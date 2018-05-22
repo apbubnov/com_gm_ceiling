@@ -71,7 +71,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         catch(Exception $e)
         {
             add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
     public function register_from_android(){

@@ -2237,7 +2237,8 @@ public function register_mnfctr(){
                     $jinput = JFactory::getApplication()->input;
                     $user_id = $jinput->get('user_id', null, 'INT');
                     $email = $jinput->get('email', null, 'STRING');
-                    $dealer_type = $jinput->get('dealer_type', null, 'STRING');
+                    $dealer_type = $jinput->get('dealer_type', null, 'INT');
+                    $type = $jinput->get('type', null, 'INT');
                     $die_bool = true;
                 }
                 else
@@ -2256,11 +2257,12 @@ public function register_mnfctr(){
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
                 $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_quick";
-                $site4 = $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
+                $site4 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site5 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site6 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=0";
                 $site_dev = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 $site_errors_mount = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=2";
+                $site_moskow_build = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=3";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2432,9 +2434,16 @@ public function register_mnfctr(){
                 }
 
                 if ($dealer_type == 7) {
-                    $body .= "<div style=\"width: 100%\">
+                    if ($type == 2) {
+                        $body .= "<div style=\"width: 100%\">Вас приветствует компания ООО \"Гильдия Мастеров\".<br>
+                        <a href=\"$site_moskow_build\"><img style=\"width: 20%\" src=\"http://".$server_name."/images/Moscow_zastr.jpg\"></a><br>
+                        <a href=\"$site_moskow_build\">Коммерческое предложение</a><br>";
+                    }
+                    else {
+                        $body .= "<div style=\"width: 100%\">
                         <a href=\"$site_dev\"><img style=\"width: 20%\" src=\"http://".$server_name."/images/KP_DEV.jpg\"></a><br>
                         <a href=\"$site_dev\">Коммерческое предложение</a><br>";
+                    }
                     $body .= "По всем вопросам писать на почту gm-vrn84@bk.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
                 }
                 else
@@ -2446,7 +2455,12 @@ public function register_mnfctr(){
                 }
                 elseif($dealer_type == 7)
                 {
-                    $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
+                    if ($type == 2) {
+                        $mailer->setSubject('Для отдела снабжения');
+                    }
+                    else {
+                        $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
+                    }
                 }
                 elseif($dealer_type == 1 && $type == 2)
                 {
@@ -2486,7 +2500,6 @@ public function register_mnfctr(){
         }
         catch (Exception $e) {
            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 
