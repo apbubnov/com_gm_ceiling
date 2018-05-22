@@ -78,6 +78,7 @@ function delete_string_characters($string)
         add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
+
 function add_error_in_log($error, $file, $func, $args)
 {
     try {
@@ -140,6 +141,7 @@ function add_error_in_log($error, $file, $func, $args)
     $code = $db->insertid();
     throw new Exception('Ошибка!', $code);
 }
+
 class Gm_ceilingHelpersGm_ceiling
 {
     public static function margin($value, $margin) {
