@@ -58,6 +58,11 @@
     </tr>
     <tr>
         <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_msk_kp">Московский застройщик КП</button>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
         </td>
     </tr>
@@ -296,6 +301,14 @@
         jQuery("#modal_window_comm").show("slow");
         jQuery("#close").show();
     });
+
+    jQuery("#but_msk_kp").click(function (){
+        jQuery("#send_comm").attr("c_type","msk");
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_comm").show("slow");
+        jQuery("#close").show();
+    });
+
     jQuery("#but_callback").click(function (){
         jQuery("#mv_container").show();
         jQuery("#modal_window_call").show("slow");
@@ -403,12 +416,17 @@
 
         jQuery("#send_comm").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
+            var type = null;
+            if(jQuery(this).attr("c_type") == "msk"){
+                type = 2;
+            }
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
                 data: {
                     user_id: user_id,
                     email: jQuery("#email_comm").val(),
-                    dealer_type: 7
+                    dealer_type: 7,
+                    type:type
                 },
                 dataType: "json",
                 async: false,
