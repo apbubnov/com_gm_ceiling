@@ -43,7 +43,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -61,7 +61,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function getIdsByStatusAndAdvt($dealer_id,$advt,$statuses,$date1,$date2){
@@ -101,7 +101,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
 					$where = "p.api_phone_id = $advt AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'";
 	                break;
 	            case $advt == 'total' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
-	                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2'";
+	                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2' and cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
 	                break; 
 	            default:
 	        
@@ -131,7 +131,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 	
