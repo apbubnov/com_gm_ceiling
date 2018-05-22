@@ -45,8 +45,6 @@ function double_margin($value, $margin1, $margin2) {
  */
 function dealer_margin($price, $margin, $objectDealerPrice) {
     try {
-        throw new Exception("Error Processing Request", 1);
-        
         $result = 0;
         $objectDealerPrice->value = floatval($objectDealerPrice->value);
         $objectDealerPrice->price = floatval($objectDealerPrice->price);
