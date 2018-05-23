@@ -1,4 +1,0 @@
-
-SELECT MAX(ecola.id) AS id
-FROM `#__gm_ceiling_ecola` AS ecola
-WHERE ecola.calculation_id  = '147' AND ecola.n26_count = '2' AND ecola.n26_illuminator = '51' AND ecola.n26_lamp = '55'

@@ -1,4 +1,0 @@
-
-SELECT `id`, `ordering`, `state`, `checked_out`, `checked_out_time`, `created_by`, `modified_by`, `dealer_id`, `calculation_title`, `project_id`, `n1`, `n2`, `n3`, `n4`, `n5`, `n6`, `n7`, `n8`, `n9`, `n10`, `n11`, `n12`, `n16`, `n17`, `n18`, `n19`, `n20`, `n21`, `n24`, `n25`, `n27`, `components_sum`, `canvases_sum`, `mounting_sum`, `transport`, `dop_krepezh`, `extra_components`, `extra_mounting`, `color`, `details`, `calc_data`, `cut_data`, `offcut_square`, `original_sketch`, `distance`, `distance_col`
-FROM `#__gm_ceiling_calculations`
-WHERE project_id  = '79'

@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  *
  * @since  1.6
  */
-class Gm_ceilingViewWebphone extends JViewLegacy
+class Gm_ceilingViewAnalytics extends JViewLegacy
 {
 	protected $state;
 

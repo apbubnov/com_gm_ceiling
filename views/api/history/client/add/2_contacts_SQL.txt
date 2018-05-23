@@ -1,4 +1,0 @@
-
-SELECT MAX(contacts.id) AS id
-FROM `#__gm_ceiling_clients_contacts` AS contacts
-WHERE contacts.phone = '333'

@@ -1,4 +1,0 @@
-
-SELECT projects.*
-FROM `#__gm_ceiling_projects` AS projects
-WHERE projects.dealer_id  = '36'

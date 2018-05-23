@@ -1,4 +1,0 @@
-10.01.2018 09:53:16
-
-username - "vorotnikov"
-password - "123456"

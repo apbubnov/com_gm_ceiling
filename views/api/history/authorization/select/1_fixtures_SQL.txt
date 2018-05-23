@@ -1,4 +1,0 @@
-
-SELECT fix.*
-FROM `#__gm_ceiling_fixtures` AS fix
-WHERE fix.calculation_id  = '7'

@@ -1,4 +1,0 @@
-
-SELECT cornice.*
-FROM `#__gm_ceiling_cornice` AS cornice
-WHERE cornice.calculation_id  = '7'

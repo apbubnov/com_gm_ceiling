@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_diffusers`
-(`calculation_id`,`n23_count`,`n23_size`) VALUES 
-('147','2','181')

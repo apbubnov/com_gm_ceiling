@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_ecola`
-(`n26_illuminator`,`calculation_id`,`n26_lamp`,`n26_count`) VALUES 
-('51','147','55','2')

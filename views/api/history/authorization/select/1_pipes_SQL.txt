@@ -1,4 +1,0 @@
-
-SELECT pipes.*
-FROM `#__gm_ceiling_pipes` AS pipes
-WHERE pipes.calculation_id  = '7'

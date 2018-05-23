@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_clients`
-(`client_name`,`dealer_id`,`type_id`,`created`) VALUES 
-('Uuu','775','1','2017-11-21')

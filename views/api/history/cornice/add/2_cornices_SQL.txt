@@ -1,4 +1,0 @@
-
-SELECT MAX(cornice.id) AS id
-FROM `#__gm_ceiling_cornice` AS cornice
-WHERE cornice.calculation_id  = '147' AND cornice.n15_count = '2' AND cornice.n15_type = '10' AND cornice.n15_size = '375'

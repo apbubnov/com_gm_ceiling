@@ -1,4 +1,0 @@
-
-SELECT diffusers.*
-FROM `#__gm_ceiling_diffusers` AS diffusers
-WHERE diffusers.calculation_id  = '7'

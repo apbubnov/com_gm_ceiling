@@ -1,6 +1,0 @@
-29.12.2017 21:20:40
-
-ERROR! authorizationTempSQL! SQLSTATE[42S22]: Column not found: 1054 Unknown column 'calc.calc_image' in 'field list' -//- 
-SELECT projects.*
-FROM `#__gm_ceiling_projects` AS projects
-WHERE projects.dealer_id  = '774'

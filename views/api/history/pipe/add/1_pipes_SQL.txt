@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_pipes`
-(`calculation_id`,`n14_size`,`n14_count`) VALUES 
-('147','369','2')

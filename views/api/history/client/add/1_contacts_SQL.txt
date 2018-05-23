@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_clients_contacts`
-(`phone`,`client_id`) VALUES 
-('333','144')
