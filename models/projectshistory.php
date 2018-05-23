@@ -67,10 +67,14 @@ class Gm_ceilingModelProjectshistory extends JModelList
     function getIdsByStatusAndAdvt($dealer_id,$advt,$statuses,$date1,$date2){
 		
         try{
+        	if(empty($dealer_id)){
+        		$dealer_id = 1;
+        	}
             $db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$subquery = $db->getQuery(true);
 			$subquery_advt = $db->getQuery(true);
+			$subquery_dealer_users = $db->getQuery(true);
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
@@ -81,6 +85,10 @@ class Gm_ceilingModelProjectshistory extends JModelList
                 ->from("`#__gm_ceiling_api_phones`")
                 ->where("dealer_id = $dealer_id");
 
+            $subquery_dealer_users
+            	->select("id")
+            	->from("`#__users`")
+            	->where("dealer_id = $dealer_id");
 			switch(true){
             case $statuses == 'all' && $advt == 'total':
 	                $where  = "p.created between '$date1' and '$date2' and p.api_phone_id in ($subquery_advt)";
@@ -89,15 +97,20 @@ class Gm_ceilingModelProjectshistory extends JModelList
 	                $where  = "p.api_phone_id = $advt and p.created between '$date1' and '$date2'";
 	                break;
 	            case $statuses == 'current' && $advt == 'total':
-	                $where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id";
+	            	if($dealer_id == 1){
+	            		$where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id in ($subquery_dealer_users)";
+	            	}
+	                else{
+	                	$where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id";
+	                }
 	                break;
 	            case $statuses == 'mounts' && $advt == 'total':
-	                $where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id";
+	                $where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id in ($subquery_dealer_users)";
 	                break;
-				case $statuses=='current'&&$advt!='total':
+				case $statuses=='current' && $advt!='total':
 					$where  = "p.api_phone_id = $advt AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
 					break;
-				case $statuses=='mounts'&&$advt!='total':
+				case $statuses=='mounts' && $advt!='total':
 					$where = "p.api_phone_id = $advt AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'";
 	                break;
 	            case $advt == 'total' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
@@ -123,6 +136,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
 				->leftJoin('#__gm_ceiling_projects_history as h on h.project_id = p.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
 				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
+				->innerJoin("`#__users` as u on cl.dealer_id = u.id")
 				->where($where);
 			$db->setQuery($query);
 		
