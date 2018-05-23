@@ -100,7 +100,7 @@ echo parent::getButtonBack();
 		var date2 = document.getElementById('date2').value;
 		if (date2 == '')
 		{
-			date2 = '<?php echo date("Y-m-d H-i-s"); ?>' + ' 23:59:59';
+			date2 = '<?php echo date("Y-m-d"); ?>' + ' 23:59:59';
 		}
 		else
 		{
