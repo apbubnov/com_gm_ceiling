@@ -796,6 +796,9 @@ class Gm_ceilingModelApi extends JModelList
                 $client_data['client_name'] = $name;
                 $client_data['client_contacts'] = $phone;
                 $client_id = $clientform_model->save($client_data);
+                if ($client_id == 'client_found') {
+                    return 'client_found';
+                }
                 if($name == "Клиент"){
                     $name.=$client_id;
                 }

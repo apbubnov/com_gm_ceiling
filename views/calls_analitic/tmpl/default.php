@@ -27,18 +27,17 @@ echo parent::getButtonBack();
 <div class="analitic-actions">
 	Выбрать с <input type="date" id="date1"> по <input type="date" id="date2"> <button type="button" class="btn btn-primary" id="show_all">Показать всё</button>
 </div>
-<table class="small_table table-striped table_cashbox one-touch-view">
+<table class="small_table table-striped one-touch-view">
 	<tbody>
-		<tr id="s1"><th>Исходящие недозвоны</th><td id="outcoming_bad"></td></tr>
-		<tr id="s2"><th>Исходящие дозвоны</th><td id="outcoming_good"></td></tr>
-		<tr id="s3"><th>Входящие звонки</th><td id="incoming"></td></tr>
+		<tr id="s1"><td>Исходящие недозвоны</td><td id="outcoming_bad"></td></tr>
+		<tr id="s2"><td>Исходящие дозвоны</td><td id="outcoming_good"></td></tr>
+		<tr id="s3"><td>Входящие звонки</td><td id="incoming"></td></tr>
+		<tr><td>Итого</td><td id="sum"></td></tr>
 	</tbody>
 </table>
+<hr>
 <table class="small_table table-striped table_cashbox one-touch-view">
-	<tbody>
-		<tr id="s1"><th>Исходящие недозвоны</th><td id="outcoming_bad"></td></tr>
-		<tr id="s2"><th>Исходящие дозвоны</th><td id="outcoming_good"></td></tr>
-		<tr id="s3"><th>Входящие звонки</th><td id="incoming"></td></tr>
+	<tbody id="info">
 	</tbody>
 </table>
 <script type="text/javascript">
@@ -49,15 +48,49 @@ echo parent::getButtonBack();
 	var td_outcoming_bad = document.getElementById('outcoming_bad');
 	var td_outcoming_good = document.getElementById('outcoming_good');
 	var td_incoming = document.getElementById('incoming');
+	var td_sum = document.getElementById('sum');
 
-	td_outcoming_bad.innerHTML = outcoming_bad.length;
-	td_outcoming_good.innerHTML = outcoming_good.length;
-	td_incoming.innerHTML = incoming.length;
+	var info = document.getElementById('info');
 
 	var arr_s1 = [], arr_s2 = [], arr_s3 = [];
 
 	document.getElementById('date1').onchange = show;
 	document.getElementById('date2').onchange = show;
+	document.getElementById('show_all').onclick = function()
+	{
+		document.getElementById('date1').value = '';
+		document.getElementById('date2').value = '';
+		show();
+	};
+
+	show();
+
+	document.getElementById('s1').onclick = function()
+	{
+		info.innerHTML = '<th>Дата</th><th>Клиент</th><th>Менеджер</th>';
+		for (var i = arr_s1.length; i--;)
+		{
+			info.innerHTML += `<td>${arr_s1[i].date_time}</td><td>${arr_s1[i].client_name}</td><td>${arr_s1[i].name}</td>`
+		}
+	};
+
+	document.getElementById('s2').onclick = function()
+	{
+		info.innerHTML = '<th>Дата</th><th>Клиент</th><th>Менеджер</th>';
+		for (var i = arr_s2.length; i--;)
+		{
+			info.innerHTML += `<td>${arr_s2[i].date_time}</td><td>${arr_s2[i].client_name}</td><td>${arr_s2[i].name}</td>`
+		}
+	};
+
+	document.getElementById('s3').onclick = function()
+	{
+		info.innerHTML = '<th>Дата</th><th>Клиент</th><th>Менеджер</th>';
+		for (var i = arr_s3.length; i--;)
+		{
+			info.innerHTML += `<td>${arr_s3[i].date_time}</td><td>${arr_s3[i].client_name}</td><td>${arr_s3[i].name}</td>`
+		}
+	};
 
 	function show() {
 		arr_s1 = [];
@@ -67,7 +100,7 @@ echo parent::getButtonBack();
 		var date2 = document.getElementById('date2').value;
 		if (date2 == '')
 		{
-			date2 = '<?php echo date("Y-m-d H-i-s"); ?>' + ' 23:59:59';
+			date2 = '<?php echo date("Y-m-d"); ?>' + ' 23:59:59';
 		}
 		else
 		{
@@ -106,6 +139,7 @@ echo parent::getButtonBack();
 		td_outcoming_bad.innerHTML = arr_s1.length;
 		td_outcoming_good.innerHTML = arr_s2.length;
 		td_incoming.innerHTML = arr_s3.length;
+		td_sum.innerHTML = arr_s1.length + arr_s2.length + arr_s3.length;
 	}
 
 
