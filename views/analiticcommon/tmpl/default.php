@@ -341,6 +341,10 @@ echo parent::getButtonBack();
             <table id="table_projects" class = "table_project_analitic"></table>
         </div>
     </div>
+    <br>
+	<h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
+	<br>
+
 </form>
 <script>
 	 jQuery(document).ready(function(){
