@@ -210,7 +210,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (strlen($phone) != 11)
             {
-                throw new Exception('Invalid phone number');
+                throw new Exception('Неверный формат номера телефона.');
             }
             if (mb_substr($phone, 0, 1) != '7')
             {
@@ -268,6 +268,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
+            echo $e->getMessage().' ';
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

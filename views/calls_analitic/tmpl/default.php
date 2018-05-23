@@ -27,11 +27,18 @@ echo parent::getButtonBack();
 <div class="analitic-actions">
 	Выбрать с <input type="date" id="date1"> по <input type="date" id="date2"> <button type="button" class="btn btn-primary" id="show_all">Показать всё</button>
 </div>
-<table>
+<table class="small_table table-striped table_cashbox one-touch-view">
 	<tbody>
-		<tr><th>Исходящие недозвоны</th><td id="outcoming_bad"></td></tr>
-		<tr><th>Исходящие дозвоны</th><td id="outcoming_good"></td></tr>
-		<tr><th>Входящие звонки</th><td id="incoming"></td></tr>
+		<tr id="s1"><th>Исходящие недозвоны</th><td id="outcoming_bad"></td></tr>
+		<tr id="s2"><th>Исходящие дозвоны</th><td id="outcoming_good"></td></tr>
+		<tr id="s3"><th>Входящие звонки</th><td id="incoming"></td></tr>
+	</tbody>
+</table>
+<table class="small_table table-striped table_cashbox one-touch-view">
+	<tbody>
+		<tr id="s1"><th>Исходящие недозвоны</th><td id="outcoming_bad"></td></tr>
+		<tr id="s2"><th>Исходящие дозвоны</th><td id="outcoming_good"></td></tr>
+		<tr id="s3"><th>Входящие звонки</th><td id="incoming"></td></tr>
 	</tbody>
 </table>
 <script type="text/javascript">
@@ -60,11 +67,11 @@ echo parent::getButtonBack();
 		var date2 = document.getElementById('date2').value;
 		if (date2 == '')
 		{
-			date2 = '<?php echo date("Y-m-d H-i-s", strtotime(date("Y-m-d H-i-s")."+ 1 day")); ?>';
+			date2 = '<?php echo date("Y-m-d H-i-s"); ?>' + ' 23:59:59';
 		}
 		else
 		{
-			date2 += '23:59:59';
+			date2 += ' 23:59:59';
 		}
 		if (date1 == '')
 		{
@@ -72,8 +79,9 @@ echo parent::getButtonBack();
 		}
 		else
 		{
-			date1 += '00:00:00';
+			date1 += ' 00:00:00';
 		}
+
 		for (var i = outcoming_bad.length; i--;)
 		{
 			if (outcoming_bad[i].date_time >= date1 && outcoming_bad[i].date_time <= date2)
