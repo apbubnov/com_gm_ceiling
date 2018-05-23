@@ -1,4 +1,0 @@
-
-SELECT MAX(hood.id) AS id
-FROM `#__gm_ceiling_hoods` AS hood
-WHERE hood.calculation_id  = '147' AND hood.n22_count = '2' AND hood.n22_type = '5' AND hood.n22_size = '57'

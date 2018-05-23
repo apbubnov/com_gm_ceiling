@@ -1,4 +1,0 @@
-
-SELECT ecola.*
-FROM `#__gm_ceiling_ecola` AS ecola
-WHERE ecola.calculation_id  = '7'

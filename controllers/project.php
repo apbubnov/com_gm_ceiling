@@ -1716,7 +1716,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 		catch(Exception $e)
 		{
 			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
 		}
 	}
 
@@ -1735,7 +1734,24 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    public function update_ready_time()
+    {
+        try
+        {   
+            $jinput = JFactory::getApplication()->input;
+            $data['id'] = $jinput->get('project_id', null, 'int');
+            $data['ready_time'] = $jinput->get('ready_time', null, 'string');
+
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $result = $model->save($data);
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

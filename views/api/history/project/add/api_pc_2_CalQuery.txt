@@ -1,4 +1,0 @@
-
-SELECT MAX(calc.id) AS id
-FROM `#__gm_ceiling_calculations` AS calc
-WHERE calc.checked_out_time = '0000-00-00 00:00:00'

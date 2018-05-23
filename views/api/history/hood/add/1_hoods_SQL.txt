@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_hoods`
-(`calculation_id`,`n22_count`,`n22_size`,`n22_type`) VALUES 
-('147','2','57','5')

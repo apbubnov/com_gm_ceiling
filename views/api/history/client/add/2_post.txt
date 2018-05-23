@@ -1,7 +1,0 @@
-21.11.2017 14:24:34
-
-{ contacts:[{"phone":"333","client_id":"-1356009470"}] } 
-
- { client:{"client_data_id":"","client_name":"Uuu","dealer_id":"775","manager_id":"","type_id":"1","created":"2017-11-21"} } 
-
- 

@@ -1,4 +1,0 @@
-
-INSERT INTO `#__gm_ceiling_cornice`
-(`n15_count`,`calculation_id`,`n15_type`,`n15_size`) VALUES 
-('2','147','10','375')

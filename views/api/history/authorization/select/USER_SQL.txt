@@ -1,6 +1,0 @@
-10.01.2018 09:53:16
-
-
-SELECT MIN(`id`) as id
-FROM `#__users`
-WHERE `username` LIKE 'vorotnikov' OR `email` LIKE 'vorotnikov'

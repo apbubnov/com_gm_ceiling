@@ -1,6 +1,0 @@
-21.11.2017 14:02:46
-
-ERROR! ContactsSQL! SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`srv112238_test1`.`rgzbn_gm_ceiling_clients_contacts`, CONSTRAINT `rgzbn_gm_ceiling_clients_contacts_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `rgzbn_gm_ceiling_clients` (`id`) ON DELETE CA) -//- 
-INSERT INTO `#__gm_ceiling_clients_contacts`
-(`phone`) VALUES 
-('666')

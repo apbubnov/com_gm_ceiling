@@ -1,4 +1,0 @@
-
-SELECT MAX(diffuser.id) AS id
-FROM `#__gm_ceiling_diffusers` AS diffuser
-WHERE diffuser.calculation_id  = '147' AND diffuser.n23_count = '2' AND diffuser.n23_size = '181'

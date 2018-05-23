@@ -1,4 +1,0 @@
-
-SELECT MAX(pipes.id) AS id
-FROM `#__gm_ceiling_pipes` AS pipes
-WHERE pipes.calculation_id  = '147' AND pipes.n14_count = '2' AND pipes.n14_size = '369'
