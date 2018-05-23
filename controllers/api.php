@@ -444,6 +444,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $Data->address = "$Data->address, квартира: $Data->apartmentNumber";
                 $Answer = ["status" => "success", "title" => "Замер сформирован", "message" => "В ближайшее время с Вами свяжется менеджер для подтверждения."];
                 $Answer["answer"] = $model->rec_to_measure($Data);
+                if ($Answer["answer"] == 'client_found') {
+                    die('client_found');
+                }
             }
             else {
                  $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Замер не успешно добавлен в базу, попробуйте позже"];
