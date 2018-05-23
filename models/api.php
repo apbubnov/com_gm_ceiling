@@ -139,6 +139,20 @@ class Gm_ceilingModelApi extends JModelList
 			$client_data['client_name'] = $name;
 			$client_data['client_contacts'] = $phone;
 			$client_id = $clientform_model->save($client_data);
+            
+            if ($client_id == 'client_found') {
+                $model_users = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $model_client_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+                $client = $model_client_phones->getItemsByPhoneNumber($phone, 1);
+                $usr = $model_users->getUserByAssociatedClient($client->id);
+                if (!is_null($usr)) {
+                    throw new Exception('Этот аккаунт уже зарегистрирован. Авторизуйтесь.');
+                }
+                else
+                {
+                    throw new Exception('Данный номер уже используется.');
+                }
+            }
 			//создание user'а
             $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, $email, $client_id);
 

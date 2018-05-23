@@ -196,7 +196,7 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function registerUser($FIO, $phone, $email, $client_id,$type = null)
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null)
     {
         try {
             jimport('joomla.user.helper');
@@ -210,7 +210,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (strlen($phone) != 11)
             {
-                throw new Exception('Invalid phone number');
+                throw new Exception('Неверный формат номера телефона.');
             }
             if (mb_substr($phone, 0, 1) != '7')
             {
@@ -268,6 +268,10 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
+            if (!empty($client_id)) {
+                Gm_ceilingHelpersGm_ceiling::getModel('Client')->delete($client_id);
+            }
+            echo $e->getMessage().' ';
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

@@ -279,5 +279,26 @@ class Gm_ceilingModelCallback extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function selectCallHistoryByStatus($status)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('`h`.`date_time`, `c`.`client_name`, `u`.`name`');
+			$query->from('`#__gm_ceiling_calls_status_history` AS `h`');
+			$query->leftJoin('`#__gm_ceiling_clients` AS `c` ON `h`.`client_id`=`c`.`id`');
+			$query->leftJoin('`#__users` AS `u` ON `h`.`manager_id`=`u`.`id`');
+			$query->where("`status` = $status");
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
 ?>

@@ -47,7 +47,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             if (strlen($username) != 11)
             {
-                throw new Exception('Invalid phone number');
+                throw new Exception('Неверный формат номера телефона.');
             }
             if (mb_substr($username, 0, 1) != '7')
             {
@@ -65,12 +65,12 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             else
             {
-                die(json_encode(null));
+                die('Неверный логин или пароль.');
             }
         }
         catch(Exception $e)
         {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            die($e->getMessage());
         }
     }
     public function register_from_android(){
@@ -135,7 +135,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            die($e);
+            die($e->getMessage());
         }
     }
         public
