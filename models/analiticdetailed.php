@@ -107,28 +107,34 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 			$common
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id AND p.created BETWEEN '$date1' and '$date2'");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.api_phone_id = a.id AND p.created BETWEEN '$date1' and '$date2' and cl.dealer_id = $dealer_id");
 
             $current_measure
                 ->select("COUNT(p.id)")
                 ->from("#__gm_ceiling_projects as p")
-                ->where("p.api_phone_id = a.id AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'");
+                ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+                ->where("p.api_phone_id = a.id AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id");
 			$measure
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([1],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.id IN (".$this->getQuery([1],$date1,$date2).") and cl.dealer_id = $dealer_id");
 			$ref_measure
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([2],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.id IN (".$this->getQuery([2],$date1,$date2).") and cl.dealer_id = $dealer_id");
 			$deals
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).") and cl.dealer_id = $dealer_id");
 			$ref_deals
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (". $this->getQuery([3],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.id IN (". $this->getQuery([3],$date1,$date2).") and cl.dealer_id = $dealer_id");
 			$dealers
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
@@ -140,24 +146,29 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 			$closed	
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([12],$date1,$date2).")");		
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.id IN (".$this->getQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");		
 			$mounts
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.project_status NOT IN (2,3) and p.api_phone_id = a.id AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+				->where("p.project_status NOT IN (2,3) and p.api_phone_id = a.id AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59' and cl.dealer_id = $dealer_id");
 			
 			$refused
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-                ->where("p.id IN (".$this->getQuery([15],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+                ->where("p.id IN (".$this->getQuery([15],$date1,$date2).") and cl.dealer_id = $dealer_id");
             $sum_deals
                 ->select("SUM(COALESCE(p.project_sum,0))")
 				->from("#__gm_ceiling_projects as p")
-                ->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+                ->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).") and cl.dealer_id = $dealer_id");
             $sum_done
                 ->select("SUM(COALESCE(p.new_project_sum,0))")
 				->from("#__gm_ceiling_projects as p")
-                ->where("p.id IN (".$this->getQuery([12],$date1,$date2).")");
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
+                ->where("p.id IN (".$this->getQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");
 
 			$query->select('DISTINCT a.name');
 			$query->select(' a.id');

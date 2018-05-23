@@ -472,6 +472,7 @@ echo parent::getButtonBack();
             var statuses = jQuery(jQuery('#c_analitic-table > thead > tr')[0].children[index]).data('value');
             var date1 = jQuery("#c_date1").val();
             var date2 = jQuery("#c_date2").val();
+            console.log(rek_name,statuses,date1,date2,0);
             getProjects(rek_name,statuses,date1,date2,0);
         }         
     });
