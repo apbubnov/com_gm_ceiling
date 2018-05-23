@@ -65,13 +65,12 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             else
             {
-                die(json_encode(null));
+                die('Неверный логин или пароль.');
             }
         }
         catch(Exception $e)
         {
-            echo $e->getMessage().' ';
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            die($e->getMessage());
         }
     }
     public function register_from_android(){
@@ -136,7 +135,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            die($e);
+            die($e->getMessage());
         }
     }
         public
