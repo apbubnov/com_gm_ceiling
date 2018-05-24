@@ -509,31 +509,13 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </tr>
                         </table>
                     </div>
-                 <!--    <div class="row" id = "ready_wrapper">
-                        <div class="col-md-4">
-                            <button class="btn btn-primary" id="btn_show_mount_ready_date" type = "button" style="margin-bottom: 25px;">Назначить дату готовности полотен</button>
-                            <table id="container_calendars" style = "display: none;*/">
-                                <tr >
-                                    <td class="no_yes_padding">
-                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                    </td>
-                                    <td>
-                                        <div style="display: inline-block; width: 100%;">
-                                            <div id="calendar1">
-                                                <?php //echo $calendar1; ?>
-                                            </div>
-                                            <div id="calendar2">
-                                                <?php //echo $calendar2; ?>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="no_yes_padding">
-                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div> -->
+                    <hr>
+                    <div class="row" id = "ready_wrapper">
+                        <h4>Назначить дату готовности полотен</h4>
+                            <input type="datetime-local" id="date_canvas_ready">
+                            <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                    </div>
+                    <hr>
                     <div class = "container" style="padding-left: 0px;">
                         <div class="row">
                             <div class="col-md-1">
@@ -588,7 +570,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
                 <div id="mounters_names"></div>
                 <div id="projects_brigade_container"></div>
-                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа (время готовности потолка):</strong></p>
+                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
                 <p>
                     <select name="hours" id='hours'></select>
                 </p>
@@ -1647,6 +1629,53 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     }
                 });
             });
+
+            jQuery("#btn_ready_date").click(function() {
+                if (jQuery("#date_canvas_ready").val() == '')
+                {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Укажите время готовности полотен"
+                    });
+                    jQuery("#date_canvas_ready").focus();
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.update_ready_time",
+                    data: {
+                        project_id: project_id,
+                        ready_time: jQuery("#date_canvas_ready").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Время готовности полотен назначено"
+                        });
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка"
+                        });
+                    }
+                });
+            });
+
         });
         
         jQuery("#jform_project_new_calc_date").attr("onchange", "update_times(\"#jform_project_new_calc_date\",\"#jform_new_project_calculation_daypart\")");

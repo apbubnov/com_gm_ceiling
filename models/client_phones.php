@@ -33,6 +33,19 @@ class Gm_ceilingModelClient_phones extends JModelList
 	{
 		try
 		{
+			$number = mb_ereg_replace('[^\d]', '', $number);
+	        if (strlen($number) == 10)
+	        {
+	            $number = '7'.$number;
+	        }
+	        if (strlen($number) != 11)
+	        {
+	            throw new Exception('Неверный формат номера телефона.');
+	        }
+	        if (mb_substr($number, 0, 1) != '7')
+	        {
+	            $number = substr_replace($number, '7', 0, 1);
+	        }
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
@@ -45,30 +58,33 @@ class Gm_ceilingModelClient_phones extends JModelList
 			$db->setQuery($query);
 			$db->execute();
 			$items = $db->loadObjectList();
+			$result = null;
 
 			foreach ($items as $key => $item)
 			{
 				if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type))
 				{
-					return $item;
+					$result = $item;
+					break;
 				}
-				elseif ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 3 || $item->dealer_type == 5) && $item->user_dealer_id == $dealer_id)
+				if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 3 || $item->dealer_type == 5) && $item->user_dealer_id == $dealer_id)
 				{
-					return $item;
+					$result = $item;
+					break;
 				}
-				elseif ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id)
+				if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id)
 				{
-					return $item;
+					$result = $item;
+					break;
 				}
 			}
-			return null;
+			return $result;
 		}
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-
 
 	public function getItemsByClientId($client_id)
 	{

@@ -148,6 +148,17 @@ $AllMounters = $model->FindAllMounters($where);
                             </td>
                         </tr>
                         <tr>
+                            <th><?php echo "Дата готовности полотен"; ?></th>
+                            <td>
+                                <?php
+                                if ($this->item->ready_time == "0000-00-00 00:00:00") { ?> -
+                                <?php } else { ?>
+                                    <?php $jdate = new JDate($this->item->ready_time); ?>
+                                    <?php echo $jdate->format('d.m.Y H:i');
+                                } ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                             <td><?php echo $this->item->project_info; ?></td>
                         </tr>

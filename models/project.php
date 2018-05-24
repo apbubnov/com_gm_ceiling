@@ -1904,4 +1904,19 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function save($data)
+    {
+    	try
+    	{
+	        $table = $this->getTable();
+	        $data['change_time'] = date("Y-m-d H:i:s");
+			//по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
+			return $table->save($data);
+	    }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
