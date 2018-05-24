@@ -34,7 +34,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 		try
 		{
 			$number = mb_ereg_replace('[^\d]', '', $number);
-	        if (mb_substr($number, 0, 1) == '9' && strlen($number) == 10)
+	        if (strlen($number) == 10)
 	        {
 	            $number = '7'.$number;
 	        }
