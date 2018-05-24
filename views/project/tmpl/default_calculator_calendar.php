@@ -1631,6 +1631,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             });
 
             jQuery("#btn_ready_date").click(function() {
+                if (jQuery("#date_canvas_ready").val() == '')
+                {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Укажите время готовности полотен"
+                    });
+                    jQuery("#date_canvas_ready").focus();
+                    return;
+                }
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=project.update_ready_time",
                     data: {
@@ -1640,11 +1653,18 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     dataType: "json",
                     async: true,
                     success: function (data) {
-                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Время готовности полотен назначено"
+                        });
                     },
                     error: function (data) {
                         console.log(data);
-                        var n = noty({
+                        noty({
                             timeout: 2000,
                             theme: 'relax',
                             layout: 'center',
