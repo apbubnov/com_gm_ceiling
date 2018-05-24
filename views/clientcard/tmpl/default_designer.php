@@ -21,6 +21,7 @@
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
     $dealer = JFactory::getUser($client->dealer_id);
+
     if ($dealer->associated_client != $this->item->id)
     {
         throw new Exception("this is not dealer", 403);
