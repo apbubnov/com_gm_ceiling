@@ -467,8 +467,28 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 </p>
             </div>
         </div>
+        <div class="comment">
+            <label> История клиента: </label>
+            <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+            <table>
+                <tr>
+                    <td><label> Добавить комментарий: </label></td>
+                </tr>
+                <tr>
+                    <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                    <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </button></td>
+                </tr>
+            </table>
+        </div>
         <!-- расчеты для проекта -->
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
+        <hr>
+            <label>Добавить звонок</label><br>
+            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
+            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
+            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <hr>
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
             <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
@@ -953,10 +973,47 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 //jQuery("#container_calendars").toggle();
             });
 
+            function add_history(id_client, comment) {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: id_client
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Добавленна запись в историю клиента"
+                        });
+                        if (jQuery("#client_id").val() == 1) {
+                            
+                            jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                        }
+                        show_comments();
+                    },
+                    error: function (data) {
+                        
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            }
+
             jQuery("#add_comment").click(function () {
                 var comment = jQuery("#new_comment").val();
                 var reg_comment = /[\\\<\>\/\'\"\#]/;
-                var id_client = <?php echo $this->item->id_client;?>;
                 if (reg_comment.test(comment) || comment === "") {
                     alert('Неверный формат примечания!');
                     return;
@@ -965,7 +1022,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     url: "index.php?option=com_gm_ceiling&task=addComment",
                     data: {
                         comment: comment,
-                        id_client: id_client
+                        id_client: client_id
                     },
                     dataType: "json",
                     async: true,
@@ -1676,7 +1733,54 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 });
             });
 
-        });
+            jQuery("#add_call").click(function(){
+                if (jQuery("#call_date").val() == '')
+                {
+                    var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "warning",
+                            text: "Укажите время перезвона"
+                        });
+                    jQuery("#call_date").focus();
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addCall",
+                    data: {
+                        id_client: client_id,
+                        date: jQuery("#call_date").val(),
+                        comment: jQuery("#call_comment").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Звонок добавлен"
+                        });
+                        add_history(client_id, 'Добавлен звонок на ' + jQuery("#call_date").val().replace('T', ' ') + ':00');
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
+
+        }); //конец ready
         
         jQuery("#jform_project_new_calc_date").attr("onchange", "update_times(\"#jform_project_new_calc_date\",\"#jform_new_project_calculation_daypart\")");
 
