@@ -181,9 +181,9 @@
         </div>
         <p class="caption-tar">Добавить перезвон</p>
          <div class="row center">
-            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
-            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            <input name="create_call_date" id="create_call_date" type="datetime-local" placeholder="Дата звонка">
+            <input name="create_call_comment" id="create_call_comment" placeholder="Введите примечание">
+            <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
 
         </div>
 <!-- конец -->
@@ -293,6 +293,7 @@
 </div>
 
 <script>
+    var client_id = '<?php echo $this->item->id;?>';
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
@@ -321,7 +322,7 @@
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
             data: {	
-                client_id: "<?php echo $this->item->id;?>",
+                client_id:client_id,
                 fio: jQuery("#new_fio").val()
             },
             success: function(data){
@@ -355,8 +356,8 @@
         });
     });
 
-    jQuery("#add_call").click(function(){
-        if (jQuery("#call_date").val() == '')
+    jQuery("#new_add_call").click(function(){
+        if (jQuery("#create_call_date").val() == '')
         {
             var n = noty({
                     timeout: 2000,
@@ -366,15 +367,15 @@
                     type: "warning",
                     text: "Укажите время перезвона"
                 });
-            jQuery("#call_date").focus();
+            jQuery("#create_call_date").focus();
             return;
         }
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=addCall",
             data: {
                 id_client: client_id,
-                date: jQuery("#call_date").val(),
-                comment: jQuery("#call_comment").val()
+                date: jQuery("#create_call_date").val(),
+                comment: jQuery("#create_call_comment").val()
             },
             dataType: "json",
             async: true,
@@ -387,7 +388,7 @@
                     type: "success",
                     text: "Звонок добавлен"
                 });
-                add_history(client_id, 'Добавлен звонок на ' + jQuery("#call_date").val().replace('T', ' ') + ':00');
+                add_history(client_id, 'Добавлен звонок на ' + jQuery("#create_call_date").val().replace('T', ' ') + ':00');
             },
             error: function (data) {
                 var n = noty({
