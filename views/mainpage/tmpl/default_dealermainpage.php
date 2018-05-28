@@ -214,15 +214,12 @@ $rest = -($total_sum) - $contributed;
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
-    <?php } elseif ($user->dealer_type == 1) {x ?>
+    <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
         </p>
         <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
-        </p>
-        <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки</a>
         </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
@@ -232,6 +229,9 @@ $rest = -($total_sum) - $contributed;
                 <?php } ?>
             </div>
         </div>
+        <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+        </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
@@ -243,9 +243,7 @@ $rest = -($total_sum) - $contributed;
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
         </p>
-         <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки</a>
-        </p>
+         
     <?php } elseif ($user->dealer_type == 2) { ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="create_order_btn"><i class="fa fa-list-alt"

@@ -6,7 +6,7 @@
     <button class="btn btn-primary" id="btn_incoming" type="button">Входящий звонок</button>
     </center>
 </div>
-<?php } ?>
+
 <script type="text/javascript">
 	function addCallHistory(status){
 		jQuery.ajax({
@@ -44,3 +44,4 @@
 		addCallHistory(3);
 	};
 </script>
+<?php } ?>

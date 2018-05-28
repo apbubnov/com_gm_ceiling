@@ -25,6 +25,11 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 
 <h2 class="center">Замерщик</h2>
 <div class="start_page">
+	<?php if ($user->dealer_type == 1){?>
+		<p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
+        </p>
+	<?php }?>
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> График замеров</a>

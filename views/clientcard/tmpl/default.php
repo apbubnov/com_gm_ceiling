@@ -179,6 +179,13 @@
                 <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
+        <p class="caption-tar">Добавить перезвон</p>
+         <div class="row center">
+            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
+            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
+            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+
+        </div>
 <!-- конец -->
 <!-- заказы -->
 <div id="orders-container-tar">
@@ -346,7 +353,55 @@
                 });
             }				
         });
-    })
+    });
+
+    jQuery("#add_call").click(function(){
+        if (jQuery("#call_date").val() == '')
+        {
+            var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Укажите время перезвона"
+                });
+            jQuery("#call_date").focus();
+            return;
+        }
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=addCall",
+            data: {
+                id_client: client_id,
+                date: jQuery("#call_date").val(),
+                comment: jQuery("#call_comment").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Звонок добавлен"
+                });
+                add_history(client_id, 'Добавлен звонок на ' + jQuery("#call_date").val().replace('T', ' ') + ':00');
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
+    
     jQuery("#edit").click(function() {
 			jQuery(".modal-window-container").show();
 			jQuery("#modal-window-call-tar").show("slow");
