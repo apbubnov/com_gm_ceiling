@@ -293,8 +293,9 @@ class Gm_ceilingModelApi extends JModelList
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`rgzbn_gm_ceiling_projects` as p");
-                $query->where("`p.project_calculator` = $project_calculator");
+                $query->where("`p`.`project_calculator` = $project_calculator");
                 $db->setQuery($query);
+               
                 $list_projects = $db->loadObjectList();
 
                 if (count($list_projects) > 0)
@@ -651,7 +652,7 @@ class Gm_ceilingModelApi extends JModelList
             $dealer_id = $db->escape($data->dealer_id, false);
             //Дилер
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.id = $dealer_id AND um.group_id = 14");
@@ -659,7 +660,7 @@ class Gm_ceilingModelApi extends JModelList
             $list_dealer = $db->loadObjectList();
             //Бригады
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND um.group_id = 11");
@@ -668,7 +669,7 @@ class Gm_ceilingModelApi extends JModelList
 
             //замерщики
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND (um.group_id = 21 OR um.group_id = 22 )");

@@ -19,9 +19,7 @@ $_SESSION['dop_num'] = $dop_num;
 ?>
 
 <form>
-    <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-       id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+    <?=parent::getButtonBack();?>
     <input type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
@@ -51,7 +49,7 @@ $_SESSION['dop_num'] = $dop_num;
     var arr_calls = JSON.parse('<?php echo json_encode($this->item); ?>');
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
-
+    var dealer_type = '<?php echo $user->dealer_type?>';
     function show_calls()
     {
         var str;
@@ -59,7 +57,7 @@ $_SESSION['dop_num'] = $dop_num;
         table_body_elem.innerHTML = "";
         for (var i = 0; i < arr_calls.length; i++)
         {
-            if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == 2 || user_id == arr_calls[i].manager_id || arr_calls[i].manager_id == 1))
+            if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == 2 || user_id == arr_calls[i].manager_id || (arr_calls[i].manager_id == 1 && dealer_type !=1 )))
             {
                 str = '';
                 if (arr_calls[i].dealer_type == 3)
@@ -90,6 +88,7 @@ $_SESSION['dop_num'] = $dop_num;
 
     jQuery(document).ready(function()
     {
+        
         show_calls();
 
         document.getElementById('calendar').onchange = function(){

@@ -228,6 +228,52 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 				);
 				array_push($items,$d_object);
 			}
+				$d_common = 0;
+				$d_measure = 0;
+				$d_ref_measure = 0;
+				$d_deals =  0;
+				$d_ref_deals =  0;
+				$d_closed =  0;
+				$d_mounts = 0;
+				$d_refused = 0;
+				$d_sum_deals = 0;
+				$d_sum_done = 0;
+				$d_current_mesure = 0;
+			$wininstallers = $this->get_data_by_dealer_type(8,$date1,$date2);
+			foreach ($wininstallers as $designer) {
+				$d_common += $designer->common;
+				$d_measure += $designer->measure;
+				$d_ref_measure += $designer->ref_measure;
+				$d_deals +=  $designer->deals;
+				$d_ref_deals +=  $designer->ref_deals;
+				$d_closed +=  $designer->closed;
+				$d_mounts+= $designer->mounts;
+				$d_refused+= $designer->refused;
+				$d_sum_deals+= $designer->sum_deals;
+				$d_sum_done+= $designer->sum_done;
+				$d_current_mesure+= $designer->current_measure;
+			}
+			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
+				$d_object = (object)array(
+					"name" => "Оконщики",
+					"id" => "",
+					"common" => $d_common,
+					"dealers" => 0,
+					"advt" => 0,
+					"refused" => $d_refused,
+					"ref_measure" => $d_ref_measure,
+					"measure" => $d_measure,
+					"current_measure" => $d_current_mesure,
+					"ref_deals" => $d_ref_deals,
+					"deals" => $d_deals,
+					"sum_deals" => $d_sum_deals,
+					"mounts" => $d_mounts,
+					"closed" => $d_closed,
+					"sum_done" => $d_sum_done
+
+				);
+				array_push($items,$d_object);
+			}
 			return $items;
 		}
 		catch(Exception $e)

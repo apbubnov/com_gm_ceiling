@@ -902,8 +902,8 @@ public function register_mnfctr(){
         {
             $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
-            $jdate = new JDate($jinput->get('date', '01.01.1970', 'STRING'));
-            $id_client = $jinput->get('id_client', '0', 'INT');
+            $jdate = new JDate($jinput->get('date', date('Y-m-d H:i:s'), 'STRING'));
+            $id_client = $jinput->get('id_client', null, 'INT');
             $manager_id = $user->id;
             $comment = $jinput->get('comment', '', 'STRING');
 
