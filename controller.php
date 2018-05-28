@@ -823,17 +823,18 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $name = $jinput->get('name', 'Клиент с promo', 'STRING');
             $phones[] = $jinput->get('phone', '', 'STRING');
-            $phones[0] = preg_replace('/[\(\)\-\+\s]/', '', $phones[0]);
+            $phones[0] = mb_ereg_replace('/[\d]/', '', $phones[0]);
             $email = $jinput->get('email', '', 'STRING');
             $action = $jinput->get('action', '', 'STRING');
             $api_phone_id = $jinput->get('api_phone_id', 0, 'INT');
             $adress = $jinput->get('adress', '', 'STRING');
-            $date = $jinput->get('date', '0000-00-00', 'STRING');
-            $time = $jinput->get('time', '00:00', 'STRING');
-            $date_time = $date . ' ' . $time;
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $result = $model->getItemsByPhoneNumber($phones[0], 1);
-            $from_promo_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
+            $calc_date = $jinput->get('date', '0000-00-00', 'STRING');
+            $calc_time = $jinput->get('time', '00:00', 'STRING');
+            $dealer_id = $jinput->get('dealer_id', 1, 'INT');
+            $calc_date_time = $calc_date . ' ' . $calc_time;
+            $cl_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $result = $cl_phones_model->getItemsByPhoneNumber($phones[0], $dealer_id);
+            $call_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             /*проверка на существование этого клиента*/
             if (empty($result)) {
@@ -841,24 +842,23 @@ public function register_mnfctr(){
                 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
                 $client_data['client_name'] = $name;
                 $client_data['type_id'] = 1;
-                $client_data['dealer_id'] = 1;//GM
-                $client_data['created'] = date("Y-m-d");
+                $client_data['dealer_id'] = $dealer_id;//GM
+                $client_data['created'] = date("Y-m-d H:i:s");
                 $client_id = $client_model->save($client_data);
                 //добавляем номер телефона
-                $cl_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_phones');
                 $cl_phones_model->save($client_id, $phones);
-                $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $date_time);
+                $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $calc_date_time);
             } else {
                 $client_id = $result->client_id;
                 $pr_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                 $projects = $pr_model->getProjectsByClientID($client_id);
-                if ($adress != '' && $date_time != '0000-00-00 00:00') {
+                if ($adress != '' && $calc_date_time != '0000-00-00 00:00') {
                     if (count($projects) > 0) {
-                        $proj_id = $this->createProject($client_id, 10, $adress, $date_time);
-                        $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
+                        $proj_id = $this->createProject($client_id, 10, $adress, $calc_date_time);
                         $repeat_model->save($proj_id, $api_phone_id);
                     } else {
-                        $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $date_time);
+                        $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $calc_date_time);
                     }
                 } else {
                     $find = false;
@@ -871,23 +871,22 @@ public function register_mnfctr(){
                     }
                     if (!$find) {
                         if (count($projects) > 0) {
-                            $proj_id = $this->createProject($client_id, 10, $adress, $date_time);
-                            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
+                            $proj_id = $this->createProject($client_id, 10, $adress, $calc_date_time);
                             $repeat_model->save($proj_id, $api_phone_id);
                         } else {
-                            $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $date_time);
+                            $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $calc_date_time);
                         }
                     }
                 }
             }
-            if ($email != "") {
+            if (!empty($email)) {
                 $dop_contacts_model->save($client_id, 1, $email);
             }
             $api_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
             $advt_name = $api_phones_model->getDataById($api_phone_id)->name;
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $history_model->save($client_id, "Произведено действие на сайте: \"$action\" ($advt_name)");
-            $from_promo_model->save($action, $client_id);
+            $call_model->save(date("Y-m-d H:i:s"), $action, $client_id, $dealer_id);
             die(true);
         }
        catch(Exception $e)
@@ -902,8 +901,8 @@ public function register_mnfctr(){
         {
             $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
-            $jdate = new JDate($jinput->get('date', '01.01.1970', 'STRING'));
-            $id_client = $jinput->get('id_client', '0', 'INT');
+            $jdate = new JDate($jinput->get('date', date('Y-m-d H:i:s'), 'STRING'));
+            $id_client = $jinput->get('id_client', null, 'INT');
             $manager_id = $user->id;
             $comment = $jinput->get('comment', '', 'STRING');
 
