@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$user_login = '79042133357';//$user->get('username');
+$user_login = $user->get('username');
 
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
