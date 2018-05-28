@@ -75,6 +75,12 @@ class Gm_ceilingModelProjectshistory extends JModelList
 			$subquery = $db->getQuery(true);
 			$subquery_advt = $db->getQuery(true);
 			$subquery_dealer_users = $db->getQuery(true);
+			if($advt == 'Отделочники'){
+				$dealer_type = 3;
+			}
+			elseif($advt == 'Оконщики'){
+				$dealer_type = 8;
+			}
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
@@ -89,7 +95,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
             	->select("c.id")
             	->from("`#__gm_ceiling_clients` AS c")
             	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
-            	->where("u.dealer_type = 3");
+            	->where("u.dealer_type = $dealer_type");
 
             $subquery_dealer_users
             	->select("id")
@@ -99,7 +105,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
             	case $statuses == 'all' && $advt == 'total':
 	                $where  = "p.created between '$date1' and '$date2' and (p.api_phone_id in ($subquery_advt) or p.client_id in($clients_id) )";
 	                break;
-	            case $statuses == 'all' && $advt != 'total' && $advt != "Отделочники" :
+	            case $statuses == 'all' && $advt != 'total' && $advt != "Отделочники" && $advt != "Оконщики" :
 	                $where  = "p.api_phone_id = $advt and p.created between '$date1' and '$date2'";
 	                break;
 	            case $statuses == 'current' && $advt == 'total':
@@ -113,7 +119,13 @@ class Gm_ceilingModelProjectshistory extends JModelList
 	            case $statuses == 'current' && $advt == 'Отделочники':
 	            	$where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and p.client_id in ($clients_id)";
 	            	break;
+	            case $statuses == 'current' && $advt == 'Оконщики':
+	            	$where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and p.client_id in ($clients_id)";
+	            	break;
 	            case $statuses == 'all' && $advt == 'Отделочники':
+	            	$where  = "p.created between '$date1' and '$date2' and  p.client_id in($clients_id)";
+	            	break;
+	            case $statuses == 'all' && $advt == 'Оконщики':
 	            	$where  = "p.created between '$date1' and '$date2' and  p.client_id in($clients_id)";
 	            	break;
 	            case $statuses == 'mounts' && $advt == 'total':
@@ -123,6 +135,9 @@ class Gm_ceilingModelProjectshistory extends JModelList
 					$where  = "p.api_phone_id = $advt AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
 					break;
 				case $statuses == 'mounts' && $advt == 'Отделочники':
+					$where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and p.client_id in ($clients_id)";
+					break;
+				case $statuses == 'mounts' && $advt == 'Оконщики':
 					$where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and p.client_id in ($clients_id)";
 					break;
 				case $statuses=='mounts' && $advt!='total':
@@ -137,6 +152,10 @@ class Gm_ceilingModelProjectshistory extends JModelList
 		            }
 	                break; 
 				case $advt == 'Отделочники' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
+		               $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2' and p.client_id in ($clients_id)";
+		           
+	                break; 
+	            case $advt == 'Оконщики' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
 		               $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2' and p.client_id in ($clients_id)";
 		           
 	                break; 

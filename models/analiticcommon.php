@@ -115,7 +115,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
-			$designers = $this->get_designers_analytics();
+			$designers = $this->get_designers_analytics(3);
 			foreach ($designers as $designer) {
 				$d_common += $designer->common;
 				$d_deals += $designer->deals;
@@ -129,6 +129,41 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
 				$d_object = (object)array(
 					"name" => "Отделочники",
+					"common" => $d_common,
+					"dealers" => 0,
+					"advt" => 0,
+					"refuse" => $d_refuse,
+					"inwork" => $d_inwork,
+					"measure" => $d_measure,
+					"deals" => $d_deals,
+					"done" => $d_done,
+					"sum" => $d_sum,
+					"profit" => $d_profit
+				);
+				array_push($items,$d_object);
+			}
+				$d_common = 0;
+				$d_deals = 0;
+				$d_inwork = 0;
+				$d_measure = 0;
+				$d_refuse = 0;
+				$d_done =  0;
+				$d_sum =  0;
+				$d_profit = 0;
+			$wininstallers = $this->get_designers_analytics(8);
+			foreach ($wininstallers as $designer) {
+				$d_common += $designer->common;
+				$d_deals += $designer->deals;
+				$d_inwork += $designer->inwork;
+				$d_measure +=  $designer->measure;
+				$d_refuse +=  $designer->refuse;
+				$d_done +=  $designer->done;
+				$d_sum +=  $designer->sum;
+				$d_profit+= $designer->profit;
+			}
+			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
+				$d_object = (object)array(
+					"name" => "Оконщики",
 					"common" => $d_common,
 					"dealers" => 0,
 					"advt" => 0,
@@ -241,7 +276,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
-			$designers = $this->get_designers_analytics($date1,$date2);
+			$designers = $this->get_designers_analytics(3,$date1,$date2);
 			foreach ($designers as $designer) {
 				$d_common += $designer->common;
 				$d_deals += $designer->deals;
@@ -268,6 +303,41 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				);
 				array_push($items,$d_object);
 			}
+				$d_common = 0;
+				$d_deals = 0;
+				$d_inwork = 0;
+				$d_measure = 0;
+				$d_refuse = 0;
+				$d_done =  0;
+				$d_sum =  0;
+				$d_profit = 0;
+			$wininstallers = $this->get_designers_analytics(8,$date1,$date2);
+			foreach ($wininstallers as $designer) {
+				$d_common += $designer->common;
+				$d_deals += $designer->deals;
+				$d_inwork += $designer->inwork;
+				$d_measure +=  $designer->measure;
+				$d_refuse +=  $designer->refuse;
+				$d_done +=  $designer->done;
+				$d_sum +=  $designer->sum;
+				$d_profit+= $designer->profit;
+			}
+			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
+				$d_object = (object)array(
+					"name" => "Оконщики",
+					"common" => $d_common,
+					"dealers" => 0,
+					"advt" => 0,
+					"refuse" => $d_refuse,
+					"inwork" => $d_inwork,
+					"measure" => $d_measure,
+					"deals" => $d_deals,
+					"done" => $d_done,
+					"sum" => $d_sum,
+					"profit" => $d_profit
+				);
+				array_push($items,$d_object);
+			}
 			return $items;
 		}
 		catch(Exception $e)
@@ -275,7 +345,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function get_designers_analytics($date1 = null,$date2 = null){
+	function get_designers_analytics($dealer_type = null,$date1 = null,$date2 = null){
 		/* SELECT c.client_name,c.dealer_id,
 (SELECT COUNT(p.id) FROM `rgzbn_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19)) AS deals,
 (SELECT COUNT(p.id) FROM `rgzbn_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (0,2,3) ) AS inwork,
@@ -348,7 +418,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			->select("ifnull(($profit),0) as profit")
 			->from('`#__gm_ceiling_clients` AS c')
 			->leftJoin('`#__users` AS u ON c.dealer_id = u.id')
-			->where("u.dealer_type = 3");
+			->where("u.dealer_type = $dealer_type ");
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
 		return $items;

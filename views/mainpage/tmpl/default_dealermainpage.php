@@ -214,7 +214,7 @@ $rest = -($total_sum) - $contributed;
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
-    <?php } elseif ($user->dealer_type == 1) { ?>
+    <?php } elseif ($user->dealer_type == 1) {x ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
         </p>
@@ -242,6 +242,9 @@ $rest = -($total_sum) - $contributed;
         </div>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
+        </p>
+         <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки</a>
         </p>
     <?php } elseif ($user->dealer_type == 2) { ?>
         <p class="center">
