@@ -219,7 +219,10 @@ $rest = -($total_sum) - $contributed;
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
         </p>
         <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
+        </p>
+        <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=incoming_calls', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Входящие звонки</a>
         </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
