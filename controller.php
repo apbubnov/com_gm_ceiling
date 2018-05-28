@@ -823,7 +823,7 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $name = $jinput->get('name', 'Клиент с promo', 'STRING');
             $phones[] = $jinput->get('phone', '', 'STRING');
-            $phones[0] = mb_ereg_replace('/[\d]/', '', $phones[0]);
+            $phones[0] = mb_ereg_replace('[^\d]', '', $phones[0]);
             $email = $jinput->get('email', '', 'STRING');
             $action = $jinput->get('action', '', 'STRING');
             $api_phone_id = $jinput->get('api_phone_id', 0, 'INT');
@@ -1428,7 +1428,7 @@ public function register_mnfctr(){
 
             $jinput = JFactory::getApplication()->input;
             $number = $jinput->get('phone', '', 'STRING');
-            $number = preg_replace('/[\(\)\-\+\s]/', '', $number);
+            $number = mb_ereg_replace('[^\d]', '', $number);
             if (mb_substr($number, 0, 1) === '7') {
                 $number = mb_substr($number, 1);
             }
