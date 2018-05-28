@@ -158,6 +158,9 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
             <button type="button" class="btn btn-primary" id="btn_pay">Оплатить с помощью карты</button>
         <?php } ?>
     <!-- конец -->
+    <? if ($this->item->project_status >= 5 && $this->item->project_status != 12): ?>
+        <button class="btn btn-primary btn-done" data-project_id="<?= $this->item->id; ?>" type="button">Выполнено</button>
+    <? endif; ?>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
@@ -204,7 +207,39 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                 }
             });
 
+            jQuery(".btn-done").click(function () {
+                var button = jQuery(this);
+                noty({
+                    layout: 'center',
+                    type: 'warning',
+                    modal: true,
+                    text: 'Вы уверены, что хотите отметить договор выполненным?',
+                    killer: true,
+                    buttons: [
+                        {
+                            addClass: 'btn btn-success', text: 'Выполнен', onClick: function ($noty) {
+                                jQuery.get(
+                                    "/index.php?option=com_gm_ceiling&task=project.done",
+                                    {
+                                        project_id: button.data("project_id"),
+                                        check: 1
+                                    },
+                                    function(data) {
+                                        location.reload();
+                                    }
+                                );
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                                $noty.close();
+                            }
+                        }
+                    ]
+                });
 
+            });
                        
             jQuery("#btn_pay").click(function () {
                 var id = "<?php echo $sb_project_id ?>";
