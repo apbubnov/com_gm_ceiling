@@ -293,8 +293,9 @@ class Gm_ceilingModelApi extends JModelList
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`rgzbn_gm_ceiling_projects` as p");
-                $query->where("`p.project_calculator` = $project_calculator");
+                $query->where("`p`.`project_calculator` = $project_calculator");
                 $db->setQuery($query);
+               
                 $list_projects = $db->loadObjectList();
 
                 if (count($list_projects) > 0)
@@ -350,10 +351,26 @@ class Gm_ceilingModelApi extends JModelList
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts = $db->loadObjectList();
+
+                $query = $db->getQuery(true);
+                $query->select("*");
+                $query->from("`rgzbn_gm_ceiling_client_history`");
+                $query->where($where);
+                $db->setQuery($query);
+                $list_client_history = $db->loadObjectList();
+
+                $query = $db->getQuery(true);
+                $query->select("*");
+                $query->from("`rgzbn_gm_ceiling_callback`");
+                $query->where($where);
+                $db->setQuery($query);
+                $list_calls = $db->loadObjectList();
             }
             else
             {
                 $list_contacts = array();
+                $list_client_history = array();
+                $list_calls = array();
             }
 
             if (count($list_projects) > 0)
@@ -477,6 +494,8 @@ class Gm_ceilingModelApi extends JModelList
             }
             $result = [];
             $result['rgzbn_gm_ceiling_clients'] = $list_clients;
+            $result['rgzbn_gm_ceiling_client_history'] = $list_client_history;
+            $result['rgzbn_gm_ceiling_callback'] = $list_calls;
             $result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
             $result['rgzbn_gm_ceiling_projects'] = $list_projects;
             $result['rgzbn_gm_ceiling_calculations'] = $list_calculations;
