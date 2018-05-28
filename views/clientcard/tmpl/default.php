@@ -149,7 +149,6 @@
 </div>
 <!-- заказы -->
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
-    <?php if($user->dealer_type != 1) { ?>
         <div class="row">
             <div class="col-sm-12" id = "calls">
                 <p class="caption-tar">История клиента</p>
@@ -180,7 +179,6 @@
                 <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
-    <?php } ?>
 <!-- конец -->
 <!-- заказы -->
 <div id="orders-container-tar">

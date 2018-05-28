@@ -201,7 +201,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
 
@@ -221,7 +220,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
 
@@ -253,7 +251,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
 
@@ -274,7 +271,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
         public function sendMountersToAndroid()
@@ -294,7 +290,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
         public function sendDealerInfoToAndroid()
@@ -312,7 +307,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             }
         }
         public function check_update(){
@@ -333,7 +327,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             catch(Exception $e)
             {
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
             } 
         }
     /*
@@ -361,7 +354,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 
@@ -379,7 +371,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
     public function changePwd(){
@@ -395,7 +386,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 

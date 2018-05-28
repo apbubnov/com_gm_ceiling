@@ -69,10 +69,10 @@ class Gm_ceilingModelTeam extends JModelItem
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('id, name')
-				->from('#__users as users')
-				->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')			
-				->where("users.dealer_id = '$id' and map.group_id = 11");
+			$query->select('`users`.`id` as `id`, `users`.`name` as `name`')
+				->from('`#__users` as `users`')
+				->innerJoin('`#__user_usergroup_map` as `map` ON `users`.`id` = `map`.`user_id`')			
+				->where("`users`.`dealer_id` = '$id' and `map`.`group_id` = 11");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
