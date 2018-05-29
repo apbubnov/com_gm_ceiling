@@ -53,6 +53,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>" class="btn btn-success">
                 <i class="icon-plus"></i> Добавить замер
             </a>
+            <a class="btn btn-large btn-primary" href="/index.php?option=com_gm_ceiling&amp;view=gaugers&amp;type=chief"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
         </div>
         <?php if (false): ?>
             <div class="span9">
