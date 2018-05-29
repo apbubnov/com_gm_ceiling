@@ -1586,13 +1586,12 @@ public function register_mnfctr(){
             }
             $project_data['project_info'] = "";
             $project_data['project_status'] = 0;
-            $project_data['project_calculation_daypart'] = 0;
             $project_data['project_calculation_date'] = "0000-00-00 00:00";
 
-            $project_data['project_mounting_date'] = "00.00.0000";
+            $project_data['project_mounting_date'] = "0000-00-00";
             $project_data['project_note'] = "";
             $project_data['who_calculate'] = 0;
-            $project_data['created'] = date("Y.m.d");
+            $project_data['created'] = date("Y-m-d");
             $project_data['project_discount'] = 0;
             $project_data['gm_canvases_margin'] = $gm_canvases_margin;
             $project_data['gm_components_margin'] = $gm_components_margin;
@@ -1613,13 +1612,45 @@ public function register_mnfctr(){
             }
             die(json_encode($result));
         }
-       catch(Exception $e)
+        catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    //KM_CHANGED END
+    public static function create_project_and_calc()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', 1, 'INT');
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+            $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+
+            $client = $client_model->getClientById($client_id);
+            $dealer_id = $client->dealer_id;
+
+            $project_data['client_id'] = $client_id;
+            $project_data['project_status'] = 0;
+            $project_data['gm_canvases_margin'] = $info_model->getMargin('gm_canvases_margin', $dealer_id);
+            $project_data['gm_components_margin'] = $info_model->getMargin('gm_components_margin', $dealer_id);
+            $project_data['gm_mounting_margin'] = $info_model->getMargin('gm_mounting_margin', $dealer_id);
+            $project_data['dealer_canvases_margin'] = $info_model->getMargin('dealer_canvases_margin', $dealer_id);
+            $project_data['dealer_components_margin'] = $info_model->getMargin('dealer_components_margin', $dealer_id);
+            $project_data['dealer_mounting_margin'] = $info_model->getMargin('dealer_mounting_margin', $dealer_id);
+
+            $project_id = $project_model->save($project_data);
+            $calc_id = $calc_model->create_calculation($project_id);
+
+            die(json_encode($calc_id));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
 
     public static function createColorImage()

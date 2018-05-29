@@ -278,7 +278,8 @@
         <?php endforeach;?>
     </table>
     <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить замер">
+        <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить заказ">
+        <input type="button" id="add_new_calc" class="btn btn-primary" value="Добавить просчет">
     </div>
 </div>
 <!-- модальное окно -->
@@ -471,13 +472,11 @@
     jQuery(document).ready(function ()
     {
         jQuery('#new_phone').mask('+7(999) 999-9999');
-        <?php if($user->dealer_type != 1) { ?>
         document.getElementById('calls-tar').scrollTop = 9999;
-        <?php } ?>
+        var client_id = <?php echo $client->id; ?>;
 
         document.getElementById('add_email').onclick = function()
         {
-            var client_id = <?php echo $client->id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
                 data: {
@@ -501,7 +500,42 @@
                     });
                 }
             });
-        }
+        };
+
+        document.getElementById('add_new_calc').onclick = function()
+        {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=create_project_and_calc",
+                data: {
+                    client_id: client_id
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    console.log(data);
+                    <?php
+                    if (in_array("16", $groups)){
+                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=';";
+                    }
+                    else{
+                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=';";
+                    }
+                    ?>
+                    location.href = url+data;
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        };
     });
 
     jQuery("#back_btn").click(function (){

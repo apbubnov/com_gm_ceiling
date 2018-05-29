@@ -1782,7 +1782,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 });
             });
 
-            document.getElementById('refuse_cooperate').onclick = function()
+            if (document.getElementById('refuse_cooperate')){
+                document.getElementById('refuse_cooperate').onclick = click_on_refuse_cooperate;
+            }
+            function click_on_refuse_cooperate()
             {
                 noty({
                     layout: 'topCenter',
