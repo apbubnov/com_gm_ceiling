@@ -66,12 +66,16 @@ $status = $status_model->getData();
                 <th>
                     Статус
                 </th>
+                <th>
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </th>
 			</tr>
             <tr class="row" id="TrClone" data-href="" style="display: none">
                 <td class="one-touch created"></td>
                 <td class="one-touch name"></td>
                 <td class="one-touch address"></td>
                 <td class="one-touch status"></td>
+                <td class="one-touch delete"></td>
             </tr>
 		</thead>
 		<tbody>
@@ -195,7 +199,7 @@ jQuery(document).ready(function(){
                 {
                     tr.find(".status").text('-');
                 }
-                
+                tr.find(".delete").append('<button class = "btn btn-danger" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
                 tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
                 list.append(tr);
                 wheel_count_clients = i;
@@ -227,7 +231,36 @@ jQuery(document).ready(function(){
             });
         });
     }
-
+    jQuery(".btn-danger").click(function(e){
+        var id = jQuery(this).data('cl_id');
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=client.delete_by_user",
+            async: false,
+            data: {
+                client_id: id
+            },
+            success: function(data){
+                jQuery('.btn-danger[data-cl_id ='+id+']').closest('.row').remove();
+            },
+            dataType: "json",
+            timeout: 20000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
+        return false;
+    });
+    
+   
     document.body.onload = function(){
         jQuery(".PRELOADER_GM").hide();
     };

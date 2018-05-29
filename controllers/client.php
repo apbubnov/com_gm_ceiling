@@ -303,6 +303,7 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             $data['id'] = $client_id;
             $data['deleted_by_user'] = 1;
             $model->save($data);
+            die(json_encode(true));
 		}
 		catch(Exception $e)
         {

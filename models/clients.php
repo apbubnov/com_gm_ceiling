@@ -172,6 +172,7 @@ if (empty($list['direction']))
                 ->select("`p`.`id`, `p`.`project_info` as `address`, `s`.`title` as `status`, `s`.`id` as `status_id`")
                 ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
                 ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
+                ->where('`client`.`deleted_by_user` <> 1')
                 ->order("`client`.`id` DESC")
                 ->group("`client`.`id`");
 
