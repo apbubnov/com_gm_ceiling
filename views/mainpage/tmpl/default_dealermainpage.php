@@ -22,7 +22,7 @@ $_SESSION['dealer_type'] = $user->dealer_type;
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 
-$userPhone = preg_replace('/[\(\)\-\+\s]/', '', $userPhone);
+$userPhone = mb_ereg_replace('[^\d]', '', $userPhone);
 
 $clientId = $model->getItemsByOwnerID($userId, $userPhone);
 
@@ -226,7 +226,7 @@ $rest = -($total_sum) - $contributed;
         </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
                 <?php if ($sumcalculator[0]->count != 0) { ?>
                     <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
                 <?php } ?>

@@ -134,7 +134,7 @@
             </div>
             <div>
                 <?php foreach ($client_phones as $item) { ?>
-                    <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;">
+                    <a href="tel:<?php echo '+'.$item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;">
                         <?php echo $item->phone; ?>
                     </a>
                     <br>
