@@ -1784,35 +1784,54 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
             document.getElementById('refuse_cooperate').onclick = function()
             {
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
-                    data: {
-                        project_id: project_id,
-                        status: 15
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Проект переведен в отказ от сотрудничества"
-                        });
-                        setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
-                    },
-                    error: function (data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
+                noty({
+                    layout: 'topCenter',
+                    type: 'default',
+                    modal: true,
+                    text: 'Перевести проект в статус "отказ от сотрудничества"?',
+                    killer: true,
+                    buttons: [
+                        {
+                            addClass: 'btn btn-success', text: 'Ок', onClick: function ($noty) {
+                                jQuery.ajax({
+                                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
+                                    data: {
+                                        project_id: project_id,
+                                        status: 15
+                                    },
+                                    dataType: "json",
+                                    async: true,
+                                    success: function (data) {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "success",
+                                            text: "Проект переведен в отказ от сотрудничества"
+                                        });
+                                        setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
+                                    },
+                                    error: function (data) {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Ошибка сервера"
+                                        });
+                                    }
+                                });
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                                $noty.close();
+                            }
+                        }
+                    ]
                 });
             };
 

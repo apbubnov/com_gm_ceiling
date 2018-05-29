@@ -75,14 +75,16 @@
     
         <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-        <?php if ($user->dealer_type != 1):?>
+        <?php if ($user->dealer_type != 1){ ?>
             <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+        <?php } ?>
             <?php if ($call_id != 0) { ?>
                 <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
             <?php } ?>
             <br>
+        <?php if ($user->dealer_type != 1){ ?>
             <label>Менеджер: <?php echo $manager_name;?></label>
-        <?php endif;?>
+        <?php } ?>
    
 </div>
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
@@ -548,7 +550,14 @@
                     dataType: "json",
                     async: true,
                     success: function (data) {
-                       add_history(client_id,"Звонок перенесен");
+                        if (jQuery("#call_date").val() == '')
+                        {
+                            add_history(client_id,'Звонок перенесен на 30 мин.');
+                        }
+                        else
+                        {
+                            add_history(client_id,'Звонок перенесен на '+jQuery("#call_date").val().replace('T',' ')+':00');
+                        }
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
