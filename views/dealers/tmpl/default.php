@@ -114,7 +114,7 @@ foreach ($dealers as $key => $dealer) {
 
 <script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
 
-<script>
+<script type="text/javascript">
     var $ = jQuery,
         managers = {},
         cities = {},
@@ -302,7 +302,7 @@ foreach ($dealers as $key => $dealer) {
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
                                 data: {
-                                    fio: document.getElementById('fio_dealer').value,
+                                    fio: document.getElementById('fio_dealer').value.replace(/[^\dA-Za-zА-ЯЁа-яё ]/gi,''),
                                     phone: document.getElementById('dealer_contacts').value,
                                     city: document.getElementById('dealer_city').value
                                 },
