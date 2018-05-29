@@ -495,17 +495,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 <table <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <tr>
                         <td style="padding: 25px 10px">
-                            <a class="btn  btn-success" id="accept_project" >Договор</a>
+                            <a class="btn  btn-success" id="accept_project">Договор</a>
                         </td>
                         <td style="padding: 25px 10px">
-                            <a class="btn  btn-primary" id="refuse_project">Сохранить</a>
+                            <button id="refuse" class="btn btn-primary" type="submit">Сохранить</button>
+                        </td>
+                        <td style="padding: 25px 10px">
+                            <button id="refuse_cooperate" class="btn btn-danger" type="button">Отказ от сотрудничества</button>
                         </td>
                     </tr>
                 </table>
             <?php } ?>
             <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
-                    <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Сохранить</button>
                     <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                             <button class="btn btn-primary" id="btn_show_mount_calendar" type = "button" style="margin-bottom: 25px;">Назначить дату монтажа</button>
                             <table id="container_calendars">
@@ -1779,6 +1781,40 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     }
                 });
             });
+
+            document.getElementById('refuse_cooperate').onclick = function()
+            {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
+                    data: {
+                        project_id: project_id,
+                        status: 15
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Проект переведен в отказ от сотрудничества"
+                        });
+                        setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            };
 
         }); //конец ready
         
