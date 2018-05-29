@@ -294,4 +294,20 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 
         }
 	}
+
+	public function delete_by_user(){
+		try{
+			$model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+			$jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', null, 'INT');
+            $data['id'] = $client_id;
+            $data['deleted_by_user'] = 1;
+            $model->save($data);
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
 }
