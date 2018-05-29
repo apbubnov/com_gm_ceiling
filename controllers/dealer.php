@@ -79,9 +79,9 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$city  = $jinput->get('city',null,'STRING');
 			//Создание клиента
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-			$client_data['client_name'] = $name;
-			$client_data['manager_id'] = $user->id;
-			$client_data['client_contacts'] = $phone;
+			$client_data['client_name'] = mb_ereg_replace('[^\dA-Za-zА-ЯЁа-яё ]', '', $name);
+			$client_data['manager_id'] = mb_ereg_replace('[^\d]', '', $user->id);
+			$client_data['client_contacts'] = mb_ereg_replace('[^\d]', '', $phone);
 
 			$client_id = $clientform_model->save($client_data);
 			if ($client_id == 'client_found')
