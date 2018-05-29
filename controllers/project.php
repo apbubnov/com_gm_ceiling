@@ -1754,5 +1754,22 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function delete_by_user(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $data['id'] = $jinput->get('project_id', null, 'int');
+            $data['deleted_by_user'] = 1;
+
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $result = $model->save($data);
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 
