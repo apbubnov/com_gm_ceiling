@@ -90,7 +90,7 @@ if (!in_array("16", $user_group)){
                     search_text: document.getElementById('search_text').value
                 },
                 success: function(data){
-                    console.log(data);
+                    //console.log(data);
                     var tbody = document.getElementById('tbody_search');
                     tbody.innerHTML = '';
                     var html = '';
