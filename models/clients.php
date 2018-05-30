@@ -428,17 +428,18 @@ if (empty($list['direction']))
 			$search = $db->escape($search);
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`, GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ', ') AS `projects_ids`")
+				->select("`c`.`id`, `c`.`client_name`, `c`.`created`, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`, GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ', ') AS `projects_ids`, GROUP_CONCAT(DISTINCT `d`.`contact` SEPARATOR ', ') AS `client_dop_contacts`")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->leftJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
-				->leftJoin('(SELECT `id`,`client_id`,`project_status`,`project_info` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')
+				->leftJoin('(SELECT `id`,`project_info`,`client_id` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')/*подзапрос нужен чтоб вывести адрес последнего проекта*/
+				->leftJoin('`#__gm_ceiling_clients_dop_contacts` AS `d` ON `c`.`id` = `d`.`client_id`')
 				->where("`c`.`client_name` LIKE '%$search%' OR
 					`b`.`phone` LIKE '%$search%' OR
 					`p`.`project_info` LIKE '%$search%' OR
-					`p`.`id` LIKE '%$search%'")
-				->group('`c`.`id`')
-				->order('`c`.`id` DESC');
+					`p`.`id` LIKE '%$search%' OR
+					`d`.`contact` LIKE '%$search%'")
+				->group('`c`.`id`');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

@@ -518,7 +518,7 @@
                 success: function(data) {
                     console.log(data);
                     <?php
-                    if (in_array("16", $groups)){
+                    if (in_array("16", $user_group)){
                         echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=';";
                     }
                     else{
