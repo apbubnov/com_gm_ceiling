@@ -315,7 +315,8 @@ if (empty($list['direction']))
 				->select("a.*, GROUP_CONCAT(b.phone SEPARATOR ', ') as client_contacts")
 				->from("`#__gm_ceiling_clients` as `a`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` as `b` ON a.id = b.client_id ')
-				->where("(`a`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND a.dealer_id = $user->dealer_id")
+				->innerJoin('`#__users` as u on a.dealer_id = u.id')
+				->where("(`a`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND a.dealer_id = $user->dealer_id and `a`.`deleted_by_user` <> 1 and `a`.`id` <> `u`.`associated_client`")
 				->order('`id` DESC')
 				->group('`id`');
 			$db->setQuery($query);
