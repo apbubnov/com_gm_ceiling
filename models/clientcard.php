@@ -122,7 +122,7 @@ class Gm_ceilingModelClientcard extends JModelList
 				->select('`b`.`title` as `status`')
 				->from('`#__gm_ceiling_projects` AS `a`')
 				->innerJoin('`#__gm_ceiling_status` AS `b` ON `a`.`project_status` = `b`.`id`')
-				->where('`a`.`client_id` = '.$db->quote($db->escape($id)));
+				->where('`a`.`client_id` = '.$db->quote($db->escape($id)).' and `a`.`deleted_by_user` <> 1');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

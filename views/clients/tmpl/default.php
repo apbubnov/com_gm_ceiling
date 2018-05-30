@@ -242,6 +242,8 @@ jQuery(document).ready(function(){
             },
             success: function(data){
                 jQuery('.btn-danger[data-cl_id ='+id+']').closest('.row').remove();
+                let remove_id = clients_data.findIndex(function(el,index,arr){return el.client_id == id });
+                clients_data.splice(remove_id,1);
             },
             dataType: "json",
             timeout: 20000,
