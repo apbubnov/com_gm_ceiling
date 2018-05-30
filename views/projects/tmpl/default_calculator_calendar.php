@@ -27,23 +27,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
 
-<style>
-    #projectList th:nth-child(1) {
-        width: 1%;
-    }
-    #projectList th:nth-child(3) {
-        width: 15%;
-    }
-    #projectListMobil {
-        font-size: 12px;
-        padding: 6px;
-    }
-    #projectListMobil td, #projectListMobil th {
-        padding: 6px;
-        vertical-align: middle !important;
-        text-align: center !important;
-    }
-</style>
+
 
 <?=parent::getButtonBack();?>
 <h2 class="center">График замеров</h2>
@@ -61,28 +45,23 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             </div>
         <?php endif; ?>
     </div>
-    <table class="table table-striped one-touch-view" id="projectList">
+    <table class="rwd-table" id="projectList">
         <thead>
-            <tr>
+            <tr class="row">
                 <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Номер договора', 'a.id', $listDirn, $listOrder); ?>
                     Номер договора
                 </th>
                 <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Дата и время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
                     Дата и время замера
                 </th>
                 <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
                     Адрес
                 </th>
                 <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
                     Примечание
                 </th>
                 <?php if (in_array("16", $groups)):?>
                     <th class="center">
-                        <?php //JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
                         Дилер
                     </th>
                 <?php endif;?>
@@ -101,8 +80,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
             ?>
                 <tr class="row" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
-                    <td class="center one-touch"><?= $item->id; ?></td>
-                    <td class="center one-touch">
+                    <td data-th = "№" class="center one-touch"><?= $item->id; ?></td>
+                    <td data-th = "Дата/время замера" class="center one-touch">
                         <? if ($item->calculation_date == "00.00.0000"): ?>-
                         <? else: ?><?= $item->calculation_date; ?>
                         <? endif; ?>
@@ -111,65 +90,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         <? else: ?><?= $item->calculation_time; ?>
                         <? endif; ?>
                     </td>
-                    <td class="center one-touch"><?= $item->address; ?></td>
-                    <td class="center one-touch"><?= $item->dealer_manager_note; ?></td>
+                    <td data-th = "Адрес" class="center one-touch"><?= $item->address; ?></td>
+                    <td data-th = "Примечание" class="center one-touch"><?= $item->dealer_manager_note; ?></td>
                     <?if (in_array("16", $groups)):?>
-                        <td class="center one-touch"><?= $item->dealer_name; ?></td>
+                        <td data-th = "Дилер" class="center one-touch"><?= $item->dealer_name; ?></td>
                     <?endif;?>
                     <?php if(in_array(14, $groups)){ ?>
-                        <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                    <?php } ?>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <table class="table table-striped one-touch-view" id="projectListMobil" style="display: none;">
-        <thead>
-            <tr>
-                <th class='center'>
-                    <?php //JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
-                    №
-                </th>
-                <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
-                    Дата/Время замера
-                </th>
-                <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-                    Адрес
-                </th>
-                <th class='center'>
-                    <?php //JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
-                    Примечание
-                </th>
-                <?php if (in_array("14", $groups)):?>
-                    <th class="center">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </th>
-                <?php endif;?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                foreach ($this->items as $i => $item):
-                    if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
-                    //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
-                    else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
-            ?>
-                <tr class="row" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
-                    <td class="center one-touch"><?= $item->id; ?></td>
-                    <td class="center one-touch">
-                        <? if ($item->calculation_date == "00.00.0000"): ?>-
-                        <? else: ?><?= $item->calculation_date; ?>
-                        <? endif; ?>
-                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?><?= $item->calculation_time; ?>
-                        <? endif; ?>
-                    </td>
-                    <td class="center one-touch"><?= $item->address; ?></td>
-                    <td class="center one-touch"><?= $item->dealer_manager_note; ?></td>
-                    <?php if(in_array(14, $groups)){ ?>
-                        <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                        <td data-th = "Удалить" class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                     <?php } ?>
                 </tr>
             <?php endforeach; ?>
@@ -200,16 +127,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <script type="text/javascript">
     var $ = jQuery;
-    $(window).resize(function(){
-        if (screen.width <= '1024') {
-            jQuery('#projectList').hide();
-            jQuery('#projectListMobil').show();
-        }
-        else {
-            jQuery('#projectList').show();
-            jQuery('#projectListMobil').hide();
-        }
-    });
     jQuery(".btn-danger").click(function(){
         var project_id = jQuery(this).data('id');
         console.log(project_id);
@@ -238,6 +155,4 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         return false;
         
     });
-    // вызовем событие resize
-    $(window).resize();
 </script>
