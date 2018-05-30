@@ -16,7 +16,9 @@ $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
 $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
-
+if (!in_array("16", $user_group)){
+    die('403 Forbidden');
+}
 ?>
 
 <?=parent::getButtonBack();?>
@@ -25,7 +27,7 @@ $_SESSION['dop_num'] = $dop_num;
 
 	<div class="row-fluid toolbar">
 		<input type="text" id="search_text">
-        <button class="btn-primary" id="btn_search"><i class="fa fa-search"></i></button>
+        <button class="btn btn-primary" id="btn_search"><i class="fa fa-search"></i></button>
 	</div>
 	<table class="table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
@@ -41,6 +43,12 @@ $_SESSION['dop_num'] = $dop_num;
 				</th>
                 <th>
                     Тип
+                </th>
+                <th>
+                    Контакты
+                </th>
+                <th>
+                    Проекты
                 </th>
 			</tr>
 		</thead>
@@ -82,45 +90,71 @@ $_SESSION['dop_num'] = $dop_num;
                     search_text: document.getElementById('search_text').value
                 },
                 success: function(data){
-                    console.log(data);
+                    //console.log(data);
                     var tbody = document.getElementById('tbody_search');
                     tbody.innerHTML = '';
                     var html = '';
                     var d_type = '';
-                    for(var i in data)
+                    for(var i = data.length, d_i; i--;)
                     {
-                        if (data[i].dealer_type == 3)
+                        d_i = data[i];
+                        if (d_i.dealer_type == 3)
                         {
-                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + d_i.id + '">';
                             d_type = 'Отделочник';
                         }
-                        else if (data[i].dealer_type == 5)
+                        else if (d_i.dealer_type == 5)
                         {
-                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id=' + data[i].id + '">';
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id=' + d_i.id + '">';
                             d_type = 'Дизайнер';
                         }
-                        else if (data[i].dealer_type == 1 || data[i].dealer_type == 0)
+                        else if (d_i.dealer_type == 6)
                         {
-                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=manufacturers&type=info&id=' + d_i.id + '">';
+                            d_type = 'Производитель';
+                        }
+                        else if (d_i.dealer_type == 7)
+                        {
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' + d_i.id + '">';
+                            d_type = 'Застройщик';
+                        }
+                        else if (d_i.dealer_type == 8)
+                        {
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=wininstaller&id=' + d_i.id + '">';
+                            d_type = 'Оконщик';
+                        }
+                        else if (d_i.dealer_type == 1 || d_i.dealer_type == 0)
+                        {
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + d_i.id + '">';
                             d_type = 'Дилер';
                         }
-                        else if (data[i].dealer_type == null)
+                        else if (d_i.dealer_type == null || d_i.dealer_type == 2)
                         {
-                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&id=' + data[i].id + '">';
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&id=' + d_i.id + '">';
                             d_type = 'Клиент';
                         }
-                        if (data[i].project_info == null)
+                        if (d_i.project_info == null)
                         {
-                            data[i].project_info = '-';
+                            d_i.project_info = '-';
                         }
-                        if (data[i].client_contacts == null)
+                        if (d_i.client_contacts == null)
                         {
-                            data[i].client_contacts = '-';
+                            d_i.client_contacts = '-';
                         }
-                        html += '<td>' + data[i].created + '</td>';
-                        html += '<td>' + data[i].client_name + '<br>' + data[i].client_contacts + '</td>';
-                        html += '<td>' + data[i].project_info + '</td>';
-                        html += '<td>' + d_type + '</td></tr>';
+                        if (d_i.projects_ids == null)
+                        {
+                            d_i.projects_ids = '-';
+                        }
+                        if (d_i.client_dop_contacts == null)
+                        {
+                            d_i.client_dop_contacts = '-';
+                        }
+                        html += '<td>' + d_i.created + '</td>';
+                        html += '<td>' + d_i.client_name + '<br>' + d_i.client_contacts + '</td>';
+                        html += '<td>' + d_i.project_info + '</td>';
+                        html += '<td>' + d_type + '</td>';
+                        html += '<td>' + d_i.client_dop_contacts + '</td>';
+                        html += '<td>' + d_i.projects_ids + '</td></tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
