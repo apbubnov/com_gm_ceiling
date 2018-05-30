@@ -42,7 +42,7 @@ if ($user->dealer_id == 1) {
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {        
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
-		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>";
+		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 		$calendars .= "</p>";
 		$names = null;
 		foreach ($brigade_mounter as $val) {
@@ -913,7 +913,51 @@ if (!empty($brigade_id)) {
 			});
 		});
 		// -----------------------------------------
-		
+		jQuery('.btn_del_brigade').click(function()
+        {
+            var user_id = jQuery(this).data('id');
+            noty({
+                layout: 'topCenter',
+                type: 'default',
+                modal: true,
+                text: 'Вы действительно хотите удалить бригаду?',
+                killer: true,
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary', text: 'Да', onClick: function ($noty) {
+                            jQuery.ajax({
+                                url: "index.php?option=com_gm_ceiling&task=users.deleteUser",
+                                data: {
+                                    user_id: user_id
+                                },
+                                dataType: "json",
+                                async: true,
+                                success: function(data) {
+                                    location.reload();
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка сервера"
+                                    });
+                                }
+                            });
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn', text: 'Нет', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        });
 	});
 
 
