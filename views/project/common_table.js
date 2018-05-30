@@ -138,7 +138,7 @@ function regenerate_common_estimate(){
 jQuery("#send_all_to_email").click(function () {
     regenerate_common_estimate();
     var email = jQuery("#all-email").val();
-    if ((/[A-Za-z\d\-\_]@[A-Za-z\d\-\_].[A-Za-z\d]/).test(email))
+    if ((/^[A-Za-z\d\-\_\.]+\@{1}[A-Za-z\d\-\_]+\.[A-Za-z\d]+$/).test(email))
     {
         var client_id = jQuery("#client_id").val();
         var filenames = jQuery("[name='include_pdf[]']:checked").map(function(){return {name: this.value, title: jQuery(this).data('name')};}).get();
