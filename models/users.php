@@ -548,4 +548,21 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function delete($id, $dealer_id){
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->delete("`#__users`");
+			$query->where("`id` = $id AND `dealer_id` = $dealer_id");
+			$db->setQuery($query);
+			$db->execute();
+			return true;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }

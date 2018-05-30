@@ -48,11 +48,11 @@ if (empty($gaugers_id)) {
 } else {
 	foreach ($gaugers_id as $value) {
 		$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
-		$calendars .= $value->name;
-		$calendars .= "</p>";
+		$calendars .= $value->name.' <button class="btn btn-danger btn-sm btn_del_calculator" type="button" data-id="'.$value->id.'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+		$calendars .= '</p>';
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
-		$calendars .= "</div>";
+		$calendars .= '</div>';
 	}
 }
 //----------------------------------------------------------------------------------------------------------
@@ -835,7 +835,51 @@ if (empty($gaugers_id)) {
 			});
 		});
 		// -----------------------------------------
-
+		jQuery('.btn_del_calculator').click(function()
+        {
+        	var user_id = jQuery(this).data('id');
+        	noty({
+                layout: 'topCenter',
+                type: 'default',
+                modal: true,
+                text: 'Вы действительно хотите удалить замерщика?',
+                killer: true,
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary', text: 'Да', onClick: function ($noty) {
+				            jQuery.ajax({
+				                url: "index.php?option=com_gm_ceiling&task=users.deleteUser",
+				                data: {
+				                    user_id: user_id
+				                },
+				                dataType: "json",
+				                async: true,
+				                success: function(data) {
+				                	location.reload();
+				                },
+				                error: function(data) {
+				                    console.log(data);
+				                    var n = noty({
+				                        timeout: 2000,
+				                        theme: 'relax',
+				                        layout: 'center',
+				                        maxVisible: 5,
+				                        type: "error",
+				                        text: "Ошибка сервера"
+				                    });
+				                }
+				            });
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn', text: 'Нет', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        });
 	});
 
 </script>
