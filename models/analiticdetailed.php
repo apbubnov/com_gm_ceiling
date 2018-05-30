@@ -176,8 +176,8 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
             if($dealer->dealer_type!=1){
 	            $query->select("($dealers) as dealers");
 	            $query->select("($advt) as advt");
-	            $query->select("($refused) as refused");
 	        }
+	        $query->select("($refused) as refused");
             $query->select("($ref_measure) as ref_measure");
             $query->select("($measure) as measure");
             $query->select("($current_measure) as current_measure");

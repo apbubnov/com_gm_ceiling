@@ -41,6 +41,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			if(empty($dealer_id)){
 				$dealer_id  = 1;
 			}
+			$dealer = JFactory::getUser($dealer_id);
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$common = $db->getQuery(true);
@@ -95,20 +96,21 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
 				->where("p.api_phone_id = a.id  AND p.project_status = 12");
-			$query
-				->select(' DISTINCT a.name')
-				->select("($common) as common")
-				->select("($dealers) as dealers")
-	            ->select("($advt) as advt")
-	            ->select("($refuse) as refuse")
-	            ->select("($inwork) as inwork")
-	            ->select("($measure) as measure")
-				->select("($deals) as deals")
-				->select("($done) as done")
-				->select("($sum) as sum")
-				->select("($profit) as profit")
-				->from('`#__gm_ceiling_api_phones` AS a')
-				->where("a.dealer_id = $dealer_id");
+			$query->select(' DISTINCT a.name');
+			$query->select("($common) as common");
+			if($dealer->dealer_type){
+				$query->select("($dealers) as dealers");
+            	$query->select("($advt) as advt");
+			}
+            $query->select("($refuse) as refuse");
+            $query->select("($inwork) as inwork");
+            $query->select("($measure) as measure");
+			$query->select("($deals) as deals");
+			$query->select("($done) as done");
+			$query->select("($sum) as sum");
+			$query->select("($profit) as profit");
+			$query->from('`#__gm_ceiling_api_phones` AS a');
+			$query->where("a.dealer_id = $dealer_id");
 				/*->from('`#__gm_ceiling_api_phones` AS a')
 				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id and a.dealer_id ='.$dealer_id);*/
 				//throw new Exception($dealer_id);
@@ -262,8 +264,8 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			if($dealer->dealer_type!=1){
 				$query->select("($dealers) as dealers");
 				$query->select("($advt) as advt");
-				$query->select("($refuse) as refuse");
 			}
+			$query->select("($refuse) as refuse");
 			$query->select("($inwork) as inwork");
 			$query->select("($measure) as measure");
             $query->select("($deals) as deals");
