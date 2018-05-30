@@ -16,6 +16,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
+$groups = $user->get('groups');
 $listOrder  = $this->state->get('list.ordering');
 $listDirn   = $this->state->get('list.direction');
 $canCreate  = $user->authorise('core.create', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
@@ -83,6 +84,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <?//= JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
                         Квадратура
                     </th>
+                    <?php if (in_array("14", $groups)):?>
+                        <th class="center">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </th>
+                    <?php endif;?>
                 </tr>
             </thead>
             <tbody>
@@ -93,7 +99,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             $canEdit = JFactory::getUser()->id == $item->created_by;
                         if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
                 ?>
-                        <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+                        <tr class = "row" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                             <td class="center one-touch"><?= $item->id; ?></td>
                             <td class="center one-touch">
                                 <? if ($item->calculation_date == "00.00.0000"): ?> -
@@ -106,6 +112,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             <td class="center one-touch"><?= $item->address; ?><br><?= $item->client_contacts; ?></td>
                             <td class="center one-touch"><?= $item->client_name; ?></td>
                             <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
+                            <?php if(in_array(14, $groups)){ ?>
+                                <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            <?php } ?>
                         </tr>
                     <? endif; ?>
                 <? endforeach; ?>
@@ -129,6 +138,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <th class="center">
                         Примечание
                     </th>
+                    <?php if (in_array("14", $groups)):?>
+                        <th class="center">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </th>
+                    <?php endif;?>
                 </tr>
             </thead>
             <tbody>
@@ -139,7 +153,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             $canEdit = JFactory::getUser()->id == $item->created_by;
                         if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
                 ?>
-                        <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+                        <tr class = "row" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                             <td class="center one-touch">
                                 <?= $item->id; ?>
                             </td>
@@ -153,6 +167,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             </td>
                             <td class="center one-touch"><?= $item->address; ?></td>
                             <td><?= ($item->dealer_chief_note)?$item->dealer_chief_note:$item->gm_chief_note ;  ?></td>
+                            <?php if(in_array(14, $groups)){ ?>
+                                <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            <?php } ?>
                         </tr>
                     <? endif; ?>
                 <? endforeach; ?>
@@ -212,6 +229,35 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
           jQuery('#projectList').show();
           jQuery('#projectListMobil').hide();
       }
+  });
+
+  jQuery(".btn-danger").click(function(){
+    var project_id = jQuery(this).data('id');
+    console.log(project_id);
+    jQuery.ajax({
+        url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
+        data: {
+            project_id: project_id
+        },
+        dataType: "json",
+        async: true,
+        success: function(data) {
+           jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
+        },
+        error: function(data) {
+            console.log(data);
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка сервера"
+            });
+        }
+    });
+    return false;
+    
   });
 
   // вызовем событие resize
