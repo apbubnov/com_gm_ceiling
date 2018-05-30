@@ -57,6 +57,7 @@ if(!$api){
 		<thead class = "caption-style-tar">
 			<th>Реклама</th>
             <th data-value = "all">Всего</th>
+            <th data-value = "(15)">Отказ от сотрудничества</th>
             <th data-value = "(0,2,3)">В работе</th>
             <th data-value = "(1)">Замеры</th>
             <th data-value = "(4,5,6,7,8,10,11,12,16,17,19)">Договоры</th>
@@ -75,6 +76,12 @@ if(!$api){
 					<?php 
 						$c_all_common +=$item->common;
 						echo $item->common;
+					?>
+				</td>
+				<td data-th = "Отказ от сотрудничества">
+					<?php
+						$c_all_refused+=$item->refuse;
+						echo $item->refuse;
 					?>
 				</td>
 				<td data-th = "В работе">
@@ -122,6 +129,7 @@ if(!$api){
 		<tr data-value = "total" >
 				<td><b>Итого</b></td>
 				<td data-th = "Всего"><b><?php echo $c_all_common;?></b></td>
+				<td data-th = "Отказ от сотрудничества"><b><?php echo $c_all_refused;?></b></td>
 				<td data-th = "В работе"><b><?php echo $c_all_inwork;?></b></td>
 				<td data-th = "Замеры"><b><?php echo $c_all_measure;?></b></td>
 				<td data-th = "Договоры"><b><?php echo $c_all_deals;?></b></td>
@@ -142,6 +150,9 @@ if(!$api){
             <tr>
                 <th rowspan = "2">Реклама</th>
                 <th data-value = "all" rowspan = "2">Всего</th>
+                <th data-value = "(15)" rowspan = "2">
+                    Отказ от сотрудничества
+                </th>
                 <th colspan = "3">
                     Замеры
                 </th>
@@ -175,6 +186,12 @@ if(!$api){
 					<?php 
 						$d_all_common +=$item->common;
 						echo $item->common;
+					?>
+				</td>
+				<td data-th = "Отказ от сотрудничества">
+					<?php 
+						$d_all_refused +=$item->refused;
+						echo $item->refused;
 					?>
 				</td>
 				<td data-th = "Замеры - Отказ">
@@ -246,6 +263,7 @@ if(!$api){
 		<tr data-value = "total">
 				<td><b>Итого</b></td>
 				<td data-th = "Всего"><b><?php echo $d_all_common;?></b></td>
+				<td data-th = "Отказ от сотрудничества"><b><?php echo $d_all_refused;?></b></td>
 				<td data-th = "Замеры - Отказ"><b><?php echo $d_all_ref_measure;?></b></td>
 				<td data-th = "Замеры - Запись"><b><?php echo $d_all_measure;?></b></td>
                 <td data-th = "Замеры - Текущие"><b><?php echo $d_all_current_measure;?></b></td>
@@ -271,6 +289,8 @@ if(!$api){
 	 jQuery(document).ready(function(){
 	 	columns_array["name"] = "Реклама";
 	 	columns_array["common"] = "Всего";
+	 	columns_array["refused"] = "Отказ от сотрудничества";
+	 	columns_array["refuse"] = "Отказ от сотрудничества";
  		columns_array["inwork"] = "В работе";
  		columns_array["measure"] = "Замеры";
  		columns_array["deals"] = "Договоры";
@@ -289,6 +309,7 @@ if(!$api){
 		c_all_count['name'] = "Итого:"; 
 		c_all_count['common'] = <?php echo $c_all_common;?>;
 		c_all_count['inwork'] = <?php echo $c_all_inwork;?>;
+		c_all_count['refuse'] = <?php echo $c_all_refused;?>;
 		c_all_count['measure'] = <?php echo $c_all_measure;?>;
         c_all_count['deals'] = <?php echo $c_all_deals;?>;
         c_all_count['done'] = <?php echo $c_all_done;?>;
@@ -302,6 +323,7 @@ if(!$api){
 		d_all_count['name'] = "Итого:"; 
 		d_all_count['common'] = <?php echo $d_all_common;?>;
 		d_all_count['measure'] = <?php echo $d_all_measure;?>;
+		d_all_count['refused'] = <?php echo $d_all_refused;?>;
 		d_all_count['ref_measure'] = <?php echo $d_all_ref_measure;?>;
         d_all_count['current_measure'] = <?php echo $d_all_current_measure;?>;
 		d_all_count['deals'] = <?php echo $d_all_deals;?>;
@@ -425,16 +447,16 @@ if(!$api){
 			var diff = 0;
 			console.log(rek_name,index);
 			switch(true){
-				case index>=2 && index<=7:
-					strindex = 1;
-					diff = 2;
-					break;
-				case index == 8:
-					diff = 4;
-					break;
-				case index>=9 && index<=10:
+				case index>=3 && index<=8:
 					strindex = 1;
 					diff = 3;
+					break;
+				case index == 9:
+					diff = 5;
+					break;
+				case index>=10 && index<=11:
+					strindex = 1;
+					diff = 4;
 					break;
 				default:
 					diff = 0;
