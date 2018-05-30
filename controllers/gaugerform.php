@@ -57,71 +57,62 @@ class Gm_ceilingControllerGaugerForm extends JControllerForm
 				"dealer_id" => $dealerId
 			);
 
-			try {
-			    $user = new JUser;
-				if (!$user->bind($data)) {
-					throw new Exception($user->getError());
-				}
-				if (!$user->save()) {
-					throw new Exception($user->getError());
-				}
+		    $user = new JUser;
+			if (!$user->bind($data)) {
+				throw new Exception($user->getError());
+			}
+			if (!$user->save()) {
+				throw new Exception($user->getError());
+			}
 
-				$id_gauger = $user->id;
-				
-				// письмо
-				$mailer = JFactory::getMailer();
-				$config = JFactory::getConfig();
-				$sender = array(
-					$config->get('mailfrom'),
-					$config->get('fromname')
-				);
-				$mailer->setSender($sender);
-				$mailer->addRecipient($email);
-				$body = "Здравствуйте. Вас зарегистрировали на сайте Гильдии Мастеров как замерщика. Данные учетной записи: \n Логин: ".$phone." \n Пароль: ".$password;
-				$mailer->setSubject('Регистрация на сайте Гильдии Мастеров');
-				$mailer->setBody($body);
-				$send = $mailer->Send();
+			$id_gauger = $user->id;
+			
+			// письмо
+			$mailer = JFactory::getMailer();
+			$config = JFactory::getConfig();
+			$sender = array(
+				$config->get('mailfrom'),
+				$config->get('fromname')
+			);
+			$mailer->setSender($sender);
+			$mailer->addRecipient($email);
+			$body = "Здравствуйте. Вас зарегистрировали на сайте Гильдии Мастеров как замерщика. Данные учетной записи: \n Логин: ".$phone." \n Пароль: ".$password;
+			$mailer->setSubject('Регистрация на сайте Гильдии Мастеров');
+			$mailer->setBody($body);
+			$send = $mailer->Send();
 
-				// сохранение паспорта
-				$model = $this->getModel('Gaugerform', 'Gm_ceilingModel');
+			// сохранение паспорта
+			$model = $this->getModel('Gaugerform', 'Gm_ceilingModel');
 
-				$passport = [];
-				for ($i=0; $i<count($_FILES['passport']['name']); $i++) {
-					if (!empty($_FILES['passport']['name'][$i])) {
-						// Проверяем, что при загрузке не произошло ошибок
-						if ($_FILES['passport']['error'][$i] == 0) {
-							// Если файл загружен успешно, то проверяем - графический ли он
-							if (substr($_FILES['passport']['type'][$i], 0, 5) == 'image') {
-								// Читаем содержимое файла
-								$passport[$i] = file_get_contents($_FILES['passport']['tmp_name'][$i]);
-							}
+			$passport = [];
+			for ($i=0; $i<count($_FILES['passport']['name']); $i++) {
+				if (!empty($_FILES['passport']['name'][$i])) {
+					// Проверяем, что при загрузке не произошло ошибок
+					if ($_FILES['passport']['error'][$i] == 0) {
+						// Если файл загружен успешно, то проверяем - графический ли он
+						if (substr($_FILES['passport']['type'][$i], 0, 5) == 'image') {
+							// Читаем содержимое файла
+							$passport[$i] = file_get_contents($_FILES['passport']['tmp_name'][$i]);
 						}
 					}
 				}
-
-				// вызов функции сохранения паспорта
-				for ($i=0; $i<count($passport); $i++) {
-					if ($passport[$i] != null) {
-						$model->SaveGaugerPassport($id_gauger, $passport[$i]);
-					}
-				}
-				
-				// редирект после сохранения
-				if ($dealerId == 1) {
-					header('Location: /index.php?option=com_gm_ceiling&view=gaugers');
-				} else {
-					header('Location: /index.php?option=com_gm_ceiling&view=gaugers');				
-				}
-
-			} catch (Exception $e) {
-				$result = json_encode(array(
-					'error' => array(
-						'msg' => $e->getMessage(),
-						'code' => $e->getCode(),
-					),
-				));
-				die($result);
 			}
+
+			// вызов функции сохранения паспорта
+			for ($i=0; $i<count($passport); $i++) {
+				if ($passport[$i] != null) {
+					$model->SaveGaugerPassport($id_gauger, $passport[$i]);
+				}
+			}
+			
+			// редирект после сохранения
+			if ($dealerId == 1) {
+				header('Location: /index.php?option=com_gm_ceiling&view=gaugers&type=gmchief');
+			} else {
+				header('Location: /index.php?option=com_gm_ceiling&view=gaugers&type=chief');				
+			}
+
+			
 		}
 		catch(Exception $e)
         {
