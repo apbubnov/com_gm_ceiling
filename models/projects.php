@@ -497,10 +497,13 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery_advt = $db->getQuery(true);
             $subquery_dsgnr = $db->getQuery(true);
             if($advt == 'Отделочники'){
-                $dealer_type = 3;
+                $dealer_type = '(3)';
             }
             elseif($advt == 'Оконщики'){
-                $dealer_type = 8;
+                $dealer_type = '(8)';
+            }
+            elseif($advt =  'total'){
+                $dealer_type = '(3,8)';
             }
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
@@ -513,7 +516,7 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery_dsgnr
                 ->select("id")
                 ->from("`#__users`")
-                ->where("dealer_id = $dealer_id and dealer_type = $dealer_type");
+                ->where("dealer_id = $dealer_id and dealer_type in $dealer_type");
             switch($advt){
                 case 'total':
                     if($dealer_id  != 1){
