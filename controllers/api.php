@@ -485,6 +485,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $f = fopen('php://input', 'r');
             $jsonData = stream_get_contents($f);
             $Data = json_decode($jsonData);
+            if (empty($Data->username) || empty($Data->password)) {
+                throw new Exception('Empty Data', 777);
+            }
 
             $username = mb_ereg_replace('[^\d]', '', $Data->username);
             if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10)
@@ -493,7 +496,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             if (strlen($username) != 11)
             {
-                throw new Exception('Invalid phone number');
+                throw new Exception('Invalid phone number', 777);
             }
             if (mb_substr($username, 0, 1) != '7')
             {
@@ -512,15 +515,19 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             else
             {
-                throw new Exception("Wrong password");
+                throw new Exception("Wrong password", 777);
             }
         }
         catch(Exception $e)
         {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-            $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
-            die(json_encode($Answer));
+            $e_message = $e->getMessage();
+            if ($e->getCode() == 777) {
+                $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e_message];
+                die(json_encode($Answer));
+            }
+            else {
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e_message, __FILE__, __FUNCTION__, func_get_args());
+            }
         }
     }
 
