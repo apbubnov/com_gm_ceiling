@@ -3084,12 +3084,12 @@ public function register_mnfctr(){
                 $result = $clientform_model->save($data);
                 if (mb_ereg('[\d]', $result)) {
                     $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
-                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
                 }
                 else
                 {
-                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 1);
-                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 1);
+                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 697);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 697);
                 }
                 die(true);
             }
