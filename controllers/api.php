@@ -191,10 +191,11 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             try
             {
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+                $result = [];
                 foreach ($_POST as $key => $value) {
                     $table_name = $key;
                     $table_data = json_decode($_POST[$key]);
-                    $result = $model->delete_from_android($table_name, $table_data);
+                    $result[] = $model->delete_from_android($table_name, $table_data);
                 }
                 die(json_encode($result));
             }
