@@ -116,15 +116,19 @@ class Gm_ceilingModelClient_phones extends JModelList
 			{
 	            if(!empty($phone))
 	            {
-	            	$phone = preg_replace('/[^\d]/', '', $phone);
-					if (strlen($phone) != 11)
-					{
-		            	throw new Exception('Invalid phone number');
-		            }
-		            if (mb_substr($phone, 0, 1) != '7')
-		            {
-		                $phone = substr_replace($phone, '7', 0, 1);
-		            }
+	            	$phone = mb_ereg_replace('[^\d]', '', $phone);
+			        if (strlen($phone) == 10)
+			        {
+			            $phone = '7'.$phone;
+			        }
+			        if (strlen($phone) != 11)
+			        {
+			            throw new Exception('Неверный формат номера телефона.');
+			        }
+			        if (mb_substr($phone, 0, 1) != '7')
+			        {
+			            $phone = substr_replace($phone, '7', 0, 1);
+			        }
 				    array_push($values ,array($client_id.",'".$phone."'"));
 	            }
 			}
