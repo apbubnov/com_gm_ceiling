@@ -215,11 +215,13 @@ class Gm_ceilingModelApi extends JModelList
             $arr_ids = (object)array("table" => $table, "ids" => '');
             foreach ($data as $key => $value)
             {
-                if (empty($data[$key]->id))
-                {
-                    throw new Exception('empty id!');
-                }
                 $id = $data[$key]->id;
+                if (empty($id)) {
+                   return 'empty id!';
+                }
+                if (mb_ereg('[^\d]', $id)) {
+                    return 'invalid id!';
+                }
                 $query = $db->getQuery(true);
                 $query->delete("`$table`");
                 $query->where("`id` = $id");
