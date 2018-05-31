@@ -1,7 +1,6 @@
-error_log.txt
-.git-ftp.log
+*.log
 .vscode/
-.idea
-.git
-.json
-.txt
+.idea/
+.git/
+*.json
+*.txt
