@@ -251,20 +251,20 @@ class Gm_ceilingModelApi extends JModelList
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`rgzbn_gm_ceiling_clients`");
-                $query->where("`dealer_id` = $dealer_id");
+                $query->where("`dealer_id` = $dealer_id AND `deleted_by_user` = 0");
                 $db->setQuery($query);
                 $list_clients = $db->loadObjectList();
 
                 if (count($list_clients) > 0)
                 {
                     //проекты
-                    $where = "";
+                    $where = "(";
                     foreach ($list_clients as $key => $value)
                     {
                         $id = $value->id;
                         if ($key == count($list_clients) - 1)
                         {
-                            $where .= "`client_id`=$id";
+                            $where .= "`client_id`=$id) AND `deleted_by_user` = 0";
                         }
                         else
                         {

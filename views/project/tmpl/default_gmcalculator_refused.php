@@ -50,6 +50,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
 		<div class="col-xl-6 item_fields">
 			<h4>Информация по проекту</h4>
 			<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=refused" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+				<input type="hidden" name="project_id" value="<?php echo $this->item->id; ?>">
 				<table class="table">
 					<tr>
 						<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>

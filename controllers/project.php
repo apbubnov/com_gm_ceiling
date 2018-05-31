@@ -710,7 +710,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$user = JFactory::getUser();
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$jinput = JFactory::getApplication()->input;
-			$project_id = $jinput->get('project_id', '0', 'INT');
+			$project_id = $jinput->get('project_id', 0, 'INT');
 			$data = $model->getData($project_id);
 			$model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
 			$include_calculation = $jinput->get('include_calculation', '', 'ARRAY');
