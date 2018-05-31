@@ -502,7 +502,7 @@ class Gm_ceilingModelProjects extends JModelList
             elseif($advt == 'Оконщики'){
                 $dealer_type = '(8)';
             }
-            elseif($advt =  'total'){
+            elseif($advt ==  'total'){
                 $dealer_type = '(3,8)';
             }
             $subquery

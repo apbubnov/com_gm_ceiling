@@ -98,7 +98,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->where("p.api_phone_id = a.id  AND p.project_status = 12");
 			$query->select(' DISTINCT a.name');
 			$query->select("($common) as common");
-			if($dealer->dealer_type){
+			if($dealer->dealer_type != 1){
 				$query->select("($dealers) as dealers");
             	$query->select("($advt) as advt");
 			}
