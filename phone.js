@@ -8,8 +8,6 @@ function phone(login, pass)
     MightyCallWebPhone.Phone.Focus();
 
     function webPhoneOnCallIncoming(callInfo) {
-        //console.log('Звонок от:' + callInfo.From);
-        //console.log('Звонок к:' + callInfo.To);
         var pt = callInfo.To.replace('+','');
         var pf = callInfo.From.replace('+','');
 
