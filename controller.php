@@ -95,7 +95,8 @@ class Gm_ceilingController extends JControllerLegacy
                     }
                 }
             }
-            if ($user->guest && $view != 'calculationform2')
+            /*&& $view != 'prices' && $view != 'canvases' && $view != 'components'*/
+            if ($user->guest && $view != 'calculationform2' && $view != 'info')
             {
                 header('location: /index.php?option=com_users&view=login');
                 die('403 forbidden');
