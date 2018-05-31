@@ -28,7 +28,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 
 
-
 <?=parent::getButtonBack();?>
 <h2 class="center">График замеров</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>" method="post" name="adminForm" id="adminForm">
@@ -49,7 +48,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <thead>
             <tr class="row">
                 <th class='center'>
-                    Номер договора
+                    №
                 </th>
                 <th class='center'>
                     Дата и время замера
@@ -79,8 +78,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
                     else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
             ?>
-                <tr class="row" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
-                    <td data-th = "№" class="center one-touch"><?= $item->id; ?></td>
+                <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
+                    <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
                     <td data-th = "Дата/время замера" class="center one-touch">
                         <? if ($item->calculation_date == "00.00.0000"): ?>-
                         <? else: ?><?= $item->calculation_date; ?>
@@ -155,4 +154,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         return false;
         
     });
+
+    jQuery("#projectList tr").click(function(){
+
+        location.href = jQuery(this).data('href');
+    })
 </script>

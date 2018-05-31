@@ -169,7 +169,15 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 //------------------------------
 
 ?>
-
+<style>
+.act_btn{
+    width:210px;
+    margin-bottom: 10px;
+}
+.save_bnt{
+    width:250px;
+}
+</style>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
@@ -492,19 +500,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
             <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
-                <table <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
-                    <tr>
-                        <td style="padding: 25px 10px">
-                            <a class="btn  btn-success" id="accept_project">Договор</a>
-                        </td>
-                        <td style="padding: 25px 10px">
-                            <button id="refuse" class="btn btn-primary" type="submit">Сохранить</button>
-                        </td>
-                        <td style="padding: 25px 10px">
-                            <button id="refuse_cooperate" class="btn btn-danger" type="button">Отказ от сотрудничества</button>
-                        </td>
-                    </tr>
-                </table>
+                <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
+                    <div class="row center">
+                        <div class = "col-lg-3">
+                             <a class="btn  btn-success act_btn"  id="accept_project">Договор</a>
+                        </div>
+                        <div class = "col-lg-3">
+                            <button id="refuse" class="btn btn-primary act_btn" type="submit">Сохранить</button>
+                        </div>
+                        <div class = "col-lg-3">
+                             <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
+                        </div>
+                    </div>
+                </div>
             <?php } ?>
             <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
@@ -532,7 +540,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         </table>
                     </div>
                     <hr>
-                    <div class="row" id = "ready_wrapper">
+                    <div class="row center" id = "ready_wrapper">
                         <h4>Назначить дату готовности полотен</h4>
                             <input type="datetime-local" id="date_canvas_ready">
                             <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
@@ -541,7 +549,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     <div class = "container" style="padding-left: 0px;">
                         <div class="row">
                             <div class="col-md-1">
-                                <button class="btn btn-primary" id = "show_comments_btn" type = "button">Открыть примечания</button>
+                                <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
                             </div>
                         </div>
                         <div id ="comments_divs" style="display:none;">
@@ -567,15 +575,15 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </p>
-                    <div class="row ">
-                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
+                    <div class="row center">
+                        <div class="col-xl-3" style="padding-top: 25px;">
+                            <button class="validate btn btn-primary save_bnt" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                         </div>
-                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
+                        <div class="col-xl-3" style="padding-top: 25px;">
+                            <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                         </div>
-                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
+                        <div class="col-xl-3" style="padding-top: 25px;">
+                            <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                         </div>
                     </div>
                 <?php } ?>
@@ -1545,7 +1553,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     jQuery(".calendar_wrapper").show();
                     jQuery(".buttons_wrapper").show();
                     jQuery(".project_activation").hide();
-                    jQuery("#refuse").hide();
                     jQuery("#project_activation").show();
                     $tmp_accept = 1;
                     $tmp_refuse = 0;
