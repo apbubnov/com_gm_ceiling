@@ -212,7 +212,7 @@ class Gm_ceilingModelApi extends JModelList
         try
         {
             $db = $this->getDbo();
-            $arr_ids = [];
+            $arr_ids = (object)array("table" => $table, "ids" => '');
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->id))
@@ -225,7 +225,15 @@ class Gm_ceilingModelApi extends JModelList
                 $query->where("`id` = $id");
                 $db->setQuery($query);
                 $db->execute();
-                $arr_ids[$key] = (object)array("delete_id" => $id);
+                if ($db->getAffectedRows() > 0)
+                {
+                    if (empty($arr_ids->ids)) {
+                        $arr_ids->ids .= $id;
+                    }
+                    else {
+                        $arr_ids->ids .= ','.$id;
+                    }
+                }
             }
             return $arr_ids;
         }
