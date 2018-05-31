@@ -9,10 +9,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-echo parent::getPreloaderNotJS();
-
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
+
 $user_group = $user->groups;
 
 $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
@@ -31,6 +30,8 @@ $jinput = JFactory::getApplication()->input;
 $type = $jinput->getString('type', NULL);
 $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
+
+echo parent::getPreloaderNotJS();
 ?>
 
 <h2 class = "center">Клиенты</h2>

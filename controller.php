@@ -39,7 +39,7 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $app = JFactory::getApplication();
             $start = $app->input->getInt('start', 0);
-
+            $user = JFactory::getUser();
             /*if ($start == 0)
             {
                 $app->input->set('limitstart', 0);
@@ -49,12 +49,10 @@ class Gm_ceilingController extends JControllerLegacy
             $task = $app->input->getCmd('task', 'components');
             $subtype = $app->input->getCmd('subtype', NULL);
 
-
             $app->input->set('subtype', $subtype);
             $type = $app->input->getCmd('type', NULL);
 
             if ($type == NULL) {
-                $user = JFactory::getUser();
                 $groups = $user->get('groups');
                 $_SESSION['user_group'] = $groups;
                 $_SESSION['dealer_type'] = $user->dealer_type;
@@ -96,6 +94,11 @@ class Gm_ceilingController extends JControllerLegacy
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
                     }
                 }
+            }
+            if ($user->guest && $view != 'calculationform2')
+            {
+                header('location: /index.php?option=com_users&view=login');
+                die('403 forbidden');
             }
             $app->input->set('view', $view);
 
@@ -3084,12 +3087,12 @@ public function register_mnfctr(){
                 $result = $clientform_model->save($data);
                 if (mb_ereg('[\d]', $result)) {
                     $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
-                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
                 }
                 else
                 {
-                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 1);
-                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 1);
+                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 697);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 697);
                 }
                 die(true);
             }
