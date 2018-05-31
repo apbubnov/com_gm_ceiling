@@ -41,7 +41,6 @@
     }
     #table1 {
         width: 100%;
-        max-width: 300px;
         font-size: 13px;
     }
     #table1 button, #table1 a, #table1 input {
@@ -778,7 +777,8 @@
 <style type="text/css">
     #table1 tr
     {
-        border: 1px solid #414099;
+        border-bottom: 1px solid #414099;
+        border-top: 1px solid #414099;
     }
     #table1 td
     {
