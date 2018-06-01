@@ -367,7 +367,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
                 die(json_encode($result));
             }
-            else throw new Exception("Empty post data");
+            else {
+                throw new Exception("Empty post data");
+            }
         }
         catch(Exception $e)
         {
