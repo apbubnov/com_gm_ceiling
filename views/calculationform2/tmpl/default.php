@@ -766,7 +766,9 @@
         jQuery("#show_rec").click(function(){
             jQuery("#close").show();
             jQuery("#mv_container").show();
+            jQuery("#rec_header").text("Заявка на запись на замер");
             jQuery("#modal_window_rec_to_mesure").show("slow");
+            jQuery("#rec_date").show();
             jQuery("#rec_to_measure").attr("status",'1');
         });
 
