@@ -396,7 +396,7 @@
                         <input name="isDiscountChange" value="0" type="hidden">
                     </td>
                     <td>
-                        <button id="update_discount" class="btn btn btn-primary">Ок</button>
+                        <button type="button" id="update_discount" class="btn btn btn-primary">Ок</button>
                     </td>
                 </tr>
             </tbody>
@@ -1480,11 +1480,33 @@
             }
         });
 
-        jQuery("#update_discount").click(function () {
-            jQuery("input[name='isDiscountChange']").val(1);
-            if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
-        });
-
+        jQuery("#update_discount").click(function() {
+                save_data_to_session(4);
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
+                    data: {
+                        project_id: project_id,
+                        new_discount: jQuery("#jform_new_discount").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        //console.log(data);
+                        location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка изменения скидки"
+                        });
+                    }
+                });
+            });
     });
 
 
