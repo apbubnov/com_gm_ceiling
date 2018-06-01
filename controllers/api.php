@@ -361,7 +361,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
     public function recToMeasure(){
         try{
             $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-            if(!empty($_POST['rec_data'])){
+            if(!empty($_POST['rec_data'])) {
                 $data = json_decode($_POST['rec_data']);
                 $result = $model->rec_to_measure($data);
 
