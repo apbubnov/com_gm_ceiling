@@ -279,13 +279,19 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
             $client = $client_model->getItemsByPhoneNumber($phone, 1);
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $user = $user_model->getUserByAssociatedClient($client->id);
-            if(!empty($user->id)){
-            	$result = $user->id;
+            if(!empty($client->id)){
+				$user = $user_model->getUserByAssociatedClient($client->id);
+				if(!empty($user->id)){
+					$result = $user->id;
+	            }
+	            else{
+	            	$result = 0;
+	            }
             }
-            else{
-            	$result = 0;
-            }
+           	else{
+           		$result = 0;
+           	}
+            
             die(json_encode($result));
 		}
 		catch(Exception $e)
