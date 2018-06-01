@@ -4,3 +4,5 @@
 .git/
 *.json
 *.txt
+*.md
+*.pdf
