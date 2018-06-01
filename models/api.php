@@ -840,6 +840,9 @@ class Gm_ceilingModelApi extends JModelList
                 $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
                 $dealer_info_model->update_city($dealer_id, $city);
             }
+            if (empty($data->advt)) {
+                die('empty advt!');
+            }
             $status = 1;
             if(!empty($data->status)){
                 $status = $data->status;
