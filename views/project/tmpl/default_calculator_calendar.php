@@ -493,6 +493,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
         <hr>
             <label>Добавить звонок</label><br>
+            <?php include_once('components/com_gm_ceiling/date_picker/date_picker.php'); ?>
             <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
