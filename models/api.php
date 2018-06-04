@@ -776,7 +776,7 @@ class Gm_ceilingModelApi extends JModelList
             $query = $db->getQuery(true);
             $query->select("*");
             $query->from("`#__gm_ceiling_recoil_map_project`");
-            $query->where("change_time >= '$change_time' and dealer_id = $dealer_id");
+            $query->where("change_time >= '$change_time' and recoil_id = $dealer_id");
             $db->setQuery($query);
             $list_recoil_map_project = $db->loadObjectList();
 
