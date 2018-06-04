@@ -100,7 +100,7 @@ class Gm_ceilingModelApi extends JModelList
 
                     $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                 }
-                if($table == '#_gm_ceiling_calculations'){
+                if($table == '#__gm_ceiling_calculations'){
                     if(!empty($data[$key]->image)){
                         $filename = md5("calculation_sketch".$id);
                         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", $data[$key]->image);
@@ -110,7 +110,7 @@ class Gm_ceilingModelApi extends JModelList
                         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
                     }
                 }
-                if($table == '#_gm_ceiling_calculations'){
+                if($table == '#__gm_ceiling_calculations'){
 
                 }
             }
@@ -260,7 +260,7 @@ class Gm_ceilingModelApi extends JModelList
                 //клиенты
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_clients`");
+                $query->from("`#__gm_ceiling_clients`");
                 $query->where("`dealer_id` = $dealer_id AND `deleted_by_user` = 0");
                 $db->setQuery($query);
                 $list_clients = $db->loadObjectList();
@@ -285,8 +285,8 @@ class Gm_ceilingModelApi extends JModelList
                     $query = $db->getQuery(true);
                     $query->select("p.*");
                     $query->select("s.title as status_name");
-                    $query->from("`#_gm_ceiling_projects` as p");
-                    $query->innerJoin("`#_gm_ceiling_status` as s on p.project_status = s.id");
+                    $query->from("`#__gm_ceiling_projects` as p");
+                    $query->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id");
                     $query->where($where);
                     $db->setQuery($query);
                     $list_projects = $db->loadObjectList();
@@ -302,7 +302,7 @@ class Gm_ceilingModelApi extends JModelList
                 //проекты
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_projects` as p");
+                $query->from("`#__gm_ceiling_projects` as p");
                 $query->where("`p`.`project_calculator` = $project_calculator");
                 $db->setQuery($query);
                
@@ -327,7 +327,7 @@ class Gm_ceilingModelApi extends JModelList
                     
                     $query = $db->getQuery(true);
                     $query->select("*");
-                    $query->from("`#_gm_ceiling_clients`");
+                    $query->from("`#__gm_ceiling_clients`");
                     $query->where($where);
                     $db->setQuery($query);
                     $list_clients = $db->loadObjectList();
@@ -357,21 +357,21 @@ class Gm_ceilingModelApi extends JModelList
 
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_clients_contacts`");
+                $query->from("`#__gm_ceiling_clients_contacts`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_client_history`");
+                $query->from("`#__gm_ceiling_client_history`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_client_history = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_callback`");
+                $query->from("`#__gm_ceiling_callback`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_calls = $db->loadObjectList();
@@ -402,7 +402,7 @@ class Gm_ceilingModelApi extends JModelList
 
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_calculations`");
+                $query->from("`#__gm_ceiling_calculations`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_calculations = $db->loadObjectList();
@@ -432,7 +432,7 @@ class Gm_ceilingModelApi extends JModelList
                 //трубы
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_pipes`");
+                $query->from("`#__gm_ceiling_pipes`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_pipes = $db->loadObjectList();
@@ -440,7 +440,7 @@ class Gm_ceilingModelApi extends JModelList
                 //экола
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_ecola`");
+                $query->from("`#__gm_ceiling_ecola`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_ecola = $db->loadObjectList();
@@ -448,7 +448,7 @@ class Gm_ceilingModelApi extends JModelList
                 //светильники
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_fixtures`");
+                $query->from("`#__gm_ceiling_fixtures`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_fixtures = $db->loadObjectList();
@@ -456,7 +456,7 @@ class Gm_ceilingModelApi extends JModelList
                 //вентиляции
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_hoods`");
+                $query->from("`#__gm_ceiling_hoods`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_hoods = $db->loadObjectList();
@@ -464,7 +464,7 @@ class Gm_ceilingModelApi extends JModelList
                 //дифузоры
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_diffusers`");
+                $query->from("`#__gm_ceiling_diffusers`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_diffusers = $db->loadObjectList();
@@ -472,7 +472,7 @@ class Gm_ceilingModelApi extends JModelList
                 //корнизы
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_cornice`");
+                $query->from("`#__gm_ceiling_cornice`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_cornice = $db->loadObjectList();
@@ -480,7 +480,7 @@ class Gm_ceilingModelApi extends JModelList
                 //профиль
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`#_gm_ceiling_profil`");
+                $query->from("`#__gm_ceiling_profil`");
                 $query->where($where);
                 $db->setQuery($query);
                 $list_profil = $db->loadObjectList();
@@ -503,19 +503,19 @@ class Gm_ceilingModelApi extends JModelList
                 }
             }
             $result = [];
-            $result['#_gm_ceiling_clients'] = $list_clients;
-            $result['#_gm_ceiling_client_history'] = $list_client_history;
-            $result['#_gm_ceiling_callback'] = $list_calls;
-            $result['#_gm_ceiling_clients_contacts'] = $list_contacts;
-            $result['#_gm_ceiling_projects'] = $list_projects;
-            $result['#_gm_ceiling_calculations'] = $list_calculations;
-            $result['#_gm_ceiling_pipes'] = $list_pipes;
-            $result['#_gm_ceiling_ecola'] = $list_ecola;
-            $result['#_gm_ceiling_fixtures'] = $list_fixtures;
-            $result['#_gm_ceiling_hoods'] = $list_hoods;
-            $result['#_gm_ceiling_diffusers'] = $list_diffusers;
-            $result['#_gm_ceiling_cornice'] = $list_cornice;
-            $result['#_gm_ceiling_profil'] = $list_profil;
+            $result['#__gm_ceiling_clients'] = $list_clients;
+            $result['#__gm_ceiling_client_history'] = $list_client_history;
+            $result['#__gm_ceiling_callback'] = $list_calls;
+            $result['#__gm_ceiling_clients_contacts'] = $list_contacts;
+            $result['#__gm_ceiling_projects'] = $list_projects;
+            $result['#__gm_ceiling_calculations'] = $list_calculations;
+            $result['#__gm_ceiling_pipes'] = $list_pipes;
+            $result['#__gm_ceiling_ecola'] = $list_ecola;
+            $result['#__gm_ceiling_fixtures'] = $list_fixtures;
+            $result['#__gm_ceiling_hoods'] = $list_hoods;
+            $result['#__gm_ceiling_diffusers'] = $list_diffusers;
+            $result['#__gm_ceiling_cornice'] = $list_cornice;
+            $result['#__gm_ceiling_profil'] = $list_profil;
 
             $change_time = strtotime($change_time);
 
@@ -587,14 +587,14 @@ class Gm_ceilingModelApi extends JModelList
             $change_time = $db->escape($data->change_time, false);
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_canvases_manufacturers`");
+            $query->from("`#__gm_ceiling_canvases_manufacturers`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_manufacturers = $db->loadObjectList();
             //текстуры
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_textures`");
+            $query->from("`#__gm_ceiling_textures`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_textures = $db->loadObjectList();
@@ -602,7 +602,7 @@ class Gm_ceilingModelApi extends JModelList
             //цвета
             $query = $db->getQuery(true);
             $query->select("id,title,hex");
-            $query->from("`#_gm_ceiling_colors`");
+            $query->from("`#__gm_ceiling_colors`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_colors = $db->loadObjectList();
@@ -610,7 +610,7 @@ class Gm_ceilingModelApi extends JModelList
             //полотна
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_canvases`");
+            $query->from("`#__gm_ceiling_canvases`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_canvases = $db->loadObjectList();
@@ -618,14 +618,14 @@ class Gm_ceilingModelApi extends JModelList
             //компоненты
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_components`");
+            $query->from("`#__gm_ceiling_components`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_components = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_components_option`");
+            $query->from("`#__gm_ceiling_components_option`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_components_option = $db->loadObjectList();
@@ -633,14 +633,14 @@ class Gm_ceilingModelApi extends JModelList
             //type && type_option
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_type`");
+            $query->from("`#__gm_ceiling_type`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_type = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_type_option`");
+            $query->from("`#__gm_ceiling_type_option`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_type_option = $db->loadObjectList();
@@ -648,23 +648,23 @@ class Gm_ceilingModelApi extends JModelList
             //статус
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_status`");
+            $query->from("`#__gm_ceiling_status`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_status = $db->loadObjectList();
 
             $result = [];
-            $result['#_gm_ceiling_textures'] = $list_textures;
-            $result['#_gm_ceiling_colors'] = $list_colors;
-            $result['#_gm_ceiling_canvases'] = $list_canvases;
-            $result['#_gm_ceiling_components'] = $list_components;
-            $result['#_gm_ceiling_components_option'] = $list_components_option;
-            $result['#_gm_ceiling_type'] = $list_type;
-            $result['#_gm_ceiling_type_option'] = $list_type_option;
-            $result['#_gm_ceiling_status'] = $list_status;
-            $result['#_gm_ceiling_canvases_manufacturers'] = $list_manufacturers;
-           // $result['#_gm_ceiling_mounters'] = $list_mounters;
-           // $result['#_gm_ceiling_mounters_map'] = $list_mounters_map; 
+            $result['#__gm_ceiling_textures'] = $list_textures;
+            $result['#__gm_ceiling_colors'] = $list_colors;
+            $result['#__gm_ceiling_canvases'] = $list_canvases;
+            $result['#__gm_ceiling_components'] = $list_components;
+            $result['#__gm_ceiling_components_option'] = $list_components_option;
+            $result['#__gm_ceiling_type'] = $list_type;
+            $result['#__gm_ceiling_type_option'] = $list_type_option;
+            $result['#__gm_ceiling_status'] = $list_status;
+            $result['#__gm_ceiling_canvases_manufacturers'] = $list_manufacturers;
+           // $result['#__gm_ceiling_mounters'] = $list_mounters;
+           // $result['#__gm_ceiling_mounters_map'] = $list_mounters_map; 
             return $result;
 
         }
@@ -681,16 +681,16 @@ class Gm_ceilingModelApi extends JModelList
             //Дилер
             $query = $db->getQuery(true);
             $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
-            $query->from("`#_users` as u");
-            $query->leftJoin('`#_user_usergroup_map`AS um ON um.user_id = u.id');
+            $query->from("`#__users` as u");
+            $query->leftJoin('`#__user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.id = $dealer_id AND um.group_id = 14");
             $db->setQuery($query);
             $list_dealer = $db->loadObjectList();
             //Бригады
             $query = $db->getQuery(true);
             $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
-            $query->from("`#_users` as u");
-            $query->leftJoin('`#_user_usergroup_map`AS um ON um.user_id = u.id');
+            $query->from("`#__users` as u");
+            $query->leftJoin('`#__user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND um.group_id = 11");
             $db->setQuery($query);
             $list_brigades = $db->loadObjectList();
@@ -698,15 +698,15 @@ class Gm_ceilingModelApi extends JModelList
             //замерщики
             $query = $db->getQuery(true);
             $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`,u.associated_client");
-            $query->from("`#_users` as u");
-            $query->leftJoin('`#_user_usergroup_map`AS um ON um.user_id = u.id');
+            $query->from("`#__users` as u");
+            $query->leftJoin('`#__user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND (um.group_id = 21 OR um.group_id = 22 )");
             $db->setQuery($query);
             $list_gaugers = $db->loadObjectList();
             //mounters & mounters_map
             $query = $db->getQuery(true);
             $query->select("id,name,phone");
-            $query->from("`#_gm_ceiling_mounters`");
+            $query->from("`#__gm_ceiling_mounters`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_mounters = $db->loadObjectList();
@@ -714,16 +714,16 @@ class Gm_ceilingModelApi extends JModelList
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_mounters_map`");
+            $query->from("`#__gm_ceiling_mounters_map`");
             $query->where("change_time >= '$change_time'");
             $db->setQuery($query);
             $list_mounters_map = $db->loadObjectList();
 
             $result = [];
             $list1 = array_merge($list_brigades,$list_gaugers);
-            $result['#_users'] = array_merge($list1,$list_dealer);
-            $result['#_gm_ceiling_mounters'] = $list_mounters;
-            $result['#_gm_ceiling_mounters_map'] = $list_mounters_map; 
+            $result['#__users'] = array_merge($list1,$list_dealer);
+            $result['#__gm_ceiling_mounters'] = $list_mounters;
+            $result['#__gm_ceiling_mounters_map'] = $list_mounters_map; 
             
             return $result;
         }
@@ -743,53 +743,53 @@ class Gm_ceilingModelApi extends JModelList
             
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_dealer_info`");
+            $query->from("`#__gm_ceiling_dealer_info`");
             $query->where("change_time >= '$change_time' and dealer_id = $dealer_id");
             $db->setQuery($query);
             $list_info = $db->loadObjectList();
       
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_mount`");
+            $query->from("`#__gm_ceiling_mount`");
             $query->where("change_time >= '$change_time' and user_id = $dealer_id");
             $db->setQuery($query);
             $list_mount = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_canvases_dealer_price`");
+            $query->from("`#__gm_ceiling_canvases_dealer_price`");
             $query->where("change_time >= '$change_time' and user_id = $dealer_id");
             $db->setQuery($query);
             $list_canvases_dealer_price = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_components_dealer_price`");
+            $query->from("`#__gm_ceiling_components_dealer_price`");
             $query->where("change_time >= '$change_time' and user_id = $dealer_id");
             $db->setQuery($query);
             $list_components_dealer_price = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_api_phones`");
+            $query->from("`#__gm_ceiling_api_phones`");
             $query->where("change_time >= '$change_time' and dealer_id = $dealer_id");
             $db->setQuery($query);
             $list_api_phones = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`#_gm_ceiling_recoil_map_project`");
+            $query->from("`#__gm_ceiling_recoil_map_project`");
             $query->where("change_time >= '$change_time' and dealer_id = $dealer_id");
             $db->setQuery($query);
             $list_recoil_map_project = $db->loadObjectList();
 
             $result = [];
-            $result['#_gm_ceiling_dealer_info'] = $list_info;
-            $result['#_gm_ceiling_mount'] =  $list_mount;
-            $result['#_gm_ceiling_canvases_dealer_price'] =  $list_canvases_dealer_price;
-            $result['#_gm_ceiling_components_dealer_price'] =  $list_components_dealer_price;
-            $result['#_gm_ceiling_api_phones'] =  $list_api_phones;
-            $result['#_gm_ceiling_recoil_map_project'] =  $list_recoil_map_project;
+            $result['#__gm_ceiling_dealer_info'] = $list_info;
+            $result['#__gm_ceiling_mount'] =  $list_mount;
+            $result['#__gm_ceiling_canvases_dealer_price'] =  $list_canvases_dealer_price;
+            $result['#__gm_ceiling_components_dealer_price'] =  $list_components_dealer_price;
+            $result['#__gm_ceiling_api_phones'] =  $list_api_phones;
+            $result['#__gm_ceiling_recoil_map_project'] =  $list_recoil_map_project;
             return $result;
         }
         catch(Exception $e)

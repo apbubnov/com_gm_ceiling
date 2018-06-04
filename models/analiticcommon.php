@@ -26,17 +26,17 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 		try
 		{
 			/* SELECT  DISTINCT a.name,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id ) AS count1,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 2 ) AS dealers,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 3 ) AS advt,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19) ) AS deals,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (0,2,3) ) AS inwork,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 1) AS measure,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse,
-			(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS done,
-			(SELECT SUM(COALESCE(p.new_project_sum,0)) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS `sum`,
-			(SELECT  SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0))) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS cost
-			FROM `#_gm_ceiling_projects` AS p INNER JOIN `#_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id ) AS count1,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 2 ) AS dealers,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 3 ) AS advt,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19) ) AS deals,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (0,2,3) ) AS inwork,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 1) AS measure,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse,
+			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS done,
+			(SELECT SUM(COALESCE(p.new_project_sum,0)) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS `sum`,
+			(SELECT  SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0))) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS cost
+			FROM `#__gm_ceiling_projects` AS p INNER JOIN `#__gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id
  */
 			if(empty($dealer_id)){
 				$dealer_id  = 1;
@@ -191,14 +191,14 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 		try
 		{
 			/*SELECT  DISTINCT a.name,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id ) AS common,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 2 ) AS dealers,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 3 ) AS advt,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19) ) AS deals,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (0,2,3) ) AS inwork,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 1) AS measure,
-	(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse
-	 FROM `#_gm_ceiling_projects` AS p INNER JOIN `#_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id 
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id ) AS common,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 2 ) AS dealers,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.who_calculate = 3 ) AS advt,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19) ) AS deals,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status IN (0,2,3) ) AS inwork,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 1) AS measure,
+	(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse
+	 FROM `#__gm_ceiling_projects` AS p INNER JOIN `#__gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id 
 	 WHERE p.created BETWEEN '2017-11-06' AND '2017-11-10'*/
 	 		if(empty($dealer_id)){
 	 			$dealer_id = 1;
@@ -349,15 +349,15 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 	}
 	function get_designers_analytics($dealer_type = null,$date1 = null,$date2 = null){
 		/* SELECT c.client_name,c.dealer_id,
-(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19)) AS deals,
-(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (0,2,3) ) AS inwork,
-(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 1) AS measure,
-(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 15) AS refuse,
-(SELECT COUNT(p.id) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status  = 12) AS done,
-(SELECT SUM(COALESCE(p.new_project_sum,0)) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 12) AS `sum`,
-(SELECT SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0))) FROM `#_gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 12) AS cost
- FROM `#_gm_ceiling_clients` AS c
- LEFT JOIN `#_users` AS u ON c.dealer_id = u.id
+(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19)) AS deals,
+(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status IN (0,2,3) ) AS inwork,
+(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 1) AS measure,
+(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 15) AS refuse,
+(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status  = 12) AS done,
+(SELECT SUM(COALESCE(p.new_project_sum,0)) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 12) AS `sum`,
+(SELECT SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0))) FROM `#__gm_ceiling_projects` AS p WHERE p.client_id = c.id AND p.project_status = 12) AS cost
+ FROM `#__gm_ceiling_clients` AS c
+ LEFT JOIN `#__users` AS u ON c.dealer_id = u.id
  WHERE u.dealer_type = 3 */
  		if(!empty($date1) && !empty($date2)){
  			$where = "and p.created BETWEEN '$date1' and '$date2'";
