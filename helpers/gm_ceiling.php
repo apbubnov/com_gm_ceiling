@@ -3627,7 +3627,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $mailer->addRecipient($user->email);
                 }
                 $dopinfo = $client->getInfo($data->client_id);
-                $q = 'SELECT * FROM  `rgzbn_gm_ceiling_clients` as t1 where t1.`id`=' . $data->client_id;
+                $q = 'SELECT * FROM  `#_gm_ceiling_clients` as t1 where t1.`id`=' . $data->client_id;
                 $db->setQuery($q);
                 $client = $db->loadObject();
                 $body = "Здравствуйте.  Договор № " . $data->id . " выполнен \n\n";

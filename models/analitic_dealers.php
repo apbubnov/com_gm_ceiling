@@ -55,9 +55,9 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
     {
         //заказывающие диллеры
         /* SELECT COUNT(u.id)
-            FROM `rgzbn_users` AS u
-            WHERE u.id IN (SELECT dealer_id FROM `rgzbn_gm_ceiling_clients` AS c  WHERE u.id = c.dealer_id AND c.id IN
-            ( SELECT p.client_id FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_projects_history` AS h ON p.id = h.project_id
+            FROM `#_users` AS u
+            WHERE u.id IN (SELECT dealer_id FROM `#_gm_ceiling_clients` AS c  WHERE u.id = c.dealer_id AND c.id IN
+            ( SELECT p.client_id FROM `#_gm_ceiling_projects` AS p INNER JOIN `#_gm_ceiling_projects_history` AS h ON p.id = h.project_id
             AND h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '2018-02-25' AND '2018-03-27'))
             AND u.dealer_id <> 1 AND u.dealer_type IN(0,1) */
         try {

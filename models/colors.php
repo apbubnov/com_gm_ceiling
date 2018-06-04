@@ -313,7 +313,7 @@ class Gm_ceilingModelColors extends JModelList
 			// Создаем новый query объект.
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			/*SELECT * FROM `rgzbn_gm_ceiling_colors` AS `a` INNER JOIN `rgzbn_gm_ceiling_canvases` AS `b` 
+			/*SELECT * FROM `#_gm_ceiling_colors` AS `a` INNER JOIN `#_gm_ceiling_canvases` AS `b` 
 			ON `a`.`id` = `b`.`color_id` WHERE `b`.`count` > 0 AND `b`.`texture_id` = 2*/
 		 //throw new Exception($filter, 11);
 			// Выбераем поля.

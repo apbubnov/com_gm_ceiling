@@ -55,7 +55,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select("($comments_cnt_query) as cmnt_cnt");
 			$query->select("($dealer_instr_cnt_query) as inst_cnt");
 			$query->from('`#__users` AS `u`');
-			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
+			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#_user_usergroup_map`.`user_id`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->leftJoin('`#__gm_ceiling_dealer_info` as i on u.id = i.dealer_id');
@@ -154,7 +154,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*');
-			$query->from('`rgzbn_users_commercial_offer`');
+			$query->from('`#_users_commercial_offer`');
 			$query->where("`code` = '$code'");
 			$db->setQuery($query);
 			$item = $db->loadObject();
@@ -207,7 +207,7 @@ class Gm_ceilingModelUsers extends JModelList
 				
 
 				$query = $db->getQuery(true);
-				$query->update('`rgzbn_users_commercial_offer`');
+				$query->update('`#_users_commercial_offer`');
 				$query->set('`status` = 1');
 				$query->where("`user_id` = $item->user_id");
 				$db->setQuery($query);
@@ -282,7 +282,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*');
-			$query->from('`rgzbn_users_commercial_offer`');
+			$query->from('`#_users_commercial_offer`');
 			$query->where("`change_time` < NOW() - INTERVAL 1 WEEK AND `status` = 0");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
