@@ -1010,7 +1010,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "success",
                             text: "Добавленна запись в историю клиента"
