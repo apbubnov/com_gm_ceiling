@@ -1,6 +1,6 @@
 
-<link rel="stylesheet" href="nice-date-picker.css">
-<script src="nice-date-picker.js"></script>
+<link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
+<script src="/components/com_gm_ceiling/date_picker/qwenice-date-picker.js"></script>
 <label>Дата: </label><br>
 <div id="calendar-wrapper"></div>
 <p><label>Время: </label><br><input type="time" class="form-control"></p>
