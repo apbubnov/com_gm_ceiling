@@ -492,9 +492,22 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <!-- расчеты для проекта -->
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
         <hr>
-            <label>Добавить звонок</label><br>
-            <?php include_once('components/com_gm_ceiling/date_picker/date_picker.php'); ?>
-            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
+            <h4>Добавить звонок</h4>
+            <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
+            <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
+            <label><b>Дата: </b></label><br>
+            <div id="calendar-wrapper"></div>
+            <script>
+                new niceDatePicker({
+                    dom:document.getElementById('calendar-wrapper'),
+                    mode:'en',
+                    onClickDate:function(date){
+                        document.getElementById('call_date').value = date;
+                    }
+                });
+            </script>
+            <p><label><b>Время: </b></label><br><input type="time" id="call_time"></p>
+            <input name="call_date" id="call_date" type="hidden">
             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
         <hr>
@@ -1749,19 +1762,30 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "warning",
-                            text: "Укажите время перезвона"
+                            text: "Укажите дату перезвона"
                         });
-                    jQuery("#call_date").focus();
                     return;
+                }
+                var date = jQuery("#call_date").val().replace(/(-)([\d]+)/g, function(str,p1,p2) {
+                    if (p2.length === 1) {
+                        return '-0'+p2;
+                    }
+                    else {
+                        return str;
+                    }
+                });
+                var time = jQuery("#call_time").val();
+                if (time == '') {
+                    time = '00:00';
                 }
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=addCall",
                     data: {
                         id_client: client_id,
-                        date: jQuery("#call_date").val(),
+                        date: date+' '+time,
                         comment: jQuery("#call_comment").val()
                     },
                     dataType: "json",
@@ -1770,12 +1794,12 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "success",
                             text: "Звонок добавлен"
                         });
-                        add_history(client_id, 'Добавлен звонок на ' + jQuery("#call_date").val().replace('T', ' ') + ':00');
+                        add_history(client_id, 'Добавлен звонок на ' + date + ' ' + time + ':00');
                     },
                     error: function (data) {
                         var n = noty({
