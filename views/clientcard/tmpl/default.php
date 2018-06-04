@@ -182,24 +182,26 @@
             </div>
         </div>
         <div class="row center">
-            <h4>Добавить звонок</h4>
-            <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
-            <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
-            <label><b>Дата: </b></label><br>
-            <div id="calendar-wrapper"></div>
-            <script>
-                new niceDatePicker({
-                    dom:document.getElementById('calendar-wrapper'),
-                    mode:'en',
-                    onClickDate:function(date){
-                        document.getElementById('create_call_date').value = date;
-                    }
-                });
-            </script>
-            <p><label><b>Время: </b></label><br><input type="time" id="create_call_time"></p>
-            <input id="create_call_date" type="hidden">
-            <input id="create_call_comment" placeholder="Введите примечание">
-            <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            <h4>Добавить звонок <button class="btn btn-sm btn-primary" type="button" id="btn_open_callback"><i class="fa fa-angle-down" aria-hidden="true"></i></button></h4>
+            <div class="row center" id="callback_cont" style="display: none;">
+                <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
+                <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
+                <label><b>Дата: </b></label><br>
+                <div id="calendar-wrapper" style="margin: 0px auto; width: 222px;"></div>
+                <script>
+                    new niceDatePicker({
+                        dom:document.getElementById('calendar-wrapper'),
+                        mode:'en',
+                        onClickDate:function(date){
+                            document.getElementById('create_call_date').value = date;
+                        }
+                    });
+                </script>
+                <p><label><b>Время: </b></label><br><input type="time" id="create_call_time"></p>
+                <input id="create_call_date" type="hidden">
+                <input id="create_call_comment" placeholder="Введите примечание">
+                <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            </div>
         </div>
 <!-- конец -->
 <!-- заказы -->
@@ -375,6 +377,15 @@
             }				
         });
     });
+
+    document.getElementById('btn_open_callback').onclick = function(){
+        var cont = document.getElementById('callback_cont');
+        if (cont.style.display == 'block') {
+            cont.style.display = 'none';
+        } else {
+            cont.style.display = 'block';
+        }
+    }
 
     jQuery("#new_add_call").click(function(){
         if (jQuery("#create_call_date").val() == '')
