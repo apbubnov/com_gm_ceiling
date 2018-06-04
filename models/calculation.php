@@ -732,7 +732,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             $table = $this->getTable();
 			if ($table->save($data) === true)
 			{
-				return $table->id;
+				return (int)$table->id;
 			}
 			else
 			{
