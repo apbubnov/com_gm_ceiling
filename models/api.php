@@ -100,7 +100,7 @@ class Gm_ceilingModelApi extends JModelList
 
                     $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                 }
-                if($table == '#__gm_ceiling_calculations'){
+                if($table == 'rgzbn_gm_ceiling_calculations'){
                     if(!empty($data[$key]->image)){
                         $filename = md5("calculation_sketch".$id);
                         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", $data[$key]->image);
@@ -109,9 +109,6 @@ class Gm_ceilingModelApi extends JModelList
                         $filename = md5("cut_sketch".$id);
                         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
                     }
-                }
-                if($table == '#__gm_ceiling_calculations'){
-
                 }
             }
             return $arr_ids;
@@ -503,19 +500,19 @@ class Gm_ceilingModelApi extends JModelList
                 }
             }
             $result = [];
-            $result['#__gm_ceiling_clients'] = $list_clients;
-            $result['#__gm_ceiling_client_history'] = $list_client_history;
-            $result['#__gm_ceiling_callback'] = $list_calls;
-            $result['#__gm_ceiling_clients_contacts'] = $list_contacts;
-            $result['#__gm_ceiling_projects'] = $list_projects;
-            $result['#__gm_ceiling_calculations'] = $list_calculations;
-            $result['#__gm_ceiling_pipes'] = $list_pipes;
-            $result['#__gm_ceiling_ecola'] = $list_ecola;
-            $result['#__gm_ceiling_fixtures'] = $list_fixtures;
-            $result['#__gm_ceiling_hoods'] = $list_hoods;
-            $result['#__gm_ceiling_diffusers'] = $list_diffusers;
-            $result['#__gm_ceiling_cornice'] = $list_cornice;
-            $result['#__gm_ceiling_profil'] = $list_profil;
+            $result['rgzbn_gm_ceiling_clients'] = $list_clients;
+            $result['rgzbn_gm_ceiling_client_history'] = $list_client_history;
+            $result['rgzbn_gm_ceiling_callback'] = $list_calls;
+            $result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
+            $result['rgzbn_gm_ceiling_projects'] = $list_projects;
+            $result['rgzbn_gm_ceiling_calculations'] = $list_calculations;
+            $result['rgzbn_gm_ceiling_pipes'] = $list_pipes;
+            $result['rgzbn_gm_ceiling_ecola'] = $list_ecola;
+            $result['rgzbn_gm_ceiling_fixtures'] = $list_fixtures;
+            $result['rgzbn_gm_ceiling_hoods'] = $list_hoods;
+            $result['rgzbn_gm_ceiling_diffusers'] = $list_diffusers;
+            $result['rgzbn_gm_ceiling_cornice'] = $list_cornice;
+            $result['rgzbn_gm_ceiling_profil'] = $list_profil;
 
             $change_time = strtotime($change_time);
 
@@ -654,17 +651,17 @@ class Gm_ceilingModelApi extends JModelList
             $list_status = $db->loadObjectList();
 
             $result = [];
-            $result['#__gm_ceiling_textures'] = $list_textures;
-            $result['#__gm_ceiling_colors'] = $list_colors;
-            $result['#__gm_ceiling_canvases'] = $list_canvases;
-            $result['#__gm_ceiling_components'] = $list_components;
-            $result['#__gm_ceiling_components_option'] = $list_components_option;
-            $result['#__gm_ceiling_type'] = $list_type;
-            $result['#__gm_ceiling_type_option'] = $list_type_option;
-            $result['#__gm_ceiling_status'] = $list_status;
-            $result['#__gm_ceiling_canvases_manufacturers'] = $list_manufacturers;
-           // $result['#__gm_ceiling_mounters'] = $list_mounters;
-           // $result['#__gm_ceiling_mounters_map'] = $list_mounters_map; 
+            $result['rgzbn_gm_ceiling_textures'] = $list_textures;
+            $result['rgzbn_gm_ceiling_colors'] = $list_colors;
+            $result['rgzbn_gm_ceiling_canvases'] = $list_canvases;
+            $result['rgzbn_gm_ceiling_components'] = $list_components;
+            $result['rgzbn_gm_ceiling_components_option'] = $list_components_option;
+            $result['rgzbn_gm_ceiling_type'] = $list_type;
+            $result['rgzbn_gm_ceiling_type_option'] = $list_type_option;
+            $result['rgzbn_gm_ceiling_status'] = $list_status;
+            $result['rgzbn_gm_ceiling_canvases_manufacturers'] = $list_manufacturers;
+           // $result['rgzbn_gm_ceiling_mounters'] = $list_mounters;
+           // $result['rgzbn_gm_ceiling_mounters_map'] = $list_mounters_map; 
             return $result;
 
         }
@@ -721,9 +718,9 @@ class Gm_ceilingModelApi extends JModelList
 
             $result = [];
             $list1 = array_merge($list_brigades,$list_gaugers);
-            $result['#__users'] = array_merge($list1,$list_dealer);
-            $result['#__gm_ceiling_mounters'] = $list_mounters;
-            $result['#__gm_ceiling_mounters_map'] = $list_mounters_map; 
+            $result['rgzbn_users'] = array_merge($list1,$list_dealer);
+            $result['rgzbn_gm_ceiling_mounters'] = $list_mounters;
+            $result['rgzbn_gm_ceiling_mounters_map'] = $list_mounters_map; 
             
             return $result;
         }
@@ -784,12 +781,12 @@ class Gm_ceilingModelApi extends JModelList
             $list_recoil_map_project = $db->loadObjectList();
 
             $result = [];
-            $result['#__gm_ceiling_dealer_info'] = $list_info;
-            $result['#__gm_ceiling_mount'] =  $list_mount;
-            $result['#__gm_ceiling_canvases_dealer_price'] =  $list_canvases_dealer_price;
-            $result['#__gm_ceiling_components_dealer_price'] =  $list_components_dealer_price;
-            $result['#__gm_ceiling_api_phones'] =  $list_api_phones;
-            $result['#__gm_ceiling_recoil_map_project'] =  $list_recoil_map_project;
+            $result['rgzbn_gm_ceiling_dealer_info'] = $list_info;
+            $result['rgzbn_gm_ceiling_mount'] =  $list_mount;
+            $result['rgzbn_gm_ceiling_canvases_dealer_price'] =  $list_canvases_dealer_price;
+            $result['rgzbn_gm_ceiling_components_dealer_price'] =  $list_components_dealer_price;
+            $result['rgzbn_gm_ceiling_api_phones'] =  $list_api_phones;
+            $result['rgzbn_gm_ceiling_recoil_map_project'] =  $list_recoil_map_project;
             return $result;
         }
         catch(Exception $e)
