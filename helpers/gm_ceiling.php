@@ -67,7 +67,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
 function delete_string_characters($string)
 {
     try {
-        $string = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]', '', $string);
+        $string = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\_\s]', '', $string);
         $string = str_replace(array("\r","\n"), '', $string);
         $string = mb_ereg_replace('[\s]+', ' ', $string);
         $string = trim($string);
