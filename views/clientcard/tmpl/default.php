@@ -187,7 +187,7 @@
                 <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
                 <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
                 <label><b>Дата: </b></label><br>
-                <div id="calendar-wrapper" style="margin: 0px auto; width: 222px;"></div>
+                <div id="calendar-wrapper" style="margin: 0px auto; width: 274px;"></div>
                 <script>
                     new niceDatePicker({
                         dom:document.getElementById('calendar-wrapper'),

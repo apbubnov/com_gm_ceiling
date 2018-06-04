@@ -1,5 +1,5 @@
 .nice-date-picker-warpper{
-    width:222px;
+    width:274px;
     background-color:#999;
     font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
     padding:10px;
@@ -16,7 +16,14 @@
     height:30px;
     line-height:30px;
 }
-.nice-date-picker-header .prev-date-btn,.next-date-btn{
+.nice-date-picker-header .prev-date-btn{
+    font-size:18px;
+    width:40px;
+    text-align:center;
+    color:#fff;
+    text-decoration: none;
+}
+.nice-date-picker-header .next-date-btn{
     font-size:18px;
     width:40px;
     text-align:center;
