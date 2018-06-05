@@ -216,10 +216,8 @@
                 var tds = document.getElementsByClassName('nice-normal');
                 for(var i = tds.length; i--;) {
                     tds[i].classList.remove('nice-select');
-                    tds[i].style.color='white';
                 }
                 $target.classList.add('nice-select');
-                $target.style.color='black';
                 var arr_str_date = $target.getAttribute('data-date').split('-');
                 selectDate = {year: arr_str_date[0], month: arr_str_date[1], day: arr_str_date[2]};
             }
