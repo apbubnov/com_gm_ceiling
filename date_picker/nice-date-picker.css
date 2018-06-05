@@ -72,8 +72,14 @@
     text-align:center;
 }
 .nice-date-picker-body tr .nice-gray{
-   opacity:.3;
+    color:  #585858;
+    opacity:.7;
 }
+
+.nice-date-picker-body tr th{
+    color:#414099;
+}
+
 .nice-date-picker-body tr .nice-normal{
     cursor:pointer;
     color:#414099;
