@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
  * @since  1.6
  */
 /* включаем библиотеку для формирования PDF */
-//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {
@@ -67,7 +66,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
 function delete_string_characters($string)
 {
     try {
-        $string = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]', '', $string);
+        $string = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\_\s]', '', $string);
         $string = str_replace(array("\r","\n"), '', $string);
         $string = mb_ereg_replace('[\s]+', ' ', $string);
         $string = trim($string);
@@ -942,6 +941,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $n23 = $data['n23'];
                 $n15 = $data['n15'];
             }
+            
             $dealer_info = JFactory::getUser($data['dealer_id']);
             if($dealer_info->dealer_id == 1){
                 $dealer_info_components = $dealer_info->getComponentsPrice($dealer_info->dealer_id);
@@ -958,7 +958,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $components[$component->id] = $component;
             }
             $component_count = array();
-            foreach ($components as $key => $value) $component_count[$key] = 0;
+            foreach ($components as $key => $value){
+                $component_count[$key] = 0;
+            }
+           
             //периметр ТОЛЬКО ДЛЯ ПВХ
             $filter = "`co`.`title` LIKE('%3,5 * 51%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_9 = $components_model->getFilteredItems($filter);
@@ -1021,6 +1024,14 @@ class Gm_ceilingHelpersGm_ceiling
             
             $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
             $items_660 = $components_model->getFilteredItems($filter);
+
+            $n13_costyl = json_decode($data['n13']);
+            $cnt_costyl = 0;
+            foreach($n13_costyl as $item ){
+                $cnt_costyl += $item[0]; 
+            }
+            $component_count[$items_4[0]->id] += $cnt_costyl/2;
+            
             if (!empty($data['n1']) && $data['n1'] != 29) {
                 if ($data['n28'] !=0){
                     $component_count[$items_9[0]->id] += $data['n5'] * 10;
@@ -3627,7 +3638,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $mailer->addRecipient($user->email);
                 }
                 $dopinfo = $client->getInfo($data->client_id);
-                $q = 'SELECT * FROM  `rgzbn_gm_ceiling_clients` as t1 where t1.`id`=' . $data->client_id;
+                $q = 'SELECT * FROM  `#__gm_ceiling_clients` as t1 where t1.`id`=' . $data->client_id;
                 $db->setQuery($q);
                 $client = $db->loadObject();
                 $body = "Здравствуйте.  Договор № " . $data->id . " выполнен \n\n";
