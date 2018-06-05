@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
  * @since  1.6
  */
 /* включаем библиотеку для формирования PDF */
-//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {
