@@ -518,11 +518,11 @@ class Gm_ceilingModelStock extends JModelList
         try {
             $db = $this->getDbo();
 
-            $query = "UPDATE `rgzbn_gm_ceiling_canvases` AS C " .
-                "SET `count`= (SELECT COUNT(R.id) FROM `rgzbn_gm_ceiling_canvases_all` AS R WHERE R.id_canvas = C.id);";
+            $query = "UPDATE `#__gm_ceiling_canvases` AS C " .
+                "SET `count`= (SELECT COUNT(R.id) FROM `#__gm_ceiling_canvases_all` AS R WHERE R.id_canvas = C.id);";
 
-            $query .= "UPDATE `rgzbn_gm_ceiling_components_option` AS O " .
-                "SET `count`= (SELECT SUM(G.count) FROM `rgzbn_gm_ceiling_components_goods` AS G WHERE G.option_id = O.id);";
+            $query .= "UPDATE `#__gm_ceiling_components_option` AS O " .
+                "SET `count`= (SELECT SUM(G.count) FROM `#__gm_ceiling_components_goods` AS G WHERE G.option_id = O.id);";
 
             $db->setQuery($query);
             $result = $db->execute();
