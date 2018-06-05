@@ -513,16 +513,25 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <hr>
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
-            <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
+            <?php if ($this->item->project_verdict == 0) { ?>
                 <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <div class="row center">
-                        <div class = "col-lg-3">
-                             <a class="btn  btn-success act_btn"  id="accept_project">Договор</a>
+                        <?php if ($this->item->project_status == 0) { ?>
+                        <div class="col-lg-3">
+                            <a class="btn btn-success act_btn" id="accept_project">Запись на замер</a>
                         </div>
-                        <div class = "col-lg-3">
+                        <div class="col-lg-3">
                             <button id="refuse" class="btn btn-primary act_btn" type="submit">Сохранить</button>
                         </div>
-                        <div class = "col-lg-3">
+                        <?php } else { ?>
+                        <div class="col-lg-3">
+                            <a class="btn btn-success act_btn" id="accept_project">Договор</a>
+                        </div>
+                        <div class="col-lg-3">
+                            <button id="refuse" class="btn btn-primary act_btn" type="submit">Сохранить</button>
+                        </div>
+                        <?php } ?>
+                        <div class="col-lg-3">
                              <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
                         </div>
                     </div>
