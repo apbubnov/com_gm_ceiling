@@ -31,7 +31,7 @@ class Gm_ceilingModelComponents extends JModelList
         {
             if (empty($config['filter_fields'])) {
                 $config['filter_fields'] = array(
-                    'component_id', 'component_title', 'option_count', "option_price"
+                    'component_id', 'component_title', 'component_unit', 'component_code', 'option_count', 'option_price'
                 );
             }
 
@@ -253,8 +253,8 @@ class Gm_ceilingModelComponents extends JModelList
                 {
                     $component = (object) [];
                     $component->title = $item->component_title;
-                    $component->unit = $item->component_unit;
-                    $component->code = $item->component_code;
+                    $component->unit = $item->unit;
+                    $component->code = $item->code;
                     $component->options = [];
 
                     $result[$item->component_id] = $component;
