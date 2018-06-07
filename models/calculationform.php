@@ -1028,8 +1028,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             
             $calculationId = $data['id'];
             $date_created = date("Y-m-d H:i:s");
-            foreach ($n29 as $key => $value) $n29[$key][0] = str_replace(",",".", $value[0]);
-            //print_r($n29); exit;
+            if (!empty($n29)) {
+                foreach ($n29 as $key => $value) $n29[$key][0] = str_replace(",",".", $value[0]);
+            }
+
             $data['n16'] = ($data['n16'] == 1) ? '1' : '0';
             if (empty($calculationId)) {
                /* foreach ($data as  $key => $value) if ($value === "") $data[$key] = "NULL";
