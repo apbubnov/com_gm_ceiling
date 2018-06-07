@@ -955,7 +955,7 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_margin = $margins['gm_components_margin'];
             $dealer_components_margin = $margins['dealer_components_margin'];
             $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $components_list = $components_model->getFil13teredItems();
+            $components_list = $components_model->getFilteredItems();
             foreach ($components_list as $i => $component) {
                 $components[$component->id] = $component;
             }
