@@ -45,16 +45,21 @@ function double_margin($value, $margin1, $margin2) {
 function dealer_margin($price, $margin, $objectDealerPrice) {
     try {
         $result = 0;
-        $objectDealerPrice->value = floatval($objectDealerPrice->value);
-        $objectDealerPrice->price = floatval($objectDealerPrice->price);
-        switch ($objectDealerPrice->type)
-        {
-            case 0: $result = $price; break;
-            case 1: $result = $objectDealerPrice->price; break;
-            case 2: $result = $price + $objectDealerPrice->value; break;
-            case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
-            case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
-            case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
+        if (!empty($objectDealerPrice)) {
+            $objectDealerPrice->value = floatval($objectDealerPrice->value);
+            $objectDealerPrice->price = floatval($objectDealerPrice->price);
+            switch ($objectDealerPrice->type)
+            {
+                case 0: $result = $price; break;
+                case 1: $result = $objectDealerPrice->price; break;
+                case 2: $result = $price + $objectDealerPrice->value; break;
+                case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
+                case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
+                case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
+            }
+        }
+        else{
+            $result = $price;
         }
         return margin($result, $margin);
     }
@@ -483,7 +488,7 @@ class Gm_ceilingHelpersGm_ceiling
             if ($components_value_stock == '-')
                 $components_value_stock = $_POST['components_stock_value'];
             $components_stock = array();
-            if ($components_title_stock !== '-') {
+            if ($components_title_stock !== '-' && !empty($components_title_stock)) {
                 foreach ($components_title_stock as $key => $title) {
                     if (!empty($title) && $components_value_stock[$key]) {
                         $components_stock[] = array(
@@ -1025,10 +1030,14 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
             $items_660 = $components_model->getFilteredItems($filter);
 
-            $n13_costyl = json_decode($data['n13']);
+            if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
+            else $n13_costyl = $data['n13'];
+            //throw new Exception(gettype($n13_costyl[0]));
             $cnt_costyl = 0;
-            foreach($n13_costyl as $item ){
-                $cnt_costyl += $item[0]; 
+            if (!empty($n13_costyl)) {
+                foreach($n13_costyl as $item) {
+                    $cnt_costyl += (gettype($item) == "array") ? $item[0] : $item->n13_count; 
+                }
             }
             $component_count[$items_4[0]->id] += $cnt_costyl/2;
             
@@ -1106,7 +1115,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $n15 = json_decode($data['n15']);
                 $n29 = json_decode($data['n29']);
                
-                if (count($n29) > 0) {
+
+                if (!empty($n29) && count($n29) > 0) {
                     
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
@@ -1119,7 +1129,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 $k = 0;
-                if (count($n26) > 0) {
+                if (!empty($n26) && count($n26) > 0) {
                     foreach ($n26 as $ecola) {
                         if ($ecola[0] > 0) {
                             $component_count[$ecola[1]] += $ecola[0];
@@ -1128,7 +1138,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                 }
-                if (count($n13) > 0 && $n13 != 0) {
+                if (!empty($n13) && count($n13) > 0) {
                     foreach ($n13 as $lamp) {
                         $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
                         foreach ($fix_components as $comp)
@@ -1148,24 +1158,24 @@ class Gm_ceilingHelpersGm_ceiling
                     $component_count[$items_2[0]->id]++;
                 }
                 //вентиляция
-                if (count($n22) > 0) {
+                if (!empty($n22) && count($n22) > 0) {
                     foreach ($n22 as $ventilation) {
                         $ventilation_components = $calcform_model->components_list_n13_n22($ventilation[1], $ventilation[2]);
                         foreach ($ventilation_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $ventilation[0]);
                     }
                 }
-                if (count($n14) > 0) {
+                if (!empty($n14) && count($n14) > 0) {
                     foreach ($n14 as $truba) {
                         if ($truba[0] > 0) $component_count[$truba[1]] += $truba[0];
                     }
                    
                 }
-                if (count($n23) > 0) {
+                if (!empty($n23) && count($n23) > 0) {
                     foreach ($n23 as $diffuzor) {
                         if ($diffuzor[0] > 0) $component_count[$diffuzor[1]] += $diffuzor[0];
                     }
                 }
-                if (count($n15) > 0) {
+                if (!empty($n15) && count($n15) > 0) {
                     foreach ($n15 as $cornice) {
                         if ($cornice[0] > 0) $component_count[$cornice[2]] += $cornice[0];
                     }
@@ -1475,7 +1485,7 @@ class Gm_ceilingHelpersGm_ceiling
             //дилерская цена для клиента
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
             //Кол-во * дилерскую цену (для клиента)
-            $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+            $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);            
             return $canvases_data;
         }
         catch(Exception $e)
@@ -1696,13 +1706,20 @@ class Gm_ceilingHelpersGm_ceiling
             $count_profil_3 = 0;
             $count_profil_4 = 0;
             if(empty($calc_id)){
-                $n13 = json_decode($data['n13']);
-                $n26 = json_decode($data['n26']);
-                $n22 = json_decode($data['n22']);
-                $n14 = json_decode($data['n14']);
-                $n23 = json_decode($data['n23']);
-                $n15 = json_decode($data['n15']);
-                $n29 = json_decode($data['n29']);
+                if (!is_array($data['n13'])) $n13 = json_decode($data['n13']);
+                else $n13 = $data['n13'];
+                if (!is_array($data['n26'])) $n26 = json_decode($data['n26']);
+                else $n26 = $data['n26'];
+                if (!is_array($data['n22'])) $n22 = json_decode($data['n22']);
+                else $n22 = $data['n22'];
+                if (!is_array($data['n14'])) $n14 = json_decode($data['n14']);
+                else $n14 = $data['n14'];
+                if (!is_array($data['n23'])) $n23 = json_decode($data['n23']);
+                else $n23 = $data['n23'];
+                if (!is_array($data['n15'])) $n15 = json_decode($data['n15']);
+                else $n15 = $data['n15'];
+                if (!is_array($data['n29'])) $n29 = json_decode($data['n29']);
+                else $n29 = $data['n29'];
             }
             if (!array_key_exists('need_mount', $data))
                 $data["need_mount"] = 1;
@@ -3426,11 +3443,16 @@ class Gm_ceilingHelpersGm_ceiling
     public static function rounding($id, $value)
     {
         try {
-            $count = intval($id / $value);
-            if (floatval($id / $value) > $count) {
-                $count++;
+            if (!empty($value)) {
+                $count = intval($id / $value);
+                if (floatval($id / $value) > $count) {
+                    $count++;
+                }
+                $id = $count * $value;
             }
-            $id = $count * $value;
+            else {
+                $id = 0;
+            }
             return $id;
         }
         catch(Exception $e)

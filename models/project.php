@@ -1604,8 +1604,7 @@ class Gm_ceilingModelProject extends JModelItem
 	            ->join("LEFT","`#__gm_ceiling_clients` as c on c.id = p.client_id")
 	            ->join("LEFT","`#__gm_ceiling_clients_contacts` as cc on cc.client_id = c.id")
 	            ->join("LEFT","`#__users` as u on u.id = c.dealer_id")
-                ->join("LEFT","#__gm_ceiling_clients_dop_contacts as d ON d.client_id = c.id")
-                ->where("d.type_id = '1' or d.type_id is NULL")
+                ->join("LEFT","#__gm_ceiling_clients_dop_contacts as d ON d.client_id = c.id and d.type_id = '1' or d.type_id is NULL")
 	            ->where("p.id = " . $db->quote($id))
 	            ->group("p.id");
 	        $db->setQuery($query);

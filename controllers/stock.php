@@ -373,6 +373,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $customer->project = $_POST["project"];
             $status = $_POST["status"];
 
+            throw new Exception($customer->dealer->id);
             $Counterparty = $this->getModel('Counterparty', 'Gm_ceilingModel');
             $customer->dealer->counterparty = $Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id;
 

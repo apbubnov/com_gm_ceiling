@@ -835,7 +835,7 @@ class Gm_ceilingModelProjects extends JModelList
 
             $query->from('`#__gm_ceiling_projects` AS project')
                 ->select('project.id as id, project.project_info as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
-            if ($type == "Stock") $query->where('project.project_status IN (5, 6, 19)');
+            if ($type == "Stock") $query->where('project.project_status IN (5, 6, 7, 8, 19)');
             else if ($type == "Guild") $query->where('project.project_status IN (5, 7)');
             $query->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
                 ->select("s.id as status, s.title as status_title")

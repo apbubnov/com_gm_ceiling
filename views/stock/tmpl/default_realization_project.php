@@ -806,7 +806,6 @@ else if ($status == 19) $status = "Выдан";
         </div>
     </div>
 
-
     <script>
         var $ = jQuery;
         $(document).ready(Init);
@@ -1283,7 +1282,7 @@ else if ($status == 19) $status = "Выдан";
         function Realization() {
             $(".PRELOADER_GM").show();
             var data = $("form.Realization").serialize();
-
+            console.log(data);
             if (Calc) {
                 jQuery.ajax({
                     type: 'POST',
@@ -1804,6 +1803,7 @@ else if ($status == 19) $status = "Выдан";
         </div>
         <div class="Customer Dealer">
             <input name="customer[dealer_id]" value="<?= $customer->dealer->id ?>" type="number" hidden required>
+
             <div class="line title">Информация о дилере</div>
             <table>
                 <tr>

@@ -121,6 +121,7 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
     <table class="Elements">
         <thead class="ElementsHead">
         <tr class="ElementsHeadTr">
+            <td>№</td>
             <td class="Name">Наименование</td>
             <td class="Client">Клиент</td>
             <td class="Dealer">Дилер</td>
@@ -131,6 +132,7 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
         <tbody>
         <? foreach ($projects as $p):?>
             <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=project&id=' . (int)$p->id); ?>">
+                <td class="Name"><?= $p->id; ?></td>
                 <td class="Name"><?= $p->name; ?></td>
                 <td class="Client"><?= $p->client; ?></td>
                 <td class="Dealer"><?= $p->dealer; ?></td>
