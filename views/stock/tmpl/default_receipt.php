@@ -1323,7 +1323,8 @@ if ($_COOKIE['receipt'] != "") {
                 },
                 dataType: "text",
                 timeout: 10000,
-                error: function () {
+                error: function (data) {
+                    console.log(data);
                     noty({
                         theme: 'relax',
                         layout: 'center',

@@ -20,7 +20,7 @@
  */
 class Gm_ceilingModelrecoil_map_project extends JModelList
 {
-	protected function populateState()
+	/*protected function populateState()
 	{
 		try
 		{
@@ -28,9 +28,9 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 
 			// Load state from the request userState on edit or from the passed variable on default
 			if (JFactory::getApplication()->input->get('layout') == 'edit')
-			{
+            {
 				$id = JFactory::getApplication()->getUserState('com_gm_ceiling.edit.recoil_map_project.id');
-			}
+            }
 			else
 			{
 				$id = JFactory::getApplication()->input->get('id');
@@ -43,7 +43,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
+    }*/
     
 	function getData($id=null)
 	{

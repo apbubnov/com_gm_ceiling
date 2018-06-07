@@ -45,19 +45,14 @@ class Gm_ceilingModelClientcard extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
 	function &getData($id=null)
 	{
 		try
 		{
-			if ($this->_item === null)
+			if (empty($id))
 			{
-				$this->_item = false;
-
-				if (empty($id))
-				{
-					$id = $this->getState('clientcard.id');
-				}
-				
+				$id = $this->getState('clientcard.id');
 			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
@@ -74,6 +69,7 @@ class Gm_ceilingModelClientcard extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
 	function getCalls($id){
 		try
 		{
@@ -92,7 +88,8 @@ class Gm_ceilingModelClientcard extends JModelList
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-	}	
+	}
+
 	function getComments($id){
 		try
 		{
@@ -112,6 +109,7 @@ class Gm_ceilingModelClientcard extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
 	function getProjects($id){
 		try
 		{

@@ -31,7 +31,7 @@ class Gm_ceilingModelComponents extends JModelList
         {
             if (empty($config['filter_fields'])) {
                 $config['filter_fields'] = array(
-                    'component_id', 'component_title', 'option_count', "option_price"
+                    'component_id', 'component_title', 'component_unit', 'component_code', 'option_count', 'option_price'
                 );
             }
 
@@ -115,7 +115,7 @@ class Gm_ceilingModelComponents extends JModelList
         }
     }
 
-    public function getFilteredItems($filter)
+    public function getFilteredItems($filter = null)
     {
         try
         {
@@ -134,8 +134,9 @@ class Gm_ceilingModelComponents extends JModelList
 
             $query->join('LEFT', '`#__gm_ceiling_components` AS `c` ON `co`.`component_id` = `c`.`id`');
             $query->group('`c`.`title`, `co`.`title`');
-            if ($filter) $query->where($filter);
-            //throw new Exception($query, 1);
+            if (!empty($filter)) {
+                $query->where($filter);
+            }
             
             $db->setQuery($query);
             $return = $db->loadObjectList();
@@ -247,14 +248,19 @@ class Gm_ceilingModelComponents extends JModelList
                     ->select("min_name as name")
                     ->where("id = '$item->good_stock'");
                 $db->setQuery($query);
-                $item->stock_name = $db->loadObject()->name;
-
+                $q_rez = $db->loadObject();
+                if (!empty($q_rez)) {
+                    $item->stock_name = $q_rez->name;
+                } else {
+                    $item->stock_name = null;
+                }
+                
                 if (empty($result[$item->component_id]))
                 {
                     $component = (object) [];
                     $component->title = $item->component_title;
-                    $component->unit = $item->component_unit;
-                    $component->code = $item->component_code;
+                    $component->unit = $item->unit;
+                    $component->code = $item->code;
                     $component->options = [];
 
                     $result[$item->component_id] = $component;
@@ -450,8 +456,9 @@ class Gm_ceilingModelComponents extends JModelList
             $db->setQuery($query);
             $result = $db->loadObjectList();
 
-            if ($filter['id_option']) $result[0]->purchasing_price = $this->getAnalyticInfoInEnd($filter['id_option'])->purchasing_price;
-
+            if (isset($filter['id_option'])) {
+                $result[0]->purchasing_price = $this->getAnalyticInfoInEnd($filter['id_option'])->purchasing_price;
+            }
             return $result;
         }
         catch(Exception $e)

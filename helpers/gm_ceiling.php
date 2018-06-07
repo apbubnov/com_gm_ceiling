@@ -57,7 +57,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                 case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
                 case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
             }
-        }
+
         else{
             $result = $price;
         }
@@ -1037,6 +1037,7 @@ class Gm_ceilingHelpersGm_ceiling
             if (!empty($n13_costyl)) {
                 foreach($n13_costyl as $item) {
                     $cnt_costyl += (gettype($item) == "array") ? $item[0] : $item->n13_count; 
+
                 }
             }
             $component_count[$items_4[0]->id] += $cnt_costyl/2;
@@ -1114,8 +1115,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $n23 = json_decode($data['n23']);
                 $n15 = json_decode($data['n15']);
                 $n29 = json_decode($data['n29']);
-               
-
                 if (!empty($n29) && count($n29) > 0) {
                     
                     foreach ($n29 as $profil) {
