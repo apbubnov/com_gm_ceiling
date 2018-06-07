@@ -955,7 +955,7 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_margin = $margins['gm_components_margin'];
             $dealer_components_margin = $margins['dealer_components_margin'];
             $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $components_list = $components_model->getFilteredItems();
+            $components_list = $components_model->getFil13teredItems();
             foreach ($components_list as $i => $component) {
                 $components[$component->id] = $component;
             }
@@ -1027,7 +1027,8 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
             $items_660 = $components_model->getFilteredItems($filter);
 
-            $n13_costyl = json_decode($data['n13']);
+            if (!is_array($n13_costyl)) $n13_costyl = json_decode($data['n13']);
+            else $n13_costyl = $data['n13'];
             $cnt_costyl = 0;
             foreach($n13_costyl as $item ){
                 $cnt_costyl += $item[0]; 
@@ -1698,13 +1699,20 @@ class Gm_ceilingHelpersGm_ceiling
             $count_profil_3 = 0;
             $count_profil_4 = 0;
             if(empty($calc_id)){
-                $n13 = json_decode($data['n13']);
-                $n26 = json_decode($data['n26']);
-                $n22 = json_decode($data['n22']);
-                $n14 = json_decode($data['n14']);
-                $n23 = json_decode($data['n23']);
-                $n15 = json_decode($data['n15']);
-                $n29 = json_decode($data['n29']);
+                if (!is_array($data['n13'])) $n13 = json_decode($data['n13']);
+                else $n13 = $data['n13'];
+                if (!is_array($data['n26'])) $n26 = json_decode($data['n26']);
+                else $n26 = $data['n26'];
+                if (!is_array($data['n22'])) $n22 = json_decode($data['n22']);
+                else $n22 = $data['n22'];
+                if (!is_array($data['n14'])) $n14 = json_decode($data['n14']);
+                else $n14 = $data['n14'];
+                if (!is_array($data['n23'])) $n23 = json_decode($data['n23']);
+                else $n23 = $data['n23'];
+                if (!is_array($data['n15'])) $n15 = json_decode($data['n15']);
+                else $n15 = $data['n15'];
+                if (!is_array($data['n29'])) $n29 = json_decode($data['n29']);
+                else $n29 = $data['n29'];
             }
             if (!array_key_exists('need_mount', $data))
                 $data["need_mount"] = 1;
@@ -3428,11 +3436,16 @@ class Gm_ceilingHelpersGm_ceiling
     public static function rounding($id, $value)
     {
         try {
-            $count = intval($id / $value);
-            if (floatval($id / $value) > $count) {
-                $count++;
+            if (!empty($value)) {
+                $count = intval($id / $value);
+                if (floatval($id / $value) > $count) {
+                    $count++;
+                }
+                $id = $count * $value;
             }
-            $id = $count * $value;
+            else {
+                $id = 0;
+            }
             return $id;
         }
         catch(Exception $e)
