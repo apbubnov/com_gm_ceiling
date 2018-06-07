@@ -46,6 +46,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $code = $jinput->get('code', 0, 'INT');
             $alphavite = $jinput->get('alfavit', 0, 'INT');
 
+            $original_sketch = '';
             for ($i = 0; $i < count($wp); $i++) {
                 $original_sketch .= implode(';', $wp[$i]);
                 $original_sketch .= ';';
