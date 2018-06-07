@@ -1030,8 +1030,10 @@ class Gm_ceilingHelpersGm_ceiling
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
             $cnt_costyl = 0;
-            foreach($n13_costyl as $item ){
-                $cnt_costyl += $item[0]; 
+            if (!empty($n13_costyl)) {
+                foreach($n13_costyl as $item) {
+                    $cnt_costyl += $item[0]; 
+                }
             }
             $component_count[$items_4[0]->id] += $cnt_costyl/2;
             
