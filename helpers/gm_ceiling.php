@@ -1027,7 +1027,7 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
             $items_660 = $components_model->getFilteredItems($filter);
 
-            if (!is_array($n13_costyl)) $n13_costyl = json_decode($data['n13']);
+            if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
             $cnt_costyl = 0;
             foreach($n13_costyl as $item ){
