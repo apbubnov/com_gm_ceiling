@@ -247,8 +247,13 @@ class Gm_ceilingModelComponents extends JModelList
                     ->select("min_name as name")
                     ->where("id = '$item->good_stock'");
                 $db->setQuery($query);
-                $item->stock_name = $db->loadObject()->name;
-
+                $q_rez = $db->loadObject();
+                if (!empty($q_rez)) {
+                    $item->stock_name = $q_rez->name;
+                } else {
+                    $item->stock_name = null;
+                }
+                
                 if (empty($result[$item->component_id]))
                 {
                     $component = (object) [];

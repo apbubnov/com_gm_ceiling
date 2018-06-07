@@ -45,6 +45,7 @@ function double_margin($value, $margin1, $margin2) {
 function dealer_margin($price, $margin, $objectDealerPrice) {
     try {
         $result = 0;
+        $objectDealerPrice = new stdClass();
         $objectDealerPrice->value = floatval($objectDealerPrice->value);
         $objectDealerPrice->price = floatval($objectDealerPrice->price);
         switch ($objectDealerPrice->type)
@@ -483,7 +484,7 @@ class Gm_ceilingHelpersGm_ceiling
             if ($components_value_stock == '-')
                 $components_value_stock = $_POST['components_stock_value'];
             $components_stock = array();
-            if ($components_title_stock !== '-') {
+            if ($components_title_stock !== '-' && !empty($components_title_stock)) {
                 foreach ($components_title_stock as $key => $title) {
                     if (!empty($title) && $components_value_stock[$key]) {
                         $components_stock[] = array(
