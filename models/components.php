@@ -115,7 +115,7 @@ class Gm_ceilingModelComponents extends JModelList
         }
     }
 
-    public function getFilteredItems($filter)
+    public function getFilteredItems($filter = null)
     {
         try
         {
@@ -134,8 +134,9 @@ class Gm_ceilingModelComponents extends JModelList
 
             $query->join('LEFT', '`#__gm_ceiling_components` AS `c` ON `co`.`component_id` = `c`.`id`');
             $query->group('`c`.`title`, `co`.`title`');
-            if ($filter) $query->where($filter);
-            //throw new Exception($query, 1);
+            if (!empty($filter)) {
+                $query->where($filter);
+            }
             
             $db->setQuery($query);
             $return = $db->loadObjectList();
@@ -455,8 +456,9 @@ class Gm_ceilingModelComponents extends JModelList
             $db->setQuery($query);
             $result = $db->loadObjectList();
 
-            if ($filter['id_option']) $result[0]->purchasing_price = $this->getAnalyticInfoInEnd($filter['id_option'])->purchasing_price;
-
+            if (isset($filter['id_option'])) {
+                $result[0]->purchasing_price = $this->getAnalyticInfoInEnd($filter['id_option'])->purchasing_price;
+            }
             return $result;
         }
         catch(Exception $e)
