@@ -1111,7 +1111,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $n15 = json_decode($data['n15']);
                 $n29 = json_decode($data['n29']);
                
-                if (count($n29) > 0) {
+                if (!empty($n29) && count($n29) > 0) {
                     
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
@@ -1124,7 +1124,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 $k = 0;
-                if (count($n26) > 0) {
+                if (!empty($n26) && count($n26) > 0) {
                     foreach ($n26 as $ecola) {
                         if ($ecola[0] > 0) {
                             $component_count[$ecola[1]] += $ecola[0];
@@ -1133,7 +1133,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                 }
-                if (count($n13) > 0 && $n13 != 0) {
+                if (!empty($n13) && count($n13) > 0) {
                     foreach ($n13 as $lamp) {
                         $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
                         foreach ($fix_components as $comp)
@@ -1153,24 +1153,24 @@ class Gm_ceilingHelpersGm_ceiling
                     $component_count[$items_2[0]->id]++;
                 }
                 //вентиляция
-                if (count($n22) > 0) {
+                if (!empty($n22) && count($n22) > 0) {
                     foreach ($n22 as $ventilation) {
                         $ventilation_components = $calcform_model->components_list_n13_n22($ventilation[1], $ventilation[2]);
                         foreach ($ventilation_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $ventilation[0]);
                     }
                 }
-                if (count($n14) > 0) {
+                if (!empty($n14) && count($n14) > 0) {
                     foreach ($n14 as $truba) {
                         if ($truba[0] > 0) $component_count[$truba[1]] += $truba[0];
                     }
                    
                 }
-                if (count($n23) > 0) {
+                if (!empty($n23) && count($n23) > 0) {
                     foreach ($n23 as $diffuzor) {
                         if ($diffuzor[0] > 0) $component_count[$diffuzor[1]] += $diffuzor[0];
                     }
                 }
-                if (count($n15) > 0) {
+                if (!empty($n15) && count($n15) > 0) {
                     foreach ($n15 as $cornice) {
                         if ($cornice[0] > 0) $component_count[$cornice[2]] += $cornice[0];
                     }
