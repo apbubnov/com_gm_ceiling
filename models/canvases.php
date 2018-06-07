@@ -562,7 +562,7 @@ class Gm_ceilingModelCanvases extends JModelList
         }
     }
 
-    public function getFilteredItemsCanvas($filter)
+    public function getFilteredItemsCanvas($filter = null)
     {
         try
         {
@@ -577,7 +577,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $query->join('LEFT', '`#__gm_ceiling_colors` AS `color` ON `color`.`id` = `a`.`color_id`');
             $query->select('`manufacturer`.`name` AS `name`, `manufacturer`.`country` AS `country`');
             $query->join('LEFT', '`#__gm_ceiling_canvases_manufacturers` AS `manufacturer` ON `manufacturer`.`id` = `a`.`manufacturer_id`');
-            if ($filter) {
+            if (!empty($filter)) {
                 $query->where($filter);
             }
             $db->setQuery($query);
