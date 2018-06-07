@@ -20,7 +20,7 @@
  */
 class Gm_ceilingModelClientcard extends JModelList
 {
-	/*protected function populateState()
+	protected function populateState()
 	{
 		try
 		{
@@ -44,7 +44,7 @@ class Gm_ceilingModelClientcard extends JModelList
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-	}*/
+	}
 
 	function &getData($id=null)
 	{
@@ -109,7 +109,7 @@ class Gm_ceilingModelClientcard extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	
+
 	function getProjects($id){
 		try
 		{
