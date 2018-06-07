@@ -945,12 +945,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 						else if ($user->dealer_type!=2 && $project_verdict == 0)
 						{
-							$return = $model->activate($data, 3/*7*/);
-							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
-							if(!empty($data->read_by_manager)){
-								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
-							}
+                            if($project_status == 1){
+                                $return = $model->activate($data, $project_status);
+                            }
+                            else{
+    							$return = $model->activate($data, 3/*7*/);
+    							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
+    							if(!empty($data->read_by_manager)){
+    								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
+    								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
+    							}
+                            }
 						}
 					}
 					else{
@@ -1080,9 +1085,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             }
 						}
 					} elseif($project_verdict == 0) {
-						Gm_ceilingHelpersGm_ceiling::notify($data, 4);
-						$this->setMessage("Проект отправлен в список отказов",'error');
-
+                        if($project_status != 1){
+                            Gm_ceilingHelpersGm_ceiling::notify($data, 4);
+                            $this->setMessage("Проект отправлен в список отказов",'error');
+                        }
+                        elseif($project_status == 1){
+                            $this->setMessage("Проект записан на замер",'success');
+                        }
+						
 					}
 
 					$menu = JFactory::getApplication()->getMenu();

@@ -167,7 +167,8 @@ $year = date("Y");
 $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
 //------------------------------
-
+$status = $this->item->project_status;
+$status_attr = "data-status = \"$status\"";
 ?>
 <style>
 .act_btn{
@@ -516,21 +517,17 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             <?php if ($this->item->project_verdict == 0) { ?>
                 <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <div class="row center">
-                        <?php if ($this->item->project_status == 0) { ?>
                         <div class="col-lg-3">
-                            <a class="btn btn-success act_btn" id="accept_project">Запись на замер</a>
+                            <a class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project">
+                                <?php if($this->item->project_status == 0){
+                                    echo "Записать на замер";
+                                    }
+                                else { echo "Договор"; } ?>
+                            </a>
                         </div>
                         <div class="col-lg-3">
-                            <button id="refuse" class="btn btn-primary act_btn" type="submit">Сохранить</button>
+                            <button id="refuse" class="btn btn-primary act_btn"  <?php echo $status_attr;?> type="submit">Сохранить</button>
                         </div>
-                        <?php } else { ?>
-                        <div class="col-lg-3">
-                            <a class="btn btn-success act_btn" id="accept_project">Договор</a>
-                        </div>
-                        <div class="col-lg-3">
-                            <button id="refuse" class="btn btn-primary act_btn" type="submit">Сохранить</button>
-                        </div>
-                        <?php } ?>
                         <div class="col-lg-3">
                              <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
                         </div>
@@ -1568,31 +1565,37 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             $tmp_accept = 0; $tmp_refuse = 0;
 
             jQuery("#accept_project").click(function () {
-                jQuery("input[name='project_verdict']").val(1);
-                if($tmp_accept == 0) {
-                    jQuery("#mounter_wraper").show();
-                    jQuery(".contract").show();
-                    jQuery("#title").show();
-                    jQuery(".calendar_wrapper").show();
-                    jQuery(".buttons_wrapper").show();
-                    jQuery(".project_activation").hide();
-                    jQuery("#project_activation").show();
-                    $tmp_accept = 1;
-                    $tmp_refuse = 0;
-                } else {
-                    jQuery(".project_activation").hide();
-                    jQuery(".contract").hide();
-                    jQuery("#mounter_wraper").hide();
-                    jQuery("#title").hide();
-                    jQuery(".calendar_wrapper").hide();
-                    jQuery(".buttons_wrapper").hide();
-                    jQuery("#project_activation").hide();
-                    $tmp_accept = 0;
-                    $tmp_refuse = 0;
+                if(!jQuery(this).data('status')){
+                    jQuery("#project_status").val(1);
+                    jQuery("#form-client").submit();
                 }
-                setTimeout(() => {
-                    window.location = "#project_activation";
-                }, 100); 
+                else{
+                    jQuery("input[name='project_verdict']").val(1);
+                    if($tmp_accept == 0) {
+                        jQuery("#mounter_wraper").show();
+                        jQuery(".contract").show();
+                        jQuery("#title").show();
+                        jQuery(".calendar_wrapper").show();
+                        jQuery(".buttons_wrapper").show();
+                        jQuery(".project_activation").hide();
+                        jQuery("#project_activation").show();
+                        $tmp_accept = 1;
+                        $tmp_refuse = 0;
+                    } else {
+                        jQuery(".project_activation").hide();
+                        jQuery(".contract").hide();
+                        jQuery("#mounter_wraper").hide();
+                        jQuery("#title").hide();
+                        jQuery(".calendar_wrapper").hide();
+                        jQuery(".buttons_wrapper").hide();
+                        jQuery("#project_activation").hide();
+                        $tmp_accept = 0;
+                        $tmp_refuse = 0;
+                    }
+                    setTimeout(() => {
+                        window.location = "#project_activation";
+                    }, 100); 
+                }
             });
             jQuery("#refuse_project").click(function () {
                 jQuery("input[name='project_verdict']").val(0);
