@@ -118,15 +118,26 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			
 			$items = $db->loadObjectList();
 			$designers = $this->get_designers_analytics(3);
-			foreach ($designers as $designer) {
-				$d_common += $designer->common;
-				$d_deals += $designer->deals;
-				$d_inwork += $designer->inwork;
-				$d_measure +=  $designer->measure;
-				$d_refuse +=  $designer->refuse;
-				$d_done +=  $designer->done;
-				$d_sum +=  $designer->sum;
-				$d_profit+= $designer->profit;
+
+			$d_common = 0;
+			$d_deals = 0;
+			$d_inwork = 0;
+			$d_measure = 0;
+			$d_refuse =  0;
+			$d_done =  0;
+			$d_sum =  0;
+			$d_profit = 0;
+			if (!empty($designers)) {
+				foreach ($designers as $designer) {
+					$d_common += $designer->common;
+					$d_deals += $designer->deals;
+					$d_inwork += $designer->inwork;
+					$d_measure +=  $designer->measure;
+					$d_refuse +=  $designer->refuse;
+					$d_done +=  $designer->done;
+					$d_sum +=  $designer->sum;
+					$d_profit+= $designer->profit;
+				}
 			}
 			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
 				$d_object = (object)array(
