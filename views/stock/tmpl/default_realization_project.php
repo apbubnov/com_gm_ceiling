@@ -1282,7 +1282,6 @@ else if ($status == 19) $status = "Выдан";
         function Realization() {
             $(".PRELOADER_GM").show();
             var data = $("form.Realization").serialize();
-            console.log(data);
             if (Calc) {
                 jQuery.ajax({
                     type: 'POST',
@@ -1785,7 +1784,6 @@ else if ($status == 19) $status = "Выдан";
         <input name="customer[type]" value="1" type="number" hidden>
         <div class="Customer Client">
             <input name="customer[client_id]" value="<?= $customer->client->id ?>" type="number" hidden required>
-            <?php throw new Exception(print_r($customer));?>
             <div class="line title">Информация о клиенте</div>
             <table>
                 <tr>

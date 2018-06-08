@@ -368,15 +368,14 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
             $canvases = array();
             $components = array();
-            $customer = json_decode($_POST["customer"]);
+            if(!is_array($_POST["customer"])) $customer = json_decode($_POST["customer"]);
+            else $customer = $_POST["customer"];
             $customer->stock = $_POST["stock"];
             $customer->project = $_POST["project"];
             $status = $_POST["status"];
-
-            throw new Exception($customer->dealer->id);
             $Counterparty = $this->getModel('Counterparty', 'Gm_ceilingModel');
-            $customer->dealer->counterparty = $Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id;
-
+            $customer->dealer->counterparty = empty($Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id) ? 1 : $Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id;
+           
             if (empty($customer->dealer->counterparty))
                 die(json_encode((object) ["status" => "error", "error" => "У дилера закончился срок договора!\nРеализация не возможна!"]));
 

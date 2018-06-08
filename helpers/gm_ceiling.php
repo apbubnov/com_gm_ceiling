@@ -768,7 +768,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
                 $html .= '</tr>';
             }
-            if ($data['n3_id'] && $data['offcut_square'] > 0) {
+            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
@@ -3225,7 +3225,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $html .= '</tr>';
             }
-            if ($data['n3'] && $data['offcut_square'] > 0) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
