@@ -1781,5 +1781,40 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
         }
     }
-}
 
+    public function save_advt(){
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $data['id'] = $jinput->get('project_id', null, 'int');
+            $api_phone_id = $jinput->get('api_phone_id', null, 'int');
+            $client_id = $jinput->get('client_id', null, 'int');
+
+            $model_project = Gm_ceilingHelpersGm_ceiling::getModel('Project', 'Gm_ceilingModel');
+            $model_repeat = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest', 'Gm_ceilingModel');
+            $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
+
+            $user = JFactory::getUser();
+            $reklama = $model_api_phones->getDataById($api_phone_id);
+
+            if ($user->id != $reklama->dealer_id) {
+                throw new Exception('403 forbidden');
+            }
+
+            if (empty($model_project->getProjectsByClientID($client_id))) {
+                $data['api_phone_id'] = $api_phone_id;
+            } else {
+                $data['api_phone_id'] = 10;
+                $model_repeat->save($data['id'], $api_phone_id);
+            }
+
+            $result = $model_project->save($data);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+}
+?>
