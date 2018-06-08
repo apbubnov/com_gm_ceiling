@@ -117,7 +117,6 @@ class Gm_ceilingModelProject extends JModelItem
 			{
 				$this->_item->modified_by_name = JFactory::getUser($this->_item->modified_by)->name;
 			}
-					$this->_item->project_mounting_daypart = $this->_item->project_mounting_daypart;
 					$this->_item->project_mounting_date = $this->_item->project_mounting_date;	
 				if (isset($this->_item->client_id) && $this->_item->client_id != '') {
 					$this->_item->_client_id = $this->_item->client_id;

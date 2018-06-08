@@ -356,7 +356,13 @@ $status_attr = "data-status = \"$status\"";
                             <?php } ?>
                         <!-- конец -->
                         <table class="calculation_sum">
-                            <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
+                            <?php 
+                                if (!empty($calculation_total)) {
+                                    $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100;
+                                } else {
+                                    $skidka = 0;
+                                }
+                            ?>
                             <tbody class="new_discount" style="display: none">
                                 <tr>
                                     <td>
