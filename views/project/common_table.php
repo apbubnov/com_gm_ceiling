@@ -418,7 +418,7 @@
                                 <div class="email-all" style="float: left;">
                                     <input list="email" name="all-email" id="all-email" class="form-control" placeholder="Адрес эл.почты" type="text">
                                     <datalist id="email">
-                                        <?php foreach ($contact_email AS $em) { ?>
+                                        <?php if (!empty($contact_email)) foreach ($contact_email AS $em) { ?>
                                             <option value="<?=$em->contact;?>">
                                         <?php } ?>
                                     </datalist>
