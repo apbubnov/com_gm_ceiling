@@ -1988,7 +1988,7 @@ $status_attr = "data-status = \"$status\"";
                         opt.value = data.id;
                         opt.innerHTML = data.name;
                         select.appendChild(opt);
-                        jQuery("#new_advt_div").hide();
+                        jQuery("#new_advt_name").val('');
                     },
                     error: function (data) {
                         console.log(data);
