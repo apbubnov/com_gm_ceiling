@@ -3084,6 +3084,8 @@ public function register_mnfctr(){
 
                 $data['client_name'] = 'Клиент с обзвона';
                 $data['client_contacts'] = explode('+', $_POST['phone'])[1];
+                 $data['dealer_id'] = 697;
+                $data['manager_id'] = 697;
                 //die($_POST['phone'].' '.$data['client_contacts']);
                 $result = $clientform_model->save($data);
                 if (mb_ereg('[\d]', $result)) {
