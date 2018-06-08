@@ -43,7 +43,7 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
         }
 	}
 
-	public function searchClients($search)
+	public function searchClients($search = '')
 	{
 		try
 		{

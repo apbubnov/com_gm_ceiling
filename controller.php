@@ -921,12 +921,14 @@ public function register_mnfctr(){
         }
     }
 
-    public function delCall($call_id)
+    public function delCall($call_id = null)
     {
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $call_id = $jinput->get('call_id', 0, 'INT');
+            if (empty($call_id)) {
+                $call_id = $jinput->get('call_id', 0, 'INT');
+            }
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $result = $callback_model->deleteCall($call_id);
 
