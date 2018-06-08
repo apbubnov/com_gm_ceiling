@@ -30,6 +30,8 @@ $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+$model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
+$repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
@@ -517,6 +519,35 @@ $status_attr = "data-status = \"$status\"";
             <input name="call_date" id="call_date" type="hidden">
             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <hr>
+        <label>Реклама: </label>
+        <?php
+            if (empty($this->item->api_phone_id)) {
+                $all_advt = $model_api_phones->getAdvt();
+        ?>
+            <select id="advt_choose">
+                <option value="0">Выберите рекламу</option>
+                <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
+                    <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                <?php } ?>
+            </select>
+            <button class="btn btn-primary" id="save_advt" type="button">Ок</button>
+        <?php
+            } else {
+                if ($this->item->api_phone_id == 10) {
+                    $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
+                    if (!empty($repeat_advt->advt_id)) {
+                        $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
+                    }
+                    else {
+                        $reklama = $model_api_phones->getDataById(10);
+                    }
+                } else {
+                    $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+                }
+        ?>
+            <label><?php echo $reklama->number.' '.$reklama->name.' '.$reklama->description; ?></label>
+        <?php } ?>
         <hr>
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
@@ -1887,6 +1918,54 @@ $status_attr = "data-status = \"$status\"";
                     ]
                 });
             };
+
+            jQuery("#save_advt").click(function() {
+                if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Укажите рекламу"
+                    });
+                    jQuery("#advt_choose").focus();
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.save_advt",
+                    data: {
+                        project_id: project_id,
+                        api_phone_id: jQuery("#advt_choose").val(),
+                        client_id: client_id
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function(data) {
+                        document.getElementById('save_advt').style.display = 'none';
+                        document.getElementById('advt_choose').disabled = 'disabled';
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Реклама сохранена"
+                        });
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка"
+                        });
+                    }
+                });
+            });
 
         }); //конец ready
         
