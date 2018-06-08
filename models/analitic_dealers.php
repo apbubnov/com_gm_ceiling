@@ -98,13 +98,13 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $prev_date2->modify('+ '.--$day_diff.' days');
             $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
             $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
-            $need_dealers = array_udiff($dealers, $prev_dealers,'compare_objects');
+            $need_dealers = array_udiff($dealers, $prev_dealers,'self::compare_objects');
             return $need_dealers;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    function compare_objects($obj_a, $obj_b) {
+    private static function compare_objects($obj_a, $obj_b) {
         return $obj_a->id != $obj_b->id;
       }
     public function getFallenOffDealers($date1, $date2)
@@ -120,7 +120,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $prev_date2->modify('+ '.--$day_diff.' days');
             $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
             $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
-            $need_dealers = array_udiff($prev_dealers, $dealers,'compare_objects');
+            $need_dealers = array_udiff($prev_dealers, $dealers,'self::compare_objects');
             return $need_dealers;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

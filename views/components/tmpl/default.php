@@ -198,7 +198,7 @@ function update_price($objectDealerPrice, $Price)
                     <?elseif ($managerGM && empty($dealer)):?>
                         <td><?=$option->count;?></td>
                         <td id="GMPrice"><?=$option->price;?></td>
-                        <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
+                        <td id="GMPrice"><?=margin($option->price, 0);?></td>
                         <td id="DealerPrice"><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">

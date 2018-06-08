@@ -28,7 +28,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
      *
      * @since    1.6
      */
-    public function &getModel($name = 'Api', $prefix = 'Gm_ceilingModel', $config = array())
+    public function getModel($name = 'Api', $prefix = 'Gm_ceilingModel', $config = array())
     {
         return parent::getModel($name, $prefix, array('ignore_request' => true));
     }

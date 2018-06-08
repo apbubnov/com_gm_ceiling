@@ -20,7 +20,7 @@
  */
 class Gm_ceilingModelClientcard extends JModelList
 {
-	protected function populateState()
+	protected function populateState($ordering = NULL, $direction = NULL)
 	{
 		try
 		{
@@ -28,15 +28,14 @@ class Gm_ceilingModelClientcard extends JModelList
 
 			// Load state from the request userState on edit or from the passed variable on default
 
-				$id = JFactory::getApplication()->input->get('id');
-				JFactory::getApplication()->setUserState('com_gm_ceiling.edit.clientcard.id', $id);
+			$id = JFactory::getApplication()->input->get('id');
+			JFactory::getApplication()->setUserState('com_gm_ceiling.edit.clientcard.id', $id);
 
 			$this->setState('clientcard.id', $id);
 
 			// Load the parameters.
 			$params       = $app->getParams();
 			$params_array = $params->toArray();
-
 
 			$this->setState('params', $params);
 		}
