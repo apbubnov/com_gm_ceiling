@@ -1178,9 +1178,9 @@ else if ($status == 19) $status = "Выдан";
             var round = Float($("." + id).val()),
                 number = Float(e.val()),
                 itog = number;
-
-            if (number % round !== 0) itog = (Math.floor(number / round) + 1) * round;
-
+                if(round){
+                    if (number % round !== 0) itog = (Math.floor(number / round) + 1) * round;
+                }
             e.val(itog);
         }
 
@@ -1777,7 +1777,7 @@ else if ($status == 19) $status = "Выдан";
 <h1>Реализация полотен и компонентов по проекту №<?= $numberProject; ?></h1>
 <form class="receipt" target="_blank"
       action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=stock.realization'); ?>"
-      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+      method="post" class="form-validate form-horizontal" enctype="multipart/form-data" >
     <input type="hidden" name="status" value="2">
     <input type="number" name="project" value="<?=$numberProject;?>" hidden>
     <div class="infoCustomer">

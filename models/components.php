@@ -677,12 +677,16 @@ class Gm_ceilingModelComponents extends JModelList
             {
                 foreach ($data as $v)
                 {
+                    $title_cond = "";
+                    if($v->Name != "Нет"){
+                        $title_cond = "O.title = ".$db->quote($v->Name)." and";
+                    }
                     $db = $this->getDbo();
                     $query = $db->getQuery(true);
                     $query->from("`#__gm_ceiling_components_option` AS O")
                         ->join("LEFT","`#__gm_ceiling_components` AS C ON C.id = O.component_id")
                         ->select("C.id as component_id, O.id AS id, O.price AS price, O.count_sale AS csale, C.title AS type, O.title AS name, C.unit AS unit, C.code AS code")
-                        ->where("O.title = ".$db->quote($v->Name)." and C.title = ".$db->quote($v->Type)." and C.unit = ".$db->quote($v->Unit));
+                        ->where($title_cond." C.title = ".$db->quote($v->Type)." and C.unit = ".$db->quote($v->Unit));
                     $db->setQuery($query);
                     $good = $db->loadObject();
                     if ($page == "Receipt") $good->price = $v->Price;
