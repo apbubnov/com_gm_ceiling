@@ -173,11 +173,15 @@ class Gm_ceilingModelApi_phones extends JModelList
     function save($name){
         try
         {
+        	$user = JFactory::getUser();
+        	if ($user->guest) {
+        		throw new Exception('403 forbidden');
+        	}
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query->insert('#__gm_ceiling_api_phones');
-	        $query->columns('`name`');
-			$query->values("'$name'");
+	        $query->columns('`name`, `dealer_id`');
+			$query->values("'$name', $user->id");
 			$db->setQuery($query);
 	        $db->execute();
 	        $last_id = $db->insertid();
