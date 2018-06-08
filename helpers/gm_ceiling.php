@@ -1329,7 +1329,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //просчет доп компонентов со склада
             $components_stock = json_decode($data['components_stock']);
-            foreach ($components_stock as $comp_stock) {
+            if (!empty($components_stock)) foreach ($components_stock as $comp_stock) {
                 $component_count[$comp_stock->title] += $comp_stock->value;
             }
             //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
