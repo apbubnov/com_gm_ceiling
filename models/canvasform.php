@@ -501,8 +501,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                     ->from('`#__gm_ceiling_canvases` AS canvases')
                     ->join('LEFT', '`#__gm_ceiling_textures` AS textures ON textures.id = canvases.texture_id')
                     ->join('LEFT', '`#__gm_ceiling_colors` AS colors ON colors.id = canvases.color_id')
-                    ->where('canvases.country = ' . $db->quote($val->Country))
-                    ->where('canvases.name = ' . $db->quote($val->Name))
+                    ->join('LEFT','`#__gm_ceiling_canvases_manufacturers` AS c_mnfct ON c_mnfct.id = canvases.manufacturer_id')
+                    ->where('c_mnfct.country = ' . $db->quote($val->Country))
+                    ->where('c_mnfct.name = ' . $db->quote($val->Name))
                     ->where('canvases.width = ' . $db->quote($val->Width))
                     ->where('textures.texture_title = ' . $db->quote($val->Texture));
                 if ($val->Color != "Нет") $query->where('colors.title = ' . $db->quote($val->Color));
@@ -553,12 +554,17 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         }
                     }
                     $result->color_id = (!empty($result->color)) ? $result->color->id : null;
-
+                    $query = $db->getQuery(true);
+                    $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
+                        ->columns('name, country')
+                        ->values($db->quote($val->Name). ', ' . $db->quote($val->Country));
+                    $db->setQuery($query);
+                    $db->execute();
+                    $result->manufacturer_id = $db->insertid();
                     $query = $db->getQuery(true);
                     $query->insert($db->quoteName('#__gm_ceiling_canvases'))
-                        ->columns('texture_id, color_id, name, country, width, count')
-                        ->values($db->quote($result->texture_id) . ', ' . (empty($result->color_id) ? 'NULL' : $db->quote($result->color_id)) . ', ' . $db->quote($val->Name)
-                            . ', ' . $db->quote($val->Country) . ', ' . $db->quote($val->Width) . ', ' . $db->quote($result->count));
+                        ->columns('texture_id, color_id, manufacturer_id, width, count')
+                        ->values($db->quote($result->texture_id) . ', ' . (empty($result->color_id) ? 'NULL' : $db->quote($result->color_id)) . ', ' . $db->quote($result->manufacturer_id) . ', ' . $db->quote($val->Width) . ', ' . $db->quote($result->count));
                     $db->setQuery($query);
                     $db->execute();
                     $result->id = $db->insertid();
