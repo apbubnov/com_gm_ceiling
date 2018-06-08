@@ -351,8 +351,9 @@ class Gm_ceilingModelStock extends JModelList
 
             $query = $db->getQuery(true);
             $query
-                ->select('CONCAT(canvas.name, \' \', canvas.width, \' - \', canvas.country) as name, \'м²\' as unit')
+                ->select('CONCAT(c_mnfct.name, \' \', canvas.width, \' - \', c_mnfct.country) as name, \'м²\' as unit')
                 ->from('`#__gm_ceiling_canvases` AS canvas')
+                ->leftJoin('`#__gm_ceiling_canvases_manufacturers` as c_mnfct on canvas.manufacturer_id = c_mnfct.id' )
                 ->where("canvas.id = ".$db->quote($id));
             $db->setQuery($query);
             $info = $db->loadObject();
