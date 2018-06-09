@@ -1750,7 +1750,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary_total" => $data['n11'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
-                if (count($n13) > 0) {
+                if ((is_array($n13) || is_object($n13)) && count($n13) > 0) {
                     foreach ($n13 as $svet) {
                         switch (gettype($svet)) {
                             case 'object':
@@ -1779,7 +1779,7 @@ class Gm_ceilingHelpersGm_ceiling
                        
                     }
                 }
-                if (count($n22) > 0) {
+                if ((is_array($n22) || is_object($n22)) && count($n22) > 0) {
                     foreach ($n22 as $ventilation) {
                         switch (gettype($ventilation)) {
                             case 'object':
@@ -1803,7 +1803,7 @@ class Gm_ceilingHelpersGm_ceiling
                         
                     }
                 }
-                if (count($n23) > 0) {
+                if ((is_array($n23) || is_object($n23)) && count($n23) > 0) {
                     foreach ($n23 as $diffuzor) {
                         switch (gettype($diffuzor)) {
                             case 'object':
@@ -1819,7 +1819,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                 }
-                if (count($n14) > 0) {
+                if ((is_array($n14) || is_object($n14)) && count($n14) > 0) {
                     foreach ($n14 as $truba) {
                         switch (gettype($truba)) {
                             case 'object':
