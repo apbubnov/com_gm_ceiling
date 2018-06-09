@@ -77,7 +77,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $info = (object) [];
             $info->stock = $stock;
             $info->counterparty = $counterparty;
-            $info->customer->dealer->counterparty = $counterparty;
+            $info->customer = (object)['dealer'=>(object)['counterparty' => $counterparty]];
+            //$info->customer->dealer->counterparty = $counterparty;
             $info->dateFormat = $dateFormat;
 
             foreach ($goods AS $g) {
@@ -92,7 +93,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             } else {
                 $canvases_group = array();
                 foreach ($canvases as $c) {
-                    $c->Count = intval($c->Count);
+                    if(isset($c->Count)){
+                         $c->Count = intval($c->Count);
+                    }
+                    else {
+                         $c->Count = 0;
+                    }
                     $c->Width = floatval(str_replace(",", ".", $c->Width));
                     $c->Price = floatval(str_replace(",", ".", $c->Price));
                     $c->Quad = floatval(str_replace(",", ".", $c->Quad));

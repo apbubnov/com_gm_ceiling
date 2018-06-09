@@ -722,6 +722,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                 $count_temp = $count;
                 foreach ($map as $index)
                     if ($Rollers[$index]->quad >= $q) {
+                        if(!isset($Rollers[$index]->realizate)) $Rollers[$index]->realizate = 0;
                         $Rollers[$index]->quad -= $q;
                         $Rollers[$index]->realizate += $q;
                         $Rollers[$index]->off = true;
