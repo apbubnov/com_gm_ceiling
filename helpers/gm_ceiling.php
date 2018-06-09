@@ -1329,7 +1329,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //просчет доп компонентов со склада
             $components_stock = json_decode($data['components_stock']);
-            foreach ($components_stock as $comp_stock) {
+            if (!empty($components_stock)) foreach ($components_stock as $comp_stock) {
                 $component_count[$comp_stock->title] += $comp_stock->value;
             }
             //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
@@ -3012,6 +3012,7 @@ class Gm_ceilingHelpersGm_ceiling
             $array_cut = explode('||',$data['cut_data']);
             $cut_data = $array_cut[0];
             $p_usadki = $array_cut[1];
+            $usadka = (1-$p_usadki)*100;
             $array1 = array();
             $array2 = explode(';', $data['calc_data']);
             array_pop($array2);
@@ -3022,7 +3023,9 @@ class Gm_ceilingHelpersGm_ceiling
             foreach($array1 as $key=>$value){
                 $us_walls .= $key.'='.$value*$p_usadki.';';
             }
-            $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';
+            $html = '<img class= "image" src="/images/GM.png"/>';
+            $html .= '<h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';
+            $html .= '<div class= "date_lbl"> Дата: '. date("d.m.y") .'</div>';
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
@@ -3034,37 +3037,8 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
             $html .= '</tr>';
             $html .= '<tr>';
-            
-            /*
-            if (empty($data['n3_id']))
-            {
-                $canvas_id = $data['n3'];
-            }
-            else
-            {
-                $canvas_id = $data['n3_id'];
-            }
-            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-            
-            $canvases = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
-            if (is_null($canvases[0]->color_id))
-            {
-                $color_title = '303';
-            }
-            else
-            {
-                $color = $color_model->getData($canvases[0]->color_id);
-                $color_title = $color->colors_title;
-            }
-            
-            $facture = $canvases[0]->texture_title;
-            $width = floatval($canvases[0]->width) * 100;
-            $name = $canvases[0]->name;
-            $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
-            */
             $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
-            $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+            $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
             $html .= '</tr>';
             $html .= '</tbody>';
             $html .= '</table>';
@@ -3078,7 +3052,9 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
-            $html .= '<th>Площадь:</th><td >' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td  style = "border-style:hidden">' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+            $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th> <td>'.$usadka.'</td> ';
             $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
@@ -3091,7 +3067,9 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</div>';
             $html .= "<pagebreak />";
             $html .= $html;
-            $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой ' . $data["calculation_title"] . '</h1>';
+            $html .= '<img class= "image" src="/images/GM.png"/>';
+            $html .= '<h1 style="text-align:center;">Раскрой ' . $data["calculation_title"] . '</h1>';
+            $html .= '<div class= "date_lbl"> Дата: '. date("d.m.y") .'</div>';
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
@@ -3104,7 +3082,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<th>Цвет: </th><td colspan="3" >' . $canvases_data["title"] . '</td>';
-            $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+            $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
             $html .= '</tr>';
             $html .= '</tbody>';
             $html .= '</table>';
@@ -3125,7 +3103,9 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
-            $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td>' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+            $html .=  '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th> <td>'.$usadka.'</td>';
             $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';

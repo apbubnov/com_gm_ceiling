@@ -598,6 +598,18 @@
 					</div>
 				</div>
 			<?php } ?>
+            <?php if($triangulator_pro == 1){?>
+                <div class="container">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                             <label>Примечание менеджера</label>
+                            <input type="text" id="jform_manager_note" name="jform[manager_note]" value = "" class="form-control"  placeholder="Комментарий" style="margin-top: 20px; margin-bottom: 5px;">
+                        </div>
+                        <div class="col-sm-4"></div>
+                    </div>
+                </div>
+            <?php }?>
 			<!-- кнопки -->
 			<div class="container btn_tar">
 				<div class="row sm-margin-bottom">
@@ -1308,10 +1320,11 @@
             let url = '<?php echo $save_button_url;?>';
             jQuery.ajax({
                  type: 'POST',
-                    url: 'index.php?option=com_gm_ceiling&task=calculation.save_title',
+                    url: 'index.php?option=com_gm_ceiling&task=calculation.save_details',
                     data: {
                         title: jQuery("#jform_calculation_title").val() , 
                         details: jQuery("#jform_details").val(),
+                        manager_note: jQuery("#jform_manager_note").val(),
                         calc_id: calculation.id
                     },
                     success: function(data){
@@ -1381,6 +1394,9 @@
                 add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
                 canvas.filled = true;
             } 
+            if(calculation.manager_note){
+                jQuery("#jform_manager_note").val(calculation.manager_note);
+            }
         }
    
         function fill_selected_color(src,color_id){
