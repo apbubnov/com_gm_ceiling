@@ -672,6 +672,7 @@ class Gm_ceilingModelComponents extends JModelList
 
     public function Format($data, $page = "Realization")
     {
+            $db = $this->getDbo();
             $new_data = array();
             if ($page == "Realization" || $page == "Receipt")
             {
@@ -681,7 +682,7 @@ class Gm_ceilingModelComponents extends JModelList
                     if($v->Name != "Нет"){
                         $title_cond = "O.title = ".$db->quote($v->Name)." and";
                     }
-                    $db = $this->getDbo();
+                    
                     $query = $db->getQuery(true);
                     $query->from("`#__gm_ceiling_components_option` AS O")
                         ->join("LEFT","`#__gm_ceiling_components` AS C ON C.id = O.component_id")

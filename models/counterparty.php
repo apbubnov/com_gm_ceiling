@@ -54,11 +54,13 @@ class Gm_ceilingModelCounterparty extends JModelList
             $query = $db->getQuery(true);
 
             $filter['where']['IS'] = array();
-            foreach ($filter['where']['like'] as $k => $v) {
-                if ($v == "'%%'") unset($filter['where']['like'][$k]);
-                else if ($v == "'%Нет%'") {
-                    unset($filter['where']['like'][$k]);
-                    $filter['where']['IS'][$k] = "NULL OR " . $k . " = ''";
+            if(isset($filter['where']['like']) && !empty($filter['where']['like'])) {
+                foreach ($filter['where']['like'] as $k => $v) {
+                    if ($v == "'%%'") unset($filter['where']['like'][$k]);
+                    else if ($v == "'%Нет%'") {
+                        unset($filter['where']['like'][$k]);
+                        $filter['where']['IS'][$k] = "NULL OR " . $k . " = ''";
+                    }
                 }
             }
 
@@ -68,7 +70,7 @@ class Gm_ceilingModelCounterparty extends JModelList
                 $query->from("`#__gm_ceiling_stocks` AS stock");
                 foreach ($filter['select'] as $key => $value)
                     $query->select($value . " AS " . $key);
-            } else if ($filter['select'])
+            } else if (isset($filter['select']))
                 foreach ($filter['select'] as $key => $value)
                     $query->select($value . " AS " . $key);
             else if (isset($filter['counterparty_id']))
@@ -78,16 +80,16 @@ class Gm_ceilingModelCounterparty extends JModelList
                     ->where("counterparty.user_id = " . $db->quote($filter['user_id']));
             else $query->select('*');
 
-            if ($filter['where'])
+            if (isset($filter['where']))
                 foreach ($filter['where'] as $key => $value)
                     foreach ($value as $title => $item)
                         $query->where($title . ' ' . $key . ' ' . $item . ' ');
 
-            if ($filter['group'])
+            if (isset($filter['group']))
                 foreach ($filter['group'] as $value)
                     $query->group($value);
 
-            if ($filter['order'])
+            if (isset($filter['order']))
                 foreach ($filter['order'] as $value)
                     $query->order($value);
 

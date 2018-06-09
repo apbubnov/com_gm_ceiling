@@ -77,7 +77,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $info = (object) [];
             $info->stock = $stock;
             $info->counterparty = $counterparty;
-            $info->customer->dealer->counterparty = $counterparty;
+            $info->customer = (object)['dealer'=>(object)['counterparty' => $counterparty]];
+            //$info->customer->dealer->counterparty = $counterparty;
             $info->dateFormat = $dateFormat;
 
             foreach ($goods AS $g) {
@@ -92,7 +93,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             } else {
                 $canvases_group = array();
                 foreach ($canvases as $c) {
-                    $c->Count = intval($c->Count);
+                    if(isset($c->Count)){
+                         $c->Count = intval($c->Count);
+                    }
+                    else {
+                         $c->Count = 0;
+                    }
                     $c->Width = floatval(str_replace(",", ".", $c->Width));
                     $c->Price = floatval(str_replace(",", ".", $c->Price));
                     $c->Quad = floatval(str_replace(",", ".", $c->Quad));
@@ -378,8 +384,10 @@ class Gm_ceilingControllerStock extends JControllerLegacy
            
             if (empty($customer->dealer->counterparty))
                 die(json_encode((object) ["status" => "error", "error" => "У дилера закончился срок договора!\nРеализация не возможна!"]));
-
-            $valute = $_POST["valute"];
+            /*Не испоблзутеся*/
+           /* if(isset($_POST["valute"])){
+                $valute = $_POST["valute"];
+            }*/
             $client = $customer->client;
             $dealer = $customer->dealer;
             $margin = JFactory::getUser($dealer->id)->getDealerInfo();

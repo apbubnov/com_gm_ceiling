@@ -35,7 +35,7 @@ $goods = null;
 $stock = 0;
 $errors = null;
 
-if ($_COOKIE['receipt'] != "") {
+if (isset($_COOKIE['receipt']) && !empty($_COOKIE['receipt'])) {
     $data = json_decode($_COOKIE['receipt']);
     $goods = array();
     foreach ($data->goods as $v) $goods[] = json_decode($v);
@@ -932,7 +932,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 
 <script type="text/javascript">
     var $ = jQuery;
-    var server_name = <?php echo $server_name;?>;
+    var server_name = '<?php echo $server_name;?>';
     $(document).ready(Init);
     $(document).scroll(Scroll);
     $(window).resize(Resize);
