@@ -410,7 +410,12 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                 скидки</a></td>
                     </tr>
                 <?php } ?>
-                <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
+                <?php
+                    $skidka = 0;
+                    if (!empty($calculation_total)) {
+                        $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100;
+                    }
+                ?>
                 <tbody class="new_discount" style="display: none">
                 <tr>
 
