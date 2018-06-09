@@ -237,13 +237,15 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
         }
 	}
 
-	public function save_title(){
+	public function save_details(){
 		try{
 			$jinput = JFactory::getApplication()->input;
 			$title = $jinput->get('title', "", 'STRING');
 			$comment = $jinput->get('details', "", 'STRING');
+			$manager_note = $jinput->get('manager_note',"","STRING");
+
 			$calc_id  = $jinput->get('calc_id', "", 'INT');
-			if((!empty($title) || !empty($comment)) && !empty($calc_id)){
+			if((!empty($title) || !empty($comment) || !empty($manager_note)) && !empty($calc_id)){
 				$db = JFactory::getDbo();
 				$query = $db->getQuery(true);
 				$query->update('`#__gm_ceiling_calculations`');
@@ -252,6 +254,9 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 				}
 				if(!empty($comment)){
 					$query->set("`details`='$comment'");
+				}
+				if(!empty($manager_note)){
+					$query->set("`manager_note` = '$manager_note'");
 				}
 				$query->where("`id`=$calc_id");
 				$db->setQuery($query);
