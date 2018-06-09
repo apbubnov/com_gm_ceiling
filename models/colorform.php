@@ -77,12 +77,11 @@ class Gm_ceilingModelColorForm extends JModelForm
 			if ($this->item === null)
 			{
 				$this->item = false;
-
 				if (empty($id))
 				{
 					$id = $this->getState('color.id');
 				}
-
+				
 				// Get a level row instance.
 				$table = $this->getTable();
 
@@ -117,7 +116,6 @@ class Gm_ceilingModelColorForm extends JModelForm
 					$this->item = ArrayHelper::toObject($properties, 'JObject');
 				}
 			}
-
 
 			return $this->item;
 		}
