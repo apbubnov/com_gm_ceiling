@@ -24,6 +24,7 @@ $canDelete = (in_array(18, $groups) || in_array(19, $groups) || in_array(14, $gr
 
 $jcookie = $app->input->cookie;
 $stocks = $model->getStocks();
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 <?= parent::getPreloaderNotJS(); ?>
     <style>
@@ -822,6 +823,7 @@ $stocks = $model->getStocks();
 
     <script>
         var $ = jQuery;
+        var server_name = '<?php echo $server_name;?>';
         $(document).ready(Init);
         $(document).scroll(Scroll);
         $(window).resize(Resize);
@@ -1390,7 +1392,7 @@ $stocks = $model->getStocks();
 
             if (values.length > 0) jQuery.ajax({
                 type: 'POST',
-                url: "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
+                url: "http://"+server_name+"/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
                 data: {files: values},
                 success: function (data) {
                     $(".ModalDoc .Document .iFrame").attr("src", data);

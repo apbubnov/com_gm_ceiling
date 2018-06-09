@@ -1206,7 +1206,7 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
 
             $DATA = (object) [];
-
+            $server_name = $_SERVER['SERVER_NAME'];
             $Components = $jinput->get('Сomponents', null, "ARRAY");
             $Count = $jinput->get('Сount', null, "ARRAY");
 
@@ -1263,7 +1263,7 @@ public function register_mnfctr(){
             $_POST["n3"] = "NULL";
             $result = Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
             $this->setMessage("Проект успешно отправлен на производство! Цена за работу производителем изменится после одобрения! Итоговую цену можно увидеть в расходке.");
-            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.$ID_PROJECT, false));
+            $this->setRedirect(JRoute::_("http://$server_name/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=".$ID_PROJECT, false));
         }
        catch(Exception $e)
         {
@@ -1908,6 +1908,7 @@ public function register_mnfctr(){
     {
         try{
             $jinput = JFactory::getApplication()->input;
+            $server_name = $_SERVER['SERVER_NAME'];
             $id = $jinput->get('id', null, 'INT');
             $fio = $jinput->get('fio', null, 'STRING');
             $phone = $jinput->get('phone', null, 'STRING');
@@ -1918,7 +1919,7 @@ public function register_mnfctr(){
             $project_calculation_date = $project_calc_date." ".$new_project_calculation_daypart;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $model->updateClientNew($id, $fio, $phone,$adress, $project_calculation_date );
-            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/components/com_gm_ceiling/views/saverclient/default_1.php?complite=1&id='.$id, false));
+            $this->setRedirect(JRoute::_("http://$server_name/components/com_gm_ceiling/views/saverclient/default_1.php?complite=1&id=".$id, false));
             return 1;
         }
        catch(Exception $e)
@@ -2262,6 +2263,7 @@ public function register_mnfctr(){
         {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
+            $server_name = $_SERVER['SERVER_NAME'];
             if (in_array("16", $groups))
             {
                 if (is_null($user_id) || is_null($email) || is_null($dealer_type) || is_null($type))
@@ -2285,7 +2287,6 @@ public function register_mnfctr(){
                 $code = md5($user_id.'commercial_offer');
                 $code_instruction = md5($user_id.'dealer_instruction');
                 $code_quick = md5($user_id.'quick');
-                $server_name = $_SERVER['SERVER_NAME'];
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
                 $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_quick";
@@ -2307,7 +2308,7 @@ public function register_mnfctr(){
                 $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
                 $body .= '<body style="margin: 10px;">';
                 $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-                $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+                $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
                 $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                 $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
                 if ($dealer_type == 3 || $dealer_type == 5)
@@ -2573,7 +2574,7 @@ public function register_mnfctr(){
             $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
             $body .= '<body style="margin: 10px;">';
             $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-            $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+            $body .= '<tr><td style="vertical-align:middle;"><a href="http://'.$server_name.'/">';
             $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
             $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
             $body .= '<p style="margin: 10px;">Тел.: +7(473)212-34-01</p>';
@@ -2731,7 +2732,7 @@ public function register_mnfctr(){
                 $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
                 $body .= '<body style="margin: 10px;">';
                 $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-                $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+                $body .= '<tr><td style="vertical-align:middle;"><a href="http://'.$server_name.'/">';
                 $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                 $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
 

@@ -140,7 +140,7 @@
     // все замерщики
     $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
-
+    $server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 <style>
@@ -207,7 +207,7 @@
                                     <table class="table" >
                                         <tr>
                                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                                            <td><a href="http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
+                                            <td><a href="http://<?php echo $server_name ?>/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
                                             <td>
                                                 <div class="FIO" style="display: none;">
                                                     <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="Новое ФИО клиента" type="text">

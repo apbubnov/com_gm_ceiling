@@ -105,7 +105,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
                         $body .= '<body style="margin: 10px;">';
                         $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-                        $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+                        $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
                         $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                         $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
 

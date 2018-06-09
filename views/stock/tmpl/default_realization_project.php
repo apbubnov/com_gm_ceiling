@@ -38,6 +38,7 @@ $statusNumber = $status;
 if ($status == 5) $status = "Укомплектован";
 else if ($status == 6) $status = "Собран";
 else if ($status == 19) $status = "Выдан";
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 
@@ -808,6 +809,7 @@ else if ($status == 19) $status = "Выдан";
 
     <script>
         var $ = jQuery;
+        var server_name = <?php echo $server_name;?>;
         $(document).ready(Init);
         $(document).scroll(Scroll);
         $(window).resize(Resize);
@@ -1025,7 +1027,7 @@ else if ($status == 19) $status = "Выдан";
             if (lenght === 1 && val === "") Element.tbody.empty();
 
             $.ajax({
-                url: "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=stock.getProject",
+                url: "http://"+server_name+"/index.php?option=com_gm_ceiling&task=stock.getProject",
                 async: false,
                 data: {id: <?=(empty($numberProject))?0:$numberProject;?>},
                 type: "POST",
@@ -1351,7 +1353,7 @@ else if ($status == 19) $status = "Выдан";
 
             if (values.length > 0) jQuery.ajax({
                 type: 'POST',
-                url: "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
+                url: "http://"+server_name+"/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
                 data: {files: values},
                 success: function (data) {
                     $(".ModalDoc .Document .iFrame").attr("src", data);

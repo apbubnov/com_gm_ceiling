@@ -94,6 +94,7 @@ $project_total = round($project_total, 2);
 $project_total_discount = round($project_total_discount, 2);
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 $phones = $client_model->getItemsByClientId($this->item->id_client);
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 <?= parent::getButtonBack(); ?>
 <h2 class="center">Просмотр проекта</h2>
@@ -107,7 +108,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                     <table class="table">
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><a href="http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
+                            <td><a href="http://<?php echo $server_name;?>/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
                         </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>

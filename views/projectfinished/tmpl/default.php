@@ -26,7 +26,7 @@ foreach ($projects as $value) {
 		array_push($masID, $value->id);
 	}
 }
-
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/projectfinished/tmpl/css/style.css" type="text/css" />
@@ -45,9 +45,9 @@ foreach ($projects as $value) {
 		<?php foreach ($projects as $value) {
 			if ($value->read_by_chief == 0) { 
 				if ($user->dealer_id == 1) { ?>
-					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
+					<tr onclick="location.replace('http://<?php echo $server_name;?>/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
 				<?php } else {?>
-					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=chief&id=<?php echo $value->id; ?>');">
+					<tr onclick="location.replace('http://<?php echo $server_name;?>/index.php?option=com_gm_ceiling&view=projectform&type=chief&id=<?php echo $value->id; ?>');">
 				<?php }?>
 					<td><?php echo $value->id; ?></td>
 					<td><?php echo $value->project_mounting_end; ?></td>

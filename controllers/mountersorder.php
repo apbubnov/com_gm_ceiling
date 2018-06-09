@@ -46,7 +46,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
 			$model_request = $model->MountingStart($id, $date);
-
+			$server_name = $_SERVER['SERVER_NAME'];
 			// письмо
 			$emails = $model->AllNMSEmails();
 			$DataOrder = $model->DataOrder($id);
@@ -72,7 +72,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$body .= ").\n";
 			$body .= "Адрес: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время монтажа: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
-			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";
+			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name""/\">http://$server_name</a>";
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();
@@ -133,7 +133,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			if (strlen($note) != 0) {
 				$body .= "Примечание монтажника: ".$note."\n";			
 			}
-			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name/\">http://$server_name</a>";		
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();
@@ -188,7 +188,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$body .= "Адрес: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
 			$body .= "Примечание монтажника: ".$note."\n";
-			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";				
+			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name/\">http://$server_name</a>";				
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();
