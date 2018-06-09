@@ -1,6 +1,7 @@
 <?php
 $id = $_GET['id'];
 $complite = $_GET['complite'];
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 <html>
 <head>
@@ -9,7 +10,7 @@ $complite = $_GET['complite'];
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
     <script type="text/javascript"
-            src="http://test1.gm-vrn.ru/templates/gantry/js/jquery.noty.packaged.min.js"></script>
+            src="http://<?php echo $server_name;?>/templates/gantry/js/jquery.noty.packaged.min.js"></script>
 </head>
 <body>
 <div class="PRELOADER_GM">

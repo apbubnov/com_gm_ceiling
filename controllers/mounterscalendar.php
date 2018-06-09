@@ -54,8 +54,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
 			if (strlen($note) != 0) {
 				$body .= "Примечание монтажника: ".$note."\n";			
-			}
-			//$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+			}		
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();

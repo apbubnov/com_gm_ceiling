@@ -25,6 +25,7 @@ foreach ($dealers as $key => $dealer) {
     $dealers[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
     $dealers[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
 }
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -227,6 +228,7 @@ foreach ($dealers as $key => $dealer) {
 
     jQuery(document).ready(function()
     {
+        var server_name = '<?php echo $server_name?>';
         $(window).resize();
         
         var HelpMessageSpan = $("<span></span>"),
@@ -391,7 +393,7 @@ foreach ($dealers as $key => $dealer) {
                         if (target.id == 'add_kp')
                         {
                             text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML = '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">' + 
-                            '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">' + 
+                            '<tr><td style="vertical-align:middle;"><a href="http://'+server_name+'/">' + 
                             '<img src="http://calc.gm-vrn.ru/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">' + 
                             '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">' + 
                             '<p style="margin: 10px;">Тел.: +7(473)212-34-01</p><p style="margin: 10px;">Почта: gm-partner@mail.ru</p><p style="margin: 10px;">Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p></div></td></tr></table>';

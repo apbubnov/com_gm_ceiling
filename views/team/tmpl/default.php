@@ -35,7 +35,7 @@ foreach ($ProjectCurrentMonthAll as $value) {
 		$ProjectCurrentMonth[$value->id] = ["id" => $value->id, "mounting_sum" => $value->mounting_sum, "new_mount_sum" => $value->new_mount_sum];
 	}
 } */
-
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/team/tmpl/css/style.css" type="text/css" />
@@ -122,7 +122,7 @@ foreach ($ProjectCurrentMonthAll as $value) {
 						$price1 +=  $value->mounting_sum;
 						$price2 += $value->new_mount_sum;
 				?>
-					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
+					<tr onclick="location.replace('http://<?php echo $server_name ?>/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
 						<td><?php echo $value->id; ?></td>
 						<td><?php echo $value->mounting_sum; ?></td>
 						<td><?php if ($value->new_mount_sum == null) { echo 0; } else { echo $value->new_mount_sum; } ?></td>

@@ -42,6 +42,7 @@ if ($_COOKIE['receipt'] != "") {
     $stock = $data->stock;
     $errors = $data->errors;
 }
+$server_name = $_SERVER['SERVER_NAME'];
 ?>
 <?= parent::getPreloader(); ?>
 
@@ -931,6 +932,7 @@ if ($_COOKIE['receipt'] != "") {
 
 <script type="text/javascript">
     var $ = jQuery;
+    var server_name = <?php echo $server_name;?>;
     $(document).ready(Init);
     $(document).scroll(Scroll);
     $(window).resize(Resize);
@@ -1350,7 +1352,7 @@ if ($_COOKIE['receipt'] != "") {
 
         if (values.length > 0) jQuery.ajax({
             type: 'POST',
-            url: "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
+            url: "http://"+server_name+"/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
             data: {files: values},
             success: function (data) {
                 $(".ModalDoc .Document .iFrame").attr("src", data);
