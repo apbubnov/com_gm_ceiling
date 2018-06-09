@@ -1855,7 +1855,7 @@ class Gm_ceilingHelpersGm_ceiling
                         
                     }
                 }
-                if (count($n29) > 0) {
+                if ((is_array($n29) || is_object($n29)) && count($n29) > 0) {
                     foreach ($n29 as $profil) {
                         switch (gettype($profil)) {
                             case 'object':
