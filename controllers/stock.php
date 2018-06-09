@@ -378,8 +378,10 @@ class Gm_ceilingControllerStock extends JControllerLegacy
            
             if (empty($customer->dealer->counterparty))
                 die(json_encode((object) ["status" => "error", "error" => "У дилера закончился срок договора!\nРеализация не возможна!"]));
-
-            $valute = $_POST["valute"];
+            /*Не испоблзутеся*/
+           /* if(isset($_POST["valute"])){
+                $valute = $_POST["valute"];
+            }*/
             $client = $customer->client;
             $dealer = $customer->dealer;
             $margin = JFactory::getUser($dealer->id)->getDealerInfo();

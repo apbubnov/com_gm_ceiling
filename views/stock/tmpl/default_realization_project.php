@@ -809,7 +809,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 
     <script>
         var $ = jQuery;
-        var server_name = <?php echo $server_name;?>;
+        var server_name ='<?php echo $server_name;?>';
         $(document).ready(Init);
         $(document).scroll(Scroll);
         $(window).resize(Resize);
