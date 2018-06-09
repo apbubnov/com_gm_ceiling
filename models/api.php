@@ -30,7 +30,7 @@ class Gm_ceilingModelApi extends JModelList
             $db = $this->getDbo();
             $arr_ids = [];
 
-            foreach ($data as $key => $value)
+            if (!empty($data)) foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
                 {
@@ -180,7 +180,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
-            foreach ($data as $key => $value)
+            if (!empty($data)) foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->id))
                 {

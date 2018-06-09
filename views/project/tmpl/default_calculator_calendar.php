@@ -532,6 +532,12 @@ $status_attr = "data-status = \"$status\"";
                 <?php } ?>
             </select>
             <button class="btn btn-primary" id="save_advt" type="button">Ок</button>
+            <hr>
+            <div id="new_advt_div">
+                <label>Добавить новую рекламу</label><br>
+                <input id="new_advt_name" placeholder="Название рекламы">
+                <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
+            </div>
         <?php
             } else {
                 if ($this->item->api_phone_id == 10) {
@@ -1962,6 +1968,37 @@ $status_attr = "data-status = \"$status\"";
                             maxVisible: 5,
                             type: "error",
                             text: "Ошибка"
+                        });
+                    }
+                });
+            });
+
+            jQuery("#add_new_advt").click(function() {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
+                    data: {
+                        name: jQuery("#new_advt_name").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        select = document.getElementById('advt_choose');
+                        var opt = document.createElement('option');
+                        opt.selected = true;
+                        opt.value = data.id;
+                        opt.innerHTML = data.name;
+                        select.appendChild(opt);
+                        jQuery("#new_advt_name").val('');
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "ошибка"
                         });
                     }
                 });

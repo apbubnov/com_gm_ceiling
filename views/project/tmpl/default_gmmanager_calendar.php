@@ -1768,7 +1768,7 @@
         jQuery("#new_advt_div").toggle();
     })
 
-    jQuery("#save_advt").click(function () {
+    jQuery("#save_advt").click(function() {
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
             data: {
@@ -1798,7 +1798,7 @@
                 });
             }
         });
-    })
+    });
 
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
