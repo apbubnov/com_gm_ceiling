@@ -179,7 +179,13 @@ class Gm_ceilingModelCanvases extends JModelList
                     ->select("min_name as name")
                     ->where("id = '$item->roller_stock'");
                 $db->setQuery($query);
-                $item->stock_name = $db->loadObject()->name;
+                $query_rslt = $db->loadObject();
+                if(!empty($query_rslt)){
+                    $item->stock_name = $query_rslt->name;    
+                }
+                else{
+                    $item->stock_name = "";   
+                }
 
                 $TC_ID = $item->texture_id;
                 if (empty($OLD_TC_ID)) $OLD_TC_ID = $TC_ID;
@@ -275,7 +281,13 @@ class Gm_ceilingModelCanvases extends JModelList
                 ->where("status = '1'")
                 ->where("canvas_id = '$canvas_id'");
             $db->setQuery($query);
-            $YCount = $db->loadObject()->count;
+            $query_rslt = $db->loadObject();
+            if(!empty($query_rslt)){
+                $YCount = $query_rslt->count;
+            } 
+            else {
+                $YCount = 0;  
+            }
 
             $query = $db->getQuery(true);
             $query->from("`#__gm_ceiling_analytics_canvases`")
@@ -284,7 +296,13 @@ class Gm_ceilingModelCanvases extends JModelList
                 ->where("status = '1'")
                 ->where("canvas_id = '$canvas_id'");
             $db->setQuery($query);
-            $MCount = $db->loadObject()->count;
+            $query_rslt = $db->loadObject();
+            if(!empty($query_rslt)){
+                $MCount = $query_rslt->count;
+            } 
+            else {
+                $MCount = 0;  
+            }
 
             $query = $db->getQuery(true);
             $query->from("`#__gm_ceiling_analytics_canvases`")
@@ -293,7 +311,13 @@ class Gm_ceilingModelCanvases extends JModelList
                 ->where("status = '1'")
                 ->where("canvas_id = '$canvas_id'");
             $db->setQuery($query);
-            $Count = $db->loadObject()->count;
+            $query_rslt = $db->loadObject();
+            if(!empty($query_rslt)){
+                $Count = $query_rslt->count;
+            } 
+            else {
+                $Count = 0;  
+            }
 
             $result = ceil((floatval($YCount) + floatval($MCount)) / 2);
             $result -= ($result < $Count)?0:$Count;

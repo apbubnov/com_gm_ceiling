@@ -78,18 +78,21 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
             $cut_data .= '||'.$p_usadki;
 
-
             for ($i = 0; $i < count($length_arr); $i++)
             {
                 $calc_data .= implode('=', $length_arr[$i]);
                 $calc_data .= ';';
             }
 
-            $filename_calc = md5('calculation_sketch'.$calc_id);
-            $filename_cut = md5('cut_sketch'.$calc_id);
+            $client_calc_img = base64_decode($calc_img);
+            $client_calc_img = preg_replace("/>\d+</", "><", $client_calc_img);
 
+            $filename_calc = md5('calculation_sketch'.$calc_id);
+            $filename_client_calc = md5('calculation_sketch_client'.$calc_id);
+            $filename_cut = md5('cut_sketch'.$calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT']."/calculation_images/$filename_calc.svg", base64_decode($calc_img));
             file_put_contents($_SERVER['DOCUMENT_ROOT']."/cut_images/$filename_cut.svg", base64_decode($cut_img));
+            file_put_contents($_SERVER['DOCUMENT_ROOT']."/calculation_images/$filename_client_calc.svg", $client_calc_img);
 
             $canv_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
