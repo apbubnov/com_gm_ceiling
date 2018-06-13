@@ -317,7 +317,7 @@ jQuery("#sh_estimate").click(function () {
     })
 });
 
-function save_data_to_session(action_type,id=null){
+function save_data_to_session(action_type,id=null,obj=null){
     var phones = [];
         var s = window.location.href;
         var classname = jQuery("input[name='new_client_contacts[]']");
@@ -356,7 +356,13 @@ function save_data_to_session(action_type,id=null){
                 create_calculation(project_id);
             }
             if(action_type == 2){
-               window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
+                console.log(jQuery(this));
+                if(obj.href){
+                    window.location = obj.href;
+                }
+                else{
+                    window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
+                }
             }
             if(action_type == 3){
                 jQuery("#form-client").submit();

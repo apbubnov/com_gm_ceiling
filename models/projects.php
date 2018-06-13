@@ -117,7 +117,6 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')
                 ->select('a.project_info AS address')
                 ->from('`#__gm_ceiling_projects` AS `a`')
-                ->where('a.state = 1')
                 ->group('id');
 
             $query->select('status.title AS `status`, status.id AS status_id')

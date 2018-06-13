@@ -584,6 +584,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$status = $jinput->get('status','','INT');
 			$name = $jinput->get('new_client_name', '', 'STRING');
 			$phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
+            $sum = $jinput->get('project_sum', '', 'STRING');
 			foreach ($phones as $key => $value) {
 				$phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
 			}
@@ -638,64 +639,72 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				if(count($new_phones)>0){
 					$cl_phones_model->save($client_id,$new_phones);
 				}
-				if(count($change_phones)>0){
-					$cl_phones_model->update($client_id,$change_phones);
+                if(count($change_phones)>0){
+                    $cl_phones_model->update($client_id,$change_phones);
+                }
+            }
+            $data->project_sum = $sum;
+			$data->project_verdict = 1;
+			$calculations = $calculationsModel->new_getProjectItems($data->id);
+			$all_calculations = array();
+			foreach($calculations as $calculation){
+				$all_calculations[] = $calculation->id;
+			}
+			$ignored_calculations = array_diff($all_calculations, $include_calculation);
+			$return = $model->activate($data, 5);
+            $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+            $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $dealer = $user_model->getUserByAssociatedClient($client_id);
+            if(!empty($dealer)){
+                $recoil_map_model->save($dealer->id, $project_id, $sum);
+            }
+            
+			if ($return === false)
+				{
+					$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
 				}
-				$data->project_verdict = 1;
-				$calculations = $calculationsModel->new_getProjectItems($data->id);
-				$all_calculations = array();
-				foreach($calculations as $calculation){
-					$all_calculations[] = $calculation->id;
-				}
-				$ignored_calculations = array_diff($all_calculations, $include_calculation);
-				$return = $model->activate($data, 5);
-				if ($return === false)
-					{
-						$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
-					}
-					else {
+				else {
 
-						if(count($ignored_calculations) > 0) {
+					if(count($ignored_calculations) > 0) {
 
-							$client_id = $data->id_client;
-							$project_data = $model->getData($project_id);
-							$project_data->project_status = 3;
-							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
-							$project_data->project_verdict = 0;
-							$project_data->client_id = 	$client_id;
-							$project_data->api_phone_id = 10;
+						$client_id = $data->id_client;
+						$project_data = $model->getData($project_id);
+						$project_data->project_status = 3;
+						$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
+						$project_data->project_verdict = 0;
+						$project_data->client_id = 	$client_id;
+						$project_data->api_phone_id = 10;
 
-							unset($project_data->id);
-							$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
-							$refuse_id = $project_model->save(get_object_vars($project_data));
-							$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
-							$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-							foreach($ignored_calculations as $ignored_calculation){
-								$calculationModel->changeProjectId($ignored_calculation, $refuse_id);
-							}
+						unset($project_data->id);
+						$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+						$refuse_id = $project_model->save(get_object_vars($project_data));
+						$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
+						$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+						foreach($ignored_calculations as $ignored_calculation){
+							$calculationModel->changeProjectId($ignored_calculation, $refuse_id);
 						}
 					}
+				}
 
-					if(count($ignored_calculations) > 0 ) {
-						$data = $model->getNewData($project_id);
-						$data->refuse_id = $refuse_id;
-						Gm_ceilingHelpersGm_ceiling::notify($data, 6);
-						$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
-					} else {
-						Gm_ceilingHelpersGm_ceiling::notify($data, 2);
-						$this->setMessage("Проект сформирован");
-						Gm_ceilingHelpersGm_ceiling::notify($data, 7);
-					}
-					
-                    if (in_array('16', $groups))
-                    {
-                        $this->setRedirect("/index.php?option=com_gm_ceiling&view=project&type=gmmanager&id=$project_id", false);
-                    }
-                    else
-                    {
-                        $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
-                    }
-			}
+				if(count($ignored_calculations) > 0 ) {
+					$data = $model->getNewData($project_id);
+					$data->refuse_id = $refuse_id;
+					Gm_ceilingHelpersGm_ceiling::notify($data, 6);
+					$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
+				} else {
+					Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+					$this->setMessage("Проект сформирован");
+					Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+				}
+				
+                if (in_array('16', $groups))
+                {
+                    $this->setRedirect("/index.php?option=com_gm_ceiling&view=project&type=gmmanager&id=$project_id", false);
+                }
+                else
+                {
+                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
+                }
 		}
 		catch(Exception $e)
         {

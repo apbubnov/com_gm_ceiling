@@ -92,14 +92,14 @@ $self_calc_data = json_encode($self_calc_data);//массив с себесто�
 $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
-$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
+$min_project_sum = (empty($mount_transport->min_sum)) ? 100 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum)) ? 100 : $mount_transport->min_components_sum;
 
 $project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
 $del_flag = 0;
 $project_total = $project_total + $client_sum_transport;
-$project_total_discount = $project_total_discount  + $client_sum_transport;
+$project_total_discount = ($project_total_discount > $min_project_sum ) ? $project_total_discount  + $client_sum_transport : $min_project_sum;
 
 // календарь
 $month = date("n");
@@ -1182,7 +1182,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
 
     jQuery('.change_calc').click(function() {
         let id = jQuery(this).data('calc_id');
-        save_data_to_session(2, id);
+        save_data_to_session(2, id,jQuery(this));
     });
 
     jQuery("#add_phone").click(function () {
