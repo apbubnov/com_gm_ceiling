@@ -32,8 +32,7 @@ class Gm_ceilingControllerColorForm extends JControllerForm
 
 			// Get the previous edit id (if any) and the current edit id.
 			$previousId = (int) $app->getUserState('com_gm_ceiling.edit.color.id');
-			$editId     = $app->input->getInt('id', 0);
-
+			$editId     = $app->getInput('id', 0, 'int');
 			// Set the user id for the user to edit in the session.
 			$app->setUserState('com_gm_ceiling.edit.color.id', $editId);
 

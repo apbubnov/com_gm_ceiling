@@ -137,6 +137,7 @@ jQuery( document ).ready(function(){
 		jQuery("#glyanec").val(0);
 	});
 		jQuery('#create_img').click(function(){
+			console.log(color_name, color_code);
 			color_name = jQuery('#jform_color_title').val();
 			color_code =jQuery('#jform_color_hex').val();
 			gl = jQuery('#glyanec').val();
