@@ -483,6 +483,9 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     [].forEach.call(inputs,function(el){
         el.addEventListener("keypress",auto_replace);
     });
+    jQuery(".clear_form_group").click(function(){
+        jQuery(this).closest(".form-group").remove();
+    });
 }); 
 
 jQuery(".component-content").on("click", ".btn_calc", function () {
@@ -505,8 +508,9 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
         });
         if(jQuery("#without").attr("fix") != "true" ){
             jQuery("#with_mount").attr("checked",true);
-        }    
+        }
     } else {
+
         if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
             arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
@@ -515,6 +519,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                     });
                 }
             });
+            event_help();
         } else {
             arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
@@ -528,8 +533,8 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 }
             });
             jQuery(`[data-parent = "${parent}"]`).toggle();
+        }
 
-        }    
     }
 });
 function  auto_replace (e){

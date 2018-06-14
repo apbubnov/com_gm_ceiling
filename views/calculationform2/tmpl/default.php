@@ -664,6 +664,7 @@
     let data;
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
+        console.log('alert');
      let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
                     help_buttons[i].onmouseenter = function(){
@@ -964,7 +965,7 @@
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
         fill_calc_data();
-        var event_help_proccess = event_help.process();
+        //var event_help_proccess = event_help.process();
         event_help();
 
         jQuery.each(canvases_data, function(key,value){
@@ -1309,7 +1310,7 @@
                 }
             }
            
-            setTimeout(event_help_proccess, 2000);
+            //setTimeout(event_help_proccess, 2000);
         });
         
         jQuery("#btn_details").click(function(){
