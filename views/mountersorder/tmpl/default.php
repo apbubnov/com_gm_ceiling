@@ -17,8 +17,8 @@ JHtml::_('formbehavior.chosen', 'select');
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
-$project = $_GET['project'];
-
+$jinput = JFactory::getApplication()->input;
+$project = $jinput->get('project',null,'INT');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);
@@ -200,6 +200,42 @@ if (!empty($calculation_ids)) {
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar">
+            <div align=center>
+                <p>Выполнено:</p>
+                <p>
+                    <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
+                    <label for="obag" class="cbx">
+                      <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                      </span>
+                      <span>обагечивание;</span>
+                    </label>
+                </p>
+                <p>
+                    <input type="checkbox" id="natyazhka" class="inp-cbx" data-status = "25" style="display: none">
+                    <label for="natyazhka" class="cbx">
+                      <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                      </span>
+                      <span>натяжка;</span>
+                    </label>
+                </p>
+                <p>
+                    <input type="checkbox" id="vstavka" class="inp-cbx" data-status = "26" style="display: none">
+                    <label for="vstavka" class="cbx">
+                      <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                      </span>
+                      <span>установка вставки.</span>
+                    </label>
+                </p>
+            </div>
             <p>Введите примечание:</p>
             <p>
                 <textarea id="note"></textarea>
@@ -214,8 +250,8 @@ if (!empty($calculation_ids)) {
 
 <script>
 
-    var url_proj = <?php echo $project; ?>;
-
+    var url_proj = '<?php echo $project; ?>';
+    var statuses = [];
     // функция получения текущего времени
     var date;
     function CurrentDateTime() {
@@ -254,9 +290,10 @@ if (!empty($calculation_ids)) {
             url: "index.php?option=com_gm_ceiling&task=mountersorder.GetDates",
             dataType: 'json',
             data: {
-                url_proj : url_proj,
+                url_proj : url_proj
             },
             success: function(msg) {
+                console.log(msg);
                 start = msg[0].project_mounting_start;
                 end = msg[0].project_mounting_end;
                 status_mount = msg[0].project_status;
@@ -269,10 +306,13 @@ if (!empty($calculation_ids)) {
                     jQuery("#begin").attr("disabled", false);
                     jQuery("#complited").attr("disabled", "disabled");
                     jQuery("#underfulfilled").attr("disabled", "disabled");
-                } else if (status_mount == 16) {
+                } else if (status_mount == 16 || status_mount == 24 || status_mount == 25 || status_mount == 26 ) {
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
                 } 
+            },
+            error: function(data){
+                console.log(data);
             }
         });
 
@@ -286,7 +326,22 @@ if (!empty($calculation_ids)) {
                 jQuery("#modal-window-1-tar").hide();
             }
         });
-
+        jQuery('.inp-cbx').change(function(){
+            let status = jQuery(this).data('status');
+            console.log(this.checked);
+            if(this.checked){
+                if(statuses.indexOf(status)== -1 ){
+                    statuses.push(status);
+                }
+            }
+            else
+            {
+                 if(statuses.indexOf(status) != -1 ){
+                    statuses.splice(statuses.indexOf(status),1);
+                }
+            }
+            console.log(statuses);
+        });
         //  кнопка "монтаж начат"
         jQuery("#begin").click( function() {
             CurrentDateTime();
@@ -317,10 +372,22 @@ if (!empty($calculation_ids)) {
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save", function() {
             var note = jQuery("#note").val();
+            let status;
             if (whatBtn == "complited") {
                 // кнопка "монтаж выполнен"
-                if (note.length != 0) {
+                
                     CurrentDateTime();
+                    if(statuses.length == 3){
+                        status = 11;
+                    }
+                    else{
+                        statuses.sort(function (a, b) {
+                                          if (a > b) return 1;
+                                          if (a < b) return -1;
+                                        });
+                        status = statuses[statuses.length-1];
+                    }
+                    console.log(status);
                     jQuery.ajax( {
                         type: "POST",
                         url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
@@ -329,16 +396,17 @@ if (!empty($calculation_ids)) {
                             date : date,
                             url_proj : url_proj,
                             note : note,
+                            status: status
                         },
                         success: function(msg) {
                             if (msg[0].project_status == 11) {
                                 window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
                             }
+                        },
+                        error: function(data){
+                            console.log(data);
                         }
                     });
-                } else {
-                    jQuery("#warning").show();
-                }
             } else if (whatBtn == "underfulfilled") {
                 // кнопка "монтаж недовыполнен"
                 if (note.length != 0) {

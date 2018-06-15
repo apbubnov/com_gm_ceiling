@@ -53,7 +53,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 
 			$query->select('project_mounting_start, project_mounting_end, project_status')
 			->from('#__gm_ceiling_projects')
-			->where('id = '.$id);
+			->where("id = $id");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -117,7 +117,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function MountingComplited($id, $date, $note2, $note) {
+	function MountingComplited($id, $date, $note2, $note,$status) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -130,7 +130,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 
 			$query->update('#__gm_ceiling_projects')
 			->set('project_mounting_end = \''.$date.'\'')
-			->set('project_status = 11')
+			->set("project_status = $status")
 			->where('id = '.$id);
 			$db->setQuery($query);
 			$db->execute();
@@ -153,7 +153,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			// запись в project_history
 			$query5->insert('#__gm_ceiling_projects_history')
 			->columns('project_id, new_status, date_of_change')
-			->values("'$id', '11', '$date'");
+			->values("'$id', $status, '$date'");
 			$db->setQuery($query5);
 			$db->execute();
 

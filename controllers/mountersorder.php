@@ -22,14 +22,14 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 	public function GetDates() {
 		try
 		{
-			$id = $_POST["url_proj"];
-			
+			$id = $_POST['url_proj'];
+			$model_request = null;
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
-			$model_request = $model->GetDates($id);
+			if(!empty($id)){
+				$model_request = $model->GetDates($id);
+			}
 
-			echo json_encode($model_request);
-
-			exit;
+			die(json_encode($model_request));
 		}
 		catch(Exception $e)
         {
@@ -41,9 +41,9 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 	public function MountingStart() {
 		try
 		{
-			$id = $_POST["url_proj"];
-			$date = $_POST["date"];
-
+			$jinput = JFactory::getApplication()->input;
+			$id = $jinput->get("url_proj","","STRING");
+			$date = $jinput->get("date","","STRING");
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
 			$model_request = $model->MountingStart($id, $date);
 			$server_name = $_SERVER['SERVER_NAME'];
@@ -55,7 +55,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$config = JFactory::getConfig();
 			$sender = array(
 				$config->get('mailfrom'),
-				$config->get('fromname')
+			 	$config->get('fromname')
 			);
 			$mailer->setSender($sender);
 			foreach ($emails as $value) {
@@ -72,7 +72,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$body .= ").\n";
 			$body .= "Адрес: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время монтажа: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
-			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name""/\">http://$server_name</a>";
+			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name\">http://$server_name</a>";
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();
@@ -91,18 +91,20 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 	public function MountingComplited() {
 		try
 		{
-			$id = $_POST["url_proj"];
-			$date = $_POST["date"];
-			$note = $_POST["note"];
+			$jinput = JFactory::getApplication()->input;
+			$id = $jinput->get("url_proj","","STRING");
+			$date = $jinput->get("date","","STRING");
+			$status = $jinput->get("status","","STRING");
+			$note = $jinput->get("note","","STRING");
 
-			if (strlen($note) != 0) {
+			if (!empty($note)) {
 				$note2 = "Монтаж по проекту №$id выполнен. Примечание от монтажной бригады: ".$note;			
-			} /*else {
-				$note = "Монтаж выполнен. Примечание от монтажной бригады: отсутствует";
-			}*/
+			} else {
+				$note2 = "Монтаж выполнен. Примечание от монтажной бригады: отсутствует";
+			}
 
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
-			$model_request = $model->MountingComplited($id, $date, $note2, $note);
+			$model_request = $model->MountingComplited($id, $date, $note2, $note, $status);
 
 			// письмо
 			$emails = $model->AllNMSEmails();

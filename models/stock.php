@@ -453,13 +453,18 @@ class Gm_ceilingModelStock extends JModelList
 
                 $query = $db->getQuery(true);
                 $query->from("`#__gm_ceiling_counterparty` AS CP")
-                    ->select("CP.id as id")
-                    ->where("CP.user_id = ".$db->quote($JSON->dealer->id))
-                    ->where("CP.close_contract > ".$db->quote(date("Y.m.d")));
+                    ->select("CP.id as id, CP.close_contract as date_contract")
+                    ->where("CP.user_id = ".$db->quote($JSON->dealer->id));
                 $db->setQuery($query);
                 $r = $db->loadObject();
-
-                if (empty($r)) $result[$i]->error = json_encode(array("У дилера закончился срок договора!"));
+                if (empty($r)){
+                    $result[$i]->error = json_encode(array("У дилера нет контрагента, добавьте или выберите ГМ!"));
+                }
+                else{
+                    if($r->date_contract < date("YYYY-MM-DD")){
+                        $result[$i]->error = json_encode(array("У дилера закончился срок договора!"));
+                    }
+                }
             }
 
             return $result;

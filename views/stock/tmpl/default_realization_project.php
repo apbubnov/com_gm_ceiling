@@ -28,7 +28,6 @@ $numberProject = $app->input->get('id', 0, 'int');
 $jcookie = $app->input->cookie;
 
 $data = Gm_ceilingHelpersGm_ceiling::getModel('Project')->getProjectForStock($numberProject);
-
 $stocks = $model->getStocks();
 
 $goods = $data->goods;
@@ -36,7 +35,7 @@ $customer = $data->customer;
 $status = floatval($customer->Status);
 $statusNumber = $status;
 if ($status == 5) $status = "Укомплектован";
-else if ($status == 6) $status = "Собран";
+else if ($status == 6 || $status == 7) $status = "Собран";
 else if ($status == 19) $status = "Выдан";
 $server_name = $_SERVER['SERVER_NAME'];
 ?>
@@ -551,7 +550,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     <option value="<?=$s->id;?>"><?=$s->name;?></option>
                 <?endforeach;?>
             </select>
-            <button type="submit" class="Action btn btn-primary Submit">
+            <button type="submit" class="Action btn btn-primary Submit" <?php if ($data->customer->status == 8) echo "style='display:none;'"?>>
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> <?=$status;?>
             </button>
         </div>
