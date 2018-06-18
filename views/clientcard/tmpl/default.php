@@ -356,7 +356,7 @@
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "success",
                     text: "ФИО обновлено!"
@@ -369,7 +369,7 @@
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка!"
@@ -516,6 +516,18 @@
 
         document.getElementById('add_email').onclick = function()
         {
+            if (!(/^[A-Za-z\d\-\_\.]+\@{1}[A-Za-z\d\-\_]+\.[A-Za-z\d]+$/).test(document.getElementById('new_email').value)) {
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Email не заполнен или имеет неверный формат"
+                });
+                document.getElementById('new_email').focus();
+                return;
+            }
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
                 data: {
@@ -532,7 +544,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -567,7 +579,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -594,7 +606,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -662,7 +674,7 @@
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "success",
                             text: "Звонок сдвинут"
@@ -674,7 +686,7 @@
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "error",
                             text: "Ошибка сервера"
@@ -696,7 +708,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "success",
                     text: "Добавленна запись в историю клиента"
@@ -726,7 +738,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка отправки"
@@ -737,6 +749,18 @@
     document.getElementById('add_phone').onclick = function()
     {
         var client_id = <?php echo $client->id; ?>;
+        if (document.getElementById('new_phone').value == '') {
+            noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'topCenter',
+                maxVisible: 5,
+                type: "warning",
+                text: "Заполните номер"
+            });
+            document.getElementById('new_phone').focus();
+            return;
+        }
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=client.addPhone",
             data: {
@@ -753,7 +777,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка сервера"

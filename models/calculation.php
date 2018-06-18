@@ -272,6 +272,9 @@ class Gm_ceilingModelCalculation extends JModelItem
 					->where("c.id = $id");
 				$db->setQuery($query);
 				$item = $db->loadObject();
+				if (empty($item)) {
+					return null;
+				}
 				$item->n13 = $this->n13_load($item->id);
 				$item->n14 = $this->n14_load($item->id);
 	            $item->n15 = $this->n15_load($item->id);
