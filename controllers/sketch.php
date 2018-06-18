@@ -85,7 +85,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
 
             $client_calc_img = base64_decode($calc_img);
-            $client_calc_img = preg_replace("/>\d+</", "><", $client_calc_img);
+            $client_calc_img = preg_replace('/<text [^\<\>]+>\d+<\/text>/', "", $client_calc_img);
 
             $filename_calc = md5('calculation_sketch'.$calc_id);
             $filename_client_calc = md5('calculation_sketch_client'.$calc_id);
