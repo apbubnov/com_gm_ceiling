@@ -54,6 +54,11 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$done =  $db->getQuery(true);
 			$sum =  $db->getQuery(true);
 			$profit =  $db->getQuery(true);
+			$profit_sub = $db->getQuery(true);
+			$profit_sub
+                ->select("SUM(c.components_sum+c.canvases_sum+c.mounting_sum)")
+                ->from("`#__gm_ceiling_calculations` as c")
+                ->where("c.project_id = p.id");
 			$common
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
@@ -89,11 +94,12 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->from("#__gm_ceiling_projects as p")
 				->where("p.api_phone_id = a.id  AND p.project_status = 12");
 			$sum
-				->select("SUM(COALESCE(p.new_project_sum,0))")
+				->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
 				->from("#__gm_ceiling_projects as p")
 				->where("p.api_phone_id = a.id  AND p.project_status = 12");
 			$profit
-				->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
+				->select("SUM(IF((project_sum IS NULL OR project_sum = 0) AND (new_project_sum  IS NOT NULL OR new_project_sum <>0),new_project_sum,project_sum) -
+IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p.new_material_sum + p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
 				->where("p.api_phone_id = a.id  AND p.project_status = 12");
 			$query->select(' DISTINCT a.name');
@@ -111,6 +117,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$query->select("($profit) as profit");
 			$query->from('`#__gm_ceiling_api_phones` AS a');
 			$query->where("a.dealer_id = $dealer_id");
+			//throw new Exception($query);
 				/*->from('`#__gm_ceiling_api_phones` AS a')
 				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id and a.dealer_id ='.$dealer_id);*/
 				//throw new Exception($dealer_id);

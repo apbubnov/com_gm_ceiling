@@ -165,7 +165,7 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
                 ->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).") and cl.dealer_id = $dealer_id");
             $sum_done
-                ->select("SUM(COALESCE(p.new_project_sum,0))")
+                ->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
                 ->where("p.id IN (".$this->getQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");
