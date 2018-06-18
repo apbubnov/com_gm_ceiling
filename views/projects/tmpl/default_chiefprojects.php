@@ -91,7 +91,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
         <?= JHtml::_('form.token'); ?>
   <? else: ?>
-        <h3 class="center">У вас нет заказов, не назначенных на монтаж!</h3>
+        <h3 class="center">У вас нет заказов неназначенных на монтаж!</h3>
   <? endif; ?>
 </form>
 
