@@ -356,7 +356,7 @@
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "success",
                     text: "ФИО обновлено!"
@@ -369,7 +369,7 @@
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка!"
@@ -520,7 +520,7 @@
                 noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "warning",
                     text: "Email не заполнен или имеет неверный формат"
@@ -544,7 +544,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -579,7 +579,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -606,7 +606,7 @@
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка сервера"
@@ -674,7 +674,7 @@
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "success",
                             text: "Звонок сдвинут"
@@ -686,7 +686,7 @@
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
-                            layout: 'center',
+                            layout: 'topCenter',
                             maxVisible: 5,
                             type: "error",
                             text: "Ошибка сервера"
@@ -708,7 +708,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "success",
                     text: "Добавленна запись в историю клиента"
@@ -738,7 +738,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка отправки"
@@ -753,7 +753,7 @@
             noty({
                 timeout: 2000,
                 theme: 'relax',
-                layout: 'center',
+                layout: 'topCenter',
                 maxVisible: 5,
                 type: "warning",
                 text: "Заполните номер"
@@ -777,7 +777,7 @@
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
-                    layout: 'center',
+                    layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: "Ошибка сервера"
