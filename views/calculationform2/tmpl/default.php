@@ -110,8 +110,11 @@
     $color_data = json_encode($components_model->getColor());
     $canvases_data = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
     $calculation_id = $jinput->get('calc_id',0,'INT');
-    if($calculation_id){
+    if(!empty($calculation_id)){
         $calculation =  $calculation_model->new_getData($calculation_id);
+        if (empty($calculation)) {
+            throw new Exception("Расчет не найден");
+        }
         $calculation->extra_components = addslashes($calculation->extra_components);
         $calculation->extra_mounting = addslashes($calculation->extra_mounting);
         $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
