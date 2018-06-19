@@ -23,7 +23,7 @@ $phones = $api_phone_model->getArrayNumbers();
     </div>
     <input type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
     <br>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view g_table" id="callbacksList">
         <thead>
         <tr>
             <th>

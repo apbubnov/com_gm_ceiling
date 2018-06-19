@@ -71,7 +71,6 @@
 <button id="back_btn" class="btn btn-primary" style="margin-bottom: 1em;"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <h3 class="center">Карточка клиента</h3>
 <div id="FIO-container-tar">
-    <label>Имя клиента:</label>
     
         <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -149,13 +148,12 @@
         </div>
     </div>
 </div>
-<!-- заказы -->
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
         <div class="row">
             <div class="col-sm-12" id = "calls">
                 <p class="caption-tar">История клиента</p>
                 <div id="calls-tar">
-                    <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
+                    <table id="table-calls-tar" class="table table-striped small_table" cellspacing="0">
 
                         <?php foreach($history as $item): ?>
 
@@ -177,7 +175,7 @@
             <div class="col-xs-12" id="add-note-container-tar">
                 <label for="comments">Добавить комментарий:</label>
                 <br>
-                <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
+                <input id="new_comment" type="text" class="input-text-tar" placeholder ="Введите комментарий">
                 <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
@@ -206,8 +204,8 @@
 <!-- конец -->
 <!-- заказы -->
 <div id="orders-container-tar">
-    <h3>Заказы</h3>
-    <table class="small_table table-striped table_cashbox one-touch-view" id="table_projects">
+    <h4>Заказы</h4>
+    <table class="small_table table-striped table_cashbox one-touch-view g_table" id="table_projects">
         <thead>
             <tr>
                 <th>Номер</th>
@@ -291,14 +289,14 @@
                     <?php echo $item->status; ?>
                 </td>
                 <td>
-                    <button class="btn btn-danger btn_del_proj" type="button" data-id="<?php echo $item->id; ?>"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    <button class="btn btn-danger btn-sm btn_del_proj" type="button" data-id="<?php echo $item->id; ?>"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                 </td>
             </tr>
         <?php endforeach;?>
     </table>
     <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить заказ">
-        <input type="button" id="add_new_calc" class="btn btn-primary" value="Добавить просчет">
+        <button type="button" id="add_new_project" class="btn btn-primary"><i class="fa fa-plus"></i> Заказ</button>
+        <button type="button" id="add_new_calc" class="btn btn-primary"><i class="fa fa-plus"></i> Просчет</button>
     </div>
 </div>
 <!-- модальное окно -->

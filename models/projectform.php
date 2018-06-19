@@ -153,9 +153,10 @@ class Gm_ceilingModelProjectForm extends JModelForm
 							}
 						}
 
-					$this->item->client_id = !empty($textValue) ? implode(', ', $textValue) : $this->item->client_id;
-					$this->item->id_client = !empty($textValue3) ? implode(', ', $textValue3) : $this->item->id_client;
-					$this->item->client_contacts = !empty($textValue2) ? implode(', ', $textValue2) : $this->item->client_contacts;
+					
+					if (!empty($textValue)) $this->item->client_id = implode(', ', $textValue);
+					if (!empty($textValue3)) $this->item->id_client = implode(', ', $textValue3);
+					if (!empty($textValue2)) $this->item->client_contacts = implode(', ', $textValue2);
 
 					}
 				}

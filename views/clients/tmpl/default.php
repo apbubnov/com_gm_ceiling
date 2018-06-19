@@ -52,7 +52,7 @@ echo parent::getPreloaderNotJS();
         <input type="text" id="search_text">
         <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
 	</div>
-	<table class="small_table table-striped table_cashbox one-touch-view" id="clientList">
+	<table class="small_table table-striped table_cashbox one-touch-view g_table" id="clientList">
 		<thead>
 			<tr>
 				<th>
@@ -200,7 +200,7 @@ jQuery(document).ready(function(){
                 {
                     tr.find(".status").text('-');
                 }
-                tr.find(".delete").append('<button class = "btn btn-danger" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
+                tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
                 tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
                 list.append(tr);
                 wheel_count_clients = i;

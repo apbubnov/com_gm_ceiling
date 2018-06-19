@@ -446,7 +446,7 @@ if(!$user->getDealerInfo()->update_check) {
 	<div  class = "col-md-12" style="margin-top:15px;">
 		<div class = "col-md-4"></div>
 		<div class = "col-md-4">
-			<button class="btn btn-primary" style="width:100%;"> Сохранить </button>
+			<button type="button" id="btn_save" class="btn btn-primary" style="width:100%;"> Сохранить </button>
 		</div>
 		<div class = "col-md-4"></div>
 	</div>	
@@ -460,6 +460,52 @@ if(!$user->getDealerInfo()->update_check) {
 		jQuery("#reset_ap").click(function(){
 			fill_inputs(gm_mount,"reset");
 		});
+
+		document.getElementById('btn_save').onclick = function() {
+			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_canvases_margin').value) ||
+				document.getElementById('jform_dealer_canvases_margin').value < 0 ||
+				document.getElementById('jform_dealer_canvases_margin').value > 99) {
+				noty({
+                    theme: 'relax',
+                    timeout: 3000,
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Значение маржинальности должно быть в пределе [0..99]"
+                });
+				document.getElementById('jform_dealer_canvases_margin').focus();
+				return;
+			}
+			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_components_margin').value) ||
+				document.getElementById('jform_dealer_components_margin').value < 0 ||
+				document.getElementById('jform_dealer_components_margin').value > 99) {
+				noty({
+                    theme: 'relax',
+                    timeout: 3000,
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Значение маржинальности должно быть в пределе [0..99]"
+                });
+				document.getElementById('jform_dealer_components_margin').focus();
+				return;
+			}
+			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_mounting_margin').value) ||
+				document.getElementById('jform_dealer_mounting_margin').value < 0 ||
+				document.getElementById('jform_dealer_mounting_margin').value > 99) {
+				noty({
+                    theme: 'relax',
+                    timeout: 3000,
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Значение маржинальности должно быть в пределе [0..99]"
+                });
+				document.getElementById('jform_dealer_mounting_margin').focus();
+				return;
+			}
+			document.getElementById('dealer_form').submit();
+		};
 	}); 
 	function fill_inputs(gm_mount,type){
 		for(let i = 0;i<Object.keys(gm_mount).length;i++){

@@ -21,7 +21,7 @@ $_SESSION['dop_num'] = $dop_num;
 <form>
     <?=parent::getButtonBack();?>
     <input type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view g_table" id="callbacksList">
         <thead>
         <tr>
             <th>
@@ -79,7 +79,7 @@ $_SESSION['dop_num'] = $dop_num;
                 str += '<td>'+arr_calls[i].client_name+'</td>';
                 str += '<td>'+arr_calls[i].date_time+'</td>';
                 str += '<td>'+arr_calls[i].comment+'</td>';
-                str += '<td><button class="btn btn-danger" type="button" onclick="del_call('+arr_calls[i].id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+                str += '<td><button class="btn btn-danger btn-sm" type="button" onclick="del_call('+arr_calls[i].id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
                 str += '</tr>';
                 table_body_elem.innerHTML += str;
             }

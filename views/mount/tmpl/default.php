@@ -57,7 +57,7 @@ $mount = array(
     <?=parent::getButtonBack();?>
 
 		<table class="table calculation_sum">
-		<?php if($this->item->project_verdict==0 && $user->dealer_type !=2) {?>
+		<?php if($user->dealer_type !=2) {?>
 			<tr>
 				<td><a id = "change_margin" class="btn btn-primary" style="float:right;">Изменить маржинальность</a></td>
 			</tr>
@@ -75,21 +75,13 @@ $mount = array(
 				</tr>
 			</tbody>
 	</table>
-	<table class="table table-striped" id="mountList">
+	<table class="table table-striped g_table" id="mountList">
 		<thead>
 		<tr>
-			<th class=''>
-				<?php echo JHtml::_('grid.sort',  'ID', 'a.id', $listDirn, $listOrder); ?>
-			</th>
-			<th class=''>
-				<?php echo JHtml::_('grid.sort',  'Наименование', 'a.component_title', $listDirn, $listOrder); ?>
-			</th>
-			<th class=''>
-				<?php echo JHtml::_('grid.sort',  'Себестоимость', 'a.component_price', $listDirn, $listOrder); ?>
-			</th>
-			<th class=''>
-				<?php echo JHtml::_('grid.sort',  'Цена для клиента', 'a.component_price', $listDirn, $listOrder); ?>
-			</th>
+			<th class='center'>ID</th>
+			<th class='center'>Наименование</th>
+			<th class='center'>Себестоимость</th>
+			<th class='center'>Цена для клиента</th>
 			<?php if ($canEdit || $canDelete): ?>
 				<th class="center">
 				</th>
@@ -113,16 +105,16 @@ $mount = array(
 		<?php foreach ($this->item as $key => $value) :  ?>
 			<?php if(($key != 'id')&&($key != 'mp18')&&($key != 'user_id')) {?>
 				<tr class="row<?php echo $i % 2; ?>">
-					<td>
+					<td class="center">
 						<?php echo $j++; ?>
 					</td>
-					<td>
+					<td class="center">
 						<?php  echo $mount[$key]; ?>
 					</td>
-					<td>        
+					<td class="center">        
 						<?php echo $value; ?>
 					</td>
-					<td>
+					<td class="center">
 						<?php echo round(($this->item->$key * 100 / (100 - $margin)), 2); ?>
 					</td>
 				</tr>
