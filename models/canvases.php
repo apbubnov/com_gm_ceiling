@@ -298,7 +298,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $query_rslt = $db->loadObject();
             if(!empty($query_rslt)){
-                $MCount = $query_rslt->count;
+                $MCount = count($query_rslt);
             } 
             else {
                 $MCount = 0;  
@@ -313,7 +313,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $query_rslt = $db->loadObject();
             if(!empty($query_rslt)){
-                $Count = $query_rslt->count;
+                $Count = count($query_rslt);
             } 
             else {
                 $Count = 0;  
