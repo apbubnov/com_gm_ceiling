@@ -78,18 +78,10 @@ $mount = array(
 	<table class="table table-striped g_table" id="mountList">
 		<thead>
 		<tr>
-			<th class='center'>
-				<?php echo JHtml::_('grid.sort',  'ID', 'a.id', $listDirn, $listOrder); ?>
-			</th>
-			<th class='center'>
-				<?php echo JHtml::_('grid.sort',  'Наименование', 'a.component_title', $listDirn, $listOrder); ?>
-			</th>
-			<th class='center'>
-				<?php echo JHtml::_('grid.sort',  'Себестоимость', 'a.component_price', $listDirn, $listOrder); ?>
-			</th>
-			<th class='center'>
-				<?php echo JHtml::_('grid.sort',  'Цена для клиента', 'a.component_price', $listDirn, $listOrder); ?>
-			</th>
+			<th class='center'>ID</th>
+			<th class='center'>Наименование</th>
+			<th class='center'>Себестоимость</th>
+			<th class='center'>Цена для клиента</th>
 			<?php if ($canEdit || $canDelete): ?>
 				<th class="center">
 				</th>
