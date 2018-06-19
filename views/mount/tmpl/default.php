@@ -75,19 +75,19 @@ $mount = array(
 				</tr>
 			</tbody>
 	</table>
-	<table class="table table-striped" id="mountList">
+	<table class="table table-striped g_table" id="mountList">
 		<thead>
 		<tr>
-			<th class=''>
+			<th class='center'>
 				<?php echo JHtml::_('grid.sort',  'ID', 'a.id', $listDirn, $listOrder); ?>
 			</th>
-			<th class=''>
+			<th class='center'>
 				<?php echo JHtml::_('grid.sort',  'Наименование', 'a.component_title', $listDirn, $listOrder); ?>
 			</th>
-			<th class=''>
+			<th class='center'>
 				<?php echo JHtml::_('grid.sort',  'Себестоимость', 'a.component_price', $listDirn, $listOrder); ?>
 			</th>
-			<th class=''>
+			<th class='center'>
 				<?php echo JHtml::_('grid.sort',  'Цена для клиента', 'a.component_price', $listDirn, $listOrder); ?>
 			</th>
 			<?php if ($canEdit || $canDelete): ?>
@@ -113,16 +113,16 @@ $mount = array(
 		<?php foreach ($this->item as $key => $value) :  ?>
 			<?php if(($key != 'id')&&($key != 'mp18')&&($key != 'user_id')) {?>
 				<tr class="row<?php echo $i % 2; ?>">
-					<td>
+					<td class="center">
 						<?php echo $j++; ?>
 					</td>
-					<td>
+					<td class="center">
 						<?php  echo $mount[$key]; ?>
 					</td>
-					<td>        
+					<td class="center">        
 						<?php echo $value; ?>
 					</td>
-					<td>
+					<td class="center">
 						<?php echo round(($this->item->$key * 100 / (100 - $margin)), 2); ?>
 					</td>
 				</tr>
