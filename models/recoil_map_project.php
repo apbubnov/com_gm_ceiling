@@ -272,5 +272,23 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function deleteByProjId($project_id){
+        try{
+            $user = JFactory::getUser();
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete("*")
+                ->from('`#__gm_ceiling_recoil_map_project`')
+                ->where("project_id = $project_id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

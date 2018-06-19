@@ -1357,6 +1357,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$id = $jinput->get('id', '0', 'INT');
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $data = $model->return($id);
+            $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            $model_projectshistory->save($id,1);
+            $model_recoil_map_project = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+            $model_recoil_map_project->deleteByProjId($id);
 			if ($data === false)
 			{
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
