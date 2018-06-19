@@ -28,7 +28,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <?=parent::getButtonBack();?>
 
-<h2 class="center" style="margin-bottom: 1em;">Не назначенные на монтаж или не запущенные в производство</h2>
+<h4 class="center" style="margin-bottom: 1em;">Не назначенные на монтаж или не запущенные в производство</h4>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post" name="adminForm" id="adminForm">
 	<? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
         <table class="table table-striped one-touch-view g_table" id="projectList">
