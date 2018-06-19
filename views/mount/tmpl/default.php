@@ -57,7 +57,7 @@ $mount = array(
     <?=parent::getButtonBack();?>
 
 		<table class="table calculation_sum">
-		<?php if($this->item->project_verdict==0 && $user->dealer_type !=2) {?>
+		<?php if($user->dealer_type !=2) {?>
 			<tr>
 				<td><a id = "change_margin" class="btn btn-primary" style="float:right;">Изменить маржинальность</a></td>
 			</tr>

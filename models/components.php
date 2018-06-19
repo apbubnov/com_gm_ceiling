@@ -440,16 +440,16 @@ class Gm_ceilingModelComponents extends JModelList
                     ->where('options.id = ' . $filter['id_option']);
             else $query->select('*');
 
-            if ($filter['where'])
+            if (isset($filter['where']) && !empty($filter['where']))
                 foreach ($filter['where'] as $key => $value)
                     foreach ($value as $title => $item)
                         $query->where($title . ' ' . $key . ' ' . $item . ' ');
 
-            if ($filter['group'])
+            if (isset($filter['group']) && !empty($filter['group']))
                 foreach ($filter['group'] as $value)
                     $query->group($value);
 
-            if ($filter['order'])
+            if (isset($filter['order']) && !empty($filter['order']))
                 foreach ($filter['order'] as $value)
                     $query->order($value);
 
