@@ -1192,7 +1192,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             filter.order.push(input.attr('NameDB'));
             filter.page = input.closest(".Form").attr("Page");
 
-
+            console.log(filter);
             if (input.is(":focus")) {
                 jQuery.ajax({
                     type: 'POST',

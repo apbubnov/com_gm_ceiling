@@ -17,6 +17,9 @@ include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {
+        if($margin == 100){
+            $margin = 99;
+        }
         return ($value * 100 / (100 - $margin));
     }
     catch(Exception $e)
@@ -1731,21 +1734,31 @@ class Gm_ceilingHelpersGm_ceiling
                 $data["need_mount"] = 1;
             $mounting_data = [];
             $guild_data = [];
-            if ($data["need_mount"]) {
-               
-                if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
-                    //Обработка 1 угла
-                    if ($data['n9']) {
-                        $guild_data[] = array(
-                            "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
-                            "quantity" => $data['n9'] - 6,                                                                //Кол-во
-                            "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => ($data['n9'] - 6) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => ($data['n9'] - 6) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        );
-                    }
+            if ($data['n31'] > 0) {
+                //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+                $guild_data[] = array(
+                    "title" => "Внутренний вырез(в цеху) (ПВХ)",                                                                    //Название
+                    "quantity" => $data['n31'],                                                                //Кол-во
+                    "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
+                //Обработка 1 угла
+                if ($data['n9']) {
+                    $guild_data[] = array(
+                        "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
+                        "quantity" => $data['n9'] - 6,                                                                //Кол-во
+                        "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => ($data['n9'] - 6) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => ($data['n9'] - 6) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    );
                 }
+            }
+            if ($data["need_mount"]) {
                 if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n11'] > 0) {
                     //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                     $mounting_data[] = array(
@@ -1972,17 +1985,6 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $data['n31'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $data['n31'] * $results->mp10                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        );
-                    }
-                    if ($data['n31'] > 0) {
-                        //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
-                        $guild_data[] = array(
-                            "title" => "Внутренний вырез(в цеху) (ПВХ)",                                                                    //Название
-                            "quantity" => $data['n31'],                                                                //Кол-во
-                            "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     //со вставкой

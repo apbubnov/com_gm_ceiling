@@ -433,6 +433,7 @@ class Gm_ceilingModelStock extends JModelList
                     $query->order($value);
 
             //print_r((string) $query);
+            throw new Exception($query);
             $db->setQuery($query);
             $result = $db->loadObjectList();
 
