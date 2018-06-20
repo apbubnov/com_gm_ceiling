@@ -965,12 +965,13 @@ class Gm_ceilingModelProjects extends JModelList
     public function getMeasuresByDealerId($dealer_id){
         try
         {
+            $currentDate = date("Y-m-d H:i:s");
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select('`p`.`id` AS `project_id`, `p`.`project_calculation_date`, `p`.`project_calculator`, `u`.`name`');
             $query->from('`#__gm_ceiling_projects` AS `p`');
             $query->innerJoin('`#__users` AS `u` ON `p`.`project_calculator` = `u`.`id`');
-            $query->where("`u`.`dealer_id` = $dealer_id");
+            $query->where("`u`.`dealer_id` = $dealer_id AND `p`.`project_calculation_date` >= '$currentDate'");
             $db->setQuery($query);
             
             $result = $db->loadObjectList();
