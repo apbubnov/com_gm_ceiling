@@ -30,14 +30,12 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
 	 */
 	public function &getModel($name = 'Projects', $prefix = 'Gm_ceilingModel', $config = array())
 	{
-		try
-		{
+		try {
 			$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 			
 			return $model;
 		}
-		catch(Exception $e)
-        {
+		catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
@@ -45,8 +43,7 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
 
     public function deleteEmptyProject()
     {
-        try
-        {
+        try {
             $jinput = JFactory::getApplication()->input;
             $client_id = $jinput->get('client_id', 1, 'INT');
             $user = JFactory::getUser();
@@ -56,8 +53,21 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             }
             die(true);
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
+    public function getMeasuresOfCurrentUser()
+    {
+        try {
+            $user = JFactory::getUser();
+            $model = $this->getModel('Projects', 'Gm_ceilingModel');
+            $result = $model->getMeasuresByDealerId($user->dealer_id);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }

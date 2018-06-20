@@ -453,9 +453,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 </div>
 <hr>
 <div id="calendar_test"></div>
+<div id="calendar_test2"></div>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
     init_measure_calendar('calendar_test');
+    init_measure_calendar('calendar_test2');
     var $ = jQuery,
         Data = {};
 
