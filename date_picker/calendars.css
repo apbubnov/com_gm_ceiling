@@ -88,7 +88,6 @@
     background:#ffffff;
     color:#414099;
     border: 1px solid #414099;
-    border-radius:5px;
 }
 .nice-date-picker-body tr .nice-active{
     background:#d3d3f9;
@@ -105,7 +104,7 @@
     border-radius:5px;
 }
 .nice-date-picker-body tr .nice-busy-all{
-    background: orange;
+    background: darkorange;
     color:#414099;
     border-radius:5px;
 }

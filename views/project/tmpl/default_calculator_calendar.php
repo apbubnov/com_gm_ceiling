@@ -640,7 +640,7 @@ $status_attr = "data-status = \"$status\"";
                     </p>
                     <div class="row center">
                         <div class="col-xl-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary save_bnt" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
+                            <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                         </div>
                         <div class="col-xl-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
@@ -1576,38 +1576,33 @@ $status_attr = "data-status = \"$status\"";
             });*/
 
             
-            jQuery("#client_order").click(function () {
+            jQuery("#client_order").click(function() {
                 jQuery("input[name='project_verdict']").val(1);
                 jQuery("#project_sum").val(<?php echo $project_total_discount?>);
             });
-            jQuery("#save_exit").click(function () {
+            jQuery("#save_exit").click(function() {
                 jQuery("input[name='project_status']").val(4);
                 jQuery("input[name='project_verdict']").val(1);
             });
-            jQuery("#save").mousedown(function () {
-                if(jQuery("input[name='project_mounter']").val() === "")
-                {
-                    jQuery(this).attr("type", "button");
+            jQuery("#save").click(function() {
+                if(jQuery("input[name='project_mounter']").val() === "") {
                     noty({
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
-                        type: "error",
+                        type: "warning",
                         text: "Выберите монтажную бригаду!"
                     });
-
                 }
-                else{
+                else {
                     jQuery("input[name='project_status']").val(5);
                     jQuery("input[name='project_verdict']").val(1);
-                    jQuery(this).attr("type", "submit");
+                    document.getElementById('form-client').submit();
                 }
-                    
-                
             });
             $tmp_accept = 0; $tmp_refuse = 0;
 
-            jQuery("#accept_project").click(function () {
+            jQuery("#accept_project").click(function() {
                 if(!jQuery(this).data('status')){
                     jQuery("#project_status").val(1);
                     jQuery("#form-client").submit();
