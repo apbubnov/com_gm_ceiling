@@ -70,8 +70,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                                 <td class="center one-touch"><?= $item->id; ?></td>
                                 <td>
-                                    <? if ($item->project_status >= 5): ?>
-                                        <button class="btn btn-primary btn-sm" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check-circle"></i></button>
+                                    <? if ($item->project_status >= 8): ?>
+                                        <button class="btn btn-primary btn-sm btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check-circle"></i></button>
                                     <? endif; ?>
                                 </td>
                                 <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>

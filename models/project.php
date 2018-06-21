@@ -986,8 +986,7 @@ class Gm_ceilingModelProject extends JModelItem
 
 	public function return($id)
     {
-    	try
-    	{
+    	try {
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query->update('`#__gm_ceiling_projects` AS projects')
@@ -1003,15 +1002,11 @@ class Gm_ceilingModelProject extends JModelItem
 	            ->where('id = ' . $id);
             $db->setQuery($query);
             $item =  $db->loadObject();
-            $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
-            $model_projectshistory->save($id,1);
 			return $item;
-
-			}
-			catch(Exception $e)
-			{
-				Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-			}
+		}
+		catch(Exception $e) {
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
     }
 	
 	/*

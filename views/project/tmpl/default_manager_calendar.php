@@ -451,40 +451,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
     </div>
 </div>
-
-<style>
-    /* @media (max-width: 1024px) {
-        .component-content, .component-content * {
-            font-size: 10px !important;
-        }
-
-        table, table *:not(label) {
-            padding: .1rem !important;
-        }
-    
-        table, table * {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-            text-align: center !important;
-        }
-
-        .container {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-            max-width: none !important;
-        }
-
-        .TabelAction {
-            margin: 0 30px !important;
-            width: calc(100% - 60px) !important;
-        }
-    } */
-</style>
-
-<script language="JavaScript">
-
+<hr>
+<div id="calendar_test"></div>
+<div id="calendar_test2"></div>
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
+<script type="text/javascript">
+    init_measure_calendar('calendar_test');
+    init_measure_calendar('calendar_test2');
     var $ = jQuery,
         Data = {};
 

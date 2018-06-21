@@ -9,12 +9,11 @@
 }(this, function () {
     'use strict';
 
-    var selectDate = {year: '', month: '', day: ''};
-
     var niceDatePicker = function ($params) {
         this.$warpper = null;
         this.monthData = null;
         this.$params = $params;
+        this.selectDate = {year: '', month: '', day: ''};
         this.init(this.$params);
     };
 
@@ -78,7 +77,7 @@
                 var today = new Date();
                 if (showDate === today.getDate() && thisMonth === today.getMonth() + 1 && thisYear == today.getFullYear()) {
                     styleCls = 'nice-normal nice-current';
-                } else if (showDate == selectDate.day && thisMonth == selectDate.month && thisYear == selectDate.year) {
+                } else if (showDate == this.selectDate.day && thisMonth == this.selectDate.month && thisYear == this.selectDate.year) {
                     styleCls = 'nice-normal nice-select';
                 } else {
                     styleCls = 'nice-normal';
@@ -213,13 +212,13 @@
             if ($target.classList.contains('nice-normal')) {
 
                 $params.onClickDate($target.getAttribute('data-date'));
-                var tds = document.getElementsByClassName('nice-normal');
+                var tds = _this.$warpper.getElementsByClassName('nice-normal');
                 for(var i = tds.length; i--;) {
                     tds[i].classList.remove('nice-select');
                 }
                 $target.classList.add('nice-select');
                 var arr_str_date = $target.getAttribute('data-date').split('-');
-                selectDate = {year: arr_str_date[0], month: arr_str_date[1], day: arr_str_date[2]};
+                _this.selectDate = {year: arr_str_date[0], month: arr_str_date[1], day: arr_str_date[2]};
             }
         }, false);
         this.$warpper.addEventListener('mouseover', function (e) {
