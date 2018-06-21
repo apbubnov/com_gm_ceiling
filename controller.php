@@ -3146,6 +3146,20 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getArrayForMeasuresCalendar()
+    {
+        try {
+            $user = JFactory::getUser();
+            $model = $this->getModel('Projects', 'Gm_ceilingModel');
+            $result = $model->getMeasuresAndDayoffsByDealerId($user->dealer_id);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 
 ?>

@@ -24,7 +24,7 @@ function init_measure_calendar(elem_id)
 
 		    jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=projects.getMeasuresOfCurrentUser",
+                url: "index.php?option=com_gm_ceiling&task=getArrayForMeasuresCalendar",
                 success: function(data) {
                 	measures = data;
                     console.log(measures);

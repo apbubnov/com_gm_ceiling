@@ -962,16 +962,17 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function getMeasuresByDealerId($dealer_id){
+    public function getMeasuresAndDayoffsByDealerId($dealer_id){
         try
         {
             $currentDate = date("Y-m-d").' 00:00:00';
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('`p`.`id` AS `project_id`, `p`.`project_calculation_date`, `p`.`project_calculator`, `u`.`name`');
+            $query->select('`p`.`id` AS `project_id`, `p`.`project_calculation_date`, `p`.`project_calculator`, `u`.`name`, `d`.`date_from`, `d`.`date_to`');
             $query->from('`#__gm_ceiling_projects` AS `p`');
-            $query->innerJoin('`#__users` AS `u` ON `p`.`project_calculator` = `u`.`id`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND `p`.`project_calculation_date` > '$currentDate'");
+            $query->innerJoin("`#__users` AS `u` ON `p`.`project_calculator` = `u`.`id` AND `u`.`dealer_id` = $dealer_id");
+            $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `p`.`project_calculator` = `d`.`id_user`');
+            $query->where("`p`.`project_calculation_date` > '$currentDate'");
             $db->setQuery($query);
             
             $result = $db->loadObjectList();

@@ -59,18 +59,4 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
         }
     }
 
-    public function getMeasuresOfCurrentUser()
-    {
-        try {
-            $user = JFactory::getUser();
-            $model = $this->getModel('Projects', 'Gm_ceilingModel');
-            $result = $model->getMeasuresByDealerId($user->dealer_id);
-            die(json_encode($result));
-        }
-        catch(Exception $e) {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-        }
-    }
-
 }
