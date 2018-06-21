@@ -2,8 +2,8 @@ function init_measure_calendar(elem_id)
 {
 	var cont = document.getElementById(elem_id), calendar, measures;
 
-	setTimeout(include_script, 1, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
-	setTimeout(include_style, 1, 'components/com_gm_ceiling/date_picker/calendars.css');
+	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
+	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
 	setTimeout(init, 200);
 
 	function init() {
@@ -12,9 +12,13 @@ function init_measure_calendar(elem_id)
 		        dom: cont,
 		        mode: 'en',
 		        onClickDate: function(date) {
+		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0];
 		            console.log(date);
 		            draw_calendar();
-		            jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0].classList.remove('nice-busy');
+		            elem.classList.remove('nice-busy');
+		            if (elem.classList.contains('nice-busy-all')) {
+		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
+		            }
 		        }
 		    });
 
@@ -72,6 +76,7 @@ function init_measure_calendar(elem_id)
 	    				count = jelems[0].getAttribute('data-count')-0 + 1;
 	    				jelems[0].setAttribute('data-count', count);
 	    				if (count === 12) {
+	    					jelems[0].classList.remove('nice-busy');
 	    					jelems[0].classList.add('nice-busy-all');
 	    				}
 	    				else {
@@ -102,7 +107,7 @@ function init_measure_calendar(elem_id)
 	    let styles = document.getElementsByTagName('link');
 	    let reg_exp = new RegExp(url);
 	    for(let i = styles.length;i--;){
-	        if(reg_exp.test(styles[i].src)){
+	        if(reg_exp.test(styles[i].href)){
 	            return;
 	        }
 	    }
