@@ -1369,27 +1369,29 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //добавляем щепотку дополнительных комплектующих
             $extra_components = json_decode($data['extra_components']);
-            foreach ($extra_components as $extra_component) {
-                $component_item = array();
-                $component_item['title'] = $extra_component->title;                                        //Название комплектующего
-                $component_item['unit'] = "шт.";                                                            //В чем измеряется
-                $component_item['id'] = 0;                                                                  //ID
-                $component_item['quantity'] = 1;
-                $component_item['stack'] = 1;
-                $component_item['self_price'] = $extra_component->value;                                    //Себестоимость
-                $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
-                //Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
-                //Кол-во * Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
-                //Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
-                //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-                $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
-                //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
-                $components_data[] = $component_item;
+            if (!empty($extra_components)) {
+                foreach ($extra_components as $extra_component) {
+                    $component_item = array();
+                    $component_item['title'] = $extra_component->title;                                        //Название комплектующего
+                    $component_item['unit'] = "шт.";                                                            //В чем измеряется
+                    $component_item['id'] = 0;                                                                  //ID
+                    $component_item['quantity'] = 1;
+                    $component_item['stack'] = 1;
+                    $component_item['self_price'] = $extra_component->value;                                    //Себестоимость
+                    $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
+                    //Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
+                    //Кол-во * Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
+                    //Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
+                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
+                    $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
+                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
+                    $components_data[] = $component_item;
+                }
             }
             return $components_data;
         }
@@ -1628,6 +1630,7 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate_mount($del_flag,$calc_id=null,$data=null){
         try {
             $user = JFactory::getUser();
+            $groups = $user->get('groups');
             $mount_model = self::getModel('mount');
             $calculation_model = self::getModel('calculation');
             $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -1668,16 +1671,21 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($project_id)->id_client;
-            if(!empty($client_id)){
-                $client_model = self::getModel('client');
-                $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
-                $dealer_id = $dealer->dealer_id;
-                if(empty($dealer_id)){
-                    $dealer_id = 1;
-                }
+            if(in_array('16',$groups)){
+                $dealer_id = 1;
             }
-            else{
-                $dealer_id = 1;   
+            else{ 
+                if(!empty($client_id)){
+                        $client_model = self::getModel('client');
+                        $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
+                        $dealer_id = $dealer->dealer_id;
+                        if(empty($dealer_id)){
+                            $dealer_id = 1;
+                        }
+                    }
+                else{
+                    $dealer_id = 1;   
+                }
             }
             $results = $mount_model->getDataAll($dealer_id);
             

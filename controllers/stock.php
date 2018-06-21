@@ -274,9 +274,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             if ($filter != null) {
                 $model = $this->getModel();
                 $result = $model->getCustomer($filter);
-                echo json_encode($result);
+                die(json_encode($result));
             }
-            exit;
         } catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -354,6 +353,18 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
     }
 
+    public function addCounterparty(){
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $user_id = $jinput->get('user_id',null,'INT');
+            $model = $this->getModel();
+            die(json_encode($model->addCounterpartyForDealer($user_id,$name,$phone,$email)));
+        } 
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
     public function Realization()
     {
         try {

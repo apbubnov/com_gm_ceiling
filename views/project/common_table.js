@@ -357,8 +357,8 @@ function save_data_to_session(action_type,id=null,obj=null){
             }
             if(action_type == 2){
                 console.log(jQuery(this));
-                if(obj.href){
-                    window.location = obj.href;
+                if(obj.attr('href')){
+                    window.location = obj.attr('href');
                 }
                 else{
                     window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;

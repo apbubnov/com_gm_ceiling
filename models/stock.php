@@ -370,7 +370,9 @@ class Gm_ceilingModelStock extends JModelList
     {
         try
         {
+            $user = JFactory::getUser();
             $db = $this->getDbo();
+            $isDealer = false;
 
             $filter['where']['IS'] = array();
             foreach ($filter['where']['like'] as $k => $v)
@@ -382,8 +384,11 @@ class Gm_ceilingModelStock extends JModelList
                     $filter['where']['IS']['('.$k] = "NULL OR ".$k." = '')";
                 }
             }
-
-            $q = $db->getQuery(true);
+             if($filter['where']['like']['customer.type'] == "'%Дилер%'"){
+                    $isDealer = true;
+                }
+            
+            /*$q = $db->getQuery(true);
             $q  ->from('`#__gm_ceiling_clients` AS client')
                 ->join('LEFT','`#__gm_ceiling_clients_contacts` AS contact ON contact.client_id = client.id ')
                 ->join('LEFT','`#__gm_ceiling_clients_dop_contacts` AS dop ON dop.client_id = client.id ')
@@ -403,15 +408,31 @@ class Gm_ceilingModelStock extends JModelList
                 ->join('LEFT','`#__gm_ceiling_dealer_info` as info ON info.dealer_id = dealer.id')
                 ->join('LEFT','`#__user_usergroup_map` as map ON map.user_id = dealer.id')
                 ->where("map.group_id = '14'")
-                ->select("CONVERT('Дилер' USING utf8) as type, CONVERT(dealer.name USING utf8) as name, CONVERT(dealer.email USING utf8) as email, CONVERT(dealer.username USING utf8) as phone")
+                ->select("CONVERT('Дилер' USING utf8) as `type`, CONVERT(dealer.name USING utf8) as `name`, CONVERT(dealer.email USING utf8) as email, CONVERT(dealer.username USING utf8) as phone")
                 ->select("CONVERT(CONCAT('{\"type\":\"4\", \"client\":null, \"dealer\":{\"id\":\"', dealer.id ,'\", \"name\":\"', dealer.name, '\", \"email\":\"', (CASE WHEN dealer.email IS NULL THEN '' ELSE dealer.email END), '\", \"phone\":\"', (CASE WHEN dealer.username IS NULL THEN '' ELSE dealer.username END), '\"}}') USING utf8) AS JSON")
                 ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
                 ->group("dealer.id");
             $query_2 = "(" . (string) $q . ")";
+*/
+            $q = $db->getQuery(true);
+            $q  ->from('`#__gm_ceiling_clients` AS client')
+                ->join('LEFT','`#__gm_ceiling_clients_contacts` AS contact ON contact.client_id = client.id ')
+                ->join('LEFT','`#__gm_ceiling_clients_dop_contacts` AS dop ON dop.client_id = client.id ')
+                ->join('LEFT','`#__gm_ceiling_clients_type` AS type ON type.id = client.type_id')
+                ->join('LEFT','`#__users` AS dealer ON dealer.id = client.dealer_id ')
+                ->join('LEFT','`#__gm_ceiling_dealer_info` as info ON info.dealer_id = dealer.id')
+                ->where('(dop.type_id = 1 or dop.type_id IS NULL) and client.dealer_id IS NOT NULL')
+                ->select("IF(client.id = dealer.associated_client,\"Дилер\",CONVERT(type.title USING utf8)) as `type`, CONVERT(client.client_name USING utf8) as name, CONVERT(dop.contact USING utf8) as email, CONVERT(contact.phone USING utf8) as phone")
+                ->select("CONVERT(CONCAT('{\"type\":\"', IF(client.id = dealer.associated_client,'4',type.id), '\", \"client\":{\"id\":\"', client.id ,'\", \"name\":\"', IF(client.client_name IS NULL, '', client.client_name), '\", \"email\":\"', IF(dop.contact  IS NULL, '', dop.contact), '\", \"phone\":\"', IF(contact.phone IS NULL, '', contact.phone), '\"}, \"dealer\":{\"id\":\"', dealer.id ,'\", \"name\":\"', dealer.name, '\", \"email\":\"', IF(dealer.email IS NULL, '', dealer.email ), '\", \"phone\":\"', IF(dealer.username IS NULL, '', dealer.username), '\"}}') USING utf8) AS JSON")
+                ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
+                ->group("client.id");
+                if(!$isDealer){
 
+                    $q->where("client.dealer_id = $user->dealer_id");
+                }
             $query = $db->getQuery(true);
-            $query->from("( " . $query_1 . " UNION " . $query_2 . " ) AS customer");
-
+            //$query->from("( " . $query_1 . " UNION " . $query_2 . " ) AS customer");
+            $query->from("($q) AS customer");
             if ($filter['select'])
                 foreach ($filter['select'] as $key => $value)
                 {
@@ -423,7 +444,6 @@ class Gm_ceilingModelStock extends JModelList
                 foreach ($filter['where'] as $key => $value)
                     foreach ($value as $title => $item)
                         $query->where($title.' '.$key.' '.$item.' ');
-
             if ($filter['group'])
                 foreach ($filter['group'] as $value)
                     $query->group($value);
@@ -432,8 +452,8 @@ class Gm_ceilingModelStock extends JModelList
                 foreach ($filter['order'] as $value)
                     $query->order($value);
 
-            //print_r((string) $query);
-            throw new Exception($query);
+
+            print_r($query,true);
             $db->setQuery($query);
             $result = $db->loadObjectList();
 
