@@ -47,7 +47,7 @@ function init_measure_calendar(elem_id)
 	            	if (target.className == 'prev-date-btn' || target.className == 'next-date-btn') {
 	            		var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
 	            		console.log(add_zeros_in_date(date_month));
-	            		//cont.getElementsByTagName('td')[10].style.background = 'green';
+	            		cont.getElementsByClassName('nice-normal')[Math.floor(Math.random() * (28))].style.background = 'green';
 	            		return;
 	            	}
 	            	target = target.parentNode;
