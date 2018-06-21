@@ -13,6 +13,8 @@ function init_measure_calendar(elem_id)
 		        mode: 'en',
 		        onClickDate: function(date) {
 		            console.log(date);
+		            draw_calendar();
+		            jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0].classList.remove('nice-busy');
 		        }
 		    });
 
@@ -23,6 +25,7 @@ function init_measure_calendar(elem_id)
                 	measures = data;
                     console.log(measures);
                     cont.onclick = clicks_on_calendar;
+                    draw_calendar();
                 },
                 dataType: "json",
                 timeout: 10000,
@@ -47,11 +50,35 @@ function init_measure_calendar(elem_id)
 	            	if (target.className == 'prev-date-btn' || target.className == 'next-date-btn') {
 	            		var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
 	            		console.log(add_zeros_in_date(date_month));
-	            		cont.getElementsByClassName('nice-normal')[Math.floor(Math.random() * (28))].style.background = 'green';
+	            		draw_calendar();
+	            		//cont.getElementsByClassName('nice-normal')[Math.floor(Math.random() * (28))].style.background = 'green';
 	            		return;
 	            	}
 	            	target = target.parentNode;
 	            }
+		    }
+
+		    function draw_calendar() {
+		    	var date, jelems, count, tds;
+		    	tds = cont.getElementsByClassName('nice-normal');
+		    	for (var i = tds.length; i--;) {
+		    		tds[i].setAttribute('data-count', 0);
+		    	}
+		    	for (var i = measures.length; i--;) {
+		    		date = measures[i].project_calculation_date.substring(0, 10);
+		    		date = date.replace('-0', '-');
+		    		jelems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+		    		if (jelems.length === 1) {
+	    				count = jelems[0].getAttribute('data-count')-0 + 1;
+	    				jelems[0].setAttribute('data-count', count);
+	    				if (count === 12) {
+	    					jelems[0].classList.add('nice-busy-all');
+	    				}
+	    				else {
+	    					jelems[0].classList.add('nice-busy');
+	    				}
+		    		}
+		    	}
 		    }
 	    } catch(e) {
 	    	//console.log(e);
