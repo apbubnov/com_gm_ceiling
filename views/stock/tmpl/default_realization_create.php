@@ -1187,7 +1187,6 @@ $server_name = $_SERVER['SERVER_NAME'];
                     Attr = parent.find("#" + v).attr("add");
                 if (Attr !== "true") filter.where.like[NameDB] = "'%" + Value + "%'";
             });
-
             filter.group.push(input.attr('NameDB'));
             filter.order.push(input.attr('NameDB'));
             filter.page = input.closest(".Form").attr("Page");
@@ -1199,6 +1198,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     url: filter.page,
                     data: {filter: filter},
                     success: function (data) {
+                        console.log(JSON.parse(data));
                         data = JSON.parse(data);
 
                         $.each(data, function (i, v) {
@@ -1238,20 +1238,57 @@ $server_name = $_SERVER['SERVER_NAME'];
         }
 
         function SelectItem(e) {
+            alert("!!");
             e = $(e);
             var parent = e.closest("form"),
                 elements = parent.find(".Input");
 
             if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
             {
+                let json = JSON.parse(e.attr('JSON')),
+                dealer = json.dealer;
                 var error = JSON.parse(e.attr('error'));
                 $.each(error, function (i, v) {
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
-                        type: "error",
-                        text: v
+                        timeout: false,
+                        type: "info",
+                        text: v,
+                        buttons:[
+                        {
+                            addClass: 'btn btn-primary', text: 'Добавить', onClick: function($noty) {
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: "/index.php?option=com_gm_ceiling&task=stock.addCounterparty",
+                                    data: ,
+                                    success: function (data) {
+                                        $noty.close();
+                                        noty({text: 'You clicked "Ok" button', type: 'success'});
+                                    },
+                                    dataType: "text",
+                                    timeout: 10000,
+                                    error: function () {
+                                        noty({
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            timeout: 1500,
+                                            type: "error",
+                                            text: "Сервер не отвечает!"
+                                        });
+
+                                        $(".PRELOADER_GM").hide();
+                                    }
+                                });
+                           
+                          }
+                        },
+                        {addClass: 'btn btn-primary', text: 'Cancel', onClick: function($noty) {
+                            $noty.close();
+                            noty({text: 'You clicked "Cancel" button', type: 'error'});
+                          }
+                        }
+                      ]
                     });
                 });
             }
@@ -1270,7 +1307,9 @@ $server_name = $_SERVER['SERVER_NAME'];
                 });
             }
         }
+        function addCounterPartyForDealer(dealer_id){
 
+        }
         function ClearSelect(e) {
             setTimeout(function () {
                 e = $(e);

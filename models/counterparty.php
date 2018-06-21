@@ -164,4 +164,22 @@ class Gm_ceilingModelCounterparty extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function addCounterpartyForDealer($dealer_id,$name,$phone,$email){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $columns = "`user_id`, `name`, `contacts_phone`, `contacts_email`, `close_contract`";
+            $query
+                ->insert($db->quoteName('#__gm_ceiling_counterparty'))
+                ->columns($columns)
+                ->values("$dealer_id, '$name','$phone','$email','2199-12-31'");
+            $db->setQuery($query);
+            $result = $db->execute();
+            (empty($result)) ? return false : return true;
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
