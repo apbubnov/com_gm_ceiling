@@ -12,7 +12,6 @@ function init_measure_calendar(elem_id, modal_window, dop_mw)
 		        dom: cont,
 		        mode: 'en',
 		        onClickDate: function(date) {
-
 		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0], date_sp = date.split('-'),
 		        	html = '', y = date_sp[0]-0, m = date_sp[1]-0, d = date_sp[2]-0;
 		            console.log(date);
@@ -30,11 +29,11 @@ function init_measure_calendar(elem_id, modal_window, dop_mw)
 		            	else {
 		            		document.getElementById(dop_mw).style.display = 'block';
 		            	}
-		            	html += '<table><tbody><tr><th></th><th>9:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
+		            	html += '<center><table class="measures_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in gaugers) {
 			    			var c = gaugers[key].id;
 			    			html += '<tr><th>'+gaugers[key].name+'</th>';
-			    			if (data_array[y][m][d] == undefined) {
+			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined) {
 			    				for (var h = 9; h < 21; h++) {
 			    					html += '<td data-time="'+h+'" data-calculator="'+c+'">0</td>';
 			    				}
@@ -52,7 +51,7 @@ function init_measure_calendar(elem_id, modal_window, dop_mw)
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table>';
+			    		html += '</tbody></table></center>';
 			    		document.getElementById(modal_window).innerHTML = html;
 		            	document.getElementById(modal_window).style.display = 'block';
 		            }
@@ -103,6 +102,9 @@ function init_measure_calendar(elem_id, modal_window, dop_mw)
 		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount;
 		    	maxCount = 12 * gaugers.length;
 		    	tds = cont.getElementsByClassName('nice-normal');
+		    	if (data_array[y] == undefined) {
+		    		data_array[y] = [];
+		    	}
 		    	for (var d in data_array[y][m]) {
 		    		count = 0;
 		    		for (var key in gaugers) {
