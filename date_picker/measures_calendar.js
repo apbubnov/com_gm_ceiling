@@ -1,6 +1,6 @@
 function init_measure_calendar(elem_id)
 {
-	var cont = document.getElementById(elem_id), calendar, measures;
+	var cont = document.getElementById(elem_id), calendar, data_array, gaugers;
 
 	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
 	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
@@ -26,8 +26,9 @@ function init_measure_calendar(elem_id)
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getArrayForMeasuresCalendar",
                 success: function(data) {
-                	measures = data;
-                    console.log(measures);
+                	data_array = data.data;
+                	gaugers = data.gaugers;
+                    console.log(data_array, gaugers);
                     cont.onclick = clicks_on_calendar;
                     draw_calendar();
                 },
@@ -55,7 +56,6 @@ function init_measure_calendar(elem_id)
 	            		var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
 	            		console.log(add_zeros_in_date(date_month));
 	            		draw_calendar();
-	            		//cont.getElementsByClassName('nice-normal')[Math.floor(Math.random() * (28))].style.background = 'green';
 	            		return;
 	            	}
 	            	target = target.parentNode;
@@ -63,13 +63,36 @@ function init_measure_calendar(elem_id)
 		    }
 
 		    function draw_calendar() {
-		    	var date, jelems, count, tds;
+		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, date, maxCount;
+		    	maxCount = 12 * gaugers.length;
 		    	tds = cont.getElementsByClassName('nice-normal');
 		    	for (var i = tds.length; i--;) {
 		    		tds[i].setAttribute('data-count', 0);
 		    	}
-		    	for (var i = measures.length; i--;) {
-		    		date = measures[i].project_calculation_date.substring(0, 10);
+		    	for (var d in data_array[y][m]) {
+		    		count = 0;
+		    		for (var key in gaugers) {
+		    			var c = gaugers[key].id;
+		    			for (var h in data_array[y][m][d][c]) {
+		    				if (data_array[y][m][d][c][h]) {
+		    					count++;
+		    				}
+		    			}
+		    		}
+		    		if (count > 0) {
+    					tds[d - 1].classList.add('nice-busy');
+    				}
+    				else if (count === maxCount) {
+    					tds[d - 1].classList.add('nice-busy-all');
+    				}
+		    	}
+		    	/*var date, jelems, count, tds;
+		    	tds = cont.getElementsByClassName('nice-normal');
+		    	for (var i = tds.length; i--;) {
+		    		tds[i].setAttribute('data-count', 0);
+		    	}
+		    	for (var i = data_array.length; i--;) {
+		    		date = data_array[i].project_calculation_date.substring(0, 10);
 		    		date = date.replace('-0', '-');
 		    		jelems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
 		    		if (jelems.length === 1) {
@@ -83,7 +106,7 @@ function init_measure_calendar(elem_id)
 	    					jelems[0].classList.add('nice-busy');
 	    				}
 		    		}
-		    	}
+		    	}*/
 		    }
 	    } catch(e) {
 	    	//console.log(e);

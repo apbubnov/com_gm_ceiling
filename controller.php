@@ -3151,9 +3151,12 @@ public function register_mnfctr(){
     {
         try {
             $user = JFactory::getUser();
-            $model = $this->getModel('Projects', 'Gm_ceilingModel');
-            $result = $model->getMeasuresAndDayoffsByDealerId($user->dealer_id);
-            $final_result = null;
+            $model_projects = $this->getModel('Projects', 'Gm_ceilingModel');
+            $model_gaugers = $this->getModel('Gaugers', 'Gm_ceilingModel');
+            $result = $model_projects->getMeasuresAndDayoffsByDealerId($user->dealer_id);
+            $result_gaugers = $model_gaugers->getDealerGaugers($user->dealer_id);
+
+            $final_result = (object)['data' => null, 'gaugers' => $result_gaugers];
 
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
@@ -3172,7 +3175,7 @@ public function register_mnfctr(){
                         $m = intval(date("m", $datetime));
                         $d = intval(date("d", $datetime));
                         $h = intval(date("H", $datetime));
-                        $final_result[$y][$m][$d][$result[$key]->project_calculator][$h] = true;
+                        $final_result->data[$y][$m][$d][$result[$key]->project_calculator][$h] = true;
                     }
                 }
             }

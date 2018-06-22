@@ -31,29 +31,31 @@ class Gm_ceilingModelGaugers extends JModelItem {
 		return $items;
 	}*/
 
-	function getData() {
-		
-	}
-
-	function getDatas($dealerId) {
+	function getDealerGaugers($dealerId) {
 		try
 		{
 			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
 			if ($dealerId == 1) {
 				$type = 22;
 			} else {
 				$type = 21;
 			}
-			
-			$query->select('users.id, users.name')
-				->from('#__users as users')
-				->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
-				->where("dealer_id = $dealerId and usergroup.group_id = '$type'");
-			$db->setQuery($query);			
-
+			$query = $db->getQuery(true);
+			$query->select('`u`.`id`, `u`.`name`')
+				->from('`#__users` AS `u`')
+				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+				->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
+			$db->setQuery($query);
 			$items = $db->loadObjectList();
+
+			if (empty($items)) {
+				$query = $db->getQuery(true);
+				$query->select('`id`, `name`')
+					->from('`#__users`')
+					->where("`id` = $dealerId");
+				$db->setQuery($query);
+				$items = $db->loadObjectList();
+			}
 			return $items;
 		}
 		catch(Exception $e)
