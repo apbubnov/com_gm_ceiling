@@ -357,7 +357,10 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         try {
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id',null,'INT');
-            $model = $this->getModel();
+            $name = $jinput->get('name','','STRING');
+            $phone = $jinput->get('phone','','STRING');
+            $email = $jinput->get('email','','STRING');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('counterparty');
             die(json_encode($model->addCounterpartyForDealer($user_id,$name,$phone,$email)));
         } 
         catch(Exception $e){
@@ -415,7 +418,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 if ($good->page == "Canvas") $canvases[] = $good;
                 else $components[] = $good;
             }
-
             $CanModel = $this->getModel('Canvases', 'Gm_ceilingModel');
             $ComModel = $this->getModel('Components', 'Gm_ceilingModel');
 
@@ -425,7 +427,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     foreach ($canvases as $i => $c) $canvases[$i]->price = ceil($PriceCanvasUSD * $USD * 100)/100;
 
                 $components = $ComModel->Format($components, "Realization");
-
                 if (($customer->type != 4 || !empty($customer->client)) && !empty($margin))
                 {
                     foreach ($canvases as $i => $c) $canvases[$i]->price = ((floatval($c->price) * 100)/(100 - floatval($margin->dealer_canvases_margin)));
