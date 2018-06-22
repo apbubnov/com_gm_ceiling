@@ -3146,6 +3146,47 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getArrayForMeasuresCalendar()
+    {
+        try {
+            $user = JFactory::getUser();
+            $model_projects = $this->getModel('Projects', 'Gm_ceilingModel');
+            $model_gaugers = $this->getModel('Gaugers', 'Gm_ceilingModel');
+            $result = $model_projects->getMeasuresAndDayoffsByDealerId($user->dealer_id);
+            $result_gaugers = $model_gaugers->getDealerGaugers($user->dealer_id);
+
+            $final_result = (object)['data' => null, 'gaugers' => $result_gaugers];
+
+            if (!empty($result)) {
+                foreach ($result as $key => $value) {
+                    $result[$key]->dates = explode(',', $value->calc_dates);
+                    $off_dates1 = explode(',', $value->off_dates);
+                    foreach ($off_dates1 as $key2 => $value2) {
+                        $off_dates2 = explode('|', $value2);
+                        while ($off_dates2[0] < $off_dates2[1]) {
+                            $result[$key]->dates[] = $off_dates2[0];
+                            $off_dates2[0] = date('Y-m-d H:i:s', strtotime($off_dates2[0].' +1 hour'));
+                        }
+                    }
+                    foreach ($result[$key]->dates as $key2 => $value2) {
+                        $datetime = strtotime($value2);
+                        $y = intval(date("Y", $datetime));
+                        $m = intval(date("m", $datetime));
+                        $d = intval(date("d", $datetime));
+                        $h = intval(date("H", $datetime));
+                        $final_result->data[$y][$m][$d][$result[$key]->project_calculator][$h] = true;
+                    }
+                }
+            }
+
+            die(json_encode($final_result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 
 ?>

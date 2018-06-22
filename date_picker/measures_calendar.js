@@ -1,9 +1,9 @@
 function init_measure_calendar(elem_id)
 {
-	var cont = document.getElementById(elem_id), calendar, measures;
+	var cont = document.getElementById(elem_id), calendar, data_array, gaugers;
 
-	setTimeout(include_script, 1, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
-	setTimeout(include_style, 1, 'components/com_gm_ceiling/date_picker/calendars.css');
+	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
+	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
 	setTimeout(init, 200);
 
 	function init() {
@@ -12,17 +12,25 @@ function init_measure_calendar(elem_id)
 		        dom: cont,
 		        mode: 'en',
 		        onClickDate: function(date) {
+		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0];
 		            console.log(date);
+		            draw_calendar();
+		            elem.classList.remove('nice-busy');
+		            if (elem.classList.contains('nice-busy-all')) {
+		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
+		            }
 		        }
 		    });
 
 		    jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=projects.getMeasuresOfCurrentUser",
+                url: "index.php?option=com_gm_ceiling&task=getArrayForMeasuresCalendar",
                 success: function(data) {
-                	measures = data;
-                    console.log(measures);
+                	data_array = data.data;
+                	gaugers = data.gaugers;
+                    console.log(data_array, gaugers);
                     cont.onclick = clicks_on_calendar;
+                    draw_calendar();
                 },
                 dataType: "json",
                 timeout: 10000,
@@ -47,11 +55,58 @@ function init_measure_calendar(elem_id)
 	            	if (target.className == 'prev-date-btn' || target.className == 'next-date-btn') {
 	            		var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
 	            		console.log(add_zeros_in_date(date_month));
-	            		cont.getElementsByClassName('nice-normal')[Math.floor(Math.random() * (28))].style.background = 'green';
+	            		draw_calendar();
 	            		return;
 	            	}
 	            	target = target.parentNode;
 	            }
+		    }
+
+		    function draw_calendar() {
+		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, date, maxCount;
+		    	maxCount = 12 * gaugers.length;
+		    	tds = cont.getElementsByClassName('nice-normal');
+		    	for (var i = tds.length; i--;) {
+		    		tds[i].setAttribute('data-count', 0);
+		    	}
+		    	for (var d in data_array[y][m]) {
+		    		count = 0;
+		    		for (var key in gaugers) {
+		    			var c = gaugers[key].id;
+		    			for (var h in data_array[y][m][d][c]) {
+		    				if (data_array[y][m][d][c][h]) {
+		    					count++;
+		    				}
+		    			}
+		    		}
+		    		if (count > 0) {
+    					tds[d - 1].classList.add('nice-busy');
+    				}
+    				else if (count === maxCount) {
+    					tds[d - 1].classList.add('nice-busy-all');
+    				}
+		    	}
+		    	/*var date, jelems, count, tds;
+		    	tds = cont.getElementsByClassName('nice-normal');
+		    	for (var i = tds.length; i--;) {
+		    		tds[i].setAttribute('data-count', 0);
+		    	}
+		    	for (var i = data_array.length; i--;) {
+		    		date = data_array[i].project_calculation_date.substring(0, 10);
+		    		date = date.replace('-0', '-');
+		    		jelems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+		    		if (jelems.length === 1) {
+	    				count = jelems[0].getAttribute('data-count')-0 + 1;
+	    				jelems[0].setAttribute('data-count', count);
+	    				if (count === 12) {
+	    					jelems[0].classList.remove('nice-busy');
+	    					jelems[0].classList.add('nice-busy-all');
+	    				}
+	    				else {
+	    					jelems[0].classList.add('nice-busy');
+	    				}
+		    		}
+		    	}*/
 		    }
 	    } catch(e) {
 	    	//console.log(e);
@@ -75,7 +130,7 @@ function init_measure_calendar(elem_id)
 	    let styles = document.getElementsByTagName('link');
 	    let reg_exp = new RegExp(url);
 	    for(let i = styles.length;i--;){
-	        if(reg_exp.test(styles[i].src)){
+	        if(reg_exp.test(styles[i].href)){
 	            return;
 	        }
 	    }
