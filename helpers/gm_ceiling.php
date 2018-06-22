@@ -1671,24 +1671,30 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($project_id)->id_client;
-            if(in_array('16',$groups)){
-                $dealer_id = 1;
-            }
-            else{ 
-                if(!empty($client_id)){
-                        $client_model = self::getModel('client');
-                        $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
-                        $dealer_id = $dealer->dealer_id;
-                        if(empty($dealer_id)){
-                            $dealer_id = 1;
-                        }
+            if(!empty($client_id)){
+                    $client_model = self::getModel('client');
+                    $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
+                    $dealer_id = $dealer->dealer_id;
+                    if(empty($dealer_id)){
+                        $dealer_id = 1;
                     }
-                else{
-                    $dealer_id = 1;   
                 }
+            else{
+                $dealer_id = 1;   
             }
+
             $results = $mount_model->getDataAll($dealer_id);
-            
+
+            $empty_mount = true;
+             foreach ($result as $value) {
+                 if(!empty($value)){
+                    $empty_mount = false;
+                    break;
+                 }
+             }
+            if(in_array('16', $groups)&& $empty_mount){
+                $results = $mount_model->getDataAll(1);
+            }
             //Если существующая калькуляция
             if(!empty($calc_id)){
                 foreach ($calculation_data as $key => $item) {

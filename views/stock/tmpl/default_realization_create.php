@@ -1191,14 +1191,12 @@ $server_name = $_SERVER['SERVER_NAME'];
             filter.order.push(input.attr('NameDB'));
             filter.page = input.closest(".Form").attr("Page");
 
-            console.log(filter);
             if (input.is(":focus")) {
                 jQuery.ajax({
                     type: 'POST',
                     url: filter.page,
                     data: {filter: filter},
                     success: function (data) {
-                        console.log(JSON.parse(data));
                         data = JSON.parse(data);
 
                         $.each(data, function (i, v) {
@@ -1238,11 +1236,11 @@ $server_name = $_SERVER['SERVER_NAME'];
         }
 
         function SelectItem(e) {
-            alert("!!");
             e = $(e);
+            let options = jQuery('.Select').children();
+            let dealer_id = '<?php echo $user->dealer_id?>';
             var parent = e.closest("form"),
                 elements = parent.find(".Input");
-
             if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
             {
                 let json = JSON.parse(e.attr('JSON')),
@@ -1261,10 +1259,25 @@ $server_name = $_SERVER['SERVER_NAME'];
                                 jQuery.ajax({
                                     type: 'POST',
                                     url: "/index.php?option=com_gm_ceiling&task=stock.addCounterparty",
-                                    data: ,
+                                    data: {
+                                        user_id: dealer.id,
+                                        name: dealer.name,
+                                        phone: dealer.phone,
+                                        email: dealer.email
+                                    },
                                     success: function (data) {
                                         $noty.close();
-                                        noty({text: 'You clicked "Ok" button', type: 'success'});
+                                        $.each(elements, function (i, v) {
+                                                v = $(v);
+                                                var id = v.attr('id');
+                                                if (typeof id !== 'undefined' && id !== false) {
+                                                    var attr = e.attr(id);
+                                                    if (typeof attr !== 'undefined' && attr !== false) {
+                                                    v.val(attr);
+                                                    v.attr({"clear": "false", "add": "false"});
+                                                }
+                                            }
+                                        });
                                     },
                                     dataType: "text",
                                     timeout: 10000,
@@ -1283,9 +1296,26 @@ $server_name = $_SERVER['SERVER_NAME'];
                            
                           }
                         },
-                        {addClass: 'btn btn-primary', text: 'Cancel', onClick: function($noty) {
+                        {addClass: 'btn btn-primary', text: 'Выбрать ГМ', onClick: function($noty) {
+                            $.each(options,function(i,v){
+                                dealer = JSON.parse($(v).attr('JSON'));
+                                if(dealer.dealer.id == dealer_id){
+                                    e = $(v);
+                                    return false;
+                                }
+                            });
+                             $.each(elements, function (i, v) {
+                                    v = $(v);
+                                    var id = v.attr('id');
+                                    if (typeof id !== 'undefined' && id !== false) {
+                                        var attr = e.attr(id);
+                                        if (typeof attr !== 'undefined' && attr !== false) {
+                                        v.val(attr);
+                                        v.attr({"clear": "false", "add": "false"});
+                                    }
+                                }
+                            });
                             $noty.close();
-                            noty({text: 'You clicked "Cancel" button', type: 'error'});
                           }
                         }
                       ]
@@ -1328,8 +1358,6 @@ $server_name = $_SERVER['SERVER_NAME'];
             e = $(e).closest(".Customer");
             var input = e.find(".InputButInp"),
                 data = (input.val() === "") ? null : input.val();
-            console.log(data);
-            console.log(input.val());
             ShowModal(e, data);
         }
 
