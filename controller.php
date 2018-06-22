@@ -110,7 +110,7 @@ class Gm_ceilingController extends JControllerLegacy
         catch(Exception $e)
         {
             if ($e->getCode() > 0) {
-                throw new Exception($e->getMessage());
+                throw new Exception($e->getMessage(), $e->getCode());
             }
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

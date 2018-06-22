@@ -53,8 +53,8 @@ function init_measure_calendar(elem_id)
 	            		return;
 	            	}
 	            	if (target.className == 'prev-date-btn' || target.className == 'next-date-btn') {
-	            		var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
-	            		console.log(add_zeros_in_date(date_month));
+	            		//var date_month = calendar.monthData.year + "-" + calendar.monthData.month;
+	            		//console.log(add_zeros_in_date(date_month));
 	            		draw_calendar();
 	            		return;
 	            	}
@@ -63,12 +63,9 @@ function init_measure_calendar(elem_id)
 		    }
 
 		    function draw_calendar() {
-		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, date, maxCount;
+		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount;
 		    	maxCount = 12 * gaugers.length;
 		    	tds = cont.getElementsByClassName('nice-normal');
-		    	for (var i = tds.length; i--;) {
-		    		tds[i].setAttribute('data-count', 0);
-		    	}
 		    	for (var d in data_array[y][m]) {
 		    		count = 0;
 		    		for (var key in gaugers) {
@@ -79,34 +76,13 @@ function init_measure_calendar(elem_id)
 		    				}
 		    			}
 		    		}
-		    		if (count > 0) {
+		    		if (count > 0 && count < maxCount) {
     					tds[d - 1].classList.add('nice-busy');
     				}
     				else if (count === maxCount) {
     					tds[d - 1].classList.add('nice-busy-all');
     				}
 		    	}
-		    	/*var date, jelems, count, tds;
-		    	tds = cont.getElementsByClassName('nice-normal');
-		    	for (var i = tds.length; i--;) {
-		    		tds[i].setAttribute('data-count', 0);
-		    	}
-		    	for (var i = data_array.length; i--;) {
-		    		date = data_array[i].project_calculation_date.substring(0, 10);
-		    		date = date.replace('-0', '-');
-		    		jelems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
-		    		if (jelems.length === 1) {
-	    				count = jelems[0].getAttribute('data-count')-0 + 1;
-	    				jelems[0].setAttribute('data-count', count);
-	    				if (count === 12) {
-	    					jelems[0].classList.remove('nice-busy');
-	    					jelems[0].classList.add('nice-busy-all');
-	    				}
-	    				else {
-	    					jelems[0].classList.add('nice-busy');
-	    				}
-		    		}
-		    	}*/
 		    }
 	    } catch(e) {
 	    	//console.log(e);
