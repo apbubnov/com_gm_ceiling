@@ -432,7 +432,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 </div>
 <hr>
 <div id="calendar_test"></div>
+<input type="text" id="calculation_time1">
+<input type="text" id="calculator_id1">
 <div id="calendar_test2"></div>
+<input type="text" id="calculation_time2">
+<input type="text" id="calculator_id2">
 <div class="modal_window_container" id="mw_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_measures_calendar"></div>
@@ -447,8 +451,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 </div>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
-    init_measure_calendar('calendar_test','modal_window_measures_calendar',['close_mw','mw_container']);
-    init_measure_calendar('calendar_test2','modal_window_measures_calendar',['close_mw','mw_container']);
+    init_measure_calendar('calendar_test','calculation_time1','calculator_id1','modal_window_measures_calendar',['close_mw','mw_container']);
+    init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
     var $ = jQuery,
         Data = {};
 

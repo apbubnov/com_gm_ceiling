@@ -117,3 +117,13 @@
     padding: 2px;
     border: 1px solid #414099;
 }
+.measures_grafik .busy-day{
+    background: gray;
+}
+.measures_grafik .free-day:hover{
+    background:#d3d3f9;
+}
+.measures_grafik .select-day{
+    background: #414099;
+    color:#ffffff;
+}

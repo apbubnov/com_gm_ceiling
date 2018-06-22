@@ -1,6 +1,7 @@
-function init_measure_calendar(elem_id, modal_window, dop_mw)
+function init_measure_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
 {
-	var cont = document.getElementById(elem_id), calendar, data_array, gaugers;
+	var cont = document.getElementById(elem_id), calendar, data_array, gaugers, selectTime, selectCalculator,
+	mw_elem = document.getElementById(modal_window);
 
 	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
 	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
@@ -35,25 +36,51 @@ function init_measure_calendar(elem_id, modal_window, dop_mw)
 			    			html += '<tr><th>'+gaugers[key].name+'</th>';
 			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined) {
 			    				for (var h = 9; h < 21; h++) {
-			    					html += '<td data-time="'+h+'" data-calculator="'+c+'">0</td>';
+			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
+			    					var _class;
+			    					if (selectTime == time) {
+			    						_class = 'select-day';
+			    					} else {
+			    						_class = 'free-day';
+			    					}
+			    					html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
 			    				}
 			    			}
 			    			else {
 			    				for (var h = 9; h < 21; h++) {
-				    				if (data_array[y][m][d][c][h]) {
-				    					html += '<td data-time="'+h+'" data-calculator="'+c+'">X</td>';
-				    				}
-				    				else {
-				    					html += '<td data-time="'+h+'" data-calculator="'+c+'">0</td>';
-				    				}
+			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
+			    					var _class;
+			    					if (selectTime == time) {
+			    						_class = 'select-day';
+			    					} else {
+			    						if (data_array[y][m][d][c][h]) {
+				    						_class = 'busy-day';
+					    				}
+					    				else {
+					    					_class = 'free-day';
+					    				}
+			    					}
+				    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
 				    			}
 			    			}
 			    			
 			    			html += '</tr>';
 			    		}
 			    		html += '</tbody></table></center>';
-			    		document.getElementById(modal_window).innerHTML = html;
-		            	document.getElementById(modal_window).style.display = 'block';
+			    		mw_elem.innerHTML = html;
+		            	mw_elem.style.display = 'block';
+		            	jQuery('.free-day').click(function(){
+		            		var selected_td = mw_elem.getElementsByClassName('select-day');
+		            		for (var i = selected_td.length; i--;) {
+		            			selected_td[i].classList.remove('select-day');
+		            		}
+		            		this.classList.add('select-day');
+		            		selectTime = this.getAttribute('data-time');
+		            		selectCalculator = this.getAttribute('data-calculator');
+		            		document.getElementById(input_time).value = selectTime;
+		            		document.getElementById(input_calculator).value = selectCalculator;
+		            		this.classList.remove('free-day');
+		            	});
 		            }
 		        }
 		    });
