@@ -460,7 +460,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             && !div1.is(e.target)
             && div1.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close_mw").hide();
-            jQuery("#modal_window_container").hide();
+            jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();
         }
     });

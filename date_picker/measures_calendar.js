@@ -1,4 +1,4 @@
-function init_measure_calendar(elem_id)
+function init_measure_calendar(elem_id, modal_window, dop_mw)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, gaugers;
 
@@ -12,12 +12,49 @@ function init_measure_calendar(elem_id)
 		        dom: cont,
 		        mode: 'en',
 		        onClickDate: function(date) {
-		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0];
+
+		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0], date_sp = date.split('-'),
+		        	html = '', y = date_sp[0]-0, m = date_sp[1]-0, d = date_sp[2]-0;
 		            console.log(date);
 		            draw_calendar();
 		            elem.classList.remove('nice-busy');
 		            if (elem.classList.contains('nice-busy-all')) {
 		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
+		            }
+		            else {
+		            	if (Array.isArray(dop_mw)) {
+		            		for (var i in dop_mw) {
+		            			document.getElementById(dop_mw[i]).style.display = 'block';
+		            		}
+		            	}
+		            	else {
+		            		document.getElementById(dop_mw).style.display = 'block';
+		            	}
+		            	html += '<table><tbody><tr><th></th><th>9:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
+		            	for (var key in gaugers) {
+			    			var c = gaugers[key].id;
+			    			html += '<tr><th>'+gaugers[key].name+'</th>';
+			    			if (data_array[y][m][d] == undefined) {
+			    				for (var h = 9; h < 21; h++) {
+			    					html += '<td data-time="'+h+'" data-calculator="'+c+'">0</td>';
+			    				}
+			    			}
+			    			else {
+			    				for (var h = 9; h < 21; h++) {
+				    				if (data_array[y][m][d][c][h]) {
+				    					html += '<td data-time="'+h+'" data-calculator="'+c+'">X</td>';
+				    				}
+				    				else {
+				    					html += '<td data-time="'+h+'" data-calculator="'+c+'">0</td>';
+				    				}
+				    			}
+			    			}
+			    			
+			    			html += '</tr>';
+			    		}
+			    		html += '</tbody></table>';
+			    		document.getElementById(modal_window).innerHTML = html;
+		            	document.getElementById(modal_window).style.display = 'block';
 		            }
 		        }
 		    });
