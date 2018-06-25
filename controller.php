@@ -110,7 +110,7 @@ class Gm_ceilingController extends JControllerLegacy
         catch(Exception $e)
         {
             if ($e->getCode() > 0) {
-                throw new Exception($e->getMessage());
+                throw new Exception($e->getMessage(), $e->getCode());
             }
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
@@ -3160,22 +3160,26 @@ public function register_mnfctr(){
 
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
-                    $result[$key]->dates = explode(',', $value->calc_dates);
+                    $prj_dates = explode('!', $value->calc_dates);
+                    foreach ($prj_dates as $key2 => $value2) {
+                        $prj_dates[$key2] = explode('|', $value2);
+                    }
+                    $result[$key]->dates = $prj_dates;
                     $off_dates1 = explode(',', $value->off_dates);
                     foreach ($off_dates1 as $key2 => $value2) {
                         $off_dates2 = explode('|', $value2);
                         while ($off_dates2[0] < $off_dates2[1]) {
-                            $result[$key]->dates[] = $off_dates2[0];
+                            $result[$key]->dates[] = [$off_dates2[0], null, null];
                             $off_dates2[0] = date('Y-m-d H:i:s', strtotime($off_dates2[0].' +1 hour'));
                         }
                     }
                     foreach ($result[$key]->dates as $key2 => $value2) {
-                        $datetime = strtotime($value2);
+                        $datetime = strtotime($value2[0]);
                         $y = intval(date("Y", $datetime));
                         $m = intval(date("m", $datetime));
                         $d = intval(date("d", $datetime));
                         $h = intval(date("H", $datetime));
-                        $final_result->data[$y][$m][$d][$result[$key]->project_calculator][$h] = true;
+                        $final_result->data[$y][$m][$d][$result[$key]->project_calculator][$h] = (object)['id' => $value2[1], 'info' => $value2[2]];
                     }
                 }
             }

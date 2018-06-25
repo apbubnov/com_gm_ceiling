@@ -968,14 +968,14 @@ class Gm_ceilingModelProjects extends JModelList
             $currentDate = date("Y-m-d").' 00:00:00';
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('`p`.`project_calculator`,
-                    GROUP_CONCAT(DISTINCT `p`.`project_calculation_date` SEPARATOR \',\') AS `calc_dates`,
+            $query->select('`u`.`id` AS `project_calculator`,
+                    GROUP_CONCAT(DISTINCT CONCAT(`p`.`project_calculation_date`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(`p`.`project_info`, \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `calc_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
-            $query->from('`#__gm_ceiling_projects` AS `p`');
-            $query->innerJoin("`#__users` AS `u` ON `p`.`project_calculator` = `u`.`id` AND `u`.`dealer_id` = $dealer_id");
-            $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `p`.`project_calculator` = `d`.`id_user`');
-            $query->where("`p`.`project_calculation_date` > '$currentDate'");
-            $query->group('`p`.`project_calculator`');
+            $query->from('`#__users` AS `u`');
+            $query->leftJoin('`rgzbn_gm_ceiling_projects` AS `p` ON `p`.`project_calculator` = `u`.`id`');
+            $query->leftJoin('`rgzbn_gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
+            $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_calculation_date` > '$currentDate' OR `p`.`project_calculation_date` IS NULL) AND (`d`.`date_to` > '$currentDate' OR `d`.`date_to` IS NULL) AND (`d`.`date_to` IS NOT NULL OR `p`.`project_calculation_date` IS NOT NULL)");
+            $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;

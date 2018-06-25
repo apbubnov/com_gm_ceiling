@@ -430,51 +430,42 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         </p>
     </div>
 </div>
-<div id="modal_window_container" class="modal_window_container">
-    <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-    </button>
-    <div id="modal_window_del" class="modal_window">
-        <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
-        <p>
-            <button type="button" id="ok" class="btn btn-primary">Да</button>
-            <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-        </p>
-    </div>
-</div>
-<div id="modal-window-container">
-    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-call-tar">
+<hr>
+<div id="calendar_test"></div>
+<input type="text" id="calculation_time1">
+<input type="text" id="calculator_id1">
+<div id="calendar_test2"></div>
+<input type="text" id="calculation_time2">
+<input type="text" id="calculator_id2">
+<div class="modal_window_container" id="mw_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_measures_calendar"></div>
+    <div class="modal_window" id="modal-window-call-tar">
         <h6>Введите ФИО</h6>
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
         <h6>Введите номер телефона</h6>
         <p><input type="text" id="new_phone" placeholder="ФИО" required></p>
-        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>
+        <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
     </div>
 </div>
-<hr>
-<div id="calendar_test"></div>
-<div id="calendar_test2"></div>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
-    init_measure_calendar('calendar_test');
-    init_measure_calendar('calendar_test2');
+    init_measure_calendar('calendar_test','calculation_time1','calculator_id1','modal_window_measures_calendar',['close_mw','mw_container']);
+    init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
     var $ = jQuery,
         Data = {};
 
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
+    jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
+        var div = jQuery("#modal_window_measures_calendar"); // тут указываем ID элемента
         var div1 = jQuery("#modal-window-call-tar");
-        if (!div1.is(e.target)
-            && div1.has(e.target).length === 0) {
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-call-tar").hide();
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0
+            && !div1.is(e.target)
+            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
+            jQuery(".modal_window").hide();
         }
     });
 
