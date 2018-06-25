@@ -120,10 +120,14 @@
 .measures_grafik .busy-day{
     background: gray;
 }
-.measures_grafik .free-day:hover{
+.measures_grafik td:hover{
     background:#d3d3f9;
 }
 .measures_grafik .select-day{
+    background: #414099;
+    color:#ffffff;
+}
+.measures_grafik .select-day:hover{
     background: #414099;
     color:#ffffff;
 }

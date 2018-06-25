@@ -20,6 +20,14 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            today = new Date();
 	            	current_day = add_zeros_in_date(today.getFullYear()+'-'+(today.getMonth() + 1)+'-'+today.getDate());
 	            	if (add_zeros_in_date(date) < current_day) {
+	            		noty({
+	                        timeout: 3000,
+	                        theme: 'relax',
+	                        layout: 'topCenter',
+	                        maxVisible: 5,
+	                        type: "warning",
+	                        text: "Для назначения замера на эту дату необходимо вернуться в прошлое"
+	                    });
 		            	return;
 		            }
 		            
@@ -55,24 +63,34 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    			else {
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
-			    					var _class;
+			    					var _class, p_id = false, p_info = false;
 			    					if (selectTime == time) {
 			    						_class = 'select-day';
 			    					} else {
-			    						if (data_array[y][m][d][c][h]) {
+			    						var ymdch = data_array[y][m][d][c][h];
+			    						if (ymdch) {
 				    						_class = 'busy-day';
+				    						if (ymdch.id != null && ymdch.info != null) {
+				    							p_id = ymdch.id;
+				    							p_info = ymdch.info;
+				    						}
 					    				}
 					    				else {
 					    					_class = 'free-day';
 					    				}
 			    					}
-				    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
+			    					if (p_id && p_info) {
+					    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
+					    			}
+					    			else {
+					    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
+					    			}
 				    			}
 			    			}
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table><br><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
+			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
 		            	jQuery('#'+modal_window+' .free-day').click(function(){
@@ -85,6 +103,26 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            		selectCalculator = this.getAttribute('data-calculator');
 		            		document.getElementById(input_time).value = selectTime;
 		            		document.getElementById(input_calculator).value = selectCalculator;
+		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = this.getAttribute('data-time');
+		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = 'Свободно';
+		            		mw_elem.getElementsByClassName('p_info')[0].innerHTML = '';
+		            		//this.classList.remove('free-day');
+		            	});
+		            	jQuery('#'+modal_window+' .busy-day').click(function(){
+		            		var p_id, p_info;
+		            		if (this.hasAttribute('data-pid') && this.hasAttribute('data-info')) {
+		            			p_date = this.getAttribute('data-time');
+		            			p_id = this.getAttribute('data-pid');
+		            			p_info = this.getAttribute('data-info');
+		            		}
+		            		else {
+		            			p_date = this.getAttribute('data-time');
+		            			p_id = 'Выходной';
+		            			p_info = '';
+		            		}
+		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = p_date;
+		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = p_id;
+		            		mw_elem.getElementsByClassName('p_info')[0].innerHTML = p_info;
 		            		this.classList.remove('free-day');
 		            	});
 		            	jQuery('#'+modal_window+' .hide_calendar').click(function(){
@@ -115,10 +153,10 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
                 dataType: "json",
                 timeout: 10000,
                 error: function() {
-                    var n = noty({
+                    noty({
                         timeout: 2000,
                         theme: 'relax',
-                        layout: 'center',
+                        layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
                         text: "Ошибка получения данных для календаря замеров"
