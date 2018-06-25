@@ -17,11 +17,9 @@ $user       = JFactory::getUser();
 $userId     = $user->id;
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-if ($user->dealer_id == 1) {
-	$gaugers_id = $model->getDatas($userId);
-} else {
-	$gaugers_id = $model->getDatas($user->dealer_id);
-}
+
+$gaugers_id = $model->getDealerGaugers($user->dealer_id);
+
 
 // календарь
 $month1 = date("n");
