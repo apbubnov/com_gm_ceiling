@@ -14,9 +14,15 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		        mode: 'en',
 		        onClickDate: function(date) {
 		        	var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0], date_sp = date.split('-'),
-		        	html = '', y = date_sp[0]-0, m = date_sp[1]-0, d = date_sp[2]-0;
+		        	html = '', y = date_sp[0]-0, m = date_sp[1]-0, d = date_sp[2]-0, current_day, today;
 		            console.log(date);
 		            draw_calendar();
+		            today = new Date();
+	            	current_day = add_zeros_in_date(today.getFullYear()+'-'+(today.getMonth() + 1)+'-'+today.getDate());
+	            	if (add_zeros_in_date(date) < current_day) {
+		            	return;
+		            }
+		            
 		            elem.classList.remove('nice-busy');
 		            if (elem.classList.contains('nice-busy-all')) {
 		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
@@ -66,10 +72,10 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table></center>';
+			    		html += '</tbody></table><br><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
-		            	jQuery('.free-day').click(function(){
+		            	jQuery('#'+modal_window+' .free-day').click(function(){
 		            		var selected_td = mw_elem.getElementsByClassName('select-day');
 		            		for (var i = selected_td.length; i--;) {
 		            			selected_td[i].classList.remove('select-day');
@@ -80,6 +86,17 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            		document.getElementById(input_time).value = selectTime;
 		            		document.getElementById(input_calculator).value = selectCalculator;
 		            		this.classList.remove('free-day');
+		            	});
+		            	jQuery('#'+modal_window+' .hide_calendar').click(function(){
+		            		if (Array.isArray(dop_mw)) {
+			            		for (var i in dop_mw) {
+			            			document.getElementById(dop_mw[i]).style.display = 'none';
+			            		}
+			            	}
+			            	else {
+			            		document.getElementById(dop_mw).style.display = 'none';
+			            	}
+			            	mw_elem.style.display = 'none';
 		            	});
 		            }
 		        }

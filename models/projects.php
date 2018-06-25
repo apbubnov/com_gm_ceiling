@@ -969,12 +969,12 @@ class Gm_ceilingModelProjects extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select('`p`.`project_calculator`,
-                    GROUP_CONCAT(DISTINCT `p`.`project_calculation_date` SEPARATOR \',\') AS `calc_dates`,
+                    GROUP_CONCAT(DISTINCT CONCAT(`p`.`project_calculation_date`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(`p`.`project_info`, \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `calc_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
             $query->from('`#__gm_ceiling_projects` AS `p`');
             $query->innerJoin("`#__users` AS `u` ON `p`.`project_calculator` = `u`.`id` AND `u`.`dealer_id` = $dealer_id");
             $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `p`.`project_calculator` = `d`.`id_user`');
-            $query->where("`p`.`project_calculation_date` > '$currentDate'");
+            $query->where("`p`.`project_calculation_date` > '$currentDate' AND `d`.`date_to` > '$currentDate'");
             $query->group('`p`.`project_calculator`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
