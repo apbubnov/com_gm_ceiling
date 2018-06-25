@@ -1686,12 +1686,14 @@ class Gm_ceilingHelpersGm_ceiling
             $results = $mount_model->getDataAll($dealer_id);
 
             $empty_mount = true;
-             foreach ($result as $value) {
-                 if(!empty($value)){
-                    $empty_mount = false;
-                    break;
-                 }
-             }
+            if (!empty($results)){
+                foreach ($results as $value){
+                    if(!empty($value)){
+                        $empty_mount = false;
+                        break;
+                    }
+                }
+            }
             if(in_array('16', $groups)&& $empty_mount){
                 $results = $mount_model->getDataAll(1);
             }

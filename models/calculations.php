@@ -291,198 +291,199 @@ class Gm_ceilingModelCalculations extends JModelList {
         try
         {
             $items = parent::getItems();
-
-            foreach ($items as $item) {
-                if (isset($item->project_id) && $item->project_id != '') {
-                    if (is_object($item->project_id)) {
-                        $item->project_id = \Joomla\Utilities\ArrayHelper::fromObject($item->project_id);
-                    }
-
-                    $values = (is_array($item->project_id)) ? $item->project_id : explode(',', $item->project_id);
-                    $textValue = array();
-
-                    foreach ($values as $value) {
-                        $db = JFactory::getDbo();
-                        $query = $db->getQuery(true);
-                        $query
-                            ->select('`#__gm_ceiling_projects_2463298`.`id`')
-                            ->from($db->quoteName('#__gm_ceiling_projects', '#__gm_ceiling_projects_2463298'))
-                            ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-                        $db->setQuery($query);
-                        $results = $db->loadObject();
-
-                        if ($results) {
-                            $textValue[] = $results->id;
+            if (!empty($items)) {
+                foreach ($items as $item) {
+                    if (isset($item->project_id) && $item->project_id != '') {
+                        if (is_object($item->project_id)) {
+                            $item->project_id = \Joomla\Utilities\ArrayHelper::fromObject($item->project_id);
                         }
-                    }
 
-                    $item->project_id = !empty($textValue) ? implode(', ', $textValue) : $item->project_id;
-                }
-                if (isset($item->n1) && $item->n1 != '') {
-                    if (is_object($item->n1)) {
-                        $item->n1 = \Joomla\Utilities\ArrayHelper::fromObject($item->n1);
-                    }
+                        $values = (is_array($item->project_id)) ? $item->project_id : explode(',', $item->project_id);
+                        $textValue = array();
 
-                    $values = (is_array($item->n1)) ? $item->n1 : explode(',', $item->n1);
-                    $textValue = array();
+                        foreach ($values as $value) {
+                            $db = JFactory::getDbo();
+                            $query = $db->getQuery(true);
+                            $query
+                                ->select('`#__gm_ceiling_projects_2463298`.`id`')
+                                ->from($db->quoteName('#__gm_ceiling_projects', '#__gm_ceiling_projects_2463298'))
+                                ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
+                            $db->setQuery($query);
+                            $results = $db->loadObject();
 
-                    foreach ($values as $value) {
-                        $db = JFactory::getDbo();
-                        $query = $db->getQuery(true);
-                        $query
-                            ->select('`#__gm_ceiling_projects_2463298`.`texture_title`')
-                            ->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_projects_2463298'))
-                            ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-                        $db->setQuery($query);
-                        $results = $db->loadObject();
-
-                        if ($results) {
-                            $textValue[] = $results->texture_title;
+                            if ($results) {
+                                $textValue[] = $results->id;
+                            }
                         }
+
+                        $item->project_id = !empty($textValue) ? implode(', ', $textValue) : $item->project_id;
                     }
-
-                    $item->n1 = !empty($textValue) ? implode(', ', $textValue) : $item->n1;
-                }
-                if (isset($item->n2) && $item->n2 != '') {
-                    if (is_object($item->n2)) {
-                        $item->n2 = \Joomla\Utilities\ArrayHelper::fromObject($item->n2);
-                    }
-
-                    $values = (is_array($item->n2)) ? $item->n2 : explode(',', $item->n2);
-                    $textValue = array();
-
-                    foreach ($values as $value) {
-                        $db = JFactory::getDbo();
-                        $query = $db->getQuery(true);
-                        $query
-                            ->select('`#__gm_ceiling_projects_2463298`.`texture_title`')
-                            ->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_projects_2463298'))
-                            ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-                        $db->setQuery($query);
-                        $results = $db->loadObject();
-
-                        if ($results) {
-                            $textValue[] = $results->texture_title;
+                    if (isset($item->n1) && $item->n1 != '') {
+                        if (is_object($item->n1)) {
+                            $item->n1 = \Joomla\Utilities\ArrayHelper::fromObject($item->n1);
                         }
-                    }
 
-                    $item->n2 = !empty($textValue) ? implode(', ', $textValue) : $item->n2;
-                }
-                if (isset($item->n3) && $item->n3 != '') {
-                    if (is_object($item->n3)) {
-                        $item->n3 = \Joomla\Utilities\ArrayHelper::fromObject($item->n3);
-                    }
+                        $values = (is_array($item->n1)) ? $item->n1 : explode(',', $item->n1);
+                        $textValue = array();
 
-                    $values = (is_array($item->n3)) ? $item->n3 : explode(',', $item->n3);
-                    $textValue = array();
+                        foreach ($values as $value) {
+                            $db = JFactory::getDbo();
+                            $query = $db->getQuery(true);
+                            $query
+                                ->select('`#__gm_ceiling_projects_2463298`.`texture_title`')
+                                ->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_projects_2463298'))
+                                ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
+                            $db->setQuery($query);
+                            $results = $db->loadObject();
 
-                    foreach ($values as $value) {
-                        $db = JFactory::getDbo();
-                        $query = $db->getQuery(true);
-                        $query
-                            ->select('CONCAT(`#__gm_ceiling_projects_2463298`.`name`, \' \',`#__gm_ceiling_projects_2463298`.`country`,\' \',`#__gm_ceiling_projects_2463298`.`width` ) AS canvas')
-                            ->from($db->quoteName('#__gm_ceiling_canvases', '#__gm_ceiling_projects_2463298'))
-                            ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-                        $db->setQuery($query);
-                        $results = $db->loadObject();
-
-                        if ($results) {
-                            $textValue[] = $results->canvas;
+                            if ($results) {
+                                $textValue[] = $results->texture_title;
+                            }
                         }
+
+                        $item->n1 = !empty($textValue) ? implode(', ', $textValue) : $item->n1;
+                    }
+                    if (isset($item->n2) && $item->n2 != '') {
+                        if (is_object($item->n2)) {
+                            $item->n2 = \Joomla\Utilities\ArrayHelper::fromObject($item->n2);
+                        }
+
+                        $values = (is_array($item->n2)) ? $item->n2 : explode(',', $item->n2);
+                        $textValue = array();
+
+                        foreach ($values as $value) {
+                            $db = JFactory::getDbo();
+                            $query = $db->getQuery(true);
+                            $query
+                                ->select('`#__gm_ceiling_projects_2463298`.`texture_title`')
+                                ->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_projects_2463298'))
+                                ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
+                            $db->setQuery($query);
+                            $results = $db->loadObject();
+
+                            if ($results) {
+                                $textValue[] = $results->texture_title;
+                            }
+                        }
+
+                        $item->n2 = !empty($textValue) ? implode(', ', $textValue) : $item->n2;
+                    }
+                    if (isset($item->n3) && $item->n3 != '') {
+                        if (is_object($item->n3)) {
+                            $item->n3 = \Joomla\Utilities\ArrayHelper::fromObject($item->n3);
+                        }
+
+                        $values = (is_array($item->n3)) ? $item->n3 : explode(',', $item->n3);
+                        $textValue = array();
+
+                        foreach ($values as $value) {
+                            $db = JFactory::getDbo();
+                            $query = $db->getQuery(true);
+                            $query
+                                ->select('CONCAT(`#__gm_ceiling_projects_2463298`.`name`, \' \',`#__gm_ceiling_projects_2463298`.`country`,\' \',`#__gm_ceiling_projects_2463298`.`width` ) AS canvas')
+                                ->from($db->quoteName('#__gm_ceiling_canvases', '#__gm_ceiling_projects_2463298'))
+                                ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
+                            $db->setQuery($query);
+                            $results = $db->loadObject();
+
+                            if ($results) {
+                                $textValue[] = $results->canvas;
+                            }
+                        }
+
+                        $item->n3 = !empty($textValue) ? implode(', ', $textValue) : $item->n3;
                     }
 
-                    $item->n3 = !empty($textValue) ? implode(', ', $textValue) : $item->n3;
+
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('fixtures.*')
+                        ->from('`#__gm_ceiling_fixtures` AS fixtures')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = fixtures.n13_size')
+                        ->select('type.title AS type_title')
+                        ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = fixtures.n13_type')
+                        ->where('fixtures.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n13 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('pipes.*')
+                        ->from('`#__gm_ceiling_pipes` AS pipes')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = pipes.n14_size')
+                        ->where('pipes.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n14 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('cornice.*')
+                        ->from('`#__gm_ceiling_cornice` AS cornice')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = cornice.n15_size')
+                        ->select('type.title AS type_title')
+                        ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = cornice.n15_type')
+                        ->where('cornice.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n15 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('hoods.*')
+                        ->from('`#__gm_ceiling_hoods` AS hoods')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = hoods.n22_size')
+                        ->select('type.title AS type_title')
+                        ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = hoods.n22_type')
+                        ->where('hoods.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n22 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('diffusers.*')
+                        ->from('`#__gm_ceiling_diffusers` AS diffusers')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = diffusers.n23_size')
+                        ->where('diffusers.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n23 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('ecola.*')
+                        ->from('`#__gm_ceiling_ecola` AS ecola')
+                        ->select('components_option_illuminator.title AS component_title_illuminator')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_illuminator ON components_option_illuminator.id = ecola.n26_illuminator')
+                        ->select('components_option_lamp.title AS component_title_lamp')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_lamp ON components_option_lamp.id = ecola.n26_lamp')
+                        ->where('ecola.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n26 = $db->loadObjectList();
+
+                    $query = $db->getQuery(true);
+                    $query
+                        ->select('profil.*')
+                        ->from('`#__gm_ceiling_profil` AS profil')
+                        ->select('components_option.title AS component_title')
+                        ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = profil.n29_profil')
+                        ->select('type.title AS type_title')
+                        ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = profil.n29_type')
+                        ->where('profil.calculation_id' . ' = ' . $item->id);
+
+                    $db->setQuery($query);
+                    $item->n29 = $db->loadObjectList();
+
                 }
-
-
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true);
-                $query
-                    ->select('fixtures.*')
-                    ->from('`#__gm_ceiling_fixtures` AS fixtures')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = fixtures.n13_size')
-                    ->select('type.title AS type_title')
-                    ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = fixtures.n13_type')
-                    ->where('fixtures.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n13 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('pipes.*')
-                    ->from('`#__gm_ceiling_pipes` AS pipes')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = pipes.n14_size')
-                    ->where('pipes.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n14 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('cornice.*')
-                    ->from('`#__gm_ceiling_cornice` AS cornice')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = cornice.n15_size')
-                    ->select('type.title AS type_title')
-                    ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = cornice.n15_type')
-                    ->where('cornice.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n15 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('hoods.*')
-                    ->from('`#__gm_ceiling_hoods` AS hoods')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = hoods.n22_size')
-                    ->select('type.title AS type_title')
-                    ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = hoods.n22_type')
-                    ->where('hoods.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n22 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('diffusers.*')
-                    ->from('`#__gm_ceiling_diffusers` AS diffusers')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = diffusers.n23_size')
-                    ->where('diffusers.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n23 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('ecola.*')
-                    ->from('`#__gm_ceiling_ecola` AS ecola')
-                    ->select('components_option_illuminator.title AS component_title_illuminator')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_illuminator ON components_option_illuminator.id = ecola.n26_illuminator')
-                    ->select('components_option_lamp.title AS component_title_lamp')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_lamp ON components_option_lamp.id = ecola.n26_lamp')
-                    ->where('ecola.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n26 = $db->loadObjectList();
-
-                $query = $db->getQuery(true);
-                $query
-                    ->select('profil.*')
-                    ->from('`#__gm_ceiling_profil` AS profil')
-                    ->select('components_option.title AS component_title')
-                    ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = profil.n29_profil')
-                    ->select('type.title AS type_title')
-                    ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = profil.n29_type')
-                    ->where('profil.calculation_id' . ' = ' . $item->id);
-
-                $db->setQuery($query);
-                $item->n29 = $db->loadObjectList();
-
             }
             return $items;
         }
@@ -708,9 +709,10 @@ class Gm_ceilingModelCalculations extends JModelList {
 
             $items = $model->getItems();
             $quadrature = 0;
-
-            foreach ($items as $item) {
-                $quadrature += $item->n4;
+            if (!empty($items)) {
+                foreach ($items as $item) {
+                    $quadrature += $item->n4;
+                }
             }
 
             return $quadrature;
