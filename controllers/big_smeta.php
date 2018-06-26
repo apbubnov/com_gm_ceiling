@@ -33,6 +33,43 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
         return parent::getModel($name, $prefix, array('ignore_request' => true));
     }
 
+
+ /*   public function costyl(){
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            $query->select('id as project_id,project_mounter as mounter_id,project_mounting_date as date_time, 4 as `type`')
+                ->from('#__gm_ceiling_projects')
+                ->where("project_mounter is not NULL and project_mounting_date is NOT NULL");
+            $db->setQuery($query);
+
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $columns = [];
+                $values = [];
+                foreach($value as $key => $val ){
+                    array_push($columns, $key);
+                    array_push($values, $val);
+                }
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('#__gm_ceiling_projects_mounts')
+                    ->columns($db->quoteName($columns))
+                    ->values(implode(',',$db->quote($values)));
+                    $db->setQuery($query);
+                    $db->execute();
+            }
+            
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+
     public function transport()
     {
         try
