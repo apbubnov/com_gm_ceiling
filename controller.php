@@ -3160,11 +3160,13 @@ public function register_mnfctr(){
 
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
-                    $prj_dates = explode('!', $value->calc_dates);
-                    foreach ($prj_dates as $key2 => $value2) {
-                        $prj_dates[$key2] = explode('|', $value2);
+                    if (!empty($value->calc_dates)) {
+                        $prj_dates = explode('!', $value->calc_dates);
+                        foreach ($prj_dates as $key2 => $value2) {
+                            $prj_dates[$key2] = explode('|', $value2);
+                        }
+                        $result[$key]->dates = $prj_dates;
                     }
-                    $result[$key]->dates = $prj_dates;
                     $off_dates1 = explode(',', $value->off_dates);
                     foreach ($off_dates1 as $key2 => $value2) {
                         $off_dates2 = explode('|', $value2);

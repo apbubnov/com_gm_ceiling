@@ -974,7 +974,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->from('`#__users` AS `u`');
             $query->leftJoin('`rgzbn_gm_ceiling_projects` AS `p` ON `p`.`project_calculator` = `u`.`id`');
             $query->leftJoin('`rgzbn_gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_calculation_date` > '$currentDate' OR `p`.`project_calculation_date` IS NULL) AND (`d`.`date_to` > '$currentDate' OR `d`.`date_to` IS NULL) AND (`d`.`date_to` IS NOT NULL OR `p`.`project_calculation_date` IS NOT NULL)");
+            $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`p`.`project_calculation_date` > '$currentDate' OR `p`.`project_calculation_date` IS NULL) AND (`d`.`date_to` > '$currentDate' OR `d`.`date_to` IS NULL) AND (`d`.`date_to` IS NOT NULL OR `p`.`project_calculation_date` IS NOT NULL)");
             $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
