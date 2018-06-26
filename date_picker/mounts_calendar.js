@@ -1,7 +1,8 @@
 function init_mount_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
 {
-	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectCalculator,
-	mw_elem = document.getElementById(modal_window);
+	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,
+	mw_elem = document.getElementById(modal_window),
+	mw_stages = '<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:60px auto;width:300px;height:280px;display:none;"></div>';
 
 	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
 	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
@@ -52,19 +53,19 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class;
-			    					if (selectTime == time) {
+			    					if (selectTime == time && selectMounter == c) {
 			    						_class = 'select-day';
 			    					} else {
 			    						_class = 'free-day';
 			    					}
-			    					html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
+			    					html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'"></td>';
 			    				}
 			    			}
 			    			else {
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class, p_id = false, p_info = false;
-			    					if (selectTime == time) {
+			    					if (selectTime == time && selectMounter == c) {
 			    						_class = 'select-day';
 			    					} else {
 			    						var ymdch = data_array[y][m][d][c][h];
@@ -80,10 +81,10 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 					    				}
 			    					}
 			    					if (p_id && p_info) {
-					    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
+					    				html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
 					    			}
 					    			else {
-					    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'"></td>';
+					    				html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'"></td>';
 					    			}
 				    			}
 			    			}
@@ -91,23 +92,29 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			    			html += '</tr>';
 			    		}
 			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
+			    		html += mw_stages;
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
-		            	jQuery('#'+modal_window+' .free-day').click(function(){
+
+		            	jQuery('#'+modal_window+' .free-day').click(function free_click(){
+		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'block';
 		            		var selected_td = mw_elem.getElementsByClassName('select-day');
 		            		for (var i = selected_td.length; i--;) {
+		            			selected_td[i].onclick = free_click;
+		            			selected_td[i].classList.add('free-day');
 		            			selected_td[i].classList.remove('select-day');
 		            		}
 		            		this.classList.add('select-day');
 		            		selectTime = this.getAttribute('data-time');
-		            		selectCalculator = this.getAttribute('data-calculator');
+		            		selectMounter = this.getAttribute('data-mounter');
 		            		document.getElementById(input_time).value = selectTime;
-		            		document.getElementById(input_calculator).value = selectCalculator;
+		            		document.getElementById(input_calculator).value = selectMounter;
 		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = this.getAttribute('data-time');
 		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = 'Свободно';
 		            		mw_elem.getElementsByClassName('p_info')[0].innerHTML = '';
 		            		//this.classList.remove('free-day');
 		            	});
+
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){
 		            		var p_id, p_info;
 		            		if (this.hasAttribute('data-pid') && this.hasAttribute('data-info')) {
