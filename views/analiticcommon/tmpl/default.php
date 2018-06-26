@@ -13,22 +13,18 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
-try {
+
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $today = date('Y-m-d');
-    $det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
+    $analytic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analytic');
+    //$det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
     $deal_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analitic_dealers');
-    $d_items = $det_analitic_model->getData();
+    $c_items = $analytic_model->getCommonAnalytic(1);
+    $d_items = $analytic_model->getDetailedAnalytic();
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 	$dealers = $deal_analitic_model->getData('2018-03-25', '2018-03-30');
-}
-catch (Exception $e) {
-	$date = date("d.m.Y H:i:s");
-	$files = "components/com_gm_ceiling/";
-	file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-	throw new Exception('Ошибка!', 500);
-}
+
 echo parent::getButtonBack();
 
 ?>
@@ -54,7 +50,7 @@ echo parent::getButtonBack();
             <th></th>
 			</thead> 
 
-		<?php foreach ($this->item as $item) {?>
+		<?php foreach ($c_items as $item) {?>
 			<tr data-value = "<?php echo $item->name;?>" >
 				<td>
 					<?php echo $item->name;?>

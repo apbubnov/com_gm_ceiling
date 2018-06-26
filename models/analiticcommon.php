@@ -448,7 +448,6 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			->leftJoin('`#__users` AS u ON c.dealer_id = u.id')
 			->where("u.dealer_type = $dealer_type ");
 		$db->setQuery($query);
-		throw new Exception($query);
 		$items = $db->loadObjectList();
 		return $items;
 	}

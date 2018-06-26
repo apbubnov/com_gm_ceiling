@@ -53,6 +53,8 @@ class Gm_ceilingModelAnalytic extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	
 	function generateSubqueryForCommon($column,$column_value,$statuses,$date1,$date2,$needJoin,$dealer_id=null){
 		try
 		{
@@ -63,7 +65,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 			if($needJoin){
 				$query->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id");
 			}
-			$query->where("$column = $column_value ".generateWhere($statuses,$date1,$date2);
+			$query->where("$column = $column_value ".$this->generateWhere($statuses,$date1,$date2));
 			if($needJoin){
 				$query->where("c.dealer_id =  $dealer_id");
 			}
@@ -96,25 +98,25 @@ class Gm_ceilingModelAnalytic extends JModelList
 
 			$column_name = "p.api_phone_id";
 			$column_value = "a.id";
-			$common = generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,true,$dealer_id);
-			$dealers = generateSubqueryForCommon($column_name,$column_value,[20],$date1,$date2,false);
-			$advt = generateSubqueryForCommon($column_name,$column_value,[21],$date1,$date2,false);
-			$refuse = generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,true,$dealer_id);
-			$inwork = generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,true,$dealer_id);	
-			$measure = generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,true,$dealer_id);
-			$deals = generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19,24,25,26],$date1,$date2,true,$dealer_id);
-			$done = generateSubqueryForCommon($column_name,$column_value,[12],$date1,$date2,true,$dealer_id);
+			$common = $this->generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,true,$dealer_id);
+			$dealers = $this->generateSubqueryForCommon($column_name,$column_value,[20],$date1,$date2,false);
+			$advt = $this->generateSubqueryForCommon($column_name,$column_value,[21],$date1,$date2,false);
+			$refuse = $this->generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,true,$dealer_id);
+			$inwork = $this->generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,true,$dealer_id);	
+			$measure = $this->generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,true,$dealer_id);
+			$deals = $this->generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19,24,25,26],$date1,$date2,true,$dealer_id);
+			$done = $this->generateSubqueryForCommon($column_name,$column_value,[12],$date1,$date2,true,$dealer_id);
 			$sum
 				->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
-				->where("p.api_phone_id = a.id  ".generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
+				->where("p.api_phone_id = a.id  ".$this->generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
 			$profit
 				->select("SUM(IF((project_sum IS NULL OR project_sum = 0) AND (new_project_sum  IS NOT NULL OR new_project_sum <>0),new_project_sum,project_sum) -
 IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p.new_material_sum + p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
-				->where("p.api_phone_id = a.id  ".generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
+				->where("p.api_phone_id = a.id  ".$this->generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
 			$query->select(' DISTINCT a.name');
 			$query->select("($common) as common");
 			if($dealer->dealer_type != 1){
@@ -166,23 +168,23 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 
 		$column_name = "p.client_id";
 		$column_value = "c.id";
-		$common = generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,false);
-		$deals =  generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,false);
-		$inwork = generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,false);
-		$measure = generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,false);
-		$refuse = generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,false);
-		$done = generateSubqueryForCommon($column_name,$column_value,[ 12],$date1,$date2,false);
+		$common = $this->generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,false);
+		$deals =  $this->generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,false);
+		$inwork = $this->generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,false);
+		$measure = $this->generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,false);
+		$refuse = $this->generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,false);
+		$done = $this->generateSubqueryForCommon($column_name,$column_value,[ 12],$date1,$date2,false);
 
 		$sum
 			->select("SUM(COALESCE(p.new_project_sum,0))")
 			->from("#__gm_ceiling_projects as p")
-			->where("p.client_id = c.id ".generateWhere([12],$date1,$date2));
+			->where("p.client_id = c.id ".$this->generateWhere([12],$date1,$date2));
 		$profit
 			->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
 			->from("#__gm_ceiling_projects as p")
-			->where("p.client_id = c.id " .generateWhere([12],$date1,$date2));
+			->where("p.client_id = c.id " .$this->generateWhere([12],$date1,$date2));
 		$query
-			->select("$title as name")
+			->select("'$title' as name")
 			->select("SUM(($common)) as common")
 			->select("0 as dealers")
 			->select("0 as advt")
@@ -242,14 +244,14 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			->select("COUNT(p.id)")
 			->from("#__gm_ceiling_projects as p")
 			->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-			->where("p.id IN (". $this->getDetQuery($statuses,$date1,$date2));
+			->where("p.id IN (". $this->getDetQuery($statuses,$date1,$date2).")");
 			if(!empty($dealer_id)){
 				$query->where("cl.dealer_id = $dealer_id");
 			}
 		return $query;
 	}
 	function getDetailedAnalytic($date1 = null,$date2 = null,$dealer_id = null){
-		if(empty($date1)&&empty($date2)){
+		if(empty($date1) && empty($date2)){
 				$date1 = date("Y-m-d");
 				$date2 = date("Y-m-d");
 			}
@@ -305,14 +307,14 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
                 ->where("p.id IN (".$this->getDetQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");
-            $measure = getDetSubquery([1],$date1,$date2,$dealer_id);
-			$ref_measure = getDetSubquery([2],$date1,$date2,$dealer_id);
-			$deals = getDetSubquery([4,5],$date1,$date2,$dealer_id);
-			$ref_deals = getDetSubquery([3],$date1,$date2,$dealer_id);
-			$dealers = getDetSubquery([20],$date1,$date2);
-			$advt = getDetSubquery([21],$date1,$date2);
-			$closed = getDetSubquery([12],$date1,$date2,$dealer_id);
-			$refused = getDetSubquery([15],$date1,$date2,$dealer_id);
+            $measure = $this->getDetSubquery([1],$date1,$date2,$dealer_id);
+			$ref_measure = $this->getDetSubquery([2],$date1,$date2,$dealer_id);
+			$deals = $this->getDetSubquery([4,5],$date1,$date2,$dealer_id);
+			$ref_deals = $this->getDetSubquery([3],$date1,$date2,$dealer_id);
+			$dealers = $this->getDetSubquery([20],$date1,$date2);
+			$advt = $this->getDetSubquery([21],$date1,$date2);
+			$closed = $this->getDetSubquery([12],$date1,$date2,$dealer_id);
+			$refused = $this->getDetSubquery([15],$date1,$date2,$dealer_id);
 
 			$query->select('DISTINCT a.name');
 			$query->select(' a.id');
@@ -334,13 +336,24 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$query->from('`#__gm_ceiling_api_phones` AS a');
 			$query->where("a.dealer_id = $dealer_id");
 			$db->setQuery($query);
-			
+
 			$items = $db->loadObjectList();
+			$designers = $this->getDetDataByDealerType(3,$date1,$date2);
+			$wininstallers = $this->getDetDataByDealerType(8,$date1,$date2);
+						array_push($items,$designers);
+			array_push($items,$wininstallers);
+			return $items;
 	}
 
-	function getSubqueryForDealerTypeQuery($statuses,$date1,$date2){
+	function getSubqueryForDealerTypeQuery($statuses,$date1,$date2,$dealer_type){
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
+		$clients_id = $db->getQuery(true);
+            $clients_id
+            	->select("c.id")
+            	->from("`#__gm_ceiling_clients` AS c")
+            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
+            	->where("u.dealer_type = $dealer_type");
 		$query
 			->select("COUNT(p.id)")
 			->from("`#__gm_ceiling_projects_history` AS h ")
@@ -350,6 +363,12 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 	}
 	function getDetDataByDealerType($dealer_type,$date1,$date2){
 		try{
+			if($dealer_type == 3){
+	 			$title = "Отделочники";
+	 		}
+	 		if($dealer_type == 8){
+	 			$title = "Оконщики";	
+	 		}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$common = $db->getQuery(true);
@@ -365,12 +384,12 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
             $sum_done = $db->getQuery(true);
             $current_measure = $db->getQuery(true);
             $clients_id = $db->getQuery(true);
+
             $clients_id
             	->select("c.id")
             	->from("`#__gm_ceiling_clients` AS c")
             	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
             	->where("u.dealer_type = $dealer_type");
-
             $common
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
@@ -381,12 +400,12 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 				->from("#__gm_ceiling_projects as p")
 				->where("p.client_id in ($clients_id) AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'");
 
-			$measure = getSubqueryForDealerTypeQuery('=1',$date1,$date2);
-			$ref_measure = getSubqueryForDealerTypeQuery('=2',$date1,$date2);
-			$deals = getSubqueryForDealerTypeQuery('in(4,5)',$date1,$date2);
-			$ref_deals = getSubqueryForDealerTypeQuery('=3',$date1,$date2);
-			$closed = getSubqueryForDealerTypeQuery('=12',$date1,$date2);
-			$refused = getSubqueryForDealerTypeQuery('=15',$date1,$date2);
+			$measure = $this->getSubqueryForDealerTypeQuery('=1',$date1,$date2,$dealer_type);
+			$ref_measure = $this->getSubqueryForDealerTypeQuery('=2',$date1,$date2,$dealer_type);
+			$deals = $this->getSubqueryForDealerTypeQuery('in(4,5)',$date1,$date2,$dealer_type);
+			$ref_deals = $this->getSubqueryForDealerTypeQuery('=3',$date1,$date2,$dealer_type);
+			$closed = $this->getSubqueryForDealerTypeQuery('=12',$date1,$date2,$dealer_type);
+			$refused = $this->getSubqueryForDealerTypeQuery('=15',$date1,$date2,$dealer_type);
 
 			
 			$mounts
@@ -404,20 +423,23 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 				->from("`#__gm_ceiling_projects_history` AS h ")
 				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
 				->where("p.client_id in ($clients_id) and h.new_status = 12 and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-            $query->select("($common) as common");
-            $query->select("($refused) as refused");
-            $query->select("($ref_measure) as ref_measure");
-            $query->select("($measure) as measure");
-            $query->select("($current_measure) as current_measure");
-			$query->select("($ref_deals) as ref_deals");
-            $query->select("($deals) as deals");
-            $query->select("ifnull(($sum_deals),0) as sum_deals");
-			$query->select("($mounts) as mounts");
-            $query->select("($closed) as closed");
-            $query->select("ifnull(($sum_done),0) as sum_done");
+			$query->select("'$title' as name");
+			$query->select("0 as id");
+            $query->select("SUM(($common)) as common");
+            $query->select("0 as dealers");
+	        $query->select("0 as advt");
+            $query->select("SUM(($refused)) as refused");
+            $query->select("SUM(($ref_measure)) as ref_measure");
+            $query->select("SUM(($measure)) as measure");
+            $query->select("SUM(($current_measure)) as current_measure");
+			$query->select("SUM(($ref_deals)) as ref_deals");
+            $query->select("SUM(($deals)) as deals");
+            $query->select("SUM(ifnull(($sum_deals),0)) as sum_deals");
+			$query->select("SUM(($mounts)) as mounts");
+            $query->select("SUM(($closed)) as closed");
+            $query->select("SUM(ifnull(($sum_done),0)) as sum_done");
 			$db->setQuery($query);
-			$items = $db->loadObjectList();
+			$items = $db->loadObject();
 
 			return $items;
 		}
