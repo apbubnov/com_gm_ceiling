@@ -984,4 +984,28 @@ class Gm_ceilingModelProjects extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getMountsAndDayoffsByDealerId($dealer_id){
+        try
+        {
+            $currentDate = date("Y-m-d").' 00:00:00';
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`u`.`id` AS `project_mounter`,
+                    GROUP_CONCAT(DISTINCT CONCAT(`m`.`date_time`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(`p`.`project_info`, \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `mount_dates`,
+                    GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
+            $query->from('`#__users` AS `u`');
+            $query->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS `m` ON `m`.`mounter_id` = `u`.`id`');
+            $query->innerJoin('`rgzbn_gm_ceiling_projects` AS `p` ON `p`.`id` = `m`.`project_id`');
+            $query->leftJoin('`rgzbn_gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
+            $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_status` > 4 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `m`.`date_time` IS NULL) AND (`d`.`date_to` > '$currentDate' OR `d`.`date_to` IS NULL) AND (`d`.`date_to` IS NOT NULL OR `m`.`date_time` IS NOT NULL)");
+            $query->group('`u`.`id`');
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

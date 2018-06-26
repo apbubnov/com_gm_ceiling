@@ -1,4 +1,4 @@
-function init_measure_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
+function init_mount_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectCalculator,
 	mw_elem = document.getElementById(modal_window);
@@ -19,7 +19,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 
 		    jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=getArrayForMeasuresCalendar",
+                url: "index.php?option=com_gm_ceiling&task=getArrayForMountsCalendar",
                 success: function(data) {
                 	data_array = data.data;
                 	mounters = data.mounters;
