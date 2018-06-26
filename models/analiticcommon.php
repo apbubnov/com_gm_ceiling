@@ -62,7 +62,8 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$common
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id and c.dealer_id =  $dealer_id");
 
 			$dealers
 				->select("COUNT(p.id)")
@@ -76,32 +77,39 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			$refuse
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id  AND p.project_status = 15");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id  AND p.project_status = 15 and c.dealer_id =  $dealer_id");
 			$inwork
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id AND  p.project_status IN (0,2,3)");			
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id AND  p.project_status IN (0,2,3) and c.dealer_id =  $dealer_id");			
 			$measure
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id  AND p.project_status = 1");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id  AND p.project_status = 1 and c.dealer_id =  $dealer_id");
 			$deals
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19)");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id AND p.project_status IN (4,5,6,7,8,10,11,12,16,17,19,24,25,26) and c.dealer_id =  $dealer_id");
 			$done
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id  AND p.project_status = 12");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id  AND p.project_status = 12 and c.dealer_id =  $dealer_id");
 			$sum
 				->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id  AND p.project_status = 12");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id  AND p.project_status = 12 and c.dealer_id =  $dealer_id");
 			$profit
 				->select("SUM(IF((project_sum IS NULL OR project_sum = 0) AND (new_project_sum  IS NOT NULL OR new_project_sum <>0),new_project_sum,project_sum) -
 IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p.new_material_sum + p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.api_phone_id = a.id  AND p.project_status = 12");
+				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
+				->where("p.api_phone_id = a.id  AND p.project_status = 12 and c.dealer_id =  $dealer_id");
 			$query->select(' DISTINCT a.name');
 			$query->select("($common) as common");
 			if($dealer->dealer_type != 1){
@@ -116,7 +124,7 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$query->select("($sum) as sum");
 			$query->select("($profit) as profit");
 			$query->from('`#__gm_ceiling_api_phones` AS a');
-			$query->where("a.dealer_id = $dealer_id");
+			$query->where("a.dealer_id = $dealer_id or a.dealer_id is null");
 			//throw new Exception($query);
 				/*->from('`#__gm_ceiling_api_phones` AS a')
 				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id and a.dealer_id ='.$dealer_id);*/
@@ -440,6 +448,7 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			->leftJoin('`#__users` AS u ON c.dealer_id = u.id')
 			->where("u.dealer_type = $dealer_type ");
 		$db->setQuery($query);
+		throw new Exception($query);
 		$items = $db->loadObjectList();
 		return $items;
 	}

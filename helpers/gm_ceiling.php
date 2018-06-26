@@ -2813,13 +2813,13 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                if ($project->who_mounting == 1) {
+                if (JFactory::getUser($project->project_mounter)->dealer_id == 1) {
                     foreach ($mounting_data as $item) {
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
-                            $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
+                            $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                            $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
+                            $html .= '<td class="center">' . round($item['dealer_salary_total'], 2) . '</td>';
                             $html .= '</tr>';
                     }
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_gm_mounting'], 2) . '</th></tr>';
@@ -2847,7 +2847,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th>Наименование</th>
                                 <th class="center">Кол-во</th>
                             </tr>';
-                if ($project->who_mounting == 1) {
+                if (JFactory::getUser($project->project_mounter)->dealer_id == 1) {
                     foreach ($mounting_data as $item) {
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
