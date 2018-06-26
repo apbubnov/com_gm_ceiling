@@ -48,7 +48,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            	for (var key in gaugers) {
 			    			var c = gaugers[key].id;
 			    			html += '<tr><th>'+gaugers[key].name+'</th>';
-			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined) {
+			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined || data_array[y][m][d][c] == undefined) {
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class;
