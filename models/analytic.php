@@ -55,7 +55,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 	}
 
 	
-	function generateSubqueryForCommon($column,$column_value,$statuses,$date1,$date2,$needJoin,$dealer_id=null){
+	function generateSubqueryForCommon($equality,$statuses,$date1,$date2,$needJoin,$dealer_id=null){
 		try
 		{
 			$db = JFactory::getDbo();
@@ -65,7 +65,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 			if($needJoin){
 				$query->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id");
 			}
-			$query->where("$column = $column_value ".$this->generateWhere($statuses,$date1,$date2));
+			$query->where($equality.$this->generateWhere($statuses,$date1,$date2));
 			if($needJoin){
 				$query->where("c.dealer_id =  $dealer_id");
 			}
@@ -96,16 +96,15 @@ class Gm_ceilingModelAnalytic extends JModelList
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
 
-			$column_name = "p.api_phone_id";
-			$column_value = "a.id";
-			$common = $this->generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,true,$dealer_id);
-			$dealers = $this->generateSubqueryForCommon($column_name,$column_value,[20],$date1,$date2,false);
-			$advt = $this->generateSubqueryForCommon($column_name,$column_value,[21],$date1,$date2,false);
-			$refuse = $this->generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,true,$dealer_id);
-			$inwork = $this->generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,true,$dealer_id);	
-			$measure = $this->generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,true,$dealer_id);
-			$deals = $this->generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19,24,25,26],$date1,$date2,true,$dealer_id);
-			$done = $this->generateSubqueryForCommon($column_name,$column_value,[12],$date1,$date2,true,$dealer_id);
+			$eq = "p.api_phone_id = a.id";
+			$common = $this->generateSubqueryForCommon($eq,[],$date1,$date2,true,$dealer_id);
+			$dealers = $this->generateSubqueryForCommon($eq,[20],$date1,$date2,false);
+			$advt = $this->generateSubqueryForCommon($eq,[21],$date1,$date2,false);
+			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,true,$dealer_id);
+			$inwork = $this->generateSubqueryForCommon($eq,[0,2,3],$date1,$date2,true,$dealer_id);	
+			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,true,$dealer_id);
+			$deals = $this->generateSubqueryForCommon($eq,[4,5,6,7,8,10,11,12,16,17,19,24,25,26],$date1,$date2,true,$dealer_id);
+			$done = $this->generateSubqueryForCommon($eq,[12],$date1,$date2,true,$dealer_id);
 			$sum
 				->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
 				->from("#__gm_ceiling_projects as p")
@@ -137,8 +136,10 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$items = $db->loadObjectList();
 			$designers = $this->getCommonAnalyticByType(3,$date1,$date2);
 			$wininstallers = $this->getCommonAnalyticByType(8,$date1,$date2);
+			$no_advt = $this->getCommonAnalyticByType(null,$date1,$date2,$dealer_id);
 			array_push($items,$designers);
 			array_push($items,$wininstallers);
+			array_push($items,$no_advt);
 			return $items;
 		}
 		catch(Exception $e)
@@ -147,7 +148,8 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
         }
 	}
 
-	function getCommonAnalyticByType($dealer_type = null,$date1 = null,$date2 = null){
+	function getCommonAnalyticByType($dealer_type = null,$date1 = null,$date2 = null,$dealer_id=null){
+		$title = "Без рекламы";
  		if($dealer_type == 3){
  			$title = "Отделочники";
  		}
@@ -164,17 +166,24 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 		$done =  $db->getQuery(true);
 		$sum =  $db->getQuery(true);
 		$profit =  $db->getQuery(true);
-		
-
-		$column_name = "p.client_id";
-		$column_value = "c.id";
-		$common = $this->generateSubqueryForCommon($column_name,$column_value,[],$date1,$date2,false);
-		$deals =  $this->generateSubqueryForCommon($column_name,$column_value,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,false);
-		$inwork = $this->generateSubqueryForCommon($column_name,$column_value,[0,2,3],$date1,$date2,false);
-		$measure = $this->generateSubqueryForCommon($column_name,$column_value,[1],$date1,$date2,false);
-		$refuse = $this->generateSubqueryForCommon($column_name,$column_value,[15],$date1,$date2,false);
-		$done = $this->generateSubqueryForCommon($column_name,$column_value,[ 12],$date1,$date2,false);
-
+		if(empty($dealer_type)){
+			$eq = "p.api_phone_id IS NULL";
+			$common = $this->generateSubqueryForCommon($eq,[],$date1,$date2,true,$dealer_id);
+			$deals =  $this->generateSubqueryForCommon($eq,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,true,$dealer_id);
+			$inwork = $this->generateSubqueryForCommon($eq,[0,2,3],$date1,$date2,true,$dealer_id);
+			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,true,$dealer_id);
+			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,true,$dealer_id);
+			$done = $this->generateSubqueryForCommon($eq,[ 12],$date1,$date2,true,$dealer_id);
+		}
+		else{
+			$eq = "p.client_id = c.id";
+			$common = $this->generateSubqueryForCommon($eq,[],$date1,$date2,false);
+			$deals =  $this->generateSubqueryForCommon($eq,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,false);
+			$inwork = $this->generateSubqueryForCommon($eq,[0,2,3],$date1,$date2,false);
+			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,false);
+			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,false);
+			$done = $this->generateSubqueryForCommon($eq,[ 12],$date1,$date2,false);
+		}
 		$sum
 			->select("SUM(COALESCE(p.new_project_sum,0))")
 			->from("#__gm_ceiling_projects as p")
@@ -196,9 +205,16 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			->select("SUM(ifnull(($sum),0)) as sum")
 			->select("SUM(ifnull(($profit),0)) as profit")
 			->from('`#__gm_ceiling_clients` AS c')
-			->leftJoin('`#__users` AS u ON c.dealer_id = u.id')
-			->where("u.dealer_type = $dealer_type ");
+			->leftJoin('`#__users` AS u ON c.dealer_id = u.id');
+			if(!empty($dealer_type)){
+				$query->where("u.dealer_type = $dealer_type ");
+			}
+			if(empty($dealer_type)){
+				throw new Exception($query);
+			}
 		$db->setQuery($query);
+
+		
 		$items = $db->loadObject();
 		return $items;
 	}
