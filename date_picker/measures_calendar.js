@@ -52,7 +52,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class;
-			    					if (selectTime == time) {
+			    					if (selectTime == time && selectCalculator == c) {
 			    						_class = 'select-day';
 			    					} else {
 			    						_class = 'free-day';
@@ -64,7 +64,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class, p_id = false, p_info = false;
-			    					if (selectTime == time) {
+			    					if (selectTime == time && selectCalculator == c) {
 			    						_class = 'select-day';
 			    					} else {
 			    						var ymdch = data_array[y][m][d][c][h];
@@ -93,9 +93,11 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
-		            	jQuery('#'+modal_window+' .free-day').click(function(){
+		            	jQuery('#'+modal_window+' .free-day').click(function free_click(){
 		            		var selected_td = mw_elem.getElementsByClassName('select-day');
 		            		for (var i = selected_td.length; i--;) {
+		            			selected_td[i].onclick = free_click;
+		            			selected_td[i].classList.add('free-day');
 		            			selected_td[i].classList.remove('select-day');
 		            		}
 		            		this.classList.add('select-day');

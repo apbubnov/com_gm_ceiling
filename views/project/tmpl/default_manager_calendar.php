@@ -430,6 +430,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         </p>
     </div>
 </div>
+
 <hr>
 <div id="calendar_test"></div>
 <input type="text" id="calculation_time1">
@@ -437,9 +438,18 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <div id="calendar_test2"></div>
 <input type="text" id="calculation_time2">
 <input type="text" id="calculator_id2">
+<hr>
+<div id="calendar2_test"></div>
+<input type="text" id="m_time1">
+<input type="text" id="m_id1">
+<div id="calendar2_test2"></div>
+<input type="text" id="m_time2">
+<input type="text" id="m_id2">
+
 <div class="modal_window_container" id="mw_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_measures_calendar"></div>
+    <div class="modal_window" id="modal_window_mounts_calendar"></div>
     <div class="modal_window" id="modal-window-call-tar">
         <h6>Введите ФИО</h6>
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
@@ -450,19 +460,25 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     </div>
 </div>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
     init_measure_calendar('calendar_test','calculation_time1','calculator_id1','modal_window_measures_calendar',['close_mw','mw_container']);
     init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
+    init_mount_calendar('calendar2_test','m_time1','m_id1','modal_window_mounts_calendar',['close_mw','mw_container']);
+    init_mount_calendar('calendar2_test2','m_time2','m_id2','modal_window_mounts_calendar',['close_mw','mw_container']);
     var $ = jQuery,
         Data = {};
 
     jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
         var div = jQuery("#modal_window_measures_calendar"); // тут указываем ID элемента
-        var div1 = jQuery("#modal-window-call-tar");
+        var div1 = jQuery("#modal_window_mounts_calendar");
+        var div2 = jQuery("#modal-window-call-tar");
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0
             && !div1.is(e.target)
-            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();

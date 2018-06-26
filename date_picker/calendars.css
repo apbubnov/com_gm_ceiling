@@ -108,26 +108,26 @@
     color:#414099;
     border-radius:5px;
 }
-.measures_grafik{
+.measures_grafik, .mounts_grafik{
     margin: 0px auto;
     text-align: center;
 }
-.measures_grafik td{
+.measures_grafik td, .mounts_grafik td{
     cursor: pointer;
     padding: 2px;
     border: 1px solid #414099;
 }
-.measures_grafik .busy-day{
+.measures_grafik .busy-day, .mounts_grafik .busy-day{
     background: gray;
 }
-.measures_grafik td:hover{
+.measures_grafik td:hover, .mounts_grafik td:hover{
     background:#d3d3f9;
 }
-.measures_grafik .select-day{
+.measures_grafik .select-day, .mounts_grafik .select-day{
     background: #414099;
     color:#ffffff;
 }
-.measures_grafik .select-day:hover{
+.measures_grafik .select-day:hover, .mounts_grafik .select-day:hover{
     background: #414099;
     color:#ffffff;
 }
