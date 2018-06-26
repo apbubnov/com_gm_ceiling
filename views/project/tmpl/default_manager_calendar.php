@@ -471,11 +471,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
     jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
         var div = jQuery("#modal_window_measures_calendar"); // тут указываем ID элемента
-        var div1 = jQuery("#modal-window-call-tar");
+        var div1 = jQuery("#modal_window_mounts_calendar");
+        var div2 = jQuery("#modal-window-call-tar");
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0
             && !div1.is(e.target)
-            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();
