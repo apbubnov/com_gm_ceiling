@@ -1,8 +1,42 @@
 function init_mount_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,
-	mw_elem = document.getElementById(modal_window),
-	mw_stages = '<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:60px auto;width:300px;height:280px;display:none;"></div>';
+	mw_elem = document.getElementById(modal_window), stages = [],
+	mw_stages = `<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:0px auto; top:10px;background:rgba(255,255,255,0.9);border: 1px solid #414099;border-radius:2px;width:300px;height:200px;display:none;">
+					<p><br>
+						<input type="radio" id="radio_full_mount" name="radio_stages">Полный монтаж<br>
+						<input type="radio" id="radio_stages_mount" name="radio_stages">Поэтапный монтаж<br>
+	                    <input type="checkbox" id="chkbox_obag" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_obag" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Обагечивание</span>
+	                    </label><br>
+	                    <input type="checkbox" id="chkbox_nat" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_nat" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Натяжка</span>
+	                    </label><br>
+	                    <input type="checkbox" id="chkbox_vst" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_vst" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Вставка</span>
+	                    </label><br>
+                    </p>
+                    <input class="btn btn-primary btn-sm btn_ok" type="button" value="Ок">
+                    <input class="btn btn-primary btn-sm btn_cancel" type="button" value="Отмена">
+                </div>`;
 
 	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
 	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
@@ -98,21 +132,104 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 
 		            	jQuery('#'+modal_window+' .free-day').click(function free_click(){
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'block';
+
+		            		selectTime = this.getAttribute('data-time');
+		            		selectMounter = this.getAttribute('data-mounter');
+
+		            		for (var i = stages.length; i--;) {
+		            			if (stages[i].time != selectTime || stages[i].mounter != selectMounter) {
+			            			if (stages[i].stage == 1) {
+			            				var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
+					            		for (var j = chkboxs.length; j--;) {
+					            			chkboxs[j].checked = true;
+					            			chkboxs[j].disabled = true;
+					            		}
+					            		jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
+			            			}
+			            			if (stages[i].stage == 2) {
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = true;
+			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+			            			}
+			            			if (stages[i].stage == 3) {
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = true;
+			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+			            			}
+			            			if (stages[i].stage == 4) {
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
+			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+			            			}
+			            		}
+		            		}
+
 		            		var selected_td = mw_elem.getElementsByClassName('select-day');
 		            		for (var i = selected_td.length; i--;) {
 		            			selected_td[i].onclick = free_click;
 		            			selected_td[i].classList.add('free-day');
 		            			selected_td[i].classList.remove('select-day');
 		            		}
-		            		this.classList.add('select-day');
-		            		selectTime = this.getAttribute('data-time');
-		            		selectMounter = this.getAttribute('data-mounter');
-		            		document.getElementById(input_time).value = selectTime;
-		            		document.getElementById(input_calculator).value = selectMounter;
-		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = this.getAttribute('data-time');
-		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = 'Свободно';
-		            		mw_elem.getElementsByClassName('p_info')[0].innerHTML = '';
-		            		//this.classList.remove('free-day');
+		            		
+		            	});
+
+		            	jQuery('#'+modal_window+' .btn_cancel').click(function(){
+		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+		            	});
+
+		            	jQuery('#'+modal_window+' .btn_ok').click(function(){
+		            		if (jQuery('#'+modal_window+' #radio_full_mount')[0].checked
+		            			|| (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
+		            				&& jQuery('#'+modal_window+' #chkbox_nat')[0].checked
+		            				&& jQuery('#'+modal_window+' #chkbox_vst')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled
+		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
+		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled)) {
+		            			stages = [{stage: 1, time: selectTime, mounter: selectMounter}];
+		            		}
+		            		else {
+		            			if (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
+		            				stages.push({stage: 2, time: selectTime, mounter: selectMounter});
+
+		            			}
+		            			if (jQuery('#'+modal_window+' #chkbox_nat')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled) {
+		            				stages.push({stage: 3, time: selectTime, mounter: selectMounter});
+		            			}
+		            			if (jQuery('#'+modal_window+' #chkbox_vst')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+		            				stages.push({stage: 4, time: selectTime, mounter: selectMounter});
+		            			}
+		            		}
+		            		console.log(stages);
+		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+		            	});
+
+		            	jQuery('#'+modal_window+' #radio_stages_mount')[0].checked = true;
+		            	jQuery('#'+modal_window+' #radio_full_mount').click(function() {
+		            		var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
+		            		for (var i = chkboxs.length; i--;) {
+		            			chkboxs[i].checked = false;
+		            			chkboxs[i].disabled = true;
+		            		}
+		            	});
+		            	jQuery('#'+modal_window+' #radio_stages_mount').click(function() {
+		            		for (var i = stages.length; i--;) {
+		            			if (stages[i].stage == 2) {
+		            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
+		            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = true;
+		            			}
+		            			if (stages[i].stage == 3) {
+		            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
+		            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = true;
+		            			}
+		            			if (stages[i].stage == 4) {
+		            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
+		            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
+		            			}
+		            		}
 		            	});
 
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){
@@ -151,7 +268,7 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getArrayForMountsCalendar",
                 success: function(data) {
-                	data_array = data.data;
+                	data_array = (data.data == null) ? [] : data.data;
                 	mounters = data.mounters;
                     console.log(data_array, mounters);
                     cont.onclick = clicks_on_calendar;
