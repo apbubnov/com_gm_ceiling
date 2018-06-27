@@ -146,7 +146,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getArrayForMeasuresCalendar",
                 success: function(data) {
-                	data_array = data.data;
+                	data_array = (data.data == null) ? [] : data.data;
                 	gaugers = data.gaugers;
                     console.log(data_array, gaugers);
                     cont.onclick = clicks_on_calendar;

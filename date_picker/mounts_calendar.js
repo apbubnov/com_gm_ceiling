@@ -2,7 +2,48 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,
 	mw_elem = document.getElementById(modal_window),
-	mw_stages = '<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:60px auto;width:300px;height:280px;display:none;"></div>';
+	mw_stages = `<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:0px auto; top:10px;background:rgba(255,255,255,0.9);border: 1px solid #414099;border-radius:2px;width:300px;height:200px;display:none;">
+					<p><br>
+						<input type="checkbox" id="chkbox_full_mount" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_full_mount" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Полный монтаж</span>
+	                    </label><br>
+	                    <input type="checkbox" id="chkbox_obag" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_obag" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Обагечивание</span>
+	                    </label><br>
+	                    <input type="checkbox" id="chkbox_nat" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_nat" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Натяжка</span>
+	                    </label><br>
+	                    <input type="checkbox" id="chkbox_vst" class="inp-cbx" style="display: none">
+	                    <label for="chkbox_vst" class="cbx">
+	                      <span>
+	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+	                        </svg>
+	                      </span>
+	                      <span>Вставка</span>
+	                    </label><br>
+                    </p>
+                    <input class="btn btn-primary btn-sm btn_ok" type="button" value="Ок">
+                    <input class="btn btn-primary btn-sm btn_cancel" type="button" value="Отмена">
+                </div>`;
 
 	setTimeout(include_script, 10, 'components/com_gm_ceiling/date_picker/nice-date-picker.js');
 	setTimeout(include_style, 10, 'components/com_gm_ceiling/date_picker/calendars.css');
@@ -115,6 +156,10 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            		//this.classList.remove('free-day');
 		            	});
 
+		            	jQuery('#'+modal_window+' .btn_cancel').click(function(){
+		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+		            	});
+
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){
 		            		var p_id, p_info;
 		            		if (this.hasAttribute('data-pid') && this.hasAttribute('data-info')) {
@@ -151,7 +196,7 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getArrayForMountsCalendar",
                 success: function(data) {
-                	data_array = data.data;
+                	data_array = (data.data == null) ? [] : data.data;
                 	mounters = data.mounters;
                     console.log(data_array, mounters);
                     cont.onclick = clicks_on_calendar;
