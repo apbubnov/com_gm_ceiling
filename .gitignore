@@ -6,3 +6,4 @@
 *.txt
 *.md
 *.pdf
+/nbproject/private/
