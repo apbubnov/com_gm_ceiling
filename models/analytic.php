@@ -22,7 +22,9 @@ class Gm_ceilingModelAnalytic extends JModelList
 	function generateWhere($statuses,$date1,$date2){
 		try
 		{
-			$str = "and p.project_status ";
+			if(!empty($statuses)){
+				$str = "and p.project_status ";
+			}
 			if(count($statuses)==1)
 			{
 				$str .= " = $statuses[0]";
@@ -47,6 +49,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 				$str .= "p.created BETWEEN '$date1' and '$date2'";
 				
 			}
+			return $str;
 		}
 		catch(Exception $e)
         {
@@ -65,10 +68,10 @@ class Gm_ceilingModelAnalytic extends JModelList
 			if($needJoin){
 				$query->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id");
 			}
-			$query->where($equality.$this->generateWhere($statuses,$date1,$date2));
+			$query->where("$equality ".$this->generateWhere($statuses,$date1,$date2));
 			if($needJoin){
 				$query->where("c.dealer_id =  $dealer_id");
-			}
+			}			
 			return $query;
 		}
 		catch(Exception $e)
@@ -174,6 +177,14 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,true,$dealer_id);
 			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,true,$dealer_id);
 			$done = $this->generateSubqueryForCommon($eq,[ 12],$date1,$date2,true,$dealer_id);
+			$sum
+				->select("SUM(COALESCE(p.new_project_sum,0))")
+				->from("#__gm_ceiling_projects as p")
+				->where("$eq and p.client_id = c.id ".$this->generateWhere([12],$date1,$date2));
+			$profit
+				->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
+				->from("#__gm_ceiling_projects as p")
+				->where("$eq and p.client_id = c.id " .$this->generateWhere([12],$date1,$date2));
 		}
 		else{
 			$eq = "p.client_id = c.id";
@@ -183,15 +194,16 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,false);
 			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,false);
 			$done = $this->generateSubqueryForCommon($eq,[ 12],$date1,$date2,false);
-		}
-		$sum
+			$sum
 			->select("SUM(COALESCE(p.new_project_sum,0))")
 			->from("#__gm_ceiling_projects as p")
 			->where("p.client_id = c.id ".$this->generateWhere([12],$date1,$date2));
-		$profit
+			$profit
 			->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
 			->from("#__gm_ceiling_projects as p")
 			->where("p.client_id = c.id " .$this->generateWhere([12],$date1,$date2));
+		}
+		
 		$query
 			->select("'$title' as name")
 			->select("SUM(($common)) as common")
@@ -209,11 +221,10 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			if(!empty($dealer_type)){
 				$query->where("u.dealer_type = $dealer_type ");
 			}
-			if(empty($dealer_type)){
-				throw new Exception($query);
-			}
 		$db->setQuery($query);
-
+		/*if(empty($dealer_type)){
+			throw new Exception($query);
+		}*/
 		
 		$items = $db->loadObject();
 		return $items;
@@ -356,29 +367,44 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 			$items = $db->loadObjectList();
 			$designers = $this->getDetDataByDealerType(3,$date1,$date2);
 			$wininstallers = $this->getDetDataByDealerType(8,$date1,$date2);
-						array_push($items,$designers);
+			$no_advt = $this->getDetDataByDealerType(null,$date1,$date2,$dealer_id);
+			array_push($items,$designers);
 			array_push($items,$wininstallers);
+			array_push($items,$no_advt);
 			return $items;
 	}
 
-	function getSubqueryForDealerTypeQuery($statuses,$date1,$date2,$dealer_type){
+	function getSubqueryForDealerTypeQuery($statuses,$date1,$date2,$dealer_type,$eq,$dealer_id=null){
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$clients_id = $db->getQuery(true);
             $clients_id
             	->select("c.id")
             	->from("`#__gm_ceiling_clients` AS c")
-            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
-            	->where("u.dealer_type = $dealer_type");
+            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id");
+            	if(empty($eq)){
+            		$clients_id->where("u.dealer_type = $dealer_type");
+            	}
+            	else{
+            		$clients_id->where("u.dealer_id = $dealer_id");
+            	}
+            	
 		$query
 			->select("COUNT(p.id)")
 			->from("`#__gm_ceiling_projects_history` AS h ")
 			->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-			->where("p.client_id in ($clients_id) and h.new_status $statuses and h.date_of_change BETWEEN '$date1' and '$date2'");
+			->where("$eq p.client_id in ($clients_id) and h.new_status $statuses and h.date_of_change BETWEEN '$date1' and '$date2'");
 		return $query;
 	}
-	function getDetDataByDealerType($dealer_type,$date1,$date2){
+	function getDetDataByDealerType($dealer_type,$date1,$date2,$dealer_id){
 		try{
+			if(empty($dealer_type)){
+				$title = "Без рекламы";
+				$eq = "p.api_phone_id is NULL and";
+			}
+			else {
+				$eq = "";
+			}
 			if($dealer_type == 3){
 	 			$title = "Отделочники";
 	 		}
@@ -404,41 +430,46 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
             $clients_id
             	->select("c.id")
             	->from("`#__gm_ceiling_clients` AS c")
-            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
-            	->where("u.dealer_type = $dealer_type");
+            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id");
+            if(!empty($dealer_type)){
+            	$clients_id->where("u.dealer_type = $dealer_type");
+            }
+            else{
+        		$clients_id->where("u.dealer_id = $dealer_id");
+        	}
             $common
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.client_id in ($clients_id) AND p.created BETWEEN '$date1' and '$date2'");
+				->where("$eq p.client_id in ($clients_id) AND p.created BETWEEN '$date1' and '$date2'");
 
 			$current_measure
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.client_id in ($clients_id) AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'");
+				->where("$eq p.client_id in ($clients_id) AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'");
 
-			$measure = $this->getSubqueryForDealerTypeQuery('=1',$date1,$date2,$dealer_type);
-			$ref_measure = $this->getSubqueryForDealerTypeQuery('=2',$date1,$date2,$dealer_type);
-			$deals = $this->getSubqueryForDealerTypeQuery('in(4,5)',$date1,$date2,$dealer_type);
-			$ref_deals = $this->getSubqueryForDealerTypeQuery('=3',$date1,$date2,$dealer_type);
-			$closed = $this->getSubqueryForDealerTypeQuery('=12',$date1,$date2,$dealer_type);
-			$refused = $this->getSubqueryForDealerTypeQuery('=15',$date1,$date2,$dealer_type);
+			$measure = $this->getSubqueryForDealerTypeQuery('=1',$date1,$date2,$dealer_type,$eq,$dealer_id);
+			$ref_measure = $this->getSubqueryForDealerTypeQuery('=2',$date1,$date2,$dealer_type,$eq,$dealer_id);
+			$deals = $this->getSubqueryForDealerTypeQuery('in(4,5)',$date1,$date2,$dealer_type,$eq,$dealer_id);
+			$ref_deals = $this->getSubqueryForDealerTypeQuery('=3',$date1,$date2,$dealer_type,$eq,$dealer_id);
+			$closed = $this->getSubqueryForDealerTypeQuery('=12',$date1,$date2,$dealer_type,$eq,$dealer_id);
+			$refused = $this->getSubqueryForDealerTypeQuery('=15',$date1,$date2,$dealer_type,$eq,$dealer_id);
 
 			
 			$mounts
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.project_status NOT IN (2,3) and p.client_id in ($clients_id) AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
+				->where("$eq p.project_status NOT IN (2,3) and p.client_id in ($clients_id) AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
 
             $sum_deals
                 ->select("SUM(COALESCE(p.project_sum,0))")
 				->from("`#__gm_ceiling_projects_history` AS h ")
 				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status IN(4,5) and h.date_of_change BETWEEN '$date1' and '$date2'");
+				->where("$eq p.client_id in ($clients_id) and h.new_status IN(4,5) and h.date_of_change BETWEEN '$date1' and '$date2'");
             $sum_done
                 ->select("SUM(COALESCE(p.new_project_sum,0))")
 				->from("`#__gm_ceiling_projects_history` AS h ")
 				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 12 and h.date_of_change BETWEEN '$date1' and '$date2'");
+				->where("$eq p.client_id in ($clients_id) and h.new_status = 12 and h.date_of_change BETWEEN '$date1' and '$date2'");
 			$query->select("'$title' as name");
 			$query->select("0 as id");
             $query->select("SUM(($common)) as common");
