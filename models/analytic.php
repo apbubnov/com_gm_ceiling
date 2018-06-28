@@ -206,16 +206,16 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 		
 		$query
 			->select("'$title' as name")
-			->select("SUM(($common)) as common")
+			->select("($common) as common")
 			->select("0 as dealers")
 			->select("0 as advt")
-			->select("SUM(($refuse)) as refuse")
-			->select("SUM(($inwork)) as inwork")
-			->select("SUM(($measure)) as measure")
-			->select("(($deals)) as deals")
-			->select("(($done)) as done")
-			->select("SUM(ifnull(($sum),0)) as sum")
-			->select("SUM(ifnull(($profit),0)) as profit")
+			->select("($refuse) as refuse")
+			->select("($inwork) as inwork")
+			->select("($measure) as measure")
+			->select("($deals) as deals")
+			->select("($done) as done")
+			->select("ifnull(($sum),0) as sum")
+			->select("ifnull(($profit),0) as profit")
 			->from('`#__gm_ceiling_clients` AS c')
 			->leftJoin('`#__users` AS u ON c.dealer_id = u.id');
 			if(!empty($dealer_type)){

@@ -498,12 +498,16 @@ class Gm_ceilingModelProjects extends JModelList
             if($advt == 'Отделочники'){
                 $dealer_type = '(3)';
             }
-            elseif($advt == 'Оконщики'){
+            if($advt == 'Оконщики'){
                 $dealer_type = '(8)';
             }
-            elseif($advt ==  'total'){
+            if($advt == 'Без рекламы'){
+                $eq = 'p.api_phone_id IS NULL';
+            }
+            if($advt ==  'total'){
                 $dealer_type = '(3,8)';
             }
+
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
@@ -519,10 +523,10 @@ class Gm_ceilingModelProjects extends JModelList
             switch($advt){
                 case 'total':
                     if($dealer_id  != 1){
-                        $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
+                        $where = "cl.dealer_id = $dealer_id";
                     }
                     else{
-                        $where = "(p.api_phone_id in ($subquery_advt) or cl.dealer_id in ($subquery_dsgnr))";
+                        $where = "cl.dealer_id in ($subquery_dsgnr) or cl.dealer_id = 1)";
                     }
                     if($statuses != 'all'){
                         $where .= " AND p.project_status in $statuses";
@@ -537,6 +541,12 @@ class Gm_ceilingModelProjects extends JModelList
                 case 'Оконщики':
                     $where = "cl.dealer_id in ($subquery_dsgnr)";
                      if($statuses != 'all'){
+                        $where .= " AND p.project_status in $statuses";
+                    }
+                    break;
+                case 'Без рекламы':
+                    $where = "cl.dealer_id = dealer_id and $eq";
+                    if($statuses != 'all'){
                         $where .= " AND p.project_status in $statuses";
                     }
                     break;

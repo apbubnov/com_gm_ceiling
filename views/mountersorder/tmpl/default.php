@@ -201,7 +201,7 @@ if (!empty($calculation_ids)) {
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar">
             <div align=center>
-                <p>Выполнено:</p>
+                <p class ="cbx_p">Выполнено:</p>
                 <p>
                     <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
                     <label for="obag" class="cbx">
@@ -213,7 +213,7 @@ if (!empty($calculation_ids)) {
                       <span>обагечивание;</span>
                     </label>
                 </p>
-                <p>
+                <p class ="cbx_p">
                     <input type="checkbox" id="natyazhka" class="inp-cbx" data-status = "25" style="display: none">
                     <label for="natyazhka" class="cbx">
                       <span>
@@ -224,9 +224,20 @@ if (!empty($calculation_ids)) {
                       <span>натяжка;</span>
                     </label>
                 </p>
-                <p>
+                <p class ="cbx_p">
                     <input type="checkbox" id="vstavka" class="inp-cbx" data-status = "26" style="display: none">
                     <label for="vstavka" class="cbx">
+                      <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                      </span>
+                      <span>установка вставки.</span>
+                    </label>
+                </p>
+                <p class ="cbx_p">
+                    <input type="checkbox" id="4444" class="inp-cbx" data-status = "26" style="display: none">
+                    <label for="4444" class="cbx">
                       <span>
                         <svg width="12px" height="10px" viewBox="0 0 12 10">
                           <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
