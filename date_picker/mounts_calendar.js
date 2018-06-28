@@ -86,12 +86,7 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined || data_array[y][m][d][c] == undefined) {
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
-			    					var _class;
-			    					if (selectTime == time && selectMounter == c) {
-			    						_class = 'select-day';
-			    					} else {
-			    						_class = 'free-day';
-			    					}
+			    					var _class = 'free-day';
 			    					html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'"></td>';
 			    				}
 			    			}
@@ -99,21 +94,18 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class, p_id = false, p_info = false;
-			    					if (selectTime == time && selectMounter == c) {
-			    						_class = 'select-day';
-			    					} else {
-			    						var ymdch = data_array[y][m][d][c][h];
-			    						if (ymdch) {
-				    						_class = 'busy-day';
-				    						if (ymdch.id != null && ymdch.info != null) {
-				    							p_id = ymdch.id;
-				    							p_info = ymdch.info;
-				    						}
-					    				}
-					    				else {
-					    					_class = 'free-day';
-					    				}
-			    					}
+		    						var ymdch = data_array[y][m][d][c][h];
+		    						if (ymdch) {
+			    						_class = 'busy-day';
+			    						if (ymdch.id != null && ymdch.info != null) {
+			    							p_id = ymdch.id;
+			    							p_info = ymdch.info;
+			    						}
+				    				}
+				    				else {
+				    					_class = 'free-day';
+				    				}
+
 			    					if (p_id && p_info) {
 					    				html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
 					    			}
@@ -129,10 +121,12 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			    		html += mw_stages;
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
+		            	del_and_add_selectdays();
 
 		            	jQuery('#'+modal_window+' .free-day').click(function free_click(){
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'block';
 
+		            		this.classList.add('select-day');
 		            		selectTime = this.getAttribute('data-time');
 		            		selectMounter = this.getAttribute('data-mounter');
 
@@ -163,23 +157,48 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            		}
+			            		else {
+			            			if (stages[i].stage == 1) {
+			            				var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
+					            		for (var j = chkboxs.length; j--;) {
+					            			chkboxs[j].checked = false;
+					            			chkboxs[j].disabled = false;
+					            		}
+					            		jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
+					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = false;
+					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].checked = true;
+			            			}
+			            			if (stages[i].stage == 2) {
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = false;
+			            			}
+			            			if (stages[i].stage == 3) {
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = false;
+			            			}
+			            			if (stages[i].stage == 4) {
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = false;
+			            				
+			            			}
+			            		}
 		            		}
 
-		            		var selected_td = mw_elem.getElementsByClassName('select-day');
-		            		for (var i = selected_td.length; i--;) {
-		            			selected_td[i].onclick = free_click;
-		            			selected_td[i].classList.add('free-day');
-		            			selected_td[i].classList.remove('select-day');
+		            		if (!jQuery('#'+modal_window+' #chkbox_obag')[0].disabled
+	            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
+	            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+		            			jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
 		            		}
-		            		
 		            	});
 
 		            	jQuery('#'+modal_window+' .btn_cancel').click(function(){
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+		            		del_and_add_selectdays();
 		            	});
 
 		            	jQuery('#'+modal_window+' .btn_ok').click(function(){
-		            		if (jQuery('#'+modal_window+' #radio_full_mount')[0].checked
+		            		if ((jQuery('#'+modal_window+' #radio_full_mount')[0].checked
+		            			&& !jQuery('#'+modal_window+' #radio_full_mount')[0].disabled)
 		            			|| (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& jQuery('#'+modal_window+' #chkbox_nat')[0].checked
 		            				&& jQuery('#'+modal_window+' #chkbox_vst')[0].checked
@@ -189,10 +208,13 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			stages = [{stage: 1, time: selectTime, mounter: selectMounter}];
 		            		}
 		            		else {
+		            			if (!jQuery('#'+modal_window+' #radio_full_mount')[0].checked) {
+		            				del_by_stage(1);
+		            			}
+
 		            			if (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
 		            				stages.push({stage: 2, time: selectTime, mounter: selectMounter});
-
 		            			}
 		            			if (jQuery('#'+modal_window+' #chkbox_nat')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled) {
@@ -202,10 +224,43 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
 		            				stages.push({stage: 4, time: selectTime, mounter: selectMounter});
 		            			}
+
+		            			if (!jQuery('#'+modal_window+' #chkbox_obag')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
+		            				del_by_stage(2);
+		            			}
+		            			if (!jQuery('#'+modal_window+' #chkbox_nat')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled) {
+		            				del_by_stage(3);
+		            			}
+		            			if (!jQuery('#'+modal_window+' #chkbox_vst')[0].checked
+		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+		            				del_by_stage(4);
+		            			}
 		            		}
-		            		console.log(stages);
+		            		del_and_add_selectdays();
+		            		console.log(JSON.stringify(stages));
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
 		            	});
+
+		            	function del_by_stage(s) {
+		            		for (var i = stages.length; i--;) {
+		            			if (stages[i].stage == s) {
+		            				stages.splice(i, 1);
+		            				break;
+		            			}
+		            		}
+		            	}
+
+		            	function del_and_add_selectdays() {
+		            		var tds = jQuery('#'+modal_window+' .free-day');
+		            		for (var i = tds.length; i--;) {
+		            			tds[i].classList.remove('select-day');
+		            		}
+		            		for (var i = stages.length; i--;) {
+		            			jQuery('#'+modal_window+' .free-day[data-time="'+stages[i].time+'"][data-mounter="'+stages[i].mounter+'"]')[0].classList.add('select-day');
+		            		}
+		            	}
 
 		            	jQuery('#'+modal_window+' #radio_stages_mount')[0].checked = true;
 		            	jQuery('#'+modal_window+' #radio_full_mount').click(function() {
@@ -216,20 +271,13 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            		}
 		            	});
 		            	jQuery('#'+modal_window+' #radio_stages_mount').click(function() {
-		            		for (var i = stages.length; i--;) {
-		            			if (stages[i].stage == 2) {
-		            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
-		            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = true;
-		            			}
-		            			if (stages[i].stage == 3) {
-		            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
-		            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = true;
-		            			}
-		            			if (stages[i].stage == 4) {
-		            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
-		            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
-		            			}
-		            		}
+		            		if (stages.length === 0 || (stages.length === 1 && stages[0].stage == 1)) {
+			            		var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
+			            		for (var i = chkboxs.length; i--;) {
+			            			chkboxs[i].checked = false;
+			            			chkboxs[i].disabled = false;
+			            		}
+			            	}
 		            	});
 
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){
