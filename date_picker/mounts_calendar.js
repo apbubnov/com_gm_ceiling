@@ -253,7 +253,6 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			}
 		            		}
 		            	}
-
 		            	function del_and_add_selectdays() {
 		            		var tds = jQuery('#'+modal_window+' .free-day');
 		            		for (var i = tds.length; i--;) {
