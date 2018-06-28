@@ -440,11 +440,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <input type="text" id="calculator_id2">
 <hr>
 <div id="calendar2_test"></div>
-<input type="text" id="m_time1">
-<input type="text" id="m_id1">
+<input type="text" id="mount1">
 <div id="calendar2_test2"></div>
-<input type="text" id="m_time2">
-<input type="text" id="m_id2">
+<input type="text" id="mount2">
 
 <div class="modal_window_container" id="mw_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -464,8 +462,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <script type="text/javascript">
     init_measure_calendar('calendar_test','calculation_time1','calculator_id1','modal_window_measures_calendar',['close_mw','mw_container']);
     init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
-    init_mount_calendar('calendar2_test','m_time1','m_id1','modal_window_mounts_calendar',['close_mw','mw_container']);
-    init_mount_calendar('calendar2_test2','m_time2','m_id2','modal_window_mounts_calendar',['close_mw','mw_container']);
+    init_mount_calendar('calendar2_test','mount1','modal_window_mounts_calendar',['close_mw','mw_container']);
+    init_mount_calendar('calendar2_test2','mount2','modal_window_mounts_calendar',['close_mw','mw_container']);
     var $ = jQuery,
         Data = {};
 
