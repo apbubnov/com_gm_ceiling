@@ -3204,7 +3204,7 @@ public function register_mnfctr(){
             $result_mounters = $model_users->getDealerMounters($user->dealer_id);
 
             $final_result = (object)['data' => null, 'mounters' => $result_mounters];
-
+            
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
                     if (!empty($value->mount_dates)) {

@@ -132,29 +132,51 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 
 		            		for (var i = stages.length; i--;) {
 		            			if (stages[i].time != selectTime || stages[i].mounter != selectMounter) {
+		            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+					            	jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
 			            			if (stages[i].stage == 1) {
 			            				var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
 					            		for (var j = chkboxs.length; j--;) {
 					            			chkboxs[j].checked = true;
 					            			chkboxs[j].disabled = true;
 					            		}
-					            		jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
-					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 2) {
 			            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 3) {
 			            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 4) {
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+			            			}
+			            		}
+			            		else {
+			            			if (stages[i].stage == 1) {
+			            				var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
+					            		for (var j = chkboxs.length; j--;) {
+					            			chkboxs[j].checked = false;
+					            			chkboxs[j].disabled = false;
+					            		}
+					            		jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
+					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = false;
+					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].checked = true;
+			            			}
+			            			if (stages[i].stage == 2) {
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = false;
+			            			}
+			            			if (stages[i].stage == 3) {
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = false;
+			            			}
+			            			if (stages[i].stage == 4) {
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
+			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = false;
+			            				
 			            			}
 			            		}
 			            		else {
@@ -188,6 +210,10 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 	            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
 	            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
 		            			jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
+<<<<<<< HEAD
+=======
+		            			jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = false;
+>>>>>>> a2f069dd9e5b264bb691166ad75a1fb0c3a3a7a4
 		            		}
 		            	});
 
@@ -208,20 +234,28 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			stages = [{stage: 1, time: selectTime, mounter: selectMounter}];
 		            		}
 		            		else {
+<<<<<<< HEAD
 		            			if (!jQuery('#'+modal_window+' #radio_full_mount')[0].checked) {
+=======
+		            			if (!jQuery('#'+modal_window+' #radio_full_mount')[0].checked
+		            				&& !jQuery('#'+modal_window+' #radio_full_mount')[0].disabled) {
+>>>>>>> a2f069dd9e5b264bb691166ad75a1fb0c3a3a7a4
 		            				del_by_stage(1);
 		            			}
 
 		            			if (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
+		            				del_by_stage(2);
 		            				stages.push({stage: 2, time: selectTime, mounter: selectMounter});
 		            			}
 		            			if (jQuery('#'+modal_window+' #chkbox_nat')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled) {
+		            				del_by_stage(3);
 		            				stages.push({stage: 3, time: selectTime, mounter: selectMounter});
 		            			}
 		            			if (jQuery('#'+modal_window+' #chkbox_vst')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+		            				del_by_stage(4);
 		            				stages.push({stage: 4, time: selectTime, mounter: selectMounter});
 		            			}
 
@@ -258,7 +292,14 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			tds[i].classList.remove('select-day');
 		            		}
 		            		for (var i = stages.length; i--;) {
+<<<<<<< HEAD
 		            			jQuery('#'+modal_window+' .free-day[data-time="'+stages[i].time+'"][data-mounter="'+stages[i].mounter+'"]')[0].classList.add('select-day');
+=======
+		            			slct_td = jQuery('#'+modal_window+' .free-day[data-time="'+stages[i].time+'"][data-mounter="'+stages[i].mounter+'"]');
+		            			if (slct_td.length == 1) {
+		            				slct_td[0].classList.add('select-day');
+		            			}
+>>>>>>> a2f069dd9e5b264bb691166ad75a1fb0c3a3a7a4
 		            		}
 		            	}
 
@@ -271,13 +312,21 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            		}
 		            	});
 		            	jQuery('#'+modal_window+' #radio_stages_mount').click(function() {
+<<<<<<< HEAD
 		            		if (stages.length === 0 || (stages.length === 1 && stages[0].stage == 1)) {
+=======
+		            		//if (stages.length === 0 || (stages.length === 1 && stages[0].stage == 1)) {
+>>>>>>> a2f069dd9e5b264bb691166ad75a1fb0c3a3a7a4
 			            		var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
 			            		for (var i = chkboxs.length; i--;) {
 			            			chkboxs[i].checked = false;
 			            			chkboxs[i].disabled = false;
 			            		}
+<<<<<<< HEAD
 			            	}
+=======
+			            	//}
+>>>>>>> a2f069dd9e5b264bb691166ad75a1fb0c3a3a7a4
 		            	});
 
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){

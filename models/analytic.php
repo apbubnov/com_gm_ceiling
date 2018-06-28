@@ -115,7 +115,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 				->where("p.api_phone_id = a.id  ".$this->generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
 			$profit
 				->select("SUM(IF((project_sum IS NULL OR project_sum = 0) AND (new_project_sum  IS NOT NULL OR new_project_sum <>0),new_project_sum,project_sum) -
-IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p.new_material_sum + p.new_mount_sum,0)))")
+						IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p.new_material_sum + p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("#__gm_ceiling_clients as c on c.id = p.client_id")
 				->where("p.api_phone_id = a.id  ".$this->generateWhere([12],$date1,$date2)." and c.dealer_id =  $dealer_id");
@@ -171,20 +171,6 @@ IF(COALESCE(p.new_material_sum + p.new_mount_sum,0) = 0,($profit_sub),COALESCE(p
 		$profit =  $db->getQuery(true);
 		if(empty($dealer_type)){
 			$eq = "p.client_id = c.id and p.api_phone_id IS NULL";
-			/*$common = $this->generateSubqueryForCommon($eq,[],$date1,$date2,true,$dealer_id);
-			$deals =  $this->generateSubqueryForCommon($eq,[4,5,6,7,8,10,11,12,16,17,19],$date1,$date2,true,$dealer_id);
-			$inwork = $this->generateSubqueryForCommon($eq,[0,2,3],$date1,$date2,true,$dealer_id);
-			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,true,$dealer_id);
-			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,true,$dealer_id);
-			$done = $this->generateSubqueryForCommon($eq,[ 12],$date1,$date2,true,$dealer_id);
-			$sum
-				->select("SUM(COALESCE(p.new_project_sum,0))")
-				->from("#__gm_ceiling_projects as p")
-				->where("$eq and p.client_id = c.id ".$this->generateWhere([12],$date1,$date2));
-			$profit
-				->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
-				->from("#__gm_ceiling_projects as p")
-				->where("$eq and p.client_id = c.id " .$this->generateWhere([12],$date1,$date2));*/
 		}
 		else{
 			$eq = "p.client_id = c.id";
