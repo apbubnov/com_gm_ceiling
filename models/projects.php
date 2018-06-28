@@ -502,7 +502,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $dealer_type = '(8)';
             }
             if($advt == 'Без рекламы'){
-                $eq = 'p.api_phone_id IS NULL';
+                $eq = 'and p.api_phone_id IS NULL';
             }
             if($advt ==  'total'){
                 $dealer_type = '(3,8)';
@@ -519,10 +519,10 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery_dsgnr
                 ->select("id")
                 ->from("`#__users`")
-                ->where("dealer_id = $dealer_id and dealer_type in $dealer_type");
+                ->where("dealer_id = $dealer_id and dealer_type in $dealer_type $eq");
             switch($advt){
                 case 'total':
-                    $where = "cl.dealer_id = $dealer_id";
+                    $where = "p.client_id = cl.id and( cl.dealer_id = $dealer_id";
                     if($dealer_id == 1){
                         $where .= " or cl.dealer_id in ($subquery_dsgnr))";
                     }
@@ -544,7 +544,7 @@ class Gm_ceilingModelProjects extends JModelList
                     }
                     break;
                 case 'Без рекламы':
-                    $where = "cl.dealer_id = dealer_id and $eq";
+                    $where = "cl.dealer_id = $dealer_id $eq";
                     if($statuses != 'all'){
                         $where .= " AND p.project_status in $statuses";
                     }
@@ -595,7 +595,8 @@ class Gm_ceilingModelProjects extends JModelList
                 ->from('`#__gm_ceiling_projects` as p')
                 ->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
                 ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
-                ->where($where);
+                ->innerJoin("`#__users` as u on u.id = cl.dealer_id")
+                ->where("p.client_id = cl.id and (cl.dealer_id = $dealer_id or u.dealer_id = $dealer_id)  ");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
