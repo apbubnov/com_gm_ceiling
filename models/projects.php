@@ -522,12 +522,11 @@ class Gm_ceilingModelProjects extends JModelList
                 ->where("dealer_id = $dealer_id and dealer_type in $dealer_type");
             switch($advt){
                 case 'total':
-                    if($dealer_id  != 1){
-                        $where = "cl.dealer_id = $dealer_id";
+                    $where = "cl.dealer_id = $dealer_id";
+                    if($dealer_id == 1){
+                        $where .= " or cl.dealer_id in ($subquery_dsgnr))";
                     }
-                    else{
-                        $where = "cl.dealer_id in ($subquery_dsgnr) or cl.dealer_id = 1)";
-                    }
+
                     if($statuses != 'all'){
                         $where .= " AND p.project_status in $statuses";
                     }
