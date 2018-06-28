@@ -132,29 +132,26 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 
 		            		for (var i = stages.length; i--;) {
 		            			if (stages[i].time != selectTime || stages[i].mounter != selectMounter) {
+		            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
+					            	jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
 			            			if (stages[i].stage == 1) {
 			            				var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
 					            		for (var j = chkboxs.length; j--;) {
 					            			chkboxs[j].checked = true;
 					            			chkboxs[j].disabled = true;
 					            		}
-					            		jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
-					            		jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 2) {
 			            				jQuery('#'+modal_window+' #chkbox_obag')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_obag')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 3) {
 			            				jQuery('#'+modal_window+' #chkbox_nat')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_nat')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            			if (stages[i].stage == 4) {
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
-			            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 			            			}
 			            		}
 			            		else {
@@ -188,6 +185,7 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 	            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
 	            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
 		            			jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
+		            			jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = false;
 		            		}
 		            	});
 
@@ -208,20 +206,24 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			stages = [{stage: 1, time: selectTime, mounter: selectMounter}];
 		            		}
 		            		else {
-		            			if (!jQuery('#'+modal_window+' #radio_full_mount')[0].checked) {
+		            			if (!jQuery('#'+modal_window+' #radio_full_mount')[0].checked
+		            				&& !jQuery('#'+modal_window+' #radio_full_mount')[0].disabled) {
 		            				del_by_stage(1);
 		            			}
 
 		            			if (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
+		            				del_by_stage(2);
 		            				stages.push({stage: 2, time: selectTime, mounter: selectMounter});
 		            			}
 		            			if (jQuery('#'+modal_window+' #chkbox_nat')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled) {
+		            				del_by_stage(3);
 		            				stages.push({stage: 3, time: selectTime, mounter: selectMounter});
 		            			}
 		            			if (jQuery('#'+modal_window+' #chkbox_vst')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+		            				del_by_stage(4);
 		            				stages.push({stage: 4, time: selectTime, mounter: selectMounter});
 		            			}
 
@@ -258,7 +260,10 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			tds[i].classList.remove('select-day');
 		            		}
 		            		for (var i = stages.length; i--;) {
-		            			jQuery('#'+modal_window+' .free-day[data-time="'+stages[i].time+'"][data-mounter="'+stages[i].mounter+'"]')[0].classList.add('select-day');
+		            			slct_td = jQuery('#'+modal_window+' .free-day[data-time="'+stages[i].time+'"][data-mounter="'+stages[i].mounter+'"]');
+		            			if (slct_td.length == 1) {
+		            				slct_td[0].classList.add('select-day');
+		            			}
 		            		}
 		            	}
 
@@ -271,13 +276,13 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            		}
 		            	});
 		            	jQuery('#'+modal_window+' #radio_stages_mount').click(function() {
-		            		if (stages.length === 0 || (stages.length === 1 && stages[0].stage == 1)) {
+		            		//if (stages.length === 0 || (stages.length === 1 && stages[0].stage == 1)) {
 			            		var chkboxs = mw_elem.getElementsByClassName('inp-cbx');
 			            		for (var i = chkboxs.length; i--;) {
 			            			chkboxs[i].checked = false;
 			            			chkboxs[i].disabled = false;
 			            		}
-			            	}
+			            	//}
 		            	});
 
 		            	jQuery('#'+modal_window+' .busy-day').click(function(){
