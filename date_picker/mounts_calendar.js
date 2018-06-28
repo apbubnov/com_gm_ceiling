@@ -1,4 +1,4 @@
-function init_mount_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
+function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,
 	mw_elem = document.getElementById(modal_window), stages = [],
@@ -241,8 +241,9 @@ function init_mount_calendar(elem_id, input_time, input_calculator, modal_window
 		            			}
 		            		}
 		            		del_and_add_selectdays();
-		            		console.log(JSON.stringify(stages));
+		            		//console.log(JSON.stringify(stages));
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+		            		document.getElementById(input_mount).value = JSON.stringify(stages);
 		            	});
 
 		            	function del_by_stage(s) {
