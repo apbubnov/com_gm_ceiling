@@ -763,9 +763,8 @@
                                             <?php } ?>
                                     </div>
                                     <?php if($this->item->project_status < 5 || $this->item->project_status == 22){?>
-                                        <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);" <?php echo $hidden?>> Удалить потолок </button>
+                                        <button class="btn btn-danger delete_calc" data-calculation_id = "<?php echo $calculation->id;?>" style="margin:10px;" type="button" <?php echo $hidden?>> Удалить потолок </button>
                                     <?php } ?>
-                                    <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
                                 </div>
                             </div>
                         </div>

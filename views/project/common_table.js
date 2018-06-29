@@ -62,6 +62,31 @@ jQuery("[name = 'include_calculation[]']").change(function(){
     check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
 });
 
+jQuery(".delete_calc").click(function(){
+        let calc_id = jQuery(this).data('calculation_id');
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=calculation.delete",
+            data:{
+                calc_id: calc_id
+            },
+            type: "POST",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке удалить!"
+                });
+            }
+        });
+});
+
 function check_min_sum(canv_sum){
     let min_sum = 0;
     if(canv_sum == 0) {

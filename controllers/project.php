@@ -776,26 +776,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			$data->perimeter = $perimeter;
 			$data->salary = $salary;
-			// ------------------------------------------
-			if($isDataDelete) {
-				$idCalc = $jinput->get('idCalcDelete','0', 'INT');
-				//print_r($idCalc); exit;
-				$result = $model_for_mail->delete($idCalc);
-				if($result == 1) {
-					$this->setMessage("Потолок удален");
-				if($type === "gmcalculator" && $subtype === "calendar") {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.$project_id, false));
-				}
-				elseif ($type === "calculator" && $subtype === "calendar") {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.$project_id, false));
-				}
-				else {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
-				}
-				}
-				
-			}
-			elseif ($isDataChange) {
+			if ($isDataChange) {
 				if($isDataChange){
 					$newFIO = $jinput->get('new_client_name','', 'STRING');
 					$newDate = $jinput->get('project_new_calc_date','','STRING');

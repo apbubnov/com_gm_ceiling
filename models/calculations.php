@@ -1124,11 +1124,11 @@ class Gm_ceilingModelCalculations extends JModelList {
          $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->delete($db->quoteName('#__gm_ceiling_calculations'));
-            $query->where('id = ' . $id);
+            $query->where("id = $id");
             $db->setQuery($query);
             $db->execute();
 
-            $query = $db->getQuery(true);
+           /* $query = $db->getQuery(true);
             $query->delete($db->quoteName('#__gm_ceiling_fixtures'));
             $query->where('calculation_id = ' .$id);
             $db->setQuery($query);
@@ -1168,7 +1168,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $query->delete($db->quoteName('#__gm_ceiling_profil'));
             $query->where('calculation_id = ' . $id);
             $db->setQuery($query);
-            $db->execute();
+            $db->execute();*/
 
             return 1;
         }
