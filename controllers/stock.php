@@ -417,14 +417,14 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 if (!empty($customer->project))
                     $model->NextStatusProject($customer->project);
                 else
-                {
                     $customer->project = $model->AddProject($client);
-                }
             }
             catch (Exception $ex)
             {
                 die(json_encode((object) ["status" => "error", "error" => $ex->getMessage()]));
             }
+
+            $info->project = $customer->project;
 
             foreach ($_POST["goods"] as $good) {
                 $good = json_decode($good);
