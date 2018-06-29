@@ -150,7 +150,18 @@ class Gm_ceilingModelProject extends JModelItem
                     $this->_item->id_client = !empty($textValue3) ? implode(', ',$textValue3) : $this->_item->client_id;
 				}
 
-				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query
+					->select("*")
+					->from('`#__gm_ceiling_projects_mounts` as m')
+					->where("m.project_id =". $this->_item->id);
+				$db->setQuery($query);
+				
+				$mount_array = $db->loadObjectList();
+				$this->_item->mount_data = (!empty($mount_array)) ?	$mount_array : array();
+
+/*				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
 					if (is_object($this->_item->project_mounter)){
 						$this->_item->project_mounter = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->project_mounter);
 					}
@@ -174,7 +185,7 @@ class Gm_ceilingModelProject extends JModelItem
 
 					$this->_item->project_mounter = !empty($textValue) ? implode(', ', $textValue) : $this->_item->project_mounter;
 
-				}
+				}*/
 				
 			return $this->_item;
 		}

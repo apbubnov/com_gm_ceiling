@@ -145,13 +145,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 <input name="data_delete" value="0" type="hidden">
                 <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id)) ? $this->item->api_phone_id : '0' ?>" type="hidden">
                 <input name="recoil" id="recoil" value="" type="hidden">
-                <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="
-                    <?php if (isset($_SESSION['time'])) {
-                        echo $_SESSION['time'];
-                    } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") {
-                        echo substr($this->item->project_calculation_date, 11);
-                    } ?>
-                    " class="inputactive" type="hidden">
                 <input name="project_new_calc_date" id="jform_project_new_calc_date" value="
                     <?php if (isset($_SESSION['date'])) {
                         echo $_SESSION['date'];
@@ -415,15 +408,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_measures_calendar"></div>
     <div class="modal_window" id="modal_window_mounts_calendar"></div>
-    <div class="modal_window" id="modal-window-call-tar">
-        <h6>Введите ФИО</h6>
-        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-        <h6>Введите номер телефона</h6>
-        <p><input type="text" id="new_phone" placeholder="ФИО" required></p>
-        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>
-        <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-    </div>
 </div>
+
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
@@ -450,512 +436,96 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         }
     });
 
-    // листание календаря
-    month_old = 0;
-    year_old = 0;
-    jQuery("#calendar-container").on("click", "#button-next", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
+
+    document.onkeydown = function (e) {
+        if (e.keyCode === 13) {
+            return false;
         }
-        if (month == 12) {
-            month = 1;
-            year++;
-        } else {
-            month++;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
-    jQuery("#calendar-container").on("click", "#button-prev", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-        }
-        if (month == 1) {
-            month = 12;
-            year--;
-        } else {
-            month--;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
-    function update_calendar(month, year) {
-        jQuery.ajax({
+    }
+
+    function formatDate(date) {
+
+        var dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+
+        var mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+
+        var yy = date.getFullYear();
+        if (yy < 10) yy = '0' + yy;
+
+        var hh = date.getHours();
+        if (hh < 10) hh = '0' + hh;
+
+        var ii = date.getMinutes();
+        if (ii < 10) ii = '0' + ii;
+
+        var ss = date.getSeconds();
+        if (ss < 10) ss = '0' + ss;
+
+        return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+    }
+
+    jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
+
+    jQuery("#add_email").click(function(){
+        if(jQuery("#jform_email").val()!=""){
+            jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
             data: {
-                id: <?php echo $userId; ?>,
-                id_dealer: <?php echo $user->dealer_id; ?>,
-                flag: 3,
-                month: month,
-                year: year,
+                email:jQuery("#jform_email").val(),
+                client_id: jQuery("#client_id").val()
             },
-            success: function (msg) {
-                jQuery("#calendar-container").empty();
-                msg += '<div class="btn-small-l"><button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
-                jQuery("#calendar-container").append(msg);
-                Today(day, NowMonth, NowYear);
-                var datesession = jQuery("#jform_project_new_calc_date").val();
-                if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("class", "change");
-                }
+            success: function (data) {
+                console.log(data);
+                jQuery("#emails").val(jQuery("#emails").val()+data+";");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Почта добавлена!"
+                });
             },
             dataType: "text",
             timeout: 10000,
             error: function () {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                });
-            }
-        });
-    }
-    //-----------------------------------------------------------------
-
-    //скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-    });
-    //-------------------------------------------------------------------
-
-    // функция подсвета сегоднешней даты
-    var Today = function (day, month, year) {
-        month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
-    }
-    //------------------------------------------
-
-    // функция чтобы другая функция выполнилась позже чем document ready
-    Function.prototype.process= function(state){
-        var process= function(){
-            var args= arguments;
-            var self= arguments.callee;
-            setTimeout(function(){
-                self.handler.apply(self, args);
-            }, 0 )
-        }
-        for(var i in state) process[i]= state[i];
-        process.handler= this;
-        return process;
-    }
-    //------------------------------------------
-
-    jQuery(document).ready(function () {
-
-        $("#modal_window_container #ok").click(function() { click_ok(this); });
-
-        window.time = undefined;
-        window.gauger = undefined;
-
-        // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
-        jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
-            window.idDay = jQuery(this).attr("id");
-            reg1 = "D(.*)D";
-            reg2 = "M(.*)M";
-            reg3 = "Y(.*)Y";
-            if (idDay.match(reg1)[1].length == 1) {
-                d = "0"+idDay.match(reg1)[1];
-            } else {
-                d = idDay.match(reg1)[1];
-            }
-            if (idDay.match(reg2)[1].length == 1) {
-                m = "0"+idDay.match(reg2)[1];
-            } else {
-                m = idDay.match(reg2)[1];
-            }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-            jQuery("#modal-window-container-tar").show();
-			jQuery("#modal-window-choose-tar").show("slow");
-            jQuery("#close-tar").show();
-            jQuery.ajax({
-                type: 'POST',
-                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
-                data: {
-                    date: date,
-                    dealer: <?php echo $user->dealer_id; ?>,
-                },
-                success: function(data) {
-                    Array.prototype.diff = function(a) {
-                        return this.filter(function(i) {return a.indexOf(i) < 0;});
-                    };
-                    AllGauger = <?php echo json_encode($AllGauger); ?>;
-                    data = JSON.parse(data); // замеры
-                    console.log(data);
-                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-                    AllTime.forEach( elementTime => {
-                        var t = elementTime.substr(0, 2);
-                        t++;
-                        Array.from(AllGauger).forEach(function(elementGauger) {
-                            var emptytd = 0;
-                            Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                                    var gaugersession = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
-                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                    } else {
-                                        TableForSelect += '<tr><td></td>';
-                                    }
-                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
-                                    emptytd = 1;
-                                }
-                            });
-                            if (emptytd == 0) {
-                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                                TableForSelect += '<td></td>';
-                            }
-                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-                        });
-                    });
-                    jQuery("#projects_gaugers").empty();
-                    jQuery("#projects_gaugers").append(TableForSelect);
-                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
-                }
-            });
-            //если сессия есть, то выдать время, которое записано в сессии
-            if (date == datesession.substr(0, 10)) {
-                var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                var gaugersession = jQuery("#jform_project_gauger").val();
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    if (timesession != undefined) {
-                        times.each(function(element) {
-                            if (timesession == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                jQuery(this).prop("checked", true);
-                            }
-                        });
-                    }
-                }, 200);
-            } else if (time != undefined) {
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    times.each(function(element) {
-                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                            jQuery(this).prop("checked", true);
-                        }
-                    });
-                }, 200);
-            }
-        });
-        //--------------------------------------------------------------------------------------------------
-
-        // получение значений из селектов
-		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
-            var times = jQuery("input[name='choose_time_gauger']");
-            time = "";
-            gauger = "";
-            times.each(function(element) {
-                if (jQuery(this).prop("checked") == true) {
-                    time = jQuery(this).val();
-                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
-                }
-            });
-            jQuery("#jform_new_project_calculation_daypart").val(time);
-            jQuery("#jform_project_new_calc_date").val(date);
-            jQuery("#jform_project_gauger").val(gauger);
-            if (jQuery(".change").length == 0) {
-                jQuery("#"+idDay).addClass("change");
-            } else {
-                jQuery(".change").removeClass("change");
-                jQuery("#"+idDay).addClass("change");
-            }
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-            jQuery("#modal-window-choose-tar").hide();
-        });
-        jQuery("#projects_gaugers").on("click", "td", function(){
-            var times = jQuery(this).closest('tr').find("input:radio[name='choose_time_gauger']");
-            times.prop("checked",true);
-            times.change();
-        });
-        //------------------------------------------
-
-        // подсвет сегоднешней даты
-        window.today = new Date();
-        window.NowYear = today.getFullYear();
-        window.NowMonth = today.getMonth();
-        window.day = today.getDate();
-        Today(day, NowMonth, NowYear);
-        //------------------------------------------
-
-        //если сессия есть, то выдать дату, которая записана в сессии
-        var datesession = jQuery("#jform_project_new_calc_date").val();
-        if (datesession != undefined) {
-            if (datesession.substr(8, 1) == "0") {
-                    daytocalendar = datesession.substr(9, 1);
-                } else {
-                    daytocalendar = datesession.substr(8, 2);
-                }
-                if (datesession.substr(5, 1) == "0") {
-                    monthtocalendar = datesession.substr(6, 1);
-                } else {
-                    monthtocalendar = datesession.substr(5, 2);
-                }
-            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
-        }
-        //-----------------------------------------------------------
-
-
-        var hrefs = document.getElementsByTagName("a");
-        var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
-        for(var i = 0; i < hrefs.length;i++){
-            if(regexp.test(hrefs[i].href))
-            {
-
-                hrefs[i].onclick = function(){
-                    return false;
-                };
-                break;
-            }
-        }
-
-        jQuery("#back_btn").click(function(){
-            var client_id = jQuery("#client_id").val();
-            if(client_id == 1){
-                if(jQuery("#jform_client_name").val() == ""){
-                    jQuery("#jform_client_name").val("Безымянный");
-
-
-                }
-                jQuery("#form-client").submit();
-            }
-            else{
-                history.back();
-
-            }
-        });
-
-        document.onkeydown = function (e) {
-            if (e.keyCode === 13) {
-                return false;
-            }
-        }
-
-
-        var time = <?php if (isset($_SESSION['time'])) {
-            echo "\"" . $_SESSION['time'] . "\"";
-        } else echo "\"" . $time . "\"";?>;
-
-        var ne = <?php unset($_SESSION['FIO'], $_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'], $_SESSION['date'], $_SESSION['time'], $_SESSION['phones'], $_SESSION['manager_comment'], $_SESSION['comments'], $_SESSION['url'], $_SESSION['gauger']); echo 1;?>;
-
-
-        function formatDate(date) {
-
-            var dd = date.getDate();
-            if (dd < 10) dd = '0' + dd;
-
-            var mm = date.getMonth() + 1;
-            if (mm < 10) mm = '0' + mm;
-
-            var yy = date.getFullYear();
-            if (yy < 10) yy = '0' + yy;
-
-            var hh = date.getHours();
-            if (hh < 10) hh = '0' + hh;
-
-            var ii = date.getMinutes();
-            if (ii < 10) ii = '0' + ii;
-
-            var ss = date.getSeconds();
-            if (ss < 10) ss = '0' + ss;
-
-            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-        }
-
-        jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
-
-
-        jQuery("#jform_project_new_calc_date").on("keyup", function () {
-            jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
-        });
-
-        jQuery("#add_email").click(function(){
-            if(jQuery("#jform_email").val()!=""){
-                jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
-                data: {
-                    email:jQuery("#jform_email").val(),
-                    client_id: jQuery("#client_id").val()
-                },
-                success: function (data) {
-                    console.log(data);
-                    jQuery("#emails").val(jQuery("#emails").val()+data+";");
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Почта добавлена!"
-                    });
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
-            }
-        });
-
-        jQuery("#advt_choose").change(function () {
-            jQuery("#selected_advt").val(jQuery("#advt_choose").val());
-            if(jQuery("#advt_choose").val()==17){
-                jQuery("#recoil_choose").show();
-                jQuery("#show_window").show();
-            }
-            else{
-                jQuery("#recoil_choose").hide();
-                jQuery("#show_window").hide();
-            }
-        });
-
-        jQuery("#show_window").click(function(){
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-call-tar").show("slow");
-            jQuery("#close-tar").show();
-        });
-
-        jQuery("#recoil_choose").change(function(){
-            jQuery("#recoil").val(jQuery("#recoil_choose").val());
-        });
-
-
-
-        jQuery("#client_order").click(function () {
-            jQuery("input[name='project_verdict']").val(1);
-            jQuery("#project_sum").val(<?php echo $project_total_discount?>);
-        });
-
-        jQuery("#rec_to_measurement").click(function () {
-            jQuery("#project_status").val(1);
-            if (jQuery("#jform_project_gauger").val() == 0
-                || jQuery("#jform_client_name").val() == ''
-                || jQuery("#jform_address").val() == ''
-                || jQuery("#jform_house").val() == '')
-            {
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Введенны не все данные!"
+                    text: "Ошибка cервер не отвечает"
                 });
             }
-            else
-            {
-                jQuery("#form-client").submit();
-            }
         });
-
-        jQuery("#accept_changes").click(function () {
-            jQuery("input[name='data_change']").val(1);
-        });
-
-        jQuery("#change_discount").click(function () {
-            jQuery(".new_discount").toggle();
-
-        });
-
-
-        jQuery("#ok").click(function () {
-            var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
-            jQuery("input[name='data_delete']").val(1);
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-                data: {
-                    fio: jQuery("#jform_client_name").val(),
-                    address: jQuery("#jform_address").val(),
-                    house: jQuery("#jform_house").val(),
-                    bdq: jQuery("#jform_bdq").val(),
-                    apartment: jQuery("#jform_apartment").val(),
-                    porch: jQuery("#jform_porch").val(),
-                    floor: jQuery("#jform_floor").val(),
-                    code: jQuery("#jform_code").val(),
-                    date: jQuery("#jform_project_new_calc_date").val(),
-                    time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#manager_note").val(),
-                    client_name: jQuery("#jform_client_name").val(),
-                    phones: phones,
-                    comments: jQuery("#comments_id").val(),
-                    s: s,
-                    gauger: jQuery("#jform_project_gauger").val()
-                },
-                success: function (data) {
-                    jQuery("#form-client").submit();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
-
-        });
-        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
-        Data.ProjectInfoYMaps.click(hideYMaps);
-
+        }
     });
 
-    function submit_form(e) {
-        jQuery("#modal_window_container, #modal_window_container *").show();
-        jQuery('#modal_window_container').addClass("submit");
-    }
-
-
-
-    function click_cancel(e) {
-        jQuery("#modal_window_container, #modal_window_container *").hide();
-    }
-
-    jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-        jQuery("#modal-window-container").hide();
-        jQuery("#modal-window-call-tar").hide();
-    })
-
+    jQuery("#rec_to_measurement").click(function () {
+        jQuery("#project_status").val(1);
+        if (jQuery("#jform_project_gauger").val() == 0
+            || jQuery("#jform_client_name").val() == ''
+            || jQuery("#jform_address").val() == ''
+            || jQuery("#jform_house").val() == '')
+        {
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Введенны не все данные!"
+            });
+        }
+        else
+        {
+            jQuery("#form-client").submit();
+        }
+    });
 
     jQuery("#add_phone").click(function () {
         var html = "";
@@ -978,131 +548,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         jQuery(this).closest(".dop-phone").remove();
        // num_counts--;
     });
-   
-    var flag = 0;
-    jQuery("#sh_ceilings").click(function () {
-        if (flag) {
-            jQuery(".section_ceilings").hide();
-            flag = 0;
-        }
-        else {
-            jQuery(".section_ceilings").show();
-            flag = 1;
-        }
-    });
-
-    var flag1 = 0;
-    jQuery("#sh_estimate").click(function () {
-        if (flag1) {
-            jQuery(".section_estimate").hide();
-            flag1 = 0;
-        }
-        else {
-            jQuery(".section_estimate").show();
-            flag1 = 1;
-        }
-        jQuery(".section_estimate").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
-
-    var flag2 = 0;
-    jQuery("#sh_mount").click(function () {
-        if (flag2) {
-            jQuery(".section_mount").hide();
-            flag2 = 0;
-        }
-        else {
-            jQuery(".section_mount").show();
-            flag2 = 1;
-        }
-        jQuery(".section_mount").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
-
-    jQuery("#send_all").click(function () {
-        jQuery(".email-all").toggle();
-    });
-
-
-    jQuery("#add_new_dvt").click(function () {
-        jQuery("#new_advt_div").toggle();
-    });
-
-    jQuery("#save_advt").click(function () {
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
-            data: {
-                name: jQuery("#new_advt_name").val()
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                select = document.getElementById('advt_choose');
-                var opt = document.createElement('option');
-                opt.selected = true;
-                opt.value = data.id;
-                opt.innerHTML = data.name;
-                select.appendChild(opt);
-                jQuery("#new_advt_div").hide();
-                jQuery("#selected_advt").val(data.id);
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка"
-                });
-            }
-        });
-    });
-
-    jQuery("#jform_project_new_calc_date").change(function () {
-        jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
-    });
-
-    function isDate(txtDate) {
-        var currVal = txtDate;
-        if (currVal == '')
-            return false;
-        //Declare Regex
-        var rxDatePattern = /^(\d{1,2})(\/|.)(\d{1,2})(\/|.)(\d{4})$/;
-        var dtArray = currVal.match(rxDatePattern); // is format OK?
-        if (dtArray == null)
-            return false;
-
-        //Checks for mm/dd/yyyy format.
-        dtMonth = dtArray[3];
-        dtDay = dtArray[1];
-        dtYear = dtArray[5];
-
-        if (dtMonth < 1 || dtMonth > 12)
-            return false;
-        else if (dtDay < 1 || dtDay > 31)
-            return false;
-        else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31)
-            return false;
-        else if (dtMonth == 2) {
-            var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
-            if (dtDay > 29 || (dtDay == 29 && !isleap))
-                return false;
-        }
-        return true;
-    }
-
-
-    // @return {number}
-    function Float(x, y = 2) {
-        return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
-    }
-
-
 
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();
@@ -1161,21 +606,5 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             $("#jform_house").focus();
         }, 75);
     }
-
-    jQuery("#BackPage").click(function ()
-    {
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=projects.deleteEmptyProject",
-            data: {
-                client_id: "<?php echo $this->item->id_client;?>"
-            },
-            dataType: "json",
-            async: false,
-            success: function(data) {
-            },
-            error: function(data) {
-            }
-        });
-    })
 
 </script>
