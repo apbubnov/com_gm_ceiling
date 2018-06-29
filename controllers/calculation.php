@@ -286,4 +286,25 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 
         }
 	}
+
+	function delete(){
+		try{
+			$jinput = JFactory::getApplication()->input;
+			$idCalc = $jinput->get('calc_id',null, 'INT');
+			if(!empty($idCalc)){
+				$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');	
+				$result = $model->delete($idCalc);
+				die(json_encode($result));
+			}
+			else{
+				throw new Exception("Empty calculation id!");
+			}
+			
+		}
+		catch(Exception $e)
+        {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
 }

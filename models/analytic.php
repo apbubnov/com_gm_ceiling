@@ -101,8 +101,8 @@ class Gm_ceilingModelAnalytic extends JModelList
 
 			$eq = "p.api_phone_id = a.id";
 			$common = $this->generateSubqueryForCommon($eq,[],$date1,$date2,true,$dealer_id);
-			$dealers = $this->generateSubqueryForCommon($eq,[20],$date1,$date2,false);
-			$advt = $this->generateSubqueryForCommon($eq,[21],$date1,$date2,false);
+			$dealers = $this->generateSubqueryForCommon($eq,[20],$date1,$date2,true,$dealer_id);
+			$advt = $this->generateSubqueryForCommon($eq,[21],$date1,$date2,true,$dealer_id);
 			$refuse = $this->generateSubqueryForCommon($eq,[15],$date1,$date2,true,$dealer_id);
 			$inwork = $this->generateSubqueryForCommon($eq,[0,2,3],$date1,$date2,true,$dealer_id);	
 			$measure = $this->generateSubqueryForCommon($eq,[1],$date1,$date2,true,$dealer_id);
