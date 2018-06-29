@@ -1916,7 +1916,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $table = $this->getTable();
 	        $data['change_time'] = date("Y-m-d H:i:s");
 			//по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
-			return $table->save($data);
+            return $table->save($data);
 	    }
         catch(Exception $e)
         {

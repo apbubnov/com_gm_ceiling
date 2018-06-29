@@ -740,7 +740,7 @@ class Gm_ceilingModelComponentForm extends JModelForm
 
         $query_analytic = $db->getQuery(true);
         $query_analytic->insert($db->quoteName('#__gm_ceiling_analytics_components'))
-            ->columns("`component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`");
+            ->columns("`component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id`");
 
         $query_transfer = $db->getQuery(true);
         $query_transfer->insert($db->quoteName('#__gm_ceiling_components_transfer'))
@@ -763,7 +763,7 @@ class Gm_ceilingModelComponentForm extends JModelForm
                         ->where("id = '$good->id'");
 
                     $query_analytic->values("'$component->component_id', '$component->id', NULL, '$good->barcode', '$good->article', '-$good->realization',".
-                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2'");
+                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                 } else {
                     $query_update = $db->getQuery(true);
                     $query_update->update($db->quoteName('#__gm_ceiling_components_goods'))
@@ -771,7 +771,7 @@ class Gm_ceilingModelComponentForm extends JModelForm
                         ->set("count = '$good->count'");
 
                     $query_analytic->values("'$component->component_id', '$component->id', '$good->id', '$good->barcode', '$good->article', '-$good->realization',".
-                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2'");
+                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                 }
 
                 if (!empty($query_update)) $query[] = $query_update;
