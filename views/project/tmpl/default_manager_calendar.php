@@ -78,13 +78,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 ?>
 
 <style>
-
+    td,th{
+        padding: 0.25em;
+    }
 </style>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?= parent::getButtonBack(); ?>
+<?php print_r($this->item); ?>
 <?php if ($this->item) : ?>
     <?php
         $need_choose = false;
@@ -129,7 +132,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
     <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
         <div class="row">
-            <div class="col-xs-12 col-md-6 no_padding">
+            <div class="col-xs-1 col-md-1 no_padding">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                 <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
@@ -169,11 +172,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                 <input id="emails" name="emails" value="" type="hidden">
                 <input name="without_advt" value="1" type="hidden">
-                <table class="table">
+                <table>
                     <tr>
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                         <td><input name="new_client_name"
-                                class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
+                                class="inputactive"
                                 id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
                                 echo $_SESSION['FIO'];
                             } else echo $this->item->client_id; ?>"
@@ -214,9 +217,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         <th>Дата рождения</th>
                         <td><input name="new_birthday" id="jform_birthday" class="inputactive"
                                 value="<? if ($birthday->birthday != 0000 - 00 - 00) echo $birthday->birthday; ?>"
-                                placeholder="Дата рождения" type="date"></td>
-                        <td>
-                            <button type="button" class="btn btn-primary" id="add_birthday">Ок</button>
+                                placeholder="Дата рождения" type="date">
+                            <button type="button" class="btn btn-primary btn-sm" id="add_birthday">Ок</button>
                         </td>
                     </tr>
                     <tr>
@@ -282,9 +284,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     <tr>
                         <th>Добавить адрес эл.почты</th>
                         <td><input name="new_email" id="jform_email" class="inputactive"
-                                value="" placeholder="e-mail" type="text"></td>
-                        <td>
-                            <button type="button" class="btn btn-primary" id="add_email">Ок</button>
+                                value="" placeholder="e-mail" type="text">
+                            <button type="button" class="btn btn-primary btn-sm" id="add_email">Ок</button>
                         </td>
                     </tr>
                     <?
@@ -325,7 +326,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                         echo $_SESSION['house'];
                                     }
                                 } else echo $house ?>" class="inputactive"
-                                style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;"
+                                style="width: 50%; float: left; margin: 0 5px 0 0;"
                                 placeholder="Дом" required="required" aria-required="true" type="text">
 
                             <input name="new_bdq" id="jform_bdq" value="<?php if (isset($_SESSION['bdq'])) {
@@ -335,7 +336,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                     echo $_SESSION['bdq'];
                                 }
                             } else echo $bdq ?>" class="inputactive"
-                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус"
+                                style="width: calc(50% - 5px);" placeholder="Корпус"
                                 aria-required="true" type="text">
                         </td>
                     </tr>
@@ -346,14 +347,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 value="<?php if (isset($_SESSION['apartment'])) {
                                     echo $_SESSION['apartment'];
                                 } else echo $apartment ?>" class="inputactive"
-                                style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;"
+                                style="width:50%;margin-right: 5px;float: left;"
                                 placeholder="Квартира" aria-required="true" type="text">
 
                             <input name="new_porch" id="jform_porch"
                                 value="<?php if (isset($_SESSION['porch'])) {
                                     echo $_SESSION['porch'];
                                 } else echo $porch ?>" class="inputactive"
-                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"
+                                style="width: calc(50% - 5px);" placeholder="Подъезд"
                                 aria-required="true" type="text">
                         </td>
                     </tr>
@@ -364,13 +365,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 value="<?php if (isset($_SESSION['floor'])) {
                                     echo $_SESSION['floor'];
                                 } else echo $floor ?>" class="inputactive"
-                                style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;"
+                                style="width:50%;  margin: 0 5px  0 0; float: left;"
                                 placeholder="Этаж" aria-required="true" type="text">
 
                             <input name="new_code" id="jform_code" value="<?php if (isset($_SESSION['code'])) {
                                 echo $_SESSION['code'];
                             } else echo $code ?>" class="inputactive"
-                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код"
+                                style="width: calc(50% - 5px);" placeholder="Код"
                                 aria-required="true" type="text">
                         </td>
                     </tr>
@@ -384,57 +385,28 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         </td>
                     </tr>
                     <tr>
-                        <th>Дата и время замера</th>
-                        <td>
-                            <div id="calendar-container">
-                                <div class="btn-small-l">
-                                    <button id="button-prev" class="button-prev-small" type="button"
-                                            class="btn btn-primary"><i class="fa fa-arrow-left"
-                                                                    aria-hidden="true"></i></button>
-                                </div>
-                                <?php echo $calendar; ?>
-                                <div class="btn-small-r">
-                                    <button id="button-next" class="button-next-small" type="button"
-                                            class="btn btn-primary"><i class="fa fa-arrow-right"
-                                                                    aria-hidden="true"></i></button>
-                                </div>
-                            </div>
-                        </td>
+                        <th colspan="2">Дата и время замера</th>
                     </tr>
-                </table>
-            </div>
-
-            <?php if ($this->item->project_verdict == 0) { ?>
-                <table class="TabelAction">
                     <tr>
-                        <td>
-                            <a class="btn  btn-primary" id="rec_to_measurement">
-                                Записать на замер
-                            </a>
+                        <td colspan="2">
+                            <div id="calendar_test"></div>
+                            <input type="text" id="calculation_time1">
+                            <input type="text" id="calculator_id1">
                         </td>
                     </tr>
                 </table>
-            <?php } ?>
+                <?php if ($this->item->project_verdict == 0) { ?>
+                    <a class="btn  btn-primary" id="rec_to_measurement">
+                        Записать на замер
+                    </a>
+                <?php } ?>
+            </div>
             <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
         </div>
     </form>
 <?php endif; ?>
 
-<div id="modal-window-container-tar">
-    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-choose-tar">
-        <p id="date-modal"></p>
-        <p><strong>Выберите время замера:</strong></p>
-        <p>
-        <table id="projects_gaugers"></table>
-        </p>
-    </div>
-</div>
-
 <hr>
-<div id="calendar_test"></div>
-<input type="text" id="calculation_time1">
-<input type="text" id="calculator_id1">
 <div id="calendar_test2"></div>
 <input type="text" id="calculation_time2">
 <input type="text" id="calculator_id2">
