@@ -764,7 +764,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             $query_analytic = $db->getQuery(true);
             $query_analytic->insert($db->quoteName('#__gm_ceiling_analytics_canvases'))
-                ->columns("`canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`");
+                ->columns("`canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id`");
 
             $query_transfer = $db->getQuery(true);
             $query_transfer->insert($db->quoteName('#__gm_ceiling_canvases_transfer'))
@@ -786,7 +786,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                             ->where("id = '$roller->id'");
 
                         $query_analytic->values("'$canvas->id', NULL, '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
-                            "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2'");
+                            "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     } else {
                         $query_update = $db->getQuery(true);
                         $query_update->update($db->quoteName('#__gm_ceiling_canvases_all'))
@@ -794,7 +794,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                             ->set("quad = '$roller->quad'");
 
                         $query_analytic->values("'$canvas->id', '$roller->id', '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
-                            "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2'");
+                            "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     }
 
                     if (!empty($query_update)) $query[] = $query_update;

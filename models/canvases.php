@@ -283,7 +283,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $query_rslt = $db->loadObject();
             if(!empty($query_rslt)){
-                $YCount = count($query_rslt);
+                $YCount = $query_rslt->quad;
             } 
             else {
                 $YCount = 0;  
@@ -298,7 +298,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $query_rslt = $db->loadObject();
             if(!empty($query_rslt)){
-                $MCount = count($query_rslt);
+                $MCount = $query_rslt->quad;
             } 
             else {
                 $MCount = 0;  
@@ -313,7 +313,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $query_rslt = $db->loadObject();
             if(!empty($query_rslt)){
-                $Count = count($query_rslt);
+                $Count = $query_rslt->quad;
             } 
             else {
                 $Count = 0;  
@@ -470,67 +470,6 @@ class Gm_ceilingModelCanvases extends JModelList
 
         return (object) array('info' => $info, 'canvases' => $canvases);
 
-        /*
-        $countElements = empty($countElements)?100:$countElements;
-
-        $session = JFactory::getSession();
-        if (empty($session->get('inventory', null)))
-        {
-            $inventory = array('canvases' => 0, 'components' => 0);
-            $session->set( 'inventory', json_encode($inventory));
-        }
-        $inventory = json_decode($session->get('inventory', null));
-        $page = $inventory->canvases;
-
-        $items = parent::getItems();
-
-        $result = array();
-        foreach ($items as $value)
-        {
-            $key = $value->id;
-            if (!$result[$key])
-            {
-                $result[$key] = (object)array();
-
-                $result[$key]->id = $value->id;
-                $result[$key]->country = $value->country;
-                $result[$key]->name = $value->name;
-                $result[$key]->texture = $value->texture_title;
-                $result[$key]->width = $value->width;
-                $result[$key]->color = (empty($value->color_title))?'Нет':$value->color_title;
-                $result[$key]->count = 0;
-                $result[$key]->rollers = array();
-            }
-
-            $k = $value->ca_lenght;
-
-            if (!$result[$key]->rollers[$k])
-            {
-                $result[$key]->rollers[$k] = (object)array();
-                $result[$key]->rollers[$k]->id = $value->ca_id;
-                $result[$key]->rollers[$k]->count = 0;
-                $result[$key]->count += 1;
-            }
-            $result[$key]->rollers[$k]->quad = $value->ca_lenght;
-            $result[$key]->rollers[$k]->purchasingPrice = $value->ca_purchasing_price;
-            $result[$key]->rollers[$k]->count += (empty($value->ca_purchasing_price))?0:1;
-        }
-
-        $results = array();
-        $index = 0;
-        foreach ($result as $item)
-        {
-            if ($index >= $page && $index < ($page + $countElements))
-            {
-                $results[] = $item;
-            }
-            else if ($index >= ($page + $countElements)) break;
-
-            $index += 1;
-        }
-
-        return array("result" => $results, "count" => count($result), "start" => $page, "end" => $page + $countElements);
-        */
 
         }
         catch(Exception $e)
