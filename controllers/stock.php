@@ -413,6 +413,19 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $info->stock = $customer->stock;
             $info->dateFormat = $dateFormat;
 
+            try {
+                if (!empty($customer->project))
+                    $model->NextStatusProject($customer->project);
+                else
+                {
+                    $customer->project = $model->AddProject($client);
+                }
+            }
+            catch (Exception $ex)
+            {
+                die(json_encode((object) ["status" => "error", "error" => $ex->getMessage()]));
+            }
+
             foreach ($_POST["goods"] as $good) {
                 $good = json_decode($good);
                 if ($good->page == "Canvas") $canvases[] = $good;
@@ -466,15 +479,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     if ($result) $model->updateCountGoods();
                     else throw new Exception("Произошла ошибка изменения!<br>Обратитесь в техподдержку!");
                 }
-            }
-            catch (Exception $ex)
-            {
-                die(json_encode((object) ["status" => "error", "error" => $ex->getMessage()]));
-            }
-
-            try {
-                if (!empty($customer->project))
-                    $model->NextStatusProject($customer->project);
             }
             catch (Exception $ex)
             {

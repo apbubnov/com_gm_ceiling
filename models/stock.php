@@ -607,4 +607,25 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function AddProject($client) {
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+
+            $query->insert($db->quoteName('#__gm_ceiling_projects'))
+                ->columns('client_id')
+                ->values("'$client->id'");
+
+            $db->setQuery($query);
+            $db->execute();
+            $id = $db->insertid();
+            return $id;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
