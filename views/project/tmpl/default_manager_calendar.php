@@ -87,7 +87,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?= parent::getButtonBack(); ?>
-<?php print_r($this->item); ?>
+<?php //print_r($this->item); ?>
 <?php if ($this->item) : ?>
     <?php
         $need_choose = false;
@@ -152,14 +152,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         echo substr($this->item->project_calculation_date, 11);
                     } ?>
                     " class="inputactive" type="hidden">
-                <input name="project_new_calc_date" id="jform_project_new_calc_date" class="inputactive" value="
+                <input name="project_new_calc_date" id="jform_project_new_calc_date" value="
                     <?php if (isset($_SESSION['date'])) {
                         echo $_SESSION['date'];
                     } else if (isset($this->item->project_calculation_date)) {
                         echo $this->item->project_calculation_date;
                     } ?>
                     " type="hidden">
-                <input name="project_gauger" id="jform_project_gauger" class="inputactive" value="
+                <input name="project_gauger" id="jform_project_gauger" value="
                     <?php if (isset($_SESSION['gauger'])) {
                         echo $_SESSION['gauger'];
                     } else if ($this->item->project_calculator != null) {
@@ -389,9 +389,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <div id="calendar_test"></div>
-                            <input type="text" id="calculation_time1">
-                            <input type="text" id="calculator_id1">
+                            <div id="measures_calendar"></div>
+                            <input type="text" id="measure_info" class="inputactive">
                         </td>
                     </tr>
                 </table>
@@ -406,10 +405,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     </form>
 <?php endif; ?>
 
-<hr>
-<div id="calendar_test2"></div>
-<input type="text" id="calculation_time2">
-<input type="text" id="calculator_id2">
 <hr>
 <div id="calendar2_test"></div>
 <input type="text" id="mount1">
@@ -432,8 +427,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
-    init_measure_calendar('calendar_test','calculation_time1','calculator_id1','modal_window_measures_calendar',['close_mw','mw_container']);
-    init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
+    init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','modal_window_measures_calendar',['close_mw','mw_container'], 'measure_info');
+    //init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
     init_mount_calendar('calendar2_test','mount1','modal_window_mounts_calendar',['close_mw','mw_container']);
     init_mount_calendar('calendar2_test2','mount2','modal_window_mounts_calendar',['close_mw','mw_container']);
     var $ = jQuery,

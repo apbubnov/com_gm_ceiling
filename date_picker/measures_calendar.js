@@ -1,4 +1,4 @@
-function init_measure_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw)
+function init_measure_calendar(elem_id, input_time, input_calculator, modal_window, dop_mw, info)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, gaugers, selectTime, selectCalculator,
 	mw_elem = document.getElementById(modal_window);
@@ -105,6 +105,14 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            		selectCalculator = this.getAttribute('data-calculator');
 		            		document.getElementById(input_time).value = selectTime;
 		            		document.getElementById(input_calculator).value = selectCalculator;
+		            		var gaugerName;
+		            		for (var i = gaugers.length; i--;) {
+		            			if (gaugers[i].id == selectCalculator) {
+		            				gaugerName = gaugers[i].name;
+		            				break;
+		            			}
+		            		}
+		            		document.getElementById(info).value = add_zeros_in_date(selectTime)+' | '+gaugerName;
 		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = this.getAttribute('data-time');
 		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = 'Свободно';
 		            		mw_elem.getElementsByClassName('p_info')[0].innerHTML = '';
