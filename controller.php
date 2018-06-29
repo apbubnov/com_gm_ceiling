@@ -794,7 +794,6 @@ public function register_mnfctr(){
             $project_data['project_status'] = 0;
             $project_data['project_calculation_daypart'] = 0;
             $project_data['project_calculation_date'] = $project_calculation_date;
-            $project_data['project_mounting_date'] = "00.00.0000";
             $project_data['project_note'] = "";
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y.m.d");
@@ -1239,7 +1238,6 @@ public function register_mnfctr(){
                 $project_data['project_calculation_daypart'] = 0;
 
                 $project_data['project_calculation_date'] = "0000-00-00 00:00";
-                $project_data['project_mounting_date'] = "00.00.0000";
                 $project_data['who_calculate'] = 0;
                 $project_data['created'] = date("Y.m.d");
                 $project_data['project_discount'] = 0;
@@ -1335,7 +1333,7 @@ public function register_mnfctr(){
     /*  функция AJAX-отображения календаря монтажей
         смотреть дальше функцию draw_calendar в файле /helpers/gm_ceiling.php
     */
-    public function update_calendar()
+/*    public function update_calendar()
     {
         try
         {
@@ -1371,7 +1369,7 @@ public function register_mnfctr(){
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
+    }*/
 
     public function UpdateCalendarTar() {
         try
@@ -1394,7 +1392,7 @@ public function register_mnfctr(){
     /*  функция AJAX-отображения календаря монтажей
         смотреть дальше функцию draw_calendar2 в файле /helpers/gm_ceiling.php
     */
-    public function update_calendar2()
+/*    public function update_calendar2()
     {
         try
         {
@@ -1427,7 +1425,7 @@ public function register_mnfctr(){
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
+    }*/
 
     public function getClientByPhone()
     {
@@ -1596,8 +1594,6 @@ public function register_mnfctr(){
             $project_data['project_info'] = "";
             $project_data['project_status'] = 0;
             $project_data['project_calculation_date'] = "0000-00-00 00:00";
-
-            $project_data['project_mounting_date'] = "0000-00-00";
             $project_data['project_note'] = "";
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y-m-d");

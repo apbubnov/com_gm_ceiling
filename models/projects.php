@@ -113,8 +113,13 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select($this->getState('list.select', 'DISTINCT a.*'))
                 ->select('DATE_FORMAT(a.project_calculation_date, \'%d.%m.%Y\') AS calculation_date')
                 ->select('CONCAT(DATE_FORMAT(a.project_calculation_date, \'%H:%i\'),\'-\',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), \'%H:%i\')) AS calculation_time')
-                ->select('DATE_FORMAT(a.project_mounting_date, \'%d.%m.%Y %H:%i\') AS mounting_date')
-                ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')
+
+                ->select("GROUP_CONCAT(DISTINCT pm.mounter_id SEPARATOR ',') AS project_mounter")
+                ->select("GROUP_CONCAT(DISTINCT DATE_FORMAT(pm.date_time, '%d.%m.%Y %H:%i') SEPARATOR ',') AS project_mounting_date")
+                ->select("GROUP_CONCAT(CONCAT(DATE_FORMAT(pm.mount_start, '%d.%m.%Y %H:%i'),'-',DATE_FORMAT(pm.mount_end, '%d.%m.%Y %H:%i')) SEPARATOR ',')AS mounting_time")
+                
+/*                ->select('DATE_FORMAT(a.project_mounting_date, \'%d.%m.%Y %H:%i\') AS mounting_date')
+                ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')*/
                 ->select('a.project_info AS address')
                 ->from('`#__gm_ceiling_projects` AS `a`')
                 ->group('id');
@@ -131,8 +136,8 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select(' client_contact.phone AS `client_contacts`')
                 ->join('LEFT', '`#__gm_ceiling_clients_contacts` AS `client_contact` ON client_contact.client_id = a.client_id');
 
-            $query->select('mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id')
-                ->join('LEFT', '`#__gm_ceiling_groups` AS `mounter_group` ON mounter_group.id = a.project_mounter');
+            /*$query->select('mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id')
+                ->join('LEFT', '`#__gm_ceiling_groups` AS `mounter_group` ON mounter_group.id = a.project_mounter');*/
 
             $query->select('sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings')
                 ->select('((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum')
@@ -140,13 +145,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum')
                 ->join('LEFT', '`#__gm_ceiling_calculations` AS `calculation` ON calculation.project_id = a.id');
 
-            $query->select('uc.id AS editor, uc.name AS editor_name')
-                ->join('LEFT', '`#__users` AS `uc` ON uc.id = a.checked_out')
-                ->select('created_by.name AS created_name')
-                ->join('LEFT', '`#__users` AS `created_by` ON created_by.id = a.created_by')
-                ->select('modified_by.name AS modified_name')
-                ->join('LEFT', '`#__users` AS `modified_by` ON modified_by.id = a.modified_by');
-
+            $query->leftJoin("`#__gm_ceiling_projects_mounts` AS pm ON a.id = pm.project_id");
             $sql_query = (string)$query;
 
             $query = $db->getQuery(true);
