@@ -171,16 +171,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         $all_recoil = $recoil_model->getData();
     ?>
 
-    <div id="modal-window-container">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<h6>Введите ФИО</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-            <h6>Введите номер телефона</h6>
-			<p><input type="text" id="new_phone" placeholder="ФИО" required></p>
-			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-	    </div>
-    </div>
     <div class="container">
         <div class="row">
             <div class="item_fields">
@@ -207,7 +197,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <table class="table">
+                            <table>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                     <td><input name="new_client_name"
@@ -409,15 +399,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                 <tr>
                                     <th>Дата и время замера</th>
                                     <td>
-                                        <div id="calendar-container">
-                                            <div class="btn-small-l">
-                                                <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                            </div>
-                                            <?php echo $calendar; ?>
-                                            <div class="btn-small-r">
-                                                <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                            </div>
-                                        </div>
+                                        <input type="text" id="measure_info" class="inputactive" readonly>
+                                        <div id="measures_calendar"></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -435,7 +418,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
                                                value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=1) {
                                                    echo JFactory::getUser($this->item->read_by_manager)->name;
-                                               } ?>">
+                                               } ?>" readonly>
                                     </td>
                                 </tr>
                                 <tr>
@@ -444,7 +427,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                         <input name="calculator_name" id="calculator_name" class="inputhidden"
                                                value="<?php if (isset($this->item->project_calculator)) {
                                                    echo JFactory::getUser($this->item->project_calculator)->name;
-                                               }?>">
+                                               }?>" readonly>
                                     </td>
                                 </tr>
                         </div>
@@ -536,53 +519,44 @@ if (!empty($_SESSION["project_card_$project_id"]))
             </table>
         <?php } ?>
     </div>
-    <div id="modal-window-container-tar">
-        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-choose-tar">
-            <p id="date-modal"></p>
-            <p><strong>Выберите время замера:</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-        </div>
-    </div>
-    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
     </form>
+</div>
+
+<div id="mw_container" class="modal_window_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="mw_recoil">
+        <h6>Введите ФИО</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <h6>Введите номер телефона</h6>
+        <p><input type="text" id="new_phone" placeholder="ФИО" required></p>
+        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
     </div>
-    <div id="modal_window_container" class="modal_window_container">
-        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-        </button>
-        <div id="modal_window_del" class="modal_window">
-            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
-            <p>
-                <button type="button" id="ok" class="btn btn-primary">Да</button>
-                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-            </p>
-        </div>
-    </div>
+    <div class="modal_window" id="mw_measures_calendar"></div>
+</div>
+
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
-<script  type="text/javascript">
+
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
+<script type="text/javascript">
+    init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
+
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
-        var div1 = jQuery("#modal-window-call-tar");
+        var div1 = jQuery("#mw_recoil");
+        var div2 = jQuery("#mw_measures_calendar");
         if (!div1.is(e.target)
-            && div1.has(e.target).length === 0) {
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-call-tar").hide();
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) {
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
+            jQuery("#mw_recoil").hide();
+            jQuery("#mw_measures_calendar").hide();
         }
     });
 
@@ -657,41 +631,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             }
         });
     }
-    //-----------------------------------------------------------------
-
-    //скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-    });
-    //-------------------------------------------------------------------
-
-    // функция подсвета сегоднешней даты
-    var Today = function (day, month, year) {
-        month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
-    }
-    //------------------------------------------
-
-    // функция чтобы другая функция выполнилась позже чем document ready
-    Function.prototype.process= function(state){
-        var process= function(){
-            var args= arguments;
-            var self= arguments.callee;
-            setTimeout(function(){
-                self.handler.apply(self, args);
-            }, 0 )
-        }
-        for(var i in state) process[i]= state[i];
-        process.handler= this;
-        return process;
-    }
-    //------------------------------------------
 
     jQuery(document).ready(function () {
         var project_card = '<?php echo $project_card; ?>';
@@ -729,147 +668,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             }
         }
         console.log(project_card);
-
-        $("#modal_window_container #ok").click(function() { click_ok(this); });
-
-        // открытие модального окна с календаря и получение даты и вывода свободных монтажников
-        jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
-            window.idDay = jQuery(this).attr("id");
-            reg1 = "D(.*)D";
-            reg2 = "M(.*)M";
-            reg3 = "Y(.*)Y";
-            if (idDay.match(reg1)[1].length == 1) {
-                d = "0"+idDay.match(reg1)[1];
-            } else {
-                d = idDay.match(reg1)[1];
-            }
-            if (idDay.match(reg2)[1].length == 1) {
-                m = "0"+idDay.match(reg2)[1];
-            } else {
-                m = idDay.match(reg2)[1];
-            }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-            jQuery("#modal-window-container-tar").show();
-			jQuery("#modal-window-choose-tar").show("slow");
-            jQuery("#close-tar").show();
-            jQuery.ajax({
-                type: 'POST',
-                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
-                data: {
-                    date: date,
-                    dealer: <?php echo $user->dealer_id; ?>,
-                },
-                success: function(data) {
-                    Array.prototype.diff = function(a) {
-                        return this.filter(function(i) {return a.indexOf(i) < 0;});
-                    };
-                    AllGauger = <?php echo json_encode($AllGauger); ?>;
-                    data = JSON.parse(data); // замеры
-                    console.log(data);
-                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-                    AllTime.forEach( elementTime => {
-                        var t = elementTime.substr(0, 2);
-                        t++;
-                        Array.from(AllGauger).forEach(function(elementGauger) {
-                            var emptytd = 0;
-                            Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                                    var gaugersession = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
-                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                    } else {
-                                        TableForSelect += '<tr><td></td>';
-                                    }
-                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
-                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
-                                    emptytd = 1;
-                                }
-                            });
-                            if (emptytd == 0) {
-                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
-                                TableForSelect += '<td></td>';
-                            }
-                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-                        });
-                    });
-                    jQuery("#projects_gaugers").empty();
-                    jQuery("#projects_gaugers").append(TableForSelect);
-                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
-                }
-            });
-            //если сессия есть, то выдать время, которое записано в сессии
-            if (date == datesession.substr(0, 10)) {
-                var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                var gaugersession = jQuery("#jform_project_gauger").val();
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    if (timesession != undefined) {
-                        times.each(function(element) {
-                            if (timesession == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                jQuery(this).prop("checked", true);
-                            }
-                        });
-                    }
-                }, 200);
-            }
-        });
-        //--------------------------------------------------------------------------------------------------
-
-        // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
-            var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
-            gauger = "";
-            times.each(function(element) {
-                if (jQuery(this).prop("checked") == true) {
-                    time = jQuery(this).val();
-                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
-                }
-            });
-            jQuery("#jform_new_project_calculation_daypart").val(time);
-            jQuery("#jform_project_new_calc_date").val(date);
-            jQuery("#jform_project_gauger").val(gauger);
-            if (jQuery(".change").length == 0) {
-                jQuery("#"+idDay).addClass("change");
-            } else {
-                jQuery(".change").removeClass("change");
-                jQuery("#"+idDay).addClass("change");
-            }
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-            jQuery("#modal-window-choose-tar").hide();
-        });
-        //------------------------------------------
-
-        // подсвет сегоднешней даты
-        window.today = new Date();
-        window.NowYear = today.getFullYear();
-        window.NowMonth = today.getMonth();
-        window.day = today.getDate();
-        Today(day, NowMonth, NowYear);
-        //------------------------------------------
-
-        //если сессия есть, то выдать дату, которая записана в сессии
-        var datesession = jQuery("#jform_project_new_calc_date").val();
-        if (datesession != undefined) {
-            if (datesession.substr(8, 1) == "0") {
-                    daytocalendar = datesession.substr(9, 1);
-                } else {
-                    daytocalendar = datesession.substr(8, 2);
-                }
-                if (datesession.substr(5, 1) == "0") {
-                    monthtocalendar = datesession.substr(6, 1);
-                } else {
-                    monthtocalendar = datesession.substr(5, 2);
-                }
-            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
-        }
-        //-----------------------------------------------------------
 
 
         var hrefs = document.getElementsByTagName("a");
@@ -958,7 +756,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             echo "\"" . $_SESSION['time'] . "\"";
         } else echo "\"" . $time . "\"";?>;
 
-        var ne = <?php unset($_SESSION['FIO'], $_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'], $_SESSION['date'], $_SESSION['time'], $_SESSION['phones'], $_SESSION['manager_comment'], $_SESSION['comments'], $_SESSION['url'], $_SESSION['gauger']); echo 1;?>;
         show_comments();
 
         function formatDate(date) {
@@ -1184,15 +981,18 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 jQuery("#recoil_choose").hide();
                 jQuery("#show_window").hide();
             }
-        })
+        });
+
         jQuery("#show_window").click(function(){
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-call-tar").show("slow");
-            jQuery("#close-tar").show();
-        })
+            jQuery("#mw_container").show();
+            jQuery("#mw_recoil").show("slow");
+            jQuery("#close_mw").show();
+        });
+
         jQuery("#recoil_choose").change(function(){
             jQuery("#recoil").val(jQuery("#recoil_choose").val());
-        })
+        });
+
         jQuery("#add_recoil").click(function(){
             jQuery.ajax({
                 type: 'POST',
@@ -1230,7 +1030,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
                     });
                 }
             });
-        })
+        });
+
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
@@ -1240,6 +1041,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
             jQuery("#project_status").val(1);
             jQuery("#call").toggle();
         });
+
         jQuery("#refuse_partnership").click(function () {
             jQuery("#project_status").val(15);
             if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){

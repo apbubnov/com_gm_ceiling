@@ -210,17 +210,6 @@
             </div>
         <?php } ?>
     </h5>
-    <div id="mw_container" class="modal_window_container">
-		<button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div class="modal_window" id="mw_recoil">
-			<h6>Введите ФИО</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-            <h6>Введите номер телефона</h6>
-			<p><input type="text" id="new_phone" placeholder="ФИО" required></p>
-			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-	    </div>
-        <div class="modal_window" id="mw_measures_calendar"></div>
-    </div>
     <div class="container">
         <div class="row">
             <div class="item_fields">
@@ -586,6 +575,18 @@
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
     endif;
 ?>
+
+<div id="mw_container" class="modal_window_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="mw_recoil">
+        <h6>Введите ФИО</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <h6>Введите номер телефона</h6>
+        <p><input type="text" id="new_phone" placeholder="ФИО" required></p>
+        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+    </div>
+    <div class="modal_window" id="mw_measures_calendar"></div>
+</div>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
