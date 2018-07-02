@@ -210,15 +210,16 @@
             </div>
         <?php } ?>
     </h5>
-    <div id="modal-window-container">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
+    <div id="mw_container" class="modal_window_container">
+		<button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+		<div class="modal_window" id="mw_recoil">
 			<h6>Введите ФИО</h6>
 			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
             <h6>Введите номер телефона</h6>
 			<p><input type="text" id="new_phone" placeholder="ФИО" required></p>
 			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
+        <div class="modal_window" id="mw_measures_calendar"></div>
     </div>
     <div class="container">
         <div class="row">
@@ -245,7 +246,7 @@
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
                     <div class="row">
                         <div class="col-xs-12 col-xm-12 col-md-6 col-lg-6">
-                            <table class="table">
+                            <table>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                     <td>
@@ -421,8 +422,8 @@
                                 <tr>
                                     <th>Дата и время замера</th>
                                     <td>
-                                        <div id="calendar-container">
-                                        </div>
+                                        <input type="text" id="measure_info" class="inputactive" readonly>
+                                        <div id="measures_calendar"></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -438,7 +439,7 @@
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
                                             value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=1) {
                                             echo JFactory::getUser($this->item->read_by_manager)->name;
-                                            } ?>">
+                                            } ?>" readonly>
                                     </td>
                                 </tr>
                                 <tr>
@@ -447,11 +448,11 @@
                                         <input name="calculator_name" id="calculator_name" class="inputhidden"
                                             value="<?php if (isset($this->item->project_calculator)) {
                                             echo JFactory::getUser($this->item->project_calculator)->name;
-                                            }?>">
+                                            }?>" readonly>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Клиенсткий просчет?</th>
+                                    <th>Клиентский просчет?</th>
                                     <td>
                                         <input id='no_client' type='radio' class = "radio" name='slider_which_calc' value='0' checked= "checked">
                                         <label  for='no_client'>Нет</label>
@@ -577,42 +578,8 @@
                     </div>
                 </div>
             </div>
-                        
-
-                       
-
-                        
-
-
-
-                       
-
         <?php } ?>
 
-    </div>
-    <div id="modal-window-container-tar">
-        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-choose-tar">
-            <p id="date-modal"></p>
-            <p><strong>Выберите время замера:</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
-        </div>
-    </div>
-    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-    </form>
-    </div>
-    <div id="modal_window_container" class="modal_window_container">
-        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-        </button>
-        <div id="modal_window_del" class="modal_window">
-            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
-            <p>
-                <button type="button" id="ok" class="btn btn-primary">Да</button>
-                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-            </p>
-        </div>
     </div>
 <?php
     else:
@@ -622,40 +589,28 @@
 
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
+    init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
-        var div1 = jQuery("#modal-window-call-tar");
+        var div1 = jQuery("#mw_recoil");
+        var div2 = jQuery("#mw_measures_calendar");
         if (!div1.is(e.target)
-            && div1.has(e.target).length === 0) {
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-call-tar").hide();
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) {
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
+            jQuery("#mw_recoil").hide();
+            jQuery("#mw_measures_calendar").hide();
         }
     });
-
-    //скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-    });
-
 
     jQuery(document).ready(function() {
 
@@ -1029,9 +984,9 @@
         });
 
         jQuery("#show_window").click(function(){
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-call-tar").show("slow");
-            jQuery("#close-tar").show();
+            jQuery("#mw_container").show();
+            jQuery("#mw_recoil").show("slow");
+            jQuery("#close_mw").show();
         });
 
         jQuery("#recoil_choose").change(function(){
@@ -1049,9 +1004,9 @@
                 success: function (data) {
                     option = "<option value = "+data+" selected >"+jQuery("#new_fio").val()+"</opton>";
                     jQuery("#recoil_choose").append(option);
-                    jQuery("#close-tar").hide();
-                    jQuery("#modal-window-container").hide();
-                    jQuery("#modal-window-call-tar").hide();
+                    jQuery("#close_mw").hide();
+                    jQuery("#mw_container").hide();
+                    jQuery("#mw_recoil").hide();
                     jQuery("#recoil").val(data);
                     var n = noty({
                         timeout: 2000,
@@ -1436,11 +1391,6 @@
         });
     });
 
-    function submit_form(e) {
-        jQuery("#modal_window_container, #modal_window_container *").show();
-        jQuery('#modal_window_container').addClass("submit");
-    }
-
     function click_ok(e) {
         var modal = $(e).closest("#modal_window_container");
         if (modal.hasClass("submit"))
@@ -1459,9 +1409,9 @@
     }
 
     jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-        jQuery("#modal-window-container").hide();
-        jQuery("#modal-window-call-tar").hide();
+        jQuery("#close_mw").hide();
+        jQuery("#mw_container").hide();
+        jQuery("#mw_recoil").hide();
     });
 
     jQuery('.change_calc').click(function() {
