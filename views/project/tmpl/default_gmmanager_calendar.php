@@ -662,9 +662,6 @@
             jQuery("#selected_advt").val(jQuery("#advt_choose").val());
         }       
 
- 
-
-
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
         for(var i = 0; i < hrefs.length;i++){
@@ -683,8 +680,6 @@
             if(client_id == 1){
                 if(jQuery("#jform_client_name").val() == ""){
                     jQuery("#jform_client_name").val("Безымянный");
-
-
                 }
                 jQuery("#form-client").submit();
             }
@@ -930,10 +925,6 @@
                 return result;
         }
 
-        jQuery("#jform_project_new_calc_date").on("keyup", function () {
-            jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
-        });
-
         jQuery("#add_email").click(function(){
             if(jQuery("#jform_email").val()!=""){
                 jQuery.ajax({
@@ -1129,7 +1120,6 @@
 
         jQuery("#change_discount").click(function() {
             jQuery(".new_discount").toggle();
-
         });
 
         jQuery("#update_discount").click(function() {
@@ -1391,23 +1381,6 @@
         });
     });
 
-    function click_ok(e) {
-        var modal = $(e).closest("#modal_window_container");
-        if (modal.hasClass("submit"))
-        {
-            var select_tab = $(".tab-pane.active").find("#idCalcDeleteSelect").val();
-
-            $("#idCalcDelete").val(select_tab);
-            modal.removeClass("submit");
-            jQuery("input[name='data_delete']").val(1);
-            document.getElementById("form-client").submit();
-        }
-    }
-
-    function click_cancel(e) {
-        jQuery("#modal_window_container, #modal_window_container *").hide();
-    }
-
     jQuery("#cancel").click(function(){
         jQuery("#close_mw").hide();
         jQuery("#mw_container").hide();
@@ -1440,7 +1413,6 @@
         jQuery(this).closest(".dop-phone").remove();
        // num_counts--;
     });
-   
   
     jQuery("#send_all").click(function () {
         jQuery(".email-all").toggle();
@@ -1480,10 +1452,6 @@
                 });
             }
         });
-    });
-
-    jQuery("#jform_project_new_calc_date").change(function () {
-        jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
 
     jQuery("#add_birthday").click(function () {
