@@ -525,6 +525,9 @@ $status_attr = "data-status = \"$status\"";
                             <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
                         </td>
                     </tr>
+                    <tr><td>Дата и время замера:</td>
+                        <td><input type="text" id="measure_info" value="" readonly=""></td>
+                    </tr>
                 </table>
             </p>
             <?php
@@ -537,8 +540,6 @@ $status_attr = "data-status = \"$status\"";
                 }
                 $measurer = JFactory::getUser($this->item->project_calculator)->name;
             ?>
-            <p>Дата и время замера: 
-            <input type="text" id="measure_info" class="inputactive" value=""></p>
             <div id="measures_calendar"></div>
             <p>
                 <button type="submit" id="accept_changes" class="btn btn btn-primary">Сохранить клиента</button>
