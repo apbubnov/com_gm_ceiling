@@ -383,7 +383,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     <tr>
                         <td colspan="2">
                             <div id="measures_calendar"></div>
-                            <input type="text" id="measure_info" class="inputactive">
+                            <input type="text" id="measure_info" class="inputactive" readonly>
                         </td>
                     </tr>
                 </table>
