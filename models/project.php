@@ -265,14 +265,14 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select(' projects.project_mounter AS project_mounter')
-	            ->from('`#__gm_ceiling_projects` AS projects')
+	            ->select(' pm.project_mounter AS project_mounter')
+	            ->from('`#__gm_ceiling_projects_mounts` AS pm')
 	            ->select('users.name AS name, users.id AS id')
-	            ->join('LEFT', '`#__users` AS users ON users.id = projects.project_mounter')
-	            ->where('projects.id =\''. $project_id.'\'');
+	            ->join('LEFT', '`#__users` AS users ON users.id = pm.mounter_id')
+	            ->where('pm.project_id =\''. $project_id.'\'');
 
 	        $db->setQuery($query);
-	        $result = $db->loadObject();
+	        $result = $db->loadObjectList();
 	        return $result;
 	    }
 	    catch(Exception $e)

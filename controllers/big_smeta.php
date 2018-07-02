@@ -40,7 +40,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('id as project_id,project_mounter as mounter_id,project_mounting_date as date_time, 4 as `type`')
+            $query->select('id as project_id,project_mounter as mounter_id,project_mounting_date as date_time, 1 as `type`')
                 ->from('#__gm_ceiling_projects')
                 ->where("project_mounter is not NULL and project_mounting_date is NOT NULL");
             $db->setQuery($query);
