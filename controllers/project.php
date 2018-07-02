@@ -1810,5 +1810,34 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
         }
     }
+
+    function save_mount_data($project_id,$data = null){
+        try{
+            if(!empty($project_id)){
+                if(empty($data)){
+                    $jinput = JFactory::getApplication()->input;
+                    $data = $jinput->get('mount_data','','STRING');
+                }
+                if(!empty($data)){
+                    $data = json_decode($data);
+                    $mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
+                    $result = $mounts_model->save($project_id,$data);
+                    die(json_encode($result));
+                }
+                else{
+                    throw new Exception("Empty mounting data!");     
+                }
+            }
+            else{
+                throw new Exception("Empty project_id!");                
+            }
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 ?>
