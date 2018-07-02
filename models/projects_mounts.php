@@ -43,9 +43,10 @@ class Gm_ceilingModelProjects_mounts extends JModelList
 					$query = $db->getQuery(true);
 					$query->insert('`#__gm_ceiling_projects_mounts` as mp');
 					$query->columns("`project_id`,`mounter_id`,`date_time`,`type`");
-					$query->values("$project_id,$value->,'$valie->',$value->");
+					$query->values("$project_id,$value->mounter,'$value->time',$value->stage");
 					$db->setQuery($query);
 					$result = $db->execute();
+					return true;
 				}
 			}
 			else{

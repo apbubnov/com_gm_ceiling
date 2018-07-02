@@ -115,9 +115,6 @@
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?=parent::getButtonBack();?>
-
-<h2 class="center">Просмотр проекта</h2>
-
 <?php if ($this->item) : ?>
 <?php    
     $phones = $phones_model->getItemsByClientId($this->item->id_client);
@@ -126,7 +123,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12 item_fields">
-                <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
+                <h4>Проект №<?php echo $this->item->id ?></h4>
                     <?php if ($this->type === "gmcalculator" && $this->subtype === "calendar") { ?>
                         <?php if ($this->item->project_verdict == 0) { ?>
                             <?php if ($user->dealer_type != 2) { ?>

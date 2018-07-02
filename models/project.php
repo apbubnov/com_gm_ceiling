@@ -592,14 +592,14 @@ class Gm_ceilingModelProject extends JModelItem
 				->set('gm_chief_note = ' . $db->quote($data->gm_chief_note))
 				->set('dealer_chief_note = ' . $db->quote($data->dealer_chief_note))
 				->set('project_sum = ' . $db->quote($data->project_sum))
-				->set('project_mounting_date = ' . $db->quote($data->project_mounting_date))
+				//->set('project_mounting_date = ' . $db->quote($data->project_mounting_date))
 				->set('project_status = ' . $db->quote($status));
-			if (empty($data->project_mounter)) $query->set('project_mounter = NULL');
-			else $query->set('project_mounter = ' . $db->quote($data->project_mounter));
-			if ($status == 3) {
+			/*if (empty($data->project_mounter)) $query->set('project_mounter = NULL');
+			else $query->set('project_mounter = ' . $db->quote($data->project_mounter));*/
+			/*if ($status == 3) {
 				$query->set("project_mounting_date = '0000-00-00 00:00:00'");
 				$query->set('project_mounter = NULL');
-			}
+			}*/
 			$query->where('id = ' . $data->id);
 			$db->setQuery($query);
 			$return = $db->execute();
