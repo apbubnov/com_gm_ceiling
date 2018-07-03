@@ -117,7 +117,6 @@ class Gm_ceilingModelProject extends JModelItem
 			{
 				$this->_item->modified_by_name = JFactory::getUser($this->_item->modified_by)->name;
 			}
-					$this->_item->project_mounting_date = $this->_item->project_mounting_date;	
 				if (isset($this->_item->client_id) && $this->_item->client_id != '') {
 					$this->_item->_client_id = $this->_item->client_id;
 					if (is_object($this->_item->client_id)){
@@ -265,7 +264,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select(' pm.project_mounter AS project_mounter')
+	            ->select(' pm.mounter_id AS project_mounter')
 	            ->from('`#__gm_ceiling_projects_mounts` AS pm')
 	            ->select('users.name AS name, users.id AS id')
 	            ->join('LEFT', '`#__users` AS users ON users.id = pm.mounter_id')
@@ -579,7 +578,6 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
-
 			$db = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query->update('`#__gm_ceiling_projects`')

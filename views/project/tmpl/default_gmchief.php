@@ -33,7 +33,6 @@ $jdate = new JDate($this->item->project_mounting_to);
 $current_to = $jdate->format('Y-m-d H:i:s');
 ?>
 <?= parent::getButtonBack(); ?>
-<h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
     <?php $calculations = $model->getProjectItems($this->item->id); ?>
@@ -179,12 +178,10 @@ $current_to = $jdate->format('Y-m-d H:i:s');
             };
 
 
-
-
             var calendar_toggle = 0,
                 month = <?php echo date("n"); ?>,
                 year = <?php echo date("Y"); ?>;
-            //jQuery("#jform_project_mounting_daypart").val(jQuery('#hours_list').val());
+
             jQuery("#jform_project_mounting_date").mask("99.99.9999");
 
             jQuery("#jform_project_mounter").change(function () {
@@ -338,11 +335,3 @@ else:
     echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
 endif;
 ?>
-<script language="JavaScript">
-    function PressEnter(your_text, your_event) {
-        if (your_text != "" && your_event.keyCode == 13)
-            jQuery("#update_discount").click();
-    }
-
-
-</script>
