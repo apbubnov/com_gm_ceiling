@@ -152,13 +152,13 @@ class Gm_ceilingModelProject extends JModelItem
 				$db = JFactory::getDbo();
 				$query = $db->getQuery(true);
 				$query
-					->select("*")
+					->select("m.type as stage,m.date_time as time,m.mounter_id as mounter")
 					->from('`#__gm_ceiling_projects_mounts` as m')
 					->where("m.project_id =". $this->_item->id);
 				$db->setQuery($query);
 				
 				$mount_array = $db->loadObjectList();
-				$this->_item->mount_data = (!empty($mount_array)) ?	$mount_array : array();
+				$this->_item->mount_data = htmlspecialchars(json_encode((!empty($mount_array)) ? $mount_array : array()),ENT_QUOTES);
 
 /*				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
 					if (is_object($this->_item->project_mounter)){

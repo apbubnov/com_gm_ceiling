@@ -153,6 +153,16 @@ class Gm_ceilingModelProjectForm extends JModelForm
 							}
 						}
 
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query
+					->select("m.type as stage,m.date_time as time,m.mounter_id as mounter")
+					->from('`#__gm_ceiling_projects_mounts` as m')
+					->where("m.project_id =". $this->item->id);
+				$db->setQuery($query);
+				
+				$mount_array = $db->loadObjectList();
+				$this->item->mount_data = htmlspecialchars(json_encode((!empty($mount_array)) ? $mount_array : array()),ENT_QUOTES);
 					
 					if (!empty($textValue)) $this->item->client_id = implode(', ', $textValue);
 					if (!empty($textValue3)) $this->item->id_client = implode(', ', $textValue3);

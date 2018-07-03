@@ -389,7 +389,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             Телефоны клиента
                         </th>
                         <th>
-                            <button id="add_phone" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                            <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
                         </th>
                     </thead>
                     <tbody>
@@ -411,7 +411,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             Эл.почта клиента
                         </th>
                         <th>
-                            <button id="add_email" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                            <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
                         </th>
                     </thead>
                     <tbody>
@@ -427,6 +427,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <?php } ?>
                     </tbody>
                 </table>
+                <button id = "update_cl_info" class="btn btn-primary">Сохранить</button>
             </div>
             <div id="mw_add_call" class="modal_window" >
                 <h4>Добавить звонок</h4>
@@ -494,7 +495,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         </td>
                     </tr>
                 </table>
-                <button class="btn btn-primary" type="button">Сохранить</button>
+                <button class="btn btn-primary" type="button" id = "update_address">Сохранить</button>
             </div>
             <div id="mw_discount" class="modal_window">
                 <p>
@@ -807,8 +808,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             type: "success",
                             text: "Комментарий добавлен"
                         });
-                        //new_comments_id.push(data);
-                        //document.getElementById("comments_id").value +=data+";";
                         jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
                         show_comments();
 
@@ -960,6 +959,54 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             jQuery("#show_comments_btn").click(function(){
                 jQuery("#comments_divs").toggle();
 
+            });
+
+            jQuery("#update_address").click(function(){
+                var street = jQuery("#jform_address").val(),
+                house = jQuery("#jform_house").val(),
+                bdq = jQuery("#jform_bdq").val(),
+                apartment = jQuery("#jform_apartment").val(),
+                porch = jQuery("#jform_porch").val(),
+                floor =jQuery("#jform_floor").val(),
+                code = jQuery("#jform_code").val();
+                if(house) address = street + ", дом: " + house;
+                if(bdq) address += ", корпус: " + bdq;
+                if(apartment) address += ", квартира: "+ apartment;
+                if(porch) address += ", подъезд: " + porch;
+                if(floor) address += ", этаж: " + floor;
+                if(code) address += ", код: " + code;
+
+                jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=project.change_address",
+                        data: {
+                            id: project_id,
+                            address: address
+                        },
+                        dataType: "json",
+                        async: true,
+                        success: function (data) {
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Адрес успешно изменен!"
+                            });
+                             location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка"
+                            });
+                        }
+                    });
             });
         });
     </script>
