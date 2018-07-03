@@ -58,4 +58,20 @@ class Gm_ceilingModelProjects_mounts extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function get_mount_types(){
+		try{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`#__gm_ceiling_mounts_types`');
+			$db->setQuery($query);
+			$result = $db->loadAssocList('id', 'title');
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
