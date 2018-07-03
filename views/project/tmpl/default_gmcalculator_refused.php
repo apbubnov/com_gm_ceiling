@@ -42,7 +42,6 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
 $server_name = $_SERVER['SERVER_NAME'];
 ?>
 <?=parent::getButtonBack();?>
-<h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
 
 	<div class="container">

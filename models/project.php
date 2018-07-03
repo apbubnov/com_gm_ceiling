@@ -264,7 +264,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select(' pm.project_mounter AS project_mounter')
+	            ->select(' pm.mounter_id AS project_mounter')
 	            ->from('`#__gm_ceiling_projects_mounts` AS pm')
 	            ->select('users.name AS name, users.id AS id')
 	            ->join('LEFT', '`#__users` AS users ON users.id = pm.mounter_id')

@@ -560,78 +560,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         }
     });
 
-    // листание календаря
-    month_old = 0;
-    year_old = 0;
-    jQuery("#calendar-container").on("click", "#button-next", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-        }
-        if (month == 12) {
-            month = 1;
-            year++;
-        } else {
-            month++;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
-    jQuery("#calendar-container").on("click", "#button-prev", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-        }
-        if (month == 1) {
-            month = 12;
-            year--;
-        } else {
-            month--;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
-    function update_calendar(month, year) {
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-            data: {
-                id: <?php echo $userId; ?>,
-                id_dealer: <?php echo $user->dealer_id; ?>,
-                flag: 3,
-                month: month,
-                year: year,
-            },
-            success: function (msg) {
-                jQuery("#calendar-container").empty();
-                msg += '<div class="btn-small-l"><button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
-                jQuery("#calendar-container").append(msg);
-                Today(day, NowMonth, NowYear);
-                var datesession = jQuery("#jform_project_new_calc_date").val();
-                if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
-                }
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                });
-            }
-        });
-    }
-
     jQuery(document).ready(function () {
         var project_card = '<?php echo $project_card; ?>';
         if (project_card != '')
@@ -667,7 +595,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 }
             }
         }
-        console.log(project_card);
+        //console.log(project_card);
 
 
         var hrefs = document.getElementsByTagName("a");
@@ -1256,12 +1184,12 @@ if (!empty($_SESSION["project_card_$project_id"]))
             client_id = jQuery("#client_id").val();
             call(phone);
             add_history(client_id, "Исходящий звонок на " + phone);
-        })
+        });
 
         jQuery("#broke").click(function(){
             jQuery("#call_up").show();
 
-        })
+        });
         jQuery("#add_call_and_submit_up").click(function(){
             client_id = <?php echo $this->item->id_client;?>;
                     jQuery.ajax({
@@ -1296,7 +1224,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                             });
                         }
                     });
-        })
+        });
 
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
@@ -1343,32 +1271,11 @@ if (!empty($_SESSION["project_card_$project_id"]))
             });
         });
 
-    function submit_form(e) {
-        jQuery("#modal_window_container, #modal_window_container *").show();
-        jQuery('#modal_window_container').addClass("submit");
-    }
-
-    function click_ok(e) {
-        var modal = $(e).closest("#modal_window_container");
-        if (modal.hasClass("submit"))
-        {
-            var select_tab = $(".tab-pane.active").find("#idCalcDeleteSelect").val();
-
-            $("#idCalcDelete").val(select_tab);
-            modal.removeClass("submit");
-            jQuery("input[name='data_delete']").val(1);
-            document.getElementById("form-client").submit();
-        }
-    }
-
-    function click_cancel(e) {
-        jQuery("#modal_window_container, #modal_window_container *").hide();
-    }
 
     jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-        jQuery("#modal-window-container").hide();
-        jQuery("#modal-window-call-tar").hide();
+        jQuery("#close_mw").hide();
+        jQuery("#mw_container").hide();
+        jQuery("#mw_recoil").hide();
     })
 
     jQuery('.change_calc').click(function() {
@@ -1440,41 +1347,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
-
-    function isDate(txtDate) {
-        var currVal = txtDate;
-        if (currVal == '')
-            return false;
-        //Declare Regex
-        var rxDatePattern = /^(\d{1,2})(\/|.)(\d{1,2})(\/|.)(\d{4})$/;
-        var dtArray = currVal.match(rxDatePattern); // is format OK?
-        if (dtArray == null)
-            return false;
-
-        //Checks for mm/dd/yyyy format.
-        dtMonth = dtArray[3];
-        dtDay = dtArray[1];
-        dtYear = dtArray[5];
-
-        if (dtMonth < 1 || dtMonth > 12)
-            return false;
-        else if (dtDay < 1 || dtDay > 31)
-            return false;
-        else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31)
-            return false;
-        else if (dtMonth == 2) {
-            var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
-            if (dtDay > 29 || (dtDay == 29 && !isleap))
-                return false;
-        }
-        return true;
-    }
-
-  
-    // @return {number}
-    function Float(x, y = 2) {
-        return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
-    }
 
     jQuery("#add_calc").click(function () {
         save_data_to_session(1);

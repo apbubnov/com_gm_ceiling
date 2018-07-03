@@ -380,7 +380,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
                                                value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=1) {
                                                    echo JFactory::getUser($this->item->read_by_manager)->name;
-                                               } ?>">
+                                               } ?>" readonly>
                                     </td>
                                 </tr>
                             </div>
@@ -461,91 +461,25 @@ if (!empty($_SESSION["project_card_$project_id"]))
         <?php } ?>
 
     </div>
-    <div id="modal-window-container-tar">
-        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-choose-tar">
-            <p id="date-modal"></p>
-            <p><strong>Выберите время замера:</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-        </div>
-    </div>
-    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
     </form>
-    </div>
-    <div id="modal_window_container" class="modal_window_container">
-        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-        </button>
-        <div id="modal_window_del" class="modal_window">
-            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
-            <p>
-                <button type="button" id="ok" class="btn btn-primary">Да</button>
-                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-            </p>
-        </div>
     </div>
 <?php
     else:
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
     endif;
 ?>
+
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+
 <script type="text/javascript">
     var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
-        var div1 = jQuery("#modal-window-call-tar");
-        if (!div1.is(e.target)
-            && div1.has(e.target).length === 0) {
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-call-tar").hide();
-        }
-    });
-
-    //скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-    });
-    //-------------------------------------------------------------------
-
-
-    // функция чтобы другая функция выполнилась позже чем document ready
-    Function.prototype.process= function(state){
-        var process= function(){
-            var args= arguments;
-            var self= arguments.callee;
-            setTimeout(function(){
-                self.handler.apply(self, args);
-            }, 0 )
-        }
-        for(var i in state) process[i]= state[i];
-        process.handler= this;
-        return process;
-    }
-    //------------------------------------------
 
     jQuery(document).ready(function () {
-
 
         jQuery("#show_cl_block").click(function(){
             jQuery("#cl_block").toggle();
@@ -585,9 +519,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 }
             }
         }
-        console.log(project_card);
+        //console.log(project_card);
 
-        $("#modal_window_container #ok").click(function() { click_ok(this); });
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
         for(var i = 0; i < hrefs.length;i++){
@@ -612,19 +545,19 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 history.back();
 
             }
-        })
+        });
 
         document.onkeydown = function (e) {
             if (e.keyCode === 13) {
                 return false;
             }
-        }
+        };
 
         document.getElementById('new_comment').onkeydown = function (e) {
             if (e.keyCode === 13) {
                 document.getElementById('add_comment').click();
             }
-        }
+        };
 
         if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1) {
             var reg_comment = /[\\\<\>\/\'\"\#]/;
@@ -843,10 +776,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 return result;
         }
 
-        jQuery("#jform_project_new_calc_date").on("keyup", function() {
-            jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
-        });
-
         jQuery("#add_email").click(function(){
             if(jQuery("#jform_email").val()!=""){
                 jQuery.ajax({
@@ -883,12 +812,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             });
             }
 
-        });
-
-        jQuery("#show_window").click(function(){
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-call-tar").show("slow");
-            jQuery("#close-tar").show();
         });
        
         jQuery("#client_order").click(function() {
@@ -1152,34 +1075,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
 
     });
 
-    function submit_form(e) {
-        jQuery("#modal_window_container, #modal_window_container *").show();
-        jQuery('#modal_window_container').addClass("submit");
-    }
-
-    function click_ok(e) {
-        var modal = $(e).closest("#modal_window_container");
-        if (modal.hasClass("submit"))
-        {
-            var select_tab = $(".tab-pane.active").find("#idCalcDeleteSelect").val();
-
-            $("#idCalcDelete").val(select_tab);
-            modal.removeClass("submit");
-            jQuery("input[name='data_delete']").val(1);
-            document.getElementById("form-client").submit();
-        }
-    }
-
-    function click_cancel(e) {
-        jQuery("#modal_window_container, #modal_window_container *").hide();
-    }
-
-    jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-        jQuery("#modal-window-container").hide();
-        jQuery("#modal-window-call-tar").hide();
-    })
-
     jQuery('.change_calc').click(function() {
         let id = jQuery(this).data('calc_id');
         save_data_to_session(2, id,jQuery(this));
@@ -1226,40 +1121,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
-
-    function isDate(txtDate) {
-        var currVal = txtDate;
-        if (currVal == '')
-            return false;
-        //Declare Regex
-        var rxDatePattern = /^(\d{1,2})(\/|.)(\d{1,2})(\/|.)(\d{4})$/;
-        var dtArray = currVal.match(rxDatePattern); // is format OK?
-        if (dtArray == null)
-            return false;
-
-        //Checks for mm/dd/yyyy format.
-        dtMonth = dtArray[3];
-        dtDay = dtArray[1];
-        dtYear = dtArray[5];
-
-        if (dtMonth < 1 || dtMonth > 12)
-            return false;
-        else if (dtDay < 1 || dtDay > 31)
-            return false;
-        else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31)
-            return false;
-        else if (dtMonth == 2) {
-            var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
-            if (dtDay > 29 || (dtDay == 29 && !isleap))
-                return false;
-        }
-        return true;
-    }
-
-    // @return {number}
-    function Float(x, y = 2) {
-        return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
-    }
 
     jQuery("#add_calc").click(function () {
         save_data_to_session(1);
