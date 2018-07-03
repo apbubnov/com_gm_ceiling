@@ -44,6 +44,14 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 
 	function init() {
 		try {
+			try {
+				if (document.getElementById(input_mount).value != '') {
+					stages = JSON.parse(document.getElementById(input_mount).value);
+				}
+			} catch(e) {
+				console.log(e);
+				console.log(document.getElementById(input_mount));
+			}
 	    	calendar = new niceDatePicker({
 		        dom: cont,
 		        mode: 'en',
@@ -382,6 +390,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    	}
 		    }
 	    } catch(e) {
+	    	//console.log(e);
 	    	setTimeout(init, 200);
 	    }
     }
