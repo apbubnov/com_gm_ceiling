@@ -1839,5 +1839,27 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
         }
     }
+
+    function change_address(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $address = $jinput->get('address','',"STRING");
+            $id = $jinput->get('id',null,"INT");
+            if(!empty($id)){
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+                $result = $model->update_address($id,$address);
+                die(json_encode($result));
+            }
+            else {
+                throw new Exception("Empty project id");
+                
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 ?>

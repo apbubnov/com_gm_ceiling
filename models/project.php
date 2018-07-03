@@ -666,6 +666,14 @@ class Gm_ceilingModelProject extends JModelItem
 	            ->where('c.project_id = '.$id);
 	        $db->setQuery($query);
 	        $result = $db->execute();
+
+	         $query = $db->getQuery(true);
+				 $query->update('`#__gm_ceiling_projects` AS p')
+	            ->set('p.project_discount = ' . $db->quote($discount))
+	            ->where('p.id = '.$id);
+	        $db->setQuery($query);
+	        $result = $db->execute();
+
 			return $result;
 		}
 		catch(Exception $e)
@@ -780,7 +788,9 @@ class Gm_ceilingModelProject extends JModelItem
 			$table = $this->getTable();
 			if($id > 0) {
 				$table->load($id);
-				$table->project_info = $address;
+				if(!empty($address)){
+					$table->project_info = $address;
+				}
 			}
 			$return = $table->store();
 

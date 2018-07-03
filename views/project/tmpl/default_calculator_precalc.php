@@ -124,7 +124,10 @@ if ($this->item->api_phone_id == 10) {
         $reklama = $model_api_phones->getDataById(10);
     }
 } else {
-    $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+    if(!empty($this->item->api_phone_id)){
+         $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+    }
+   
 }
 
 $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description; 
@@ -134,8 +137,17 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 } else {
     $skidka = 0;
 }
+ $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
 ?>
-
+<style>
+.act_btn{
+    width:210px;
+    margin-bottom: 10px;
+}
+.save_bnt{
+    width:250px;
+}
+</style>
  <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
     <div class="project_activation" style="display: none;">
         <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
@@ -172,7 +184,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 </a>
             </div>
             <div style="display: inline-block;">
-                <button class="btn-sm btn-primary" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                <button class="btn btn-sm btn-primary" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             </div>
         </div>
         <div class="container">
@@ -204,8 +216,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 <th>Почта</th>
                                 <td colspan="2">
                                     <?php
-                                        
-                                        $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
                                         foreach ($contact_email AS $contact) {
                                             echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
                                             echo "<br>";
@@ -231,7 +241,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                     </a>
                                 </td>
                                 <td>
-                                     <button class="btn-sm btn-primary" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -242,7 +252,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                     <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
                                 </td>
                                 <td>
-                                     <button class="btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -253,7 +263,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                     <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
                                 </td>
                                 <td>
-                                     <button class="btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                         </table>
@@ -283,75 +293,88 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             <?php if ($this->item->project_verdict == 0) { ?>
                 <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <div class="row center">
-                        <div class="col-lg-3">
-                            <a class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project">
-                                <?php if($this->item->project_status == 0){
-                                    echo "Записать на замер";
-                                    }
-                                else { echo "Договор"; } ?>
-                            </a>
+                        <div class="col-md-6" style="padding-top: 25px;" align="center">
+                            <p>
+                                <button class="btn btn-success act_btn" type="button" <?php echo $status_attr;?> id="accept_project">
+                                Договор/производство</button>
+                            </p>
+                            <p>
+                                <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="rec_to_mesure" type="button" >Записать на замер</button>
+                            </p>
                         </div>
-                        <div class="col-lg-3">
-                            <button id="refuse" class="btn btn-primary act_btn"  <?php echo $status_attr;?> type="submit">Сохранить</button>
+                        <div class="col-md-6" style="padding-top: 25px;" align="center">
+                            <p>
+                                <button id="ref_btn" class="btn btn-danger act_btn" type="button">Отказ</button>
+                                <div id = refuse_block align="left" style="display: none;">
+                                    <p>
+                                        <input id='refuse_measure' type='radio' class = "radio" name='slider-refuse' value='2'>
+                                        <label  for='refuse_measure'>от замера</label>
+                                    </p>
+                                    <p>
+                                        <input id='refuse_deal' type='radio' class = "radio" name='slider-refuse' value='3'>
+                                        <label  for='refuse_deal'>от договора</label>
+                                    </p>
+                                    <p>
+                                        <input id='refuse_coop' type='radio' class = "radio" name='slider-refuse' value='15'>
+                                        <label  for='refuse_coop'>от сотрудничества</label>
+                                    </p>
+                                </div>
+                            </p>
+                            <p>
+                                <button id="save_btn" class="btn btn-primary act_btn" type="">Сохранить</button>  
+                            </p>
                         </div>
-                        <div class="col-lg-3">
-                             <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
+                    </div>  
+                </div>
+            <?php } ?>
+            <div class="project_activation" id="project_activation" style="display: none;">
+                <h4>Назначить дату монтажа</h4>
+                    <div>
+                        Calendar
+                    </div>
+                <div class="row center" id = "ready_wrapper">
+                    <h4>Назначить дату готовности полотен</h4>
+                        <input type="datetime-local" id="date_canvas_ready">
+                        <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                </div>
+                <hr>
+                <div class = "container" style="padding-left: 0px;">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
+                        </div>
+                    </div>
+                    <div id ="comments_divs" style="display:none;">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for = "jform_gm_calculator_note">Примечание к договору</label>
+                             </div>
+                            <div class="col-md-2">
+                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for = "jform_chief_note">Примечание к монтажу</label>
+                            </div>
+                            <div class="col-md-2">
+                                <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
-            <?php } ?>
-            <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
-                <?php if ($user->dealer_type != 2) { ?>
-                    <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
+                <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
+                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                </p>
+                <div class="row center">
+                    <div class="col-md-6" style="padding-top: 25px;">
+                        <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                     </div>
-                    <hr>
-                    <div class="row center" id = "ready_wrapper">
-                        <h4>Назначить дату готовности полотен</h4>
-                            <input type="datetime-local" id="date_canvas_ready">
-                            <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                    <div class="col-md-6" style="padding-top: 25px;">
+                        <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                     </div>
-                    <hr>
-                    <div class = "container" style="padding-left: 0px;">
-                        <div class="row">
-                            <div class="col-md-1">
-                                <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
-                            </div>
-                        </div>
-                        <div id ="comments_divs" style="display:none;">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label for = "jform_gm_calculator_note">Примечание к договору</label>
-                                 </div>
-                                <div class="col-md-2">
-                                    <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
-                                </div>
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label for = "jform_chief_note">Примечание к монтажу</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
-                        <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-                    </p>
-                    <div class="row center">
-                        <div class="col-xl-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
-                        </div>
-                        <div class="col-xl-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
-                        </div>
-                        <div class="col-xl-3" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
-                        </div>
-                    </div>
-                <?php } ?>
+                </div>
             </div>
         <!-- Всплывающие окна -->
         <div class="modal_window_container" id="mw_container">
@@ -373,7 +396,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <?php foreach ($phone as $value) { ?>
                             <tr>
                                 <td>
-                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" value="" placeholder="Телефон клиента" type="text" value = <?php echo $value->client_contacts;?>>
+                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
                                 </td>
                                 <td>
                                     <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -395,7 +418,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <?php foreach ($contact_email as $value) { ?>
                             <tr>
                                 <td>
-                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" value="" placeholder="Телефон клиента" type="text" value=<?php echo $value->contact;?>>
+                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента" type="text" value=<?php echo $value->contact;?>>
                                 </td>
                                 <td>
                                     <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -510,6 +533,56 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 <br>
                 <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
             </div>
+            <div id="mw_rec_to_msr" class="modal_window">
+                <label><strong>Адрес замера</strong></label>
+                <table align="center">
+                    <tr>
+                        <td>Улица:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Дом:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Корпус:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Квартира:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_apartment" id="rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Подъезд:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Этаж:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Код:</td>
+                        <td style="padding-bottom: 10px;">                
+                            <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                </table>
+                <label><strong>Время замера</strong></label>
+                <div>Здесь календарь замеров</div>
+                <button id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
+            </div>
         </div>
     </form>
      <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
@@ -532,6 +605,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             var div3 = jQuery("#mw_add_call");
             var div4 = jQuery("#mw_advt");
             var div5 = jQuery("#mw_address");
+            var div6 = jQuery("#mw_rec_to_msr");
             if (!div1.is(e.target) // если клик был не по нашему блоку
                 && div1.has(e.target).length === 0
                 && !div2.is(e.target)
@@ -541,7 +615,9 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 && !div4.is(e.target)
                 && div4.has(e.target).length === 0
                 && !div5.is(e.target)
-                && div5.has(e.target).length === 0) { // и не по его дочерним элементам
+                && div5.has(e.target).length === 0
+                && !div6.is(e.target)
+                && div6.has(e.target).length === 0) { // и не по его дочерним элементам
                 jQuery("#close_mw").hide();
                 jQuery("#mw_container").hide();
                 div1.hide();
@@ -549,9 +625,23 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 div3.hide();
                 div4.hide();
                 div5.hide();
+                div6.hide();
             }
         });
         jQuery(document).ready(function(){
+
+            var client_id = "<?php echo $this->item->id_client;?>";
+
+            document.getElementById('add_calc').onclick = function()
+            {
+                create_calculation(<?php echo $this->item->id; ?>);
+            };
+            
+
+            if (document.getElementById('comments'))
+            {
+                show_comments();
+            }
 
             jQuery("#change_data").click(function(){
                 jQuery("#close_mw").show();
@@ -581,6 +671,295 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
                 jQuery("#mw_address").show();
+            });
+
+            jQuery("#rec_to_mesure").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_rec_to_msr").show();
+            });
+
+            jQuery("#ref_btn").click(function(){
+                jQuery("#refuse_block").toggle();
+            });
+
+            jQuery("#accept_project").click(function(){
+                jQuery("#project_activation").toggle();
+            });
+
+            jQuery("#add_call").click(function(){
+                if (jQuery("#call_date").val() == '')
+                {
+                    var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "warning",
+                            text: "Укажите дату перезвона"
+                        });
+                    return;
+                }
+                var date = jQuery("#call_date").val().replace(/(-)([\d]+)/g, function(str,p1,p2) {
+                    if (p2.length === 1) {
+                        return '-0'+p2;
+                    }
+                    else {
+                        return str;
+                    }
+                });
+                var time = jQuery("#call_time").val();
+                if (time == '') {
+                    time = '00:00';
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addCall",
+                    data: {
+                        id_client: client_id,
+                        date: date+' '+time,
+                        comment: jQuery("#call_comment").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Звонок добавлен"
+                        });
+                        add_history(client_id, 'Добавлен звонок на ' + date + ' ' + time + ':00');
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
+
+            function add_history(id_client, comment) {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: id_client
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Добавленна запись в историю клиента"
+                        });
+                        if (jQuery("#client_id").val() == 1) {
+                            
+                            jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                        }
+                        show_comments();
+                    },
+                    error: function (data) {
+                        
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            }
+
+            jQuery("#add_comment").click(function () {
+                var comment = jQuery("#new_comment").val();
+                var reg_comment = /[\\\<\>\/\'\"\#]/;
+                if (reg_comment.test(comment) || comment === "") {
+                    alert('Неверный формат примечания!');
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: client_id
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Комментарий добавлен"
+                        });
+                        //new_comments_id.push(data);
+                        //document.getElementById("comments_id").value +=data+";";
+                        jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                        show_comments();
+
+                        jQuery("#new_comment").val("");
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            });
+
+            // для истории и добавления комментария
+            function formatDate(date) {
+
+                var dd = date.getDate();
+                if (dd < 10) dd = '0' + dd;
+
+                var mm = date.getMonth() + 1;
+                if (mm < 10) mm = '0' + mm;
+
+                var yy = date.getFullYear();
+                if (yy < 10) yy = '0' + yy;
+
+                var hh = date.getHours();
+                if (hh < 10) hh = '0' + hh;
+
+                var ii = date.getMinutes();
+                if (ii < 10) ii = '0' + ii;
+
+                var ss = date.getSeconds();
+                if (ss < 10) ss = '0' + ss;
+
+                return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+            }
+
+            function show_comments() {
+                var id_client = <?php echo $this->item->id_client;?>;
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=selectComments",
+                    data: {
+                        id_client: id_client
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var comments_area = document.getElementById('comments');
+                        comments_area.innerHTML = "";
+                        var date_t;
+                        for (var i = 0; i < data.length; i++) {
+                            date_t = new Date(data[i].date_time);
+                            comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+                        }
+                        comments_area.scrollTop = comments_area.scrollHeight;
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка вывода примечаний"
+                        });
+                    }
+                });
+            }
+
+            jQuery("#update_discount").click(function() {
+                save_data_to_session(4);
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
+                    data: {
+                        project_id: project_id,
+                        new_discount: jQuery("#jform_new_discount").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        //console.log(data);
+                        location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка изменения скидки"
+                        });
+                    }
+                });
+            });
+
+            jQuery("#btn_ready_date").click(function() {
+                if (jQuery("#date_canvas_ready").val() == '')
+                {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Укажите время готовности полотен"
+                    });
+                    jQuery("#date_canvas_ready").focus();
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.update_ready_time",
+                    data: {
+                        project_id: project_id,
+                        ready_time: jQuery("#date_canvas_ready").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Время готовности полотен назначено"
+                        });
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка"
+                        });
+                    }
+                });
+            });
+
+            jQuery("#show_comments_btn").click(function(){
+                jQuery("#comments_divs").toggle();
+
             });
         });
     </script>
