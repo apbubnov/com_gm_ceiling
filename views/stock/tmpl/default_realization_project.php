@@ -978,8 +978,12 @@ $server_name = $_SERVER['SERVER_NAME'];
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.canvas));
                         s.Itog = Float(s.PriceM * s.Quad);
                 } else {
+                    try {
+                        s.PriceM = Customer.dealer.dealerPrice[s.id];
+                    } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.component));
-                        s.Itog = Float(s.PriceM * s.Count);
+                    }
+                    s.Itog = Float(s.PriceM * s.Count);
                 }
 
                 e.val(JSON.stringify(s));

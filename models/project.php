@@ -1623,8 +1623,10 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db->setQuery($query);
 	        $project = $db->loadObject();
 
+	        $tempDealerPrice = JFactory::getUser()->getComponentsPrice($project->dealer);
+
 	        $customer->client = (object) ["id" => $project->client, "name" => $project->client_name, "phone" => $project->client_phone, "email" => $project->client_email];
-	        $customer->dealer = (object) ["id" => $project->dealer, "name" => $project->dealer_name, "phone" => $project->dealer_phone, "email" => $project->dealer_email];
+	        $customer->dealer = (object) ["id" => $project->dealer, "name" => $project->dealer_name, "phone" => $project->dealer_phone, "email" => $project->dealer_email, "dealerPrice" => []];
 	        $customer->Name = $project->client_name;
 	        $customer->Phone = $project->client_phone;
 	        $customer->Email = $project->client_email;
@@ -1636,8 +1638,8 @@ class Gm_ceilingModelProject extends JModelItem
             if ($margin->canvas == 100) $margin->canvas = 99;
             $customer->Margin = $margin;
 
-            $discount = $project->discount;
-            if (empty($discount)) $discount = 0;
+            /*$discount = $project->discount;
+            if (empty($discount)) */$discount = 0;
             $customer->discount = $discount;
             $customer->status = $project->status;
 
@@ -1649,14 +1651,21 @@ class Gm_ceilingModelProject extends JModelItem
 	        $calculations = $db->loadObjectList();
 
 	        foreach ($calculations as $calculation) {
-	            $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "discount" => $discount);
-	            if (floatval($calculation->square) > 0) $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "discount" => 50);
+	            if ($calculation->quad > 0) {
+                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "discount" => $discount);
+
+                    if (floatval($calculation->square) > 0) {
+                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "discount" => 50);
+                    }
+                }
 
 	            $from_db = 1; $save = 0; $ajax = 0; $pdf = 0; $print_components = 1;
 	            $componentsTemp = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components);
 	            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
 	            foreach ($componentsTemp as $v)
 	            {
+                    $customer->dealer->dealerPrice[$v->id] = dealer_margin($v->self_price, 0, $tempDealerPrice[$v->id]);
+
 	                if ($v->quantity != "0" && $v->id > 0)
 	                {
 	                    $component = (object) array();
@@ -1681,6 +1690,7 @@ class Gm_ceilingModelProject extends JModelItem
 	            $db->setQuery($query);
 	            $CT = $db->loadObject();
 
+	            $CT->id = $component->id;
 	            $CT->page = "Component";
 	            $CT->Price = floatval($CT->Price) * ((100 - intval($discount)) / 100);
 	            $CT->PriceM = (($CT->Price * 100)/(100 - floatval($margin->component)));
@@ -1689,6 +1699,7 @@ class Gm_ceilingModelProject extends JModelItem
                 if ((($CT->Count*100) % ($CT->CountUnit*100)) != 0)
                     $CT->Count = (floor($CT->Count / $CT->CountUnit) + 1) * $CT->CountUnit;
                 $CT->Itog = $CT->PriceM * $CT->Count;
+
                 $CT->page = "Component";
 
                 $componentsTemp[] = $CT;
