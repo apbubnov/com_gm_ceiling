@@ -98,6 +98,11 @@
     color:#414099;
     border-radius:5px;
 }
+.nice-date-picker-body tr .nice-appointed{
+    background: green;
+    color:#ffffff;
+    border-radius:5px;
+}
 .nice-date-picker-body tr .nice-select{
     background: #414099;
     color:#ffffff;

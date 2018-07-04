@@ -47,6 +47,10 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			try {
 				if (document.getElementById(input_mount).value != '') {
 					stages = JSON.parse(document.getElementById(input_mount).value);
+					for (var i = stages.length, elems, date; i--;) {
+			    		date = stages[i].time.replace('-0', '-');
+			    		stages[i].time = date.replace(' 0', '-');
+			    	}
 				}
 			} catch(e) {
 				console.log(e);
@@ -253,6 +257,17 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            		//console.log(JSON.stringify(stages));
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
 		            		document.getElementById(input_mount).value = JSON.stringify(stages);
+		            		var tds_appointed = cont.getElementsByClassName('nice-appointed');
+		            		for (var i = tds_appointed.length; i--;) {
+		            			tds_appointed[i].classList.remove('nice-appointed');
+		            		}
+		            		for (var i = stages.length, elems; i--;) {
+					    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+					    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+					    		if (elems.length === 1) {
+					    			elems[0].classList.add('nice-appointed');
+					    		}
+					    	}
 		            	});
 
 		            	function del_by_stage(s) {
@@ -366,11 +381,19 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    }
 
 		    function draw_calendar() {
-		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount;
+		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount, date;
 		    	maxCount = 12 * mounters.length;
 		    	tds = cont.getElementsByClassName('nice-normal');
 		    	if (data_array[y] == undefined) {
 		    		data_array[y] = [];
+		    	}
+		    	console.log(stages);
+		    	for (var i = stages.length, elems; i--;) {
+		    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+		    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+		    		if (elems.length === 1) {
+		    			elems[0].classList.add('nice-appointed');
+		    		}
 		    	}
 		    	for (var d in data_array[y][m]) {
 		    		count = 0;
