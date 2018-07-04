@@ -23,8 +23,8 @@ class Gm_ceilingModelProjects_mounts extends JModelList
 		try{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->delete('`#__gm_ceiling_projects_mounts` as mp');
-			$query->where("mp.project_id = $project_id");
+			$query->delete('`#__gm_ceiling_projects_mounts`');
+			$query->where("project_id = $project_id");
 			$db->setQuery($query);
 			$result = $db->execute();
 		}
@@ -41,7 +41,7 @@ class Gm_ceilingModelProjects_mounts extends JModelList
 				$this->delete($project_id);
 				foreach ($mounts as $value) {
 					$query = $db->getQuery(true);
-					$query->insert('`#__gm_ceiling_projects_mounts` as mp');
+					$query->insert('`#__gm_ceiling_projects_mounts`');
 					$query->columns("`project_id`,`mounter_id`,`date_time`,`type`");
 					$query->values("$project_id,$value->mounter,'$value->time',$value->stage");
 					$db->setQuery($query);
@@ -52,6 +52,22 @@ class Gm_ceilingModelProjects_mounts extends JModelList
 			else{
 				throw new Exception("Empty project_id or mounts_array");
 			}
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function get_mount_types(){
+		try{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`#__gm_ceiling_mounts_types`');
+			$db->setQuery($query);
+			$result = $db->loadAssocList('id', 'title');
+			return $result;
 		}
 		catch(Exception $e)
         {
