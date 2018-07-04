@@ -49,7 +49,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 					stages = JSON.parse(document.getElementById(input_mount).value);
 					for (var i = stages.length, elems, date; i--;) {
 			    		date = stages[i].time.replace('-0', '-');
-			    		stages[i].time = date.replace(' 0', '-');
+			    		stages[i].time = date.replace(' 0', ' ');
 			    	}
 				}
 			} catch(e) {
@@ -92,7 +92,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            	else {
 		            		document.getElementById(dop_mw).style.display = 'block';
 		            	}
-		            	html += '<center><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
+		            	html += '<center><div style="overflow-y:auto; border: 1px solid #414099; border-radius: 4px;"><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in mounters) {
 			    			var c = mounters[key].id;
 			    			html += '<tr><th>'+mounters[key].name+'</th>';
@@ -130,7 +130,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
+			    		html += '</tbody></table><br></div><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		html += mw_stages;
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
