@@ -831,7 +831,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             ModalInit();
             ElementsInit();
 
-            Goods.forEach(function (t) { AddElementPHP(t) });
+            Goods.forEach(function (t, i) { AddElementPHP(t) });
             AddCustomer();
 
             ScrollInit();
@@ -840,7 +840,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             $(".PRELOADER_GM").hide();
         }
 
-        function AddElementPHP(s) {
+        function AddElementPHP(s, i) {
             var TopSum = $(".CustomerInfoTable .Pay"),
                 element = Element.tr.clone();
 
@@ -849,10 +849,12 @@ $server_name = $_SERVER['SERVER_NAME'];
             var line = (s.page === "Canvas") ? "Полотно: " : "Компонент: ",
                 value;
             if (s.page === "Canvas") {
+                if (s.Quad < 1)  return;
                 line += s.Country + " " + s.Name + " " + s.Width + " - Т: " + s.Texture + " Ц: " + s.Color;
                 value = s.Quad + " m²";
             }
             else {
+                if (s.Name == null) s.Name = "Нет";
                 line += s.Type + " " + s.Name;
                 value = s.Count + " " + s.Unit;
             }

@@ -687,9 +687,9 @@ class Gm_ceilingModelCanvases extends JModelList
                     $query->from("`#__canvases` AS C")
                         ->join("LEFT", "`#__gm_ceiling_textures` AS T ON C.texture_id = T.id")
                         ->join("LEFT", "`#__gm_ceiling_colors` AS L ON C.color_id = L.id")
-                        ->where(($v->Texture == "Нет")?"C.texture_id IS NULL":"T.texture_title = '$v->Texture'")
+                        ->where(($v->Texture == "Нет" || $v->Texture == "")?"C.texture_id IS NULL":"T.texture_title = '$v->Texture'")
                         ->where(($v->Color == "Нет")?"C.color_id IS NULL":"L.title = '$v->Color'")
-                        ->where("C.name = '$v->Name' and C.width = '$v->Width' and C.country = '$v->Country'")
+                        ->where("C.name = '$v->Name' AND C.width = '$v->Width' AND C.country = '$v->Country'")
                         ->select("C.id, C.name, C.width, C.country, T.texture_title as texture, L.title as color, C.price");
                     $db->setQuery($query);
                     $good = $db->loadObject();
