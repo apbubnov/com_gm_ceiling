@@ -396,6 +396,26 @@ echo parent::getPreloader();
         }
     });
 
+    jQuery('#btn_submit').click(function(){
+        var project_status = <?= $this->item->project_status; ?>;
+        if (document.getElementById('mount').value == ''
+            && project_status != 1 && project_status != 17)
+        {
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Дата монтажа пустая!"
+            });
+        }
+        else
+        {
+            document.getElementById('form-project').submit();
+        }
+    });
+
     // показать историю
     function show_comments() {
         <?php if (isset($this->item->id_client)) { ?>
