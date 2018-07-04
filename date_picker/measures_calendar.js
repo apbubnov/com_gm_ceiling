@@ -44,7 +44,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            	else {
 		            		document.getElementById(dop_mw).style.display = 'block';
 		            	}
-		            	html += '<center><table class="measures_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
+		            	html += '<center><div style="overflow-y:auto; border: 1px solid #414099; border-radius: 4px;"><table class="measures_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in gaugers) {
 			    			var c = gaugers[key].id;
 			    			html += '<tr><th>'+gaugers[key].name+'</th>';
@@ -90,7 +90,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
+			    		html += '</tbody></table><br></div><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
 		            	jQuery('#'+modal_window+' .free-day').click(function free_click(){
@@ -112,6 +112,15 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            				break;
 		            			}
 		            		}
+		            		var tds_appointed = cont.getElementsByClassName('nice-appointed');
+		            		for (var i = tds_appointed.length; i--;) {
+		            			tds_appointed[i].classList.remove('nice-appointed');
+		            		}
+		            		var appointed_date = selectTime.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+		            		var elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+appointed_date+'"]');
+				    		if (elems.length === 1) {
+				    			elems[0].classList.add('nice-appointed');
+				    		}
 		            		document.getElementById(info).value = add_zeros_in_date(selectTime)+' | '+gaugerName;
 		            		mw_elem.getElementsByClassName('p_date')[0].innerHTML = this.getAttribute('data-time');
 		            		mw_elem.getElementsByClassName('p_id')[0].innerHTML = 'Свободно';
@@ -213,6 +222,13 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
     				else if (count === maxCount) {
     					tds[d - 1].classList.add('nice-busy-all');
     				}
+		    	}
+		    	if (selectTime != undefined) {
+		    		var appointed_date = selectTime.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+	        		var elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+appointed_date+'"]');
+		    		if (elems.length === 1) {
+		    			elems[0].classList.add('nice-appointed');
+		    		}
 		    	}
 		    }
 	    } catch(e) {

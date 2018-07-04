@@ -47,6 +47,10 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			try {
 				if (document.getElementById(input_mount).value != '') {
 					stages = JSON.parse(document.getElementById(input_mount).value);
+					for (var i = stages.length, elems, date; i--;) {
+			    		date = stages[i].time.replace('-0', '-');
+			    		stages[i].time = date.replace(' 0', ' ');
+			    	}
 				}
 			} catch(e) {
 				console.log(e);
@@ -88,7 +92,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            	else {
 		            		document.getElementById(dop_mw).style.display = 'block';
 		            	}
-		            	html += '<center><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
+		            	html += '<center><div style="overflow-y:auto; border: 1px solid #414099; border-radius: 4px;"><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in mounters) {
 			    			var c = mounters[key].id;
 			    			html += '<tr><th>'+mounters[key].name+'</th>';
@@ -126,7 +130,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			    			
 			    			html += '</tr>';
 			    		}
-			    		html += '</tbody></table><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
+			    		html += '</tbody></table><br></div><label class="p_date"></label><br><label class="p_id"></label><br><label class="p_info"></label><p><button type="button" class="btn btn-primary hide_calendar">Ок</button></p></center>';
 			    		html += mw_stages;
 			    		mw_elem.innerHTML = html;
 		            	mw_elem.style.display = 'block';
@@ -253,6 +257,17 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            		//console.log(JSON.stringify(stages));
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
 		            		document.getElementById(input_mount).value = JSON.stringify(stages);
+		            		var tds_appointed = cont.getElementsByClassName('nice-appointed');
+		            		for (var i = tds_appointed.length; i--;) {
+		            			tds_appointed[i].classList.remove('nice-appointed');
+		            		}
+		            		for (var i = stages.length, elems; i--;) {
+					    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+					    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+					    		if (elems.length === 1) {
+					    			elems[0].classList.add('nice-appointed');
+					    		}
+					    	}
 		            	});
 
 		            	function del_by_stage(s) {
@@ -366,11 +381,19 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    }
 
 		    function draw_calendar() {
-		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount;
+		    	var y = calendar.monthData.year, m = calendar.monthData.month, count, tds, maxCount, date;
 		    	maxCount = 12 * mounters.length;
 		    	tds = cont.getElementsByClassName('nice-normal');
 		    	if (data_array[y] == undefined) {
 		    		data_array[y] = [];
+		    	}
+		    	console.log(stages);
+		    	for (var i = stages.length, elems; i--;) {
+		    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
+		    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
+		    		if (elems.length === 1) {
+		    			elems[0].classList.add('nice-appointed');
+		    		}
 		    	}
 		    	for (var d in data_array[y][m]) {
 		    		count = 0;

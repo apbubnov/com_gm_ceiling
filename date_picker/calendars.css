@@ -98,6 +98,11 @@
     color:#414099;
     border-radius:5px;
 }
+.nice-date-picker-body tr .nice-appointed{
+    background: green;
+    color:#ffffff;
+    border-radius:5px;
+}
 .nice-date-picker-body tr .nice-select{
     background: #414099;
     color:#ffffff;
@@ -111,6 +116,11 @@
 .measures_grafik, .mounts_grafik{
     margin: 0px auto;
     text-align: center;
+}
+.measures_grafik th, .mounts_grafik th{
+    cursor: default;
+    padding: 2px;
+    border: 1px solid #414099;
 }
 .measures_grafik td, .mounts_grafik td{
     cursor: pointer;
