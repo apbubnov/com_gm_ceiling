@@ -30,7 +30,7 @@ if (!empty($calculation_ids)) {
  if (!empty($calculation_ids)) { 
     $AllCalc = [];
     foreach ($calculation_ids as $value) { 
-         $DataOfProject =[];// Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
+         $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
          foreach ($DataOfProject["mounting_data"] as $val) { 
                 if (!array_key_exists($val["title"], $AllCalc)) {
                     $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
@@ -125,7 +125,6 @@ $AllSum = 0;
                 </table>
             </div>
         </div>
-        <?= print_r($calculation_ids);?>
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
                 <?php if (!empty($value->details)) { ?>
@@ -144,7 +143,7 @@ $AllSum = 0;
                             <td>Количество</td>
                             <td>Стоимость, ₽</td>
                         </tr>
-                        <?php $DataOfProject = [];//Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                        <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php if (!empty($DataOfProject)) { ?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
