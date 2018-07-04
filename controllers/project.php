@@ -1177,14 +1177,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('jform[id]', '0', 'INT');
 			$get_data = JFactory::getApplication()->input->get('jform', array(), 'array');
-
+            $history_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_history');
+            $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
 			$data = $model->getData($get_data['id']);
-
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('Callback');
 			$type = $jinput->get('type', '', 'STRING');
 			$subtype = $jinput->get('subtype', '', 'STRING');
 
 			$data->gm_chief_note = $get_data['gm_chief_note'];
             $data->dealer_chief_note = $get_data['dealer_chief_note'];
+            $mount_data = json_decode($get_data['mount_data']);
 
 			// замеры
 			$data->project_calculation_date = $get_data['project_new_calc_date'];
@@ -1203,39 +1205,60 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				Gm_ceilingHelpersGm_ceiling::notify($data, 11);
 			}
 			if ($data->project_calculation_date != $old_date_gauger) {
-				$model->AddComment(3, $data);
+                $text = "У проекта №$data->id дата замера перенесена на $data->project_calculation_date ";
+				$history_model->save($data->id_client,$text);
 			}
 			if ($data->project_calculator != $old_gauger) {
-				$model->AddComment(4, $data);
+                $gauger_name = JFactory::getUser($data->project_calculator)->name;
+                $text = "У проекта №$data->id был изменен замерщик на ".$gauger_name;
+				$history_model->save($data->id_client,$text);
 			}
 
+            $old_mount_data = $projects_mounts_model->getData($data->id);
+            //throw new Exception(print_r($old_mount_data,true));
+            $common_mount = array_uintersect($old_mount_data, $mount_data, function ($e1, $e2) {
+                return $e1 == $e2;
+            });
+            $mount_diff = array_udiff($mount_data,$common_mount,
+                  function ($obj_a, $obj_b) {
+                    if($obj_a != $obj_b){
+                        return 1;
+                    }
+                    else{
+                         return 0;
+                    }
+                  }
+                );
 			// монтажи
-			$data->project_mounting_date = $get_data['project_mounting_date'];
-			$old_date = $jinput->get('jform_project_mounting_date_old', '0000-00-00 00:00:00', 'DATE');
-			$data->old_date = $old_date;
-			$old_mounter = $jinput->get('jform_project_mounting_old','0','INT');
-			$data->old_mounter = $old_mounter;
-			if (!empty($get_data['project_mounting'])) {
-				$data->project_mounter = $get_data['project_mounting'];
+
+            $mount_types = $projects_mounts_model->get_mount_types();
+			if (!empty($mount_diff)) {
+                foreach ($mount_diff as $value) {
+                    foreach ($old_mount as $old_value) {
+                       if($old_value->stage == $value->stage){
+                            if($old_value->mounter == $value->mounter && $old_value->time != $value->time){
+                                Gm_ceilingHelpersGm_ceiling::notify($data, 8);
+                                $text = "У проекта №$data->id дата этапа монтажа '".$mount_types[$value->stage]."' перенесена на $value->time";
+                                $history_model->save($data->id_client,$text);
+                                $callback_model->updateCallbackDate($value->time,$data->id_client);
+                            }
+                            if($old_value->mounter != $value->mounter){
+                                Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+                                Gm_ceilingHelpersGm_ceiling::notify($data, 9);
+                                $mounter_name = JFactory::getUser($value->mounter)->name;
+                                $text = "У проекта №$data->id монтажная бригада этапа '".$mount_types[$value->stage]."' заменена на $mounter_name";
+                                $history_model->save($data->id_client,$text);
+                            }
+                       }
+                    }
+                }
 			}
-			if ($data->project_mounting_date != $data->old_date && $data->project_mounter == $old_mounter) { // если изменилась только дата
-				Gm_ceilingHelpersGm_ceiling::notify($data, 8);
-			}
-			if ($data->project_mounter != $old_mounter) { // если изменились монтажники		
-				Gm_ceilingHelpersGm_ceiling::notify($data, 7);
-				Gm_ceilingHelpersGm_ceiling::notify($data, 9);
-			}
-			if ($data->project_mounting_date != $data->old_date) {
-				$model->AddComment(1, $data);
-			}
-			if ($data->project_mounter != $old_mounter) {
-				$model->AddComment(2, $data);
-			}
+
 			// оповещение менеджерам
 			if ($user->dealer_type == 1 && $data->project_mounting_date != $data->old_date) {
 				Gm_ceilingHelpersGm_ceiling::notify($data, 12);
 			}
-
+            $projects_mounts_model->save($data->id,$mount_data);
             $return = $model->approve($data);
             
 			if ($return === false) {
