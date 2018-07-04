@@ -737,12 +737,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
             if(!empty($mount_data)){
                 $mount_str = "";
+                $mount_dates = array();
                 $mount_types = $projects_mounts_model->get_mount_types();
-                foreach ($mount_data $value) {
+                foreach ($mount_data as $value) {
                     $value->stage_name = $mount_types[$value->stage];
-                    $mount_str .= "$value->time - $mount_types[$value->stage]";
+                    $date = new DateTime($value->time);
+                    $mount_str .= $date->format('d.m.Y H:i:s')." - ".$mount_types[$value->stage]."; ";
                 }
-                
             }
 			$data->project_sum =  $jinput->get('project_sum',0, 'INT');
 
@@ -889,16 +890,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 					//$checked_calculations = array_intersect($data['include_calculation'], $all_calculations);
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
-                    
+                    $gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
 					// Attempt to save the data.
 					if($activate_by_email==0){
-						$gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
 						if($user->dealer_type!=2 && $project_verdict == 1) 
 						{
-
-							$c_date = date_create($data->project_mounting_date);
-							date_sub($c_date, date_interval_create_from_date_string('1 day'));
-							if(empty($data->project_mounting_date)){
+							if(empty($mount_data)){
 								$data->project_status = 4;
 								$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
@@ -917,25 +914,24 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 								if($project_status == 4){
 									$data->project_verdict = 0;
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
-									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-									if(!empty($data->read_by_manager)){
-										$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-										$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
-									}
+									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж.".$mount_str );
 									$return = $model->activate($data, 4);
 
 								} else {
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
 
-									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-
-									if(!empty($data->read_by_manager)){
-										$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-										$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
-									}
+									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
 									$return = $model->activate($data, 5/*3*/);
-
-								}	
+								}
+                                if(!empty($data->read_by_manager)){
+                                    foreach ($mount_data as $value) {
+                                        $c_date = date_create($value->time);
+                                        date_sub($c_date, date_interval_create_from_date_string('1 day'));
+                                        $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа \"$value->stage_name\"",$data->id_client,$data->read_by_manager);
+                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа \"$value->stage_name\"");
+                                    }
+                                }
+                                $projects_mounts_model->save($project_id,$mount_data);
 							}
 							
 						}
@@ -1111,7 +1107,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					if(!$project_verdict) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 			}
 
-			$db = JFactory::getDbo();
+			/*$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$fields = array(
 				$db->quoteName('project_mounting_date'). ' = '.$db->quote($mounting_date)
@@ -1121,7 +1117,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			);
 			$query->update($db->quoteName('#__gm_ceiling_projects'))->set($fields)->where($conditions);
 			$db->setQuery($query);
-			$result = $db->execute();
+			$result = $db->execute();*/
 		}
 		catch(Exception $e)
         {
