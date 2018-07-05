@@ -1609,7 +1609,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $canvasesTemp = array();
 	        foreach ($canvases as $canvas) {
 	            $query = $db->getQuery(true);
-	            $query->select('c.name as Name, c.country as Country, c.width as Width, c.price as Price')
+	            $query->select('c.id as id, c.name as Name, c.country as Country, c.width as Width, c.price as Price')
 	                ->select('t.texture_title as Texture, cc.title as Color')
 	                ->from("`#__canvases` as c")
 	                ->join("LEFT", "`#__gm_ceiling_textures` as t on c.texture_id = t.id")
@@ -1619,6 +1619,7 @@ class Gm_ceilingModelProject extends JModelItem
 	            $CT = $db->loadObject();
 
 	            if ($CT->Color == "") $CT->Color = "Нет";
+                $CT->id = $canvas->id;
 	            $CT->Quad = floatval($canvas->quad);
 	            $CT->Price = floatval($CT->Price) * ((100 - intval($canvas->discount)) / 100);
 	            $CT->PriceM = ((floatval($CT->Price) * 100)/(100 - floatval($margin->canvas)));

@@ -486,14 +486,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 $components = $ComModel->Format($components, "Realization");
 
-                print_r($CanDP);
-
                 foreach ($components as $index => $component) {
                     $components[$index]->price = self::dealer_margin($component->price, 0, $ComDP[$index]);
                 }
 
                 foreach ($canvases as $index => $canvase) {
-                    $canvases[$index]->price = self::dealer_margin($canvases->price, 0, $CanDP[$index]);
+                    $canvases[$index]->price = $CanDP[$index]->price_itog;
 
                     $price = $canvases[$index]->price;
                     $sum = 0;
