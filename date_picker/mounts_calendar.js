@@ -119,7 +119,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 				    					_class = 'free-day';
 				    				}
 
-			    					if (p_id && p_info) {
+			    					if (p_id || p_info) {
 					    				html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
 					    			}
 					    			else {

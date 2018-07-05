@@ -79,7 +79,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 					    					_class = 'free-day';
 					    				}
 			    					}
-			    					if (p_id && p_info) {
+			    					if (p_id || p_info) {
 					    				html += '<td class="'+_class+'" data-time="'+time+'" data-calculator="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
 					    			}
 					    			else {
