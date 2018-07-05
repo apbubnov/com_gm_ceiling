@@ -820,6 +820,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             Calc = false,
             Customer = <?=json_encode($customer);?>,
             Goods = <?=json_encode($goods);?>;
+            console.log(Goods);
 
         function Init() {
             $(".Actions .Customer").width($(".Actions .Customer .ButtonButInp").outerWidth(true));
@@ -977,11 +978,15 @@ $server_name = $_SERVER['SERVER_NAME'];
                     tr = e.closest("tr");
 
                 if (s.page === "Canvas") {
+                    try {
+                        s.PriceM = Customer.dealer.CanDP[s.id];
+                    } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.canvas));
-                        s.Itog = Float(s.PriceM * s.Quad);
+                    }
+                    s.Itog = Float(s.PriceM * s.Quad);
                 } else {
                     try {
-                        s.PriceM = Customer.dealer.dealerPrice[s.id];
+                        s.PriceM = Customer.dealer.ComDP[s.id];
                     } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.component));
                     }
