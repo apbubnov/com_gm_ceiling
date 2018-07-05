@@ -56,17 +56,23 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$query2 = $db->getQuery(true);
 			$query3 = $db->getQuery(true);
 			
-			$query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, transport, distance, distance_col')
+			$query
+				->select('p.id,pm.date_time as project_mounting_date,p.read_by_mounter, p.project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.transport, p.distance, p.distance_col')
+				->from('`#__gm_ceiling_projects_mounts` as pm')
+				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
+				->where("pm.mounter_id = '$id' and pm.date_time between '$date1 00:00:00' and '$date2 23:59:59'")
+				->order('pm.date_time');
+			/*$query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, transport, distance, distance_col')
 				->from('#__gm_ceiling_projects')
 				->where("project_mounter = '$id' and project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'")
-				->order('project_mounting_date');
+				->order('project_mounting_date');*/
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 
 			$query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum')
 				->from('#__gm_ceiling_calculations as calculations')
-				->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
-				->where("projects.project_mounter = '$id' and projects.project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'");
+				->innerJoin('#__gm_ceiling_projects_mounts as pm ON calculations.project_id = pm.project_id')
+				->where("pm.mounter_id = '$id' and pm.date_time between '$date1 00:00:00' and '$date2 23:59:59'");
 			$db->setQuery($query2);
 			$items2 = $db->loadObjectList();
 
@@ -216,17 +222,22 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $query2 = $db->getQuery(true);
             $query4 = $db->getQuery(true);
             
-            $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, gm_calculator_note, dealer_calculator_note')
-                ->from('#__gm_ceiling_projects')
-                ->where("project_mounter = '$id' and `project_status` > 3 and project_mounting_date between '$date 00:00:00' and '$date 23:59:59'")
-                ->order('project_mounting_date');
+
+            $query
+ 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, p.project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note')
+                ->from('`#__gm_ceiling_projects_mounts` as pm')
+				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
+                ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
+                ->order('pm.date_time');
+
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
             $query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum, calculations.details')
                 ->from('#__gm_ceiling_calculations as calculations')
                 ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
-                ->where("projects.project_mounter = '$id' and projects.`project_status` > 3 and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59'");
+                ->innerJoin('#__gm_ceiling_projects_mounts as pm on calculations.project_id = pm.project_id')
+                ->where("pm.mounter_id = '$id' and projects.`project_status` > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'");
             $db->setQuery($query2);
             $items2 = $db->loadObjectList();
 

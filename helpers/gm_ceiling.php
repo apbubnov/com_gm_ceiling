@@ -1668,7 +1668,7 @@ class Gm_ceilingHelpersGm_ceiling
                     else
                         $calculation_data["need_mount"] = 1;
                 }
-                $project_id = $calculation_data->project_id;
+                $project_id = $calculation_data['project_id'];
             }
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($project_id)->id_client;

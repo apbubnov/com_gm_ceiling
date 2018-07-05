@@ -147,6 +147,12 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 .save_bnt{
     width:250px;
 }
+
+.btn_edit{
+    position: absolute;
+    top:0px;
+    right:0px;
+}
 </style>
  <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
     <div class="project_activation" style="display: none;">
@@ -171,27 +177,22 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     </div>
        <?= parent::getButtonBack();?>
         <h4 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h4>
-        <br>
-        <div class="center">
-            <div style="display: inline-block;">
-                <h4>
-                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
-                </h4>
-            </div>
-            <div style="display: inline-block; font-size: 16pt;">
-                <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
-                    <?php echo $this->item->client_id; ?>
-                </a>
-            </div>
-            <div style="display: inline-block;">
-                <button class="btn btn-sm btn-primary" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-md-6 no_padding">
                     <div>
-                        <table class="table_info">
+                        <table class="table_info" style="border: 1px solid #414099;border-radius: 35px">
+                             <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                            <tr>
+                                <th>
+                                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                                </th>
+                                <td>
+                                    <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
+                                        <?php echo $this->item->client_id; ?>
+                                    </a>
+                                </td>
+                            </tr>
                             <tr>
                                 <th>
                                     <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
@@ -203,7 +204,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                         $phone = [];
                                     }
                                 ?>
-                                <td colspan="2">
+                                <td>
                                     <?php
                                         foreach ($phone AS $contact) {
                                             echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
@@ -214,7 +215,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             </tr>
                             <tr>
                                 <th>Почта</th>
-                                <td colspan="2">
+                                <td>
                                     <?php
                                         foreach ($contact_email AS $contact) {
                                             echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
@@ -224,7 +225,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan = 3 style="text-align: center;">
+                                <td colspan = 2 style="text-align: center;">
                                     <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>    
                                 </td>
                             </tr>
@@ -240,7 +241,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                         <?=$this->item->project_info;?>
                                     </a>
                                 </td>
-                                <td>
+                                <td style="text-align: right;">
                                      <button class="btn btn-sm btn-primary" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
@@ -251,7 +252,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 <td>
                                     <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
                                 </td>
-                                <td>
+                                <td style="text-align: right;">
                                      <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
@@ -262,7 +263,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 <td>
                                     <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
                                 </td>
-                                <td>
+                                <td style="text-align: right;">
                                      <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                 </td>
                             </tr>

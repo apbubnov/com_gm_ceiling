@@ -300,5 +300,22 @@ class Gm_ceilingModelCallback extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function updateCallbackDate($new_date,$client_id){
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->update('#__gm_ceiling_callback')
+				->set("date_time = '$new_date'")
+				->where("client_id = '$data->id_client' and date_time like '$olddate%'");
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
 ?>

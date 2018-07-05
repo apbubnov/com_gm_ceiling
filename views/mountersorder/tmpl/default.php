@@ -27,6 +27,23 @@ if (!empty($calculation_ids)) {
     $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
 }
 
+ if (!empty($calculation_ids)) { 
+    $AllCalc = [];
+    foreach ($calculation_ids as $value) { 
+         $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
+         foreach ($DataOfProject["mounting_data"] as $val) { 
+                if (!array_key_exists($val["title"], $AllCalc)) {
+                    $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                } else {
+                    $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
+                    $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                    $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                }
+            } 
+    }
+}
+$AllSum = 0;
+
 ?>
 
 <?=parent::getButtonBack();?>
@@ -58,24 +75,6 @@ if (!empty($calculation_ids)) {
                         <td>Количество</td>
                         <td>Стоимость, ₽</td>
                     </tr>
-                    <?php if (!empty($calculation_ids)) { ?>
-                        <?php $AllCalc = [];?>
-                        <?php foreach ($calculation_ids as $value) { ?>
-                            <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);?>
-                            <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
-                                <?php
-                                    if (!array_key_exists($val["title"], $AllCalc)) {
-                                        $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
-                                    } else {
-                                        $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
-                                        $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
-                                        $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
-                                    }
-                                ?>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } ?>
-                    <?php $AllSum = 0;?>
                     <?php foreach ($AllCalc as $val) { ?>
                         <tr>
                             <td class="left"><?php echo $val["title"]; ?></td>

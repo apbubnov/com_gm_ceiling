@@ -25,6 +25,11 @@ $canEdit = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_
 $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
+foreach ($this->items as $i => $item){
+    if(!empty($item->project_mounter)){
+        $item->project_mounter = explode(',',$item->project_mounter);
+    }
+}
 
 ?>
 
@@ -86,11 +91,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                                 </td>
                                 <td class="center one-touch"><?= $item->address; ?></td>
                                 <td class="center one-touch"><?= $item->client_contacts; ?> <br> <?= $item->client_name; ?></td>
-                                <? if ($item->project_mounter) {
-                                    $mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-                                    $mounter = $mounters_model->getEmailMount($item->project_mounter);
+                                <?php if ($item->project_mounter) {
+                                    $mounter = "";
+                                    foreach ($item->project_mounter as $value) {
+                                        $mounter  .= JFactory::getUser($value)->name."; ";
+                                    }
                                 } ?>
-                                <td class="center one-touch"><?= $mounter->name; ?></td>
+                                <td class="center one-touch"><?php echo $mounter; ?></td>
                                 <?php if(in_array(14, $groups)){ ?>
                                     <td class="center one-touch delete"><button class="btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                 <?php } ?>
