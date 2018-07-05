@@ -64,13 +64,14 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
         else{
             $result = $price;
         }
-        return margin($result, $margin);
+        return ($margin > 0)?margin($result, $margin):$result;
     }
     catch(Exception $e)
     {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
  }
+
 function delete_string_characters($string)
 {
     try {
