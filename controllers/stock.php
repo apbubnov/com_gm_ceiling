@@ -404,7 +404,10 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             }*/
             $client = $customer->client;
             $dealer = $customer->dealer;
-            $margin = JFactory::getUser($dealer->id)->getDealerInfo();
+            $dealerObject = JFactory::getUser($dealer->id);
+            $margin = $dealerObject->getDealerInfo();
+            $ComDP = $dealerObject->getComponentsPrice();
+            $CanDP = $dealerObject->getCanvasesPrice();
 
             $info = (object) [];
             $info->customer = $customer;
@@ -440,6 +443,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     foreach ($canvases as $i => $c) $canvases[$i]->price = ceil($PriceCanvasUSD * $USD * 100)/100;
 
                 $components = $ComModel->Format($components, "Realization");
+
                 if (($customer->type != 4 || !empty($customer->client)) && !empty($margin))
                 {
                     foreach ($canvases as $i => $c) $canvases[$i]->price = ((floatval($c->price) * 100)/(100 - floatval($margin->dealer_canvases_margin)));
@@ -494,6 +498,11 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 if (empty($status) || floatval($status) == 5 || floatval($status) == 6)
                 {
+                    /*foreach ($components as $index => $component) {
+                        if (!empty($ComDP[$index]))
+                            $components[$index]->price = Gm_ceilingHelpersGm_ceiling::dealer_margin($component->price, 0, $ComDP[$index]);
+                    }*/
+
                     $out = Gm_ceilingHelpersPDF::Format(array_merge($canvases, $components));
                     $info->sum = $out->sum;
 
