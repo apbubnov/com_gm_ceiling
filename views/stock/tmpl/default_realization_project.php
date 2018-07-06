@@ -31,7 +31,11 @@ $data = Gm_ceilingHelpersGm_ceiling::getModel('Project')->getProjectForStock($nu
 $stocks = $model->getStocks();
 
 $goods = $data->goods;
+
 $customer = $data->customer;
+$DPC = JFactory::getUser($customer->dealer->id)->getCanvasesPrice();
+$DPG = JFactory::getUser($customer->dealer->id)->getComponentsPrice();
+
 $status = floatval($customer->Status);
 $statusNumber = $status;
 if ($status == 5) $status = "Укомплектован";
@@ -816,6 +820,8 @@ $server_name = $_SERVER['SERVER_NAME'];
         var Modal = {},
             Element = {},
             Scroll = {},
+            DPC = <?=json_encode($DPC);?>,
+            DPG = <?=json_encode($DPG);?>,
             Data = {margin: {canvas: 0, component: 0}},
             Calc = false,
             Customer = <?=json_encode($customer);?>,
@@ -977,11 +983,15 @@ $server_name = $_SERVER['SERVER_NAME'];
                     tr = e.closest("tr");
 
                 if (s.page === "Canvas") {
+                    try {
+                        s.PriceM = DPC[s.id].price_itog;
+                    } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.canvas));
-                        s.Itog = Float(s.PriceM * s.Quad);
+                    }
+                    s.Itog = Float(s.PriceM * s.Quad);
                 } else {
                     try {
-                        s.PriceM = Customer.dealer.dealerPrice[s.id];
+                        s.PriceM = DPG[s.id].price_itog;
                     } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.component));
                     }

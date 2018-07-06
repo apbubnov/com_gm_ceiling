@@ -1525,10 +1525,10 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db->setQuery($query);
 	        $project = $db->loadObject();
 
-	        $tempDealerPrice = JFactory::getUser()->getComponentsPrice($project->dealer);
-
 	        $customer->client = (object) ["id" => $project->client, "name" => $project->client_name, "phone" => $project->client_phone, "email" => $project->client_email];
-	        $customer->dealer = (object) ["id" => $project->dealer, "name" => $project->dealer_name, "phone" => $project->dealer_phone, "email" => $project->dealer_email, "dealerPrice" => []];
+
+	        $customer->dealer = (object) ["id" => $project->dealer, "name" => $project->dealer_name, "phone" => $project->dealer_phone, "email" => $project->dealer_email];
+
 	        $customer->Name = $project->client_name;
 	        $customer->Phone = $project->client_phone;
 	        $customer->Email = $project->client_email;
@@ -1554,10 +1554,10 @@ class Gm_ceilingModelProject extends JModelItem
 
 	        foreach ($calculations as $calculation) {
 	            if ($calculation->quad > 0) {
-                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "discount" => $discount);
+                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
 
                     if (floatval($calculation->square) > 0) {
-                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "discount" => 50);
+                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => 50);
                     }
                 }
 
@@ -1566,8 +1566,6 @@ class Gm_ceilingModelProject extends JModelItem
 	            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
 	            foreach ($componentsTemp as $v)
 	            {
-                    $customer->dealer->dealerPrice[$v->id] = dealer_margin($v->self_price, 0, $tempDealerPrice[$v->id]);
-
 	                if ($v->quantity != "0" && $v->id > 0)
 	                {
 	                    $component = (object) array();
@@ -1611,7 +1609,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $canvasesTemp = array();
 	        foreach ($canvases as $canvas) {
 	            $query = $db->getQuery(true);
-	            $query->select('c.name as Name, c.country as Country, c.width as Width, c.price as Price')
+	            $query->select('c.id as id, c.name as Name, c.country as Country, c.width as Width, c.price as Price')
 	                ->select('t.texture_title as Texture, cc.title as Color')
 	                ->from("`#__canvases` as c")
 	                ->join("LEFT", "`#__gm_ceiling_textures` as t on c.texture_id = t.id")
@@ -1621,11 +1619,14 @@ class Gm_ceilingModelProject extends JModelItem
 	            $CT = $db->loadObject();
 
 	            if ($CT->Color == "") $CT->Color = "Нет";
+                $CT->id = $canvas->id;
 	            $CT->Quad = floatval($canvas->quad);
 	            $CT->Price = floatval($CT->Price) * ((100 - intval($canvas->discount)) / 100);
 	            $CT->PriceM = ((floatval($CT->Price) * 100)/(100 - floatval($margin->canvas)));
 	            $CT->Itog = $CT->PriceM * $CT->Quad;
                 $CT->page = "Canvas";
+                $CT->discount = $canvas->discount;
+                $CT->square = $canvas->square;
 
                 $canvasesTemp[] = $CT;
 	        }

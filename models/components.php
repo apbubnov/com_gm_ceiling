@@ -679,7 +679,7 @@ class Gm_ceilingModelComponents extends JModelList
                 foreach ($data as $v)
                 {
                     $title_cond = "";
-                    if($v->Name != "Нет"){
+                    if($v->Name != "Нет" && $v->Name != ""){
                         $title_cond = "O.title = ".$db->quote($v->Name)." and";
                     }
                     
