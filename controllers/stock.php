@@ -362,12 +362,53 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $email = $jinput->get('email','','STRING');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('counterparty');
             die(json_encode($model->addCounterpartyForDealer($user_id,$name,$phone,$email)));
-        } 
+        }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
+
+    public static function margin($value, $margin) {
+        try {
+            if($margin == 100){
+                $margin = 99;
+            }
+            return ($value * 100 / (100 - $margin));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public static function dealer_margin($price, $margin, $objectDealerPrice) {
+        try {
+            $result = 0;
+            if (!empty($objectDealerPrice)) {
+                $objectDealerPrice->value = floatval($objectDealerPrice->value);
+                $objectDealerPrice->price = floatval($objectDealerPrice->price);
+                switch ($objectDealerPrice->type)
+                {
+                    case 0: $result = $price; break;
+                    case 1: $result = $objectDealerPrice->price; break;
+                    case 2: $result = $price + $objectDealerPrice->value; break;
+                    case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
+                    case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
+                    case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
+                }
+            }
+            else{
+                $result = $price;
+            }
+            return ($margin > 0)? self::margin($result, $margin):$result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     public function Realization()
     {
         try {
@@ -395,7 +436,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $status = $_POST["status"];
             $Counterparty = $this->getModel('Counterparty', 'Gm_ceilingModel');
             $customer->dealer->counterparty = empty($Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id) ? 1 : $Counterparty->getCounterparty(array("user_id" => $customer->dealer->id))[0]->id;
-           
+
             if (empty($customer->dealer->counterparty))
                 die(json_encode((object) ["status" => "error", "error" => "У дилера закончился срок договора!\nРеализация не возможна!"]));
             /*Не испоблзутеся*/
@@ -404,7 +445,10 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             }*/
             $client = $customer->client;
             $dealer = $customer->dealer;
-            $margin = JFactory::getUser($dealer->id)->getDealerInfo();
+            $dealerObject = JFactory::getUser($dealer->id);
+            $margin = $dealerObject->getDealerInfo();
+            $ComDP = $dealerObject->getComponentsPrice();
+            $CanDP = $dealerObject->getCanvasesPrice();
 
             $info = (object) [];
             $info->customer = $customer;
@@ -431,6 +475,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 if ($good->page == "Canvas") $canvases[] = $good;
                 else $components[] = $good;
             }
+
             $CanModel = $this->getModel('Canvases', 'Gm_ceilingModel');
             $ComModel = $this->getModel('Components', 'Gm_ceilingModel');
 
@@ -440,10 +485,23 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     foreach ($canvases as $i => $c) $canvases[$i]->price = ceil($PriceCanvasUSD * $USD * 100)/100;
 
                 $components = $ComModel->Format($components, "Realization");
-                if (($customer->type != 4 || !empty($customer->client)) && !empty($margin))
-                {
-                    foreach ($canvases as $i => $c) $canvases[$i]->price = ((floatval($c->price) * 100)/(100 - floatval($margin->dealer_canvases_margin)));
-                    foreach ($components as $i => $c) $components[$i]->price = ((floatval($c->price) * 100)/(100 - floatval($margin->dealer_components_margin)));
+
+                foreach ($components as $index => $component) {
+                    $components[$index]->price = self::dealer_margin($component->price, 0, $ComDP[$index]);
+                }
+
+                foreach ($canvases as $index => $canvase) {
+                    $canvases[$index]->price = $CanDP[$index]->price_itog;
+
+                    $price = $canvases[$index]->price;
+                    $sum = 0;
+                    $discount_sum = 0;
+                    foreach ($canvase->discount as $i => $v) {
+                        $sum += $v * $price;
+                        $discount_price = ($i == 100)?$price:$price * ((100 - $i) / 100);
+                        $discount_sum += $v * $discount_price;
+                    }
+                    $canvases[$index]->price = $discount_sum * $price / $sum;
                 }
 
                 if (count($components) + count($canvases) <= 0)
@@ -494,7 +552,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 if (empty($status) || floatval($status) == 5 || floatval($status) == 6)
                 {
-                    $out = Gm_ceilingHelpersPDF::Format(array_merge($canvases, $components));
+                    $allGoods = array_merge($canvases, $components);
+                    $out = Gm_ceilingHelpersPDF::Format($allGoods);
                     $info->sum = $out->sum;
 
                     $href = array();

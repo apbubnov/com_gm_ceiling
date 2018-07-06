@@ -698,16 +698,24 @@ class Gm_ceilingModelCanvases extends JModelList
 
                     if (empty($good)) throw new Exception("Полотно: $v->Country $v->Name $v->Width :: Т: $v->Texture Ц: $v->Color - НЕ НАЙДЕНО!");
 
+
                     $good->quad = floatval($v->Quad);
                     $good->unit = "м²";
                     $good->code = "055";
 
-                    if (empty($new_data[$good->id]))
-                    {
-                        $good->quad = array($good->quad);
+                    if (!empty($new_data[$good->id])) {
+                        $new_data[$good->id]->quad[] = $good->quad;
+
+                        if (empty($new_data[$good->id]->discount[$v->discount]))
+                            $new_data[$good->id]->discount[$v->discount] = $good->quad;
+                        else
+                            $new_data[$good->id]->discount[$v->discount] += $good->quad;
+                    }
+                    else {
+                        $good->discount = [$v->discount => $good->quad];
+                        $good->quad = [$good->quad];
                         $new_data[$good->id] = $good;
                     }
-                    else $new_data[$good->id]->quad[] = $good->quad;
                 }
             }
             return $new_data;

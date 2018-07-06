@@ -47,6 +47,7 @@ class Gm_ceilingHelpersPDF {
 
         $i = 1;
         $sum = 0;
+
         foreach ($data as $d) {
             if (!empty($d->rollers))
             {

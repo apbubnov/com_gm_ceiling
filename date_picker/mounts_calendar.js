@@ -109,17 +109,32 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			    					var _class, p_id = false, p_info = false;
 		    						var ymdch = data_array[y][m][d][c][h];
 		    						if (ymdch) {
-			    						_class = 'busy-day';
-			    						if (ymdch.id != null && ymdch.info != null) {
-			    							p_id = ymdch.id;
-			    							p_info = ymdch.info;
-			    						}
+		    							var unlock = false;
+		    							for (var i = stages.length; i--;) {
+		    								if (stages[i].time == time) {
+		    									unlock = true;
+		    									data_array[y][m][d][c][h] = undefined;
+		    									delete data_array[y][m][d][c][h];
+		    									break;
+		    								}
+		    							}
+		    							if (unlock) {
+		    								_class = 'free-day'
+		    							}
+		    							else {
+		    								_class = 'busy-day';
+				    						if (ymdch.id != null && ymdch.info != null) {
+				    							p_id = ymdch.id;
+				    							p_info = ymdch.info;
+				    						}
+		    							}
+			    						
 				    				}
 				    				else {
 				    					_class = 'free-day';
 				    				}
 
-			    					if (p_id && p_info) {
+			    					if (p_id || p_info) {
 					    				html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'" data-pid="'+p_id+'" data-info="'+p_info+'"></td>';
 					    			}
 					    			else {

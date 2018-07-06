@@ -1001,7 +1001,8 @@ class Gm_ceilingModelProjects extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select('`u`.`id` AS `project_mounter`,
-                    GROUP_CONCAT(DISTINCT CONCAT(`m`.`date_time`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(ifnull(`p`.`project_info`,\'Отсутствует\'), \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `mount_dates`,
+
+                    GROUP_CONCAT(DISTINCT CONCAT(`m`.`date_time`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(ifnull(`p`.`project_info`,\'\'), \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `mount_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
             $query->from('`#__users` AS `u`');
             $query->leftJoin('`#__gm_ceiling_projects_mounts` AS `m` ON `m`.`mounter_id` = `u`.`id`');

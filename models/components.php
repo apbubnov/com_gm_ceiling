@@ -679,7 +679,7 @@ class Gm_ceilingModelComponents extends JModelList
                 foreach ($data as $v)
                 {
                     $title_cond = "";
-                    if($v->Name != "Нет"){
+                    if($v->Name != "Нет" && $v->Name != ""){
                         $title_cond = "O.title = ".$db->quote($v->Name)." and";
                     }
                     
@@ -690,6 +690,7 @@ class Gm_ceilingModelComponents extends JModelList
                         ->where($title_cond." C.title = ".$db->quote($v->Type)." and C.unit = ".$db->quote($v->Unit));
                     $db->setQuery($query);
                     $good = $db->loadObject();
+
                     if ($page == "Receipt") $good->price = $v->Price;
 
                     if (empty($good)) throw new Exception("Компонент: $v->Type $v->Name - НЕ НАЙДЕН!");
