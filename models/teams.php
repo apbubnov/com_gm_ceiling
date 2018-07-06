@@ -81,17 +81,18 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$whereAll = "";
 			foreach ($masID as $value) {
 				if ($whereAll == "") {
-					$whereAll .= '(project_mounter = '.$value;
+					$whereAll .= '(m.mounter_id = '.$value;
 				} else {
-					$whereAll .= ' or project_mounter = '.$value;				
+					$whereAll .= ' or m.mounter_id = '.$value;				
 				}
 			}
-			$whereAll .= ") and project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'";
+			$whereAll .= ") and m.date_time between '$date1 00:00:00' and '$date2 23:59:59'";
 			
-			$query->select('project_mounter, project_mounting_date, read_by_mounter, project_status')
-				->from('#__gm_ceiling_projects')
+			$query->select('m.mounter_id AS project_mounter, m.date_time AS project_mounting_date, p.read_by_mounter, p.project_status')
+				->from('#__gm_ceiling_projects AS p')
+				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = p.id')
 				->where("$whereAll")
-				->order('project_mounting_date');
+				->order('m.date_time');
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
@@ -148,10 +149,11 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->from("#__gm_ceiling_calculations as calculations")
 				->where("calculations.project_id = projects.id");
 
-		 	$query->select("DISTINCT projects.id, projects.project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary, projects.$note as note, projects.read_by_mounter, projects.project_status")
+		 	$query->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary, projects.$note as note, projects.read_by_mounter, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
-				->where("projects.project_mounter = '$id' and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 12, 17, 19)")
-				->order('projects.project_mounting_date');
+				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = projects.id')
+				->where("m.mounter_id = '$id' and m.date_time between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 12, 17, 19)")
+				->order('m.date_time');
 			$db->setQuery($query);
 			$items = $db->loadObjectList(); 
 
@@ -358,9 +360,10 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select("count(id) as count")
-				->from("#__gm_ceiling_projects")
-				->where("project_mounter = '$id' and project_mounting_date between '$date1' and '$date2'");
+			$query->select("count(p.id) as count")
+				->from("#__gm_ceiling_projects AS p")
+				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = p.id')
+				->where("m.mounter_id = '$id' and m.date_time between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObject();
 			
