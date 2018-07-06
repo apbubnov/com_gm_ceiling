@@ -77,15 +77,12 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<td class="center one-touch">
 						<?php echo $item->id; ?>
 					</td>
-<!--					<td class="center one-touch">-->
-<!--						--><?php //echo $item->project_status; ?>
-<!--					</td>-->
 					<td class="center one-touch">
-						<?php if($item->project_mounting_date == "0000-00-00 00:00:00") { ?>
+						<?php if(empty($item->project_mounting_date)) { ?>
 							-
 						<?php } else { ?>
-							<?php $jdate = new JDate($item->project_mounting_date); ?>
-							<?php echo $jdate->format('d.m.Y H:i'); ?>
+							<?php echo str_replace(',', '<br>', $item->project_mounting_date)   ?>
+							
 						<?php } ?>
 					</td>
 					<td class="center one-touch">

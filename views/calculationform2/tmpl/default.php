@@ -1024,6 +1024,7 @@
         };
         
         function select_colors(){
+            console.log(1);
             let colors = [];
             canvases_data_of_selected_texture = [];
 
@@ -1094,7 +1095,7 @@
             }
             let width_polotna = [];
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                if (value.manufacturer_id === select_proizv && value.color_id === select_color)
+                if (value.manufacturer_id === select_proizv && value.color_id === select_color )
                 {
                     let width = Math.round(value.width * 100);
     
@@ -1389,13 +1390,13 @@
             let n2_options = jQuery("#jform_n2 option");
             if(canvas){
                 add_select_attr_to_option(n2_options,canvas.texture_id);
-                select_colors();
+                let proizv_options = jQuery("#jform_proizv option");
+                add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
                 if(canvas.color_id){
                     jQuery("#jform_color_switch-lbl").show();
                     jQuery("#color_switch").show();
                 }
-                let proizv_options = jQuery("#jform_proizv option");
-                add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
+                select_widths();
                 canvas.filled = true;
             } 
             if(calculation.manager_note){

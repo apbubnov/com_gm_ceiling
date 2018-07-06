@@ -32,7 +32,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-
+$projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
@@ -113,6 +113,41 @@ $code = $code[1];
 
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
+$json_mount = $this->item->mount_data;
+if(!empty($this->item->mount_data)){
+    $mount_types = $projects_mounts_model->get_mount_types(); 
+    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    foreach ($this->item->mount_data as $value) {
+        $value->stage_name = $mount_types[$value->stage];
+    }
+    
+}
+
+$all_advt = $model_api_phones->getAdvt();
+if ($this->item->api_phone_id == 10) {
+    $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
+    if (!empty($repeat_advt->advt_id)) {
+        $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
+    }
+    else {
+        $reklama = $model_api_phones->getDataById(10);
+    }
+} else {
+    if(!empty($this->item->api_phone_id)){
+         $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+    }
+   
+}
+
+$advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description; 
+
+ if (!empty($calculation_total)) {
+    $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100;
+} else {
+    $skidka = 0;
+}
+ $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+
 ?>
 <style>
 .act_btn{
@@ -124,9 +159,9 @@ $status_attr = "data-status = \"$status\"";
 }
 .btn_edit{
     position: absolute;
-    top:0px;
-    right:0px;
+    right:0;
 }
+
 </style>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -143,22 +178,22 @@ $status_attr = "data-status = \"$status\"";
     <input name="data_change" value="0" type="hidden">
     <input name="data_delete" value="0" type="hidden">
     <input id="mounting_date" name="mounting_date" type='hidden'>
+    <input id="mount" name="mount" type='hidden' value=<?php echo $json_mount ?>>
     <input id="jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
     <input id="project_mounter" name="project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-    <input name = "project_new_calc_date" id = "project_new_calc_date" type = "hidden">
-    <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
-    <input name = "project_gauger" id = "project_gauger" type = "hidden">
     <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
+    <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
+    <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>
 </div>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
             <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                 <div>
-                    <table class="table_info" style="border: 1px solid #414099;border-radius: 35px">
+                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
                          <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                         <tr>
                             <th>
@@ -208,7 +243,8 @@ $status_attr = "data-status = \"$status\"";
                         </tr>
                     </table>
                     <br>
-                    <table class="table_info">
+                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
+                         <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                         <tr>
                             <th>
                                 <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
@@ -217,11 +253,40 @@ $status_attr = "data-status = \"$status\"";
                                 <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
                                     <?=$this->item->project_info;?>
                                 </a>
-                            </td>
-                            <td style="text-align: right;">
-                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                            <td>
+                                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                    -
+                                <?php } else { ?>
+                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
+                                <?php } ?>
                             </td>
                         </tr>
+                        <?php if(!empty($this->item->project_calculator)):?>
+                            <tr>
+                                <th>Замерщик</th>
+                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
+                            </tr>
+                        <?php endif;?>
+
+                    </table>
+                    <table class="table_info">
+                        <?php if(!empty($this->item->mount_data)):?>
+                            <tr>
+                                <th colspan="3" style="text-align: center;">Монтаж</th>
+                            </tr>
+                            <?php foreach ($this->item->mount_data as $value) { ?>                          
+                                <tr>
+                                    <th><?php echo $value->time;?></th>
+                                    <td><?php echo $value->stage_name;?></td>
+                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                </tr>
+                            <?php }?>
+                        <?php endif;?>
                         <tr>
                             <th>
                                 Скидка
@@ -243,30 +308,6 @@ $status_attr = "data-status = \"$status\"";
                             <td style="text-align: right;">
                                  <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                             </td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td>
-                                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php if(!empty($this->item->project_calculator)):?>
-                            <tr>
-                                <th>Замерщик</th>
-                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                            </tr>
-                        <?php endif;?>
-                        <?php if(!empty($this->item->project_mounter)):?>
-                            <tr>
-                                <th>Монтажная бригада</th>
-                                <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
-                            </tr>
-                        <?php endif;?>
                         <tr>
                             <th>Примечание менеджера</th>
                             <td>
@@ -295,92 +336,41 @@ $status_attr = "data-status = \"$status\"";
     </div>
     <!-- расчеты для проекта -->
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-    <hr>
-        <h4>Добавить звонок</h4>
-        <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
-        <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
-        <label><b>Дата: </b></label><br>
-        <div id="calendar-wrapper"></div>
-        <script>
-            new niceDatePicker({
-                dom:document.getElementById('calendar-wrapper'),
-                mode:'en',
-                onClickDate:function(date){
-                    document.getElementById('call_date').value = date;
-                }
-            });
-        </script>
-        <p><label><b>Время: </b></label><br><input type="time" id="call_time"></p>
-        <input name="call_date" id="call_date" type="hidden">
-        <input name="call_comment" id="call_comment" placeholder="Введите примечание">
-        <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
-    <hr>
-    <label>Реклама: </label>
-    <?php
-        if (empty($this->item->api_phone_id)) {
-            $all_advt = $model_api_phones->getAdvt();
-    ?>
-        <select id="advt_choose">
-            <option value="0">Выберите рекламу</option>
-            <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
-                <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-            <?php } ?>
-        </select>
-        <button class="btn btn-primary" id="save_advt" type="button">Ок</button>
-        <hr>
-        <div id="new_advt_div">
-            <label>Добавить новую рекламу</label><br>
-            <input id="new_advt_name" placeholder="Название рекламы">
-            <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
-        </div>
-    <?php
-        } else {
-            if ($this->item->api_phone_id == 10) {
-                $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-                if (!empty($repeat_advt->advt_id)) {
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                }
-                else {
-                    $reklama = $model_api_phones->getDataById(10);
-                }
-            } else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-            }
-    ?>
-        <label><?php echo $reklama->number.' '.$reklama->name.' '.$reklama->description; ?></label>
-    <?php } ?>
-    <hr>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
-    <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
         <?php if ($this->item->project_verdict == 0) { ?>
             <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                 <div class="row center">
-                    <div class="col-lg-3">
-                        <a class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project">
-                            <?php if($this->item->project_status == 0){
-                                echo "Записать на замер";
-                                }
-                            else { echo "Договор"; } ?>
-                        </a>
+                    <div class="col-md-6">
+                        <p>
+                            <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project" type="button">Договор</button>
+                        </p>
+                        <p>
+                            <button id="simple_save" class="btn btn-primary act_btn"  <?php echo $status_attr;?> type="button">Сохранить</button>
+                        </p>
                     </div>
-                    <div class="col-lg-3">
-                        <button id="refuse" class="btn btn-primary act_btn"  <?php echo $status_attr;?> type="submit">Сохранить</button>
+                    <div class="col-md-6">
+                        <p>
+                            <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
+                        </p>
+                        <p>
+                            <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
+                        </p>
                     </div>
-                    <div class="col-lg-3">
-                         <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
-                    </div>
-                </div>
+                
             </div>
         <?php } ?>
         <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
             <?php if ($user->dealer_type != 2) { ?>
                 <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                 </div>
-                <hr>
+                 <div class="row center" id = "ready_wrapper">
+                    <h4>Назначить дату монтажа</h4>
+                    <div id="calendar_mount" align="center"></div>
+                </div>
                 <div class="row center" id = "ready_wrapper">
                     <h4>Назначить дату готовности полотен</h4>
-                        <input type="datetime-local" id="date_canvas_ready">
-                        <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                    <input type="datetime-local" id="date_canvas_ready">
+                    <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
                 </div>
                 <hr>
                 <div class = "container" style="padding-left: 0px;">
@@ -413,21 +403,20 @@ $status_attr = "data-status = \"$status\"";
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </p>
                 <div class="row center">
-                    <div class="col-xl-3" style="padding-top: 25px;">
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                     </div>
-                    <div class="col-xl-3" style="padding-top: 25px;">
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                     </div>
-                    <div class="col-xl-3" style="padding-top: 25px;">
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                     </div>
                 </div>
             <?php } ?>
         </div>
-    <?php } ?>
+ 
     <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-</form>
 
     <div class="modal_window_container" id="mw_container">
         <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -440,91 +429,184 @@ $status_attr = "data-status = \"$status\"";
             </p>
             <p><button class = "btn btn-primary">Запустить</button></p>
         </div>
-        <div id="change_info_win" class="modal_window">
-            <p><strong>Изменение данных</strong></p>
-            <br>
-            <p>ФИО клиента: <span class="star">&nbsp;*</span> <?php echo $this->item->client_id; ?></p>
-            <p>
+        <div id="mw_cl_info" class="modal_window">
+            <h4>Изменение данных клиента</h4>
+                <label> ФИО клиента: </label>
                 <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
-            </p>
-            <p>Телефон клиента: <span class="star">&nbsp;*</span></p>
+            <table align="center" id="client_phones">
+                <thead>
+                    <th>
+                        Телефоны клиента
+                    </th>
+                    <th>
+                        <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                    </th>
+                </thead>
+                <tbody>
+                    <?php foreach ($phone as $value) { ?>
+                        <tr>
+                            <td>
+                                 <input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <table align="center" id="client_phones">
+                <thead>
+                    <th>
+                        Эл.почта клиента
+                    </th>
+                    <th>
+                        <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                    </th>
+                </thead>
+                <tbody>
+                    <?php foreach ($contact_email as $value) { ?>
+                        <tr>
+                            <td>
+                                 <input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента" type="text" value=<?php echo $value->contact;?>>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <button id = "update_cl_info" class="btn btn-primary">Сохранить</button>
+        </div>
+        <div id="mw_rec_to_msr" class="modal_window">
+            <div class="row">
+                <div class="col-md-6">
+                    <label><strong>Адрес замера</strong></label>
+                    <table align="center">
+                        <tr>
+                            <td>Улица:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Дом:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Корпус:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Квартира:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_apartment" id="rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Подъезд:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Этаж:</td>
+                            <td style="padding-bottom: 10px;">
+                                <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Код:</td>
+                            <td style="padding-bottom: 10px;">                
+                                <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <label><strong>Время замера</strong></label>
+                    <div id = "measures_calendar" align="center"></div>
+                    <input  id="measure_info" readonly>
+                </div>
+            </div>
+            <button  id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
+        </div>
+        <div id="mw_measures_calendar" class="modal_window"></div>
+        <div id="mw_mounts_calendar" class="modal_window"></div>
+        <div id="mw_add_call" class="modal_window" >
+            <h4>Добавить звонок</h4>
+            <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
+            <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
+            <label><b>Дата: </b></label><br>
+            <div id="calendar-wrapper" align="center"></div>
+            <script>
+                new niceDatePicker({
+                    dom:document.getElementById('calendar-wrapper'),
+                    mode:'en',
+                    onClickDate:function(date){
+                        document.getElementById('call_date').value = date;
+                    }
+                });
+            </script>
+            <p><label><b>Время: </b></label><br><input type="time" id="call_time"></p>
+            <p><input name="call_date" id="call_date" type="hidden"></p>
+            <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+            <P><button class="btn btn-primary" id="add_call" type="button">Сохранить</button></p>
+        </div>
+        <div id="mw_discount" class="modal_window">
             <p>
-                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
+                <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
+                <input name="new_discount" id="jform_new_discount" placeholder="%" min="0" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
             </p>
-            <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
             <p>
-                <table style="width: 100%;">
-                    <tr>
-                        <td>Улица:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Дом:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Корпус:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Квартира:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Подъезд:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Этаж:</td>
-                        <td style="padding-bottom: 10px;">
-                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Код:</td>
-                        <td style="padding-bottom: 10px;">                
-                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
-                        </td>
-                    </tr>
-                    <tr><td>Дата и время замера:</td>
-                        <td><input type="text" id="measure_info" value="" readonly=""></td>
-                    </tr>
-                </table>
-            </p>
-            <?php
-                if ($this->item->project_calculation_date == "0000-00-00 00:00:00") {
-                    $measure_date = '-';
-                }
-                else {
-                    $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date));
-                    $measure_date = $jdate->format('d.m.Y H:i');
-                }
-                $measurer = JFactory::getUser($this->item->project_calculator)->name;
-            ?>
-            <div id="measures_calendar"></div>
-            <p>
-                <button type="submit" id="accept_changes" class="btn btn btn-primary">Сохранить клиента</button>
+                <button type="button" id="update_discount" class="btn btn-primary">Сохранить</button>
             </p>
         </div>
+        <div id="mw_advt" class="modal_window">
+            <h4>Изменение/добавление рекламы</h4>
+            <label>Выберите или добавьте новую рекламу</label>
+            <div class="row">  
+                <div class="col-xs-6 col-md-6">
+                    <p>
+                        <label><strong>Выбрать:</strong></label>
+                    </p>
+                    <select id="advt_choose">
+                        <option value="0">Выберите рекламу</option>
+                        <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
+                            <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="col-xs-6 col-md-6">
+                     <p>
+                        <label><strong>Добавить:</strong></label>
+                    </p>
+                     <div id="new_advt_div">
+                        <p><input id="new_advt_name" placeholder="Название рекламы"></p>
+                        <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
+        </div>
     </div>
-
+    </div>
+</form>
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
     <script type="text/javascript">
-        init_measure_calendar('measures_calendar','project_new_calc_date','project_gauger','modal_window_measures_calendar',[], 'measure_info');
+    init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',[], 'measure_info');
+    init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
+
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
@@ -535,9 +617,14 @@ $status_attr = "data-status = \"$status\"";
         // закрытие окон модальных
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var div1 = jQuery("#modal_window_by_email");
-            var div2 = jQuery("#change_info_win");
-            var div3 = jQuery("#modal_window_measures_calendar");
-            var div4 = jQuery("#modal_window_mounts_calendar");
+            var div2 = jQuery("#mw_rec_to_msr");
+            var div3 = jQuery("#mw_discount");
+            var div4 = jQuery("#mw_add_call");
+            var div5 = jQuery("#mw_advt");
+            var div6 = jQuery("#mw_address");
+            var div7 = jQuery("#mw_cl_info");
+            var div8 = jQuery("#mw_mounts_calendar");
+            var div9 = jQuery("#mw_measures_calendar");
             if (!div1.is(e.target) // если клик был не по нашему блоку
                 && div1.has(e.target).length === 0
                 && !div2.is(e.target)
@@ -545,13 +632,32 @@ $status_attr = "data-status = \"$status\"";
                 && !div3.is(e.target)
                 && div3.has(e.target).length === 0
                 && !div4.is(e.target)
-                && div4.has(e.target).length === 0) { // и не по его дочерним элементам
+                && div4.has(e.target).length === 0
+                && !div5.is(e.target)
+                && div5.has(e.target).length === 0
+                && !div6.is(e.target)
+                && div6.has(e.target).length === 0
+                && !div7.is(e.target)
+                && div7.has(e.target).length === 0
+                && !div8.is(e.target)
+                && div8.has(e.target).length === 0
+                && !div9.is(e.target)
+                && div9.has(e.target).length === 0) { // и не по его дочерним элементам
                 jQuery("#close_mw").hide();
                 jQuery("#mw_container").hide();
-                jQuery("#modal_window_by_email").hide();
-                jQuery("#change_info_win").hide();
+                div1.hide();
+                div2.hide();
+                div3.hide();
+                div4.hide();
+                div5.hide();
+                div6.hide();
+                div7.hide();
+                div8.hide();
+                div9.hide();
             }
         });
+
+            
 
         jQuery(document).ready(function () {
             var client_id = "<?php echo $this->item->id_client;?>";
@@ -567,6 +673,35 @@ $status_attr = "data-status = \"$status\"";
                 show_comments();
             }
 
+            jQuery("#change_data").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_cl_info").show();
+            });
+
+            jQuery("#edit_discount").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_discount").show();
+            });
+
+            jQuery("#assign_call").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_add_call").show();
+            });
+
+            jQuery("#edit_advt").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_advt").show();
+            });
+
+            jQuery("#edit_address").click(function(){
+                jQuery("#close_mw").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_rec_to_msr").show();
+            });
             // для истории и добавления комментария
             function formatDate(date) {
 
@@ -754,20 +889,9 @@ $status_attr = "data-status = \"$status\"";
                 jQuery("input[name='project_verdict']").val(1);
             });
             jQuery("#save").click(function() {
-                if(jQuery("input[name='project_mounter']").val() === "") {
-                    noty({
-                        theme: 'relax',
-                        layout: 'topCenter',
-                        maxVisible: 5,
-                        type: "warning",
-                        text: "Выберите монтажную бригаду!"
-                    });
-                }
-                else {
-                    jQuery("input[name='project_status']").val(5);
-                    jQuery("input[name='project_verdict']").val(1);
-                    document.getElementById('form-client').submit();
-                }
+                jQuery("input[name='project_status']").val(5);
+                jQuery("input[name='project_verdict']").val(1);
+                document.getElementById('form-client').submit();
             });
             $tmp_accept = 0; $tmp_refuse = 0;
 
@@ -1006,6 +1130,8 @@ $status_attr = "data-status = \"$status\"";
             if (document.getElementById('refuse_cooperate')){
                 document.getElementById('refuse_cooperate').onclick = click_on_refuse_cooperate;
             }
+
+
             function click_on_refuse_cooperate()
             {
                 noty({
@@ -1033,6 +1159,64 @@ $status_attr = "data-status = \"$status\"";
                                             maxVisible: 5,
                                             type: "success",
                                             text: "Проект переведен в отказ от сотрудничества"
+                                        });
+                                        setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
+                                    },
+                                    error: function (data) {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Ошибка сервера"
+                                        });
+                                    }
+                                });
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                                $noty.close();
+                            }
+                        }
+                    ]
+                });
+            };
+
+            if (document.getElementById('refuse')){
+                document.getElementById('refuse').onclick = click_on_refuse;
+            }
+
+
+            function click_on_refuse()
+            {
+                noty({
+                    layout: 'topCenter',
+                    type: 'default',
+                    modal: true,
+                    text: 'Перевести проект в статус "отказ от договора"?',
+                    killer: true,
+                    buttons: [
+                        {
+                            addClass: 'btn btn-success', text: 'Ок', onClick: function ($noty) {
+                                jQuery.ajax({
+                                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
+                                    data: {
+                                        project_id: project_id,
+                                        status: 3
+                                    },
+                                    dataType: "json",
+                                    async: true,
+                                    success: function (data) {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "success",
+                                            text: "Проект переведен в отказ от договора"
                                         });
                                         setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
                                     },
@@ -1164,8 +1348,3 @@ $status_attr = "data-status = \"$status\"";
             }, 75);
         }
     </script>
-<?php
-    else:
-        echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
-    endif;
-?>

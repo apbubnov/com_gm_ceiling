@@ -1016,7 +1016,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $return = $db->execute();
 
 			$query = $db->getQuery(true);
-			$query ->select("id, client_id, project_info, project_mounting_date, project_note, 	gm_calculator_note")
+			$query ->select("id, client_id, project_info, project_note, 	gm_calculator_note")
 				->from('`#__gm_ceiling_projects`')
 	            ->where('id = ' . $id);
             $db->setQuery($query);
