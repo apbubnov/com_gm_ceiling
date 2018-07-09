@@ -216,20 +216,19 @@
                 <th></th>
             </tr>
         </thead>
-        <?php foreach($projects as $item):?>
+        <?php foreach($projects as $item): ?>
             <tr class="row_project" data-proj_id="<?php echo $item->id; ?>" data-href="
                 <?php
                     if($user->dealer_type == 1) {
-                        if ($item->status == "Просчет" || $item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) {
+                        if ($item->project_status == 0) {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=precalc&id='.(int) $item->id);
+                        } elseif ($item->project_status == 1 || $item->project_status == 4) {
                             echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                        } elseif ($item->project_status == 3 || $item->project_status == 2 || $item->project_status == 15) {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=refused&id='.(int) $item->id);
                         } else {
                             echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
-                        } 
-                        /* elseif ($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") {
-                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
-                        } else {
-                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id);
-                        } */
+                        }
                     } else {
                         echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id);
                     }
@@ -567,7 +566,7 @@
                         echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=';";
                     }
                     else{
-                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=';";
+                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=precalc&calc_id=';";
                     }
                     ?>
                     location.href = url+data;

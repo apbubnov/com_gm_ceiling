@@ -296,7 +296,7 @@ $rest = -($total_sum) - $contributed;
                 },
                 success: function(data){
                     console.log(data);
-                    location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=${data}&precalculation=1`;
+                    location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=precalc&calc_id=${data}&precalculation=1`;
                 },
                 error: function(data){
                     var n = noty({
