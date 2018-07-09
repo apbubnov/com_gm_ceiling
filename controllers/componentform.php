@@ -170,9 +170,9 @@ class Gm_ceilingControllerComponentForm extends JControllerForm
 	            $result = $model->getComponents($filter);
                 $user = JFactory::getUser($filter['user']['dealer']['id']);
                 $user->getComponentsPrice();
-                foreach ($result as $key => $item) {
+                foreach ($result as $key => $item) if(!empty($item->Price)) {
                     $result[$key]->Price =
-                        Gm_ceilingHelpersGm_ceiling::dealer_margin($result[$key]->Price, 0, $user->CComponentsPrice[$result[$key]->id]);
+                        Gm_ceilingHelpersGm_ceiling::dealer_margin($result[$key]->Price, 0, $user->ComponentsPrice[$result[$key]->id]);
                 }
 	            echo json_encode($result);
 	        }
