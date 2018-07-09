@@ -393,30 +393,19 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     </a>
                 <?php } ?>
             </div>
-            <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
         </div>
     </form>
 <?php endif; ?>
 
-<hr>
-<div id="calendar2_test"></div>
-<input type="text" id="mount1">
-<div id="calendar2_test2"></div>
-<input type="text" id="mount2">
-
 <div class="modal_window_container" id="mw_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_measures_calendar"></div>
-    <div class="modal_window" id="modal_window_mounts_calendar"></div>
 </div>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
-<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
     init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','modal_window_measures_calendar',['close_mw','mw_container'], 'measure_info');
-    //init_measure_calendar('calendar_test2','calculation_time2','calculator_id2','modal_window_measures_calendar',['close_mw','mw_container']);
-    init_mount_calendar('calendar2_test','mount1','modal_window_mounts_calendar',['close_mw','mw_container']);
-    init_mount_calendar('calendar2_test2','mount2','modal_window_mounts_calendar',['close_mw','mw_container']);
+
     var $ = jQuery,
         Data = {};
 
