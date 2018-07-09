@@ -554,6 +554,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 {
                     $allGoods = array_merge($canvases, $components);
                     $out = Gm_ceilingHelpersPDF::Format($allGoods);
+
                     $info->sum = $out->sum;
 
                     $href = array();
