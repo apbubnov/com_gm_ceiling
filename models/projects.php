@@ -396,11 +396,12 @@ class Gm_ceilingModelProjects extends JModelList
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17','23') and clients.dealer_id = '$user->dealer_id'");
-                 $query->where('projects.deleted_by_user <> 1');
+                $query->select('count(distinct p.id) as count')
+                    ->from('#__gm_ceiling_projects as p')
+                    ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
+                    ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
+                    ->where("p.project_status in ('5', '6', '7', '8', '10', '11', '16', '17','23') and m.date_time is not null and m.date_time <> '0000-00-00 00:00:00' and c.dealer_id = '$user->dealer_id'");
+                 $query->where('p.deleted_by_user <> 1');
             } else
             // НМС (завершенные заказы)
             if ($status == "ComplitedMountings") {
@@ -412,11 +413,13 @@ class Gm_ceilingModelProjects extends JModelList
             } else
             // НМС (незавершенные заказы)
             if ($status == "UnComplitedMountings") {
-                $query->select('count(projects.id) as count')
-                ->from('#__gm_ceiling_projects as projects')
-                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_status in ('4') and clients.dealer_id = '$user->dealer_id'");
-                 $query->where('projects.deleted_by_user <> 1');
+                $query->select('count(distinct p.id) as `count`')
+                ->from('#__gm_ceiling_projects as p')
+                ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
+                ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
+                ->where("((p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
+                    OR (p.project_status = 5 AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00'))
+                    AND c.dealer_id = $user->dealer_id AND p.deleted_by_user <> 1)");
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {
@@ -1009,7 +1012,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->leftJoin('`#__gm_ceiling_projects` AS `p` ON `p`.`id` = `m`.`project_id`');
             $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
             $query->innerJoin('`#__user_usergroup_map` AS `g` ON `u`.`id` = `g`.`user_id`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 OR `g`.`group_id` = 14) AND (`p`.`project_status` > 4 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
+            $query->where("`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 OR `g`.`group_id` = 14) AND (`p`.`project_status` > 4 OR `p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
             $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();

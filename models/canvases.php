@@ -394,9 +394,11 @@ class Gm_ceilingModelCanvases extends JModelList
                 ->join('LEFT','`#__gm_ceiling_textures` AS textures ON textures.id = canvases.texture_id ')
                 ->join('LEFT','`#__gm_ceiling_colors` AS colors ON colors.id = canvases.color_id ');
 
-            if ($filter['select'])
+            if ($filter['select']) {
+                $filter['select']['id'] = 'canvases.id';
                 foreach ($filter['select'] as $key => $value)
                     $query->select($value." AS ".$key);
+            }
             else if ($filter['id_canvas'])
                 $query->select('DISTINCT canvases.id AS id, canvases.name AS name, canvases.country AS country, canvases.width AS width, canvases.price AS price')
                     ->select('canvases.id AS canvases_id, canvases.texture_id AS texture_id, textures.texture_title AS texture, canvases.color_id AS color_id, colors.title AS color')

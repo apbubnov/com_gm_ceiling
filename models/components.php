@@ -429,9 +429,11 @@ class Gm_ceilingModelComponents extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_components_option` AS options  ON components.id = options.component_id')
                 ->join('LEFT', '`#__gm_ceiling_components_goods` AS goods ON options.id = goods.option_id');
 
-            if ($filter['select'])
+            if ($filter['select']) {
+                $filter['select']['id'] = 'options.id';
                 foreach ($filter['select'] as $key => $value)
                     $query->select($value . " AS " . $key);
+            }
             else if ($filter['id_component'])
                 $query->select('components.id AS component_id, components.title AS component_title, components.unit AS component_unit')
                     ->where('components.id = ' . $filter['id_component']);

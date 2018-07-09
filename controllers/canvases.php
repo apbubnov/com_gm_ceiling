@@ -223,11 +223,10 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                         :$OldDealerPrice;
                     $NewDealerData = $this->parse_price($price, $OldDealerPrice, $v->price);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
+                    $UpdateDealerPrice = $NewDealerData->updatePrice;
 
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $NewDealerPrice);
                     $PPrice = $model->MinPriceCanvas($v->id);
-
-                    $UpdateDealerPrice = $NewDealerData->updatePrice;
 
                     if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else { 

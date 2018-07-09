@@ -267,6 +267,12 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
 	        {
 	            $model = $this->getModel('Canvases', 'Gm_ceilingModel');
 	            $result = $model->getCanvases($filter);
+	            $user = JFactory::getUser($filter['user']['dealer']['id']);
+	            $user->getCanvasesPrice();
+                foreach ($result as $key => $item) {
+                    $result[$key]->Price =
+                        Gm_ceilingHelpersGm_ceiling::dealer_margin($result[$key]->Price, 0, $user->CanvasesPrice[$result[$key]->id]);
+	            }
 	            echo json_encode($result);
 	        }
 	        exit;
