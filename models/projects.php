@@ -1009,7 +1009,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->leftJoin('`#__gm_ceiling_projects` AS `p` ON `p`.`id` = `m`.`project_id`');
             $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
             $query->innerJoin('`#__user_usergroup_map` AS `g` ON `u`.`id` = `g`.`user_id`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 OR `g`.`group_id` = 14) AND (`p`.`project_status` > 4 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
+            $query->where("`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 OR `g`.`group_id` = 14) AND (`p`.`project_status` > 4 OR `p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
             $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
