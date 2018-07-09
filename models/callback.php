@@ -126,6 +126,8 @@ class Gm_ceilingModelCallback extends JModelList
 			$id_client = $db->escape($id_client, true);
 			$manager_id = $db->escape($manager_id, true);
 
+			$comment = str_replace('\\"', '\\\\"', $comment);
+
 			if (empty($manager_id))
 			{
 				$manager_id = 1;
