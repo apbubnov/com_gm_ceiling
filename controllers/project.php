@@ -927,8 +927,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                     foreach ($mount_data as $value) {
                                         $c_date = date_create($value->time);
                                         date_sub($c_date, date_interval_create_from_date_string('1 day'));
-                                        $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа \"$value->stage_name\"",$data->id_client,$data->read_by_manager);
-                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа \"$value->stage_name\"");
+                                        $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$data->read_by_manager);
+                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
                                     }
                                 }
                                 $projects_mounts_model->save($project_id,$mount_data);
@@ -1076,13 +1076,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             }
 						}
 					} elseif($project_verdict == 0) {
-                        if($project_status != 1){
+                        if(in_array($project_status, [2,3,15])){
                             Gm_ceilingHelpersGm_ceiling::notify($data, 4);
                             $this->setMessage("Проект отправлен в список отказов",'error');
                         }
-                        elseif($project_status == 1){
-                            $this->setMessage("Проект записан на замер",'success');
+                        else{
+                            if($project_status == 1){
+                                $this->setMessage("Проект записан на замер",'success');
+                            }
+                            else{
+                                $this->setMessage("Сохранено",'success');
+                            }
                         }
+                        
 						
 					}
 
