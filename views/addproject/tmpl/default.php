@@ -126,7 +126,8 @@ $userId     = $user->get('id');
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
     init_measure_calendar('measures_calendar','jform_project_calculation_date','jform_project_calculator','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
-    var $ = jQuery;
+    var $ = jQuery, Data = {};
+    
     $(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#calculate_form').css('font-size', '13px');

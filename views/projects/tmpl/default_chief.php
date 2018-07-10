@@ -79,14 +79,10 @@ foreach ($this->items as $i => $item){
                                         <button class="btn btn-primary btn-sm btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check-circle"></i></button>
                                     <? endif; ?>
                                 </td>
-                                <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
+                                <?php $date = $item->project_mounting_date; ?>
                                 <td class="center one-touch">
-                                    <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                                    <? else: ?><?= $jdate->format('d.m.Y'); ?>
-                                    <? endif; ?>
-                                    <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                                    <? else: ?>
-                                        <?php echo $jdate->format('H:i'); ?>
+                                    <? if ($date == "00.00.0000 00:00"): ?> -
+                                    <? else: ?><?= $date; ?>
                                     <? endif; ?>
                                 </td>
                                 <td class="center one-touch"><?= $item->address; ?></td>

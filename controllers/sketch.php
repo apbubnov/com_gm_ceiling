@@ -24,9 +24,9 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $calc_img = $jinput->get('calc_img', '', 'string');
             $cut_img = $jinput->get('cut_img', '', 'string');
-            $n4 = $jinput->get('jform_n4', '0', 'string');
-            $n5 = $jinput->get('jform_n5', '0', 'string');
-            $n9 = $jinput->get('jform_n9', '0', 'string');
+            $n4 = $jinput->get('jform_n4', '', 'string');
+            $n5 = $jinput->get('jform_n5', '', 'string');
+            $n9 = $jinput->get('jform_n9', '', 'string');
             $texture = $jinput->get('texture', 0, 'int');
             $color = $jinput->get('color', 0, 'int');
             $manufacturer = $jinput->get('manufacturer', 0, 'int');
@@ -111,9 +111,15 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $n3 = $result[0]->id;
             $data['id'] = $calc_id;
             $data['n3'] = $n3;
-            $data['n4'] = $n4;
-            $data['n5'] = $n5;
-            $data['n9'] = $n9;
+            if (!empty($n4)) {
+                $data['n4'] = $n4;
+            }
+            if (!empty($n5)) {
+                $data['n5'] = $n5;
+            }
+            if (!empty($n9)) {
+                $data['n9'] = $n9;
+            }
             $data['calc_data'] = $calc_data;
             $data['cut_data'] = $cut_data;
             $data['original_sketch'] = $original_sketch;

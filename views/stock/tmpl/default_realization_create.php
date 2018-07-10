@@ -348,7 +348,7 @@ $server_name = $_SERVER['SERVER_NAME'];
     .Modal .Form .Action .Button {
         display: inline-block;
         float: left;
-        width: calc(70% - 5px);
+        width: calc(40% - 5px);
         height: 30px;
         overflow: visible;
         margin-right: 10px;
@@ -357,6 +357,10 @@ $server_name = $_SERVER['SERVER_NAME'];
         background-color: rgb(54, 53, 127);
         color: #ffffff;
         border: none;
+    }
+
+    .Modal .Form .Action .Button.Reset {
+        width: calc(30% - 10px);
     }
 
     .Modal .Form .Action .Button.Cancel {
@@ -786,6 +790,9 @@ $server_name = $_SERVER['SERVER_NAME'];
             <button type="submit" class="Button Add Component">
                 Добавить
             </button>
+            <button type="reset" class="Button Reset Component">
+                Очистить
+            </button>
             <button type="button" class="Button Cancel" onclick="CancelElement(this)">
                 Закрыть
             </button>
@@ -958,6 +965,7 @@ $server_name = $_SERVER['SERVER_NAME'];
         Temp.Name = s.Name;
         Temp.Email = s.Email;
         Temp.Phone = s.Phone;
+        Temp.Type = s.Type;
         Temp.page = e;
         element.find(".InputButInp").val(JSON.stringify(Temp));
 
@@ -980,6 +988,7 @@ $server_name = $_SERVER['SERVER_NAME'];
         dealer.show();
         dealer.find('.Value').text(Temp.dealer.name);
 
+        $(".Elements tbody").empty();
         CheckElements();
         Calculate();
         CancelElement();
@@ -1128,6 +1137,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             if (modal === null) Modal.modal.hide();
 
             modal.find(".Add").text("Изменить");
+            console.log(data);
             $.each(data, function (i, v) {
                 if (modal.find("[name = '" + i + "']"))
                     modal.find("[name = '" + i + "']").val(v);

@@ -985,6 +985,9 @@ $server_name = $_SERVER['SERVER_NAME'];
                 if (s.page === "Canvas") {
                     try {
                         s.PriceM = DPC[s.id].price_itog;
+                        if (s.square) {
+                            s.PriceM = s.PriceM * ((100 - s.discount) / 100);
+                        }
                     } catch (e) {
                         s.PriceM = Margin(Float(s.Price), Float(Data.margin.canvas));
                     }
