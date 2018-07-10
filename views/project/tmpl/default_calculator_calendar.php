@@ -819,7 +819,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 if(jQuery("#jform_client_name").val() && jQuery("#jform_client_name").val() != client_name){
                     new_name = jQuery("#jform_client_name").val();
                 }
-               jQuery.ajax({
+                jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=client.update_info",
                     data: {
                         phones: phones,
@@ -838,8 +838,9 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             layout: 'topCenter',
                             maxVisible: 5,
                             type: "success",
-                            text: "Добавленна запись в историю клиента"
+                            text: "Данные успешно изменены!"
                         });
+                        location.reload();
                     },
                     error: function (data) {
                         
@@ -854,6 +855,60 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     }
                 });
             });
+
+            jQuery("#save_rec").click(function(){
+
+                var address = "",
+                    street = jQuery("#jform_rec_address").val(),
+                    house = jQuery("#jform_rec_house").val(),
+                    bdq = jQuery("#jform_rec_bdq").val(),
+                    apartment = jQuery("#jform_rec_apartment").val(),
+                    porch = jQuery("#jform_rec_porch").val(),
+                    floor =jQuery("#jform_rec_floor").val(),
+                    code = jQuery("#jform_rec_code").val();
+                if(house) address = street + ", дом: " + house;
+                if(bdq) address += ", корпус: " + bdq;
+                if(apartment) address += ", квартира: "+ apartment;
+                if(porch) address += ", подъезд: " + porch;
+                if(floor) address += ", этаж: " + floor;
+                if(code) address += ", код: " + code;
+
+                var data = {id:project_id,project_calculator:jQuery("#jform_project_gauger").val(), project_calculation_date:jQuery("#jform_project_new_calc_date").val(),project_info:address};
+
+                data = JSON.stringify(data)
+
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.change_project_data",
+                    data: {
+                        new_data: data
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Данные успешно изменены!"
+                        });
+                        location.reload();
+                    },
+                    error: function (data) {
+                        
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            });
+
             function add_history(id_client, comment) {
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=addComment",
@@ -1363,6 +1418,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             type: "success",
                             text: "Реклама сохранена"
                         });
+                        location.reload();
                     },
                     error: function(data) {
                         console.log(data);
