@@ -167,9 +167,9 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     break;
                 case "chiefprojects":
-                    $query->where('a.project_status in (4,23)');
+                    $query->where("((a.project_status = 4 AND a.project_mounting_date IS NOT NULL AND a.project_mounting_date <> '00.00.0000 00:00')
+                    OR (a.project_status = 5 AND (a.project_mounting_date IS NULL OR a.project_mounting_date = '00.00.0000 00:00')))");
                     $query->where('dealer_id = ' . $user->dealer_id);
-                    $query->where('a.project_mounter IS NULL');
                     $query->where('a.deleted_by_user <> 1');
                     break;
                 case "calculatorprojects":
@@ -348,6 +348,8 @@ class Gm_ceilingModelProjects extends JModelList
             $query->order('a.id DESC');            
 
             $this->setState('list.limit', null);
+            
+
             return $query;
         }
         catch(Exception $e)
@@ -418,14 +420,14 @@ class Gm_ceilingModelProjects extends JModelList
                 ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
                 ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
                 ->where("((p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
-                    OR (p.project_status = 5 AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00'))
-                    AND c.dealer_id = $user->dealer_id AND p.deleted_by_user <> 1)");
+                    OR (p.project_status = 5 AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00')))
+                    AND c.dealer_id = $user->dealer_id AND p.deleted_by_user <> 1");
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {
                 $query->select('count(projects.id) as count')
                     ->from('#__gm_ceiling_projects as projects')
-                    ->where("project_status in ('4', '5')");
+                    ->where("project_status = 5");
                      $query->where('projects.deleted_by_user <> 1');
             } else 
             //менеджер (заявки с сайта) 
