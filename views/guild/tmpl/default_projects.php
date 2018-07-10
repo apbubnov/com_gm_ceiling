@@ -72,7 +72,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                                             <input name="data" id="Data" value='<?= json_encode($cut); ?>' disabled hidden>
                                             <div class="ceiling">
                                                 <name><?= $cut->title; ?></name>
-                                                <div class="image" style="background-image: url('<?= $cut->cut_image; ?>')"></div>
+                                                <div class="image" style="background-image: url('<?= $cut->cut_image . $cut->cut_image_dop; ?>')"></div>
                                             </div>
                                             <div class="loupe" onclick="ModalShow(this);">
                                                 <i class="fa fa-search-plus" aria-hidden="true"></i>
@@ -230,6 +230,7 @@ $server_name = $_SERVER['SERVER_NAME'];
         });
 
         window.addEventListener("message", function(e) {
+            console.log(e);
             if (e.data === 'update') ModalUpdateData();
             $(".redactor").hide();
         }, false);
@@ -578,7 +579,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                                 T.attr("id", i3);
                                 T.find("input").val(JSON.stringify(b3));
                                 T.find("name").text(b3.title);
-                                T.find(".image").attr("style","background-image: url('" + b3.cut_image + "'");
+                                T.find(".image").attr("style","background-image: url('" + b3.cut_image + b3.cut_image_dop + "'");
 
                                 if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(Next); Data.calculations.splice(index, 0, i3); }
                                 else { block2.find("ceilings").append(T); Data.calculations.push(i3); }
@@ -654,6 +655,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
+                console.log(data);
 
                 $.each(data, function (i1, b1) {
                     var blocks1 = $(".block_1"),
@@ -727,7 +729,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                                 blocks3 = block2.find(".block_3"),
                                 fblocks3 = blocks3.filter("#"+i3);
 
-                            if (fblocks3.length < 1) {
+                            if (true) {
                                 var Pred = "", Next = "", Temp = null;
                                 blocks3.each(function () {
                                     if (parseInt(i3) <= parseInt(Next)) return;
@@ -754,6 +756,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                                 T.find("input").val(JSON.stringify(b3));
                                 T.find("name").text(b3.title);
                                 T.find(".image").attr("style","background-image: url('" + b3.cut_image + b3.cut_image_dop + "'");
+                                console.log(T.find(".image"));
 
                                 delete Data.calculations[Data.calculations.indexOf(parseInt(i3))];
                                 if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(parseInt(Next)); Data.calculations.splice(index, 0, parseInt(i3)); }

@@ -31,11 +31,32 @@ $cutModel = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $data = (empty($id))?null:$cutModel->getData($id);
 ?>
 
-<?if(!(empty($id) || empty($data)) && $page != "cut"):?>
-<form action="/sketch/cut_redactor/index.php" id="data_form" method="POST" style="display : none;">
+<?if(!(empty($id) || empty($data)) && $page != "cut"):
+    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+    $color_filter = "";
+    $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $data->n3_id")[0];
+    if(!empty($canvas->color_id)){
+        $color_filter = "and color_id = $canvas->color_id";
+    }
+    $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0 $color_filter");
+    $widths = [];
+    foreach ($canvases as $item) {
+        $widths[] = (object)array("width" =>$item->width*100,"price" => $item->price);
+    }
+
+    usort($widths, function($obj_a,$obj_b){
+        return ($obj_a > $obj_b) ? -1 : 1;
+    });
+
+    ?>
+<form action="/sketch/cut_redactor_2/index.php" id="data_form" method="POST" style="display : none;">
     <input type="hidden" name="walls" id="input_walls" value="<?=$data->original_sketch;?>">
     <input type="hidden" name="calc_id" id="calc_id" value="<?=$data->id;?>">
     <input type="hidden" name="proj_id" id="proj_id" value="<?=$data->project_id;?>">
+    <input type="hidden" name="width" id="width" value=<?=json_encode($widths);?>>
+    <input type="hidden" name="texture" id="texture" value="<?=$canvas->texture_id;?>">
+    <input type="hidden" name="manufacturer" id="manufacturer" value="<?=$canvas->manufacturer_id;?>">
+    <input type="hidden" name="color" id="color" value="<?=$canvas->color_id;?>">
     <input type="hidden" name="page" id="page" value="guild">
 </form>
 
