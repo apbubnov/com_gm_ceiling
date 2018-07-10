@@ -260,7 +260,7 @@
                 }
             });
         } else if (kind == "no-empty") {
-            TrOrders2 = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
+            TrOrders2 = '<tr id="caption-data"><td colspan="7">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>P</td><td>З/П</td><td>Примечание</td><td>Статус</td><td>Этап</td></tr>';
             jQuery("#table-mounting").append(TrOrders2);
              jQuery.ajax( {
                 type: "POST",
@@ -271,6 +271,8 @@
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
+                    console.log(msg);
+                    var status, type, note, note2, comment_calc, project, adress, perimeter;
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
@@ -341,8 +343,19 @@
                             if (salary < 1500) {
                                 salary = 1500;
                             }
+
+                            switch (element.type) {
+                                case '1': type = 'Полный монт.';
+                                break;
+                                case '2': type = 'Обагечивание';
+                                break;
+                                case '3': type = 'Натяжка';
+                                break;
+                                case '4': type = 'Вставка';
+                                break;
+                            }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}${note2}${comment_calc}</td><td>${status}</td></tr>`;
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}${note2}${comment_calc}</td><td>${status}</td><td>${type}</td></tr>`;
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
@@ -354,26 +367,26 @@
         }
     }
 
-    function ReplaceToOrder(project, month, ReadOrNot) {
+    function ReplaceToOrder(project, month, ReadOrNot, stage) {
         month--;
         if (ReadOrNot == 0) {
-            jQuery.ajax( {
+            jQuery.ajax({
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
                 dataType: 'json',
                 data: {
-                    id_calculation : project
+                    id_calculation: project
                 },
                 success: function(msg) {
                     if (msg.read_by_mounter == 1) {
-                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
+                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"stage="+stage;
                     }
                 },
                 error: function(msg) {
                 }
             });
         } else {
-            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
+            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"stage="+stage;
         }
     }
 
