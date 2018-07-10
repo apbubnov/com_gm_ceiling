@@ -170,5 +170,22 @@ class Gm_ceilingModelClient_phones extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function deletePhone($client_id,$phone){
+    	try
+    	{
+	        $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+			$query->delete('#__gm_ceiling_clients_contacts');
+			$query->where("client_id = $client_id AND phone ='$phone'");
+			$db->setQuery($query);
+			$db->execute();
+	        
+	    }
+	    catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

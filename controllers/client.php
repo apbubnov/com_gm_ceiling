@@ -324,8 +324,8 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             $client_id = $jinput->get('client_id', null, 'INT');
            	$phones = $jinput->get('phones', array(), 'ARRAY');
            	$emails = $jinput->get('emails', array(), 'ARRAY');
-           	$deleted_phones = $jinput->get('deleted_emails', array(), 'ARRAY');
-           	$deleted_emails = $jinput->get('deleted_phones', array(), 'ARRAY');
+           	$deleted_phones = $jinput->get('deleted_phones', array(), 'ARRAY');
+           	$deleted_emails = $jinput->get('deleted_emails', array(), 'ARRAY');
            	$new_name = $jinput->get('client_name','','STRING');
            	$client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
            	$client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
@@ -360,6 +360,18 @@ class Gm_ceilingControllerClient extends JControllerLegacy
            			else{
            				$client_dop_model->save($client_id,1,$value['email']);
            			}
+           		}
+           	}
+
+           	if(!empty($deleted_phones)){
+           		foreach ($deleted_phones as $phone) {
+           			$client_phones_model->deletePhone($client_id,$phone);
+           		}
+           	}
+           	
+           	if(!empty($deleted_emails)){
+           		foreach ($deleted_emails as $value) {
+           			$client_dop_model->removeEmail($client_id, $value);
            		}
            	}
            	die(json_encode(true));
