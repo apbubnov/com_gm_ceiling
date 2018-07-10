@@ -317,4 +317,57 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 
         }
 	}
+
+	function update_info(){
+		try{
+			$jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', null, 'INT');
+           	$phones = $jinput->get('phones', array(), 'ARRAY');
+           	$emails = $jinput->get('emails', array(), 'ARRAY');
+           	$deleted_phones = $jinput->get('deleted_emails', array(), 'ARRAY');
+           	$deleted_emails = $jinput->get('deleted_phones', array(), 'ARRAY');
+           	$new_name = $jinput->get('client_name','','STRING');
+           	$client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+           	$client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+           	$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client');
+           	$new_phones =[];
+           	$need_update_phones = [];
+           	if(!empty($new_name)){
+           		$client_model->updateClient($client_id,$new_name);
+           	}
+           	if(!empty($phones)){
+           		foreach ($phones as $value) {
+           			if(isset($value['old_phone'])){
+           				$need_update_phones[$value['old_phone']] = $value['phone'];
+           			}
+           			else{
+           				array_push($new_phones, $value['phone']);
+           			}
+           		}
+           		if(!empty($new_phones)){
+           			$client_phones_model->save($client_id,$new_phones);
+           		}
+           		if(!empty($need_update_phones)){
+           			$client_phones_model->update($client_id,$need_update_phones);
+           		}
+           	}
+
+           	if(!empty($emails)){
+           		foreach ($emails as $value) {
+           			if(isset($value['old_email'])){
+           				$client_dop_model->updateEmail($client_id,$value['email'],$value['old_email']);
+           			}
+           			else{
+           				$client_dop_model->save($client_id,1,$value['email']);
+           			}
+           		}
+           	}
+           	die(json_encode(true));
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
 }

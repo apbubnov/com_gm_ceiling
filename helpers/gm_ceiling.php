@@ -61,10 +61,10 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                 case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
             }
         }
-        else{
+        else {
             $result = $price;
         }
-        return ($margin > 0)?margin($result, $margin):$result;
+        return ($margin > 0) ? margin($result, $margin) : $result;
     }
     catch(Exception $e)
     {

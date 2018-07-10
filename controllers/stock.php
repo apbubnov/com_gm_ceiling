@@ -553,7 +553,9 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 if (empty($status) || floatval($status) == 5 || floatval($status) == 6)
                 {
                     $allGoods = array_merge($canvases, $components);
+
                     $out = Gm_ceilingHelpersPDF::Format($allGoods);
+
                     $info->sum = $out->sum;
 
                     $href = array();

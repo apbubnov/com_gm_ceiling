@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 //echo Gm_ceilingHelpersPDF::Code(5);
 
 /* включаем библиотеку для формирования PDF */
-include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 
 /* Данный хелпер используется для создания pdf файлов. Например: Накладная. */
 class Gm_ceilingHelpersPDF {
