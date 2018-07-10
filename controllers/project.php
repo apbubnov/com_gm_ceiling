@@ -1823,15 +1823,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             if ($user->id != $reklama->dealer_id) {
                 throw new Exception('403 forbidden');
             }
-
-            if (empty($model_project->getProjectsByClientID($client_id))) {
+            $project = $model_project->getData($data['id']);
+            if($project->api_phone_id != 10){
                 $data['api_phone_id'] = $api_phone_id;
-            } else {
-                $data['api_phone_id'] = 10;
-                $model_repeat->save($data['id'], $api_phone_id);
+                 $result = $model_project->save($data);
             }
-
-            $result = $model_project->save($data);
+            else{
+                  $model_repeat->update($project_id,$api_phone_id);
+            }           
             die(json_encode($result));
         }
         catch(Exception $e)
@@ -1884,6 +1883,28 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 throw new Exception("Empty project id");
                 
             }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
+    function change_project_data(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $data = json_decode($jinput->get('new_data', '', 'STRING'));
+            $data = get_object_vars($data);
+            foreach ($data as $key => $value) {
+                if(empty($value)){
+                    unset($data[$key]);
+                }
+            }
+            
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $result = $model->save($data);
+            die(json_encode($result));
         }
         catch(Exception $e)
         {
