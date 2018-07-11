@@ -363,7 +363,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             <?php if ($user->dealer_type != 2) { ?>
                 <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                 </div>
-                 <div class="row center" id = "ready_wrapper">
+                <div class="row center">
                     <h4>Назначить дату монтажа</h4>
                     <div id="calendar_mount" align="center"></div>
                 </div>
@@ -1327,63 +1327,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 });
             };
 
-            if (document.getElementById('refuse')){
-                document.getElementById('refuse').onclick = click_on_refuse;
-            }
-
-
-            function click_on_refuse()
-            {
-                noty({
-                    layout: 'topCenter',
-                    type: 'default',
-                    modal: true,
-                    text: 'Перевести проект в статус "отказ от договора"?',
-                    killer: true,
-                    buttons: [
-                        {
-                            addClass: 'btn btn-success', text: 'Ок', onClick: function ($noty) {
-                                jQuery.ajax({
-                                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
-                                    data: {
-                                        project_id: project_id,
-                                        status: 3
-                                    },
-                                    dataType: "json",
-                                    async: true,
-                                    success: function (data) {
-                                        var n = noty({
-                                            timeout: 2000,
-                                            theme: 'relax',
-                                            layout: 'center',
-                                            maxVisible: 5,
-                                            type: "success",
-                                            text: "Проект переведен в отказ от договора"
-                                        });
-                                        setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&task=mainpage'}, 2000);
-                                    },
-                                    error: function (data) {
-                                        var n = noty({
-                                            timeout: 2000,
-                                            theme: 'relax',
-                                            layout: 'center',
-                                            maxVisible: 5,
-                                            type: "error",
-                                            text: "Ошибка сервера"
-                                        });
-                                    }
-                                });
-                                $noty.close();
-                            }
-                        },
-                        {
-                            addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
-                                $noty.close();
-                            }
-                        }
-                    ]
-                });
-            };
+            jQuery("#refuse").click(function(){
+                jQuery('#project_status').val(3);
+                jQuery("#project_verdict").val(0);
+                document.getElementById('form-client').submit();
+            });
 
             jQuery("#save_advt").click(function() {
                 if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {

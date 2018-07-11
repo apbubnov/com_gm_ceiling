@@ -879,9 +879,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				} else {
 					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
                     $project_status = $jinput->get('project_status', '0', 'INT');
-					if($project_verdict == 1) {
-						$data->project_verdict = 1;
-					}
+
+					$data->project_verdict = $project_verdict;
+					
+                    $data->project_status = $project_status;
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					$calculations = $calculationsModel->new_getProjectItems($data->id);
 					$all_calculations = array();
@@ -892,11 +893,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
                     $gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
 					// Attempt to save the data.
-					if($activate_by_email==0){
+					if($activate_by_email == 0){
 						if($user->dealer_type!=2 && $project_verdict == 1) 
 						{
 							if(empty($mount_data)){
-								$data->project_status = 4;
 								$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
@@ -907,7 +907,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 									$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
 								}
 								
-								$return = $model->activate($data,4/*3*/);
+								//$return = $model->activate($data,4/*3*/);
 								
 							}
 							else{
@@ -915,13 +915,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 									$data->project_verdict = 0;
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж.".$mount_str );
-									$return = $model->activate($data, 4);
+									//$return = $model->activate($data, 4);
 
 								} else {
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
 
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
-									$return = $model->activate($data, 5/*3*/);
+									//$return = $model->activate($data, 5/*3*/);
 								}
                                 if(!empty($data->read_by_manager)){
                                     foreach ($mount_data as $value) {
@@ -935,20 +935,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							}
 							
 						}
-						else if ($user->dealer_type!=2 && $project_verdict == 0)
+						else if ($user->dealer_type!=2 && $project_verdict == 0 && $project_status == 3)
 						{
-                            if($project_status == 1){
-                                $return = $model->activate($data, $project_status);
-                            }
-                            else{
-    							$return = $model->activate($data, 3/*7*/);
-    							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
-    							if(!empty($data->read_by_manager)){
-    								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-    								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
-    							}
-                            }
+							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
+							if(!empty($data->read_by_manager)){
+								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
+								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
+							}
+                            
 						}
+                        $return = $model->activate($data, $project_status);
 					}
 					else{
 						$return = $model->activate($data, 23);
@@ -1112,18 +1108,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 					if(!$project_verdict) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 			}
-
-			/*$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$fields = array(
-				$db->quoteName('project_mounting_date'). ' = '.$db->quote($mounting_date)
-			);
-			$conditions = array(
-				$db->quoteName('id').' = '.$db->quote($project_id)
-			);
-			$query->update($db->quoteName('#__gm_ceiling_projects'))->set($fields)->where($conditions);
-			$db->setQuery($query);
-			$result = $db->execute();*/
 		}
 		catch(Exception $e)
         {
