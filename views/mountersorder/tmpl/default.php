@@ -387,7 +387,7 @@ $AllSum = 0;
                     },
                     success: function(msg) {
                         console.log(msg);
-                        if (msg[0].project_status == 11) {
+                        if (msg[0].project_status == 11 || msg[0].project_status == 24 || msg[0].project_status == 25 || msg[0].project_status == 26) {
                             window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
                         }
                     },
