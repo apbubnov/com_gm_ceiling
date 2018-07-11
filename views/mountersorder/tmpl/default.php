@@ -18,7 +18,9 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $jinput = JFactory::getApplication()->input;
-$project = $jinput->get('project',null,'INT');
+$project = $jinput->get('project', null, 'INT');
+$stage = $jinput->get('stage', null, 'INT');
+
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);
@@ -258,8 +260,8 @@ $AllSum = 0;
     </div>
 </div>
 
-<script>
-
+<script type="text/javascript">
+    var stage = '<?php echo $stage; ?>';
     var url_proj = '<?php echo $project; ?>';
     var statuses = [];
     // функция получения текущего времени
@@ -292,15 +294,16 @@ $AllSum = 0;
         return date;
     }
 
-    jQuery(document).ready( function() {
+    jQuery(document).ready(function() {
 
         //отправка ajax для проверки дат начала конца монтажа и статуса
-        jQuery.ajax( {
+        jQuery.ajax({
             type: "POST",
             url: "index.php?option=com_gm_ceiling&task=mountersorder.GetDates",
             dataType: 'json',
             data: {
-                url_proj : url_proj
+                url_proj: url_proj,
+                stage: stage
             },
             success: function(msg) {
                 console.log(msg);
@@ -353,15 +356,15 @@ $AllSum = 0;
             console.log(statuses);
         });
         //  кнопка "монтаж начат"
-        jQuery("#begin").click( function() {
+        jQuery("#begin").click(function() {
             CurrentDateTime();
-            jQuery.ajax( {
+            jQuery.ajax({
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingStart",
                 dataType: 'json',
                 data: {
-                    date : date,
-                    url_proj : url_proj,
+                    date: date,
+                    url_proj: url_proj,
                 },
                 success: function(msg) {
                     if (msg[0].project_status == 16) {

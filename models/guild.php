@@ -81,7 +81,7 @@ class Gm_ceilingModelGuild extends JModelList
                 $calc->canvas_name = $calc->name . " " . $calc->country . " " . $calc->width . " " . $calc->texture . ((empty($calc->color)) ? "" : " " . $calc->color);
                 $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf') . '.pdf';
                 $calc->cut_image = "/cut_images/" . md5("cut_sketch" . $calc->id) . ".svg";
-                $calc->cut_image_dop = "?date=" . ((string)date("dmYHis"));
+                $calc->cut_image_dop = "?date=" . ((string)date("dmYHis")) . rand(1000000000, 9999999999);
                 $calc->quad = floatval($calc->quad);
                 $calc->perimeter = floatval($calc->perimeter);
                 $calc->square = floatval($calc->square);
@@ -565,12 +565,11 @@ class Gm_ceilingModelGuild extends JModelList
                 ->join("LEFT", "`#__gm_ceiling_guild_works` as w ON w.id = s.work")
                 ->join("LEFT", "`#__gm_ceiling_calculations` as c ON c.id = s.calc_id")
                 ->join("LEFT", "`#__canvases` as canvas ON canvas.id = c.n3")
-                ->join("LEFT", "`#__gm_ceiling_textures` as t1 ON t1.id = c.n1")
-                ->join("LEFT", "`#__gm_ceiling_textures` as t2 ON t2.id = c.n2")
+                ->join("LEFT", "`#__gm_ceiling_textures` as t2 ON t2.id = c.n3")
                 ->join("LEFT", "`#__gm_ceiling_colors` as color ON color.id = canvas.color_id")
                 ->select("s.user_id, s.salaries, s.accrual_date, w.name as work, c.project_id, c.calculation_title as name")
                 ->select("canvas.name as canvas, canvas.country, canvas.width")
-                ->select("t1.texture_title as texture, t2.texture_title as invoice, color.title as color")
+                ->select("t2.texture_title as invoice, color.title as color")
                 ->where("s.accrual_date BETWEEN '$data->DateStart' AND '$data->DateEnd'")
                 ->order("s.accrual_date");
 

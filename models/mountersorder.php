@@ -45,17 +45,18 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function GetDates($id) {
+	function GetDates($proj_id, $stage) {
 		try
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('project_mounting_start, project_mounting_end, project_status')
-			->from('#__gm_ceiling_projects')
-			->where("id = $id");
+			$query->select('m.mount_start as project_mounting_start, m.mount_end as project_mounting_end, p.project_status')
+			->from('#__gm_ceiling_projects as p')
+			->innerJoin('#__gm_ceiling_projects_mounts as m ON m.project_id = p.id')
+			->where("p.id = $proj_id and m.type = $stage");
 			$db->setQuery($query);
-
+			
 			$items = $db->loadObjectList();
 			return $items;
 		}
@@ -65,7 +66,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function MountingStart($id, $date) {
+	function MountingStart($id, $date, $stage) {
 		try
 		{
 			$db = JFactory::getDbo();

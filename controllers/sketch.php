@@ -39,7 +39,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             $canvas_area = $jinput->get('sq_polo', 0, 'FLOAT');
-            $p_usadki = $jinput->get('p_usadki', '1', 'FLOAT');
+            $p_usadki = $jinput->get('p_usadki', 1, 'FLOAT');
             $wp = $jinput->get('walls_points', array(), 'ARRAY');
             $dp = $jinput->get('diags_points', array(), 'ARRAY');
             $pp = $jinput->get('pt_points', array(), 'ARRAY');
@@ -74,8 +74,9 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
                 }
                 $points_polonta = substr($points_polonta, 0, -2);
 
-                $cut_data .= "Полотно" . ($i + 1) . ": " . $points_polonta . "| ";
+                $cut_data .= "Полотно" . ($i + 1) . ": " . $points_polonta . "|";
             }
+            $cut_data = substr($cut_data, 0, -1);
             $cut_data .= '||'.$p_usadki;
 
             for ($i = 0; $i < count($length_arr); $i++)

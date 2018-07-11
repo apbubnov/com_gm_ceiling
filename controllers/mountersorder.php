@@ -23,10 +23,11 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 		try
 		{
 			$id = $_POST['url_proj'];
+			$stage = $_POST['stage'];
 			$model_request = null;
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
 			if(!empty($id)){
-				$model_request = $model->GetDates($id);
+				$model_request = $model->GetDates($id, $stage);
 			}
 
 			die(json_encode($model_request));

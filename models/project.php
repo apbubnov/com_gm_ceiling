@@ -1556,8 +1556,8 @@ class Gm_ceilingModelProject extends JModelItem
 	            if ($calculation->quad > 0) {
                     $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
 
-                    if (floatval($calculation->square) > 0) {
-                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => 50);
+                    if (floatval($calculation->square) >= $calculation->quad / 2) {
+                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => 40);
                     }
                 }
 
