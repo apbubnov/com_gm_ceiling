@@ -74,8 +74,9 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
                 }
                 $points_polonta = substr($points_polonta, 0, -2);
 
-                $cut_data .= "Полотно" . ($i + 1) . ": " . $points_polonta . "| ";
+                $cut_data .= "Полотно" . ($i + 1) . ": " . $points_polonta . "|";
             }
+            $cut_data = substr($cut_data, 0, -1);
             $cut_data .= '||'.$p_usadki;
 
             for ($i = 0; $i < count($length_arr); $i++)
