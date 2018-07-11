@@ -356,15 +356,15 @@ $AllSum = 0;
             console.log(statuses);
         });
         //  кнопка "монтаж начат"
-        jQuery("#begin").click( function() {
+        jQuery("#begin").click(function() {
             CurrentDateTime();
-            jQuery.ajax( {
+            jQuery.ajax({
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingStart",
                 dataType: 'json',
                 data: {
-                    date : date,
-                    url_proj : url_proj,
+                    date: date,
+                    url_proj: url_proj,
                 },
                 success: function(msg) {
                     if (msg[0].project_status == 16) {

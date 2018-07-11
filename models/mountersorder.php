@@ -66,7 +66,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function MountingStart($id, $date) {
+	function MountingStart($id, $date, $stage) {
 		try
 		{
 			$db = JFactory::getDbo();
