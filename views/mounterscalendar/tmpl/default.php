@@ -379,14 +379,14 @@
                 },
                 success: function(msg) {
                     if (msg.read_by_mounter == 1) {
-                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"stage="+stage;
+                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
                     }
                 },
                 error: function(msg) {
                 }
             });
         } else {
-            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"stage="+stage;
+            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
         }
     }
 
