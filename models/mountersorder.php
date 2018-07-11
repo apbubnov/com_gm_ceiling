@@ -70,44 +70,50 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 		try
 		{
 			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query2 = $db->getQuery(true);
-			$query3 = $db->getQuery(true);
-			$query4 = $db->getQuery(true);
-			$query5 = $db->getQuery(true);
 
+			$query = $db->getQuery(true);
 			$query->update('#__gm_ceiling_projects')
-			->set('project_mounting_start = \''.$date.'\'')
 			->set('project_status = 16')
 			->where('id = '.$id);
 			$db->setQuery($query);
 			$db->execute();
 
-			$query3->select('client_id')
+			$query = $db->getQuery(true);
+			$query->update('#__gm_ceiling_projects_mounts')
+			->set('mount_start = \''.$date.'\'')
+			->where("project_id = $id AND type = $stage");
+			$db->setQuery($query);
+			$db->execute();
+
+			$query = $db->getQuery(true);
+			$query->select('client_id')
 			->from('#__gm_ceiling_projects')
 			->where('id = '.$id);
-			$db->setQuery($query3);
+			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			$client = $items[0]->client_id;
 	
 			$note = "Монтаж по проекту №$id начат.";
-			$query4->insert('#__gm_ceiling_client_history')
+			$query = $db->getQuery(true);
+			$query->insert('#__gm_ceiling_client_history')
 			->columns('client_id, date_time, text')
 			->values("'$client', '$date', '$note'");
-			$db->setQuery($query4);
+			$db->setQuery($query);
 			$db->execute();
 
 			// запись в project_history
-			$query5->insert('#__gm_ceiling_projects_history')
+			$query = $db->getQuery(true);
+			$query->insert('#__gm_ceiling_projects_history')
 			->columns('project_id, new_status, date_of_change')
 			->values("'$id', '16', '$date'");
-			$db->setQuery($query5);
+			$db->setQuery($query);
 			$db->execute();
 
-			$query2->select('project_status')
+			$query = $db->getQuery(true);
+			$query->select('project_status')
 			->from('#__gm_ceiling_projects')
 			->where('id = '.$id);
-			$db->setQuery($query2);
+			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
 			return $items;
@@ -118,44 +124,48 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function MountingComplited($id, $date, $note2, $note,$status) {
+	function MountingComplited($id, $date, $note2, $note, $status, $stage) {
 		try
 		{
 			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query2 = $db->getQuery(true);
-			$query3 = $db->getQuery(true);
-			$query4 = $db->getQuery(true);
-			$query5 = $db->getQuery(true);
-			$query6 = $db->getQuery(true);
 
+			$query = $db->getQuery(true);
 			$query->update('#__gm_ceiling_projects')
-			->set('project_mounting_end = \''.$date.'\'')
 			->set("project_status = $status")
 			->where('id = '.$id);
 			$db->setQuery($query);
 			$db->execute();
 
+			$query = $db->getQuery(true);
+			$query->update('#__gm_ceiling_projects_mounts')
+			->set('mount_end = \''.$date.'\'')
+			->where("project_id = $id AND type = $stage");
+			$db->setQuery($query);
+			$db->execute();
+
 			if (strlen($note2) != 0) {
-				$query2->select('client_id')
+				$query = $db->getQuery(true);
+				$query->select('client_id')
 				->from('#__gm_ceiling_projects')
 				->where('id = '.$id);
-				$db->setQuery($query2);
+				$db->setQuery($query);
 				$items = $db->loadObjectList();
 				$client = $items[0]->client_id;
 		
-				$query3->insert('#__gm_ceiling_client_history')
+				$query = $db->getQuery(true);
+				$query->insert('#__gm_ceiling_client_history')
 				->columns('client_id, date_time, text')
 				->values("'$client', '$date', '$note2'");
-				$db->setQuery($query3);
+				$db->setQuery($query);
 				$db->execute();
 			}
 
 			// запись в project_history
-			$query5->insert('#__gm_ceiling_projects_history')
+			$query = $db->getQuery(true);
+			$query->insert('#__gm_ceiling_projects_history')
 			->columns('project_id, new_status, date_of_change')
 			->values("'$id', $status, '$date'");
-			$db->setQuery($query5);
+			$db->setQuery($query);
 			$db->execute();
 
 			// запись в note
@@ -165,16 +175,18 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			} else {
 				$ForWho = "mounter_note";
 			}
-			$query6->update('#__gm_ceiling_projects')
+			$query = $db->getQuery(true);
+			$query->update('#__gm_ceiling_projects')
 			->set("$ForWho = '$note'")
 			->where("id = '$id'");
-			$db->setQuery($query6);
+			$db->setQuery($query);
 			$db->execute();
 
-			$query4->select('project_status')
+			$query = $db->getQuery(true);
+			$query->select('project_status')
 			->from('#__gm_ceiling_projects')
 			->where('id = '.$id);
-			$db->setQuery($query4);
+			$db->setQuery($query);
 
 			$items2 = $db->loadObjectList();
 			return $items2;
@@ -266,7 +278,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function DataOrder($id) {
+	function DataOrder($id, $stage) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -275,11 +287,12 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 
 			$query2->select("users.name")
 			->from('#__users as users')
-			->where("users.id = projects.project_mounter");
+			->where("users.id = m.mounter_id");
 
-			$query->select("projects.project_info, projects.project_mounting_date, projects.project_mounter, ($query2) as project_mounter_name")
-			->from('#__gm_ceiling_projects as projects')
-			->where("projects.id = $id");
+			$query->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
+			->from('#__gm_ceiling_projects as p')
+			->innerJoin('#__gm_ceiling_projects_mounts as m ON m.project_id = p.id')
+			->where("p.id = $id AND m.type = $stage");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();

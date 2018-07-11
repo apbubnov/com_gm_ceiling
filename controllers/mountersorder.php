@@ -45,12 +45,13 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$jinput = JFactory::getApplication()->input;
 			$id = $jinput->get("url_proj","","STRING");
 			$date = $jinput->get("date","","STRING");
+			$stage = $jinput->get('stage', null, 'INT');
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
-			$model_request = $model->MountingStart($id, $date);
+			$model_request = $model->MountingStart($id, $date, $stage);
 			$server_name = $_SERVER['SERVER_NAME'];
 			// письмо
 			$emails = $model->AllNMSEmails();
-			$DataOrder = $model->DataOrder($id);
+			$DataOrder = $model->DataOrder($id, $stage);
 			$NamesMounters = $model->NamesMounters($DataOrder[0]->project_mounter);
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
@@ -95,8 +96,8 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$jinput = JFactory::getApplication()->input;
 			$id = $jinput->get("url_proj","","STRING");
 			$date = $jinput->get("date","","STRING");
-			$status = $jinput->get("status","","STRING");
 			$note = $jinput->get("note","","STRING");
+			$stage = $jinput->get('stage', null, 'INT');
 
 			if (!empty($note)) {
 				$note2 = "Монтаж по проекту №$id выполнен. Примечание от монтажной бригады: ".$note;			
@@ -104,12 +105,30 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 				$note2 = "Монтаж выполнен. Примечание от монтажной бригады: отсутствует";
 			}
 
+			switch ($stage) {
+				case 1:
+					$status = 11;
+					break;
+				case 2:
+					$status = 24;
+					break;
+				case 3:
+					$status = 25;
+					break;
+				case 4:
+					$status = 26;
+					break;
+				default:
+					$status = 17;
+					break;
+			}
+
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
-			$model_request = $model->MountingComplited($id, $date, $note2, $note, $status);
+			$model_request = $model->MountingComplited($id, $date, $note2, $note, $status, $stage);
 
 			// письмо
 			$emails = $model->AllNMSEmails();
-			$DataOrder = $model->DataOrder($id);
+			$DataOrder = $model->DataOrder($id, $stage);
 			$NamesMounters = $model->NamesMounters($DataOrder[0]->project_mounter);
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();

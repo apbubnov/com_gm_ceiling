@@ -201,7 +201,7 @@ $AllSum = 0;
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar">
-            <div align=center>
+            <!--<div align=center>
                 <p class ="cbx_p">Выполнено:</p>
                 <p>
                     <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
@@ -247,7 +247,7 @@ $AllSum = 0;
                       <span>установка вставки.</span>
                     </label>
                 </p>
-            </div>
+            </div>-->
             <p>Введите примечание:</p>
             <p>
                 <textarea id="note"></textarea>
@@ -263,7 +263,6 @@ $AllSum = 0;
 <script type="text/javascript">
     var stage = '<?php echo $stage; ?>';
     var url_proj = '<?php echo $project; ?>';
-    var statuses = [];
     // функция получения текущего времени
     var date;
     function CurrentDateTime() {
@@ -339,22 +338,7 @@ $AllSum = 0;
                 jQuery("#modal-window-1-tar").hide();
             }
         });
-        jQuery('.inp-cbx').change(function(){
-            let status = jQuery(this).data('status');
-            console.log(this.checked);
-            if(this.checked){
-                if(statuses.indexOf(status)== -1 ){
-                    statuses.push(status);
-                }
-            }
-            else
-            {
-                 if(statuses.indexOf(status) != -1 ){
-                    statuses.splice(statuses.indexOf(status),1);
-                }
-            }
-            console.log(statuses);
-        });
+
         //  кнопка "монтаж начат"
         jQuery("#begin").click(function() {
             CurrentDateTime();
@@ -365,6 +349,7 @@ $AllSum = 0;
                 data: {
                     date: date,
                     url_proj: url_proj,
+                    stage: stage
                 },
                 success: function(msg) {
                     if (msg[0].project_status == 16) {
@@ -385,41 +370,31 @@ $AllSum = 0;
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save", function() {
             var note = jQuery("#note").val();
-            let status;
+            
             if (whatBtn == "complited") {
                 // кнопка "монтаж выполнен"
-                
-                    CurrentDateTime();
-                    if(statuses.length == 3){
-                        status = 11;
-                    }
-                    else{
-                        statuses.sort(function (a, b) {
-                                          if (a > b) return 1;
-                                          if (a < b) return -1;
-                                        });
-                        status = statuses[statuses.length-1];
-                    }
-                    console.log(status);
-                    jQuery.ajax( {
-                        type: "POST",
-                        url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
-                        dataType: 'json',
-                        data: {
-                            date : date,
-                            url_proj : url_proj,
-                            note : note,
-                            status: status
-                        },
-                        success: function(msg) {
-                            if (msg[0].project_status == 11) {
-                                window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
-                            }
-                        },
-                        error: function(data){
-                            console.log(data);
+                CurrentDateTime();
+
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
+                    dataType: 'json',
+                    data: {
+                        date: date,
+                        url_proj: url_proj,
+                        note: note,
+                        stage: stage
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        if (msg[0].project_status == 11) {
+                            window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
                         }
-                    });
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
             } else if (whatBtn == "underfulfilled") {
                 // кнопка "монтаж недовыполнен"
                 if (note.length != 0) {
