@@ -67,11 +67,16 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
         }
    }
 
-    function calculateSelfPrice($calculation,$reject_rate){
+    function calculateSelfPrice($calculation,$reject_rate,$project_id){
         try {
             $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
+            $price = 0;
+            foreach ($components as  $value) {
+                $dop_params = $component_model->getComponentsParameters($project_id,$value->component_id,$value->id);
+                $price = $components_model->getComponentsSelfPrice($value->component_id,$value->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article);
+            }
             $results = $mount_model->getDataAll(1);
             return $calculation->canvas_area*($calculation->price +$calculation->price*reject_rate)+($calculation->canvas_area - $calculation->offcut_square)*11 + $calculation->n5_shrink*4 + ($calculation->n9 - 6)*$results->mp20 + components_self;
         } catch (Exception $e) {
