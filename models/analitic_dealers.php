@@ -20,110 +20,62 @@
  */
 class Gm_ceilingModelAnalitic_dealers extends JModelList
 {
-    public function getData($date1, $date2)
+    public function getData()
     {
         try {
-            $result = (object)array(
-                "common" => $this->getCommonDealersCount(),
-                "ordering_dealers" => $this->getOrderingDealers($date1, $date2),
-                "new_order_dealers" =>  $this->getNewOrderingDealers($date1, $date2), 
-                "fallen" => $this->getFallenOffDealers($date1, $date2)
-            );
-            return $result;
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $dealers_and_projects = $this->getProjectsOfDealers();
+            if(!empty($dealers_and_projects)){
+                foreach ($dealers_and_projects as $value) {
+                   $ids = explode(';',$value->projects);
+                   $new_value = array();
+                   foreach ($ids as $id) {
+                        $calcs = $calculation_model->getDataForAnalytic($id);
+                        $sum = 0;
+                        foreach ($calcs as $calc) {
+                            $sum += $this->calculateSelfPrice($calc,0.05);
+                        }
+                        $new_value[$id] = $sum; 
+                   }
+                   $value->projects = $new_value;
+                }
+            }
+            
+            return $dealers_and_projects;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public function getCommonDealersCount()
-    {
-        //общее количество дилеров
-        try {
-            $db = JFactory::getDbo();
+    function getProjectsOfDealers(){
+        try{
+            $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query
-                ->select('count(id)')
-                ->from('#__users')
-                ->where('dealer_id <> 1 and dealer_type in(0,1)');
+            $query->select("u.id,u.name,GROUP_CONCAT(DISTINCT p.id SEPARATOR ';') AS projects")
+                ->from("`#__gm_ceiling_projects` AS p")
+                ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
+                ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
+                ->where("u.dealer_type IN (0,1) and p.project_status in(6,7,8,10,11,12,13,14,16,17,19,24,25,26)")
+                ->group("u.id");
             $db->setQuery($query);
-            $count = $db->loadResult();
-            return $count;
-        } catch (Exception $e) {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-    public function getOrderingDealers($date1, $date2)
-    {
-        //заказывающие диллеры
-        /* SELECT COUNT(u.id)
-            FROM `#__users` AS u
-            WHERE u.id IN (SELECT dealer_id FROM `#__gm_ceiling_clients` AS c  WHERE u.id = c.dealer_id AND c.id IN
-            ( SELECT p.client_id FROM `#__gm_ceiling_projects` AS p INNER JOIN `#__gm_ceiling_projects_history` AS h ON p.id = h.project_id
-            AND h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '2018-02-25' AND '2018-03-27'))
-            AND u.dealer_id <> 1 AND u.dealer_type IN(0,1) */
-        try {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $sub_query1 = $db->getQuery(true);
-            $sub_query2 = $db->getQuery(true);
-            $sub_query2
-                ->select('p.client_id')
-                ->from("#__gm_ceiling_projects as p")
-                ->innerJoin("#__gm_ceiling_projects_history as h on p.id = h.project_id and h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '$date1' and '$date2'");
-            $sub_query1
-                ->select('c.dealer_id')
-                ->from('#__gm_ceiling_clients as c')
-                ->where("u.id = c.dealer_id AND c.id IN ($sub_query2)");
-            $query
-                ->select('u.id')
-                ->from('#__users as u')
-                ->where("u.id IN ($sub_query1)");
-            $db->setQuery($query);
-           
+
             $items = $db->loadObjectList();
             return $items;
-        } catch (Exception $e) {
+        }
+        catch(Exception $e)
+        {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
-    public function getNewOrderingDealers($date1, $date2)
-    {
-        //дилеры которые не заказывали до выбранного промежутка и заказали в выбранном
+   }
+
+    function calculateSelfPrice($calculation,$reject_rate){
         try {
-            $date1 = new DateTime($date1);
-            $date2 = new DateTime($date2);
-            $day_diff = $date2->diff($date1)->format("%d");
-            $prev_date1 = clone $date1;
-            $prev_date1->modify('- '.++$day_diff.' days');
-            $prev_date2 = clone $prev_date1;
-            $prev_date2->modify('+ '.--$day_diff.' days');
-            $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
-            $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
-            $need_dealers = array_udiff($dealers, $prev_dealers,'self::compare_objects');
-            return $need_dealers;
+            $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+            $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
+            $results = $mount_model->getDataAll(1);
+            return $calculation->canvas_area*($calculation->price +$calculation->price*reject_rate)+($calculation->canvas_area - $calculation->offcut_square)*11 + $calculation->n5_shrink*4 + ($calculation->n9 - 6)*$results->mp20 + components_self;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
-    private static function compare_objects($obj_a, $obj_b) {
-        return $obj_a->id != $obj_b->id;
-      }
-    public function getFallenOffDealers($date1, $date2)
-    {
-        //дилеры которые заказывали до выбранного промежутка и не заказывали в выбранный
-        try {
-            $date1 = new DateTime($date1);
-            $date2 = new DateTime($date2);
-            $day_diff = $date2->diff($date1)->format("%d");
-            $prev_date1 = clone $date1;
-            $prev_date1->modify('- '.++$day_diff.' days');
-            $prev_date2 = clone $prev_date1;
-            $prev_date2->modify('+ '.--$day_diff.' days');
-            $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
-            $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
-            $need_dealers = array_udiff($prev_dealers, $dealers,'self::compare_objects');
-            return $need_dealers;
-        } catch (Exception $e) {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
+   }
 }

@@ -1347,26 +1347,29 @@ class Gm_ceilingHelpersGm_ceiling
             //Сюда считаем итоговую сумму компонентов
             $components_data = array();
             foreach ($component_count as $key => $cost) {
-                $component_item = array();
-                $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
-                $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
-                $component_item['id'] = $components[$key]->id;                                      //ID
-                $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
-                $component_item['stack'] = 0;                                                       //Флаг, складывать ли этот компонент при сложении калькуляций
-                $component_item['self_price'] = $components[$key]->price;                           //cебестоимость    
-                $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
-                //Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
-                //Кол-во * Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
-                //Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
-                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-                $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
-                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
-                $components_data[] = $component_item;
+                if(self::rounding($cost, $components[$key]->count_sale) > 0){
+                    $component_item = array();
+                    $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
+                    $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
+                    $component_item['id'] = $components[$key]->id;
+                    $component_item['component_id'] = $components[$key]->component_id;                                     //ID
+                    $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
+                    $component_item['stack'] = 0;                                                       //Флаг, складывать ли этот компонент при сложении калькуляций
+                    $component_item['self_price'] = $components[$key]->price;                           //cебестоимость    
+                    $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
+                    //Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
+                    //Кол-во * Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
+                    //Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
+                        //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
+                    $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
+                        //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
+                    $components_data[] = $component_item;
+                }
             }
             //добавляем щепотку дополнительных комплектующих
             $extra_components = json_decode($data['extra_components']);

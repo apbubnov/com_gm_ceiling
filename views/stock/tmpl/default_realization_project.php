@@ -1308,6 +1308,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     url: "/index.php?option=com_gm_ceiling&task=stock.realization",
                     data: data,
                     success: function (data) {
+                        console.log(data);
                         data = JSON.parse(data);
 
                         if (data.status === "error")
