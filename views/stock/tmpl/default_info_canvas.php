@@ -152,6 +152,7 @@ $info = $canvasHistory->info;
     <tr>
         <td>Дата</td>
         <td>Тип</td>
+        <td>Цена</td>
         <td>Квадратура</td>
         <td>Остаток</td>
         <td>Штрих-код</td>
@@ -165,6 +166,7 @@ $info = $canvasHistory->info;
         <tr>
             <td><?= $h->date_update; ?></td>
             <td><?= $h->status; ?></td>
+            <td><?= $h->price; ?></td>
             <td><?= $h->quad . " " . $info->unit; ?></td>
             <td><?= $h->quad_now . " " . $info->unit; ?></td>
             <td><?= $h->barcode; ?></td>
@@ -176,7 +178,7 @@ $info = $canvasHistory->info;
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="8"> </td>
+        <td colspan="9"> </td>
     </tr>
     </tfoot>
 </table>
