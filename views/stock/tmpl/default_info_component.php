@@ -21,6 +21,7 @@ $userGroup = $user->groups;
 if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: ' . $_SERVER['REDIRECT_URL']);
 
 $id = $app->input->get('id', NULL, 'INT');
+$good_id = $app->input->get('good', NULL, 'INT');
 $componentHistory = $model->getHistoryComponent($id);
 $history = $componentHistory->history;
 $info = $componentHistory->info;
@@ -152,31 +153,35 @@ $info = $componentHistory->info;
     <tr>
         <td>Дата</td>
         <td>Тип</td>
+        <td>Цена</td>
         <td>Количество</td>
         <td>Остаток</td>
         <td>Штрих-код</td>
         <td>Клиент</td>
         <td>Дилер</td>
         <td>Кладовщик</td>
+        <td>Склад</td>
     </tr>
     </thead>
     <tbody>
-    <? foreach ($history as $h): ?>
+    <? foreach ($history as $h): if (empty($good_id) || $good_id == $h->good_id): ?>
         <tr>
             <td><?= $h->date_update; ?></td>
             <td><?= $h->status; ?></td>
+            <td><?= $h->price; ?> руб.</td>
             <td><?= $h->count . " " . $info->unit; ?></td>
             <td><?= $h->count_now . " " . $info->unit; ?></td>
             <td><?= $h->barcode; ?></td>
             <td><?= $h->client; ?></td>
             <td><?= $h->dealer; ?></td>
             <td><?= $h->stock; ?></td>
+            <td><?= $h->stock_name; ?></td>
         </tr>
-    <? endforeach; ?>
+    <? endif; endforeach; ?>
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="8"> </td>
+        <td colspan="10"> </td>
     </tr>
     </tfoot>
 </table>
