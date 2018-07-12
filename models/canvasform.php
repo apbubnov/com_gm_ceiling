@@ -771,6 +771,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                 ->columns("`canvas_id`, `quad`, `in`, `out`, `date`");
             $count_transefer = 0;
 
+
+            //print_r($data);
+            //exit;
             foreach ($data as $index => $canvas) {
                 foreach ($canvas->rollers as $roller) {
                     $price = ceil(floatval($canvas->price) * (floatval($roller->realizate)) * 100) / 100;
