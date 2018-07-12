@@ -26,6 +26,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $cut_img = $jinput->get('cut_img', '', 'string');
             $n4 = $jinput->get('jform_n4', '', 'string');
             $n5 = $jinput->get('jform_n5', '', 'string');
+            $n5_shrink = $jinput->get('n5_shrink', '', 'string');
             $n9 = $jinput->get('jform_n9', '', 'string');
             $texture = $jinput->get('texture', 0, 'int');
             $color = $jinput->get('color', 0, 'int');
@@ -117,6 +118,9 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
             if (!empty($n5)) {
                 $data['n5'] = $n5;
+            }
+            if (!empty($n5_shrink)) {
+                $data['n5_shrink'] = $n5_shrink;
             }
             if (!empty($n9)) {
                 $data['n9'] = $n9;

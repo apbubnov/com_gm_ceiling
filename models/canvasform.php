@@ -771,10 +771,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                 ->columns("`canvas_id`, `quad`, `in`, `out`, `date`");
             $count_transefer = 0;
 
+
             foreach ($data as $index => $canvas) {
                 foreach ($canvas->rollers as $roller) {
-                    $price = ceil(floatval($canvas->price) * (floatval($roller->realizate)) * 100) / 100;
-
                     if ($roller->stock != $roller->stock2) {
                         $count_transefer += 1;
                         $query_transfer->values("'$canvas->id', '$roller->realizate', '$roller->stock2', '$roller->stock', '$info->date'");
@@ -785,7 +784,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         $query_delete->delete($db->quoteName('#__gm_ceiling_canvases_all'))
                             ->where("id = '$roller->id'");
 
-                        $query_analytic->values("'$canvas->id', NULL, '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
+                        $query_analytic->values("'$canvas->id', NULL, '$roller->barcode', '$roller->article', '-$roller->realizate', '$canvas->price', " .
                             "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     } else {
                         $query_update = $db->getQuery(true);
@@ -793,7 +792,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                             ->where("id = '$roller->id'")
                             ->set("quad = '$roller->quad'");
 
-                        $query_analytic->values("'$canvas->id', '$roller->id', '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
+                        $query_analytic->values("'$canvas->id', '$roller->id', '$roller->barcode', '$roller->article', '-$roller->realizate', '$canvas->price', " .
                             "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     }
 
