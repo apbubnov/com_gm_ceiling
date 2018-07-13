@@ -313,7 +313,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	        	->from('`#__gm_ceiling_analytics_canvases`')
 	        	->where('roller_id = ca.id AND `status` = 1');
 	        $query
-	        	->select("DISTINCT c.id,c.n3,c.n4,c.n5,c.n5_shrink,c.offcut_square,c.n9,cut.canvas_area,($price_subquery) as self_price")
+	        	->select("DISTINCT c.id,c.n3,c.n4,c.n5,c.n31,c.n5_shrink,c.offcut_square,c.n9,c.components_sum,c.canvases_sum,cut.canvas_area,($price_subquery) as self_price")
 	            ->from('`#__gm_ceiling_calculations` AS c')
 	            ->innerJoin('`#__gm_ceiling_cuttings` AS cut ON c.id = cut.id')
 	            ->innerJoin('`rgzbn_gm_ceiling_canvases_all` AS ca ON ca.id_canvas = c.n3')

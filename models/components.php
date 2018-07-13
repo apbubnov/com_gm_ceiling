@@ -757,8 +757,11 @@ class Gm_ceilingModelComponents extends JModelList
             $query = $db->getQuery(true);
             $query
                 ->select("good_id,barcode,article")
-                ->from("`#__gm_ceiling_analytics_components`")
-                ->where("project_id = $project_id and component_id = $component_id and option_id = $option_id");
+                ->from("`#__gm_ceiling_analytics_components`");
+                if(!empty($project_id)){
+                    $query->where("project_id = $project_id");
+                }
+               $query->where("component_id = $component_id and option_id = $option_id");
             $db->setQuery($query);
             return $db->loadObject();
         }
@@ -774,7 +777,16 @@ class Gm_ceilingModelComponents extends JModelList
             $query
                 ->select("price")
                 ->from("`#__gm_ceiling_analytics_components`")
-                ->where("component_id = $component_id and option_id = $option_id and good_id = $good_id and barcode = $barcode and article = $article and status = 1");
+                ->where("component_id = $component_id and option_id = $option_id and status = 1");
+                if(!empty($good_id)){
+                    $query->where("good_id = '$good_id'");
+                }
+                if(!empty($barcode)){
+                    $query->where("barcode = '$barcode'");
+                }
+                if(!empty($article)){
+                    $query->where("article = '$article'");
+                }
             $db->setQuery($query);
             return $db->loadObject();
         }
