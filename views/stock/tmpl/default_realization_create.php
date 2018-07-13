@@ -1228,7 +1228,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает!"
                     });
@@ -1243,7 +1243,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             number = Float(e.val()),
             itog = number;
 
-        if (number % round !== 0) itog = (Math.floor(number / round) + 1) * round;
+        if (number % round !== 0) itog = (Math.floor(number / round + round)) * round;
 
         e.val(itog);
     }
@@ -1429,7 +1429,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                         noty({
                             theme: 'relax',
                             layout: 'center',
-                            timeout: 1500,
+                            timeout: 5000,
                             type: "error",
                             text: data.error
                         });
@@ -1450,7 +1450,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает!"
                     });
@@ -1483,7 +1483,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 1500,
+                    timeout: 5000,
                     type: "error",
                     text: "Сервер не отвечает!"
                 });
