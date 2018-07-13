@@ -106,7 +106,8 @@ class Gm_ceilingModelTeam extends JModelItem
 
 			$query->select("projects.id, ($query2) as mounting_sum, projects.new_mount_sum, transport, distance, distance_col")
 				->from('#__gm_ceiling_projects as projects')
-				->where("project_mounter = '$id' and project_mounting_date between '$date1' and '$date2'");
+				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on p.id = mp.project_id")
+				->where("mp.mounter_id = '$id' and mp.date_time between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 

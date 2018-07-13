@@ -1135,9 +1135,10 @@ class Gm_ceilingModelProject extends JModelItem
                 ->from("#__gm_ceiling_calculations AS calculations")
                 ->where("calculations.project_id = projects.id");
 
-            $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
+            $query->select("mp.mounter_id  as project_mounter, mp.date_time as project_mounting_date, projects.project_info, ($query2) as n5")
                 ->from('#__gm_ceiling_projects as projects')
-                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'")
+                ->innerJoin("`#__gm_ceiling_projects_mounts` as mp on p.id = mp.project_id")
+                ->where("mp.date_time BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'")
                 ->order('projects.id');
             $db->setQuery($query);
 
