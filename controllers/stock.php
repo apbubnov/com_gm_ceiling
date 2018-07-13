@@ -99,7 +99,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     else {
                          $c->Count = 0;
                     }
-                    $c->Width = floatval(str_replace(",", ".", $c->Width));
+                    $c->Width = str_replace(",", ".", $c->Width);
                     $c->Price = floatval(str_replace(",", ".", $c->Price));
                     $c->Quad = floatval(str_replace(",", ".", $c->Quad));
 

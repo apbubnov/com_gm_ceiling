@@ -514,7 +514,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                 if (empty($result)) {
                     $result = (object)array();
-                    $result->count = $val->Count;
+                    $result->count = count($val->Rollers);
 
                     $query = $db->getQuery(true);
                     $query->select('textures.id AS id')
@@ -561,9 +561,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         ->from($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
                         ->where("name = '$val->Name' and country = '$val->Country'");
                     $db->setQuery($query);
-                    $result->manufacturer_id = $db->loadObject();
+                    $manufacturers = $db->loadObject();
 
-                    if (empty($result->manufacturer_id)) {
+                    if (empty($manufacturers)) {
                         $query = $db->getQuery(true);
                         $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
                             ->columns('name, country')
@@ -571,6 +571,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         $db->setQuery($query);
                         $db->execute();
                         $result->manufacturer_id = $db->insertid();
+                    }
+                    else {
+                        $result->manufacturer_id = $manufacturers->id;
                     }
 
                     $query = $db->getQuery(true);
@@ -582,10 +585,9 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                     $result->id = $db->insertid();
 
                 } else {
-
                     $query = $db->getQuery(true);
                     $query->update('`#__gm_ceiling_canvases`')
-                        ->set('count = ' . $db->quote(intval($result->count) + intval($val->Count)))
+                        ->set('count = ' . $db->quote(intval($result->count) + intval(count($val->Rollers))))
                         ->where('id = ' . $db->quote($result->id));
                     $db->setQuery($query);
                     $db->execute();
@@ -599,10 +601,11 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                     $query = $db->getQuery(true);
                     $query->insert($db->quoteName('#__gm_ceiling_canvases_all'))
-                        ->columns('`id_canvas`, `barcode`, `article`, `stock`, `type`, `quad`, `points`')
+                        ->columns('`id_canvas`, `barcode`, `article`, `stock`, `type`, `lenght`, `quad`, `points`')
                         ->values($db->quote($result->id) . ', ' . $db->quote($rol->Barcode)
                             . ', ' . $db->quote($rol->Article) . ', ' . $db->quote($rol->Stock)
-                            . ', ' . $db->quote(0) . ', ' . $db->quote($rol->Quad) . ', ' . $db->quote($points));
+                            . ', ' . $db->quote(0)  . ', ' . $db->quote($lenght) . ', ' .  $db->quote($rol->Quad) .
+                            ', ' . $db->quote($points));
 
                     $db->setQuery($query);
                     $db->execute();
