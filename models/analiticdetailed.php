@@ -152,7 +152,8 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
 				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.project_status NOT IN (2,3) and p.api_phone_id = a.id AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59' and cl.dealer_id = $dealer_id");
+				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
+				->where("p.project_status NOT IN (2,3) and p.api_phone_id = a.id AND pm.date_time BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59' and cl.dealer_id = $dealer_id");
 			
 			$refused
 				->select("COUNT(p.id)")
@@ -348,7 +349,8 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 			$mounts
 				->select("COUNT(p.id)")
 				->from("#__gm_ceiling_projects as p")
-				->where("p.project_status NOT IN (2,3) and p.client_id in ($clients_id) AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
+				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
+				->where("p.project_status NOT IN (2,3) and p.client_id in ($clients_id) AND pm.date_time BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
 			
 			$refused
 				->select("COUNT(p.id)")

@@ -303,8 +303,6 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				$project_data['project_info'] = $data['project_info'];
 			elseif(!empty($data['project_info-top']))
 				$project_data['project_info'] = $data['project_info-top'];
-			$project_data['project_mounting_date'] = "00.00.0000";
-			$project_data['project_mounting_daypart'] = "0";
 			$project_data['created'] = date("d.m.Y");
 			
 			//Если расчет пришел со страницы клиентского гостевого расчета
