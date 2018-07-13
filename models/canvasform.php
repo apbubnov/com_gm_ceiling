@@ -554,13 +554,25 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         }
                     }
                     $result->color_id = (!empty($result->color)) ? $result->color->id : null;
+
                     $query = $db->getQuery(true);
-                    $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
-                        ->columns('name, country')
-                        ->values($db->quote($val->Name). ', ' . $db->quote($val->Country));
+                    $query
+                        ->select('id')
+                        ->from($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
+                        ->where("name = '$val->Name' and country = '$val->Country'");
                     $db->setQuery($query);
-                    $db->execute();
-                    $result->manufacturer_id = $db->insertid();
+                    $result->manufacturer_id = $db->loadObject();
+
+                    if (empty($result->manufacturer_id)) {
+                        $query = $db->getQuery(true);
+                        $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
+                            ->columns('name, country')
+                            ->values($db->quote($val->Name). ', ' . $db->quote($val->Country));
+                        $db->setQuery($query);
+                        $db->execute();
+                        $result->manufacturer_id = $db->insertid();
+                    }
+
                     $query = $db->getQuery(true);
                     $query->insert($db->quoteName('#__gm_ceiling_canvases'))
                         ->columns('texture_id, color_id, manufacturer_id, width, count')
@@ -568,13 +580,16 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                     $db->setQuery($query);
                     $db->execute();
                     $result->id = $db->insertid();
+
                 } else {
+
                     $query = $db->getQuery(true);
                     $query->update('`#__gm_ceiling_canvases`')
                         ->set('count = ' . $db->quote(intval($result->count) + intval($val->Count)))
                         ->where('id = ' . $db->quote($result->id));
                     $db->setQuery($query);
                     $db->execute();
+
                 }
 
                 foreach ($val->Rollers as $rol) {
