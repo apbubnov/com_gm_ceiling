@@ -673,6 +673,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
             var client_id = "<?php echo $this->item->id_client;?>";
             var client_name = "<?php echo $this->item->client_id;?>";
+            jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
 
 
             document.getElementById('add_calc').onclick = function()
@@ -724,6 +725,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
             jQuery("#ref_btn").click(function(){
                 jQuery("#refuse_block").toggle();
+                if(jQuery("#refuse_block").is(":visible")){
+                    console.log(jQuery('[name = slider-refuse]:checked').data("status"));
+                    jQuery("#project_status").val(jQuery('[name = slider-refuse]:checked').data("status"));
+                }
+                else{
+                    jQuery("#project_status").val(<?php echo $this->item->project_status;?>);
+                }
             });
 
             jQuery("#save_email").click(function(){
@@ -754,6 +762,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                      var tr = jQuery(this).closest('tr');
                      remove_tr(tr,deleted_phones);
                 });
+                jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
             });
 
             jQuery(".phone").click(function(){
@@ -915,8 +924,8 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
             jQuery('[name = "slider-refuse"]').change(function(){
                 jQuery("#project_status").val(jQuery(this).data("status"));
-                console.log(jQuery("#project_status").val());
             });
+
 
             jQuery("#save_rec").click(function(){
 

@@ -174,7 +174,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <input name="type" value="calculator" type="hidden">
     <input name="subtype" value="calendar" type="hidden">
     <input id="project_verdict" name="project_verdict" value="0" type="hidden">
-    <input id="project_status" name="project_status" value="0" type="hidden">
+    <input id="project_status" name="project_status" value="<?php echo $this->item->project_status;?>" type="hidden">
     <input name="data_change" value="0" type="hidden">
     <input name="data_delete" value="0" type="hidden">
     <input id="mounting_date" name="mounting_date" type='hidden'>
@@ -665,7 +665,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         jQuery(document).ready(function () {
             var client_id = "<?php echo $this->item->id_client;?>";
             var client_name = "<?php echo $this->item->client_id;?>";
-
+            jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
             document.getElementById('add_calc').onclick = function()
             {
                 create_calculation(<?php echo $this->item->id; ?>);
@@ -777,6 +777,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                      var tr = jQuery(this).closest('tr');
                      remove_tr(tr,deleted_phones);
                 });
+                jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
             });
 
             jQuery(".phone").click(function(){
@@ -1038,37 +1039,31 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             $tmp_accept = 0; $tmp_refuse = 0;
 
             jQuery("#accept_project").click(function() {
-                if(!jQuery(this).data('status')){
-                    jQuery("#project_status").val(1);
-                    jQuery("#form-client").submit();
+                jQuery("input[name='project_verdict']").val(1);
+                if($tmp_accept == 0) {
+                    jQuery("#mounter_wraper").show();
+                    jQuery(".contract").show();
+                    jQuery("#title").show();
+                    jQuery(".calendar_wrapper").show();
+                    jQuery(".buttons_wrapper").show();
+                    jQuery(".project_activation").hide();
+                    jQuery("#project_activation").show();
+                    $tmp_accept = 1;
+                    $tmp_refuse = 0;
+                } else {
+                    jQuery(".project_activation").hide();
+                    jQuery(".contract").hide();
+                    jQuery("#mounter_wraper").hide();
+                    jQuery("#title").hide();
+                    jQuery(".calendar_wrapper").hide();
+                    jQuery(".buttons_wrapper").hide();
+                    jQuery("#project_activation").hide();
+                    $tmp_accept = 0;
+                    $tmp_refuse = 0;
                 }
-                else{
-                    jQuery("input[name='project_verdict']").val(1);
-                    if($tmp_accept == 0) {
-                        jQuery("#mounter_wraper").show();
-                        jQuery(".contract").show();
-                        jQuery("#title").show();
-                        jQuery(".calendar_wrapper").show();
-                        jQuery(".buttons_wrapper").show();
-                        jQuery(".project_activation").hide();
-                        jQuery("#project_activation").show();
-                        $tmp_accept = 1;
-                        $tmp_refuse = 0;
-                    } else {
-                        jQuery(".project_activation").hide();
-                        jQuery(".contract").hide();
-                        jQuery("#mounter_wraper").hide();
-                        jQuery("#title").hide();
-                        jQuery(".calendar_wrapper").hide();
-                        jQuery(".buttons_wrapper").hide();
-                        jQuery("#project_activation").hide();
-                        $tmp_accept = 0;
-                        $tmp_refuse = 0;
-                    }
-                    setTimeout(() => {
-                        window.location = "#project_activation";
-                    }, 100); 
-                }
+                setTimeout(() => {
+                    window.location = "#project_activation";
+                }, 100); 
             });
             jQuery("#refuse_project").click(function () {
                 jQuery("input[name='project_verdict']").val(0);
