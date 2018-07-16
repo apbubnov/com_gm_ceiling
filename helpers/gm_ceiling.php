@@ -4285,6 +4285,8 @@ class Gm_ceilingHelpersGm_ceiling
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
                         $AllMountingOfBrigade = $model->GetAllMountingOfBrigade($id, $date1, $date2);
+                        //throw new Exception(print_r($AllMountingOfBrigade,true));
+                        
                         $DateStatys = [];$need_calc_projects = [];
                         foreach ($AllMountingOfBrigade as $value) {
                             if ($value->read_by_mounter == null) {
@@ -4292,7 +4294,7 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5,$value->id];
                             array_push($DateStatys, $arr);
-                            
+                            //throw new Exception(print_r($DateStatys,true));
 
                         }
                         $DayMounter = [];
@@ -4312,7 +4314,7 @@ class Gm_ceilingHelpersGm_ceiling
                                     if ($value[1] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19 || $value[2] == 24|| $value[2] == 25|| $value[2] == 26|| $value[2] == 27|| $value[2] == 28|| $value[2] == 29 ) {
                                             $DayMounter[$r] = ["yellow", $perimeter];
                                         }
                                         if ($value[2] == 16) {
@@ -4324,8 +4326,14 @@ class Gm_ceilingHelpersGm_ceiling
                                         if ($value[2] == 11) {
                                             $DayMounter[$r] = ["green", $perimeter];
                                         }
-                                        if ($value[2] == 12) {
+                                        if ($value[2] == 12 ) {
                                             $DayMounter[$r] = ["blue", $perimeter];
+                                        }
+                                        if($value == 24 || $value == 25 || $value == 26){
+                                            $DayMounter[$r] = ["blue", $perimeter];
+                                        }
+                                        if($value == 26 || $value == 27 || $value == 28){
+                                            $DayMounter[$r] = ["green", $perimeter];
                                         }
                                     }
                                 } else {

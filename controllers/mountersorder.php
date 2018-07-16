@@ -46,6 +46,8 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$id = $jinput->get("url_proj","","STRING");
 			$date = $jinput->get("date","","STRING");
 			$stage = $jinput->get('stage', null, 'INT');
+			$model_mounts = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
+			$stages_name = $model_mounts->get_mount_types();
 			$model = $this->getModel('Mountersorder', 'Gm_ceilingModel');
 			$model_request = $model->MountingStart($id, $date, $stage);
 			$server_name = $_SERVER['SERVER_NAME'];
@@ -64,7 +66,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 				$mailer->addRecipient($value->email);
 			}
 			$body = "Здравствуйте. \n";
-			$body .= "Проект №$id перешел в статус \"Монтаж\".\n";
+			$body .= "Проект №$id перешел в статус \"$stages_name[$stage]\".\n";
 			$body .= "\n";
 			$body .= "Монтажная Бригада: ".$DataOrder[0]->project_mounter_name." (";
 			foreach ($NamesMounters as $value) {
