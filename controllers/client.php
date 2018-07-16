@@ -365,7 +365,7 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 
            	if(!empty($deleted_phones)){
            		foreach ($deleted_phones as $phone) {
-           			$client_phones_model->deletePhone($client_id,$phone);
+           			$client_phones_model->deletePhone($client_id,preg_replace('/[\(\)\-\+\s]/', '', $phone));
            		}
            	}
            	
