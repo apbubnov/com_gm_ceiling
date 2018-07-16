@@ -4285,13 +4285,15 @@ class Gm_ceilingHelpersGm_ceiling
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
                         $AllMountingOfBrigade = $model->GetAllMountingOfBrigade($id, $date1, $date2);
-                        $DateStatys = [];
+                        $DateStatys = [];$need_calc_projects = [];
                         foreach ($AllMountingOfBrigade as $value) {
                             if ($value->read_by_mounter == null) {
                                 $value->read_by_mounter = "0";
                             }
-                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5];
+                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5,$value->id];
                             array_push($DateStatys, $arr);
+                            
+
                         }
                         $DayMounter = [];
                         for ($r = 1; $r <= $current_days; $r++) {
@@ -4302,7 +4304,11 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             foreach ($DateStatys as $value) {
                                 if ($value[0] == $year . "-" . $monthfull . "-" . $t) {
-                                    $perimeter += $value[3];
+                                    if(!in_array($value[4],$need_calc_projects)){
+                                        $perimeter += $value[3];
+                                        array_push($need_calc_projects,$value[4]);
+                                    }
+                                    
                                     if ($value[1] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value[1] == 1) {
