@@ -175,6 +175,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                     <input name="data_delete" value="0" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
+                    <input id="mount" name="mount" type='hidden' value='<?php echo $this->item->mount_data;?>'>
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -342,13 +343,13 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                                value="<?php if (isset($_SESSION['address'])) {
                                                    echo $_SESSION['address'];
                                                } else echo $street ?>" placeholder="Адрес"
-                                               type="text" required="required"></td>
+                                               type="text"></td>
                                 </tr>
                                 <tr class="controls">
                                 <td>Дом / Корпус</td>
                                 <td>
                                     <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                               } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
+                                               } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" aria-required="true" type="text">
                                
                                     <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
                                                } else echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
@@ -435,30 +436,22 @@ if (!empty($_SESSION["project_card_$project_id"]))
     </div>
     </div>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-<?php if ($this->item->project_verdict == 0) { ?>
-            <table>
-                <tr>
-                    <td>
-                        <a class="btn  btn-primary" id="run_in_production">
-                            Запустить в производство
-                        </a>
-                    </td>
-                    
-                </tr>
-                <tr>
-                    <td colspan=3>
-                        <div id="call" class="call" style="display:none;">
-                            <label for="call">Добавить звонок</label>
-                            <br>
-                            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
-                            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
-                            <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
-                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
-                        </div>
-                    <td>
-                </tr>
-            </table>
-        <?php } ?>
+    <?php if ($this->item->project_verdict == 0) { ?>  
+        <button class="btn  btn-primary" id="run_in_production" type="button">
+            Запустить в производство
+        </button>
+        <div id="choose_mount" class="row center" style="display: none;">
+            <h4>Назначить дату монтажа, если требуется</h4>
+            <div id="calendar_mount" align="center"></div>
+            <button id = "to_production" class="btn btn-primary">Запустить</button>
+        </div>
+         <div class="modal_window_container" id="mw_container">
+            <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+            <div id="mw_mounts_calendar" class="modal_window">
+            </div>
+        </div>
+            
+    <?php } ?>
 
     </div>
     </form>
@@ -471,8 +464,9 @@ if (!empty($_SESSION["project_card_$project_id"]))
 
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
-
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
+    init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
     var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
@@ -822,7 +816,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
         jQuery("#run_in_production").click(function() {
             jQuery("#project_status").val(5);
             jQuery("#data_change").val(1);
-            jQuery("#form-client").submit();
+            jQuery("#choose_mount").show();
+            //jQuery("#form-client").submit();
         });
         jQuery("#change_discount").click(function() {
             jQuery(".new_discount").toggle();

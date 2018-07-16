@@ -980,9 +980,11 @@ class Gm_ceilingModelProject extends JModelItem
 	        $return = $db->execute();
 
 			$query = $db->getQuery(true);
-			$query ->select("id, client_id, project_info, project_mounting_date, project_note, 	gm_calculator_note")
-				->from('`#__gm_ceiling_projects`')
-	            ->where('id = ' . $id);
+			$query ->select("p.id, p.client_id, p.project_info, GROUP_CONCAT(distinct mp.date_time SEPARATOR ';') as project_mounting_date, p.project_note, 	p.gm_calculator_note")
+				->from('`#__gm_ceiling_projects` as p')
+				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on mp.project_id = p.id")
+	            ->where('p.id = ' . $id)
+	            ->order("p.id");
             $db->setQuery($query);
             $item =  $db->loadObject();
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');

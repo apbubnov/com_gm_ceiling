@@ -151,20 +151,10 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
-                        <?php if($item->project_mounting_date == "0000-00-00 00:00:00") { ?>
-                            -
-                        <?php } else { ?>
-                            <?php $jdate = new JDate($item->project_mounting_date); ?>
-                            <?php echo $jdate->format('d.m.Y H:i'); ?>
-                        <?php } ?>
+                        <?php echo $item->project_mounting_date;?>
                     </td>
                     <td class="center one-touch">
-                    <?php if($item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                            -
-                        <?php } else { ?>
-                            <?php $jdate = new JDate($item->project_calculation_date); ?>
-                            <?php echo $jdate->format('d.m.Y H:i'); ?>
-                        <?php } ?>
+                    <?php $item->project_calculation_date?>
                     </td>
                     <td class="center one-touch">
                         <?php if($item->closed == "0000-00-00") { ?>

@@ -279,7 +279,7 @@ class Gm_ceilingHelpersGm_ceiling
             if (!empty($client_id)) {
                 Gm_ceilingHelpersGm_ceiling::getModel('Client')->delete($client_id);
             }
-            echo $e->getMessage().' ';
+            die($e->getMessage().' ');
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -3616,9 +3616,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
-                $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
-                if ($data->project_mounting_date != "0000-00-00 00:00:00")
-                    $body .= "Дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
+                if (!empty($data->project_mounting_date))
+                    $body .= "Дата и время монтажа: " . $data->project_mounting_date . "\n";
                 $body .= "Примечание клиента: " . $data->project_note . "\n";
                 $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
                 if ($em || $em1) {

@@ -53,9 +53,24 @@ class Gm_ceilingModelProjectshistory extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->insert('`#__gm_ceiling_projects_history`')
-				->columns('project_id,new_status,date_of_change')
-				->values("$project_id,$new_status,NOW()");
+				->select("*")
+				->from('`#__gm_ceiling_projects_history`')
+				->where("project_id = $project_id and new_status = $new_status");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			if(empty($items)){
+				$query
+					->insert('`#__gm_ceiling_projects_history`')
+					->columns('project_id,new_status,date_of_change')
+					->values("$project_id,$new_status,NOW()");
+			}
+			else{
+				$query
+					->update('`#__gm_ceiling_projects_history`')
+					->set('date_of_change = NOW()')
+					->where("project_id = $project_id and new_status = $new_status");
+			}
+			
 			$db->setQuery($query);
 			$db->execute();
 		}

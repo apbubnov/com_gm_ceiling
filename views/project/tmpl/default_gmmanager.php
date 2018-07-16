@@ -63,10 +63,13 @@ if(!empty($this->item->mount_data)){
     }
     
 }
-
+ 
 
 //статус проекта
 $status = $model->WhatStatusProject($_GET['id']);
+if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status == 11) || ((int)$status[0]->project_status == 22) || $this->item->dealer_id != $user->dealer_id){
+    $display = 'style="display:none;"';
+} 
 
 ?>
 
@@ -84,7 +87,6 @@ $status = $model->WhatStatusProject($_GET['id']);
                 <form id="form-client"
                       action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                      <input type="hidden" name="mount" id = mount value= "<?php echo $json_mount;?>">
                     <table class="table">
                         <tr>
                             <th>Дилер</th>
@@ -347,9 +349,7 @@ $status = $model->WhatStatusProject($_GET['id']);
                 </table>
                 </div>
                 <div id="table-container">
-                    <?php if (((int)$status[0]->project_status != 16) && ((int)$status[0]->project_status != 11) && ((int)$status[0]->project_status != 22)) { ?>
-                        <div id = "calendar_mount" align="center" ></div>
-                    <?php } ?>
+                    <div id = "calendar_mount" align="center" <?php echo $display;?>></div>
                 </div>
             </div>
         </div>
@@ -363,6 +363,7 @@ $status = $model->WhatStatusProject($_GET['id']);
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.approvemanager&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+            <input type="hidden" name="mount" id = mount value= "<?php echo $json_mount;?>">
             <button type="button" id = "run" class="btn btn-primary">
                 Запустить
             </button>
@@ -526,9 +527,9 @@ $status = $model->WhatStatusProject($_GET['id']);
             
 
             jQuery("#run").click(function(){
-                jQuery("#modal_window_container").show();
-                jQuery("#modal_window_date").show("slow");
-                jQuery("#close").show();
+                jQuery("#mw_container").show();
+                jQuery("#mw_date").show("slow");
+                jQuery("#close_mw").show();
             });
            
 
