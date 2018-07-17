@@ -338,9 +338,8 @@ $AllSum = 0;
                         }
                         break;
                     case '26':
-                        if(stage == 4){
-                            jQuery("#begin").attr("disabled", false);
-                        }
+                        jQuery("#begin").attr("disabled", "disabled");
+                        jQuery("#complited").attr("disabled", "disabled");
                         break;
                     case '27':
                         if(stage == 2){
