@@ -3236,6 +3236,11 @@ public function register_mnfctr(){
 
         }
     }
+
+    function test(){
+        $model = Gm_ceilingHelpersGm_ceiling::getModel("Analitic_dealers");
+        die(json_encode($model->getData()));
+    }
 }
 
 ?>
