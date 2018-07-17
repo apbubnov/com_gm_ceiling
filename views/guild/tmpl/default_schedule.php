@@ -263,7 +263,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                         noty({
                             theme: 'relax',
                             layout: 'center',
-                            timeout: 1500,
+                            timeout: 5000,
                             type: "error",
                             text: "Что то пошло не так! Попробуйте снова!"
                         });
@@ -275,7 +275,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает! Попробуйте снова!"
                     });
@@ -326,7 +326,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает!"
                     });
@@ -416,7 +416,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает! Попробуйте позже!"
                     });
@@ -517,7 +517,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: data.status,
                         text: data.message
                     });
@@ -528,7 +528,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает!"
                     });

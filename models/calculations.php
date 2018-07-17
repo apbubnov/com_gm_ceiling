@@ -869,10 +869,11 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->from("#__gm_ceiling_calculations AS calculations")
                 ->where("calculations.project_id = projects.id");
 
-            $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
+            $query->select("pm.mounter_id as project_mounter, pm.date_time as project_mounting_date, projects.project_info, ($query2) as n5")
                 ->from('#__gm_ceiling_projects as projects')
+                ->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
+                ->where("pm.date_time  BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -933,10 +934,11 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->from("#__gm_ceiling_calculations AS calculations")
                 ->where("calculations.project_id = projects.id");
 
-            $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
+            $query->select("pm.mounter_id as project_mounter, pm.date_time as project_mounting_date, projects.project_info, ($query2) as n5")
                 ->from('#__gm_ceiling_projects as projects')
+                ->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
+                ->where("pm.date_time BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
             $items = $db->loadObjectList();

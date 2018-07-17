@@ -750,4 +750,49 @@ class Gm_ceilingModelComponents extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getComponentsParameters($project_id,$component_id,$option_id){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("good_id,barcode,article")
+                ->from("`#__gm_ceiling_analytics_components`");
+                if(!empty($project_id)){
+                    $query->where("project_id = $project_id");
+                }
+               $query->where("component_id = $component_id and option_id = $option_id");
+            $db->setQuery($query);
+            return $db->loadObject();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getComponentsSelfPrice($component_id,$option_id,$good_id,$barcode,$article){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("price")
+                ->from("`#__gm_ceiling_analytics_components`")
+                ->where("component_id = $component_id and option_id = $option_id and status = 1");
+                if(!empty($good_id)){
+                    $query->where("good_id = '$good_id'");
+                }
+                if(!empty($barcode)){
+                    $query->where("barcode = '$barcode'");
+                }
+                if(!empty($article)){
+                    $query->where("article = '$article'");
+                }
+            $db->setQuery($query);
+            return $db->loadObject();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

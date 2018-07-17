@@ -21,6 +21,8 @@ $jinput = JFactory::getApplication()->input;
 $project = $jinput->get('project', null, 'INT');
 $stage = $jinput->get('stage', null, 'INT');
 
+
+
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);
@@ -262,6 +264,8 @@ $AllSum = 0;
 
 <script type="text/javascript">
     var stage = '<?php echo $stage; ?>';
+    var stage_map_status = JSON.parse('<?php echo json_encode($stage_map_status);?>');
+    console.log(stage_map_status);
     var url_proj = '<?php echo $project; ?>';
     // функция получения текущего времени
     var date;
@@ -310,7 +314,54 @@ $AllSum = 0;
                 end = msg[0].project_mounting_end;
                 status_mount = msg[0].project_status;
                 console.log(status_mount);
-                if (status_mount == 17 ) {
+                switch(status_mount){
+                    case '10':
+                    case '19':
+                        if(stage == 1 || stage == 2){
+                            jQuery("#begin").attr("disabled", false);
+                        }
+                        break;
+                    case '16':
+                        if(stage == 1){
+                            jQuery("#complited").attr("disabled", false);
+                            jQuery("#underfulfilled").attr("disabled",false);
+                        }
+                        break;
+                    case '24':
+                        if(stage == 3){
+                            jQuery("#begin").attr("disabled", false);
+                        }
+                        break;
+                    case '25':
+                        if(stage == 4){
+                            jQuery("#begin").attr("disabled", false);
+                        }
+                        break;
+                    case '26':
+                        if(stage == 4){
+                            jQuery("#begin").attr("disabled", false);
+                        }
+                        break;
+                    case '27':
+                        if(stage == 2){
+                            jQuery("#begin").attr("disabled", "disabled");
+                            jQuery("#complited").attr("disabled", false);
+                        }
+                        break;
+                    case '28':
+                        if(stage == 3){
+                            jQuery("#begin").attr("disabled", "disabled");
+                            jQuery("#complited").attr("disabled", false);
+                        }
+                        break;
+                    case '29':
+                        if(stage == 4){
+                            jQuery("#begin").attr("disabled", "disabled");
+                            jQuery("#complited").attr("disabled", false);
+                        }  
+                        break;
+                }
+                /*if (status_mount == 27 || status_mount == 28 || status_mount == 29 ) {
                     jQuery("#begin").attr("disabled", "disabled");
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
@@ -321,7 +372,7 @@ $AllSum = 0;
                 } else if (status_mount == 16 || status_mount == 24 || status_mount == 25 || status_mount == 26 ) {
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
-                } 
+                }*/ 
             },
             error: function(data){
                 console.log(data);

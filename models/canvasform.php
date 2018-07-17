@@ -514,7 +514,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                 if (empty($result)) {
                     $result = (object)array();
-                    $result->count = $val->Count;
+                    $result->count = count($val->Rollers);
 
                     $query = $db->getQuery(true);
                     $query->select('textures.id AS id')
@@ -554,13 +554,28 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         }
                     }
                     $result->color_id = (!empty($result->color)) ? $result->color->id : null;
+
                     $query = $db->getQuery(true);
-                    $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
-                        ->columns('name, country')
-                        ->values($db->quote($val->Name). ', ' . $db->quote($val->Country));
+                    $query
+                        ->select('id')
+                        ->from($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
+                        ->where("name = '$val->Name' and country = '$val->Country'");
                     $db->setQuery($query);
-                    $db->execute();
-                    $result->manufacturer_id = $db->insertid();
+                    $manufacturers = $db->loadObject();
+
+                    if (empty($manufacturers)) {
+                        $query = $db->getQuery(true);
+                        $query->insert($db->quoteName('#__gm_ceiling_canvases_manufacturers'))
+                            ->columns('name, country')
+                            ->values($db->quote($val->Name). ', ' . $db->quote($val->Country));
+                        $db->setQuery($query);
+                        $db->execute();
+                        $result->manufacturer_id = $db->insertid();
+                    }
+                    else {
+                        $result->manufacturer_id = $manufacturers->id;
+                    }
+
                     $query = $db->getQuery(true);
                     $query->insert($db->quoteName('#__gm_ceiling_canvases'))
                         ->columns('texture_id, color_id, manufacturer_id, width, count')
@@ -568,13 +583,15 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                     $db->setQuery($query);
                     $db->execute();
                     $result->id = $db->insertid();
+
                 } else {
                     $query = $db->getQuery(true);
                     $query->update('`#__gm_ceiling_canvases`')
-                        ->set('count = ' . $db->quote(intval($result->count) + intval($val->Count)))
+                        ->set('count = ' . $db->quote(intval($result->count) + intval(count($val->Rollers))))
                         ->where('id = ' . $db->quote($result->id));
                     $db->setQuery($query);
                     $db->execute();
+
                 }
 
                 foreach ($val->Rollers as $rol) {
@@ -584,10 +601,11 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                     $query = $db->getQuery(true);
                     $query->insert($db->quoteName('#__gm_ceiling_canvases_all'))
-                        ->columns('`id_canvas`, `barcode`, `article`, `stock`, `type`, `quad`, `points`')
+                        ->columns('`id_canvas`, `barcode`, `article`, `stock`, `type`, `lenght`, `quad`, `points`')
                         ->values($db->quote($result->id) . ', ' . $db->quote($rol->Barcode)
                             . ', ' . $db->quote($rol->Article) . ', ' . $db->quote($rol->Stock)
-                            . ', ' . $db->quote(0) . ', ' . $db->quote($rol->Quad) . ', ' . $db->quote($points));
+                            . ', ' . $db->quote(0)  . ', ' . $db->quote($lenght) . ', ' .  $db->quote($rol->Quad) .
+                            ', ' . $db->quote($points));
 
                     $db->setQuery($query);
                     $db->execute();
@@ -772,12 +790,8 @@ class Gm_ceilingModelCanvasForm extends JModelForm
             $count_transefer = 0;
 
 
-            //print_r($data);
-            //exit;
             foreach ($data as $index => $canvas) {
                 foreach ($canvas->rollers as $roller) {
-                    $price = ceil(floatval($canvas->price) * (floatval($roller->realizate)) * 100) / 100;
-
                     if ($roller->stock != $roller->stock2) {
                         $count_transefer += 1;
                         $query_transfer->values("'$canvas->id', '$roller->realizate', '$roller->stock2', '$roller->stock', '$info->date'");
@@ -788,7 +802,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                         $query_delete->delete($db->quoteName('#__gm_ceiling_canvases_all'))
                             ->where("id = '$roller->id'");
 
-                        $query_analytic->values("'$canvas->id', NULL, '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
+                        $query_analytic->values("'$canvas->id', NULL, '$roller->barcode', '$roller->article', '-$roller->realizate', '$canvas->price', " .
                             "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     } else {
                         $query_update = $db->getQuery(true);
@@ -796,7 +810,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                             ->where("id = '$roller->id'")
                             ->set("quad = '$roller->quad'");
 
-                        $query_analytic->values("'$canvas->id', '$roller->id', '$roller->barcode', '$roller->article', '-$roller->realizate', '$price', " .
+                        $query_analytic->values("'$canvas->id', '$roller->id', '$roller->barcode', '$roller->article', '-$roller->realizate', '$canvas->price', " .
                             "'$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                     }
 

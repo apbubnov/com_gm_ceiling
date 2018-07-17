@@ -279,7 +279,7 @@ class Gm_ceilingHelpersGm_ceiling
             if (!empty($client_id)) {
                 Gm_ceilingHelpersGm_ceiling::getModel('Client')->delete($client_id);
             }
-            echo $e->getMessage().' ';
+            die($e->getMessage().' ');
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -1347,26 +1347,29 @@ class Gm_ceilingHelpersGm_ceiling
             //Сюда считаем итоговую сумму компонентов
             $components_data = array();
             foreach ($component_count as $key => $cost) {
-                $component_item = array();
-                $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
-                $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
-                $component_item['id'] = $components[$key]->id;                                      //ID
-                $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
-                $component_item['stack'] = 0;                                                       //Флаг, складывать ли этот компонент при сложении калькуляций
-                $component_item['self_price'] = $components[$key]->price;                           //cебестоимость    
-                $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
-                //Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
-                //Кол-во * Стоимость с маржой ГМ (для дилера)
-                $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
-                //Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
-                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-                $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
-                    //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
-                $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
-                $components_data[] = $component_item;
+                if(self::rounding($cost, $components[$key]->count_sale) > 0){
+                    $component_item = array();
+                    $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
+                    $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
+                    $component_item['id'] = $components[$key]->id;
+                    $component_item['component_id'] = $components[$key]->component_id;                                     //ID
+                    $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
+                    $component_item['stack'] = 0;                                                       //Флаг, складывать ли этот компонент при сложении калькуляций
+                    $component_item['self_price'] = $components[$key]->price;                           //cебестоимость    
+                    $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
+                    //Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
+                    //Кол-во * Стоимость с маржой ГМ (для дилера)
+                    $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
+                    //Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
+                        //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
+                    $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
+                        //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+                    $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
+                    $components_data[] = $component_item;
+                }
             }
             //добавляем щепотку дополнительных комплектующих
             $extra_components = json_decode($data['extra_components']);
@@ -3613,9 +3616,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
-                $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
-                if ($data->project_mounting_date != "0000-00-00 00:00:00")
-                    $body .= "Дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
+                if (!empty($data->project_mounting_date))
+                    $body .= "Дата и время монтажа: " . $data->project_mounting_date . "\n";
                 $body .= "Примечание клиента: " . $data->project_note . "\n";
                 $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
                 if ($em || $em1) {
@@ -4283,13 +4285,17 @@ class Gm_ceilingHelpersGm_ceiling
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
                         $AllMountingOfBrigade = $model->GetAllMountingOfBrigade($id, $date1, $date2);
-                        $DateStatys = [];
+                        //throw new Exception(print_r($AllMountingOfBrigade,true));
+                        
+                        $DateStatys = [];$need_calc_projects = [];
                         foreach ($AllMountingOfBrigade as $value) {
                             if ($value->read_by_mounter == null) {
                                 $value->read_by_mounter = "0";
                             }
-                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5];
+                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5,$value->id];
                             array_push($DateStatys, $arr);
+                            //throw new Exception(print_r($DateStatys,true));
+
                         }
                         $DayMounter = [];
                         for ($r = 1; $r <= $current_days; $r++) {
@@ -4300,11 +4306,15 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             foreach ($DateStatys as $value) {
                                 if ($value[0] == $year . "-" . $monthfull . "-" . $t) {
-                                    $perimeter += $value[3];
+                                    if(!in_array($value[4],$need_calc_projects)){
+                                        $perimeter += $value[3];
+                                        array_push($need_calc_projects,$value[4]);
+                                    }
+                                    
                                     if ($value[1] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19 || $value[2] == 24|| $value[2] == 25|| $value[2] == 26|| $value[2] == 27|| $value[2] == 28|| $value[2] == 29 ) {
                                             $DayMounter[$r] = ["yellow", $perimeter];
                                         }
                                         if ($value[2] == 16) {
@@ -4316,8 +4326,14 @@ class Gm_ceilingHelpersGm_ceiling
                                         if ($value[2] == 11) {
                                             $DayMounter[$r] = ["green", $perimeter];
                                         }
-                                        if ($value[2] == 12) {
+                                        if ($value[2] == 12 ) {
                                             $DayMounter[$r] = ["blue", $perimeter];
+                                        }
+                                        if($value == 24 || $value == 25 || $value == 26){
+                                            $DayMounter[$r] = ["blue", $perimeter];
+                                        }
+                                        if($value == 26 || $value == 27 || $value == 28){
+                                            $DayMounter[$r] = ["green", $perimeter];
                                         }
                                     }
                                 } else {

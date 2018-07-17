@@ -749,8 +749,6 @@ class Gm_ceilingModelComponentForm extends JModelForm
 
         foreach ($data as $index => $component) {
             foreach ($component->goods as $good) {
-                $price = ceil(floatval($component->price) * (floatval($good->countOld) - floatval($good->count)) * 100) / 100;
-
                 if ($good->stock != $good->stock2)
                 {
                     $count_transefer += 1;
@@ -763,7 +761,7 @@ class Gm_ceilingModelComponentForm extends JModelForm
                         ->where("id = '$good->id'");
 
                     $query_analytic->values("'$component->component_id', '$component->id', NULL, '$good->barcode', '$good->article', '-$good->realization',".
-                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
+                        " '$component->price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                 } else {
                     $query_update = $db->getQuery(true);
                     $query_update->update($db->quoteName('#__gm_ceiling_components_goods'))
@@ -771,7 +769,7 @@ class Gm_ceilingModelComponentForm extends JModelForm
                         ->set("count = '$good->count'");
 
                     $query_analytic->values("'$component->component_id', '$component->id', '$good->id', '$good->barcode', '$good->article', '-$good->realization',".
-                        " '$price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
+                        " '$component->price', '$stock', '$info->date', $client_id, '$dealer_id', '$info->user', $counterparty_id, '2', $info->project");
                 }
 
                 if (!empty($query_update)) $query[] = $query_update;

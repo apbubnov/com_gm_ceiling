@@ -338,10 +338,10 @@ class Gm_ceilingControllerClient extends JControllerLegacy
            	if(!empty($phones)){
            		foreach ($phones as $value) {
            			if(isset($value['old_phone'])){
-           				$need_update_phones[$value['old_phone']] = $value['phone'];
+           				$need_update_phones[$value['old_phone']] = preg_replace('/[\(\)\-\+\s]/', '', $value['phone']);
            			}
            			else{
-           				array_push($new_phones, $value['phone']);
+           				array_push($new_phones, preg_replace('/[\(\)\-\+\s]/', '', $value['phone']));
            			}
            		}
            		if(!empty($new_phones)){
@@ -365,7 +365,7 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 
            	if(!empty($deleted_phones)){
            		foreach ($deleted_phones as $phone) {
-           			$client_phones_model->deletePhone($client_id,$phone);
+           			$client_phones_model->deletePhone($client_id,preg_replace('/[\(\)\-\+\s]/', '', $phone));
            		}
            	}
            	

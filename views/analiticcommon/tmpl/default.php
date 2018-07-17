@@ -23,7 +23,7 @@ JHtml::_('formbehavior.chosen', 'select');
     $c_items = $analytic_model->getCommonAnalytic(1);
     $d_items = $analytic_model->getDetailedAnalytic();
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-	$dealers = $deal_analitic_model->getData('2018-03-25', '2018-03-30');
+	//$dealers = $deal_analitic_model->getData('2018-03-25', '2018-03-30');
 
 echo parent::getButtonBack();
 
@@ -293,55 +293,10 @@ echo parent::getButtonBack();
         </div>
     </div>
 </form>
-<h2>Аналитика дилеров</h2>
-<form action="" method="post" name="adminForm" id="d_analiticForm">
-	<div class = "analitic-actions">
-		Выбрать с <input type = "date" id = "dealer_date1"> по <input type ="date" id = "dealer_date2">
-	</div>
-	<table id = "dealer_analitic-table" class="analitic-table">
-		<thead class = "caption-style-analitic">
-            <tr>
-                <th>Всего</th>
-				<th>Заказывающие</th>
-				<th>Новые</th>
-				<th>Отвалившиеся</th>
-				<th>Кол-во заказов</th>
-				<th>Общая сумма</th>
-				<th>Средняя сумма чека</th>
-            </tr>
-		</thead> 
-		<tbody>
-		<tr>
-			<td>
-				<?php echo $dealers->common;?>
-			</td>		
-			<td>
-				<?php echo count($dealers->ordering_dealers);?>
-			</td>
-			<td>
-				<?php echo count($dealers->new_order_dealers);?>
-			</td>
-			<td>
-				<?php echo count($dealers->fallen);?>
-			</td>
-		</tr>
-		</tbody>
-  			
-			
-		
-	
-	</table>
-	<div id="modal-window-with-table" class="modal_window_analitic">
-        <button type="button" id="close-modal-window" class="close_modal_analic"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="window-with-table" class ="window-with-table-analitic">
-            <table id="table_projects" class = "table_project_analitic"></table>
-        </div>
-    </div>
-    <br>
-	<h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
-	<br>
 
-</form>
+<br>
+<h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
+<br>
 <script>
 	 jQuery(document).ready(function(){
         hideEmptyTr("#c_analitic-table");

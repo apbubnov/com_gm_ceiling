@@ -44,7 +44,8 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('p.check_mount_done as `done`')
 				
 				->from('#__gm_ceiling_projects as p')
-				->innerJoin('#__users as u ON p.project_mounter = u.id')
+				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
+				->innerJoin('#__users as u ON pm.mounter_id = u.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
 				->where("p.project_status in (12,17) and p.closed between '$date1' and '$date2'");
 			$db->setQuery($query);

@@ -106,8 +106,6 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 				$project_data['project_status'] = 1;
 				$jdate = $data['project_calculation_date'];
 				$project_data['project_calculation_date'] = $jdate." ".$data['project_calculation_daypart'];
-				$project_data['project_mounting_date'] = "0000-00-00";
-				$project_data['project_mounting_daypart'] = "00:00:00";
 				$project_data['project_note'] = $data['project_note'];
 				$project_data['dealer_id'] = $user->dealer_id;
 				$project_data['project_calculator'] = $data['project_calculator'];

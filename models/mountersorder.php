@@ -69,11 +69,17 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 	function MountingStart($id, $date, $stage) {
 		try
 		{
+			$stage_map_status = array(
+			    "1"=>16,
+			    "2"=>27,
+			    "3"=>28,
+			    "4"=>29
+			);
 			$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
 			$query->update('#__gm_ceiling_projects')
-			->set('project_status = 16')
+			->set("project_status = $stage_map_status[$stage]")
 			->where('id = '.$id);
 			$db->setQuery($query);
 			$db->execute();

@@ -568,6 +568,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
 			$client_model =  $this->getModel('client', 'Gm_ceilingModel');
 			$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 			//--------
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('project_id', '0', 'INT');
@@ -588,6 +589,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			foreach ($phones as $key => $value) {
 				$phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
 			}
+            $mount_data = json_decode($jinput->get('mount','',"STRING"));
+
 			$street = $jinput->get('new_address', '', 'STRING');
 			$house = $jinput->get('new_house', '', 'STRING');
 			$bdq = $jinput->get('new_bdq', '', 'STRING');
@@ -652,6 +655,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			$ignored_calculations = array_diff($all_calculations, $include_calculation);
 			$return = $model->activate($data, 5);
+            if(!empty($mount_data)){
+                $projects_mounts_model->save($project_id,$mount_data);
+            }
             $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $dealer = $user_model->getUserByAssociatedClient($client_id);
@@ -1292,9 +1298,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $ready_date_time = $ready_date.' '.$time;
             $quickly = $jinput->get('quick',0,'INT');
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+            $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel'); 
 			$data = $model->approvemanager($id,$ready_date_time,$quickly);
 			$res = $model->getNewData($id);
-		
+
+            $mount_data = json_decode($jinput->get('mount','',"STRING"));
+
+
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calc_model->new_getProjectItems($id);
 			$material_sum = 0;
@@ -1315,6 +1325,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
 			} else {
 				$this->setMessage("Проект ожидает монтажа");
+                if(!empty($mount_data)){
+                    $projects_mounts_model->save($id,$mount_data);
+                }
 				Gm_ceilingHelpersGm_ceiling::notify($data, 1);
 				Gm_ceilingHelpersGm_ceiling::notify($data, 13);
 			}

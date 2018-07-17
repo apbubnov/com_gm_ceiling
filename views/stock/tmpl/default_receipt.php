@@ -964,7 +964,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 3000,
+                    timeout: 5000,
                     type: "error",
                     text: v
                 });
@@ -1308,7 +1308,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                         noty({
                             theme: 'relax',
                             layout: 'center',
-                            timeout: 1500,
+                            timeout: 5000,
                             type: "error",
                             text: data.error
                         });
@@ -1330,7 +1330,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     noty({
                         theme: 'relax',
                         layout: 'center',
-                        timeout: 1500,
+                        timeout: 5000,
                         type: "error",
                         text: "Сервер не отвечает!"
                     });
@@ -1363,7 +1363,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 1500,
+                    timeout: 5000,
                     type: "error",
                     text: "Сервер не отвечает!"
                 });

@@ -176,7 +176,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
 			$query2->select("users.name")
 			->from('#__users as users')
-			->where("users.id = p.project_mounter");
+			->where("users.id = m.mounter_id");
 
 			$query->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
 			->from('#__gm_ceiling_projects as p')
@@ -225,9 +225,10 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             
 
             $query
- 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, p.project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type')
+ 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type')
                 ->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
+				->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
                 ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
                 ->order('pm.date_time');
 

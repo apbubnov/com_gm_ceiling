@@ -261,9 +261,10 @@ class Gm_ceilingModelStock extends JModelList
 
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('*, status.title as status')
+            $query->select('analytic.*, status.title as status, stock.name as stock_name')
                 ->from("`#__gm_ceiling_analytics_components` as analytic")
                 ->join("LEFT", "`#__gm_ceiling_analytics_status` as status ON analytic.status = status.id")
+                ->join("LEFT", "`#__gm_ceiling_stocks` as stock ON analytic.stock = stock.id")
                 ->where("analytic.option_id = ".$db->quote($id))
                 ->order("analytic.date_update DESC");
 
@@ -282,6 +283,7 @@ class Gm_ceilingModelStock extends JModelList
                     ->where("date_update <= ".$db->quote($h->date_update));
                 $db->setQuery($query);
                 $h->count_now = $db->loadObject()->count;
+                $h->price = ($h->price > 0)?$h->price:0;
 
                 $h->client = (!empty($h->client_id))?$client->getItem($h->client_id)->client_name:"-";
                 $h->dealer = (!empty($h->dealer_id))?JFactory::getUser($h->dealer_id)->name:"-";
@@ -320,9 +322,10 @@ class Gm_ceilingModelStock extends JModelList
 
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('*, status.title as status')
+            $query->select('canvas.*, status.title as status, stock.name as stock_name')
                 ->from("`#__gm_ceiling_analytics_canvases` as canvas")
                 ->join("LEFT","`#__gm_ceiling_analytics_status` as status ON status.id = canvas.status")
+                ->join("LEFT", "`#__gm_ceiling_stocks` as stock ON canvas.stock = stock.id")
                 ->where("canvas_id = ".$db->quote($id))
                 ->order("date_update DESC");
 
@@ -342,6 +345,7 @@ class Gm_ceilingModelStock extends JModelList
                     ->where("date_update <= ".$db->quote($h->date_update));
                 $db->setQuery($query);
                 $h->quad_now = round(floatval($db->loadObject()->quad),2);
+                $h->price = ($h->price > 0)?$h->price:0;
 
                 $h->client = (!empty($h->client_id))?$client->getItem($h->client_id)->client_name:"-";
                 $h->dealer = (!empty($h->dealer_id))?JFactory::getUser($h->dealer_id)->name:"-";

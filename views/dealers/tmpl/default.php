@@ -309,33 +309,47 @@ $server_name = $_SERVER['SERVER_NAME'];
                                     city: document.getElementById('dealer_city').value
                                 },
                                 success: function(data){
-                                    if (data == 'client_found')
-                                    {
-                                        var n = noty({
-                                            timeout: 2000,
-                                            theme: 'relax',
-                                            layout: 'center',
-                                            maxVisible: 5,
-                                            type: "error",
-                                            text: "Клиент с таким номером существует!"
-                                        });
+                                    console.log(data);
+                                    if(isNaN(data)){
+                                        if (data == 'client_found')
+                                        {
+                                            var n = noty({
+                                                timeout: 2000,
+                                                theme: 'relax',
+                                                layout: 'center',
+                                                maxVisible: 5,
+                                                type: "error",
+                                                text: "Клиент с таким номером существует!"
+                                            });
+                                        }
+                                        else{
+                                            var n = noty({
+                                                timeout: 2000,
+                                                theme: 'relax',
+                                                layout: 'center',
+                                                maxVisible: 5,
+                                                type: "error",
+                                                text: data
+                                            });
+                                        }
                                     }
                                     else
                                     {
-                                        location.reload();
+                                        //location.reload();
                                     }
                                 },
                                 dataType: "text",
                                 async: false,
                                 timeout: 10000,
                                 error: function(data){
+                                    console.log(data);
                                     var n = noty({
                                         timeout: 2000,
                                         theme: 'relax',
                                         layout: 'center',
                                         maxVisible: 5,
                                         type: "error",
-                                        text: "Ошибка. Сервер не отвечает"
+                                        text: data
                                     });
                                 }                   
                             });

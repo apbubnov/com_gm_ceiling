@@ -308,8 +308,9 @@
                                 comment_calc = "";
                             }
                             // статусы
-                            status_proj = element.project_status;
-                            if (element.project_status == 5 ) {
+                            status = element.project_status;
+                            
+                            /*if (element.project_status == 5 ) {
                                 status = "В производстве";
                             }
                             if (element.project_status == 6 ) {
@@ -330,12 +331,13 @@
                             if (element.project_status == 16 ) {
                                 status = "Монтаж";
                             }
+                            if()
                             if (element.project_status == 11 ) {
                                 status = "Монтаж выполнен";
                             }
                             if (element.project_status == 17 ) {
                                 status = "Монтаж недовыполнен";
-                            }
+                            }*/
                             if (element.read_by_mounter == 0) {
                                 status += " <strong>/ Не прочитан</strong>";
                             }

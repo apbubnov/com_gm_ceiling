@@ -980,9 +980,11 @@ class Gm_ceilingModelProject extends JModelItem
 	        $return = $db->execute();
 
 			$query = $db->getQuery(true);
-			$query ->select("id, client_id, project_info, project_mounting_date, project_note, 	gm_calculator_note")
-				->from('`#__gm_ceiling_projects`')
-	            ->where('id = ' . $id);
+			$query ->select("p.id, p.client_id, p.project_info, GROUP_CONCAT(distinct mp.date_time SEPARATOR ';') as project_mounting_date, p.project_note, 	p.gm_calculator_note")
+				->from('`#__gm_ceiling_projects` as p')
+				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on mp.project_id = p.id")
+	            ->where('p.id = ' . $id)
+	            ->order("p.id");
             $db->setQuery($query);
             $item =  $db->loadObject();
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
@@ -1135,9 +1137,10 @@ class Gm_ceilingModelProject extends JModelItem
                 ->from("#__gm_ceiling_calculations AS calculations")
                 ->where("calculations.project_id = projects.id");
 
-            $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
+            $query->select("mp.mounter_id  as project_mounter, mp.date_time as project_mounting_date, projects.project_info, ($query2) as n5")
                 ->from('#__gm_ceiling_projects as projects')
-                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'")
+                ->innerJoin("`#__gm_ceiling_projects_mounts` as mp on p.id = mp.project_id")
+                ->where("mp.date_time BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'")
                 ->order('projects.id');
             $db->setQuery($query);
 
@@ -1556,8 +1559,9 @@ class Gm_ceilingModelProject extends JModelItem
 	            if ($calculation->quad > 0) {
                     $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
 
-                    if (floatval($calculation->square) >= $calculation->quad / 2) {
-                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => 40);
+                    if (floatval($calculation->square) > 0) {
+                        $discount_temp = (floatval($calculation->square) >= $calculation->quad / 2) ? 40 : 100;
+                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => $discount_temp);
                     }
                 }
 
