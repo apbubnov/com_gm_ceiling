@@ -1957,7 +1957,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $mp1,                                           //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n5'] * $mp1,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $mp1,                                       //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $mp1                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n5'] * $mp1,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>2
                         );
                     }
                     //периметр
@@ -1968,7 +1969,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $mp31,                                          //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n5'] * $mp31,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $mp31                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n5'] * $mp31,                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>2
                         );
                     }
                     //периметр
@@ -1979,7 +1981,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n5'] * $mp32,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $mp32                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n5'] * $mp32,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>2
                         );
                     }
                     if ($data['n5'] > 0) {
@@ -1989,7 +1992,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp47,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n5'] * $results->mp47,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp47,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $results->mp47                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n5'] * $results->mp47,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>3
                         );
                     }
                     //?????????????????????????????????????????????????????????????????? здесь тоже + 10рублей????
@@ -2000,7 +2004,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n31'] * $results->mp1,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n31'] * $results->mp1                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n31'] * $results->mp1,                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 3
                         );
                     }
                     if ($data['n31'] > 0) {
@@ -2017,7 +2022,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp10,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n31'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n31'] * $results->mp10                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n31'] * $results->mp10,                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 4
                         );
                     }
                     //со вставкой
@@ -2035,25 +2041,38 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp10,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n5'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $results->mp10                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n5'] * $results->mp10,                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 4
                         );
                     }
                     //установка люстры
                     if ($data['n12'] > 0) {
                         $mounting_data[] = array(
-                            "title" => "Установка люстр (ПВХ)",                                                                       //Название
+                            "title" => "Установка закладной под люстру (ПВХ)",                 //Название
                             "quantity" => $data['n12'],//$count_lust,                                                           //Кол-во
                             "gm_salary" => $results->mp2,//max($gm->mp4, $gm->mp5),                                             //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $results->mp2 * $data['n12'],//$count_lust * max($gm->mp4, $gm->mp5),          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp2,//max($dealer->mp4, $dealer->mp5),                                 //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n12'] * $results->mp2//max($dealer->mp4, $dealer->mp5)              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n12'] * $results->mp2,//max($dealer->mp4, $dealer->mp5)              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>2
+                        );
+                        $mounting_data[] = array(
+                            "title" => "Установка люстры (ПВХ)",                 //Название
+                            "quantity" => $data['n12'],//$count_lust,                                                           //Кол-во
+                            "gm_salary" => $results->mp2_2,//max($gm->mp4, $gm->mp5),                                             //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $results->mp2_2 * $data['n12'],//$count_lust * max($gm->mp4, $gm->mp5),          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp2_2,//max($dealer->mp4, $dealer->mp5),                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n12'] * $results->mp2_2,//max($dealer->mp4, $dealer->mp5)              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=>3
                         );
                     }
                     if($data['n16']){
-                        $cornice = "Шторный карниз / Скрытый (ПВХ)";
+                        $cornice = "Закладная под шторный карниз / Скрытый (ПВХ)";
+                        $cornice1 = "Установка шторного карниза / Скрытый (ПВХ)";
                     }
                     else {
-                        $cornice = "Шторный карниз / Обычный (ПВХ)";
+                        $cornice = "Закладная под шторный карниз / Обычный (ПВХ)";
+                        $cornice1 = "Установка шторного карниза / Обычный (ПВХ)";
                     }
                     //Установка светильников
                     if (count($n13) > 0) {
@@ -2064,7 +2083,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp4,                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=>2
                             );
                         }
                         if ($count_square_lamp > 0) {
@@ -2074,19 +2094,23 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp5,                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=>2
                             );
                         }
+                        $count_lamp = $count_square_lamp+$count_round_lamp;
+                        if($count_lamp > 0){
+                            $mounting_data[] = array(
+                                "title" => "Установка светильников (ПВХ)",                              //Название
+                                "quantity" => $count_lamp,                                            //Кол-во
+                                "gm_salary" => $results->mp4_2,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_lamp * $results->mp4_2,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp4_2,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_lamp * $results->mp4_2,                 //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=>3
 
-                        $mounting_data[] = array(
-                            "title" => "Установка светильников (ПВХ)",                              //Название
-                            "quantity" => $count_square_lamp,                                            //Кол-во
-                            "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        );
-                        
+                            );
+                        }
                     }
                     if (count($n22) > 0) {
                         if ($count_ventilation > 0) {
@@ -2096,7 +2120,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_ventilation * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_ventilation * $results->mp16,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=>3
                             );
                         }
                         if ($count_ventilation_1 > 0) {
@@ -2106,7 +2131,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_ventilation_1 * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation_1 * $results->mp12                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_ventilation_1 * $results->mp12,                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=>3
                             );
                         }
                     }
@@ -2115,11 +2141,12 @@ class Gm_ceilingHelpersGm_ceiling
                         if ($count_diffuzor > 0) {
                             $mounting_data[] = array(
                                 "title" => "Установка диффузора (ПВХ)",                                                    //Название
-                                "quantity" => count($n13),                                                    //Кол-во
-                                "gm_salary" => $results->mp4_2,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => count($n13) * $results->mp4_2,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp4_2,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => count($n13) * $results->mp4_2                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "quantity" => $count_diffuzor,                                                    //Кол-во
+                                "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_diffuzor * $results->mp19,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 3
                             );
                         }
                     }
@@ -2132,7 +2159,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_pipe * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_pipe * $results->mp8                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_pipe * $results->mp8,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 3
                             );
                         }
                         if ($count_big_pipe > 0) {
@@ -2142,7 +2170,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp7,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_big_pipe * $results->mp7,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_big_pipe * $results->mp7,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 3
                             );
                         }
                     }
@@ -2154,7 +2183,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_1 * $results->mp23,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
                             );
                         }
                         if ($count_profil_2 > 0) {
@@ -2164,7 +2194,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_2 * $results->mp24,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
                             );
                         }
                         if ($count_profil_3 > 0) {
@@ -2174,7 +2205,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_3 * $results->mp25,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
                             );
                         }
                         if ($count_profil_4 > 0) {
@@ -2184,7 +2216,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                                 "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_4 * $results->mp26,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
                             );
                         }
                     }
@@ -2196,7 +2229,17 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp11,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n27'] * $results->mp11,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp11,                                              //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n27'] * $results->mp11                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n27'] * $results->mp11,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 2
+                        );
+                        $mounting_data[] = array(
+                            "title" => $cornice1,                                                            //Название
+                            "quantity" => $data['n27'],                                                     //Кол-во
+                            "gm_salary" => $results->mp11_2,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $data['n27'] * $results->mp11_2,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp11_2,                                              //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n27'] * $results->mp11_2,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 3
                         );
                     }
                     //закладная брусом
@@ -2207,7 +2250,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp11,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n17'] * $results->mp11,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp11,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n17'] * $results->mp11                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n17'] * $results->mp11,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 2
                         );
                     }
                     //пожарная сигнализация
@@ -2218,7 +2262,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp6,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n21'] * $results->mp6,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp6,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n21'] * $results->mp6                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n21'] * $results->mp6,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 3
                         );
                     }
                     //парящий потолок
@@ -2229,7 +2274,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp30,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n30'] * $results->mp30,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp30,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n30'] * $results->mp30                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n30'] * $results->mp30,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 3
                         );
                     }
                     //разделитель
@@ -2240,7 +2286,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary" => $results->mp9,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n20'] * $results->mp9,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp9,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n20'] * $results->mp9                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n20'] * $results->mp9,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 2
                         );
                     }
                     
