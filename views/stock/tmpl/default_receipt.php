@@ -673,7 +673,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['TIN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['TIN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{10}" required>
+                   autocomplete="off">
             <div class="Message TIN">ИНН</div>
             <div class="Selects TIN"></div>
         </div>
@@ -683,7 +683,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['CPR'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['CPR'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{9}" required>
+                   autocomplete="off" >
             <div class="Message CPR">КПП</div>
             <div class="Selects CPR"></div>
         </div>
@@ -693,7 +693,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['OGRN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['OGRN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{13}" required>
+                   autocomplete="off">
             <div class="Message OGRN">Основной государственный регистрационный номер</div>
             <div class="Selects OGRN"></div>
         </div>
@@ -746,7 +746,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['PayAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['PayAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{20}" required>
+                   autocomplete="off" required>
             <div class="Message PayAccount">Расчетный счет</div>
             <div class="Selects PayAccount"></div>
         </div>
@@ -757,7 +757,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['CorAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['CorAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{20}" required>
+                   autocomplete="off">
             <div class="Message CorAccount">Корреспондентский счёт</div>
             <div class="Selects CorAccount"></div>
         </div>
@@ -767,7 +767,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['BIC'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['BIC'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\d{9}" required>
+                   autocomplete="off"  required>
             <div class="Message BIC">БИК</div>
             <div class="Selects BIC"></div>
         </div>
@@ -778,7 +778,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                    onclick="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onkeyup="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
                    onblur="ClearSelect(this)"
-                   autocomplete="off" pattern="\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}" required>
+                   autocomplete="off" required>
             <div class="Message ContactsPhone">Номера телефона</div>
             <div class="Selects ContactsPhone"></div>
         </div>
