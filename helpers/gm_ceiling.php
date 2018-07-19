@@ -2912,7 +2912,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 $html .= '</tr>';
                             }
                             else{
-                                if($item["stage"] == $stages){
+                                if($item["stage"] == $stage){
                                     $html .= '<tr>';
                                     $html .= '<td>' . $item['title'] . '</td>';
                                     $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
@@ -2945,7 +2945,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 $html .= '</tr>';
                             }
                             else{
-                                 if($item["stage"] == $stages){
+                                 if($item["stage"] == $stage){
                                     $html .= '<tr>';
                                     $html .= '<td>' . $item['title'] . '</td>';
                                     $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
@@ -2994,7 +2994,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $html .= '</tbody></table>';}
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                $filename = ($project_id . "fuck".$stage) . ".pdf";
+                $filename = md5($project->id."mount_stage".$stage) . ".pdf";
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
                 return 1;
            
