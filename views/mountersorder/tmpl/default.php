@@ -20,7 +20,7 @@ $userId     = $user->get('id');
 $jinput = JFactory::getApplication()->input;
 $project = $jinput->get('project', null, 'INT');
 $stage = $jinput->get('stage', null, 'INT');
-
+$calc_sum_stage = 0;
 
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
@@ -36,6 +36,7 @@ if (!empty($calculation_ids)) {
     foreach ($calculation_ids as $value) { 
          $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
          foreach ($DataOfProject["mounting_data"] as $val) { 
+            if($val['stage']==$stage){
                 if (!array_key_exists($val["title"], $AllCalc)) {
                     $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                 } else {
@@ -44,6 +45,7 @@ if (!empty($calculation_ids)) {
                     $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                 }
             } 
+        }
     }
 }
 $AllSum = 0;
@@ -148,46 +150,53 @@ $AllSum = 0;
                             <td>Стоимость, ₽</td>
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                        <?php if (!empty($DataOfProject)) { ?>
-                            <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
-                                <tr>
-                                    <td class="left">
-                                        <?php echo $val["title"]; ?>
-                                    </td>
-                                    <?php if ($user->dealer_id == 1) { ?>
-                                        <td>
-                                            <?php echo $val["gm_salary"]; ?>
-                                        </td>
-                                    <?php } else { ?>
-                                        <td>
-                                            <?php echo $val["dealer_salary"]; ?>
-                                        </td>
-                                    <?php } ?>
-                                    <td>
-                                        <?php echo $val["quantity"]; ?>
-                                    </td>
-                                    <?php if ($user->dealer_id == 1) { ?>
-                                        <td>
-                                            <?php echo $val["gm_salary_total"]; ?>
-                                        </td>
-                                    <?php } else { ?>
-                                        <td>
-                                            <?php echo $val["dealer_salary_total"]; ?>
-                                        </td>
-                                    <?php } ?>
-                                </tr>
-                            <?php } ?> 
+                        <?php 
+                            $calc_sum_stage = 0;
+                                if (!empty($DataOfProject)) { 
+                                    foreach ($DataOfProject["mounting_data"] as $val) {
+                                        if($val['stage'] == $stage){ ?>
+                                            <tr>
+                                                <td class="left">
+                                                    <?php echo $val["title"]; ?>
+                                                </td>
+                                                <?php if ($user->dealer_id == 1) { ?>
+                                                    <td>
+                                                        <?php echo $val["gm_salary"]; ?>
+                                                    </td>
+                                                <?php } else { ?>
+                                                    <td>
+                                                        <?php echo $val["dealer_salary"]; ?>
+                                                    </td>
+                                                <?php } ?>
+                                                <td>
+                                                    <?php echo $val["quantity"]; ?>
+                                                </td>
+                                                <?php if ($user->dealer_id == 1) { ?>
+                                                    <td>
+
+                                                        <?php
+                                                            $calc_sum_stage +=  $val["gm_salary_total"];
+                                                            echo $val["gm_salary_total"]; 
+                                                        ?>
+                                                    </td>
+                                                <?php } else { ?>
+                                                    <td>
+                                                        <?php 
+                                                             $calc_sum_stage +=  $val["dealer_salary_total"];
+                                                             echo $val["dealer_salary_total"]; 
+                                                        ?>
+                                                    </td>
+                                                <?php } ?>
+                                            </tr>
+                        <?php              
+                                        }
+                                     }
+                        ?> 
                             <tr class="caption">
                                 <td colspan=3 style="text-align: right;">Итого, ₽:</td>
-                                <?php if ($user->dealer_id == 1) { ?>
-                                    <td>
-                                        <?php echo $DataOfProject["total_gm_mounting"]; ?>
-                                    </td>
-                                <?php } else { ?>
-                                    <td>
-                                        <?php echo $DataOfProject["total_dealer_mounting"]; ?>
-                                    </td>
-                                <?php } ?>
+                                <td>
+                                    <?php echo $calc_sum_stage;?>
+                                </td>
                             </tr>
                         <?php } ?>
                     </table>
