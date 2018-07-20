@@ -2725,10 +2725,11 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $project_model = self::getModel('project');
+            $projects_mounts_model = self::getModel('projects_mounts');
             $project = $project_model->getData($project_id);
             $calculations_model = self::getModel('calculations');
-            $names = $calculations_model->FindAllMounters($project->project_mounter);
             $calculations = $calculations_model->new_getProjectItems($project_id);
+            $full = false;
             if(!empty($calc_ids)){
                 foreach($calculations as $key => $calculation){
                     if(!in_array($calculation->id,$calc_ids)){
@@ -2736,6 +2737,14 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
+            if(!empty($project->mount_data)){
+                $mount_data = json_decode(htmlspecialchars_decode($project->mount_data));
+                $mount_types = $projects_mounts_model->get_mount_types();
+                foreach ($mount_data as $value) {
+                    $value->stage_name = $mount_types[$value->stage];
+                }
+            }
+
             $transport = self::calculate_transport($project_id);
             $brigade = JFactory::getUser($project->project_mounter);
             $client_contacts_model = self::getModel('client_phones');
@@ -2743,27 +2752,39 @@ class Gm_ceilingHelpersGm_ceiling
             for($i=0;$i<count($client_contacts);$i++){
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
+            if(count($mounting_data) && $mounting_data[0] == 1){
+                $full = true;
+            }
             $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-            $html .= '<h2>Монтажная бригада: ' . $brigade->name . '</h2>';
-            $html .= "<h2>Состав монтажной бригады: </h2>";
-            for($i=0;$i<count($names);$i++){
-                $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
+            $html .= '<h2>Монтажные бригады</h2>';
+            foreach ($mount_data as $value) {
+                $brigade_names = "";
+                $names = $calculations_model->FindAllMounters($value->mounter);
+                for($i=0;$i<count($names);$i++){
+                    $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
+                }
+                $html .= "<b>Бригада</b>:".JFactory::getUser($value->mounter)->name."($brigade_names) - $value->stage_name;<br>";
             }
-            $html .= $brigade_names;
-            $html .= "<br>";
             $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
-            $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
-            $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
+            $html .= "<h2>Даты монтажа </h2>";
+            foreach ($mount_data as $value) {
+                 $html .= "<b>$value->stage_name</b>:$value->time<br>";
+            }
             $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
             $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Название</th>
                                 <th class="center">Площадь, м<sup>2</sup>.</th>
-                                <th class="center">Периметр, м </th>
-                                <th class="center">Стоимость, руб.</th>
-                            </tr>';
+                                <th class="center">Периметр, м </th>';
+                                if($full){
+                                     $html .='<th class="center">Стоимость, руб.</th>';
+                                }
+                                else{
+
+                                }
+                                
             foreach ($calculations as $calc) {
                 $html .= '<tr>';
                 $html .= '<td>' . $calc->calculation_title . '</td>';
@@ -2804,6 +2825,7 @@ class Gm_ceilingHelpersGm_ceiling
             $array = [$html];
             foreach($calculations as $calc){
                 if ($calc->mounting_sum > 0)
+
                     $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
                 //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
             }
