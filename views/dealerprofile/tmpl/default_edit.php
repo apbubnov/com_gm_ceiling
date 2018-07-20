@@ -307,10 +307,18 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-						<label id="jform_mp22-lbl" for="jform_mp22" >Внутренний вырез для ПВХ </label>
+						<label id="jform_mp48-lbl" for="jform_mp48" > Закладная под внутренний вырез для ПВХ </label>
 					</div>
 					<div class="controls">
-						<input type="text" name="jform[mp22]" id="jform_mp22" value=<?php echo $mount->mp22?$mount->mp22:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+						<input type="text" name="jform[mp48]" id="jform_mp48" value=<?php echo $mount->mp48?$mount->mp48:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<label id="jform_mp48_2-lbl" for="jform_mp48_2" >Установка внутренний вырез для ПВХ </label>
+					</div>
+					<div class="controls">
+						<input type="text" name="jform[mp48_2]" id="jform_mp48_2" value=<?php echo $mount->mp48_2?$mount->mp48_2:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 					</div>
 				</div>
 				<div class="control-group">

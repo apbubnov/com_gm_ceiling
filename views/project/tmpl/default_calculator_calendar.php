@@ -21,6 +21,7 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
+
 /*_____________блок для всех моделей/models block________________*/ 
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -114,13 +115,30 @@ $code = $code[1];
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
 $json_mount = $this->item->mount_data;
+$stages = [];
 if(!empty($this->item->mount_data)){
+
     $mount_types = $projects_mounts_model->get_mount_types(); 
     $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
     foreach ($this->item->mount_data as $value) {
         $value->stage_name = $mount_types[$value->stage];
+        if(!array_key_exists($value->mounter,$stages)){
+            $stages[$value->mounter] = array((object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
+        else{
+            array_push($stages[$value->mounter],(object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
     }
-    
+    foreach ($calculations as $calc) {
+        foreach ($stages as $key => $value) {
+           foreach ($value as $val) {
+            print_r($val->stage);
+              Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$key,$val->stage,$val->time);
+           }
+            
+        }
+    }
+   
 }
 
 $all_advt = $model_api_phones->getAdvt();
