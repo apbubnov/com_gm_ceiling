@@ -2755,6 +2755,22 @@ class Gm_ceilingHelpersGm_ceiling
             if(count($mounting_data) && $mounting_data[0] == 1){
                 $full = true;
             }
+            if(!$full){
+                foreach ($calculations as $calc) {
+                    $calc_mount = self::calculate_mount(0,$calc->id);
+                    $stage_sum = [];
+                    foreach ($mount_data as $stage) {
+                        $s_sum =0;
+                        foreach ($calc_mount['mounting_data'] as $value) {
+                           if($value['stage'] == $stage->stage){
+                                    $s_sum += $value['dealer_salary_total'];
+                           }
+                        }
+                        $stage_sum[$stage->stage] = $s_sum;
+                    }
+                    $calc->mount_sum = $stage_sum;
+                }
+            }            
             $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
             $html .= '<h2>Монтажные бригады</h2>';
@@ -2778,23 +2794,35 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th>Название</th>
                                 <th class="center">Площадь, м<sup>2</sup>.</th>
                                 <th class="center">Периметр, м </th>';
-                                if($full){
-                                     $html .='<th class="center">Стоимость, руб.</th>';
+                                if(!$full){
+                                    foreach ($mount_data as $value) {
+                                        $html .= "<th class=\"center\">$value->stage_name, руб.</th>";
+                                    }
                                 }
-                                else{
-
-                                }
+                                $html .='<th class="center">Стоимость, руб.</th>';
                                 
             foreach ($calculations as $calc) {
                 $html .= '<tr>';
                 $html .= '<td>' . $calc->calculation_title . '</td>';
                 $html .= '<td class="center">' . $calc->n4 . '</td>';
                 $html .= '<td class="center">' . $calc->n5 . '</td>';
+                if(!$full){
+                    foreach ($mount_data as $value) {
+                        $html .= '<td class="center">' . $calc->mount_sum[$value->stage] . '</td>';
+                        $sums[$value->stage] += $calc->mount_sum[$value->stage];
+                    }
+                }
                 $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
                 $html .= '</tr>';
                 $sum += $calc->mounting_sum;
             }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th>';
+            if(!$full){
+                foreach ($mount_data as $value) {
+                      $html .= '<th class="center">' . $sums[$value->stage] . '</th></tr>';
+                }
+            }
+            $html .= '<th class="center">' . $sum . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
             $html .= '<h2>Транспортные расходы: </h2>';
             $html .= '<table border="0" cellspacing="0" width="100%">
@@ -2824,9 +2852,16 @@ class Gm_ceilingHelpersGm_ceiling
             //$html .= "<pagebreak />";
             $array = [$html];
             foreach($calculations as $calc){
-                if ($calc->mounting_sum > 0)
-
-                    $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+                if ($calc->mounting_sum > 0){
+                    if($full){
+                         $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+                    }
+                    else{
+                        foreach ($mount_data as $value) {
+                            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
+                        }
+                    }
+                }
                 //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
             }
             $filename = md5($project_id . "mount_common") . ".pdf";
@@ -3085,7 +3120,7 @@ class Gm_ceilingHelpersGm_ceiling
                         if(array_key_exists($component['id'], $print_data)){
                             $print_data[$component['id']]['self_total'] +=  $component['self_total'];
                             $print_data[$component['id']]['dealer_total'] += $component['self_dealer_total'];
-                            $print_data[$component['id']]['quantity'] = self::rounding($print_data[$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]['count_sale']);
+                            $print_data[$component['id']]['quantity'] = self::rounding($print_data[$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]->count_sale);
                         }
                         else{
                             $print_data[$component['id']] = $component;
