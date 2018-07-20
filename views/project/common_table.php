@@ -345,6 +345,15 @@
                             $json = json_encode($pdf_names);
                         ?>
 
+                        <?php
+                            if (is_array($this->item->mount_data)) {
+                                $mount_data = $this->item->mount_data;
+                            }
+                            else {
+                                $mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+                            }
+                        ?>
+
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr style="background-color: rgba(0,0,0,0.05);">
                                 <th class="section_estimate" style="display: none;" colspan="4">Наряды на монтаж:</th>
@@ -362,11 +371,35 @@
                                         <?php echo $calculation->calculation_title; ?>
                                     </td>
                                     <td colspan="3">
-                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                        <?php } else { ?>
-                                            После договора
-                                        <?php } ?>
+                                    <?php
+                                    if (count($mount_data) === 1 && $mount_data[0]->stage == 1) {
+                                        if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                                            echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Посмотреть</a>';
+                                        } else {
+                                            echo 'После договора';
+                                        } 
+                                    }
+                                    else {
+                                        foreach ($mount_data as $value) {
+                                            $path = "/costsheets/" . md5($calculation->id.'mount_stage'.$value->stage).'.pdf';
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                                                switch ($value->stage) {
+                                                    case 2:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Обагечивание</a>';
+                                                        break;
+                                                    case 3:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Натяжка</a>';
+                                                        break;
+                                                    case 4:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Вставка</a>';
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ?>
                                     </td>
                                 </tr>
                             <?php
