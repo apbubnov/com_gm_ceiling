@@ -372,7 +372,7 @@
                                     </td>
                                     <td colspan="3">
                                     <?php
-                                    if (count($mount_data) === 1 && $mount_data[0]->stage == 1) {
+                                    if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                             echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Посмотреть</a>';
                                         } else {

@@ -285,24 +285,25 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 </table>
                 <?php 
                     if (is_array($this->item->mount_data)) {
-                            $mount_data = $this->item->mount_data;
-                        }
-                        else {
-                            $mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
-                        }
+                        $mount_data = $this->item->mount_data;
+                    }
+                    else {
+                        $mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+                    }
+                    print_r($mount_data);
                 ?>
                 <h4>Наряды на монтаж</h4>
                 <table class="table">
-                    <?php foreach ($calculations as $calculation) { ?>
+                    <?php foreach ($calculations as $calculation) { 
+                        $path = "/costsheets/" . md5($calculation->id.'mount_single').'.pdf'; ?>
                         <tr>
                             <th><?php echo $calculation->calculation_title; ?></th>
                             <td>
-
                                 <?php echo $calculation->mounting_sum; ?> руб.
                             </td>
                             <td>
                                 <?php
-                                if (count($mount_data) === 1 && $mount_data[0]->stage == 1) {
+                                if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                         echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Посмотреть</a>';
                                     } else {
