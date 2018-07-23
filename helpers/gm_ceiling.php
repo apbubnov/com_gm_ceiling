@@ -2752,7 +2752,7 @@ class Gm_ceilingHelpersGm_ceiling
             for($i=0;$i<count($client_contacts);$i++){
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
-            if(count($mounting_data) && $mounting_data[0] == 1){
+            if(count($mount_data) == 1 && $mount_data[0]->stage == 1){
                 $full = true;
             }
             if(!$full){
