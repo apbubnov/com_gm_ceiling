@@ -290,7 +290,6 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     else {
                         $mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
                     }
-                    print_r($mount_data);
                 ?>
                 <h4>Наряды на монтаж</h4>
                 <table class="table">
