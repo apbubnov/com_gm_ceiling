@@ -1658,8 +1658,10 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 
                 $calculation_data["extra_mounting_array"] = array();
-                foreach (json_decode($calculation_data["extra_mounting"]) as $extra_mounting)
-                    $calculation_data["extra_mounting_array"][] = $extra_mounting;
+                $extra_mounting_decode = json_decode($calculation_data["extra_mounting"]);
+                if (!empty($extra_mounting_decode))
+                    foreach ($extra_mounting_decode as $extra_mounting)
+                        $calculation_data["extra_mounting_array"][] = $extra_mounting;
                 $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
                 if (floatval($calculation_data["mounting_sum"]) == 0)
                     $calculation_data["need_mount"] = 0;
@@ -2566,15 +2568,17 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //Дополнительный монтаж
             $extra_mounting = json_decode($data['extra_mounting']);
-            foreach ($extra_mounting as $extra_mount) {
-                $mounting_data[] = array(
-                    "title" => $extra_mount->title,                                                        //Название
-                    "quantity" => 1,                                                                    //Кол-во
-                    "gm_salary" => $extra_mount->value,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $extra_mount->value,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $extra_mount->value,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $extra_mount->value                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                );
+            if (!empty($extra_mounting)) {
+                foreach ($extra_mounting as $extra_mount) {
+                    $mounting_data[] = array(
+                        "title" => $extra_mount->title,                                                        //Название
+                        "quantity" => 1,                                                                    //Кол-во
+                        "gm_salary" => $extra_mount->value,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $extra_mount->value,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $extra_mount->value,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $extra_mount->value                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    );
+                }
             }
             $margins = self::get_margin($data['project_id']);
             $gm_mounting_margin = $margins['gm_mounting_margin'];
@@ -2752,7 +2756,7 @@ class Gm_ceilingHelpersGm_ceiling
             for($i=0;$i<count($client_contacts);$i++){
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
-            if(count($mounting_data) && $mounting_data[0] == 1){
+            if(count($mount_data) == 1 && $mount_data[0]->stage == 1){
                 $full = true;
             }
             if(!$full){
@@ -2874,7 +2878,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date){
+    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
