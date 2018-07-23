@@ -2796,8 +2796,12 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get('id','','INT');
            /*throw new Exception($project_id);*/
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
+            $project = $project_model->getData($project_id);
+            $mount_data = json_decode(htmlspecialchars_decode($project->mount_data));
+
             foreach($calculations as $calc){
                 $calculation_data["extra_mounting_array"] = array();
                 foreach (json_decode($calc->extra_mounting) as $extra_mounting){
@@ -2821,10 +2825,18 @@ public function register_mnfctr(){
                         $need_mount = 1;
                 }
                 if(!empty($calc->n3)){
+
                     Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
                     Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($need_mount,$calc->id);
                     Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
-                    Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($calc->id);  
+                    if(!empty($mount_data)){
+                        foreach ($mount_data as $value) {
+                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time);
+                        }
+                    }
+                    else{
+                        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,null,1,null);
+                    }
                 }
             }
             Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
