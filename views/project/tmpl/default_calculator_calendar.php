@@ -132,7 +132,6 @@ if(!empty($this->item->mount_data)){
     foreach ($calculations as $calc) {
         foreach ($stages as $key => $value) {
            foreach ($value as $val) {
-            print_r($val->stage);
               Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$key,$val->stage,$val->time);
            }
             
