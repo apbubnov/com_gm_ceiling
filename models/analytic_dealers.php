@@ -32,20 +32,23 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                    $new_value = array();
                    $quadr = 0;$total_self_sum = 0;$calcs_count = 0;$total_canv_sum = 0;
                    $total_comp_sum = 0;$total_comp_self = 0;
-                   foreach ($ids as $id) {
-                        $calcs = $calculation_model->getDataForAnalytic($id);
-                        $sum = 0;
-                        foreach ($calcs as $calc) {
-                            $data = $this->calculateSelfPrice($calc,0.05);
-                            $sum += $data["sum"];
-                            $quadr += $calc->n4;
-                            $total_comp_self += $data["self_price"];
-                        }
-                        $new_value[$id] = $sum;
-                        $total_self_sum += $sum;
-                        $calcs_count += count($calcs); 
-                        $total_canv_sum +=$calc->canvases_sum;
-                        $total_comp_sum += $calc->components_sum;
+                   if(!empty($ids)){
+                       foreach ($ids as $id) {
+                            if(!empty($id))
+                                $calcs = $calculation_model->getDataForAnalytic($id);
+                            $sum = 0;
+                            foreach ($calcs as $calc) {
+                                $data = $this->calculateSelfPrice($calc,0.05,$id);
+                                $sum += $data["sum"];
+                                $quadr += $calc->n4;
+                                $total_comp_self += $data["self_price"];
+                            }
+                            $new_value[$id] = $sum;
+                            $total_self_sum += $sum;
+                            $calcs_count += count($calcs); 
+                            $total_canv_sum +=$calc->canvases_sum;
+                            $total_comp_sum += $calc->components_sum;
+                       }
                    }
                    $value->projects = $new_value;
                    $value->project_count = $project_count;
@@ -70,7 +73,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->from("`#__gm_ceiling_projects` AS p")
                 ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
                 ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
-                ->where("u.dealer_type IN (0,1) and p.project_status in(6,7,8,10,11,12,13,14,16,17,19,24,25,26)")
+                ->where("u.dealer_type IN (0,1) and p.project_status in(6,7,8,10,11,12,13,14,16,17,19,24,25,26) and p.created > '2018-07-01'")
                 ->group("u.id");
             $db->setQuery($query);
 
@@ -89,16 +92,26 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
             $price_comp = 0;
-            $harpoon = $component_model->getFilteredItems("co.component_id = 42");
+            $harpoon = $component_model->getFilteredItems("co.component_id = 195");
+            
             $harp_dop = $component_model->getComponentsParameters(null,$harpoon[0]->component_id,$harpoon[0]->id);
             $harp_price  = $component_model->getComponentsSelfPrice($harpoon[0]->component_id,$harpoon[0]->id,$harp_dop->good_id,$harp_dop->barcode,$harp_dop->article);
             if(!empty($components)){
-                foreach ($components as  $value) {                    
-                    $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
+               
+                foreach ($components as  $value) {
+                    /*if($calculation->id = 4143){
+                        print($value['component_id']);
+                        print($project_id);
+                        print($value['id']);
+                        exit();
+                    }*/
+                  //  if(!empty($value['component_id']) && !empty($value['id'])){
+                        $dop_params = $component_model->getComponentsParameters($calculation->project_id,$value['component_id'],$value['id']);
+                    
                     if(!empty($dop_params)){
                         $price_comp = $component_model->getComponentsSelfPrice($value['component_id'],$value['id'],$dop_params->good_id,$dop_params->barcode,$dop_params->article);
                     }
-                    
+                   // }
                 }
             }
            

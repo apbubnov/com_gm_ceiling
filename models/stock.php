@@ -514,7 +514,8 @@ class Gm_ceilingModelStock extends JModelList
                 $queryLine = substr($queryLine, 1);
                 $queryText .= $queryLine.";\n";
             }
-
+            print($queryText);
+            exit;
             $fileOld = file("components/com_gm_ceiling/views/stock/log/sql_log.txt");
             $fileNew = [];
             if (sizeof($fileOld) > 1000)

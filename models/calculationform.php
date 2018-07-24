@@ -245,7 +245,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
             $db->setQuery($query);
             $result = $db->loadObjectList();
-
+            
             foreach ($result AS $key => $value) {
                 if ($key == 0) {
                     $list[$key] = array('id' => $ring, 'count' => $value->count);
@@ -270,7 +270,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     }
                     foreach ($com_opt as $item) {
                         $rings = explode("-", $item->title);
-                        if (floatval($ring_size) <= floatval($rings[1])) {
+                        if (floatval($ring_size)>=  floatval($rings[0]) && floatval($ring_size) <= floatval($rings[1])) {
                             $list[$key] = array('id' => $item->id, 'count' => $value->count);
                             break;
                         }
@@ -278,7 +278,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     if (empty($list[$key])) $list[$key] = array('id' => $value->def, 'count' => $value->count);
                 } else $list[$key] = array('id' => $value->def, 'count' => $value->count);
             }
-    //print_r($list); exit;
             return $list;
         }
         catch(Exception $e)
