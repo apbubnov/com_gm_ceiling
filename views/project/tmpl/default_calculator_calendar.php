@@ -555,7 +555,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             </div>
             <button  id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
         </div>
-        <div id="mw_measures_calendar" class="modal_window"></div>
+        <div id="mw_measures_calendar" class="modal-window1"></div>
         <div id="mw_mounts_calendar" class="modal_window"></div>
         <div id="mw_add_call" class="modal_window" >
             <h4>Добавить звонок</h4>
