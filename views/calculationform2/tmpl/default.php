@@ -1396,6 +1396,7 @@
                     jQuery("#jform_color_switch-lbl").show();
                     jQuery("#color_switch").show();
                 }
+                select_colors();
                 select_widths();
                 canvas.filled = true;
             } 

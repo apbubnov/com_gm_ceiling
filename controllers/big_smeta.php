@@ -69,6 +69,54 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
         }
     }*/
 
+    /*public function costyl_original_sketch(){
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`id`, `original_sketch`')
+                ->from('`#__gm_ceiling_calculations`')
+                ->where('`change_time` < \'2018-07-05 00:00:00\'');
+            $db->setQuery($query);
+
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                if (!empty($value->original_sketch))
+                {
+                    $str = $value->original_sketch;
+                    $data = explode('||',$str);
+                    $alphavite = $data[4];
+                    $code = $data[3];
+                    $walls = $data[0];
+                    $diags = $data[1];
+                    $pt = explode(';',$data[2]);
+                    array_pop($pt);
+                    $pt_points = '';
+                    $iter = 0;
+                    for ($i = 0; $i < count($pt) / 2; $i++)
+                    {
+                        $x = $pt[$iter];
+                        $x += 4;
+                        $iter++;
+                        $y = $pt[$iter];
+                        $y += 2;
+                        $iter++;
+                        $pt_points .= $x.';'.$y.';';
+                    }
+                    $str_result = $walls.'||'.$diags.'||'.$pt_points.'||'.$code.'||'.$alphavite;
+                    $query = $db->getQuery(true);
+                    $query->update('`#__gm_ceiling_calculations`')
+                        ->set("`original_sketch` = '$str_result'")
+                        ->where("`id` = $value->id");
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
 
     public function transport()
     {
