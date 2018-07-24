@@ -20,11 +20,11 @@
  */
 class Gm_ceilingModelAnalytic_Dealers extends JModelList
 {
-    public function getData()
+    public function getData($date_from,$date_to)
     {
         try {
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $dealers_and_projects = $this->getProjectsOfDealers();
+            $dealers_and_projects = $this->getProjectsOfDealers($date_from,$date_to);
             if(!empty($dealers_and_projects)){
                 foreach ($dealers_and_projects as $value) {
                    $ids = explode(';',$value->projects);
@@ -65,7 +65,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    function getProjectsOfDealers(){
+    function getProjectsOfDealers($date1,$date2){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -73,7 +73,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->from("`#__gm_ceiling_projects` AS p")
                 ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
                 ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
-                ->where("u.dealer_type IN (0,1) and p.project_status in(6,7,8,10,11,12,13,14,16,17,19,24,25,26) and p.created > '2018-07-01'")
+                ->where("u.dealer_type IN (0,1) and p.project_status in(6,7,8,10,11,12,13,14,16,17,19,24,25,26) and p.created BETWEEN '$date1' AND '$date2'")
                 ->group("u.id");
             $db->setQuery($query);
 

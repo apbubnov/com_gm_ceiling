@@ -8,9 +8,21 @@
  */
 // No direct access
 defined('_JEXEC') or die;
+$date_from = date('Y-m-d');
+$date_to = date('Y-m-d');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
-$data = json_encode($model->getData());
+$data = json_encode($model->getData($date_from,$date_to));
 ?>
+<div class="row" align="right">
+	<div>
+		<label for="date_from">Выбрать с: </label>
+		<input type="date" name="date_from" id = "date_from" class="input-gm" value="<?php echo $date_from;?>">
+	</div>
+	<div>
+		<label for ="date_to">по:</label>
+		<input type="date" name="date_to" id = "date_to" class="input-gm" value="<?php echo $date_to;?>">
+	</div>
+</div>
 <table id = "analytic" class="analitic-table">
 	<thead class = "caption-style-tar">
 		<th>
@@ -44,14 +56,75 @@ $data = json_encode($model->getData());
 <script type="text/javascript">
 	var data = JSON.parse('<?php echo $data;?>');
 	console.log(data);
-	jQuery('#analytic tbody').empty();
-	for(let i = 0;i<data.length;i++){
-		jQuery('#analytic').append('<tr></tr>');
-		for(let j=0;j<Object.keys(data[i]).length;j++){
-			if(Object.keys(data[i])[j] != 'projects' && Object.keys(data[i])[j] != 'id')
-			jQuery('#analytic > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+	jQuery(document).ready(function(){
+		fill_data(data);
+	});
+	function fill_data(data){
+		jQuery('#analytic tbody').empty();
+		for(let i = 0;i<data.length;i++){
+			jQuery('#analytic').append('<tr></tr>');
+			for(let j=0;j<Object.keys(data[i]).length;j++){
+				if(Object.keys(data[i])[j] != 'projects' && Object.keys(data[i])[j] != 'id')
+				jQuery('#analytic > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+			}
 		}
 	}
-	
+	jQuery("#date_from").change(function(){
+		var date_from = jQuery('#date_from').val(),
+		date_to = jQuery("#date_to").val()
+
+		if(date_from <= date_to){
+			getData(date_from,date_to);
+		}
+		else{
+			var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Начальная дата не может быть больше конечной!"
+            });
+		}
+	});
+
+	jQuery("#date_to").change(function(){
+		var date_from = jQuery('#date_from').val(),
+		date_to = jQuery("#date_to").val()
+
+		if(date_from <= date_to){
+			getData(date_from,date_to);
+		}
+		else{
+			var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Начальная дата не может быть больше конечной!"
+            });
+		}
+	});
+
+	function getData(date_from,date_to){
+		console.log("123");
+		jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=getDealersAnalyticData",
+            data: {
+                date_from:date_from,
+                date_to:date_to
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+            	console.log(data);
+                fill_data(data);
+            },
+            error: function (data) {
+                console.log(data.responseText);
+            }
+        });
+	}
 
 </script>
