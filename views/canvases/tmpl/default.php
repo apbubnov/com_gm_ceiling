@@ -29,7 +29,7 @@ if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');
     $userDealer->getDealerInfo();
-    $userDealer->getCanvasesPrice();
+    //$userDealer->getCanvasesPrice();
 } else {
     $userDealer = $user;
 }
@@ -46,7 +46,7 @@ if ($managerGM) {
         $dealer = JFactory::getUser($dealerId);
         $dealer->groups = $dealer->get('groups');
         $dealer->getDealerInfo();
-        $dealer->getCanvasesPrice();
+        //$dealer->getCanvasesPrice();
     }
 }
 

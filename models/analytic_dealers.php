@@ -42,12 +42,13 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                                 $sum += $data["sum"];
                                 $quadr += $calc->n4;
                                 $total_comp_self += $data["self_price"];
+                                $total_canv_sum += $calc->canvases_sum;
+                                $total_comp_sum += $calc->components_sum;
                             }
                             $new_value[$id] = $sum;
                             $total_self_sum += $sum;
                             $calcs_count += count($calcs); 
-                            $total_canv_sum +=$calc->canvases_sum;
-                            $total_comp_sum += $calc->components_sum;
+                            
                        }
                    }
                    $value->projects = $new_value;
