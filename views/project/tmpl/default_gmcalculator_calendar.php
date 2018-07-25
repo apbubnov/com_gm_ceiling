@@ -579,6 +579,7 @@
                 jQuery("#new_call").show();
             }
             else {
+                jQuery('#project_status').val(5)
                 jQuery("#form-client").submit();
             }
         });

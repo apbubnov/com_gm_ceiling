@@ -3249,9 +3249,19 @@ public function register_mnfctr(){
         }
     }
 
-    function test(){
-        $model = Gm_ceilingHelpersGm_ceiling::getModel("Analitic_dealers");
-        die(json_encode($model->getData()));
+    function getDealersAnalyticData(){
+        try{
+             $jinput = JFactory::getApplication()->input;
+             $date1 = $jinput->get('date_from','','STRING');
+             $date2 = $jinput->get('date_to','','STRING');
+             $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
+             $data = $model->getData($date1,$date2);
+             die(json_encode($data));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
     }
 }
 
