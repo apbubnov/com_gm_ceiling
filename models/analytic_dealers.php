@@ -94,30 +94,28 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
             $price_comp = 0;
             $harpoon = $component_model->getFilteredItems("co.component_id = 195");
-            
             $harp_dop = $component_model->getComponentsParameters(null,$harpoon[0]->component_id,$harpoon[0]->id);
+
             $harp_price  = $component_model->getComponentsSelfPrice($harpoon[0]->component_id,$harpoon[0]->id,$harp_dop->good_id,$harp_dop->barcode,$harp_dop->article);
+            
             if(!empty($components)){
                
                 foreach ($components as  $value) {
-                    /*if($calculation->id = 4143){
-                        print($value['component_id']);
-                        print($project_id);
-                        print($value['id']);
-                        exit();
-                    }*/
-                  //  if(!empty($value['component_id']) && !empty($value['id'])){
-                        $dop_params = $component_model->getComponentsParameters($calculation->project_id,$value['component_id'],$value['id']);
+                    $dop_params = $component_model->getComponentsParameters($calculation->project_id,$value['component_id'],$value['id']);
                     
                     if(!empty($dop_params)){
-                        $price_comp = $component_model->getComponentsSelfPrice($value['component_id'],$value['id'],$dop_params->good_id,$dop_params->barcode,$dop_params->article);
+                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($value['component_id'],$value['id'],$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
                     }
-                   // }
+                   
                 }
             }
-           
+            $calculation->n9 = ($calculation->n9 > 4) ? $calculation->n9-4 : 0; 
             $results = $mount_model->getDataAll(1);
-            return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*reject_rate)+($calculation->canvas_area - $calculation->offcut_square)*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price + ($calculation->n9 - 6)*$results->mp20 + $price_comp),
+             /*print("$calculation->id<br>");
+            print( ($calculation->n9));
+            print("<br>");*/
+           
+            return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*$reject_rate)+($calculation->canvas_area - $calculation->offcut_square)*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price +  $calculation->n9*5+ $price_comp),
                 "self_price"=>$price_comp);
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
