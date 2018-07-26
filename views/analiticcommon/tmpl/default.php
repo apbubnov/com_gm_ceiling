@@ -297,6 +297,9 @@ echo parent::getButtonBack();
 <br>
 <h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
 <br>
+<br>
+<h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytic_dealers">Аналитика дилеров</a></h2>
+<br>
 <script>
 	 jQuery(document).ready(function(){
         hideEmptyTr("#c_analitic-table");

@@ -514,8 +514,7 @@ class Gm_ceilingModelStock extends JModelList
                 $queryLine = substr($queryLine, 1);
                 $queryText .= $queryLine.";\n";
             }
-            print($queryText);
-            exit;
+           
             $fileOld = file("components/com_gm_ceiling/views/stock/log/sql_log.txt");
             $fileNew = [];
             if (sizeof($fileOld) > 1000)
@@ -531,8 +530,14 @@ class Gm_ceilingModelStock extends JModelList
             $Text .= "Транзакция: ".$date."\n";
             $Text .= $queryText."\n";
             $db = $this->getDbo();
-            $db->setQuery($queryText);
-            $result = $db->execute();
+            $result = [];
+            $queries = $db->splitSql($queryText);
+            foreach( $queries AS $sql ) {
+                $db->setQuery($sql);
+                array_push($result,$db->execute());
+            }
+            //$db->setQuery($queryText);
+            //$result = $db->execute();
             $Text .= (empty($result))?"Ответ: Неудачно!\n":"Ответ: Удачно!\n";
             $files = "components/com_gm_ceiling/views/stock/log/";
             file_put_contents($files.'sql_log.txt', $Text, FILE_APPEND);
@@ -555,9 +560,14 @@ class Gm_ceilingModelStock extends JModelList
 
             $query .= "UPDATE `#__gm_ceiling_components_option` AS O " .
                 "SET `count`= (SELECT SUM(G.count) FROM `#__gm_ceiling_components_goods` AS G WHERE G.option_id = O.id);";
-
-            $db->setQuery($query);
-            $result = $db->execute();
+            $result = [];
+            $queries = $db->splitSql($query);
+            foreach( $queries AS $sql ) {
+                $db->setQuery($sql);
+                array_push($result,$db->execute());
+            }
+            //$db->setQuery($query);
+            //$result = $db->execute();
         }
         catch(Exception $e)
         {
