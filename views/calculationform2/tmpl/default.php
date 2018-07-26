@@ -1390,13 +1390,13 @@
             let n2_options = jQuery("#jform_n2 option");
             if(canvas){
                 add_select_attr_to_option(n2_options,canvas.texture_id);
+                select_colors();
                 let proizv_options = jQuery("#jform_proizv option");
                 add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
                 if(canvas.color_id){
                     jQuery("#jform_color_switch-lbl").show();
                     jQuery("#color_switch").show();
                 }
-                select_colors();
                 select_widths();
                 canvas.filled = true;
             } 
