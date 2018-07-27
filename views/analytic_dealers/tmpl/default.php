@@ -37,6 +37,11 @@ $data = json_encode($model->getData($date_from,$date_to));
 		<th>
 			Квадратура
 		</th>
+		<?php if(!empty($proizv)){
+			foreach($proizv as $key=>$value){?>
+				<th data-id="<?php echo $key;?>"><?php echo $value;?></th>
+		<?php }
+		}?>
 		<th>
 			Стоимость
 		</th>
@@ -53,19 +58,29 @@ $data = json_encode($model->getData($date_from,$date_to));
 	<tbody>
 	</tbody>
 </table>
+<table id = "analytic2" class="analitic-table">
+	<thead id = "thead" class = "caption-style-tar">
+		
+	</thead>
+	<tbody>
+	</tbody>
+</table>
 <script type="text/javascript">
 	var data = JSON.parse('<?php echo $data;?>');
 	console.log(data);
 	jQuery(document).ready(function(){
 		fill_data(data);
+		makeTh(jQuery("#thead"),data[0]);
 	});
 	function fill_data(data){
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){
 			jQuery('#analytic').append('<tr></tr>');
 			for(let j=0;j<Object.keys(data[i]).length;j++){
-				if(Object.keys(data[i])[j] != 'projects' && Object.keys(data[i])[j] != 'id')
-				jQuery('#analytic > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+				if(Object.keys(data[i])[j] != 'projects' && Object.keys(data[i])[j] != 'proizvs' && Object.keys(data[i])[j] != 'id'){
+
+					jQuery('#analytic > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+				}
 			}
 		}
 	}
@@ -127,4 +142,11 @@ $data = json_encode($model->getData($date_from,$date_to));
         });
 	}
 
+	function makeTh(container, data) {
+        var row = jQuery("<tr/>");
+        jQuery.each(data, function(key, value) { 
+            row.append(jQuery("<th/ data-value = "+key+">").text(value));
+        });
+		container.append(row);
+	}
 </script>

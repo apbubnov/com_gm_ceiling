@@ -26,6 +26,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $dealers_and_projects = $this->getProjectsOfDealers($date_from,$date_to);
             if(!empty($dealers_and_projects)){
+                $proizvs = [];
                 foreach ($dealers_and_projects as $value) {
                    $ids = explode(';',$value->projects);
                    $project_count = count($ids);
@@ -33,14 +34,18 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                    $quadr = 0;$total_self_sum = 0;$calcs_count = 0;$total_canv_sum = 0;
                    $total_comp_sum = 0;$total_comp_self = 0;
                    if(!empty($ids)){
-                       foreach ($ids as $id) {
-                            if(!empty($id))
+                      foreach ($ids as $id) {
+                        if(!empty($id))
                                 $calcs = $calculation_model->getDataForAnalytic($id);
                             $sum = 0;
                             foreach ($calcs as $calc) {
                                 $data = $this->calculateSelfPrice($calc,0.05,$id);
                                 $sum += $data["sum"];
                                 $quadr += $calc->n4;
+                                $quadr_proizv[$calc->name] +=$calc->n4;
+                                if(!array_key_exists($calc->manufacturer_id, $proizvs)){
+                                  $proizvs[$calc->manufacturer_id] = $calc->name;
+                                }
                                 $total_comp_self += $data["self_price"];
                                 $total_canv_sum += $calc->canvases_sum;
                                 $total_comp_sum += $calc->components_sum;
@@ -48,19 +53,32 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                             $new_value[$id] = $sum;
                             $total_self_sum += $sum;
                             $calcs_count += count($calcs); 
-                            
+                           
                        }
                    }
-                   $value->projects = $new_value;
-                   $value->project_count = $project_count;
-                   $value->calcs_count = $calcs_count;
-                   $value->quadr = $quadr;
-                   $value->sum = $total_canv_sum + $total_comp_sum;
-                   $value->total_self_sum = $total_self_sum;
-                   $value->comp_sum  = $total_comp_sum;
-                   $value->comp_self_sum = $total_comp_self;
+                   
+                    $value->projects = $new_value;
+                    $value->project_count = $project_count;
+                    $value->calcs_count = $calcs_count;
+                    $value->quadr = $quadr;
+                    $value->sum = $total_canv_sum + $total_comp_sum;
+                    $value->total_self_sum = $total_self_sum;
+                    $value->comp_sum  = $total_comp_sum;
+                    $value->comp_self_sum = $total_comp_self;
+                    $value->quadr_proizv = $quadr_proizv;
                 }
             }
+            
+            $headers = array("name"=>"Дилер","project_count"=>"Кол-во проектов","calcs_count"=>"Кол-во потолков","quadr"=>"Квадратура");
+            foreach ($proizvs as $key => $value) {
+                $headers[$value]=$value;
+            }
+           
+            $headers['sum'] = "Стоимость";
+            $headers['total_self_sum'] = "Себестоимость";
+            $headers['comp_sum'] = "Стоимость комплектующих";
+            $headers['comp_self_sum'] = "Себестоимость комплектующих";
+            array_unshift($dealers_and_projects , $headers);
             return $dealers_and_projects;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
