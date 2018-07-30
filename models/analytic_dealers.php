@@ -32,7 +32,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                    $project_count = count($ids);
                    $new_value = array();
                    $quadr = 0;$total_self_sum = 0;$calcs_count = 0;$total_canv_sum = 0;
-                   $total_comp_sum = 0;$total_comp_self = 0;
+                   $total_comp_sum = 0;$total_comp_self = 0;$quadr_proizv = [];
                    if(!empty($ids)){
                       foreach ($ids as $id) {
                         if(!empty($id))
@@ -61,11 +61,13 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                     $value->project_count = $project_count;
                     $value->calcs_count = $calcs_count;
                     $value->quadr = $quadr;
-                    $value->sum = $total_canv_sum + $total_comp_sum;
-                    $value->total_self_sum = $total_self_sum;
-                    $value->comp_sum  = $total_comp_sum;
-                    $value->comp_self_sum = $total_comp_self;
-                    $value->quadr_proizv = $quadr_proizv;
+                    $value->sum = round($total_canv_sum + $total_comp_sum,2);
+                    $value->total_self_sum = round($total_self_sum,2);
+                    $value->comp_sum  = round($total_comp_sum,2);
+                    $value->comp_self_sum =round($total_comp_self,2);
+                    foreach ($quadr_proizv as $key => $val) {
+                        $value->$key = $val;
+                    }
                 }
             }
             

@@ -24,43 +24,7 @@ $data = json_encode($model->getData($date_from,$date_to));
 	</div>
 </div>
 <table id = "analytic" class="analitic-table">
-	<thead class = "caption-style-tar">
-		<th>
-			Дилер
-		</th>
-		<th>
-			Кол-во проектов
-		</th>
-		<th>
-			Кол-во потолков
-		</th>
-		<th>
-			Квадратура
-		</th>
-		<?php if(!empty($proizv)){
-			foreach($proizv as $key=>$value){?>
-				<th data-id="<?php echo $key;?>"><?php echo $value;?></th>
-		<?php }
-		}?>
-		<th>
-			Стоимость
-		</th>
-		<th>
-			Себестоимость
-		</th>
-		<th>
-			Стоимость комплектуюших
-		</th>
-		<th>
-			Себестоимость комплектующих
-		</th>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
-<table id = "analytic2" class="analitic-table">
 	<thead id = "thead" class = "caption-style-tar">
-		
 	</thead>
 	<tbody>
 	</tbody>
@@ -69,21 +33,11 @@ $data = json_encode($model->getData($date_from,$date_to));
 	var data = JSON.parse('<?php echo $data;?>');
 	console.log(data);
 	jQuery(document).ready(function(){
-		fill_data(data);
 		makeTh(jQuery("#thead"),data[0]);
+		data.shift();
+		fill_table(data);
 	});
-	function fill_data(data){
-		jQuery('#analytic tbody').empty();
-		for(let i = 0;i<data.length;i++){
-			jQuery('#analytic').append('<tr></tr>');
-			for(let j=0;j<Object.keys(data[i]).length;j++){
-				if(Object.keys(data[i])[j] != 'projects' && Object.keys(data[i])[j] != 'proizvs' && Object.keys(data[i])[j] != 'id'){
 
-					jQuery('#analytic > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-				}
-			}
-		}
-	}
 	jQuery("#date_from").change(function(){
 		var date_from = jQuery('#date_from').val(),
 		date_to = jQuery("#date_to").val()
@@ -134,19 +88,58 @@ $data = json_encode($model->getData($date_from,$date_to));
             async: true,
             success: function (data) {
             	console.log(data);
-                fill_data(data);
+            	makeTh(jQuery("#thead"),data[0]);
+				data.shift();
+                fill_table(data);
             },
             error: function (data) {
                 console.log(data.responseText);
+                var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Произошла ошибка, попробуйте позднее!"
+            });
             }
         });
 	}
 
 	function makeTh(container, data) {
         var row = jQuery("<tr/>");
+		container.empty();
         jQuery.each(data, function(key, value) { 
-            row.append(jQuery("<th/ data-value = "+key+">").text(value));
+            row.append(jQuery("<th/ data-value = '"+key+"'>").text(value));
         });
 		container.append(row);
+	}
+
+	function fill_table(data){
+		var ths = jQuery("#analytic > thead  th"),key ="",total = [];
+		jQuery('#analytic tbody').empty();
+		for(let i = 0;i<data.length;i++){
+			jQuery('#analytic').append('<tr></tr>');
+			jQuery.each(ths,function(index,item){
+				key = jQuery(item).data('value');
+				let val = (data[i][key] ? data[i][key] : 0); 
+				jQuery('#analytic > tbody > tr:last').append('<td>'+ val +'</td>');
+				if(key == 'name'){
+					total[key] = '<b>Итого</b>';
+				}
+				else{
+					total[key] = (total[key]) ? total[key] + val : val;
+				}
+				
+			});
+			
+		}
+		if(Object.keys(total).length){
+			jQuery('#analytic').append('<tr></tr>');
+			jQuery.each(ths,function(index,item){
+				key = jQuery(item).data('value');
+				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ total[key] +'</b></td>');
+			});
+		}
 	}
 </script>
