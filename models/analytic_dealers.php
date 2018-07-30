@@ -78,8 +78,8 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
            
             $headers['sum'] = "Стоимость";
             $headers['total_self_sum'] = "Себестоимость";
-            $headers['comp_sum'] = "Стоимость комплектующих";
-            $headers['comp_self_sum'] = "Себестоимость комплектующих";
+            $headers['comp_sum'] = "Стоимость компл-х";
+            $headers['comp_self_sum'] = "Себестоимость компл-х";
             array_unshift($dealers_and_projects , $headers);
             return $dealers_and_projects;
         } catch (Exception $e) {

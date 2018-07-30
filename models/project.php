@@ -1617,7 +1617,7 @@ class Gm_ceilingModelProject extends JModelItem
 	                ->select('t.texture_title as Texture, cc.title as Color')
 	                ->from("`#__canvases` as c")
 	                ->join("LEFT", "`#__gm_ceiling_textures` as t on c.texture_id = t.id")
-	                ->join("LEFT", "`#__gm_ceiling_colors` as cc on c.color_id = c.id")
+	                ->join("LEFT", "`#__gm_ceiling_colors` as cc on c.color_id = cc.id")
 	                ->where("c.id = " . $db->quote($canvas->id));
 	            $db->setQuery($query);
 	            $CT = $db->loadObject();

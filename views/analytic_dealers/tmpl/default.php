@@ -138,7 +138,7 @@ $data = json_encode($model->getData($date_from,$date_to));
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ total[key] +'</b></td>');
+				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name') ? total[key].toFixed(2) : total[key]) +'</b></td>');
 			});
 		}
 	}
