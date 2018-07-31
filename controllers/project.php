@@ -1172,6 +1172,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('jform[id]', '0', 'INT');
+            $mount_data = json_decode($jinput->get('mount','','STRING'));
 			$get_data = JFactory::getApplication()->input->get('jform', array(), 'array');
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_history');
             $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
@@ -1182,7 +1183,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$data->gm_chief_note = $get_data['gm_chief_note'];
             $data->dealer_chief_note = $get_data['dealer_chief_note'];
-            $mount_data = json_decode($get_data['mount_data']);
+            //$mount_data = json_decode($get_data['mount']);
 
 			// замеры
 			$data->project_calculation_date = $get_data['project_new_calc_date'];
