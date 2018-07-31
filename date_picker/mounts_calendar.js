@@ -48,7 +48,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 				if (document.getElementById(input_mount).value != '') {
 					stages = JSON.parse(document.getElementById(input_mount).value);
 					for (var i = stages.length, elems, date; i--;) {
-			    		date = stages[i].time.replace('-0', '-');
+			    		date = stages[i].time.replace(/-0/g, '-');
 			    		stages[i].time = date.replace(' 0', ' ');
 			    	}
 				}
@@ -63,7 +63,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		        onClickDate: function(date) {
 		            var elem = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]')[0], date_sp = date.split('-'),
 		        	html = '', y = date_sp[0]-0, m = date_sp[1]-0, d = date_sp[2]-0, current_day, today;
-		            console.log(date);
+		            //console.log(date);
 		            draw_calendar();
 		            today = new Date();
 	            	current_day = add_zeros_in_date(today.getFullYear()+'-'+(today.getMonth() + 1)+'-'+today.getDate());
@@ -376,7 +376,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
                         layout: 'topCenter',
                         maxVisible: 5,
                         type: "error",
-                        text: "Ошибка получения данных для календаря замеров"
+                        text: "Ошибка получения данных для календаря монтажей"
                     });
                 }
             });
@@ -402,7 +402,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    	if (data_array[y] == undefined) {
 		    		data_array[y] = [];
 		    	}
-		    	console.log(stages);
+		    	//console.log(stages);
 		    	for (var i = stages.length, elems; i--;) {
 		    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
 		    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
