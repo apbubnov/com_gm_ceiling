@@ -65,6 +65,25 @@ class Gm_ceilingControllerTeam extends JControllerLegacy {
         }
 	}
 
+	function delete_mounter() {
+		try
+		{
+			$id_mounter = $_POST['id'];
+			if (!mb_ereg('^[\d]+$', $id_mounter) || JFactory::getUser()->guest) {
+				throw new Exception('Bad id mounter or non authorise');
+			}
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('Team');
+			$model->delete_mounter($id_mounter);
+			
+			die(true);
+		}
+		catch(Exception $e)
+        {
+          Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
+
 	/**
 	 * Method to check out an item for editing and redirect to the edit form.
 	 *

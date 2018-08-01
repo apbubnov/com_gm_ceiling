@@ -106,7 +106,7 @@ class Gm_ceilingModelTeam extends JModelItem
 
 			$query->select("projects.id, ($query2) as mounting_sum, projects.new_mount_sum, transport, distance, distance_col")
 				->from('#__gm_ceiling_projects as projects')
-				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on p.id = mp.project_id")
+				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on projects.id = mp.project_id")
 				->where("mp.mounter_id = '$id' and mp.date_time between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
@@ -172,6 +172,23 @@ class Gm_ceilingModelTeam extends JModelItem
 			$query->update('#__gm_ceiling_mounters_map')
 				->set("id_brigade = '$id_brigade'")
 				->where("id_mounter = '$id_mounter'");
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function delete_mounter($id) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->delete('`#__gm_ceiling_mounters`')
+				->where("id = $id");
 			$db->setQuery($query);
 			$db->execute();
 		}

@@ -39,7 +39,11 @@ $server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/team/tmpl/css/style.css" type="text/css" />
-
+<style type="text/css">
+	th {
+		text-align: center;
+	}
+</style>
 <?=parent::getButtonBack();?>
 
 <h2 class="center">Бригада: <?php echo $brigade[0]->name; ?></h2>
@@ -49,21 +53,29 @@ $server_name = $_SERVER['SERVER_NAME'];
 	<div id="mounters-container">
 		<p><h6>Монтажники:</h6></p>
 		<table id="mounters">
+			<thead>
+				<tr>
+					<th>Имя</th>
+					<th>Телефон</th>
+					<th>Паспорт</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
 			<?php 
-				$i = 1;
 				foreach ($mounters as $value) {
 			?>
 				<tr>
-					<td>Монтажник <?php echo $i; ?>:</td>
 					<td><?php echo $value->name; ?></td>
 					<td><?php echo $value->phone; ?></td>
 					<td><img src="data:image/png;base64,<?php echo base64_encode($value->pasport); ?>" id="image<?php $value->id ?>" class="passport-image" style="cursor: pointer"></td>
-					<td><button type="button" class="btn btn-primary move" id="btn<?php echo $value->id; ?>">Переместить в другую бригаду</button></td>
+					<td><button type="button" class="btn btn-primary btn-sm move" id="btn<?php echo $value->id; ?>"><i class="fa fa-random"></i></button></td>
+					<td><button type="button" class="btn btn-danger btn-sm del" data-id="<?php echo $value->id_mounter; ?>"><i class="fa fa-trash"></i></button></td>
 				</tr>
 			<?php 
-				$i++;
 				}
 			?>
+			</tbody>
 		</table>
 	</div>
 	<div id="modal-window-container-tar">
@@ -283,6 +295,57 @@ $server_name = $_SERVER['SERVER_NAME'];
 			jQuery("#big-image-shadow").show("slow");
 			jQuery("#big-image").show("slow");
 		});
+
+		jQuery(".del").click(function() {
+            var button = jQuery(this);
+            noty({
+                layout: 'center',
+                type: 'warning',
+                modal: true,
+                text: 'Удалить монтажника?',
+                killer: true,
+                buttons: [
+                    {
+                        addClass: 'btn btn-success', text: 'Выполнен', onClick: function ($noty) {
+                        	jQuery.ajax({
+								type: 'POST',
+								url: "/index.php?option=com_gm_ceiling&task=team.delete_mounter",
+								dataType: 'json',
+								data: {
+									id: button.data("id")
+								},
+								success: function(data) {
+									location.reload();
+								},
+								error: function(data) {
+									noty({
+						                layout: 'center',
+						                type: 'warning',
+						                text: 'Ошибка'
+						            });
+								}
+							});
+                            /*jQuery.get(
+                                "/index.php?option=com_gm_ceiling&task=team.delete_mounter",
+                                {
+                                    id: button.data("id")
+                                },
+                                function(data) {
+                                    location.reload();
+                                }
+                            );*/
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+
+        });
 
 	});
 
