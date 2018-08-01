@@ -988,7 +988,7 @@ $server_name = $_SERVER['SERVER_NAME'];
         dealer.show();
         dealer.find('.Value').text(Temp.dealer.name);
 
-        $(".Elements tbody").empty();
+        //$(".Elements tbody").empty();
         CheckElements();
         Calculate();
         CancelElement();
