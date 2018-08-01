@@ -117,7 +117,32 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }*/
+   /* function costyl_canvases(){
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('id,id_canvas,barcode,article,quad')
+                ->from('`#__gm_ceiling_canvases_all`')
+                ->where('id_canvas between 228 and 297');
+            $db->setQuery($query);
 
+            $items = $db->loadObjectList();
+
+            foreach ($items as $value) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_analytics_canvases`')
+                    ->columns('canvas_id,roller_id,barcode,article,quad,price,stock,user_id,counterparty_id,status')
+                    ->values("$value->id_canvas,$value->id,$value->barcode,$value->article,$value->quad,55,2,71,9,1");
+                $db->setQuery($query);
+                $db->execute();
+            
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
     public function transport()
     {
         try

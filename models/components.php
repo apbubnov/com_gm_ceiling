@@ -756,7 +756,7 @@ class Gm_ceilingModelComponents extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("good_id,barcode,article")
+                ->select("component_id,option_id,good_id,barcode,article")
                 ->from("`#__gm_ceiling_analytics_components`");
                 if(!empty($project_id)){
                     $query->where("project_id = $project_id");

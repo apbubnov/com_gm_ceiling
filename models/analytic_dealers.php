@@ -121,10 +121,11 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             if(!empty($components)){
                
                 foreach ($components as  $value) {
-                    $dop_params = $component_model->getComponentsParameters($calculation->project_id,$value['component_id'],$value['id']);
+                   if(!empty($value['id']) && !empty($value['component_id']))
+                        $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
                     
                     if(!empty($dop_params)){
-                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($value['component_id'],$value['id'],$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
+                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
                     }
                    
                 }
