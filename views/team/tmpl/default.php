@@ -48,7 +48,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 
 <h2 class="center">Бригада: <?php echo $brigade[0]->name; ?></h2>
 <h6 class="center">Телефон: <?php echo $brigade[0]->username; ?>; E-mail: <?php echo $brigade[0]->email; ?></h6>
-
+<button type="button" class="btn btn-primary" id="add_new_mounter">Добавить монтажника</button>
 <div id="content-tar">
 	<div id="mounters-container">
 		<p><h6>Монтажники:</h6></p>
@@ -148,6 +148,21 @@ $server_name = $_SERVER['SERVER_NAME'];
 		</table>
 	</div>
 </div>
+<div class="modal_window_container" id="mw_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_new_mounter" style="border: 2px solid black; border-radius: 4px;">
+    	<form id="mounter_form" enctype="multipart/form-data" method="post">
+    		<input type="hidden" name="id_brigade" value="<?= $id_brigade ?>">
+	    	<p class="margin-button-tar" style="margin-top: 1em;">ФИО:</p>
+			<p class="margin-top-tar"><input type="text" name="name-mount" id="name-mount" class="name-mount input-tar"></p>
+			<p class="margin-button-tar">Номер телефона:</p>
+			<p class="margin-top-tar"><input type="text" name="phone-mount" id="phone-mount" class="phone-mount input-tar"></p>
+			<p class="margin-button-tar">Загрузите ксерокопию паспорта:</p>
+			<p class="margin-top-tar"><input type="file" accept="image/*" name="pasport" id="pasport" class="pasport input-tar"></p>
+			<p class="margin-top-tar"><button type="button" class="btn btn-primary" id="btn_send_new_mounter">Добавить</button></p>
+		</form>
+    </div>
+</div>
 
 <script type='text/javascript'>
 
@@ -161,23 +176,25 @@ $server_name = $_SERVER['SERVER_NAME'];
 		}
 	}
 
+	jQuery(".phone-mount").mask("+7(999)999-99-99");
+
 	//скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-		var div2 = jQuery("#big-image");
-		if (!div2.is(e.target)
-		    && div2.has(e.target).length === 0) {
-			jQuery("#close2-tar").hide();
-			jQuery("#modal-window-container2-tar").hide();
-			jQuery("#big-image-shadow").hide();
-			jQuery("#big-image").hide();
-		}
+	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div1 = jQuery("#modal-window-choose-tar");
+        var div2 = jQuery("#big-image");
+        var div3 = jQuery("#modal_window_new_mounter");
+        if (!div1.is(e.target) // если клик был не по нашему блоку
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0
+            && !div3.is(e.target)
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
+            div1.hide();
+            div2.hide();
+            div3.hide();
+        }
     });
 
 	// перенаправление на страницу проекта
@@ -333,8 +350,32 @@ $server_name = $_SERVER['SERVER_NAME'];
                     }
                 ]
             });
-
         });
+
+        jQuery("#add_new_mounter").click(function() {
+        	jQuery("#close_mw").show();
+            jQuery("#mw_container").show();
+            jQuery("#modal_window_new_mounter").show();
+        });
+
+        jQuery("#btn_send_new_mounter").click(function() {
+        	formdata = new FormData(jQuery('#mounter_form')[0]);
+        	jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=teamform.save_mounter",
+				processData: false,
+				contentType:false,
+				data: formdata,
+				success: function(data) {
+					//console.log(data);
+					location.reload();
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+        });
+        
 
 	});
 
