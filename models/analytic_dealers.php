@@ -28,33 +28,42 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             if(!empty($dealers_and_projects)){
                 $proizvs = [];
                 foreach ($dealers_and_projects as $value) {
-                   $ids = explode(';',$value->projects);
-                   $project_count = count($ids);
-                   $new_value = array();
-                   $quadr = 0;$total_self_sum = 0;$calcs_count = 0;$total_canv_sum = 0;
-                   $total_comp_sum = 0;$total_comp_self = 0;$quadr_proizv = [];
-                   if(!empty($ids)){
-                      foreach ($ids as $id) {
-                        if(!empty($id))
+                    $ids = explode(';',$value->projects);
+                    $project_count = count($ids);
+                    $new_value = array();
+                    $quadr = 0;$total_self_sum = 0;$calcs_count = 0;$total_canv_sum = 0;
+                    $total_comp_sum = 0;$total_comp_self = 0;$quadr_proizv = [];
+                    if(!empty($ids)){
+                        foreach ($ids as $id) {
+                            if(!empty($id))
                                 $calcs = $calculation_model->getDataForAnalytic($id);
                             $sum = 0;
-                            foreach ($calcs as $calc) {
-                                $data = $this->calculateSelfPrice($calc,0.05,$id);
-                                $sum += $data["sum"];
-                                $quadr += $calc->n4;
-                                $quadr_proizv[$calc->name] +=$calc->n4;
-                                if(!array_key_exists($calc->manufacturer_id, $proizvs)){
-                                  $proizvs[$calc->manufacturer_id] = $calc->name;
+                            if(!empty($calcs)){
+                                foreach ($calcs as $calc) {
+                                    $data = $this->calculateSelfPrice($calc,0.05,$id);
+                                    $sum += $data["sum"];
+                                    $quadr += $calc->n4;
+                                    $quadr_proizv[$calc->name] +=$calc->n4;
+                                    if(!array_key_exists($calc->manufacturer_id, $proizvs)){
+                                      $proizvs[$calc->manufacturer_id] = $calc->name;
+                                    }
+                                    $total_comp_self += $data["self_price"];
+                                    $total_canv_sum += $calc->canvases_sum;
+                                    $total_comp_sum += $calc->components_sum;
                                 }
-                                $total_comp_self += $data["self_price"];
-                                $total_canv_sum += $calc->canvases_sum;
-                                $total_comp_sum += $calc->components_sum;
+                            }
+                            else{
+                                $stock_model = Gm_ceilingHelpersGm_ceiling::getModel("stock");
+                                $components = $stock_model->getRealizedComponents($id);
+                                $price = $this->calculateCompSelfPrice(null,$components); 
+                                $sum += $price->self;
+                                $total_comp_sum += $price->sum;
+                                $total_comp_self += $price->self;
                             }
                             $new_value[$id] = $sum;
                             $total_self_sum += $sum;
                             $calcs_count += count($calcs); 
-                           
-                       }
+                        }
                    }
                    
                     $value->projects = $new_value;
@@ -118,28 +127,41 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
 
             $harp_price  = $component_model->getComponentsSelfPrice($harpoon[0]->component_id,$harpoon[0]->id,$harp_dop->good_id,$harp_dop->barcode,$harp_dop->article);
             
-            if(!empty($components)){
-               
-                foreach ($components as  $value) {
-                   if(!empty($value['id']) && !empty($value['component_id']))
-                        $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
-                    
-                    if(!empty($dop_params)){
-                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
-                    }
-                   
-                }
-            }
+            $price_comp = $this->calculateCompSelfPrice($calculation);
             $calculation->n9 = ($calculation->n9 > 4) ? $calculation->n9-4 : 0; 
             $results = $mount_model->getDataAll(1);
-             /*print("$calculation->id<br>");
-            print( ($calculation->n9));
-            print("<br>");*/
+
            
             return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*$reject_rate)+/*($calculation->canvas_area - $calculation->offcut_square)*/$calculation->n4*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price +  $calculation->n9*5+ $price_comp),
                 "self_price"=>$price_comp);
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+   }
+
+   function calculateCompSelfPrice($calculation = null,$components = null){
+        $price_comp = 0;$project_sum = 0;
+        $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        if(!empty($calculation)){
+            $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
+        }
+        if(!empty($components)){
+            foreach ($components as  $value) {
+                if(gettype($value) == 'array'){
+                   if(!empty($value['id']) && !empty($value['component_id']))
+                        $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
+                    
+                    if(!empty($dop_params)){
+                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
+                    }
+                }
+                if(gettype($value) == 'object'){
+                     $price_comp += $value->quantity*$component_model->getComponentsSelfPrice($value->component_id,$value->option_id,$value->good_id,$value->barcode,$value->article)->price;
+                     $project_sum += $value->quantity*$value->price;
+                }
+            }
+        }
+        return (object)array("self" => $price_comp,"sum" => $project_sum);
    }
 }

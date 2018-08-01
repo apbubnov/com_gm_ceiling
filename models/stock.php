@@ -643,4 +643,24 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getRealizedComponents($id){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('ac.component_id,ac.option_id,ac.option_id as id,ac.good_id,ac.barcode,ac.article,ABS(ac.count) as count,ABS(ac.count) as quantity,ac.price')
+                ->from('`#__gm_ceiling_analytics_components` as ac')
+                ->innerJoin('`#__gm_ceiling_components_option` as co on ac.option_id = co.id')
+                ->innerJoin('`#__gm_ceiling_components` as c on ac.component_id = c.id')
+                ->where("ac.project_id = $id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
