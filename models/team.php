@@ -169,9 +169,9 @@ class Gm_ceilingModelTeam extends JModelItem
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->update('#__gm_ceiling_mounters_map')
-				->set("id_brigade = '$id_brigade'")
-				->where("id_mounter = '$id_mounter'");
+			$query->update('`#__gm_ceiling_mounters_map`')
+				->set("id_brigade = $id_brigade")
+				->where("id_mounter = $id_mounter");
 			$db->setQuery($query);
 			$db->execute();
 		}

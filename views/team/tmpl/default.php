@@ -69,7 +69,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 					<td><?php echo $value->name; ?></td>
 					<td><?php echo $value->phone; ?></td>
 					<td><img src="data:image/png;base64,<?php echo base64_encode($value->pasport); ?>" id="image<?php $value->id ?>" class="passport-image" style="cursor: pointer"></td>
-					<td><button type="button" class="btn btn-primary btn-sm move" id="btn<?php echo $value->id; ?>"><i class="fa fa-random"></i></button></td>
+					<td><button type="button" class="btn btn-primary btn-sm move" id="btn<?php echo $value->id_mounter; ?>"><i class="fa fa-random"></i></button></td>
 					<td><button type="button" class="btn btn-danger btn-sm del" data-id="<?php echo $value->id_mounter; ?>"><i class="fa fa-trash"></i></button></td>
 				</tr>
 			<?php 
@@ -249,6 +249,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 		//перемещение
 		jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function () {
 			brigade = jQuery("#brigades").val();
+			console.log(id_mounter, brigade);
 			jQuery.ajax({
 				type: 'POST',
 				url: "/index.php?option=com_gm_ceiling&task=team.MoveBrigade",
@@ -259,21 +260,9 @@ $server_name = $_SERVER['SERVER_NAME'];
 					current_brigade: <?php echo $id_brigade; ?>,
 				},
 				success: function(data) {
-					console.log(data);
-					jQuery("#mounters").empty();
+					//console.log(data);
 					if (data != null) {
-						var table2 = '';
-						var i = 1;
-						Array.from(data).forEach(function(element) {
-							table2 += "<tr><td>Монтажник "+i+":</td>";
-							table2 += "<td>"+element.name+"</td>";
-							table2 += "<td>"+element.phone+"</td>";
-							table2 += '<td><img src="'+element.passport+'" id="image'+element.id+'" class="passport-image" style="cursor: pointer"></td>';
-							table2 += '<td><button type="button" class="btn btn-primary move" id="btn'+element.id+'">Переместить в другую бригаду</button></td>';
-							table2 += "</tr>";
-							i++;
-						});
-						jQuery("#mounters").append(table2);
+						location.reload();
 					}
 				},
 				error: function(data) {
