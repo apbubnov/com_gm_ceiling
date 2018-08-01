@@ -39,31 +39,43 @@ $server_name = $_SERVER['SERVER_NAME'];
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/team/tmpl/css/style.css" type="text/css" />
-
+<style type="text/css">
+	th {
+		text-align: center;
+	}
+</style>
 <?=parent::getButtonBack();?>
 
 <h2 class="center">Бригада: <?php echo $brigade[0]->name; ?></h2>
 <h6 class="center">Телефон: <?php echo $brigade[0]->username; ?>; E-mail: <?php echo $brigade[0]->email; ?></h6>
-
+<button type="button" class="btn btn-primary" id="add_new_mounter">Добавить монтажника</button>
 <div id="content-tar">
 	<div id="mounters-container">
 		<p><h6>Монтажники:</h6></p>
 		<table id="mounters">
+			<thead>
+				<tr>
+					<th>Имя</th>
+					<th>Телефон</th>
+					<th>Паспорт</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
 			<?php 
-				$i = 1;
 				foreach ($mounters as $value) {
 			?>
 				<tr>
-					<td>Монтажник <?php echo $i; ?>:</td>
 					<td><?php echo $value->name; ?></td>
 					<td><?php echo $value->phone; ?></td>
 					<td><img src="data:image/png;base64,<?php echo base64_encode($value->pasport); ?>" id="image<?php $value->id ?>" class="passport-image" style="cursor: pointer"></td>
-					<td><button type="button" class="btn btn-primary move" id="btn<?php echo $value->id; ?>">Переместить в другую бригаду</button></td>
+					<td><button type="button" class="btn btn-primary btn-sm move" id="btn<?php echo $value->id_mounter; ?>"><i class="fa fa-random"></i></button></td>
+					<td><button type="button" class="btn btn-danger btn-sm del" data-id="<?php echo $value->id_mounter; ?>"><i class="fa fa-trash"></i></button></td>
 				</tr>
 			<?php 
-				$i++;
 				}
 			?>
+			</tbody>
 		</table>
 	</div>
 	<div id="modal-window-container-tar">
@@ -136,6 +148,21 @@ $server_name = $_SERVER['SERVER_NAME'];
 		</table>
 	</div>
 </div>
+<div class="modal_window_container" id="mw_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_new_mounter" style="border: 2px solid black; border-radius: 4px;">
+    	<form id="mounter_form" enctype="multipart/form-data" method="post">
+    		<input type="hidden" name="id_brigade" value="<?= $id_brigade ?>">
+	    	<p class="margin-button-tar" style="margin-top: 1em;">ФИО:</p>
+			<p class="margin-top-tar"><input type="text" name="name-mount" id="name-mount" class="name-mount input-tar"></p>
+			<p class="margin-button-tar">Номер телефона:</p>
+			<p class="margin-top-tar"><input type="text" name="phone-mount" id="phone-mount" class="phone-mount input-tar"></p>
+			<p class="margin-button-tar">Загрузите ксерокопию паспорта:</p>
+			<p class="margin-top-tar"><input type="file" accept="image/*" name="pasport" id="pasport" class="pasport input-tar"></p>
+			<p class="margin-top-tar"><button type="button" class="btn btn-primary" id="btn_send_new_mounter">Добавить</button></p>
+		</form>
+    </div>
+</div>
 
 <script type='text/javascript'>
 
@@ -149,23 +176,25 @@ $server_name = $_SERVER['SERVER_NAME'];
 		}
 	}
 
+	jQuery(".phone-mount").mask("+7(999)999-99-99");
+
 	//скрыть модальное окно
-    jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
-		}
-		var div2 = jQuery("#big-image");
-		if (!div2.is(e.target)
-		    && div2.has(e.target).length === 0) {
-			jQuery("#close2-tar").hide();
-			jQuery("#modal-window-container2-tar").hide();
-			jQuery("#big-image-shadow").hide();
-			jQuery("#big-image").hide();
-		}
+	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div1 = jQuery("#modal-window-choose-tar");
+        var div2 = jQuery("#big-image");
+        var div3 = jQuery("#modal_window_new_mounter");
+        if (!div1.is(e.target) // если клик был не по нашему блоку
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0
+            && !div3.is(e.target)
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
+            div1.hide();
+            div2.hide();
+            div3.hide();
+        }
     });
 
 	// перенаправление на страницу проекта
@@ -237,6 +266,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 		//перемещение
 		jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function () {
 			brigade = jQuery("#brigades").val();
+			console.log(id_mounter, brigade);
 			jQuery.ajax({
 				type: 'POST',
 				url: "/index.php?option=com_gm_ceiling&task=team.MoveBrigade",
@@ -247,21 +277,9 @@ $server_name = $_SERVER['SERVER_NAME'];
 					current_brigade: <?php echo $id_brigade; ?>,
 				},
 				success: function(data) {
-					console.log(data);
-					jQuery("#mounters").empty();
+					//console.log(data);
 					if (data != null) {
-						var table2 = '';
-						var i = 1;
-						Array.from(data).forEach(function(element) {
-							table2 += "<tr><td>Монтажник "+i+":</td>";
-							table2 += "<td>"+element.name+"</td>";
-							table2 += "<td>"+element.phone+"</td>";
-							table2 += '<td><img src="'+element.passport+'" id="image'+element.id+'" class="passport-image" style="cursor: pointer"></td>';
-							table2 += '<td><button type="button" class="btn btn-primary move" id="btn'+element.id+'">Переместить в другую бригаду</button></td>';
-							table2 += "</tr>";
-							i++;
-						});
-						jQuery("#mounters").append(table2);
+						location.reload();
 					}
 				},
 				error: function(data) {
@@ -283,6 +301,81 @@ $server_name = $_SERVER['SERVER_NAME'];
 			jQuery("#big-image-shadow").show("slow");
 			jQuery("#big-image").show("slow");
 		});
+
+		jQuery(".del").click(function() {
+            var button = jQuery(this);
+            noty({
+                layout: 'center',
+                type: 'warning',
+                modal: true,
+                text: 'Удалить монтажника?',
+                killer: true,
+                buttons: [
+                    {
+                        addClass: 'btn btn-success', text: 'Выполнен', onClick: function ($noty) {
+                        	jQuery.ajax({
+								type: 'POST',
+								url: "/index.php?option=com_gm_ceiling&task=team.delete_mounter",
+								dataType: 'json',
+								data: {
+									id: button.data("id")
+								},
+								success: function(data) {
+									location.reload();
+								},
+								error: function(data) {
+									noty({
+						                layout: 'center',
+						                type: 'warning',
+						                text: 'Ошибка'
+						            });
+								}
+							});
+                            /*jQuery.get(
+                                "/index.php?option=com_gm_ceiling&task=team.delete_mounter",
+                                {
+                                    id: button.data("id")
+                                },
+                                function(data) {
+                                    location.reload();
+                                }
+                            );*/
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        });
+
+        jQuery("#add_new_mounter").click(function() {
+        	jQuery("#close_mw").show();
+            jQuery("#mw_container").show();
+            jQuery("#modal_window_new_mounter").show();
+        });
+
+        jQuery("#btn_send_new_mounter").click(function() {
+        	formdata = new FormData(jQuery('#mounter_form')[0]);
+        	jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=teamform.save_mounter",
+				processData: false,
+				contentType:false,
+				data: formdata,
+				success: function(data) {
+					//console.log(data);
+					location.reload();
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+        });
+        
 
 	});
 
