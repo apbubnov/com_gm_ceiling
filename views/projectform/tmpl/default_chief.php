@@ -35,7 +35,7 @@ $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-
+$projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
@@ -115,6 +115,21 @@ preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
 $code = $code[1];
 
 $mount_sum = 0;
+
+$json_mount = $this->item->mount_data;
+if(!empty($this->item->mount_data)){
+    $mount_types = $projects_mounts_model->get_mount_types(); 
+    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    foreach ($this->item->mount_data as $value) {
+        $value->stage_name = $mount_types[$value->stage];
+        if(!array_key_exists($value->mounter,$stages)){
+            $stages[$value->mounter] = array((object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
+        else{
+            array_push($stages[$value->mounter],(object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
+    }
+}
 
 if ($this->item->project_status == 1) {
     $whatCalendar = 0;
@@ -228,7 +243,7 @@ echo parent::getPreloader();
                                     <?php echo $jdate->format('d.m.Y H:i'); ?>
                                 <?php } ?>
                             </td>
-                        <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
+                        <?php }/* else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
                             <th>Дата монтажа</th>
                             <td>
                                 <?php
@@ -258,7 +273,7 @@ echo parent::getPreloader();
                                     }
                                 ?>
                             </td>
-                        <?php } ?>
+                        <?php }*/ ?>
                     </tr>
                     <tr>
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
@@ -296,14 +311,18 @@ echo parent::getPreloader();
                         ?>
                         <td><?php echo $gauger->name; ?></td>
                     </tr>
-                    <tr>
-                        <th>Монтажная бригада</th>
-                        <?php 
-                            $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                            $mount = $mount_model->getMount($this->item->id); 
-                        ?>
-                        <td><?php echo $mount->name; ?></td>
-                    </tr>
+                    <?php if(!empty($this->item->mount_data)):?>
+                            <tr>
+                                <th colspan="3" style="text-align: center;">Монтаж</th>
+                            </tr>
+                            <?php foreach ($this->item->mount_data as $value) { ?>                          
+                                <tr>
+                                    <th><?php echo $value->time;?></th>
+                                    <td><?php echo $value->stage_name;?></td>
+                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                </tr>
+                            <?php }?>
+                        <?php endif;?>
                 </table>
                 <?php if ($userId == $user->dealer_id) { ?>
                     <input name="type" value="chief" type="hidden">
