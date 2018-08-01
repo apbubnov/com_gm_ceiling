@@ -629,9 +629,9 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->insert($db->quoteName('#__gm_ceiling_projects'))
-                ->columns('client_id')
-                ->values("'$client->id'");
+            $query->insert('`#__gm_ceiling_projects`')
+                ->columns('`client_id`, `project_status`, `created`')
+                ->values("$client->id, 8, NOW()");
 
             $db->setQuery($query);
             $db->execute();
