@@ -1693,17 +1693,17 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             $results = $mount_model->getDataAll($dealer_id);
-
+            
             $empty_mount = true;
             if (!empty($results)){
-                foreach ($results as $value){
-                    if(!empty($value)){
+                foreach ($results as $key => $value){
+                    if(!empty($value) && mb_ereg('mp[\d]+',$key)){
                         $empty_mount = false;
                         break;
                     }
                 }
             }
-            if(in_array('16', $groups)&& $empty_mount){
+            if($empty_mount){
                 $results = $mount_model->getDataAll(1);
             }
             //Если существующая калькуляция
