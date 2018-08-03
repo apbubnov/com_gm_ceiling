@@ -569,16 +569,16 @@ class Gm_ceilingHelpersGm_ceiling
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
-            if ($need_mount || $data["need_mount_extra"]) {
+            //if ($need_mount || $data["need_mount_extra"]) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
-            } else {
+            /*} else {
                 $mounting_data = [
                     'total_with_gm_dealer_margin' => 0,
                     'total_with_gm_dealer_margin_guild' => 0,
                     'total_gm_mounting' => 0,
                     'total_dealer_mounting' => 0
                 ];
-            }
+            }*/
             //Итоговая сумма компонентов
             $total_sum = 0;
             //Прибавляем к подсчету комплектующие
@@ -1584,7 +1584,7 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $dealer_id = 1;
             }
-            $results = $mount_model->getDataAll($dealer_id);
+            $results = $mount_model->getDataAll(1);
             $margin = self::get_margin($data['project_id']);
             $guild_data = array();
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
@@ -1693,7 +1693,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             $results = $mount_model->getDataAll($dealer_id);
-            
+            $gm_mount  = $mount_model->getDataAll(1);
             $empty_mount = true;
             if (!empty($results)){
                 foreach ($results as $key => $value){
@@ -1706,6 +1706,7 @@ class Gm_ceilingHelpersGm_ceiling
             if($empty_mount){
                 $results = $mount_model->getDataAll(1);
             }
+           
             //Если существующая калькуляция
             if(!empty($calc_id)){
                 foreach ($calculation_data as $key => $item) {
@@ -1759,15 +1760,17 @@ class Gm_ceilingHelpersGm_ceiling
                 $data["need_mount"] = 1;
             $mounting_data = [];
             $guild_data = [];
+        
+            
             if ($data['n31'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $guild_data[] = array(
                     "title" => "Внутренний вырез(в цеху) (ПВХ)",                                                                    //Название
                     "quantity" => $data['n31'],                                                                //Кол-во
-                    "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => $gm_mount->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $gm_mount->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $gm_mount->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $gm_mount->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
@@ -1776,10 +1779,10 @@ class Gm_ceilingHelpersGm_ceiling
                     $guild_data[] = array(
                         "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
                         "quantity" => $data['n9'] - 6,                                                                //Кол-во
-                        "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => ($data['n9'] - 6) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => ($data['n9'] - 6) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $gm_mount->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => ($data['n9'] - 6) * $gm_mount->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $gm_mount->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => ($data['n9'] - 6) * $gm_mount->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
             }

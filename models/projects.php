@@ -192,6 +192,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     if ($subtype == "refused") {
                         $query->where('a.project_verdict = 0');
+                        $query->where('a.project_status in (2,3,15)');
                     } else {
                         $query->where('a.project_status = 5');
                         $query->where('a.project_verdict = 1');

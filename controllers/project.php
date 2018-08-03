@@ -1818,7 +1818,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $user = JFactory::getUser();
             $reklama = $model_api_phones->getDataById($api_phone_id);
 
-            if ($user->id != $reklama->dealer_id) {
+            if ($user->dealer_id != $reklama->dealer_id) {
                 throw new Exception('403 forbidden');
             }
             $project = $model_project->getData($data['id']);
