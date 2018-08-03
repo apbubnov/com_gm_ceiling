@@ -98,6 +98,23 @@ class Gm_ceilingModelApi_phones extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+	function getDealersAdvt($dealer_id){
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('id,name as advt_title');
+			$query->from('#__gm_ceiling_api_phones');
+			$query->where("dealer_id = $dealer_id OR dealer_id IS NULL");
+			$db->setQuery($query);
+			$item = $db->loadAssocList('id');
+			return $item;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 	function getNumberInfo($number){
 		try
 		{
