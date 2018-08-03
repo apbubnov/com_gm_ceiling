@@ -37,14 +37,30 @@ echo parent::getButtonBack();
 
 
 <script type="text/javascript">
+    var data = JSON.parse('<?php echo $data?>');
     jQuery(document).ready(function(){
-        var data = JSON.parse('<?php echo $data?>');
+        
         makeTh(jQuery("#analytic_common > thead"),data[0]);
         data.shift();
         fill_table(data);   
         console.log(data);
     });
-    
+    jQuery(document).on("click", "#analytic_common tbody tr", function(event) {
+        var target = event.target;
+        if (target.tagName == 'TD'){
+            var rek_name = jQuery(target.closest("tr")).data('value');
+            var index = jQuery(target)[0].cellIndex;
+            var statuses = jQuery(jQuery('#analytic_common > thead > tr')[0].children[index]).data('value');
+            //var date1 = jQuery("#c_date1").val();
+            //var date2 = jQuery("#c_date2").val();
+            //console.log(rek_name,statuses,date1,date2,0);
+             for(let i = 0;i<data.length;i++){
+                if(data[i]['id'] == rek_name){
+                    console.log(data[i]['projects'][statuses]);
+                }
+             }
+        }         
+    });
     function makeTh(container, data) {
         var row = jQuery("<tr/>");
         container.empty();
@@ -61,7 +77,8 @@ echo parent::getButtonBack();
             jQuery('#analytic_common').append('<tr></tr>');
             jQuery.each(ths,function(index,item){
                 key = jQuery(item).data('value');
-                let val = (data[i][key] ? data[i][key] : 0); 
+                let val = (data[i][key] ? data[i][key] : 0);
+                 jQuery('#analytic_common > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
                 jQuery('#analytic_common > tbody > tr:last').append('<td>'+ val +'</td>');
                 if(key == 'advt_title'){
                     total[key] = '<b>Итого</b>';
