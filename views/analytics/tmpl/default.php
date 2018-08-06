@@ -90,8 +90,8 @@ echo parent::getButtonBack();
         det_ths = jQuery("#analytic_detailed > thead  th");
         data.shift();
         det_data.shift();
-        fill_table("#analytic_common",data);
-        fill_table("#analytic_detailed",det_data);   
+        fill_table("#analytic_common",data,ths);
+        fill_table("#analytic_detailed",det_data,det_ths);   
         hideEmptyTr("#analytic_common");
         //hideEmptyTr("#analytic_detailed");
         jQuery("#c_show_all").click(function(){
@@ -122,7 +122,6 @@ echo parent::getButtonBack();
         jQuery("#c_date_from").change(function(){
             var date1 = jQuery("#c_date_from").val(),
             date2 = jQuery("#c_date_to").val();
-            console.log(date1,date2);
             getDataByPeriod(date1,date2);
         });
     });
@@ -136,7 +135,6 @@ echo parent::getButtonBack();
             var statuses = jQuery(jQuery('#analytic_common > thead > tr')[0].children[index]).data('value');
             var date1 = jQuery("#c_date_from").val();
             var date2 = jQuery("#c_date_to").val();
-            console.log(rek_name == undefined);
             if(rek_name != undefined){
                 for(let i = 0;i<data.length;i++){
                     if(data[i]['id'] == rek_name){
@@ -151,7 +149,6 @@ echo parent::getButtonBack();
                 }   
             }
             getProjects(projects,date1,date2,0);
-            console.log(rek_name);
         }         
     });
 
@@ -182,7 +179,6 @@ echo parent::getButtonBack();
        container.append(row);
 
        if(row1){
-        console.log(row1);
             container.append(row1);
        }
     }
@@ -201,7 +197,7 @@ echo parent::getButtonBack();
                 total = [];
                 result.shift();
                 data = result;
-                fill_table(result);
+                fill_table("#analytic_common",result,ths);
                 hideEmptyTr("#analytic_common");
                 console.log(result);
             },
@@ -234,24 +230,25 @@ echo parent::getButtonBack();
         });
     }
 
-    function fill_table(container,data){
+    function fill_table(container,data,ths){
         var key ="";
         jQuery(container + ' tbody').empty();
         jQuery(container + '> thead > tr:last').append("<th/>");
         for(let i = 0;i<data.length;i++){
             jQuery(container).append('<tr></tr>');
             jQuery.each(ths,function(index,item){
-                key = jQuery(item).data('value');
-                let val = (data[i][key] ? data[i][key] : 0);
-                 jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
-                jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
-                if(key == 'advt_title'){
-                    total[key] = '<b>Итого</b>';
+                if(item.colSpan == 1){
+                    key = jQuery(item).data('value');
+                    let val = (data[i][key] ? data[i][key] : 0);
+                     jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
+                    jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
+                    if(key == 'advt_title'){
+                        total[key] = '<b>Итого</b>';
+                    }
+                    else{
+                        total[key] = (total[key]) ? total[key] + val : val;
+                    }
                 }
-                else{
-                    total[key] = (total[key]) ? total[key] + val : val;
-                }
-                
             });
 
             jQuery(container + ' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
