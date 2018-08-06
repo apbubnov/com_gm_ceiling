@@ -17,7 +17,9 @@ JHtml::_('formbehavior.chosen', 'select');
 $user = JFactory::getUser();
 $analytic_model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
 $data = json_encode($analytic_model->getData($user->dealer_id));
-
+$det_acnalytic_model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_detailed_new');
+$det_data = json_encode($det_acnalytic_model->getData($user->dealer_id));
+$today = date('Y-m-d');
 echo parent::getButtonBack();
 
 ?>
@@ -39,6 +41,25 @@ echo parent::getButtonBack();
             </table>
         </div>        
     </div>
+
+    <div class="row right">
+        <label for="d_date_from">Выбрать с:</label>
+        <input type="date" name="d_date_from" id = "d_date_from" class="input-gm" value="<?php echo $today?>">
+        <label for="d_date_to">до:</label>
+        <input type="date" name="d_date_to" id = "d_date_to" class="input-gm" value="<?php echo $today?>">
+        <button type="button" class = "btn btn-primary" id = "d_show_all">Показать всё</button>
+    </div>
+    <div class="row" style="margin-top: 10px">  
+        <div class="col-md-12">
+            <table id = "analytic_detailed" class="analitic-table">
+                <thead id = "thead_det" class = "caption-style-tar">
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>        
+    </div>
+
 </div>
 <div id="mw_container" class="modal_window_analitic">
         <button type="button" id="close-modal-window" class="close_modal_analic"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -50,6 +71,9 @@ echo parent::getButtonBack();
 <script type="text/javascript">
     var data = JSON.parse('<?php echo $data?>'),total = [];
     var ths = [];
+    var det_ths =[];
+    var det_data = JSON.parse('<?php echo $det_data?>');
+    console.log(det_data);
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#mw_projects"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
@@ -61,11 +85,15 @@ echo parent::getButtonBack();
     });
     jQuery(document).ready(function(){
         makeTh(jQuery("#analytic_common > thead"),data[0]);
+        makeTh(jQuery("#analytic_detailed > thead"),det_data[0]);
         ths = jQuery("#analytic_common > thead  th");
+        det_ths = jQuery("#analytic_detailed > thead  th");
         data.shift();
-        fill_table(data);   
-       hideEmptyTr("#analytic_common");
-
+        det_data.shift();
+        fill_table("#analytic_common",data);
+        fill_table("#analytic_detailed",det_data);   
+        hideEmptyTr("#analytic_common");
+        //hideEmptyTr("#analytic_detailed");
         jQuery("#c_show_all").click(function(){
             jQuery('#analytic_common > tbody > tr').show();
             jQuery('#analytic_common > tbody > tr:last').remove();
@@ -128,12 +156,35 @@ echo parent::getButtonBack();
     });
 
     function makeTh(container, data) {
-        var row = jQuery("<tr/>");
+        var row = jQuery("<tr/>"),row1 = jQuery("<tr/>");
+
         container.empty();
-        jQuery.each(data, function(key, value) { 
-            row.append(jQuery("<th/ data-value = '"+key+"'>").text(value));
+        jQuery.each(data, function(key, value) {
+            if(typeof value == 'string'){ 
+                row.append(jQuery("<th/ data-value = '"+key+"'>").text(value));
+                row1 = "";        
+            }
+            if(typeof value == 'object'){
+                if(!value.columns){
+                    row.append(jQuery("<th/ rowspan ="+value.rowspan+" data-value = '"+key+"'>").text(value.head_name));    
+                }
+                else{
+                    
+                    row.append(jQuery("<th/ colspan ="+Object.keys(value.columns).length+" data-value = '"+key+"'>").text(value.head_name));
+                    jQuery.each(value.columns, function(key_c, value_c) {
+                        
+                        row1.append(jQuery("<th/ data-value = '"+key_c+"'>").text(value_c));
+                    });
+                }
+               
+            }
         });
-        container.append(row);
+       container.append(row);
+
+       if(row1){
+        console.log(row1);
+            container.append(row1);
+       }
     }
     
     function getDataByPeriod(date1,date2){
@@ -183,17 +234,17 @@ echo parent::getButtonBack();
         });
     }
 
-    function fill_table(data){
+    function fill_table(container,data){
         var key ="";
-        jQuery('#analytic_common tbody').empty();
-        jQuery('#analytic_common > thead > tr:last').append("<th/>");
+        jQuery(container + ' tbody').empty();
+        jQuery(container + '> thead > tr:last').append("<th/>");
         for(let i = 0;i<data.length;i++){
-            jQuery('#analytic_common').append('<tr></tr>');
+            jQuery(container).append('<tr></tr>');
             jQuery.each(ths,function(index,item){
                 key = jQuery(item).data('value');
                 let val = (data[i][key] ? data[i][key] : 0);
-                 jQuery('#analytic_common > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
-                jQuery('#analytic_common > tbody > tr:last').append('<td>'+ val +'</td>');
+                 jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
+                jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
                 if(key == 'advt_title'){
                     total[key] = '<b>Итого</b>';
                 }
@@ -203,7 +254,7 @@ echo parent::getButtonBack();
                 
             });
 
-            jQuery('#analytic_common > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
+            jQuery(container + ' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
         }
 
         fill_total_string();

@@ -177,6 +177,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     break;
                 case "gmmanager":
+                    $query->where('a.deleted_by_user = 0');
                     if ($subtype == "runprojects") {
                         $query->where('a.project_status in (10, 11, 16, 17, 19, 24, 25, 26)');
                     } elseif ($subtype == "archive") {

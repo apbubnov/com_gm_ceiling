@@ -92,8 +92,8 @@ $self_calc_data = json_encode($self_calc_data);//массив с себесто�
 $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = (empty($mount_transport->min_sum)) ? 100 : $mount_transport->min_sum;
-$min_components_sum = (empty($mount_transport->min_components_sum)) ? 100 : $mount_transport->min_components_sum;
+$min_project_sum = 100;
+$min_components_sum = 100;
 
 $project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
