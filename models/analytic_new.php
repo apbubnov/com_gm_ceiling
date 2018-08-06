@@ -24,7 +24,8 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","inwork"=>"(0,2,3)","measure"=>"(1)","deals"=>"(4,5,6,7,8,10,11,12,16,17,19,24,25,26)","done"=>"(12)");
+		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","inwork"=>"(0,2,3)","measure"=>"(1)","deals"=>"(4,5,6,7,8,10,11,12,16,17,19,24,25,26)","done"=>"(12)","sum"=>"(12)","profit"=>"(12)");
+		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
 			foreach ($statuses as $key => $status) {
@@ -97,6 +98,12 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			}
 			if(!empty($date1)&&!empty($date2)){
 				$query->where("created BETWEEN '$date1' and '$date2'");
+			}
+			if(!empty($date1) && empty($date2)){
+				$query->where("created >= '$date1' ");
+			}
+			if(empty($date1) && !empty($date2)){
+				$query->where("created <= '$date2' ");
 			}
 			$db->setQuery($query);
 			$result = $db->loadObjectList();

@@ -1949,9 +1949,9 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
-            $dealer_id = $jinput->get('dealer_id','','STRING');
-            $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analiticcommon');
-            $data = $analitic_model->getDataByPeriod($date1,$date2,$dealer_id);
+            $dealer_id = JFactory::getUser()->dealer_id;
+            $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
+            $data = $analitic_model->getData($dealer_id,$date1,$date2);
             die(json_encode($data));
         }
        catch(Exception $e)
@@ -1994,24 +1994,15 @@ public function register_mnfctr(){
         try{
             $jinput = JFactory::getApplication()->input;
             $type = $jinput->get('type','','STRING');
-            $advt_name = $jinput->get('advt','','STRING');
-            $statuses = $jinput->get('statuses','','STRING');
+            $ids = $jinput->get('ids','','STRING');
+            $ids = explode(';',$ids);
+            array_pop($ids);
+            $ids = "(".implode(',', $ids).")";
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
-            $dealer_id = $jinput->get('dealer_id','','STRING');
-            $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-            $advt_id = $phones_model->getIdByName($advt_name);
-            if(empty($advt_id)){
-                $advt_id = $advt_name;
-            }
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             if($type == 0){
-                if(empty($date1)&&empty($date2)){
-                    $projects = $project_model->getDataByStatusAndAdvt($dealer_id,$advt_id,$statuses);
-                }
-                else{
-                    $projects = $project_model->getDataByStatusAndAdvt($dealer_id,$advt_id,$statuses,$date1,$date2);
-                };
+                $projects = $project_model->getDataByStatusAndAdvt($ids,$date1,$date2);
             }
             if($type == 1){
                 $project_history = Gm_ceilingHelpersGm_ceiling::getModel('Projectshistory');
