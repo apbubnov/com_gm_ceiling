@@ -30,7 +30,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","done"=>"(12)","sum"=>"(12)","profit"=>"(12)");
+		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","profit"=>"(12)");
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
@@ -117,7 +117,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 
 	function get_current_measures(){
 		try{
-			
+
 		}
 		catch(Exception $e)
         {
