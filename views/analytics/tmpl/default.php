@@ -303,7 +303,7 @@ echo parent::getButtonBack();
 
     function fill_total_string(container){
         if(Object.keys(total).length){
-            jQuery(container).append('<tr></tr>');
+            jQuery(c-ontainer).append('<tr></tr>');
                 jQuery.each(ths,function(index,item){
                     key = jQuery(item).data('value');
                     jQuery(container + ' > tbody > tr:last').append('<td><b>'+  total[key] +'</b></td>');
