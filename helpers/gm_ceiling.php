@@ -1587,6 +1587,11 @@ class Gm_ceilingHelpersGm_ceiling
             $results = $mount_model->getDataAll(1);
             $margin = self::get_margin($data['project_id']);
             $guild_data = array();
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            if(!empty($data['n3'])){
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3']);
+                $data['n1'] = $canvasData[0]->texture_id;
+            }
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
                 //Обработка 1 угла
                 $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);

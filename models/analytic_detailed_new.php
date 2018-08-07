@@ -21,7 +21,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 {
 	function getData($dealer_id,$date1=null,$date2 = null){
 		if(empty($date1)){
-			$date1 =  date("Y-m-d");
+			$date1 =  date("2018-01-01");
 		}
 		if(empty($date2)){
 			$date2 =  date("Y-m-d");
@@ -30,7 +30,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","profit"=>"(12)");
+		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)");
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
@@ -40,32 +40,42 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$advt[0][$key] = 0;
 			}
 		}
+		
 		foreach ($statuses as $key => $value) {
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
 			$sum = 0;
-
 			foreach ($projects as $project) {
-				
-
 				if(!empty($project->api_phone_id)){
 					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-					
-					$advt[$project->api_phone_id][$key]++;
-					 
+					$advt[$project->api_phone_id][$key]++; 
 				}
 				else{
 					$ids[0]['projects'][$key] .= $project->project_id . ";";
 					$advt[0][$key]++;
-
 				}
 
-				if($project->project_status == 12 && $key == 'done'){
-					$advt[$project->api_phone_id]['sum'] += $project->sum;
-					$advt[$project->api_phone_id]['profit'] += $project->profit;
-					
+				if($project->project_status == 12 && $key == 'closed'){
+					$advt[$project->api_phone_id]['sum_done'] += $project->sum;
+				}
+				if(($project->project_status == 4 || $project->project_status == 5) && $key == 'deals'){
+					$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
 				}
 			}
 			
+		}
+		foreach ($advt as $id => $advt_obj){
+			if($advt_obj['id'] == 0){
+				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
+				$current_mounts = $this->getCurrentMounts($dealer_id,null,$date1,$date2);
+			}
+			else{
+				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2);
+				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2);
+			}
+			$advt[$id]['current_measure'] = $current_measure[0]->count;
+			$advt[$id]['projects']['current_measure'] = $current_measure[0]->projects;
+			$advt[$id]['mounts'] = $current_mounts[0]->count;
+			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
 		}
 		foreach ($ids as $key => $value) {
 			$advt[$key]['projects'] = $value['projects'];
@@ -75,11 +85,11 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			"common" => (object)array("head_name" =>"Всего","rowspan"=>2),
 			"dealers" => (object)array("head_name" =>"Дилеры","rowspan"=>2),
 			"advt" => (object)array("head_name" =>"Реклама","rowspan"=>2),
-			"refused" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
-			"measures" => (object)array("head_name"=>"Замеры","columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
-			"deal" => (object)array("head_name"=>"Договоры","columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
-			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2),
-			"close" => (object)array("head_name"=>"Закрытые","columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
+			"refuse" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
+			"measures" => (object)array("head_name"=>"Замеры","bias"=>5,"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
+			"deal" => (object)array("head_name"=>"Договоры","bias"=>5,"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
+			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>5),
+			"close" => (object)array("head_name"=>"Закрытые","bias"=>5,"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
 			);
 		array_unshift($advt, $header);
 		return $advt;
@@ -90,7 +100,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select('*')
+				->select('distinct *')
 				->from('#__analytic_detailed')
 				->where("client_dealer_id = $dealer_id and (advt_owner = $dealer_id OR advt_owner is NULL)");
 			if(!empty($statuses)){
@@ -115,18 +125,47 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
         }
 	}
 
-	function get_current_measures(){
+	function getCurrentMeasures($dealer_id,$advt,$date1,$date2){
 		try{
-
+			//throw new Exception("$dealer_id,$advt,$date1,$date2");
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
+				->from('`#__analytic_detailed`')
+				->where("calculation_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id");
+			if(!empty($advt)){
+				$query->where("api_phone_id = $advt");
+			}
+			else{
+				$query->where("api_phone_id Is NULL");	
+			}
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			return $result;
 		}
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function get_current_mounts(){
+	function getCurrentMounts($dealer_id,$advt,$date1,$date2){
 		try{
-
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
+				->from('`#__analytic_detailed`')
+				->where("mount_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id");
+			if(!empty($advt)){
+				$query->where("api_phone_id = $advt");
+			}
+			else{
+				$query->where("api_phone_id Is NULL");	
+			}
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			return $result;
 		}
 		catch(Exception $e)
         {

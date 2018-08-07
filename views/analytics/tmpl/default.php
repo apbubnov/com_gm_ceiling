@@ -52,7 +52,7 @@ echo parent::getButtonBack();
     <div class="row" style="margin-top: 10px">  
         <div class="col-md-12">
             <table id = "analytic_detailed" class="analitic-table">
-                <thead id = "thead_det" class = "caption-style-tar">
+                <thead id = "thead_det" class = "caption-style-analitic">
                 </thead>
                 <tbody>
                 </tbody>
@@ -83,11 +83,12 @@ echo parent::getButtonBack();
             jQuery("#mw_container").hide();
         }
     });
+
     jQuery(document).ready(function(){
         makeTh(jQuery("#analytic_common > thead"),data[0]);
         makeTh(jQuery("#analytic_detailed > thead"),det_data[0]);
         ths = jQuery("#analytic_common > thead  th");
-        det_ths = jQuery("#analytic_detailed > thead  th");
+        det_ths = jQuery("#analytic_detailed > thead  th").filter(":not([colspan]),[colspan='1']")
         data.shift();
         det_data.shift();
         fill_table("#analytic_common",data,ths);
@@ -98,7 +99,7 @@ echo parent::getButtonBack();
             jQuery('#analytic_common > tbody > tr').show();
             jQuery('#analytic_common > tbody > tr:last').remove();
             jQuery('#analytic_common').append('<tr></tr>');
-            fill_total_string();
+            fill_total_string("#analytic_common");
         });
 
         jQuery(".clear_form_group").click(function (event) {
@@ -162,15 +163,16 @@ echo parent::getButtonBack();
                 row1 = "";        
             }
             if(typeof value == 'object'){
+                let bias = (value.bias ? value.bias : 0);
                 if(!value.columns){
-                    row.append(jQuery("<th/ rowspan ="+value.rowspan+" data-value = '"+key+"'>").text(value.head_name));    
+                    row.append(jQuery("<th/ rowspan ="+value.rowspan+" data-bias='"+bias+"' data-value = '"+key+"'>").text(value.head_name));    
                 }
                 else{
                     
                     row.append(jQuery("<th/ colspan ="+Object.keys(value.columns).length+" data-value = '"+key+"'>").text(value.head_name));
                     jQuery.each(value.columns, function(key_c, value_c) {
                         
-                        row1.append(jQuery("<th/ data-value = '"+key_c+"'>").text(value_c));
+                        row1.append(jQuery("<th/ data-bias='"+bias+"' data-value = '"+key_c+"'>").text(value_c));
                     });
                 }
                
@@ -230,24 +232,23 @@ echo parent::getButtonBack();
         });
     }
 
-    function fill_table(container,data,ths){
+/*    function fill_table(container,data,ths){
         var key ="";
         jQuery(container + ' tbody').empty();
         jQuery(container + '> thead > tr:last').append("<th/>");
         for(let i = 0;i<data.length;i++){
             jQuery(container).append('<tr></tr>');
             jQuery.each(ths,function(index,item){
-                if(item.colSpan == 1){
-                    key = jQuery(item).data('value');
-                    let val = (data[i][key] ? data[i][key] : 0);
-                     jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
-                    jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
-                    if(key == 'advt_title'){
-                        total[key] = '<b>Итого</b>';
-                    }
-                    else{
-                        total[key] = (total[key]) ? total[key] + val : val;
-                    }
+                key = jQuery(item).data('value');
+                console.log(item.cellIndex);
+                let val = (data[i][key] ? data[i][key] : 0);
+                 jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
+                jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
+                if(key == 'advt_title'){
+                    total[key] = '<b>Итого</b>';
+                }
+                else{
+                    total[key] = (total[key]) ? total[key] + val : val;
                 }
             });
 
@@ -255,14 +256,57 @@ echo parent::getButtonBack();
         }
 
         fill_total_string();
+    }*/
+
+
+    function fill_table(container,data,ths){
+        var key ="";
+        let tds = [];
+        jQuery(container + ' tbody').empty();
+        jQuery(container + '> thead > tr:last').append("<th/>");
+        for(let i = 0;i<data.length;i++){
+            jQuery(container).append('<tr></tr>');
+            jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
+            for (var j = ths.length - 1; j >= 0; j--) {
+                jQuery(container + ' > tbody > tr:last').append('<td></td>');
+                //console.log(ths[j].cellIndex);
+            }
+            jQuery.each(ths,function(index,item){
+                console.log(item);
+                key = jQuery(item).data('value');
+                //console.log(item.cellIndex);
+                let val = (data[i][key]) ? data[i][key] : 0;
+                tds = jQuery(container + " > tbody >tr:last td");
+                let cell_index = item.cellIndex;
+                console.log(cell_index,"before");
+                let bias =  jQuery(item).data('bias');
+                if (typeof bias !== typeof undefined && bias !== false) {
+                   
+                    cell_index += bias;
+                }
+                console.log(cell_index,"after");
+                tds[cell_index].innerText = val;
+                if(key == 'advt_title'){
+                    total[key] = '<b>Итого</b>';
+                }
+                else{
+                    total[key] = (total[key]) ? total[key] + val : val;
+                }
+            });
+
+            jQuery(container + ' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
+        }
+
+        fill_total_string(container);
     }
 
-    function fill_total_string(){
+
+    function fill_total_string(container){
         if(Object.keys(total).length){
-            jQuery('#analytic_common').append('<tr></tr>');
+            jQuery(container).append('<tr></tr>');
                 jQuery.each(ths,function(index,item){
                     key = jQuery(item).data('value');
-                    jQuery('#analytic_common > tbody > tr:last').append('<td><b>'+  total[key] +'</b></td>');
+                    jQuery(container + ' > tbody > tr:last').append('<td><b>'+  total[key] +'</b></td>');
                 });
             }
     }
