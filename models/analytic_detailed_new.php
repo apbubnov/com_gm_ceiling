@@ -46,8 +46,8 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$sum = 0;
 			foreach ($projects as $project) {
 				if(!empty($project->api_phone_id)){
-					if(!in_array($project->project_id,$ids[$project->api_phone_id]['projects'][$key])){
-						$ids[$project->api_phone_id]['projects'][$key][] = $project->project_id;
+					if(!in_array($project->project_id,$ids[$project->api_phone_id][$key])){
+						$ids[$project->api_phone_id][$key][] = $project->project_id;
 					}
 
 					/*if($key != "sum_done" && $key != "sum_deals"){
@@ -56,8 +56,8 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 					}*/
 				}
 				else{
-					if(!in_array($project->project_id,$ids[0]['projects'][$key])){
-						$ids[0]['projects'][$key][] = $project->project_id;
+					if(!in_array($project->project_id,$ids[0][$key])){
+						$ids[0][$key][] = $project->project_id;
 					}
 					/*$ids[0]['projects'][$key] .= $project->project_id . ";";
 					if($key != "sum_done" && $key != "sum_deals"){
@@ -66,6 +66,9 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				}
 			}
 			if($key="sum_done"){
+				foreach($ids as $advt_id => $projects){
+
+				}
 				if(!empty($project->api_phone_id)){
 					$advt[$project->api_phone_id]['sum_done'] += $project->sum;
 				}
@@ -74,7 +77,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				}
 			}
 			if($key == 'sum_deals'){
-				
+
 				if(!empty($project->api_phone_id)){
 					$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
 				}
@@ -84,7 +87,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			}
 		}
 		
-		throw new Exception(print_r($ids,true));
+		//throw new Exception(print_r($ids,true));
 		foreach ($advt as $id => $advt_obj){
 			if($advt_obj['id'] == 0){
 				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
