@@ -94,12 +94,19 @@ echo parent::getButtonBack();
         fill_table("#analytic_common",data,ths);
         fill_table("#analytic_detailed",det_data,det_ths);   
         hideEmptyTr("#analytic_common");
-        //hideEmptyTr("#analytic_detailed");
+        hideEmptyTr("#analytic_detailed");
         jQuery("#c_show_all").click(function(){
             jQuery('#analytic_common > tbody > tr').show();
             jQuery('#analytic_common > tbody > tr:last').remove();
             jQuery('#analytic_common').append('<tr></tr>');
-            fill_total_string("#analytic_common");
+            fill_total_string("#analytic_common",ths);
+        });
+
+        jQuery("#d_show_all").click(function(){
+            jQuery('#analytic_detailed > tbody > tr').show();
+            jQuery('#analytic_detailed > tbody > tr:last').remove();
+            jQuery('#analytic_detailed').append('<tr></tr>');
+            fill_total_string("#analytic_detailed",det_ths);
         });
 
         jQuery(".clear_form_group").click(function (event) {
@@ -111,19 +118,32 @@ echo parent::getButtonBack();
             for(var i = 1;i<tr.children.length;i++){
                 arr.push(+tr.children[i].childNodes[0].data);
             }
+            console.log(table_name);
             update_total(arr,table_name);
         });
 
         jQuery("#c_date_to").change(function(){
             var date1 = jQuery("#c_date_from").val(),
             date2 = jQuery("#c_date_to").val();
-            getDataByPeriod(date1,date2);
+            getDataByPeriod(date1,date2,1);
         });
 
         jQuery("#c_date_from").change(function(){
             var date1 = jQuery("#c_date_from").val(),
             date2 = jQuery("#c_date_to").val();
-            getDataByPeriod(date1,date2);
+            getDataByPeriod(date1,date2,1);
+        });
+
+        jQuery("#d_date_to").change(function(){
+            var date1 = jQuery("#d_date_from").val(),
+            date2 = jQuery("#d_date_to").val();
+            getDataByPeriod(date1,date2,0);
+        });
+
+        jQuery("#d_date_from").change(function(){
+            var date1 = jQuery("#d_date_from").val(),
+            date2 = jQuery("#d_date_to").val();
+            getDataByPeriod(date1,date2,0);
         });
     });
     jQuery(document).on("click", "#analytic_common tbody tr", function(event) {
@@ -149,7 +169,70 @@ echo parent::getButtonBack();
                         projects += data[i]['projects'][statuses];
                 }   
             }
-            getProjects(projects,date1,date2,0);
+            if(projects){
+                getProjects(projects); 
+            }
+            else{
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Проекты отсутствуют!"
+                });
+            }
+        }         
+    });
+
+    jQuery(document).on("click", "#analytic_detailed tbody tr", function(event) {
+        var target = event.target;
+        projects = "";
+        if (target.tagName == 'TD' || target.tagName == 'B'){
+            target = (target.tagName == 'B') ?  jQuery(target.closest("td")) : target;
+            var rek_name = jQuery(target.closest("tr")).data('value');
+            let click_indexes = [];
+            jQuery.each(det_ths,function(index,item){
+                key = jQuery(item).data('value');
+                let cell_index = item.cellIndex;
+                let bias =  jQuery(item).data('bias');
+                if (typeof bias !== typeof undefined && bias !== false) {
+                    cell_index += bias;
+                }
+                click_indexes[cell_index] = key;
+            });
+            console.log(click_indexes);
+            var index = jQuery(target)[0].cellIndex;
+            var statuses = click_indexes[index];
+            var date1 = jQuery("#d_date_from").val();
+            var date2 = jQuery("#d_date_to").val();
+            console.log(rek_name,statuses);
+            if(rek_name != undefined){
+                for(let i = 0;i<data.length;i++){
+                    if(data[i]['id'] == rek_name){
+                        projects = data[i]['projects'][statuses];
+                    }
+                 }
+            }
+            else{
+                for(let i = 0;i<data.length;i++){
+                    if(data[i]['projects'][statuses])
+                        projects += data[i]['projects'][statuses];
+                }   
+            }
+            if(projects){
+                getProjects(projects); 
+            }
+            else{
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Проекты отсутствуют!"
+                });
+            }
         }         
     });
 
@@ -185,13 +268,24 @@ echo parent::getButtonBack();
        }
     }
     
-    function getDataByPeriod(date1,date2){
+    function getDataByPeriod(date1,date2,type){
+        var table_name = "",table_ths =[];
+        if(type){
+            url = "index.php?option=com_gm_ceiling&task=getAnaliticByPeriod";
+            table_name = "#analytic_common";
+            table_ths  = ths;
+
+        }
+        else{
+            url = "index.php?option=com_gm_ceiling&task=getDetailedAnaliticByPeriod";
+            table_name = "#analytic_detailed";
+            table_ths = det_ths;
+        }
         jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=getAnaliticByPeriod",
+            url: url,
             data: {
                 date1: date1,
                 date2: date2,
-                type : 0
             },
             dataType: "json",
             async: true,
@@ -199,11 +293,12 @@ echo parent::getButtonBack();
                 total = [];
                 result.shift();
                 data = result;
-                fill_table("#analytic_common",result,ths);
-                hideEmptyTr("#analytic_common");
+                fill_table(table_name,result,table_ths);
+                hideEmptyTr(table_name);
                 console.log(result);
             },
             error: function (data) {
+                console.log(data.responseText);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -232,36 +327,9 @@ echo parent::getButtonBack();
         });
     }
 
-/*    function fill_table(container,data,ths){
-        var key ="";
-        jQuery(container + ' tbody').empty();
-        jQuery(container + '> thead > tr:last').append("<th/>");
-        for(let i = 0;i<data.length;i++){
-            jQuery(container).append('<tr></tr>');
-            jQuery.each(ths,function(index,item){
-                key = jQuery(item).data('value');
-                console.log(item.cellIndex);
-                let val = (data[i][key] ? data[i][key] : 0);
-                 jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
-                jQuery(container + ' > tbody > tr:last').append('<td>'+ val +'</td>');
-                if(key == 'advt_title'){
-                    total[key] = '<b>Итого</b>';
-                }
-                else{
-                    total[key] = (total[key]) ? total[key] + val : val;
-                }
-            });
-
-            jQuery(container + ' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
-        }
-
-        fill_total_string();
-    }*/
-
-
     function fill_table(container,data,ths){
         var key ="";
-        let tds = [];
+        let tds = [],result = [];
         jQuery(container + ' tbody').empty();
         jQuery(container + '> thead > tr:last').append("<th/>");
         for(let i = 0;i<data.length;i++){
@@ -269,44 +337,47 @@ echo parent::getButtonBack();
             jQuery(container +' > tbody > tr:last').attr('data-value',data[i]['id'] ? data[i]['id'] : 0); 
             for (var j = ths.length - 1; j >= 0; j--) {
                 jQuery(container + ' > tbody > tr:last').append('<td></td>');
-                //console.log(ths[j].cellIndex);
             }
             jQuery.each(ths,function(index,item){
-                console.log(item);
                 key = jQuery(item).data('value');
-                //console.log(item.cellIndex);
                 let val = (data[i][key]) ? data[i][key] : 0;
                 tds = jQuery(container + " > tbody >tr:last td");
                 let cell_index = item.cellIndex;
-                console.log(cell_index,"before");
                 let bias =  jQuery(item).data('bias');
                 if (typeof bias !== typeof undefined && bias !== false) {
-                   
                     cell_index += bias;
                 }
-                console.log(cell_index,"after");
                 tds[cell_index].innerText = val;
                 if(key == 'advt_title'){
-                    total[key] = '<b>Итого</b>';
+                    result[key] = '<b>Итого</b>';
                 }
                 else{
-                    total[key] = (total[key]) ? total[key] + val : val;
+                    result[key] = (result[key]) ? result[key] - (-val)  : val;
                 }
             });
-
+            total[container]  = result;
             jQuery(container + ' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
         }
 
-        fill_total_string(container);
+        fill_total_string(container,ths);
     }
 
 
-    function fill_total_string(container){
+    function fill_total_string(container,ths){
         if(Object.keys(total).length){
             jQuery(container).append('<tr></tr>');
+            for (var j = ths.length - 1; j >= 0; j--) {
+                jQuery(container + ' > tbody > tr:last').append('<td></td>');
+            }
+            let tds = jQuery(container + " > tbody >tr:last td");;
                 jQuery.each(ths,function(index,item){
                     key = jQuery(item).data('value');
-                    jQuery(container + ' > tbody > tr:last').append('<td><b>'+  total[key] +'</b></td>');
+                    let cell_index = item.cellIndex;
+                    let bias =  jQuery(item).data('bias');
+                    if (typeof bias !== typeof undefined && bias !== false) {
+                        cell_index += bias;
+                    }
+                    tds[cell_index].innerHTML = '<b>'+total[container][key]+'</b>';
                 });
             }
     }
@@ -320,14 +391,11 @@ echo parent::getButtonBack();
         }
     }
 
-    function getProjects(ids,date1,date2,type){
+    function getProjects(ids){
         jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
                     data: {
-                        ids : ids,
-                        date1: date1,
-                        date2: date2,
-                        type : type
+                        ids : ids
                     },
                     dataType: "json",
                     async: true,

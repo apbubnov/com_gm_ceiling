@@ -1965,9 +1965,9 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
-             $dealer_id = $jinput->get('dealer_id','','STRING');
-            $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analiticdetailed');
-            $data = $analitic_model->getData($date1,$date2,$dealer_id);
+            $dealer_id = JFactory::getUser()->dealer_id;
+            $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_detailed_new');
+            $data = $analitic_model->getData($dealer_id,$date1,$date2);            
             die(json_encode($data));
         }
        catch(Exception $e)
@@ -1993,22 +1993,16 @@ public function register_mnfctr(){
     public function getAnaliticProjects(){
         try{
             $jinput = JFactory::getApplication()->input;
-            $type = $jinput->get('type','','STRING');
             $ids = $jinput->get('ids','','STRING');
             $ids = explode(';',$ids);
-            array_pop($ids);
+            if(empty(end($ids))){
+                array_pop($ids);
+            }
             $ids = "(".implode(',', $ids).")";
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            if($type == 0){
-                $projects = $project_model->getDataByStatusAndAdvt($ids,$date1,$date2);
-            }
-            if($type == 1){
-                $project_history = Gm_ceilingHelpersGm_ceiling::getModel('Projectshistory');
-                $projects = $project_history->getIdsByStatusAndAdvt($dealer_id,$advt_id,$statuses,$date1,$date2);
-                
-            }
+            $projects = $project_model->getDataByStatusAndAdvt($ids);
             die(json_encode($projects));       
             
 

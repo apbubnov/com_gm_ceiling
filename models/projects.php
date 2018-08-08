@@ -512,11 +512,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("ifnull(($subquery),0) as cost")
                 ->from('`#__gm_ceiling_projects` as p')
                 ->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
-                
                 ->where("p.id in $projects");
-                if(!empty($date1) && !empty($date2)){
-                    $query->where("p.created BETWEEN '$date1' and '$date2'");
-                }
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;

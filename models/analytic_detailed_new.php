@@ -21,7 +21,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 {
 	function getData($dealer_id,$date1=null,$date2 = null){
 		if(empty($date1)){
-			$date1 =  date("2018-01-01");
+			$date1 =  date("Y-m-d");
 		}
 		if(empty($date2)){
 			$date2 =  date("Y-m-d");
@@ -30,7 +30,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)");
+		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","sum_deals"=>"(4,5)");
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
@@ -47,21 +47,34 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			foreach ($projects as $project) {
 				if(!empty($project->api_phone_id)){
 					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-					$advt[$project->api_phone_id][$key]++; 
+					if($key != "sum_done" && $key != "sum_deals"){
+						$advt[$project->api_phone_id][$key]++; 	
+					}
 				}
 				else{
 					$ids[0]['projects'][$key] .= $project->project_id . ";";
-					$advt[0][$key]++;
+					if($key != "sum_done" && $key != "sum_deals"){
+						$advt[0][$key]++;
+					}
 				}
 
-				if($project->project_status == 12 && $key == 'closed'){
-					$advt[$project->api_phone_id]['sum_done'] += $project->sum;
+				if($project->new_status == 12 && $key == 'closed'){
+					if(!empty($project->api_phone_id)){
+						$advt[$project->api_phone_id]['sum_done'] += $project->sum;
+					}
+					else{
+						$advt[0]['sum_done'] += $project->sum;
+					}
 				}
-				if(($project->project_status == 4 || $project->project_status == 5) && $key == 'deals'){
-					$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
+				if(($project->new_status == 4 || $project->new_status == 5) && $key == 'deals'){
+					if(!empty($project->api_phone_id)){
+						$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
+					}
+					else{
+						$advt[0]['sum_done'] += $project->sum;
+					}
 				}
 			}
-			
 		}
 		foreach ($advt as $id => $advt_obj){
 			if($advt_obj['id'] == 0){
@@ -78,7 +91,8 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
 		}
 		foreach ($ids as $key => $value) {
-			$advt[$key]['projects'] = $value['projects'];
+			$old_val = $advt[$key]['projects'];
+			$advt[$key]['projects'] = array_merge($old_val,$value['projects']);
 		}
 		$header = (object)array(
 			"advt_title" => (object)array("head_name" =>"Реклама","rowspan"=>2), 
@@ -88,8 +102,8 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			"refuse" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
 			"measures" => (object)array("head_name"=>"Замеры","bias"=>5,"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
 			"deal" => (object)array("head_name"=>"Договоры","bias"=>5,"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
-			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>5),
-			"close" => (object)array("head_name"=>"Закрытые","bias"=>5,"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
+			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>4),
+			"close" => (object)array("head_name"=>"Закрытые","bias"=>6,"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
 			);
 		array_unshift($advt, $header);
 		return $advt;
@@ -127,7 +141,6 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 
 	function getCurrentMeasures($dealer_id,$advt,$date1,$date2){
 		try{
-			//throw new Exception("$dealer_id,$advt,$date1,$date2");
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
