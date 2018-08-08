@@ -21,7 +21,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 {
 	function getData($dealer_id,$date1=null,$date2 = null){
 		if(empty($date1)){
-			$date1 =  date("Y-m-d");
+			$date1 =  date("2018-01-01");
 		}
 		if(empty($date2)){
 			$date2 =  date("Y-m-d");
@@ -46,36 +46,45 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$sum = 0;
 			foreach ($projects as $project) {
 				if(!empty($project->api_phone_id)){
-					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-					if($key != "sum_done" && $key != "sum_deals"){
-						$advt[$project->api_phone_id][$key]++; 	
+					if(!in_array($project->project_id,$ids[$project->api_phone_id]['projects'][$key])){
+						$ids[$project->api_phone_id]['projects'][$key][] = $project->project_id;
 					}
+
+					/*if($key != "sum_done" && $key != "sum_deals"){
+						if(!in_array($project->project_id, ))
+						$advt[$project->api_phone_id][$key]++; 	
+					}*/
 				}
 				else{
-					$ids[0]['projects'][$key] .= $project->project_id . ";";
+					if(!in_array($project->project_id,$ids[0]['projects'][$key])){
+						$ids[0]['projects'][$key][] = $project->project_id;
+					}
+					/*$ids[0]['projects'][$key] .= $project->project_id . ";";
 					if($key != "sum_done" && $key != "sum_deals"){
 						$advt[0][$key]++;
-					}
+					}*/
 				}
-
-				if($project->new_status == 12 && $key == 'closed'){
-					if(!empty($project->api_phone_id)){
-						$advt[$project->api_phone_id]['sum_done'] += $project->sum;
-					}
-					else{
-						$advt[0]['sum_done'] += $project->sum;
-					}
+			}
+			if($key="sum_done"){
+				if(!empty($project->api_phone_id)){
+					$advt[$project->api_phone_id]['sum_done'] += $project->sum;
 				}
-				if(($project->new_status == 4 || $project->new_status == 5) && $key == 'deals'){
-					if(!empty($project->api_phone_id)){
-						$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
-					}
-					else{
-						$advt[0]['sum_done'] += $project->sum;
-					}
+				else{
+					$advt[0]['sum_done'] += $project->sum;
+				}
+			}
+			if($key == 'sum_deals'){
+				
+				if(!empty($project->api_phone_id)){
+					$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
+				}
+				else{
+					$advt[0]['sum_done'] += $project->sum;
 				}
 			}
 		}
+		
+		throw new Exception(print_r($ids,true));
 		foreach ($advt as $id => $advt_obj){
 			if($advt_obj['id'] == 0){
 				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
@@ -130,7 +139,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$query->where("date_of_change <= '$date2' ");
 			}
 			$db->setQuery($query);
-			$result = $db->loadObjectList();
+			$result = $db->loadAssocList('project_id');
 			return $result;
 		}
 		catch(Exception $e)
