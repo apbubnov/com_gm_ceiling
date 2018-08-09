@@ -45,8 +45,8 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
 			$sum = 0;
 			if(!$dealer_type){
-				$types_projects = $this->getDataByDealerType(3,$date1,$date2,$value);
-				$types_projects = $this->getDataByDealerType(8,$date1,$date2,$value);
+				$types_projects = $this->getDataByDealerType($dealer_id,3,$date1,$date2,$value);
+				$types_projects = $this->getDataByDealerType($dealer_id,8,$date1,$date2,$value);
 			}
 
 			foreach ($projects as $project) {
@@ -124,7 +124,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
         }
 	}
 
-	function getDataByDealerType($dealer_type,$date1,$date2,$statuses = null){
+	function getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$statuses = null){
 		try{
 			if($dealer_type == 3){
 				$advt = 'otd';
@@ -135,7 +135,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("project_id,project_status,$advt as api_phone_id,sum,profit")
+				->select("project_id,project_status,'$advt' as api_phone_id,sum,profit")
 				->from('#__analytic')
 				->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
 			if(!empty($statuses)){
