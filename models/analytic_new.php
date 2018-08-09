@@ -25,14 +25,13 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
 		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","inwork"=>"(0,2,3)","measure"=>"(1)","deals"=>"(4,5,6,7,8,10,11,12,16,17,19,24,25,26)","done"=>"(12)","sum"=>"(12)","profit"=>"(12)");
-
+		$advt['otd']['id'] = "otd";
+		$advt['otd']['advt_title'] = 'Отделочники';
+		$advt['win']['id'] = "win";
+		$advt['win']['advt_title'] = 'Оконщики';
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
-		if(!$dealer_type){
-			array_push($advt,array("id"=>'otd','advt_title'=>"Отделочники"));
-			array_push($advt,array("id"=>'win','advt_title'=>"Оконщики"));
-			
-		}
+
 		foreach ($advt as $id => $advt_obj) {
 			foreach ($statuses as $key => $status) {
 				$advt[$id][$key] = 0;
@@ -44,10 +43,6 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		foreach ($statuses as $key => $value) {
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
 			$sum = 0;
-			if(!$dealer_type){
-				$types_projects = $this->getDataByDealerType($dealer_id,3,$date1,$date2,$value);
-				$types_projects = $this->getDataByDealerType($dealer_id,8,$date1,$date2,$value);
-			}
 
 			foreach ($projects as $project) {
 				if(!empty($project->api_phone_id)){
@@ -70,10 +65,17 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			}
 			
 		}
+		if(!$dealer_type){
+			$this->addTypes($advt,$ids,$dealer_id,3,$date1,$date2,$statuses);
+			$this->addTypes($advt,$ids,$dealer_id,8,$date1,$date2,$statuses);	
+		}
 		foreach ($ids as $key => $value) {
 			$advt[$key]['projects'] = $value['projects'];
 		}
-
+		$result = [];
+		foreach ($advt as $key => $value) {
+			$result[] = $value;
+		}
 		$header = (object)array(
 			"advt_title" => "Реклама", 
 			"common" => "Всего",
@@ -88,11 +90,11 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			"profit"=> "Прибыль"
 			);
 		
-		array_unshift($advt, $header);
+		array_unshift($result, $header);
 		if($dealer_type){
-			$this->unset_columns($advt);
+			$this->unset_columns($result);
 		}
-		return $advt;
+		return $result;
 	}
 	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null){
 		try{
@@ -153,6 +155,29 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+	function addTypes(&$advt,&$ids,$dealer_id,$dealer_type,$date1,$date2,$statuses){
+		try{
+			
+			foreach ($statuses as $key => $value) {
+				$projects = $this->getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$value);
+				$sum = 0;
+				
+				foreach ($projects as $project) {
+					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
+					$advt[$project->api_phone_id][$key]++;
+					if($project->project_status == 12 && $key == 'done'){
+						$advt[$project->api_phone_id]['sum'] += $project->sum;
+						$advt[$project->api_phone_id]['profit'] += $project->profit;
+					}
+				}
+				
+			}
 		}
 		catch(Exception $e)
         {
