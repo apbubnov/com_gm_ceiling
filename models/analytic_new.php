@@ -42,32 +42,14 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		$ids = [];
 		foreach ($statuses as $key => $value) {
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
-			$sum = 0;
-
-			foreach ($projects as $project) {
-				if(!empty($project->api_phone_id)){
-					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-					
-					$advt[$project->api_phone_id][$key]++;
-					 
-				}
-				else{
-					$ids[0]['projects'][$key] .= $project->project_id . ";";
-					$advt[0][$key]++;
-
-				}
-
-				if($project->project_status == 12 && $key == 'done'){
-					$advt[$project->api_phone_id]['sum'] += $project->sum;
-					$advt[$project->api_phone_id]['profit'] += $project->profit;
-					
-				}
+			$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+		
+			if(!$dealer_type){
+				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
+				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,8);
+				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
 			}
-			
-		}
-		if(!$dealer_type){
-			$this->addTypes($advt,$ids,$dealer_id,3,$date1,$date2,$statuses);
-			$this->addTypes($advt,$ids,$dealer_id,8,$date1,$date2,$statuses);	
 		}
 		foreach ($ids as $key => $value) {
 			$advt[$key]['projects'] = $value['projects'];
@@ -96,37 +78,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		}
 		return $result;
 	}
-	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null){
-		try{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query
-				->select('*')
-				->from('#__analytic')
-				->where("client_dealer_id = $dealer_id and (advt_owner = $dealer_id OR advt_owner is NULL)");
-			if(!empty($statuses)){
-				$query->where("project_status in $statuses");
-			}
-			if(!empty($date1)&&!empty($date2)){
-				$query->where("created BETWEEN '$date1' and '$date2'");
-			}
-			if(!empty($date1) && empty($date2)){
-				$query->where("created >= '$date1' ");
-			}
-			if(empty($date1) && !empty($date2)){
-				$query->where("created <= '$date2' ");
-			}
-			$db->setQuery($query);
-			$result = $db->loadObjectList();
-			return $result;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
-	function getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$statuses = null){
+	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null,$dealer_type = null){
 		try{
 			if($dealer_type == 3){
 				$advt = 'otd';
@@ -136,10 +88,18 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query
-				->select("project_id,project_status,'$advt' as api_phone_id,sum,profit")
-				->from('#__analytic')
-				->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			if(empty($dealer_type)){
+				$query
+					->select('*')
+					->where("client_dealer_id = $dealer_id and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			}
+			else{
+				$query
+					->select("project_id,project_status,'$advt' as api_phone_id,sum,profit")
+					->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			}
+			$query->from('#__analytic');
+				
 			if(!empty($statuses)){
 				$query->where("project_status in $statuses");
 			}
@@ -161,28 +121,24 @@ class Gm_ceilingModelAnalytic_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function addTypes(&$advt,&$ids,$dealer_id,$dealer_type,$date1,$date2,$statuses){
-		try{
+	function addData(&$advt,&$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key){
+		foreach ($projects as $project) {
 			
-			foreach ($statuses as $key => $value) {
-				$projects = $this->getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$value);
-				$sum = 0;
-				
-				foreach ($projects as $project) {
-					$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-					$advt[$project->api_phone_id][$key]++;
-					if($project->project_status == 12 && $key == 'done'){
-						$advt[$project->api_phone_id]['sum'] += $project->sum;
-						$advt[$project->api_phone_id]['profit'] += $project->profit;
-					}
-				}
-				
+			if(!empty($project->api_phone_id)){
+				$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
+				$advt[$project->api_phone_id][$key]++;
+			}
+			else{
+				$ids[0]['projects'][$key] .= $project->project_id . ";";
+				$advt[0][$key]++;
+
+			}
+
+			if($project->project_status == 12 && $key == 'done'){
+				$advt[$project->api_phone_id]['sum'] += $project->sum;
+				$advt[$project->api_phone_id]['profit'] += $project->profit;
 			}
 		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
 	}
 	function unset_columns($data){
 		try{
