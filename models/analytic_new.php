@@ -57,7 +57,6 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 					 
 				}
 				else{
-					if()
 					$ids[0]['projects'][$key] .= $project->project_id . ";";
 					$advt[0][$key]++;
 
