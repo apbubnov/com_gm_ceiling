@@ -170,6 +170,7 @@ echo parent::getButtonBack();
                 }   
             }
             if(projects){
+
                 getProjects(projects); 
             }
             else{
@@ -208,19 +209,20 @@ echo parent::getButtonBack();
             var date2 = jQuery("#d_date_to").val();
             console.log(rek_name,statuses);
             if(rek_name != undefined){
-                for(let i = 0;i<data.length;i++){
-                    if(data[i]['id'] == rek_name){
-                        projects = data[i]['projects'][statuses];
+                for(let i = 0;i<det_data.length;i++){
+                    if(det_data[i]['id'] == rek_name){
+                        projects = det_data[i]['projects'][statuses];
                     }
                  }
             }
             else{
-                for(let i = 0;i<data.length;i++){
-                    if(data[i]['projects'][statuses])
-                        projects += data[i]['projects'][statuses];
+                for(let i = 0;i<det_data.length;i++){
+                    if(det_data[i]['projects'][statuses])
+                        projects += det_data[i]['projects'][statuses]+';';
                 }   
             }
             if(projects){
+                console.log(projects);
                 getProjects(projects); 
             }
             else{
@@ -292,7 +294,12 @@ echo parent::getButtonBack();
             success: function (result) {
                 total = [];
                 result.shift();
-                data = result;
+                if(type){
+                    data = result;
+                }
+                else{
+                    det_data =result;
+                }
                 fill_table(table_name,result,table_ths);
                 hideEmptyTr(table_name);
                 console.log(result);

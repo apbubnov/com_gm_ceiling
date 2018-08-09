@@ -86,6 +86,9 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				}
 			}
 			$old_val = $advt[$advt_id]['projects'];
+			foreach ($value as $s => $ps) {
+				$value[$s] = implode(";",$ps);
+			}
 			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
 		}
 		$header = (object)array(
