@@ -32,6 +32,10 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
 		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","sum_deals"=>"(4,5)");
+		$advt['otd']['id'] = "otd";
+		$advt['otd']['advt_title'] = 'Отделочники';
+		$advt['win']['id'] = "win";
+		$advt['win']['advt_title'] = 'Оконщики';
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
@@ -74,6 +78,10 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$advt[$id]['mounts'] = $current_mounts[0]->count;
 			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
 		}
+		if(!$dealer_type){
+			$this->addTypes($advt,$ids,$dealer_id,3,$date1,$date2,$statuses);
+			$this->addTypes($advt,$ids,$dealer_id,8,$date1,$date2,$statuses);	
+		}
 		foreach ($ids as $advt_id => $value) {
 			foreach ($value as $status => $projs) {
 				if($status != 'sum_done' && $status != "sum_deals"){
@@ -90,6 +98,9 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$value[$s] = implode(";",$ps);
 			}
 			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
+		}
+		foreach ($advt as $key => $value) {
+			$result[] = $value;
 		}
 		if(!$dealer_type){
 			$biases = [4,5,6];
@@ -108,11 +119,11 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]),
 			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
 			);
-		array_unshift($advt, $header);
+		array_unshift($result, $header);
 		if($dealer_type){
-			$this->unset_columns($advt);
+			$this->unset_columns($result);
 		}
-		return $advt;
+		return $result;
 	}
 
 	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null){
@@ -145,6 +156,61 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
         }
 	}
 
+		function getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$statuses = null){
+		try{
+			if($dealer_type == 3){
+				$advt = 'otd';
+			}
+			if($dealer_type == 8){
+				$advt = 'win';
+			}
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("project_id,new_status,'$advt' as api_phone_id,sum,profit")
+				->from('#__analytic_detailed')
+				->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			if(!empty($statuses)){
+				$query->where("new_status in $statuses");
+			}
+			if(!empty($date1)&&!empty($date2)){
+				$query->where("date_of_change BETWEEN '$date1' and '$date2'");
+			}
+			if(!empty($date1) && empty($date2)){
+				$query->where("date_of_change >= '$date1' ");
+			}
+			if(empty($date1) && !empty($date2)){
+				$query->where("date_of_change <= '$date2' ");
+			}
+			$db->setQuery($query);
+			$result = $db->loadAssocList('project_id');
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+	function addTypes(&$advt,&$ids,$dealer_id,$dealer_type,$date1,$date2,$statuses){
+		try{
+			
+			foreach ($statuses as $key => $value) {
+				$projects = $this->getDataByDealerType($dealer_id,$dealer_type,$date1,$date2,$value);
+				$sum = 0;
+				
+				foreach ($projects as $project) {
+					if(!in_array($project['project_id'],$ids[$project['api_phone_id']][$key])){
+						$ids[$project['api_phone_id']][$key][] = $project['project_id'];
+					}
+				}
+				
+			}
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 	function getCurrentMeasures($dealer_id,$advt,$date1,$date2){
 		try{
 			$db = JFactory::getDbo();
