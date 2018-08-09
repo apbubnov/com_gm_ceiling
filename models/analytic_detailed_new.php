@@ -21,13 +21,14 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 {
 	function getData($dealer_id,$date1=null,$date2 = null){
 		if(empty($date1)){
-			$date1 =  date("2018-01-01");
+			$date1 =  date("Y-m-d");
 		}
 		if(empty($date2)){
 			$date2 =  date("Y-m-d");
 		}
 		$dealer_type = JFactory::getUser($dealer_id)->dealer_type;
 		$result = [];
+		$ids = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
 		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","sum_deals"=>"(4,5)");
@@ -38,56 +39,27 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$advt[$id][$key] = 0;
 				$advt[$id]['projects'] = "";
 				$advt[0][$key] = 0;
+				$ids[$id][$key] = [];
 			}
 		}
 		
 		foreach ($statuses as $key => $value) {
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
 			$sum = 0;
-			foreach ($projects as $project) {
-				if(!empty($project->api_phone_id)){
-					if(!in_array($project->project_id,$ids[$project->api_phone_id][$key])){
-						$ids[$project->api_phone_id][$key][] = $project->project_id;
+			foreach ($projects as $id => $project) {
+				if(!empty($project['api_phone_id'])){
+					if(!in_array($project['project_id'],$ids[$project['api_phone_id']][$key])){
+						$ids[$project['api_phone_id']][$key][] = $project['project_id'];
 					}
-
-					/*if($key != "sum_done" && $key != "sum_deals"){
-						if(!in_array($project->project_id, ))
-						$advt[$project->api_phone_id][$key]++; 	
-					}*/
 				}
 				else{
-					if(!in_array($project->project_id,$ids[0][$key])){
-						$ids[0][$key][] = $project->project_id;
+					if(!in_array($project['project_id'],$ids[0][$key])){
+						$ids[0][$key][] = $project['project_id'];
 					}
-					/*$ids[0]['projects'][$key] .= $project->project_id . ";";
-					if($key != "sum_done" && $key != "sum_deals"){
-						$advt[0][$key]++;
-					}*/
 				}
 			}
-			if($key="sum_done"){
-				foreach($ids as $advt_id => $projects){
-
-				}
-				if(!empty($project->api_phone_id)){
-					$advt[$project->api_phone_id]['sum_done'] += $project->sum;
-				}
-				else{
-					$advt[0]['sum_done'] += $project->sum;
-				}
-			}
-			if($key == 'sum_deals'){
-
-				if(!empty($project->api_phone_id)){
-					$advt[$project->api_phone_id]['sum_deals'] += $project->sum;
-				}
-				else{
-					$advt[0]['sum_done'] += $project->sum;
-				}
-			}
-		}
 		
-		//throw new Exception(print_r($ids,true));
+		}
 		foreach ($advt as $id => $advt_obj){
 			if($advt_obj['id'] == 0){
 				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
@@ -102,9 +74,19 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$advt[$id]['mounts'] = $current_mounts[0]->count;
 			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
 		}
-		foreach ($ids as $key => $value) {
-			$old_val = $advt[$key]['projects'];
-			$advt[$key]['projects'] = array_merge($old_val,$value['projects']);
+		foreach ($ids as $advt_id => $value) {
+			foreach ($value as $status => $projs) {
+				if($status != 'sum_done' && $status != "sum_deals"){
+					$advt[$advt_id][$status] = count($projs);
+				}
+				else{
+					foreach ($projs as $p_id) {
+						$advt[$advt_id][$status] += $projects[$p_id]["sum"];				
+					}	
+				}
+			}
+			$old_val = $advt[$advt_id]['projects'];
+			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
 		}
 		$header = (object)array(
 			"advt_title" => (object)array("head_name" =>"Реклама","rowspan"=>2), 
