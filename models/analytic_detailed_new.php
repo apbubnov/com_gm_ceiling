@@ -91,18 +91,27 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			}
 			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
 		}
+		if(!$dealer_type){
+			$biases = [4,5,6];
+		}
+		else{
+			$biases = [4,3,4];
+		}
 		$header = (object)array(
 			"advt_title" => (object)array("head_name" =>"Реклама","rowspan"=>2), 
 			"common" => (object)array("head_name" =>"Всего","rowspan"=>2),
 			"dealers" => (object)array("head_name" =>"Дилеры","rowspan"=>2),
 			"advt" => (object)array("head_name" =>"Реклама","rowspan"=>2),
 			"refuse" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
-			"measures" => (object)array("head_name"=>"Замеры","bias"=>5,"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
-			"deal" => (object)array("head_name"=>"Договоры","bias"=>5,"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
-			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>4),
-			"close" => (object)array("head_name"=>"Закрытые","bias"=>6,"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
+			"measures" => (object)array("head_name"=>"Замеры","bias"=>$biases[1],"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
+			"deal" => (object)array("head_name"=>"Договоры","bias"=>$biases[1],"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
+			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]),
+			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
 			);
 		array_unshift($advt, $header);
+		if($dealer_type){
+			$this->unset_columns($advt);
+		}
 		return $advt;
 	}
 
@@ -176,6 +185,20 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function unset_columns($data){
+		try{
+
+			foreach ($data as $key => $value) {
+				unset($data[$key]->dealers);
+				unset($data[$key]->advt);
+			}
 		}
 		catch(Exception $e)
         {
