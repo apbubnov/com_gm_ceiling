@@ -256,15 +256,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <?php } ?>
                  <?php //echo $item->project_calculation_date ?>
                 </td>
-                <td>
-                <?php if($item->project_mounting_date== "0000-00-00 00:00:00") { ?>
-                        -
-                    <?php } else { ?>
-                        <?php $jdate = new JDate(JFactory::getDate($item->project_mounting_date)); ?>
-                        <?php echo $jdate->format('d.m.Y'); ?>
-                    <?php } ?>
-                    <?php //echo $item->project_mounting_date ?>
+                 <td class="center one-touch">
+                    <?php $date = $item->project_mounting_date; ?>
+                    <? if ($date == "00.00.0000 00:00"): ?> -
+                    <? else: ?><?= $date; ?>
+                    <? endif; ?>
                 </td>
+                
                 <td>
                     <?php if ($item->dealer_id == 1) {
                         if ($item->gm_chief_note) { ?>
