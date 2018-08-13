@@ -132,8 +132,8 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $results = $mount_model->getDataAll(1);
 
            
-            return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*$reject_rate)+/*($calculation->canvas_area - $calculation->offcut_square)*/$calculation->n4*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price +  $calculation->n9*5+ $price_comp),
-                "self_price"=>$price_comp);
+            return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*$reject_rate)+/*($calculation->canvas_area - $calculation->offcut_square)*/$calculation->n4*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price +  $calculation->n9*5+ $price_comp->self),
+                "self_price"=>$price_comp->self);
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

@@ -67,7 +67,14 @@ echo parent::getButtonBack();
             <table id="table_projects" class = "table_project_analitic"></table>
         </div>
     </div>
-
+<?php if($user->dealer_id == 1){?>
+    <br>
+    <h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
+    <br>
+    <br>
+    <h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytic_dealers">Аналитика дилеров</a></h2>
+    <br>
+<?php }?>
 <script type="text/javascript">
     var data = JSON.parse('<?php echo $data?>'),total = [];
     var ths = [];
