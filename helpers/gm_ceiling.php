@@ -4393,6 +4393,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 array_push($DateStatys, $arr);
                             }
                         }
+                        
                         for ($r = 1; $r <= $current_days; $r++) {
                             if (strlen($r) == 1) {
                                 $t = "0" . strval($r);
@@ -4422,7 +4423,7 @@ class Gm_ceilingHelpersGm_ceiling
                                     }
                                 }
                             }
-                        }
+                        }//throw new Exception(print_r($DayMounters,true));
                         // выходные дни
                         $statusDayOff = "";
                         $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
@@ -4494,20 +4495,22 @@ class Gm_ceilingHelpersGm_ceiling
                                     if ($value[1] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
-                                            $DayMounter[$r] = ["yellow", $perimeter];
-                                        }
-                                        if ($value[2] == 16) {
-                                            $DayMounter[$r] = ["navy", $perimeter];
-                                        }
-                                        if ($value[2] == 17) {
-                                            $DayMounter[$r] = ["brown", $perimeter];
-                                        }
-                                        if ($value[2] == 11) {
-                                            $DayMounter[$r] = ["green", $perimeter];
-                                        }
-                                        if ($value[2] == 12) {
-                                            $DayMounter[$r] = ["blue", $perimeter];
+                                        if(empty($DayMounters[$r])){
+                                            if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                                $DayMounter[$r] = ["yellow", $perimeter];
+                                            }
+                                            if ($value[2] == 16) {
+                                                $DayMounter[$r] = ["navy", $perimeter];
+                                            }
+                                            if ($value[2] == 17) {
+                                                $DayMounter[$r] = ["brown", $perimeter];
+                                            }
+                                            if ($value[2] == 11) {
+                                                $DayMounter[$r] = ["green", $perimeter];
+                                            }
+                                            if ($value[2] == 12) {
+                                                $DayMounter[$r] = ["blue", $perimeter];
+                                            }
                                         }
                                     }
                                 } else {
