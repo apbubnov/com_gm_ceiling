@@ -67,7 +67,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            draw_calendar();
 		            today = new Date();
 	            	current_day = add_zeros_in_date(today.getFullYear()+'-'+(today.getMonth() + 1)+'-'+today.getDate());
-	            	if (add_zeros_in_date(date) < current_day) {
+	            	/*if (add_zeros_in_date(date) < current_day) {
 	            		noty({
 	                        timeout: 3000,
 	                        theme: 'relax',
@@ -77,7 +77,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	                        text: "Для назначения монтажа на эту дату необходимо вернуться в прошлое"
 	                    });
 		            	return;
-		            }
+		            }*/
 		            
 		            elem.classList.remove('nice-busy');
 		            if (elem.classList.contains('nice-busy-all')) {

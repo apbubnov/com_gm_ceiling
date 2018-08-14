@@ -316,6 +316,11 @@
                     <div class="col-md-6">
                         <p>
                             <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
+                            <div id="ref_comment" style="display:none;">
+                                <label for= "ref_note" >Примечание:</label><br>
+                                <textarea name="ref_note" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
+                                <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                            </div>
                         </p>
                         <p>
                             <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
@@ -1066,10 +1071,18 @@
             };
 
             jQuery("#refuse").click(function(){
+
+                jQuery("#ref_comment").toggle();
+                //jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
                 jQuery('#project_status').val(3);
                 jQuery("#project_verdict").val(0);
-                document.getElementById('form-client').submit();
+                //document.getElementById('form-client').submit();
             });
+
+        jQuery("#refuse_submit").click(function(){
+            jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
+            document.getElementById('form-client').submit();
+        });    
         jQuery("#update_discount").click(function() {
                 save_data_to_session(4);
                 jQuery.ajax({
