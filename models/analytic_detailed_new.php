@@ -149,6 +149,9 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			if(!empty($statuses)){
 				$query->where("new_status in $statuses");
 			}
+			else{
+				$query->where("created BETWEEN '$date1' and '$date2'");
+			}
 			if(!empty($date1)&&!empty($date2)){
 				$query->where("date_of_change BETWEEN '$date1' and '$date2'");
 			}
@@ -190,10 +193,10 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
 				->from('`#__analytic_detailed`');
 			if(empty($dealer_type)){
-				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id");
+				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id and project_status = 1");
 			}
 			else{
-				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type");
+				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type and project_status = 1");
 			}
 			if(!empty($advt) && empty($dealer_type)){
 				$query->where("api_phone_id = $advt");
