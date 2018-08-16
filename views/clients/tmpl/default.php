@@ -234,32 +234,52 @@ jQuery(document).ready(function(){
     }
     jQuery(".btn-danger").click(function(e){
         var id = jQuery(this).data('cl_id');
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=client.delete_by_user",
-            async: false,
-            data: {
-                client_id: id
-            },
-            success: function(data){
-                jQuery('.btn-danger[data-cl_id ='+id+']').closest('.row').remove();
-                let remove_id = clients_data.findIndex(function(el,index,arr){return el.client_id == id });
-                clients_data.splice(remove_id,1);
-            },
-            dataType: "json",
-            timeout: 20000,
-            error: function(data){
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Сервер не отвечает."
-                });
-            }                   
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: false,
+            type: "info",
+            text: "Вы действительно хотите удалить клиента?",
+            buttons:[
+                {
+                    addClass: 'btn btn-primary', text: 'Удалить', onClick: function($noty) {
+                        jQuery.ajax({
+                            type: 'POST',
+                            url: "index.php?option=com_gm_ceiling&task=client.delete_by_user",
+                            async: false,
+                            data: {
+                                client_id: id
+                            },
+                            success: function(data){
+                                jQuery('.btn-danger[data-cl_id ='+id+']').closest('.row').remove();
+                                let remove_id = clients_data.findIndex(function(el,index,arr){return el.client_id == id });
+                                clients_data.splice(remove_id,1);
+                            },
+                            dataType: "json",
+                            timeout: 20000,
+                            error: function(data){
+                                console.log(data);
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Сервер не отвечает."
+                                });
+                            }                   
+                        });
+                        $noty.close();
+                    }
+                },
+                {
+                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                        $noty.close();
+                    }
+                }
+            ]
         });
+        
         return false;
     });
     
