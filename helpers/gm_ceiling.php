@@ -3232,7 +3232,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $array1[$key] = $value;
             }
             foreach($array1 as $key=>$value){
-                $us_walls .= $key.'='.$value*$p_usadki.';';
+                $us_walls .= $key.'='.round($value*$p_usadki,1).';';
             }
             $html = '<img class= "image" src="/images/GM.png"/>';
             $html .= '<h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';

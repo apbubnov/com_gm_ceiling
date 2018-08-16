@@ -1549,27 +1549,36 @@ class Gm_ceilingModelProject extends JModelItem
             $customer->status = $project->status;
             //получение списаных компонентов если есть
             $stock_model = Gm_ceilingHelpersGm_ceiling::getModel("stock");
-        	$components = $stock_model->getRealizedComponents($id);
-        	$canvases = $stock_model->getRealizedCanvases($id);
+        	$r_components = $stock_model->getRealizedComponents($id);
+        	$r_canvases = $stock_model->getRealizedCanvases($id);
         	//если нет, то считаем
-        	if(empty($components)){
-		        $query = $db->getQuery(true);
-		        $query->select('c.id as id, c.n3 as cid, c.n5 as quad, c.offcut_square as square')
-		            ->from("`#__gm_ceiling_calculations` as c")
-		            ->where("project_id = " . $db->quote($id));
-		        $db->setQuery($query);
-		        $calculations = $db->loadObjectList();
-				if(!empty($calculations)){
-			        foreach ($calculations as $calculation) {
-			            if ($calculation->quad > 0) {
-		                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
+	        $query = $db->getQuery(true);
+	        $query->select('c.id as id, c.n3 as cid, c.n5 as quad, c.offcut_square as square')
+	            ->from("`#__gm_ceiling_calculations` as c")
+	            ->where("project_id = " . $db->quote($id));
+	        $db->setQuery($query);
+	        $calculations = $db->loadObjectList();
+			if(!empty($calculations)){
+		        foreach ($calculations as $calculation) {
+		            if ($calculation->quad > 0) {
+	                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
 
-		                    if (floatval($calculation->square) > 0) {
-		                        $discount_temp = (floatval($calculation->square) >= $calculation->quad / 2) ? 40 : 100;
-		                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => $discount_temp);
-		                    }
-		                }
-
+	                    if (floatval($calculation->square) > 0) {
+	                        $discount_temp = (floatval($calculation->square) >= $calculation->quad / 2) ? 40 : 100;
+	                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => $discount_temp);
+	                    }
+	                }
+				}
+				$canvases1 = array_uintersect($canvases,$r_canvases,function($a,$b){
+					if($a->cid == $b->id && $a->quad == $b->quad){
+						return 1;
+					}
+					else return 0;
+				});
+				//throw new Exception(print_r($canvases1,true));
+				
+				if(empty($r_components)){
+					foreach ($calculations as $calculation) {
 			            $from_db = 1; $save = 0; $ajax = 0; $pdf = 0; $print_components = 1;
 			            $componentsTemp = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components);
 			            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
@@ -1587,7 +1596,18 @@ class Gm_ceilingModelProject extends JModelItem
 			                }
 			            }
 			        }
-			    }
+		        }
+		        else
+		        {
+		        	$components = $r_components;
+		        }
+		        //}
+		    }
+			if(empty($components)){
+				$components = $r_components;
+			}
+			if(empty($canvases)){
+				$canvases = $r_canvases;
 			}
 	        $componentsTemp = array();
 	        foreach ($components as $component) {

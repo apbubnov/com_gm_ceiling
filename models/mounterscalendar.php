@@ -183,7 +183,6 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			->leftJoin('#__gm_ceiling_projects_mounts as m')
 			->where("p.id = $id");
 			$db->setQuery($query);
-
 			$items = $db->loadObjectList();
 			return $items;
 		}

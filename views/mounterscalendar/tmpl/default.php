@@ -371,7 +371,7 @@
 
     function ReplaceToOrder(project, month, ReadOrNot, stage) {
         month--;
-        alert(project);
+       
         if (ReadOrNot == 0) {
             jQuery.ajax({
                 type: "POST",

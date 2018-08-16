@@ -526,9 +526,11 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             {
                 die(json_encode((object) ["status" => "error", "error" => $ex->getMessage()]));
             }
+            //throw new Exception(print_r($CanRealization,true));
             try {
                 if (empty($status) || floatval($status) == 5 || floatval($status) == 6)
                 {
+
                     $query = [];
                     if (count($canvases) > 0) $query = array_merge($query, $CanForModel->Realization($CanRealization, $info));
                     if (count($components) > 0) $query = array_merge($query, $ComForModel->Realization($ComRealization, $info));
