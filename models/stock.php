@@ -663,4 +663,22 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getRealizedCanvases($id){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("ac.canvas_id as id,abs(quad) as quad")
+                ->from("`#__gm_ceiling_analytics_canvases` as ac")
+                ->where("ac.project_id = $id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

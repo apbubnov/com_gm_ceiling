@@ -1547,47 +1547,49 @@ class Gm_ceilingModelProject extends JModelItem
             if (empty($discount)) */$discount = 0;
             $customer->discount = $discount;
             $customer->status = $project->status;
+            //получение списаных компонентов если есть
+            $stock_model = Gm_ceilingHelpersGm_ceiling::getModel("stock");
+        	$components = $stock_model->getRealizedComponents($id);
+        	$canvases = $stock_model->getRealizedCanvases($id);
+        	//если нет, то считаем
+        	if(empty($components)){
+		        $query = $db->getQuery(true);
+		        $query->select('c.id as id, c.n3 as cid, c.n5 as quad, c.offcut_square as square')
+		            ->from("`#__gm_ceiling_calculations` as c")
+		            ->where("project_id = " . $db->quote($id));
+		        $db->setQuery($query);
+		        $calculations = $db->loadObjectList();
+				if(!empty($calculations)){
+			        foreach ($calculations as $calculation) {
+			            if ($calculation->quad > 0) {
+		                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
 
-	        $query = $db->getQuery(true);
-	        $query->select('c.id as id, c.n3 as cid, c.n5 as quad, c.offcut_square as square')
-	            ->from("`#__gm_ceiling_calculations` as c")
-	            ->where("project_id = " . $db->quote($id));
-	        $db->setQuery($query);
-	        $calculations = $db->loadObjectList();
-			if(!empty($calculations)){
-		        foreach ($calculations as $calculation) {
-		            if ($calculation->quad > 0) {
-	                    $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->quad, "square" => false, "discount" => $discount);
-
-	                    if (floatval($calculation->square) > 0) {
-	                        $discount_temp = (floatval($calculation->square) >= $calculation->quad / 2) ? 40 : 100;
-	                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => $discount_temp);
-	                    }
-	                }
-
-		            $from_db = 1; $save = 0; $ajax = 0; $pdf = 0; $print_components = 1;
-		            $componentsTemp = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components);
-		            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
-		            foreach ($componentsTemp as $v)
-		            {
-		                if ($v->quantity != "0" && $v->id > 0)
-		                {
-		                    $component = (object) array();
-		                    $component->id = $v->id;
-		                    $component->title = $v->title;
-		                    $component->count = floatval($v->quantity);
-
-		                    if (empty($components[$v->id])) $components[$v->id] = $component;
-		                    else $components[$v->id]->count += $component->count;
+		                    if (floatval($calculation->square) > 0) {
+		                        $discount_temp = (floatval($calculation->square) >= $calculation->quad / 2) ? 40 : 100;
+		                        $canvases[] = (object) array("id" => $calculation->cid, "quad" => $calculation->square, "square" => true, "discount" => $discount_temp);
+		                    }
 		                }
-		            }
-		        }
-		    }
+
+			            $from_db = 1; $save = 0; $ajax = 0; $pdf = 0; $print_components = 1;
+			            $componentsTemp = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components);
+			            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
+			            foreach ($componentsTemp as $v)
+			            {
+			                if ($v->quantity != "0" && $v->id > 0)
+			                {
+			                    $component = (object) array();
+			                    $component->id = $v->id;
+			                    $component->title = $v->title;
+			                    $component->count = floatval($v->quantity);
+
+			                    if (empty($components[$v->id])) $components[$v->id] = $component;
+			                    else $components[$v->id]->count += $component->count;
+			                }
+			            }
+			        }
+			    }
+			}
 	        $componentsTemp = array();
-	        if(empty($components)){
-	        	$stock_model = Gm_ceilingHelpersGm_ceiling::getModel("stock");
-	        	$components = $stock_model->getRealizedComponents($id);
-	        }
 	        foreach ($components as $component) {
 
 	            $query = $db->getQuery(true);

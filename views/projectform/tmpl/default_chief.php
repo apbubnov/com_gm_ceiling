@@ -180,7 +180,7 @@ echo parent::getPreloader();
                 <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
                 <input id="jform_project_gauger_old" type="hidden" name="jform_project_gauger_old" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else { echo "0"; } ?>"/>
                 <input id="jform_project_calculation_date_old" type="hidden" name="jform_project_calculation_date_old" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;} ?>"/>
-                <input id="mount" type="hidden" name="jform[mount_data]" value="<?php if (isset($this->item->mount_data)) { echo $this->item->mount_data; } ?>"/>
+                <input id="mount" type="hidden" name="mount" value="<?php if (isset($this->item->mount_data)) { echo $this->item->mount_data; } ?>"/>
                 <input type="hidden" name="option" value="com_gm_ceiling"/>
                 <input type="hidden" name="task" value="project.approve"/>
                 <?php echo JHtml::_('form.token'); ?>
@@ -374,7 +374,7 @@ echo parent::getPreloader();
             <div class="controls">
                 <?php if($this->item->project_status == 4) { ?>
                     <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить и запустить в производство</button>
-                <?php } else if($this->item->project_status == 5) { ?>
+                <?php } else{ ?>
                     <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить</button>
                 <?php } ?>
             </div>
