@@ -167,17 +167,17 @@ if (empty($list['direction']))
             $query->from("`#__gm_ceiling_clients` as `client`")
                 ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
                 ->join("LEFT", "(SELECT * FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) as `p` ON `p`.`client_id` = `client`.`id`")
-                ->join("LEFT", "`#__users` as `u` ON `client`.`id` = `u`.`associated_client`")
+                ->join("LEFT outer", "`#__users` as `u` ON `client`.`id` = `u`.`associated_client`")
                 ->join("LEFT", "`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`")
                 ->select("`p`.`id`, `p`.`project_info` as `address`, `s`.`title` as `status`, `s`.`id` as `status_id`")
                 ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
                 ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
                 ->where('`client`.`deleted_by_user` <> 1')
+                ->where('(`p`.`deleted_by_user`<> 1 OR `p`.`deleted_by_user` IS NULL )')
                 ->order("`client`.`id` DESC")
                 ->group("`client`.`id`");
 
             $query->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
-
             $db->setQuery($query);
             
             $result = $db->loadObjectList();

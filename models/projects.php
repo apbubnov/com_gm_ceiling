@@ -177,6 +177,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     break;
                 case "gmmanager":
+                    $query->where('a.deleted_by_user = 0');
                     if ($subtype == "runprojects") {
                         $query->where('a.project_status in (10, 11, 16, 17, 19, 24, 25, 26)');
                     } elseif ($subtype == "archive") {
@@ -192,6 +193,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     if ($subtype == "refused") {
                         $query->where('a.project_verdict = 0');
+                        $query->where('a.project_status in (2,3,15)');
                     } else {
                         $query->where('a.project_status = 5');
                         $query->where('a.project_verdict = 1');
@@ -489,103 +491,15 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function getDataByStatusAndAdvt($dealer_id,$advt,$statuses,$date1 = null,$date2 = null){
+    public function getDataByStatusAndAdvt($projects,$date1 = null,$date2 = null){
         try{
-            if(empty($dealer_id)){
-                $dealer_id = 1;
-            }
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
-            $subquery_advt = $db->getQuery(true);
-            $subquery_dsgnr = $db->getQuery(true);
-            if($advt == 'Отделочники'){
-                $dealer_type = '(3)';
-            }
-            if($advt == 'Оконщики'){
-                $dealer_type = '(8)';
-            }
-            if($advt == 'Без рекламы'){
-                $eq = 'and p.api_phone_id IS NULL';
-            }
-            if($advt ==  'total'){
-                $dealer_type = '(3,8)';
-            }
-
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
-            $subquery_advt
-                ->select("id")
-                ->from("`#__gm_ceiling_api_phones`")
-                ->where("dealer_id = $dealer_id");
-            $subquery_dsgnr
-                ->select("id")
-                ->from("`#__users`")
-                ->where("dealer_id = $dealer_id and dealer_type in $dealer_type $eq");
-            switch($advt){
-                case 'total':
-                    $where = "p.client_id = cl.id and( cl.dealer_id = $dealer_id";
-                    if($dealer_id == 1){
-                        $where .= " or cl.dealer_id in ($subquery_dsgnr))";
-                    }
-
-                    if($statuses != 'all'){
-                        $where .= " AND p.project_status in $statuses";
-                    }
-                    break;
-                case 'Отделочники':
-                    $where = "cl.dealer_id in ($subquery_dsgnr)";
-                     if($statuses != 'all'){
-                        $where .= " AND p.project_status in $statuses";
-                    }
-                    break;
-                case 'Оконщики':
-                    $where = "cl.dealer_id in ($subquery_dsgnr)";
-                     if($statuses != 'all'){
-                        $where .= " AND p.project_status in $statuses";
-                    }
-                    break;
-                case 'Без рекламы':
-                    $where = "cl.dealer_id = $dealer_id $eq";
-                    if($statuses != 'all'){
-                        $where .= " AND p.project_status in $statuses";
-                    }
-                    break;
-                default :
-                    $where = "p.api_phone_id = $advt";
-                    if($statuses != 'all'){
-                        $where .= " AND p.project_status in $statuses";
-                    }
-                    break;
-            }
-            /*if($advt == 'total'){
-                if($dealer_id  != 1){
-                    $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
-                }
-                else{
-                    $where = "p.api_phone_id in ($subquery_advt)";
-                }
-                if($statuses != 'all'){
-                    $where .= " AND p.project_status in $statuses";
-                }
-            }
-            else{
-                $where = "p.api_phone_id = $advt";
-                if($statuses != 'all'){
-                    $where .= " AND p.project_status in $statuses";
-                }
-            }*/
-            if(!empty($date1)&&!empty($date2)){
-                if(!empty($where)){
-                    $where .= " and p.created between '$date1' and '$date2'";
-                }
-                else{
-                     $where .= "p.created between '$date1' and '$date2'";
-                }
-            }
-
             $query
                 ->select('p.id')
                 ->select('s.title as `status`')
@@ -598,9 +512,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("ifnull(($subquery),0) as cost")
                 ->from('`#__gm_ceiling_projects` as p')
                 ->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
-                ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
-                ->innerJoin("`#__users` as u on u.id = cl.dealer_id")
-                ->where("p.client_id = cl.id and (cl.dealer_id = $dealer_id or u.dealer_id = $dealer_id)  ");
+                ->where("p.id in $projects");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;

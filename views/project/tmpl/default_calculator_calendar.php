@@ -206,7 +206,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>
 </div>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
-            <div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                 <div>
@@ -354,84 +354,84 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <!-- расчеты для проекта -->
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
-        <?php if ($this->item->project_verdict == 0) { ?>
-            <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
-                <div class="row center">
-                    <div class="col-md-6">
-                        <p>
-                            <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project" type="button">Договор</button>
-                        </p>
-                        <p>
-                            <button id="simple_save" class="btn btn-primary act_btn">Сохранить</button>
-                        </p>
+    <?php if ($this->item->project_verdict == 0) { ?>
+        <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
+            <div class="row center">
+                <div class="col-md-6">
+                    <p>
+                        <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project" type="button">Договор</button>
+                    </p>
+                    <p>
+                        <button id="simple_save" class="btn btn-primary act_btn">Сохранить</button>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
+                    </p>
+                    <p>
+                        <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
+                    </p>
+                </div>
+            
+        </div>
+    <?php } ?>
+    <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
+        <?php if ($user->dealer_type != 2) { ?>
+            <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
+            </div>
+            <div class="row center">
+                <h4>Назначить дату монтажа</h4>
+                <div id="calendar_mount" align="center"></div>
+            </div>
+            <div class="row center" id = "ready_wrapper">
+                <h4>Назначить дату готовности полотен</h4>
+                <input type="datetime-local" id="date_canvas_ready">
+                <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+            </div>
+            <hr>
+            <div class = "container" style="padding-left: 0px;">
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
                     </div>
-                    <div class="col-md-6">
-                        <p>
-                            <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
-                        </p>
-                        <p>
-                            <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
-                        </p>
+                </div>
+                <div id ="comments_divs" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for = "jform_gm_calculator_note">Примечание к договору</label>
+                         </div>
+                        <div class="col-md-2">
+                            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                        </div>
+                        
                     </div>
-                
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for = "jform_chief_note">Примечание к монтажу</label>
+                        </div>
+                        <div class="col-md-2">
+                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
+                <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+            </p>
+            <div class="row center">
+                <div class="col-md-4" style="padding-top: 25px;">
+                    <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
+                </div>
+                <div class="col-md-4" style="padding-top: 25px;">
+                    <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
+                </div>
+                <div class="col-md-4" style="padding-top: 25px;">
+                    <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
+                </div>
             </div>
         <?php } ?>
-        <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
-            <?php if ($user->dealer_type != 2) { ?>
-                <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
-                </div>
-                <div class="row center">
-                    <h4>Назначить дату монтажа</h4>
-                    <div id="calendar_mount" align="center"></div>
-                </div>
-                <div class="row center" id = "ready_wrapper">
-                    <h4>Назначить дату готовности полотен</h4>
-                    <input type="datetime-local" id="date_canvas_ready">
-                    <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
-                </div>
-                <hr>
-                <div class = "container" style="padding-left: 0px;">
-                    <div class="row">
-                        <div class="col-md-1">
-                            <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
-                        </div>
-                    </div>
-                    <div id ="comments_divs" style="display:none;">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label for = "jform_gm_calculator_note">Примечание к договору</label>
-                             </div>
-                            <div class="col-md-2">
-                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
-                            </div>
-                            
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label for = "jform_chief_note">Примечание к монтажу</label>
-                            </div>
-                            <div class="col-md-2">
-                                <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
-                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-                </p>
-                <div class="row center">
-                    <div class="col-md-4" style="padding-top: 25px;">
-                        <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
-                    </div>
-                    <div class="col-md-4" style="padding-top: 25px;">
-                        <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
-                    </div>
-                    <div class="col-md-4" style="padding-top: 25px;">
-                        <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
-                    </div>
-                </div>
-            <?php } ?>
-        </div>
+    </div>
  
     <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
 

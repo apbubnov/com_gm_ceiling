@@ -135,7 +135,7 @@ class Gm_ceilingModelAnalytic extends JModelList
 			$query->from('`#__gm_ceiling_api_phones` AS a');
 			$query->where("a.dealer_id = $dealer_id or a.dealer_id is null");
 			$db->setQuery($query);
-			
+			throw new Exception($query);
 			$items = $db->loadObjectList();
 			$designers = $this->getCommonAnalyticByType(3,$date1,$date2);
 			$wininstallers = $this->getCommonAnalyticByType(8,$date1,$date2);

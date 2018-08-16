@@ -569,16 +569,16 @@ class Gm_ceilingHelpersGm_ceiling
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
-            if ($need_mount || $data["need_mount_extra"]) {
+            //if ($need_mount || $data["need_mount_extra"]) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
-            } else {
+            /*} else {
                 $mounting_data = [
                     'total_with_gm_dealer_margin' => 0,
                     'total_with_gm_dealer_margin_guild' => 0,
                     'total_gm_mounting' => 0,
                     'total_dealer_mounting' => 0
                 ];
-            }
+            }*/
             //Итоговая сумма компонентов
             $total_sum = 0;
             //Прибавляем к подсчету комплектующие
@@ -1006,13 +1006,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $filter = "`co`.`title`  LIKE('%п/сф 3,5*9,5%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_10 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('%тарелка%') AND `c`.`title` LIKE('%Платформа под люстру%') ";
+            $filter = "`co`.`title`  LIKE('%круглая%') AND `c`.`title` LIKE('%Платформа под люстру%') ";
             $items_16 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%6*40%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
             $items_556 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%ПВС 2 х 0,75%') AND `c`.`title` LIKE('%Провод%') ";
             $items_4 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('50') AND `c`.`title` LIKE('%Круглое кольцо%') ";
+            $filter = "`co`.`title`  LIKE('35') AND `c`.`title` LIKE('%Круглое кольцо%') ";
             $items_58 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%П 60%') AND `c`.`title` LIKE('%Подвес прямой %') ";
             $items_3 = $components_model->getFilteredItems($filter);
@@ -1020,7 +1020,7 @@ class Gm_ceilingHelpersGm_ceiling
             $items_2 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%40*50%') AND `c`.`title` LIKE('%Брус%') ";
             $items_1 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('%3,5 * 41%') AND `c`.`title` LIKE('%Саморез%') ";
+            $filter = "`co`.`title`  LIKE('%3,5*35%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_8 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%4,2 * 102%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_6 = $components_model->getFilteredItems($filter);
@@ -1113,10 +1113,10 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_9[0]->id] += $data['n12'] * 3;
             $component_count[$items_10[0]->id] += $data['n12'] * 8;
             $component_count[$items_16[0]->id] += $data['n12'];
-            $component_count[$items_556[0]->id] += $data['n12'];
+            //$component_count[$items_556[0]->id] += $data['n12'];
             $component_count[$items_4[0]->id] += $data['n12'] * 0.5;
             $component_count[$items_58[0]->id] += $data['n12'];
-            $component_count[$items_3[0]->id] += $data['n12'] * 4;
+            $component_count[$items_3[0]->id] += $data['n12'] * 2;
             if ($data['n12'] > 0) {
                 $component_count[$items_2[0]->id] += 2;
             }
@@ -1152,6 +1152,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 if (!empty($n13) && count($n13) > 0) {
+                    $svet_count = 0;
                     foreach ($n13 as $lamp) {
                         $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
                         foreach ($fix_components as $comp)
@@ -1167,8 +1168,10 @@ class Gm_ceilingHelpersGm_ceiling
                             $component_count[66] -= $k;
                             if ($component_count[66] < 0) $component_count[66] = 0;
                         }
+                        $svet_count += $lamp[0];
                     }
                     $component_count[$items_2[0]->id]++;
+                    $component_count[$items_3[0]->id] += $svet_count;
                 }
                 //вентиляция
                 if (!empty($n22) && count($n22) > 0) {
@@ -1208,6 +1211,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 if (count($n13) > 0 && $n13 != 0) {
+                    $svet_count = 0;
                     foreach ($n13 as $lamp) {
                         $fix_components = $calcform_model->components_list_n13_n22($lamp->n13_type, $lamp->n13_size);
                         foreach ($fix_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $lamp->n13_count);
@@ -1216,7 +1220,9 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         if ($component_count[66] < 0) $component_count[66] = 0;
                     }
+                     $svet_count += $lamp->n13_count;
                     $component_count[$items_2[0]->id]++;
+                    $component_count[$items_3[0]->id] += $svet_count;
                 }
                 //вентиляция
                 $n22 = $data['n22'];
@@ -1299,7 +1305,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
-            $component_count[$items_3[0]->id] += $data['n17'] * 3;
+            $component_count[$items_430[0]->id] += $data['n17'] * 3;
             $component_count[$items_5[0]->id] += $data['n17'] * 6;
             $component_count[$items_9[0]->id] += $data['n17'] * 6;
             $component_count[$items_8[0]->id] += $data['n17'] * 6;
@@ -1584,9 +1590,14 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $dealer_id = 1;
             }
-            $results = $mount_model->getDataAll($dealer_id);
+            $results = $mount_model->getDataAll(1);
             $margin = self::get_margin($data['project_id']);
             $guild_data = array();
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            if(!empty($data['n3'])){
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
+                $data['n1'] = $canvasData[0]->texture_id;
+            }
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
                 //Обработка 1 угла
                 $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
@@ -1622,6 +1633,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $result['total_with_gm_dealer_margin_guild'] += $guild['total_with_gm_dealer_margin'];
                 $result['total_with_dealer_margin_guild'] += $guild['total_with_dealer_margin'];
             }
+
             return $result;
         }
         catch(Exception $e)
@@ -1693,7 +1705,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             $results = $mount_model->getDataAll($dealer_id);
-            
+            $gm_mount  = $mount_model->getDataAll(1);
             $empty_mount = true;
             if (!empty($results)){
                 foreach ($results as $key => $value){
@@ -1706,6 +1718,7 @@ class Gm_ceilingHelpersGm_ceiling
             if($empty_mount){
                 $results = $mount_model->getDataAll(1);
             }
+           
             //Если существующая калькуляция
             if(!empty($calc_id)){
                 foreach ($calculation_data as $key => $item) {
@@ -1759,15 +1772,17 @@ class Gm_ceilingHelpersGm_ceiling
                 $data["need_mount"] = 1;
             $mounting_data = [];
             $guild_data = [];
+        
+            
             if ($data['n31'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $guild_data[] = array(
                     "title" => "Внутренний вырез(в цеху) (ПВХ)",                                                                    //Название
                     "quantity" => $data['n31'],                                                                //Кол-во
-                    "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => $gm_mount->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $gm_mount->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $gm_mount->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $gm_mount->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
@@ -1776,10 +1791,10 @@ class Gm_ceilingHelpersGm_ceiling
                     $guild_data[] = array(
                         "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
                         "quantity" => $data['n9'] - 6,                                                                //Кол-во
-                        "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => ($data['n9'] - 6) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => ($data['n9'] - 6) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $gm_mount->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => ($data['n9'] - 6) * $gm_mount->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $gm_mount->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => ($data['n9'] - 6) * $gm_mount->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
             }
@@ -4378,6 +4393,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 array_push($DateStatys, $arr);
                             }
                         }
+                        
                         for ($r = 1; $r <= $current_days; $r++) {
                             if (strlen($r) == 1) {
                                 $t = "0" . strval($r);
@@ -4407,7 +4423,7 @@ class Gm_ceilingHelpersGm_ceiling
                                     }
                                 }
                             }
-                        }
+                        }//throw new Exception(print_r($DayMounters,true));
                         // выходные дни
                         $statusDayOff = "";
                         $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
@@ -4479,20 +4495,22 @@ class Gm_ceilingHelpersGm_ceiling
                                     if ($value[1] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
-                                            $DayMounter[$r] = ["yellow", $perimeter];
-                                        }
-                                        if ($value[2] == 16) {
-                                            $DayMounter[$r] = ["navy", $perimeter];
-                                        }
-                                        if ($value[2] == 17) {
-                                            $DayMounter[$r] = ["brown", $perimeter];
-                                        }
-                                        if ($value[2] == 11) {
-                                            $DayMounter[$r] = ["green", $perimeter];
-                                        }
-                                        if ($value[2] == 12) {
-                                            $DayMounter[$r] = ["blue", $perimeter];
+                                        if(empty($DayMounters[$r])){
+                                            if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                                $DayMounter[$r] = ["yellow", $perimeter];
+                                            }
+                                            if ($value[2] == 16) {
+                                                $DayMounter[$r] = ["navy", $perimeter];
+                                            }
+                                            if ($value[2] == 17) {
+                                                $DayMounter[$r] = ["brown", $perimeter];
+                                            }
+                                            if ($value[2] == 11) {
+                                                $DayMounter[$r] = ["green", $perimeter];
+                                            }
+                                            if ($value[2] == 12) {
+                                                $DayMounter[$r] = ["blue", $perimeter];
+                                            }
                                         }
                                     }
                                 } else {

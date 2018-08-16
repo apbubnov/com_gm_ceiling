@@ -20,7 +20,7 @@ JHtml::_('formbehavior.chosen', 'select');
     $analytic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analytic');
     //$det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
     $deal_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analitic_dealers');
-    $c_items = $analytic_model->getCommonAnalytic(1);
+    $c_items =[];
     $d_items = $analytic_model->getDetailedAnalytic();
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 	//$dealers = $deal_analitic_model->getData('2018-03-25', '2018-03-30');
