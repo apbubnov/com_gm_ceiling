@@ -588,28 +588,48 @@
         jQuery('.btn_del_proj').click(function()
         {
             var project_id = jQuery(this).data('id');
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
-                data: {
-                    project_id: project_id
+            noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: false,
+            type: "info",
+            text: "Вы действительно хотите удалить проект?",
+            buttons:[
+                {
+                    addClass: 'btn btn-primary', text: 'Удалить', onClick: function($noty) {
+                        jQuery.ajax({
+                            url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
+                            data: {
+                                project_id: project_id
+                            },
+                            dataType: "json",
+                            async: true,
+                            success: function(data) {
+                                jQuery('.row_project[data-proj_id="'+project_id+'"]')[0].remove();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'topCenter',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка сервера"
+                                });
+                            }
+                        });
+                        $noty.close();
+                    }
                 },
-                dataType: "json",
-                async: true,
-                success: function(data) {
-                    jQuery('.row_project[data-proj_id="'+project_id+'"]')[0].remove();
-                },
-                error: function(data) {
-                    console.log(data);
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'topCenter',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
+                {
+                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                        $noty.close();
+                    }
                 }
-            });
+            ]
+        });
+            
             return false;
         });
     });

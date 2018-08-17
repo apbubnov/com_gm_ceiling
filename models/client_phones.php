@@ -49,7 +49,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("`b`.`id`, `b`.`client_name`, `b`.`dealer_id` AS `client_dealer_id`, `a`.`phone`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`")
+				->select("`b`.`id`, `b`.`client_name`, `b`.`dealer_id` AS `client_dealer_id`, `a`.`phone`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`,`b`.`deleted_by_user`")
 				->from("`#__gm_ceiling_clients_contacts` AS `a`")
 				->innerJoin('`#__gm_ceiling_clients` AS `b` ON `a`.`client_id` = `b`.`id`')
 				->leftJoin('`#__users` AS `u` ON `b`.`id` = `u`.`associated_client`')
