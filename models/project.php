@@ -1603,12 +1603,10 @@ class Gm_ceilingModelProject extends JModelItem
 		        }
 		        //}
 		    }
-			if(empty($components)){
-				$components = $r_components;
-			}
-			if(empty($canvases)){
-				$canvases = $r_canvases;
-			}
+		    else{
+		    	$components = $r_components;
+		    	$canvases = $r_canvases;
+		    }
 	        $componentsTemp = array();
 	        foreach ($components as $component) {
 

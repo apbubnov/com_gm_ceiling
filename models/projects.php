@@ -767,7 +767,8 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('client.client_name as client')
                 ->join("LEFT","`#__users` as user ON user.id = client.dealer_id")
                 ->select('user.name as dealer')
-                ->order('project.created DESC');
+                ->order('project.created DESC')
+                ->order('project.id desc');
 
             $db->setQuery($query);
             $return = $db->loadObjectList();
