@@ -113,7 +113,6 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select($this->getState('list.select', 'DISTINCT a.*'))
                 ->select('DATE_FORMAT(a.project_calculation_date, \'%d.%m.%Y\') AS calculation_date')
                 ->select('CONCAT(DATE_FORMAT(a.project_calculation_date, \'%H:%i\'),\'-\',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), \'%H:%i\')) AS calculation_time')
-
                 ->select("GROUP_CONCAT(DISTINCT pm.mounter_id SEPARATOR ',') AS project_mounter")
                 ->select("GROUP_CONCAT(DISTINCT DATE_FORMAT(pm.date_time, '%d.%m.%Y %H:%i')  ORDER BY pm.date_time DESC SEPARATOR ',') AS project_mounting_date")
                 ->select("GROUP_CONCAT(CONCAT(DATE_FORMAT(pm.mount_start, '%d.%m.%Y %H:%i'),'-',DATE_FORMAT(pm.mount_end, '%d.%m.%Y %H:%i')) SEPARATOR ',')AS mounting_time")
@@ -139,7 +138,7 @@ class Gm_ceilingModelProjects extends JModelList
             /*$query->select('mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id')
                 ->join('LEFT', '`#__gm_ceiling_groups` AS `mounter_group` ON mounter_group.id = a.project_mounter');*/
 
-            $query->select('sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings')
+            $query->select('(SUM(calculation.components_sum) + SUM(calculation.canvases_sum)) AS self_price,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings')
                 ->select('((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum')
                 ->select('((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum')
                 ->select('((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum')
@@ -151,6 +150,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
             $query->select('a.*')
                 ->select('(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum')
+                ->select('self_price')
                 ->from('(' . $sql_query . ') AS a');
 
             $user = JFactory::getUser();

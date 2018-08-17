@@ -62,6 +62,7 @@ usort($this->items,function($a,$b){
                         <th class='center'>Дата / время монтажа</th>
                         <th class='center'>Адрес</th>
                         <th class='center'>Клиент</th>
+                        <th class="center">Сумма</th>
                         <th class="center">Бригада</th>
                         <?php if (in_array("14", $groups)):?>
                             <th class="center">
@@ -100,6 +101,7 @@ usort($this->items,function($a,$b){
                                         $mounter  .= JFactory::getUser($value)->name."; ";
                                     }
                                 } ?>
+                                <td class="center one-touch"><?php echo round($item->self_price,2);?></td>
                                 <td class="center one-touch"><?php echo $mounter; ?></td>
                                 <?php if(in_array(14, $groups)){ ?>
                                     <td class="center one-touch delete"><button class="btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
