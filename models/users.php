@@ -588,7 +588,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$db->setQuery($query);
 				$items = $db->loadObjectList();
 			}
-			$mount_service = $this->getMountService($dealerId);
+			$mount_service = $this->getUserByGroup(26);
 			$items = array_merge($items,$mount_service);
 
 			return $items;
@@ -599,15 +599,15 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	function getMountService($dealer_id){
+	function getUserByGroup($group_id){
 		try{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select('`u`.`id`, `u`.`name`')
+				->select('`u`.`id`, `u`.`name`, `u`.`email`')
 				->from('`#__users` AS `u`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-				->where("`g`.`group_id` = 26");
+				->where("`g`.`group_id` = $group_id");
 			$db->setQuery($query);
 			//throw new Exception($query);
 			
@@ -619,4 +619,6 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	
 }

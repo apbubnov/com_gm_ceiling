@@ -352,6 +352,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			            		document.getElementById(dop_mw).style.display = 'none';
 			            	}
 			            	mw_elem.style.display = 'none';
+			            	check_mount_service();
 		            	});
 		            }
 		        }
@@ -393,6 +394,38 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	            	}
 	            	target = target.parentNode;
 	            }
+		    }
+
+		    function check_mount_service(){
+		    	var project_id = jQuery("#project_id").val();
+		    	jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.calcServiceMount",
+                data:{
+                	project_id:project_id,
+                	mount:jQuery("#mount").val()
+                },
+                success: function(data) {
+                	console.log(data);
+                	console.log(self_data);
+                	jQuery.each(data,function(index,elem){
+                		self_data[index].mount_data = elem['total_gm_mounting']
+                	})
+                	
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function() {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "error"
+                    });
+                }
+            });
 		    }
 
 		    function draw_calendar() {

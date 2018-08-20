@@ -1646,7 +1646,7 @@ class Gm_ceilingHelpersGm_ceiling
         $calc_id - id калькуляции в БД
         $data - массив данных для просчета, если новый просчет
     */
-    public static function calculate_mount($del_flag,$calc_id=null,$data=null){
+    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null){
         try {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -1718,7 +1718,14 @@ class Gm_ceilingHelpersGm_ceiling
             if($empty_mount){
                 $results = $mount_model->getDataAll(1);
             }
-           
+            if(!empty($service) && $service){
+                $results = $mount_model->getDataAll(1);
+                array_walk($results, function(&$mp,$key){
+                    if(mb_ereg('mp[\d]+',$key)){
+                        $mp +=$mp*0.1;
+                    }
+                });
+            }
             //Если существующая калькуляция
             if(!empty($calc_id)){
                 foreach ($calculation_data as $key => $item) {
@@ -4059,6 +4066,26 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Договор запущен в производство');
             $mailer->setBody($body);
             $mailer->addRecipient($dealer->email);
+            }
+            elseif($type == 14){
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(17);
+                $client_model = self::getModel('client');
+                $client = $client_model->getClientById($data->client_id);
+                $dealer = JFactory::getUser($client->dealer_id);
+                foreach ($users as $user) {
+                    $mailer->addRecipient($user->email);
+                }
+                $body = "Здравствуйте. Дилер выбрал монтажную службу ГМ в проекте №" . $data->project_id . "\n\n";
+                $body .= "Имя дилера: " . $dealer->name . "\n";
+                $body .= "Телефон дилера: " . $dealer->username . "\n";
+                $body .= "Желаемые дата и время монтажа: \n";
+                foreach ($data->mount as $value) {
+                    $body .="<b>".$value->stage_name."<b>" ." : ". $value->time . "\n";
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Дилер заказал монтаж');
+                $mailer->setBody($body);
             }
             if ($type != 5) {
                 $mailer->addRecipient($em);

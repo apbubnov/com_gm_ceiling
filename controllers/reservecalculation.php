@@ -67,6 +67,7 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 			$type = $jinput->get('type', '', 'string');
 			// Checking if the user can remove object
 			$user = JFactory::getUser();
+			$dealer_id = $user->dealer_id;
 			$dealer = JFactory::getUser($user->dealer_id);
 			$project_model = $this->getModel('ProjectForm', 'Gm_ceilingModel');
 			$project_data = array();
@@ -76,6 +77,13 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 			if(!empty($data['project_info_porch'])) $adress .= ", подъезд: ".$data['project_info_porch'];
 			if(!empty($data['project_info_floor'])) $adress .= ", этаж: ".$data['project_info_floor'];
 			if(!empty($data['project_info_code'])) $adress .= ", код: ".$data['project_info_code'];
+			$info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $dealer_id);
+            $gm_components_margin = $info_model->getMargin('gm_components_margin', $dealer_id);
+            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $dealer_id);
+            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $dealer_id);
+            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $dealer_id);
+            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $dealer_id);
 			$client_bool = true;
 			if($data['client_id']==0)// если новый клиент создаем нового клиента
 			{
@@ -118,13 +126,13 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 				}
 				$project_data['created'] = date("Y-m-d");
 				$project_data['project_discount'] = $dealer->discount;
-				$project_data['gm_canvases_margin']   = $dealer->gm_canvases_margin;
-				$project_data['gm_components_margin'] = $dealer->gm_components_margin;
-				$project_data['gm_mounting_margin']   = $dealer->gm_mounting_margin;
+				$project_data['gm_canvases_margin']   = $gm_canvases_margin;
+				$project_data['gm_components_margin'] = $gm_components_margin;
+				$project_data['gm_mounting_margin']   = $gm_mounting_margin;
 				
-				$project_data['dealer_canvases_margin']   = $dealer->dealer_canvases_margin;
-				$project_data['dealer_components_margin'] = $dealer->dealer_components_margin;
-				$project_data['dealer_mounting_margin']   = $dealer->dealer_mounting_margin;
+				$project_data['dealer_canvases_margin']   = $dealer_canvases_margin;
+				$project_data['dealer_components_margin'] = $dealer_components_margin;
+				$project_data['dealer_mounting_margin']   = $dealer_mounting_margin;
 				
 				$project_id = $project_model->save($project_data);
 				

@@ -938,6 +938,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                     }
                                 }
                                 $projects_mounts_model->save($project_id,$mount_data);
+                                $service_data = $this->check_mount_for_service($mount_data);
+                                $send_data['project_id'] = $project_id;
+                                $send_data['client_id'] = $data->id_client;
+                                $send_data['mount'] = $service_data;
+                                if(!empty($service_data)){
+                                    Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
+                                }
 							}
 							
 						}
@@ -1909,6 +1916,51 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
+    }
+
+    function check_mount_for_service($mount_data){
+        try{
+            $mount = [];
+            if(!empty($mount_data)){
+                foreach ($mount_data as $value) {
+                    $groups = JFactory::getUser($value->mounter)->groups;
+                    if(in_array(26, $groups) && !in_array($value,$mount)){
+                        array_push($mount, $value);
+                    }
+                }
+            }
+            return $mount;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function calcServiceMount(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get("project_id",null,"INT");
+            $mount_data = json_decode($jinput->get("mount","","STRING"));
+            $service_mount = $this->check_mount_for_service($mount_data);
+            $calculations_model = self::getModel('calculations');
+            $calculations = $calculations_model->new_getProjectItems($project_id);
+            if(empty($service_mount)){
+                die(json_encode(0));
+            }
+            else{
+                foreach ($calculations as $calc) {
+                    $result[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,true);    
+                }
+                
+                die(json_encode($result));
+            }
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }   
     }
 }
 ?>
