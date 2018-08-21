@@ -942,8 +942,18 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                 $send_data['project_id'] = $project_id;
                                 $send_data['client_id'] = $data->id_client;
                                 $send_data['mount'] = $service_data;
-                                if(!empty($service_data)){
+                                $pr_data['id'] = $project_id;
+                                if(!empty($service_data)){                                    
+                                    foreach ($include_calculation as $calc) {
+                                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                                        $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                                    }
+                                    $pr_data['mounting_check'] = json_encode($mount_sum);
+                                    $this->change_project_data($pr_data);
                                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
+                                }
+                                else{
+                                      $pr_data['mounting_check'] = "";
                                 }
 							}
 							
@@ -1896,20 +1906,27 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
-    function change_project_data(){
+    function change_project_data($data = null){
         try{
             $jinput = JFactory::getApplication()->input;
-            $data = json_decode($jinput->get('new_data', '', 'STRING'));
-            $data = get_object_vars($data);
-            foreach ($data as $key => $value) {
-                if(empty($value)){
-                    unset($data[$key]);
+            if(empty($data)){
+                $ajax = 1;
+                $data = json_decode($jinput->get('new_data', '', 'STRING'));
+                $data = get_object_vars($data);
+                foreach ($data as $key => $value) {
+                    if(empty($value)){
+                        unset($data[$key]);
+                    }
                 }
             }
-            
             $model = $this->getModel('Project', 'Gm_ceilingModel');
             $result = $model->save($data);
-            die(json_encode($result));
+            if($ajax){
+                die(json_encode($result));
+            }
+            else{
+                return true;
+            }
         }
         catch(Exception $e)
         {
@@ -1941,17 +1958,31 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get("project_id",null,"INT");
+            $include_calculations = $jinput->get("calcs",array(),"ARRAY");
             $mount_data = json_decode($jinput->get("mount","","STRING"));
             $service_mount = $this->check_mount_for_service($mount_data);
-            $calculations_model = self::getModel('calculations');
-            $calculations = $calculations_model->new_getProjectItems($project_id);
             if(empty($service_mount)){
-                die(json_encode(0));
+                foreach ($include_calculations as $calc) {
+                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc);
+                }
+                /*$pr_data['id'] = $project_id;
+                $pr_data['mounting_check'] = "";
+                $this->change_project_data($pr_data);*/ 
+                die(json_encode($result));
             }
             else{
-                foreach ($calculations as $calc) {
-                    $result[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,true);    
+                $mount_sum = [];
+                foreach ($include_calculations as $calc) {
+                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                    $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                    foreach ($service_mount as $key => $value) {
+                        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
+                    }
+                        
                 }
+                /*$pr_data['id'] = $project_id;
+                $pr_data['mounting_check'] = json_encode($mount_sum);
+                $this->change_project_data($pr_data); */
                 
                 die(json_encode($result));
             }

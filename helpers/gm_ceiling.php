@@ -2900,7 +2900,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null){
+    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
@@ -2909,7 +2909,12 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-                $data_mount = self::calculate_mount(0,$data['id'],null);
+                if(!empty($service) && $service){
+                    $data_mount = self::calculate_mount(0,$data['id'],null,true);
+                }
+                else{
+                    $data_mount = self::calculate_mount(0,$data['id'],null);
+                }
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
                 for($i=0;$i<count($names);$i++){
@@ -3091,12 +3096,23 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tbody></table>';
                 }
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                if(!$full){
-                    $filename = md5($calc_id."mount_stage".$stage) . ".pdf";
+                if($service){
+                    if(!$full){
+                        $filename = md5($calc_id."mount_stage_service".$stage) . ".pdf";
+                    }
+                    else{
+                        $filename = md5($calc_id."mount_single_service") . ".pdf";
+                    }    
                 }
                 else{
-                    $filename = md5($calc_id."mount_single") . ".pdf";
+                    if(!$full){
+                        $filename = md5($calc_id."mount_stage".$stage) . ".pdf";
+                    }
+                    else{
+                        $filename = md5($calc_id."mount_single") . ".pdf";
+                    }
                 }
+                
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
                 return 1;
            

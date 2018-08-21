@@ -398,34 +398,51 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 
 		    function check_mount_service(){
 		    	var project_id = jQuery("#project_id").val();
+		    	var incl_calcs = [];
+		    	jQuery.each(jQuery("[name = 'include_calculation[]']:checked"),function(index,elem){
+		    		incl_calcs.push(elem.value);
+		    	});
+
+		    	console.log(incl_calcs);
 		    	jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=project.calcServiceMount",
-                data:{
-                	project_id:project_id,
-                	mount:jQuery("#mount").val()
-                },
-                success: function(data) {
-                	console.log(data);
-                	console.log(self_data);
-                	jQuery.each(data,function(index,elem){
-                		self_data[index].mount_data = elem['total_gm_mounting']
-                	})
-                	
-                },
-                dataType: "json",
-                timeout: 10000,
-                error: function() {
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'topCenter',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "error"
-                    });
-                }
-            });
+	                type: 'POST',
+	                url: "index.php?option=com_gm_ceiling&task=project.calcServiceMount",
+	                data:{
+	                	project_id:project_id,
+	                	mount:jQuery("#mount").val(),
+	                	calcs:incl_calcs
+	                },
+	                success: function(data) {
+	                	console.log(data);
+	                	console.log(self_data);
+	                	var old_mount_sum = 0, new_mount_sum = 0;
+	                	jQuery.each(data,function(index,elem){
+	                		old_mount_sum += self_data[index].mount_data;
+	                		new_mount_sum += elem['total_gm_mounting'];
+	                		self_data[index].mount_data = elem['total_gm_mounting'];
+	                	});
+	                	change_self_sum(old_mount_sum,new_mount_sum);
+	                },
+	                dataType: "json",
+	                timeout: 10000,
+	                error: function() {
+	                    noty({
+	                        timeout: 2000,
+	                        theme: 'relax',
+	                        layout: 'topCenter',
+	                        maxVisible: 5,
+	                        type: "error",
+	                        text: "error"
+	                    });
+	                }
+	            });
+		    }
+
+		    function change_self_sum(old_sum,new_sum){
+		    	var old_mount = jQuery("#calcs_self_mount_total span.sum").text();
+		    	var old_total = jQuery("#calcs_total_border").text();
+		    	jQuery("#calcs_self_mount_total span.sum").text(old_mount - old_sum + new_sum);
+		    	jQuery("#calcs_total_border").text(old_total - old_sum + new_sum);
 		    }
 
 		    function draw_calendar() {
