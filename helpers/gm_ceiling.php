@@ -3959,7 +3959,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $db = JFactory::getDBO();
                 if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
                 $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте, " . $mounters->name . ". Новый договор " . $data->id . " ожидает монтажа!\n\n";
+                $body = "Здравствуйте! Новый договор " . $data->id . " ожидает монтажа!\n\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
@@ -3972,7 +3972,17 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор назначен на монтаж');
                 $mailer->setBody($body);
-                $mailer->addRecipient($mounters->email);
+                if(!empty($data->mount_data)){
+                    $mount_data = json_decode(htmlspecialchars_decode($data->mount_data));
+                    foreach ($mount_data as $key => $value) {
+                        $email = JFactory::getUser($value->mounter)->email;
+                        $mailer->addRecipient($email);
+                    }
+
+                }
+                else{
+                    $mailer->addRecipient($mounters->email);
+                }
             } elseif ($type == 8) {
                 //Уведомление о изменении времени на монтаж нужной бригаде
                 $db = JFactory::getDBO();
@@ -4097,10 +4107,22 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Телефон дилера: " . $dealer->username . "\n";
                 $body .= "Желаемые дата и время монтажа: \n";
                 foreach ($data->mount as $value) {
-                    $body .="<b>".$value->stage_name."<b>" ." : ". $value->time . "\n";
+                    $body .=$value->stage_name." : ". $value->time . "\n";
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Дилер заказал монтаж');
+                $mailer->setBody($body);
+            }
+            elseif($type == 15){
+                $dealer = JFactory::getUser($data->dealer_id);
+                $mailer->addRecipient($dealer->email);
+                $body = "Здравствуйте. Начальник монтажной службы утвердил дату монтажа в проекте №" . $data->project_id . "\n\n";
+                $body .= "Дата и время монтажа: \n";
+                foreach ($data->mount as $value) {
+                    $body .=$value->stage_name." : ". $value->time . "\n";
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Начальник монтажной службы утвердил монтаж');
                 $mailer->setBody($body);
             }
             if ($type != 5) {

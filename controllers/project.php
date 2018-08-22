@@ -1993,5 +1993,54 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }   
     }
+
+    function saveService(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('project_id',null,'INT');
+            $dealer_id = $jinput->get('dealer_id',null,'INT');
+            $dealer = JFactory::getUser($dealer_id);
+            $email = $dealer->email;
+            $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $mount_data = json_decode($jinput->get('mount','',"STRING"));
+            if(!empty($mount_data) && !empty($project_id)){
+                $mount_types = $projects_mounts_model->get_mount_types();
+                foreach ($mount_data as $value) {
+                    $value->stage_name = $mount_types[$value->stage];
+                }
+                $return = $projects_mounts_model->save($project_id,$mount_data);
+            }
+            if($return){
+                $data = $model->getData($project_id);
+                $model_for_mail = Gm_ceilingHelpersGm_ceiling::getModel('calculations');       
+                // перимерт и зп бригаде
+                $project_info_for_mail = $model_for_mail->InfoForMail($project_id);
+                $perimeter = 0;
+                $salary = 0;
+                foreach ($project_info_for_mail as $value) {
+                    $perimeter += $value->n5;
+                    $salary += $value->mounting_sum;
+                }
+                $data->perimeter = $perimeter;
+                $data->salary = $salary;
+                Gm_ceilingHelpersGm_ceiling::notify($data,7);
+                $appr_data['project_id'] = $project_id;
+                $appr_data['dealer_id'] = $dealer_id;
+                $appr_data['mount'] = $mount_data;
+                Gm_ceilingHelpersGm_ceiling::notify((object)$appr_data,15);
+                $this->setMessage("Монтаж назначен!");  
+            }
+            else{
+                $this->setMessage("Произошла ошибка");
+            }
+             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmchief&subtype=service&id='.$project_id, false));  
+            
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

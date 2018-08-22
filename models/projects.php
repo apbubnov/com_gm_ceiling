@@ -229,7 +229,9 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
                 case "gmchief":
                     $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
-                    $query->where('c.dealer_id = '. $user->dealer_id);
+                    if($subtype!="service"){
+                        $query->where('c.dealer_id = '. $user->dealer_id);
+                    }
                     if ($user->dealer_type == 2) {
                         $query->where('a.project_status >= 0'); 
                     } elseif ($subtype =="run") {
@@ -237,6 +239,9 @@ class Gm_ceilingModelProjects extends JModelList
                     } elseif ($subtype == "gaugings") {
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "1"');
+                    } elseif($subtype == "service"){
+                        $query->innerJoin('`#__user_usergroup_map` as umap on umap.user_id in (a.project_mounter)');
+                        $query->where("umap.group_id = 26");
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
@@ -263,7 +268,6 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = -1');
                     break;
             }
-
             /* if ($type == "managerprojects") {
                 $query->where('a.project_status = 3');
                 $query->where('dealer_id = ' . $user->dealer_id);
