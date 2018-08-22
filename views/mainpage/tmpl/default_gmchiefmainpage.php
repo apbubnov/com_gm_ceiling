@@ -26,6 +26,8 @@ $answer2 = $model->getDataByStatus("Mountings");
 $answer3 = $model->getDataByStatus("ComplitedMountings");
 // войти как замерщик
 $answer4 = $model->getDataByStatus("GaugingsGraphNMS");
+//запросы на монтаж
+$answer5 = $model->getDataByStatus("MountService");
 //--------------------------------------
 
 ?>
@@ -48,6 +50,14 @@ $answer4 = $model->getDataByStatus("GaugingsGraphNMS");
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> Монтажи</a>
 			<?php if ($answer2[0]->count != 0) { ?>
 				<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
+			<?php } ?>
+		</div>
+	</div>
+	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+		<div class="container-for-circl">
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=service', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Запросы на монтаж </a>
+			<?php if ($answer5[0]->count != 0) { ?>
+				<div class="circl-digits"><?php echo $answer5[0]->count; ?></div>
 			<?php } ?>
 		</div>
 	</div>

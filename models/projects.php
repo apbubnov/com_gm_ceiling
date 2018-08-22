@@ -485,6 +485,15 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->select('call_id')
                     ->from('#__gm_ceiling_missed_calls');
             }
+            else
+                if($status == "MountService"){
+                    $query
+                        ->select("count(distinct pm.project_id) as `count`")
+                        ->from("`#__gm_ceiling_projects_mounts` as pm")
+                        ->innerJoin("`#__user_usergroup_map` as umap on umap.user_id = pm.mounter_id")
+                        ->where("umap.group_id = 26");
+                }
+
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;    
