@@ -381,7 +381,11 @@
                                     }
                                     else {
                                         foreach ($mount_data as $value) {
-                                            $path = "/costsheets/" . md5($calculation->id.'mount_stage'.$value->stage).'.pdf';
+                                            if(!empty($service_mount)){
+                                                $path = "/costsheets/" . md5($calculation->id.'mount_stage_service'.$value->stage).'.pdf';
+                                            }else{
+                                                $path = "/costsheets/" . md5($calculation->id.'mount_stage_service'.$value->stage).'.pdf';
+                                            }
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                                 switch ($value->stage) {
                                                     case 2:

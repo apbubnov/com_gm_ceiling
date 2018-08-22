@@ -113,7 +113,7 @@ if(!empty($this->item->mount_data)){
                                     </td>
                                     <td>
                                         <?php echo JFactory::getUser($value->mounter)->name;?>
-                                    </td>
+                                    </td>]
                                </tr>
 	                            <?php }?>
 	                           
