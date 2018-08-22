@@ -103,18 +103,21 @@ if(!empty($this->item->mount_data)){
                             <th colspan="3" style="text-align: center">Монтаж</th>
                         </tr>
                         <?php if(!empty($this->item->mount_data)):?>
-                     		<tr>  
-                                
-                            	<?php foreach ($this->item->mount_data as $value) { ?>                          
+                        	<?php foreach ($this->item->mount_data as $value) { ?>
+                                <tr>                          
 	                                 <th>
-	                                 	<?php echo $value->stage_name;?></th>
-	                                 <td> <?php echo $value->time;?>  </td>
-	                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
-	                                </p>
-                               
+	                                 	<?php echo $value->stage_name;?>     
+                                    </th>
+	                                 <td>
+                                        <?php echo $value->time;?>
+                                    </td>
+                                    <td>
+                                        <?php echo JFactory::getUser($value->mounter)->name;?>
+                                    </td>
+                               </tr>
 	                            <?php }?>
 	                           
-	                        </tr>
+	                        
 	                    <?php endif;?>
 
                     </table>
