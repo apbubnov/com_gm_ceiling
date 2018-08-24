@@ -291,7 +291,7 @@ class Gm_ceilingHelpersGm_ceiling
         $pdf - 0,1 флаг формирования PDF
         $print_components - 0,1 флаг возвращения расчета при вызове в переменную
     */
-    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
+    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount,$gm_mounters=null){
         try {
             $jinput = JFactory::getApplication()->input;
             /*____________________Модели_______________________*/
@@ -570,7 +570,7 @@ class Gm_ceilingHelpersGm_ceiling
             //считаем монтаж
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             //if ($need_mount || $data["need_mount_extra"]) {
-                $mounting_data = self::calculate_mount($del_flag,null,$data);
+                $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             /*} else {
                 $mounting_data = [
                     'total_with_gm_dealer_margin' => 0,
@@ -670,6 +670,7 @@ class Gm_ceilingHelpersGm_ceiling
                
                 
                 //клиентская смета
+
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }      
             $return = json_encode($ajax_return);
@@ -1646,7 +1647,7 @@ class Gm_ceilingHelpersGm_ceiling
         $calc_id - id калькуляции в БД
         $data - массив данных для просчета, если новый просчет
     */
-    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null){
+    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null,$gm_mounters = null){
         try {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -1657,6 +1658,7 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($components_list as $i => $component) {
                 $components[$component->id] = $component;
             }
+            $transport = 0;
             $calculation_data = null;
             if(empty($calc_id)){
                 $project_id = $data['project_id'];
@@ -1715,16 +1717,17 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            if($empty_mount){
-                $results = $mount_model->getDataAll(1);
-            }
-            if(!empty($service) && $service){
+            
+            if((!empty($service) && $service) || $gm_mounters == "service" || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
                     if(mb_ereg('mp[\d]+',$key)){
                         $mp +=$mp*0.1;
                     }
                 });
+            }
+            if($gm_mounters == "mount"){
+                $results = $mount_model->getDataAll(1);
             }
             //Если существующая калькуляция
             if(!empty($calc_id)){
@@ -2651,7 +2654,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
            
             $result['mounting_data'] = $mounting_data;
-            $result['total_gm_mounting'] =  $total_gm_mounting;
+            $result['total_gm_mounting'] =  $total_gm_mounting + $transport;
             $result['total_dealer_mounting'] =  $total_dealer_mounting;
             $result['total_with_gm_margin'] = $total_with_gm_margin;
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
@@ -2671,7 +2674,7 @@ class Gm_ceilingHelpersGm_ceiling
     $distance расстояние
     $distance_col - кол-во выездов
     */
-    public static function calculate_transport($project_id){
+    public static function calculate_transport($project_id,$service=null){
         try {
             $project_model = self::getModel('Project');
             $mount_model = self::getModel('mount');
@@ -2691,6 +2694,11 @@ class Gm_ceilingHelpersGm_ceiling
                 $res = $mount_model->getDataAll($dealer_id);
                 if(empty($res->user_id)) {
                     $res->user_id = 1;
+                }
+                if($service == "service"){
+                    $res = $mount_model->getDataAll(1);
+                    $res->transport +=$res->transport*0.1;
+                    $res->distance +=$res->distance*0.1;
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
                 if($res) {
@@ -2747,7 +2755,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция генерации общего наряда на монтаж */
-    public static function create_common_estimate_mounters($project_id,$calc_ids = null){
+    public static function create_common_estimate_mounters($project_id,$calc_ids = null,$service=null){
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $project_model = self::getModel('project');
@@ -2771,7 +2779,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
 
-            $transport = self::calculate_transport($project_id);
+            $transport = self::calculate_transport($project_id,$service);
             $brigade = JFactory::getUser($project->project_mounter);
             $client_contacts_model = self::getModel('client_phones');
             $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
@@ -2783,7 +2791,12 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if(!$full){
                 foreach ($calculations as $calc) {
-                    $calc_mount = self::calculate_mount(0,$calc->id);
+                    if($service){
+                        $calc_mount = self::calculate_mount(0,$calc->id,null,true,"service");
+                    }
+                    else{
+                        $calc_mount = self::calculate_mount(0,$calc->id);
+                    }
                     $stage_sum = [];
                     foreach ($mount_data as $stage) {
                         $s_sum =0;
@@ -2879,18 +2892,31 @@ class Gm_ceilingHelpersGm_ceiling
             $array = [$html];
             foreach($calculations as $calc){
                 if ($calc->mounting_sum > 0){
-                    if($full){
-                         $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+                    if($service){
+                        if($full){
+                             $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single_service") . ".pdf";
+                        }
+                        else{
+                            foreach ($mount_data as $value) {
+                                $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage_service".$value->stage) . ".pdf";
+                            }
+                        }
                     }
                     else{
-                        foreach ($mount_data as $value) {
-                            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
+                        if($full){
+                             $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+                        }
+                        else{
+                            foreach ($mount_data as $value) {
+                                $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
+                            }
                         }
                     }
                 }
                 //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
             }
-            $filename = md5($project_id . "mount_common") . ".pdf";
+            $filename = $service ? md5($project_id . "mount_common_service") . ".pdf" : md5($project_id . "mount_common") . ".pdf";
+            
             
             self::save_pdf($array, $sheets_dir . $filename, "A4");
         }
@@ -2900,7 +2926,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null){
+    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null,$need_mount = null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
@@ -2913,7 +2939,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $data_mount = self::calculate_mount(0,$data['id'],null,true);
                 }
                 else{
-                    $data_mount = self::calculate_mount(0,$data['id'],null);
+                    $data_mount = self::calculate_mount(0,$data['id'],null,null,$need_mount);
                 }
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
@@ -2987,7 +3013,8 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
                 }
                 $mounting_data = $data_mount['mounting_data'];
-                if ($data['mounting_sum'] != 0) {
+                //throw new Exception(print_r($mounting_data,true));
+                if ($data['mounting_sum'] != 0 || !empty($need_mount)) {
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>';

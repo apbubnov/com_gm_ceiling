@@ -45,6 +45,11 @@
 	else{
 		$triangulator_pro = 0;
 	}
+
+	if(in_array('16', $user_group) && $subtype == 'production'){
+		$gm_mounters = true;
+	}
+	throw new Exception($gm_mounters);
 	//определение с монтажными работами или без
 	if ($_GET['id'] == 0) {
 		$need_mount_for_radio = 0;
@@ -3809,6 +3814,9 @@
 						 
 						<?php } else if ($type === "gmmanager" || $type === "manager" || $type === "guest") {  ?>
 					    var additional = "&save=0&pdf=0&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
+					    	<?php if(!empty($gm_mounters)){ ?>
+					    		additional += "&gm_mounters=1"
+					    	<?php }?>
 						<?php } else { ?>
 							var additional = "";
 							<?php } ?>

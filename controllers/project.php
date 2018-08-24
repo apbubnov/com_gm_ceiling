@@ -590,7 +590,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
 			}
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
-
+            if(!empty($mount_data)){
+                $mount_types = $projects_mounts_model->get_mount_types();
+                foreach ($mount_data as $value) {
+                    $value->stage_name = $mount_types[$value->stage];
+                }
+            }
 			$street = $jinput->get('new_address', '', 'STRING');
 			$house = $jinput->get('new_house', '', 'STRING');
 			$bdq = $jinput->get('new_bdq', '', 'STRING');
@@ -657,6 +662,26 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$return = $model->activate($data, 5);
             if(!empty($mount_data)){
                 $projects_mounts_model->save($project_id,$mount_data);
+                $service_data = $this->check_mount_for_service($mount_data);
+                $send_data['project_id'] = $project_id;
+                $send_data['client_id'] = $data->id_client;
+                $send_data['mount'] = $service_data;
+                $pr_data['id'] = $project_id;
+                if(!empty($service_data)){
+                    foreach ($include_calculation as $calc) {
+                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                        $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                        foreach ($service_data as $key => $value) {
+                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
+                        }
+                    }
+                    $pr_data['mounting_check'] = json_encode($mount_sum);
+                    $this->change_project_data($pr_data);
+                    Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
+                }
+                else{
+                      $pr_data['mounting_check'] = "";
+                }
             }
             $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
@@ -954,6 +979,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                     $pr_data['mounting_check'] = json_encode($mount_sum);
                                     $this->change_project_data($pr_data);
                                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
+                                    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation,"service");
                                 }
                                 else{
                                       $pr_data['mounting_check'] = "";
@@ -1974,7 +2000,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $mount_sum = [];
                 foreach ($include_calculations as $calc) {
                     $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
-                    $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];        
+                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
+                    $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                    $result['transport'] = $transport;        
                 }
                 die(json_encode($result));
             }

@@ -413,15 +413,20 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	                	calcs:incl_calcs
 	                },
 	                success: function(data) {
+	                	var transport = data['transport'];
+	                	delete data['transport']; 
+	                	
 	                	var old_mount_sum = 0, new_mount_sum = 0;
 	                	jQuery.each(data,function(index,elem){
-	                		if (typeof self_data === 'undefined' || self_data === null) {
+	                		if (typeof self_data !== 'undefined' || self_data !== null) {
 	                			old_mount_sum += self_data[index].mount_data;
 		                		new_mount_sum += elem['total_gm_mounting'];
 		                		self_data[index].mount_data = elem['total_gm_mounting'];
 							}
-	                		
 	                	});
+	                	console.log(jQuery("#transport_sum span.sum").data('selfval'));
+	                	old_mount_sum += jQuery("#transport_sum span.sum").data('selfval');
+	                	new_mount_sum += transport;
 	                	change_self_sum(old_mount_sum,new_mount_sum);
 	                },
 	                dataType: "json",
@@ -442,8 +447,27 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    function change_self_sum(old_sum,new_sum){
 		    	var old_mount = jQuery("#calcs_self_mount_total span.sum").text();
 		    	var old_total = jQuery("#calcs_total_border").text();
-		    	jQuery("#calcs_self_mount_total span.sum").text(old_mount - old_sum + new_sum);
-		    	jQuery("#calcs_total_border").text(old_total - old_sum + new_sum);
+		    	var total = jQuery("#project_total span.sum").text();
+		    	var url_getparams = window
+		            .location
+		            .search
+		            .replace('?','')
+		            .split('&')
+		            .reduce(
+		                function(p,e){
+		                    var a = e.split('=');
+		                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+		                    return p;
+		                },
+		                {}
+		            );
+		    	if(parseFloat(total) == parseFloat(old_total) && url_getparams["subtype"]=="production"){
+		    		jQuery("#project_total span.sum").text(Math.round(total -0 + new_sum));
+		    		jQuery("#project_sum").val(Math.round(total -0 + new_sum));
+		    	}
+		    	jQuery("#calcs_self_mount_total span.sum").text(Math.round(old_mount - old_sum + new_sum));
+		    	jQuery("#calcs_total_border").text(Math.round(old_total - old_sum + new_sum));
+
 		    }
 
 		    function draw_calendar() {

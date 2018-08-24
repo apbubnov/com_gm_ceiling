@@ -1188,10 +1188,9 @@ public function register_mnfctr(){
             $save = $jinput->get('save', '0', 'INT');
             $pdf = $jinput->get('pdf', '0', 'INT');
             $need_mount = $jinput->get('need_mount', '0', 'INT');
-            
+            $gm_mounters = $jinput->get('gm_mounters',"",'STRING');
             $del_flag = $jinput->get('del_flag', '0', 'INT');
-           
-            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
+            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount,$gm_mounters);
             die($result);
         }
         catch(Exception $e) {

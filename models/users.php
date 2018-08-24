@@ -569,24 +569,28 @@ class Gm_ceilingModelUsers extends JModelList
 	function getDealerMounters($dealerId) {
 		try
 		{
+			$user = JFactory::getUser();
+			$groups = $user->groups;
 			$db = JFactory::getDbo();
 			$type = 11;
-
-			$query = $db->getQuery(true);
-			$query->select('`u`.`id`, `u`.`name`')
-				->from('`#__users` AS `u`')
-				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-				->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
-			$db->setQuery($query);
-			$items = $db->loadObjectList();
-
-			if (empty($items)) {
+			$items = [];
+			if(!in_array(16, $groups)){
 				$query = $db->getQuery(true);
-				$query->select('`id`, `name`')
-					->from('`#__users`')
-					->where("`id` = $dealerId");
+				$query->select('`u`.`id`, `u`.`name`')
+					->from('`#__users` AS `u`')
+					->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+					->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
 				$db->setQuery($query);
 				$items = $db->loadObjectList();
+
+				if (empty($items)) {
+					$query = $db->getQuery(true);
+					$query->select('`id`, `name`')
+						->from('`#__users`')
+						->where("`id` = $dealerId");
+					$db->setQuery($query);
+					$items = $db->loadObjectList();
+				}
 			}
 			$mount_service = $this->getUserByGroup(26);
 			$items = array_merge($items,$mount_service);

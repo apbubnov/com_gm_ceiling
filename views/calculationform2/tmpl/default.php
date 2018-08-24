@@ -45,6 +45,14 @@
     $longitude = $jinput->get('longitude','',"STRING");
     $advt = $jinput->get('advt','',"STRING");
     $type_url = '';
+
+    if(in_array('16', $user_groups) && $subtype == 'production'){
+        $gm_mounters = "service";
+    }
+    
+    if(!empty($gm_mounters)){
+        $gm_mounters_url = "&gm_mounters=$gm_mounters";
+    }
     if (!empty($type))
     {
         $type_url = "&type=$type";
@@ -1187,13 +1195,14 @@
             if(need_mount == undefined && api==1){
                 need_mount = 1;
             }
+            gm_mounters = "<?php echo $gm_mounters_url;?>"
             if (!calculate_button.hasClass("loading")) {
                 calculate_button.addClass("loading");
                 calculate_button.find("span.static").hide();
                 calculate_button.find("span.loading").show();
                 jQuery.ajax({
                     type: 'POST',
-                    url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}`,
+                    url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}${gm_mounters}`,
                     data: data,
                     success: function(data){
                         console.log(data);

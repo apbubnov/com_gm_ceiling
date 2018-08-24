@@ -48,11 +48,6 @@ Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
-foreach($calculations as $calc){
-    if(!empty($calc->n3)){
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
-    }
-}
 
 $json_mount  = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
@@ -63,14 +58,36 @@ if(!empty($this->item->mount_data)){
     }
     
 }
- 
+$transport_service = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['mounter_sum'];
+$mounter_approve = true;
+foreach($calculations as $calc){
+    if(!empty($calc->n3)){
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+    }
+
+    foreach ($this->item->mount_data as $key => $value) {
+        $groups = JFactory::getUser($value->mounter)->groups;
+        if(in_array("26", $groups)){
+            $mounter_approve = false;
+        }
+        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,null,"mount")['total_gm_mounting'];
+        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,null,true);
+
+    }
+   
+}
 
 //статус проекта
 $status = $model->WhatStatusProject($_GET['id']);
 if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status == 11) || ((int)$status[0]->project_status == 22) || $this->item->dealer_id != $user->dealer_id){
     $display = 'style="display:none;"';
 } 
-
+$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+$need_service =(!empty($service_mount)) ? true : false;
+$total_service = $transport_service;
+$total_gm_mount = 0;
+$total_mount = 0;
 ?>
 
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
@@ -157,17 +174,38 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
             <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
             <div class="">
                 <h4>Информация для менеджера</h4>
-                <table class="table">
+                <table class="table table_cashbox">
                     <?php
                     
                     $mount = $mount_model->getDataAll();
                     $common_canvases_sum = 0;
                     ?>
+                    <thead>
+                        <tr>
+                            <th>
+                                Название
+                            </th>
+                            <th>
+                                Стоимость
+                            </th>
+                            <th>
+                                Смета
+                            </th>
+                            <th>
+                                Раскрой
+                            </th>
+                            <th>
+                                Изменить раскрой
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <?php foreach ($calculations as $calculation) {
                         $guild_data = Gm_ceilingHelpersGm_ceiling::calculate_guild_jobs($calculation->id);
                         ?>
+                        
                         <tr>
-                            <th><?php echo $calculation->calculation_title; ?></th>
+                            <td><?php echo $calculation->calculation_title; ?></td>
                             <td>
                                 <?php echo $calculation->canvases_sum; $common_canvases_sum += $calculation->canvases_sum;?> руб.
                             </td>
@@ -185,7 +223,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                 <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
-                                       target="_blank">Посмотреть раскрой</a>
+                                       target="_blank">Посмотреть</a>
                                 <?php } else { ?>
                                     -
                                 <?php } ?>
@@ -193,20 +231,20 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                             <td>
                                 <?php if ($this->item->project_status != 12) { ?>
                                     <button  data-calc_id = "<?php echo $calculation->id; ?>" name = "change_cut"
-                                            class="btn btn-primary">Изменить раскрой
+                                            class="btn btn-primary">Изменить
                                     </button>
                                 <?php } ?>
                             </td>
                         </tr>
                     <?php } ?>
                     <tr>
-                        <th>Общая информация:</th>
+                        <td><b>Общая информация</b></td>
                         <td><?=$common_canvases_sum;?> руб.</td>
                         <td>
                             <?php $path = "/costsheets/".md5($this->item->id."common_manager").".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary"
-                                   target="_blank">Посмотреть общую</a>
+                                   target="_blank">Посмотреть</a>
                             <?php } else { ?>
                                 -
                             <?php } ?>
@@ -215,13 +253,14 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                             <?php $path = "/costsheets/".md5($this->item->id."common_cutpdf").".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary"
-                                   target="_blank">Посмотреть общий раскрой</a>
+                                   target="_blank">Посмотреть</a>
                             <?php } else { ?>
                                 -
                             <?php } ?>
                         </td>
                         <td></td>
                     </tr>
+                </tbody>
                 </table>
                 <h4>Расходные материалы</h4>
                 <table class="table">
@@ -292,41 +331,87 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     }
                 ?>
                 <h4>Наряды на монтаж</h4>
-                <table class="table">
-                    <?php foreach ($calculations as $calculation) { 
-                        $path = "/costsheets/" . md5($calculation->id.'mount_single').'.pdf'; ?>
+                <table class="table table_cashbox ">
+                    <thead>
                         <tr>
-                            <th><?php echo $calculation->calculation_title; ?></th>
-                            <td>
-                                <?php echo $calculation->mounting_sum; ?> руб.
-                            </td>
+                            <th>
+                                Название
+                            </th>
+                            <?php if($need_service){ ?>
+                                <th>Сумма монтажной слубы</th>
+                                <th>Сумма монтажа ГМ</th>
+                            <?php } else {?>
+                                <th>Сумма</th>
+                            <?php }?>
+                            <th>
+                                Наряды
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($calculations as $calculation) {
+                            if($mounter_approve){ 
+                                $path = "/costsheets/" . md5($calculation->id.'mount_single').'.pdf'; 
+                            }
+                            else{
+                                 $path = "N\A"; 
+                            }
+                        ?>
+                        <tr>
+                            <td><?php echo $calculation->calculation_title; ?></td>
+                            <?php if($need_service) {?>
+                                <td>
+                                    <?php
+                                        $total_service += $service_mount[$calculation->id];
+                                        echo  $service_mount[$calculation->id]; 
+                                    ?> руб.
+                                </td>
+                                <td>
+                                    <?php
+                                        $total_gm_mount += $gm_mount_price[$calculation->id];
+                                        echo $gm_mount_price[$calculation->id]; 
+                                    ?> руб.
+                                </td>
+                                <?php }else{ ?>
+                                    <td>
+                                        <?php
+                                            $total_mount += $calculation->mounting_sum; 
+                                            echo $calculation->mounting_sum; 
+                                        ?> руб.
+                                    </td>
+                               <?php } ?>
                             <td>
                                 <?php
                                 if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                         echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Посмотреть</a>';
                                     } else {
-                                        echo 'После договора';
+                                        echo 'После утверждения бригады';
                                     } 
                                 }
                                 else {
-                                    foreach ($mount_data as $value) {
-                                        $path = "/costsheets/" . md5($calculation->id.'mount_stage'.$value->stage).'.pdf';
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
-                                            switch ($value->stage) {
-                                                case 2:
-                                                    echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Обагечивание</a>';
-                                                    break;
-                                                case 3:
-                                                    echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Натяжка</a>';
-                                                    break;
-                                                case 4:
-                                                    echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Вставка</a>';
-                                                    break;
-                                                default:
-                                                    break;
+                                    if($mounter_approve){
+                                        foreach ($mount_data as $value) {
+                                            $path = "/costsheets/" . md5($calculation->id.'mount_stage'.$value->stage).'.pdf';
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                                                switch ($value->stage) {
+                                                    case 2:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Обагечивание</a>';
+                                                        break;
+                                                    case 3:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Натяжка</a>';
+                                                        break;
+                                                    case 4:
+                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Вставка</a>';
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
                                             }
                                         }
+                                    }
+                                    else{
+                                        echo 'После утверждения бригады';
                                     }
                                 }
                                 ?>
@@ -334,20 +419,32 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         </tr>
                     <?php } ?>
                     <tr>
-                <td><b>Общий наряд на монтаж <b></td>
-                <td>
-                    <?php
-                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                    <?php } else { ?>
-                        -
-                    <?php }
-                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
-                    $json2 = json_encode($pdf_names); ?>
-                </td>
-                <td></td>
-            </tr>
-                </table>
+                        <td>
+                            <b>Итого</b>
+                        </td>
+                        <?php if($need_service) {?>
+                            <td>
+                                <?php echo $total_service;?> руб.
+                            </td>
+                            <td> 
+                                <?php echo $total_gm_mount + $transport;?> руб.
+                            </td>
+                        <?php }else{ ?>
+                            <td>
+                               <?php echo $total_mount + $transport;?> руб.
+                            </td>
+                       <?php } ?>
+                        <td>
+                            <?php
+                                $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
+                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                            <?php } else { ?>
+                                После утверждения бригады
+                            <?php } ?>
+                        </td>
+        </tbody>
+    </table>
                 <h4>Изменить время, дату и монтажную бригаду</h4>
                 <div style="border-top: 1px solid #eceeef;">
                     <label><strong>Текущие данные</strong></label>

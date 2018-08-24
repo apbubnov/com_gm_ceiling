@@ -431,7 +431,15 @@
                         <!-- общий наряд на монтаж--> 
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr class="section_estimate" style="display: none;">
-                                <?php $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; ?>
+
+                                <?php if(!empty($service_mount)){
+                                        $path = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
+                                    }
+                                    else{
+                                        $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
+                                    } ?>
+                                    
+                                    
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                         <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общий наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">

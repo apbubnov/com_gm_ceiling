@@ -109,101 +109,31 @@ class Gm_ceilingModelCalculation extends JModelItem
 				}
 			}
 
-			if (isset($this->_item->created_by) )
-			{
-				$this->_item->created_by_name = JFactory::getUser($this->_item->created_by)->name;
-			}
+			if (isset($this->_item->project_id) && $this->_item->project_id != '') {
+				if (is_object($this->_item->project_id)){
+					$this->_item->project_id = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->project_id);
+				}
+				$values = (is_array($this->_item->project_id)) ? $this->_item->project_id : explode(',',$this->_item->project_id);
 
-			if (isset($this->_item->modified_by) )
-			{
-				$this->_item->modified_by_name = JFactory::getUser($this->_item->modified_by)->name;
-			}
-
-				if (isset($this->_item->project_id) && $this->_item->project_id != '') {
-					if (is_object($this->_item->project_id)){
-						$this->_item->project_id = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->project_id);
+				$textValue = array();
+				foreach ($values as $value)
+				{
+					$db = JFactory::getDbo();
+					$query = $db->getQuery(true);
+					$query
+						->select('`#__gm_ceiling_projects_2463298`.`id`')
+						->from($db->quoteName('#__gm_ceiling_projects', '#__gm_ceiling_projects_2463298'))
+						->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
+					$db->setQuery($query);
+					$results = $db->loadObject();
+					if ($results) {
+						$textValue[] = $results->id;
 					}
-					$values = (is_array($this->_item->project_id)) ? $this->_item->project_id : explode(',',$this->_item->project_id);
-
-					$textValue = array();
-					foreach ($values as $value)
-					{
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$query
-							->select('`#__gm_ceiling_projects_2463298`.`id`')
-							->from($db->quoteName('#__gm_ceiling_projects', '#__gm_ceiling_projects_2463298'))
-							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->id;
-						}
-					}
-
+				}
 				$this->_item->project_id = !empty($textValue) ? implode(', ', $textValue) : $this->_item->project_id;
 
-				}
+			}
 
-				if (isset($this->_item->n1) && $this->_item->n1 != '') {
-					if (is_object($this->_item->n1)){
-						$this->_item->n1 = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->n1);
-					}
-					$values = (is_array($this->_item->n1)) ? $this->_item->n1 : explode(',',$this->_item->n1);
-
-					$textValue = array();
-					foreach ($values as $value)
-					{
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$query
-							->select('`#__gm_ceiling_textures_2460779`.`texture_title`')
-							->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_textures_2460779'))
-							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->texture_title;
-							
-						}
-					}
-
-				//KM_CHANGED START
-				$this->_item->n1_id = $this->_item->n1;
-				//KM_CHANGED END
-				$this->_item->n1 = !empty($textValue) ? implode(', ', $textValue) : $this->_item->n1;
-
-				}
-
-				if (isset($this->_item->n2) && $this->_item->n2 != '') {
-					if (is_object($this->_item->n2)){
-						$this->_item->n2 = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->n2);
-					}
-					$values = (is_array($this->_item->n2)) ? $this->_item->n2 : explode(',',$this->_item->n2);
-
-					$textValue = array();
-					foreach ($values as $value)
-					{
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$query
-							->select('`#__gm_ceiling_textures_2460779`.`texture_title`')
-							->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_textures_2460779'))
-							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->texture_title;
-							
-							
-						}
-					}
-				//KM_CHANGED START
-				$this->_item->n2_id = $this->_item->n2;
-				//KM_CHANGED END
-				$this->_item->n2 = !empty($textValue) ? implode(', ', $textValue) : $this->_item->n2;
-
-				}
 
 				if (isset($this->_item->n3) && $this->_item->n3 != '') {
 					if (is_object($this->_item->n3)){
@@ -226,14 +156,15 @@ class Gm_ceilingModelCalculation extends JModelItem
 							$textValue[] = $results->name." ".$results->country." ".$results->width;						
 						}
 					}
+
 				//KM_CHANGED START
 				$this->_item->n3_id = $this->_item->n3;
 				//KM_CHANGED END
 				$this->_item->n3 = !empty($textValue) ? implode(', ', $textValue) : $this->_item->n3;
 
 				}
-				//throw new Exception($this->_item->n13, 1);
-
+				
+				
 
 				$query = $db->getQuery(true);
 				$query
@@ -243,8 +174,8 @@ class Gm_ceilingModelCalculation extends JModelItem
 					->join('LEFT','`#__gm_ceiling_calculations` AS calc ON calc.project_id = proj.id')
 					->where('calc.id  = ' . $this->_item->id);
 				$db->setQuery($query);
-				$this->_item->dealer_id = $db->loadObject()->dealer_id;
 
+				$this->_item->dealer_id = $db->loadObject()->dealer_id;
                 $this->_item->n13 = $this->n13_load($this->_item->id);
 				$this->_item->n14 = $this->n14_load($this->_item->id);
 	            $this->_item->n15 = $this->n15_load($this->_item->id);
@@ -252,7 +183,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	            $this->_item->n23 = $this->n23_load($this->_item->id);
 	            $this->_item->n26 = $this->n26_load($this->_item->id);
 				$this->_item->n29 = $this->n29_load($this->_item->id);
-
+				//throw new Exception("Error Processing Request", 1);
 			return $this->_item;
 		}
 		catch(Exception $e)
