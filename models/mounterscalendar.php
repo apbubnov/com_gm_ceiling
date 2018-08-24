@@ -180,7 +180,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
 			$query->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
 			->from('#__gm_ceiling_projects as p')
-			->leftJoin('#__gm_ceiling_projects_mounts as m')
+			->leftJoin('#__gm_ceiling_projects_mounts as m ON p.id = m.project_id')
 			->where("p.id = $id");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();

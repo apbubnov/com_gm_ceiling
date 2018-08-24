@@ -21,7 +21,8 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 	public function ChangeStatus() {
 		try
 		{
-			$id = $_POST["id_calculation"];
+			$jinput = JFactory::getApplication()->input;
+			$id = $jinput->get("id_calculation",null,'INT');
 			
  			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
 			$model_request = $model->ChangeStatusOfRead($id);

@@ -371,7 +371,7 @@
 
     function ReplaceToOrder(project, month, ReadOrNot, stage) {
         month--;
-       
+        console.log(project);
         if (ReadOrNot == 0) {
             jQuery.ajax({
                 type: "POST",
@@ -381,7 +381,7 @@
                     id_calculation: project
                 },
                 success: function(msg) {
-                    if (msg.read_by_mounter == 1) {
+                    if (msg[0].read_by_mounter == 1) {
                         location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
                     }
                 },
