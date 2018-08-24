@@ -46,10 +46,23 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$ids[$id][$key] = [];
 			}
 		}
-		
+		$sum_done = [];
+		$sum_deals = [];
 		foreach ($statuses as $key => $value) {
 			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
 			$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+			if($key == "sum_done"){
+				
+				foreach ($projects as $project) {
+					$sum_done[$project["api_phone_id"]] += $project["sum"];
+				}
+			}
+			if($key == "sum_deals"){
+				
+				foreach ($projects as $project) {
+					$sum_deals[$project["api_phone_id"]] += $project["sum"];
+				}
+			}
 			if(!$dealer_type){
 				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
 				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
@@ -87,9 +100,13 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 					$advt[$advt_id][$status] = count($projs);
 				}
 				else{
-					foreach ($projs as $p_id) {
-						$advt[$advt_id][$status] += $projects[$p_id]["sum"];				
-					}	
+					if($status == 'sum_done'){
+						$advt[$advt_id][$status] += $sum_done[$advt_id];			
+					}
+					if($status == 'sum_deals'){
+						$advt[$advt_id][$status] += $sum_deals[$advt_id];			
+					}
+					
 				}
 			}
 			$old_val = $advt[$advt_id]['projects'];
