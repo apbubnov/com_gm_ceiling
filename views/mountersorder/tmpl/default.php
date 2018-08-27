@@ -21,22 +21,33 @@ $jinput = JFactory::getApplication()->input;
 $project = $jinput->get('project', null, 'INT');
 $stage = $jinput->get('stage', null, 'INT');
 $calc_sum_stage = 0;
-
-
+$project_model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+$project_data = $project_model->getData($project);
+$service = !empty(json_decode($project_data->mounting_check)) ? true : false; 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);
 
 if (!empty($calculation_ids)) {
-    $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
+    if(!$service){
+        $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
+    }
+    else{
+        $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
+    }
 }
 
  if (!empty($calculation_ids)) { 
     $AllCalc = [];
-    foreach ($calculation_ids as $value) { 
-         $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
-         foreach ($DataOfProject["mounting_data"] as $val) { 
-            if($val['stage']==$stage){
+    foreach ($calculation_ids as $value) {
+        if(!$service){ 
+            $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
+        }
+        else{
+            $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null,null,"mount");
+        }
+         foreach ($DataOfProject[$value->id]["mounting_data"] as $val) { 
+            if($val['stage']==$stage || $stage == 1){
                 if (!array_key_exists($val["title"], $AllCalc)) {
                     $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                 } else {
@@ -48,8 +59,6 @@ if (!empty($calculation_ids)) {
         }
     }
 }
-$AllSum = 0;
-
 ?>
 
 <?=parent::getButtonBack();?>
@@ -149,12 +158,11 @@ $AllSum = 0;
                             <td>Количество</td>
                             <td>Стоимость, ₽</td>
                         </tr>
-                        <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php 
                             $calc_sum_stage = 0;
-                                if (!empty($DataOfProject)) { 
-                                    foreach ($DataOfProject["mounting_data"] as $val) {
-                                        if($val['stage'] == $stage){ ?>
+                                if (!empty($DataOfProject[$value->id])) { 
+                                    foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
+                                        if($val['stage'] == $stage || $stage == 1){ ?>
                                             <tr>
                                                 <td class="left">
                                                     <?php echo $val["title"]; ?>

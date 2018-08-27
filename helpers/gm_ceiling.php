@@ -1670,6 +1670,7 @@ class Gm_ceilingHelpersGm_ceiling
                     if ((empty($item) || strripos($key, "n") == 0) && array_key_exists($key, $calculation_data2))
                         $calculation_data[$key] = $calculation_data2[$key];
                 }
+               
                 
                 $calculation_data["extra_mounting_array"] = array();
                 $extra_mounting_decode = json_decode($calculation_data["extra_mounting"]);
@@ -1677,7 +1678,7 @@ class Gm_ceilingHelpersGm_ceiling
                     foreach ($extra_mounting_decode as $extra_mounting)
                         $calculation_data["extra_mounting_array"][] = $extra_mounting;
                 $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
-                if (floatval($calculation_data["mounting_sum"]) == 0)
+                if (floatval($calculation_data["mounting_sum"]) == 0 && $calculation_data["need_mount"] != 1)
                     $calculation_data["need_mount"] = 0;
                 else if (!$calculation_data["need_mount_extra"])
                     $calculation_data["need_mount"] = 1;
@@ -1705,7 +1706,6 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $dealer_id = 1;   
             }
-
             $results = $mount_model->getDataAll($dealer_id);
             $gm_mount  = $mount_model->getDataAll(1);
             $empty_mount = true;

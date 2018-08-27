@@ -342,9 +342,7 @@
                                 status += " <strong>/ Не прочитан</strong>";
                             }
                             salary = element.mounting_sum;
-                            if (salary < 1500) {
-                                salary = 1500;
-                            }
+                           
 
                             switch (element.type) {
                                 case '1': type = 'Полный монт.';

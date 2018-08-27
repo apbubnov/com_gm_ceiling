@@ -224,7 +224,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             
 
             $query
- 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type')
+ 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.mounting_check')
                 ->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
 				->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
@@ -234,7 +234,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            $query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum, calculations.details')
+            $query2->select('calculations.id, calculations.project_id, calculations.n5, calculations.mounting_sum , calculations.details')
                 ->from('#__gm_ceiling_calculations as calculations')
                 ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
                 ->innerJoin('#__gm_ceiling_projects_mounts as pm on calculations.project_id = pm.project_id')
@@ -248,7 +248,13 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 foreach ($items2 as $val) {
                     if ($value->id == $val->project_id) {
                         $value->n5 += $val->n5;
-                        $value->mounting_sum += $val->mounting_sum;
+                        if(!empty($value->mounting_check)){
+                        	$mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val->id,null,null,"mount")["total_gm_mounting"];
+                        }
+                        else{
+                        	$mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val->id)["total_gm_mounting"];
+                        }
+                        $value->mounting_sum += $mount_sum;
 					}
 					if (!empty($val->details)) {
 						$value->details = 1;
