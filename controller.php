@@ -3247,6 +3247,10 @@ public function register_mnfctr(){
 
         }
     }
+
+    function test(){
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf2(58);
+    }
 }
 
 ?>

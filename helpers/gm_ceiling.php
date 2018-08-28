@@ -3253,133 +3253,164 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция генерации pdf раскроя */
-    public static function create_cut_pdf($calc_id=null,$data=null){
-        try {
-            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            if(!empty($calc_id)){
-                $calculation_model = self::getModel('calculation');
-                $data = $calculation_model->getData($calc_id);
-                $data = get_object_vars($data);
-            }
-            if(empty($calc_id)){
-                $calc_id = $data['id'];
-            }
-            $project_model = self::getModel('project');
-            $project = $project_model->getData($data['project_id']);
-            $canvases_data = self::calculate_canvases($calc_id);
-            $client_model = self::getModel('client');
-            $client = $client_model->getClientById($project->id_client);
-            $dealer_name = JFactory::getUser($client->dealer_id)->name;
-            $array_cut = explode('||',$data['cut_data']);
-            $cut_data = $array_cut[0];
-            $p_usadki = $array_cut[1];
-            $usadka = (1-$p_usadki)*100;
-            $array1 = array();
-            $array2 = explode(';', $data['calc_data']);
-            array_pop($array2);
-            foreach($array2 as $str) {
-                list($key, $value) = explode('=', $str);
-                $array1[$key] = $value;
-            }
-            foreach($array1 as $key=>$value){
-                $us_walls .= $key.'='.round($value*$p_usadki,1).';';
-            }
-            $html = '<img class= "image" src="/images/GM.png"/>';
-            $html .= '<h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';
-            $html .= '<div class= "date_lbl"> Дата: '. date("d.m.y") .'</div>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
-            $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
-            $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
-            $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th >Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
-            $html .= '</tr>';
-            $html .= ' </tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th> <td>'.$usadka.'</td> ';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
-            $html .= '</tr>';
-            $html .= ' </tbody>';
-            $html .= '</table>';
-            $html .= '<div align="center" style="width: 100%">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
-            $html .= '</div>';
-            $html .= "<pagebreak />";
-            $html .= $html;
-            $html .= '<img class= "image" src="/images/GM.png"/>';
-            $html .= '<h1 style="text-align:center;">Раскрой ' . $data["calculation_title"] . '</h1>';
-            $html .= '<div class= "date_lbl"> Дата: '. date("d.m.y") .'</div>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
-            $html .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
-            $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Цвет: </th><td colspan="3" >' . $canvases_data["title"] . '</td>';
-            $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Полотна: </th><td style="font-size: 14pt">' . str_replace('|', ";<br>", $cut_data) . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .=  '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th> <td>'.$usadka.'</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<div align="center" style="width: 100%;">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
-            $html .= '</div>';
-            $filename = md5($calc_id . 'cutpdf') . '.pdf';
-            Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
-        }
+    public static function create_cut_pdf($calc_id=null,$data = null){
+    	try{
+	        if(!empty($calc_id)){
+	            $calculation_model = self::getModel('calculation');
+	            $data = $calculation_model->getData($calc_id);
+	            $data = get_object_vars($data);
+	        }
+	        if(empty($calc_id)){
+	            $calc_id = $data['id'];
+	        }
+	        $project_model = self::getModel('project');
+	        $project = $project_model->getData($data['project_id']);
+	        $canvases_data = self::calculate_canvases($calc_id);
+	        $client_model = self::getModel('client');
+	        $client = $client_model->getClientById($project->id_client);
+	        $dealer_name = JFactory::getUser($client->dealer_id)->name;
+	        $array_cut = explode('||',$data['cut_data']);
+	        $cut_data = $array_cut[0];
+	        $p_usadki = $array_cut[1];
+	        $usadka = (1-$p_usadki)*100;
+	        $array1 = array();
+	        $array2 = explode(';', $data['calc_data']);
+	        array_pop($array2);
+	        foreach($array2 as $str) {
+	            list($key, $value) = explode('=', $str);
+	            $array1[$key] = $value;
+	        }
+	        foreach($array1 as $key=>$value){
+	            $us_walls .= $key.'='.round($value*$p_usadki,1).';';
+	        }
+	    	$mpdf = new mPDF('utf-8', 'A4','8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
+	    	$mpdf->setAutoTopMargin='stretch';
+	    	$mpdf->setAutoBottomMargin = 'stretch';
+	    	$mpdf->SetHTMLHeader('
+				<table width="100%" style="vertical-align: middle;">
+				    <tr>
+				        <td width="33%"  style="text-align:left"><img style="max-height:50px" src="/images/GM.png"/></td>
+				        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Потолок 1</h1></td>
+				        <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
+				    </tr>
+				</table>');
+		 	$html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+	        $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
+	        $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
+	        $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
+	        $html .= '</tr>';
+	        $html .= '</tbody>';
+	        $html .= '</table>';
+	        $html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th >Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
+	        $html .= '</tr>';
+	        $html .= ' </tbody>';
+	        $html .= '</table>';
+	        $html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
+	                  <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+	                  <th>% усадки:</th> <td>'.$usadka.'</td> ';
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+	        $html .= '</tr>';
+	        $html .= ' </tbody>';
+	        $html .= '</table>';
+	       	$stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
+	        $mpdf->WriteHTML($stylesheet, 1);
+	        $mpdf->WriteHTML($html, 2);
+	        $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
+	        if($mpdf->y < $unusedSpaceH){
+	        	$min_height = ($unusedSpaceH -5)*3.779528;
+	        	$max_height_attr = " max-height:$min_height;";
+	        }
+	        else{
+	        	$max_height_attr = "";	
+	        }
+	        $html_image = '<div align="center" style="width: 100%;page-break-after:always;">';
+	        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
+	            $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+	        $html_image .= '</div>';
+	        $html_image .= "<pagebreak/>";
+	       
+	        $mpdf->WriteHTML($stylesheet, 1);
+	        $mpdf->WriteHTML($html_image, 2);
+	        $html .= $html_image;
+	        $html .= '<pagebreak/>';
+	        $html .= '<table >';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+	        $html .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
+	        $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Цвет: </th><td colspan="3" >' . $canvases_data["title"] . '</td>';
+	        $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
+	        $html .= '</tr>';
+	        $html .= '</tbody>';
+	        $html .= '</table>';
+	        $html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th>Полотна: </th><td style="font-size: 14pt">' . str_replace('|', ";<br>", $cut_data) . '</td>';
+	        $html .= '</tr>';
+	        $html .= '</tbody>';
+	        $html .= '</table>';
+	        $html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
+	        $html .= '</tr>';
+	        $html .= '</tbody>';
+	        $html .= '</table>';
+	        $html .= '<table>';
+	        $html .= '<tbody>';
+	        $html .= '<tr>';
+	        $html .=  '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
+	                  <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+	                  <th>% усадки:</th> <td>'.$usadka.'</td>';
+	        $html .= '</tr>';
+	        $html .= '<tr>';
+	        $html .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+	        $html .= '</tr>';
+	        $html .= '</tbody>';
+	        $html .= '</table>';
+	        $mpdf->WriteHTML($stylesheet, 1);
+	        $mpdf->WriteHTML($html, 2);
+	        $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
+	        if($mpdf->y < $unusedSpaceH){
+	        	$min_height = ($unusedSpaceH -5)*3.779528;
+	        	$max_height_attr = " max-height:$min_height;";
+	        }
+	        else{
+	        	$max_height_attr = "";	
+	        }
+	        $html = '<div align="center" style="width: 100%;">';
+	        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
+	            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+	        $html .= '</div>';
+	        $mpdf->WriteHTML($stylesheet, 1);
+	        $mpdf->WriteHTML($html, 2);
+	        $filename = md5($calc_id . 'cutpdf') . '.pdf';
+			$mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');
+   		}
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
