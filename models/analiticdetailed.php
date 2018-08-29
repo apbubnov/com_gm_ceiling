@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @version    CVS: 0.1.7
  * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
+ * @author     Alexandr <al.p.bubnov@gmail.com>
+ * @copyright  GM
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
  // No direct access.
@@ -18,377 +17,263 @@
  *
  * @since  1.6
  */
-class Gm_ceilingModelAnaliticDetailed extends JModelList
+class Gm_ceilingModelAnaliticdetailed extends JModelList
 {
-	function getQuery($statuses,$date1,$date2){
-		try
-		{
-			if(count($statuses)==1)
-			{
-				$str = " = $statuses[0]";
+	function getData($dealer_id,$date1=null,$date2 = null){
+		if(empty($date1)){
+			$date1 =  date("Y-m-d");
+		}
+		if(empty($date2)){
+			$date2 =  date("Y-m-d");
+		}
+		$dealer_type = JFactory::getUser($dealer_id)->dealer_type;
+		$result = [];
+		$ids = [];
+		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
+		$advt = $api_model->getDealersAdvt($dealer_id);
+		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","sum_deals"=>"(4,5)");
+		$advt['otd']['id'] = "otd";
+		$advt['otd']['advt_title'] = 'Отделочники';
+		$advt['win']['id'] = "win";
+		$advt['win']['advt_title'] = 'Оконщики';
+		$advt[0]['id'] = "0";
+		$advt[0]['advt_title'] = 'Отсутствует';
+		foreach ($advt as $id => $advt_obj) {
+			foreach ($statuses as $key => $status) {
+				$advt[$id][$key] = 0;
+				$advt[$id]['projects'] = "";
+				$advt[0][$key] = 0;
+				$ids[$id][$key] = [];
 			}
-			else {
-				$str = "IN(";
-				for($i=0;$i<count($statuses);$i++){
-					if($i<count($statuses)-1){
-						$str .= $statuses[$i].",";
+		}
+		$sum_done = [];
+		$sum_deals = [];
+		foreach ($statuses as $key => $value) {
+			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
+			$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+			if($key == "sum_done"){
+				
+				foreach ($projects as $project) {
+					$sum_done[$project["api_phone_id"]] += $project["sum"];
+				}
+			}
+			if($key == "sum_deals"){
+				
+				foreach ($projects as $project) {
+					$sum_deals[$project["api_phone_id"]] += $project["sum"];
+				}
+			}
+			if(!$dealer_type){
+				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
+				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,8);
+				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
+			}
+		}
+		foreach ($advt as $id => $advt_obj){
+			if($advt_obj['id'] === "0"){
+				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
+				$current_mounts = $this->getCurrentMounts($dealer_id,null,$date1,$date2);
+			}
+			elseif($advt_obj['id'] =='otd'){
+				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2,3);
+				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2,3);
+			}
+			elseif($advt_obj['id'] =='win'){
+				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2,8);
+				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2,8);
+			}
+			else{
+				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2);
+				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2);
+			}
+			
+			$advt[$id]['current_measure'] = $current_measure[0]->count;
+			$advt[$id]['projects']['current_measure'] = $current_measure[0]->projects;
+			$advt[$id]['mounts'] = $current_mounts[0]->count;
+			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
+		}
+		
+		foreach ($ids as $advt_id => $value) {
+			foreach ($value as $status => $projs) {
+				if($status != 'sum_done' && $status != "sum_deals"){
+					$advt[$advt_id][$status] = count($projs);
+				}
+				else{
+					if($status == 'sum_done'){
+						$advt[$advt_id][$status] += $sum_done[$advt_id];			
 					}
-					else 
-					{
-						$str.=$statuses[$i].")";
+					if($status == 'sum_deals'){
+						$advt[$advt_id][$status] += $sum_deals[$advt_id];			
+					}
+					
+				}
+			}
+			$old_val = $advt[$advt_id]['projects'];
+			foreach ($value as $s => $ps) {
+				$value[$s] = implode(";",$ps);
+			}
+			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
+		}
+		foreach ($advt as $key => $value) {
+			$result[] = $value;
+		}
+		if(!$dealer_type){
+			$biases = [4,5,6];
+		}
+		else{
+			$biases = [4,3,4];
+		}
+		$header = (object)array(
+			"advt_title" => (object)array("head_name" =>"Реклама","rowspan"=>2), 
+			"common" => (object)array("head_name" =>"Всего","rowspan"=>2),
+			"dealers" => (object)array("head_name" =>"Дилеры","rowspan"=>2),
+			"advt" => (object)array("head_name" =>"Реклама","rowspan"=>2),
+			"refuse" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
+			"measures" => (object)array("head_name"=>"Замеры","bias"=>$biases[1],"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
+			"deal" => (object)array("head_name"=>"Договоры","bias"=>$biases[1],"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
+			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]),
+			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
+			);
+		array_unshift($result, $header);
+		if($dealer_type){
+			$this->unset_columns($result);
+		}
+		return $result;
+	}
+
+	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null,$dealer_type = null){
+		try{
+			if($dealer_type == 3){
+				$advt = 'otd';
+			}
+			if($dealer_type == 8){
+				$advt = 'win';
+			}
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			if(empty($dealer_type)){
+				$query
+					->select('distinct *')
+					->where("client_dealer_id = $dealer_id and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			}
+			else{
+				$query
+					->select("project_id,new_status,'$advt' as api_phone_id,sum,profit")
+					->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
+			}
+			$query->from('#__analytic_detailed');
+			if(!empty($statuses)){
+				$query->where("new_status in $statuses");
+			}
+			else{
+				$query->where("created BETWEEN '$date1' and '$date2'");
+			}
+			if(!empty($date1)&&!empty($date2)){
+				$query->where("date_of_change BETWEEN '$date1' and '$date2'");
+			}
+			if(!empty($date1) && empty($date2)){
+				$query->where("date_of_change >= '$date1' ");
+			}
+			if(empty($date1) && !empty($date2)){
+				$query->where("date_of_change <= '$date2' ");
+			}
+			$db->setQuery($query);
+			$result = $db->loadAssocList('project_id');
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function addData(&$advt,&$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key){
+		foreach ($projects as $id => $project) {
+				if(!empty($project['api_phone_id'])){
+					if(!in_array($project['project_id'],$ids[$project['api_phone_id']][$key])){
+						$ids[$project['api_phone_id']][$key][] = $project['project_id'];
 					}
 				}
-					
+				else{
+					if(!in_array($project['project_id'],$ids[0][$key])){
+						$ids[0][$key][] = $project['project_id'];
+					}
+				}
 			}
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query
-				->select('h.project_id')
-				->from('#__gm_ceiling_projects_history as h')
-				->where("h.new_status $str AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '$date1' AND '$date2'");
-			return $query;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
 	}
-		
-	
-	
-	function getData($date1 = null,$date2 = null,$dealer_id = null)
-	{
-		try
-		{
-			/*SELECT DISTINCT a.name,
-            (SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.created BETWEEN '2017-11-13' AND '2017-11-14') AS common,
-            (SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND  p.project_status = 1 AND p.project_calculation_date BETWEEN '2017-12-14 00:00:00' AND '2018-01-25 23:59:00') AS zap_zamer,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 1 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS zamer,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 2 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS otk_zam,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status  IN (4,5) AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS deal,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 3 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS otk_deal,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status IN(10,11,16,17) AND h.project_id = p.id AND a.id = p.api_phone_id AND p.project_mounting_date BETWEEN '2017-11-13' AND '2017-11-14')) AS mount,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 12 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS closed,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 15 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS refuse,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 20 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS dealer,
-			(SELECT COUNT(p.id) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 21 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS advt
-            (SELECT SUM(p.project_sum) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status IN(4,5) AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS sum_deal,
-            (SELECT SUM(p.project_sum) FROM `#__gm_ceiling_projects` AS p WHERE  p.id IN (SELECT h.project_id FROM `#__gm_ceiling_projects_history` AS h WHERE h.new_status = 12 AND h.project_id = p.id AND a.id = p.api_phone_id AND h.date_of_change BETWEEN '2017-11-13' AND '2017-11-14')) AS sum_done
-            FROM `#__gm_ceiling_api_phones` AS a */
-			if(empty($date1)&&empty($date2)){
-				$date1 = date("Y-m-d");
-				$date2 = date("Y-m-d");
-			}
-			if(empty($dealer_id)){
-				$dealer_id = 1;
-			}
-			$dealer = JFactory::getUser($dealer_id);
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$common = $db->getQuery(true);
-			$measure =  $db->getQuery(true);
-			$ref_measure = $db->getQuery(true);
-			$deals = $db->getQuery(true);
-			$ref_deals = $db->getQuery(true);
-			$dealers = $db->getQuery(true);
-			$advt = $db->getQuery(true);
-			$closed = $db->getQuery(true);
-			$mounts = $db->getQuery(true);
-			$refused =  $db->getQuery(true);
-            $mounts_sub = $db->getQuery(true);
-            $sum_deals = $db->getQuery(true);
-            $sum_done = $db->getQuery(true);
-            $current_measure = $db->getQuery(true);
-
-			$mounts_sub
-				->select('h.project_id')
-				->from('#__gm_ceiling_projects_history as h')
-				->where("h.new_status IN(10,11,16,17) AND h.project_id = p.id AND a.id = p.api_phone_id AND p.project_mounting_date BETWEEN '$date1' AND '$date2' ");
-			$common
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.api_phone_id = a.id AND p.created BETWEEN '$date1' and '$date2' and cl.dealer_id = $dealer_id");
-
-            $current_measure
-                ->select("COUNT(p.id)")
-                ->from("#__gm_ceiling_projects as p")
-                ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-                ->where("p.api_phone_id = a.id AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id");
-			$measure
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.id IN (".$this->getQuery([1],$date1,$date2).") and cl.dealer_id = $dealer_id");
-			$ref_measure
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.id IN (".$this->getQuery([2],$date1,$date2).") and cl.dealer_id = $dealer_id");
-			$deals
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).") and cl.dealer_id = $dealer_id");
-			$ref_deals
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.id IN (". $this->getQuery([3],$date1,$date2).") and cl.dealer_id = $dealer_id");
-			$dealers
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([20],$date1,$date2).")");
-			$advt
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->where("p.id IN (".$this->getQuery([21],$date1,$date2).")");
-			$closed	
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->where("p.id IN (".$this->getQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");		
-			$mounts
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
-				->where("p.project_status NOT IN (2,3) and p.api_phone_id = a.id AND pm.date_time BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59' and cl.dealer_id = $dealer_id");
-			
-			$refused
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-                ->where("p.id IN (".$this->getQuery([15],$date1,$date2).") and cl.dealer_id = $dealer_id");
-            $sum_deals
-                ->select("SUM(COALESCE(p.project_sum,0))")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-                ->where("p.id IN (".$this->getQuery([4,5],$date1,$date2).") and cl.dealer_id = $dealer_id");
-            $sum_done
-                ->select("SUM(COALESCE(IF((p.project_sum IS NULL OR p.project_sum = 0) AND (p.new_project_sum  IS NOT NULL OR p.new_project_sum <>0),p.new_project_sum,p.project_sum),0))")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id")
-                ->where("p.id IN (".$this->getQuery([12],$date1,$date2).") and cl.dealer_id = $dealer_id");
-
-			$query->select('DISTINCT a.name');
-			$query->select(' a.id');
-            $query->select("($common) as common");
-            if($dealer->dealer_type!=1){
-	            $query->select("($dealers) as dealers");
-	            $query->select("($advt) as advt");
-	        }
-	        $query->select("($refused) as refused");
-            $query->select("($ref_measure) as ref_measure");
-            $query->select("($measure) as measure");
-            $query->select("($current_measure) as current_measure");
-			$query->select("($ref_deals) as ref_deals");
-            $query->select("($deals) as deals");
-            $query->select("ifnull(($sum_deals),0) as sum_deals");
-			$query->select("($mounts) as mounts");
-            $query->select("($closed) as closed");
-            $query->select("ifnull(($sum_done),0) as sum_done");
-			$query->from('`#__gm_ceiling_api_phones` AS a');
-			$query->where("a.dealer_id = $dealer_id");
-			$db->setQuery($query);
-			
-			$items = $db->loadObjectList();
-
-			$designers = $this->get_data_by_dealer_type(3,$date1,$date2);
-			foreach ($designers as $designer) {
-				$d_common += $designer->common;
-				$d_measure += $designer->measure;
-				$d_ref_measure += $designer->ref_measure;
-				$d_deals +=  $designer->deals;
-				$d_ref_deals +=  $designer->ref_deals;
-				$d_closed +=  $designer->closed;
-				$d_mounts+= $designer->mounts;
-				$d_refused+= $designer->refused;
-				$d_sum_deals+= $designer->sum_deals;
-				$d_sum_done+= $designer->sum_done;
-				$d_current_mesure+= $designer->current_measure;
-			}
-			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
-				$d_object = (object)array(
-					"name" => "Отделочники",
-					"id" => "",
-					"common" => $d_common,
-					"dealers" => 0,
-					"advt" => 0,
-					"refused" => $d_refused,
-					"ref_measure" => $d_ref_measure,
-					"measure" => $d_measure,
-					"current_measure" => $d_current_mesure,
-					"ref_deals" => $d_ref_deals,
-					"deals" => $d_deals,
-					"sum_deals" => $d_sum_deals,
-					"mounts" => $d_mounts,
-					"closed" => $d_closed,
-					"sum_done" => $d_sum_done
-
-				);
-				array_push($items,$d_object);
-			}
-				$d_common = 0;
-				$d_measure = 0;
-				$d_ref_measure = 0;
-				$d_deals =  0;
-				$d_ref_deals =  0;
-				$d_closed =  0;
-				$d_mounts = 0;
-				$d_refused = 0;
-				$d_sum_deals = 0;
-				$d_sum_done = 0;
-				$d_current_mesure = 0;
-			$wininstallers = $this->get_data_by_dealer_type(8,$date1,$date2);
-			foreach ($wininstallers as $designer) {
-				$d_common += $designer->common;
-				$d_measure += $designer->measure;
-				$d_ref_measure += $designer->ref_measure;
-				$d_deals +=  $designer->deals;
-				$d_ref_deals +=  $designer->ref_deals;
-				$d_closed +=  $designer->closed;
-				$d_mounts+= $designer->mounts;
-				$d_refused+= $designer->refused;
-				$d_sum_deals+= $designer->sum_deals;
-				$d_sum_done+= $designer->sum_done;
-				$d_current_mesure+= $designer->current_measure;
-			}
-			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
-				$d_object = (object)array(
-					"name" => "Оконщики",
-					"id" => "",
-					"common" => $d_common,
-					"dealers" => 0,
-					"advt" => 0,
-					"refused" => $d_refused,
-					"ref_measure" => $d_ref_measure,
-					"measure" => $d_measure,
-					"current_measure" => $d_current_mesure,
-					"ref_deals" => $d_ref_deals,
-					"deals" => $d_deals,
-					"sum_deals" => $d_sum_deals,
-					"mounts" => $d_mounts,
-					"closed" => $d_closed,
-					"sum_done" => $d_sum_done
-
-				);
-				array_push($items,$d_object);
-			}
-			return $items;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
-	function get_data_by_dealer_type($dealer_type,$date1,$date2){
+	function getCurrentMeasures($dealer_id,$advt,$date1,$date2,$dealer_type = null){
 		try{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$common = $db->getQuery(true);
-			$measure =  $db->getQuery(true);
-			$ref_measure = $db->getQuery(true);
-			$deals = $db->getQuery(true);
-			$ref_deals = $db->getQuery(true);
-			$closed = $db->getQuery(true);
-			$mounts = $db->getQuery(true);
-			$refused =  $db->getQuery(true);
-            $mounts_sub = $db->getQuery(true);
-            $sum_deals = $db->getQuery(true);
-            $sum_done = $db->getQuery(true);
-            $current_measure = $db->getQuery(true);
-            $clients_id = $db->getQuery(true);
-            $clients_id
-            	->select("c.id")
-            	->from("`#__gm_ceiling_clients` AS c")
-            	->leftJoin("`#__users` AS u ON c.dealer_id = u.id")
-            	->where("u.dealer_type = $dealer_type");
-
-            $common
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->where("p.client_id in ($clients_id) AND p.created BETWEEN '$date1' and '$date2'");
-
-			$measure
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 1 and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-			$current_measure
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->where("p.client_id in ($clients_id) AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'");
-
-			$ref_measure
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 2 and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-			$deals
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status in(4,5) and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-			$ref_deals
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 3 and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-			$closed	
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 12 and h.date_of_change BETWEEN '$date1' and '$date2'");
-		
-			$mounts
-				->select("COUNT(p.id)")
-				->from("#__gm_ceiling_projects as p")
-				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
-				->where("p.project_status NOT IN (2,3) and p.client_id in ($clients_id) AND pm.date_time BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'");
+			$query
+				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
+				->from('`#__analytic_detailed`');
+			if(empty($dealer_type)){
+				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id and project_status = 1");
+			}
+			else{
+				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type and project_status = 1");
+			}
+			if(!empty($advt) && empty($dealer_type)){
+				$query->where("api_phone_id = $advt");
+			}
+			else{
+				$query->where("api_phone_id Is NULL");	
+			}
+			/*if(!empty($dealer_type)){
+				throw new Exception($query);
+			}*/
 			
-			$refused
-				->select("COUNT(p.id)")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status in(15) and h.date_of_change BETWEEN '$date1' and '$date2'");
-            $sum_deals
-                ->select("SUM(COALESCE(p.project_sum,0))")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status IN(4,5) and h.date_of_change BETWEEN '$date1' and '$date2'");
-            $sum_done
-                ->select("SUM(COALESCE(p.new_project_sum,0))")
-				->from("`#__gm_ceiling_projects_history` AS h ")
-				->leftJoin("`#__gm_ceiling_projects` AS p ON p.id = h.project_id")
-				->where("p.client_id in ($clients_id) and h.new_status = 12 and h.date_of_change BETWEEN '$date1' and '$date2'");
-
-            $query->select("($common) as common");
-            $query->select("($refused) as refused");
-            $query->select("($ref_measure) as ref_measure");
-            $query->select("($measure) as measure");
-            $query->select("($current_measure) as current_measure");
-			$query->select("($ref_deals) as ref_deals");
-            $query->select("($deals) as deals");
-            $query->select("ifnull(($sum_deals),0) as sum_deals");
-			$query->select("($mounts) as mounts");
-            $query->select("($closed) as closed");
-            $query->select("ifnull(($sum_done),0) as sum_done");
 			$db->setQuery($query);
-			$items = $db->loadObjectList();
-
-			return $items;
+			$result = $db->loadObjectList();
+			return $result;
 		}
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	
+	function getCurrentMounts($dealer_id,$advt,$date1,$date2,$dealer_type = null){
+		try{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
+				->from('`#__analytic_detailed`');
+				if(empty($dealer_type)){
+					$query->where("mount_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id");
+				}
+				else{
+					$query->where("mount_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type");
+			}
+			if(!empty($advt) && empty($dealer_type)){
+				$query->where("api_phone_id = $advt");
+			}
+			else{
+				$query->where("api_phone_id Is NULL");	
+			}
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function unset_columns($data){
+		try{
+
+			foreach ($data as $key => $value) {
+				unset($data[$key]->dealers);
+				unset($data[$key]->advt);
+			}
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
-?>

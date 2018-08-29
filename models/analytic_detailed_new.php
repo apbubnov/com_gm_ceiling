@@ -31,7 +31,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$ids = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","ref_measure"=>"(2)","measure"=>"(1)","ref_deals"=>"(3)","deals"=>"(4,5)","closed"=>"(12)","sum_done"=>"(12)","sum_deals"=>"(4,5)");
+		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"sum_deals"=>[4,5]);
 		$advt['otd']['id'] = "otd";
 		$advt['otd']['advt_title'] = 'Отделочники';
 		$advt['win']['id'] = "win";
@@ -46,30 +46,18 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$ids[$id][$key] = [];
 			}
 		}
-		$sum_done = [];
-		$sum_deals = [];
-		foreach ($statuses as $key => $value) {
-			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
-			$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-			if($key == "sum_done"){
-				
-				foreach ($projects as $project) {
-					$sum_done[$project["api_phone_id"]] += $project["sum"];
-				}
-			}
-			if($key == "sum_deals"){
-				
-				foreach ($projects as $project) {
-					$sum_deals[$project["api_phone_id"]] += $project["sum"];
-				}
-			}
+		
+		//foreach ($statuses as $key => $value) {
+		$projects = $this->getDataByParameters($dealer_id,$date1,$date2);
+		$this->addData($advt,$ids,$projects,$dealer_id,$date1,$date2,$statuses);
+			/*
 			if(!$dealer_type){
 				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
 				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
 				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,8);
 				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-			}
-		}
+			}*/
+		//}
 		foreach ($advt as $id => $advt_obj){
 			if($advt_obj['id'] === "0"){
 				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
@@ -94,7 +82,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
 		}
 		
-		foreach ($ids as $advt_id => $value) {
+		/*foreach ($ids as $advt_id => $value) {
 			foreach ($value as $status => $projs) {
 				if($status != 'sum_done' && $status != "sum_deals"){
 					$advt[$advt_id][$status] = count($projs);
@@ -114,7 +102,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$value[$s] = implode(";",$ps);
 			}
 			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
-		}
+		}*/
 		foreach ($advt as $key => $value) {
 			$result[] = $value;
 		}
@@ -142,7 +130,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		return $result;
 	}
 
-	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null,$dealer_type = null){
+	function getDataByParameters($dealer_id,$date1,$date2,$dealer_type = null){
 		try{
 			if($dealer_type == 3){
 				$advt = 'otd';
@@ -163,20 +151,15 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 					->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
 			}
 			$query->from('#__analytic_detailed');
-			if(!empty($statuses)){
-				$query->where("new_status in $statuses");
-			}
-			else{
-				$query->where("created BETWEEN '$date1' and '$date2'");
-			}
+
 			if(!empty($date1)&&!empty($date2)){
-				$query->where("date_of_change BETWEEN '$date1' and '$date2'");
+				$query->where("(date_of_change BETWEEN '$date1' and '$date2' OR created BETWEEN '$date1' and '$date2')");
 			}
 			if(!empty($date1) && empty($date2)){
-				$query->where("date_of_change >= '$date1' ");
+				$query->where("(date_of_change >= '$date1' OR created >= '$date1')");
 			}
 			if(empty($date1) && !empty($date2)){
-				$query->where("date_of_change <= '$date2' ");
+				$query->where("(date_of_change <= '$date2' OR created <= '$date2')");
 			}
 			$db->setQuery($query);
 			$result = $db->loadAssocList('project_id');
@@ -188,19 +171,24 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
         }
 	}
 
-	function addData(&$advt,&$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key){
+	function addData(&$advt,&$ids,$projects,$dealer_id,$date1,$date2,$statuses){
 		foreach ($projects as $id => $project) {
-				if(!empty($project['api_phone_id'])){
-					if(!in_array($project['project_id'],$ids[$project['api_phone_id']][$key])){
-						$ids[$project['api_phone_id']][$key][] = $project['project_id'];
-					}
-				}
-				else{
-					if(!in_array($project['project_id'],$ids[0][$key])){
-						$ids[0][$key][] = $project['project_id'];
+			$advt_id = (empty($project["api_phone_id"])) ? 0 : $project["api_phone_id"];
+ 			if(date_create($project["created"]) >= date_create($date1) && date_create($project["created"]) <= date_create($date2)){
+				$advt[$advt_id]['projects']["common"] .= $project["project_id"] . ";";
+				$advt[$advt_id]["common"]++;
+			}
+			foreach ($statuses as $key => $statuses_arr) {
+				if($key != "sum_done" && $key != "sum_deals"){
+					if(!is_null($project["new_status"]) && in_array($project["new_status"], $statuses_arr)){
+						if(!in_array($project['project_id'],$advt[$advt_id]['projects'][$key])){
+							$advt[$advt_id]['projects'][$key][] = $project['project_id'];
+							$advt[$advt_id][$key]++;
+						}
 					}
 				}
 			}
+		}
 	}
 	function getCurrentMeasures($dealer_id,$advt,$date1,$date2,$dealer_type = null){
 		try{
