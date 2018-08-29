@@ -24,7 +24,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("common"=>"","dealers"=>"(20)","advt"=>"(21)","refuse"=>"(15)","inwork"=>"(0,2,3)","measure"=>"(1)","deals"=>"(4,5,6,7,8,10,11,12,16,17,19,24,25,26)","done"=>"(12)","sum"=>"(12)","profit"=>"(12)");
+		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"inwork"=>[0,2,3],"measure"=>[1],"deals"=>[4,5,6,7,8,10,11,12,16,17,19,24,25,26],"done"=>[12],"sum"=>[12],"profit"=>[12]);
 		$advt['otd']['id'] = "otd";
 		$advt['otd']['advt_title'] = 'Отделочники';
 		$advt['win']['id'] = "win";
@@ -40,19 +40,13 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			}
 		}
 		$ids = [];
-		foreach ($statuses as $key => $value) {
-			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value);
-			$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-		
-			if(!$dealer_type){
-				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
-				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,8);
-				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-			}
-		}
-		foreach ($ids as $key => $value) {
-			$advt[$key]['projects'] = $value['projects'];
+		$projects = $this->getDataByParameters($dealer_id,$date1,$date2);
+		$this->addData($advt,$projects,$dealer_id,$dealer_type,$date1,$date2,$statuses);
+		if(!$dealer_type){
+			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,3);
+			$this->addData($advt,$projects,$dealer_id,$dealer_type,$date1,$date2,$statuses);
+			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,8);
+			$this->addData($advt,$projects,$dealer_id,$dealer_type,$date1,$date2,$statuses);
 		}
 		$result = [];
 		foreach ($advt as $key => $value) {
@@ -78,7 +72,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 		}
 		return $result;
 	}
-	function getDataByParameters($dealer_id,$date1,$date2,$statuses = null,$dealer_type = null){
+	function getDataByParameters($dealer_id,$date1,$date2,$dealer_type = null){
 		try{
 			if($dealer_type == 3){
 				$advt = 'otd';
@@ -100,9 +94,9 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			}
 			$query->from('#__analytic');
 				
-			if(!empty($statuses)){
+			/*if(!empty($statuses)){
 				$query->where("project_status in $statuses");
-			}
+			}*/
 			if(!empty($date1)&&!empty($date2)){
 				$query->where("created BETWEEN '$date1' and '$date2'");
 			}
@@ -121,22 +115,20 @@ class Gm_ceilingModelAnalytic_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function addData(&$advt,&$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key){
+	function addData(&$advt,$projects,$dealer_id,$dealer_type,$date1,$date2,$statuses){
 		foreach ($projects as $project) {
-			
-			if(!empty($project->api_phone_id)){
-				$ids[$project->api_phone_id]['projects'][$key] .= $project->project_id . ";";
-				$advt[$project->api_phone_id][$key]++;
-			}
-			else{
-				$ids[0]['projects'][$key] .= $project->project_id . ";";
-				$advt[0][$key]++;
-
-			}
-
-			if($project->project_status == 12 && $key == 'done'){
-				$advt[$project->api_phone_id]['sum'] += $project->sum;
-				$advt[$project->api_phone_id]['profit'] += $project->profit;
+			$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
+			$advt[$advt_id]['projects']["common"] .= $project->project_id . ";";
+			$advt[$advt_id]["common"]++;
+			foreach ($statuses as $key => $statuses_arr) {
+				if(!is_null($project->project_status) && in_array($project->project_status, $statuses_arr)){
+					$advt[$advt_id]['projects'][$key] .= $project->project_id . ";";
+					$advt[$advt_id][$key]++;
+				}
+				if($project->project_status == 12 && $key == 'done'){
+					$advt[$advt_id]['sum'] += $project->sum;
+					$advt[$advt_id]['profit'] += $project->profit;
+				}
 			}
 		}
 	}

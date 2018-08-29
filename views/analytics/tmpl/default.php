@@ -80,7 +80,8 @@ echo parent::getButtonBack();
     var ths = [];
     var det_ths =[];
     var det_data = JSON.parse('<?php echo $det_data?>');
-    console.log(det_data);
+    console.log("common",data);
+    console.log("detailed",det_data);
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#mw_projects"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
@@ -90,7 +91,6 @@ echo parent::getButtonBack();
             jQuery("#mw_container").hide();
         }
     });
-
     jQuery(document).ready(function(){
         makeTh(jQuery("#analytic_common > thead"),data[0]);
         makeTh(jQuery("#analytic_detailed > thead"),det_data[0]);
