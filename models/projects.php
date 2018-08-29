@@ -524,7 +524,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('p.client_id')
                 ->select("ifnull(($subquery),0) as cost")
                 ->from('`#__gm_ceiling_projects` as p')
-                ->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
+                ->leftJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
                 ->where("p.id in $projects");
             $db->setQuery($query);
             $items = $db->loadObjectList();

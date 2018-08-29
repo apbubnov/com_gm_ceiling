@@ -176,6 +176,7 @@ echo parent::getButtonBack();
                         projects += data[i]['projects'][statuses];
                 }   
             }
+            console.log(projects);
             if(projects){
 
                 getProjects(projects); 
