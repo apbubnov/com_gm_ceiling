@@ -28,7 +28,6 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		}
 		$dealer_type = JFactory::getUser($dealer_id)->dealer_type;
 		$result = [];
-		$ids = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
 		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"sum_deals"=>[4,5]);
@@ -43,68 +42,26 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				$advt[$id][$key] = 0;
 				$advt[$id]['projects'] = "";
 				$advt[0][$key] = 0;
-				$ids[$id][$key] = [];
 			}
 		}
-		
-		//foreach ($statuses as $key => $value) {
 		$projects = $this->getDataByParameters($dealer_id,$date1,$date2);
-		$this->addData($advt,$ids,$projects,$dealer_id,$date1,$date2,$statuses);
-			/*
-			if(!$dealer_type){
-				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,3);
-				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-				$projects = $this->getDataByParameters($dealer_id,$date1,$date2,$value,8);
-				$this->addData($advt,$ids,$projects,$dealer_id,$dealer_type,$date1,$date2,$key);
-			}*/
-		//}
-		foreach ($advt as $id => $advt_obj){
-			if($advt_obj['id'] === "0"){
-				$current_measure = $this->getCurrentMeasures($dealer_id,null,$date1,$date2);
-				$current_mounts = $this->getCurrentMounts($dealer_id,null,$date1,$date2);
-			}
-			elseif($advt_obj['id'] =='otd'){
-				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2,3);
-				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2,3);
-			}
-			elseif($advt_obj['id'] =='win'){
-				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2,8);
-				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2,8);
-			}
-			else{
-				$current_measure = $this->getCurrentMeasures($dealer_id,$advt_obj['id'],$date1,$date2);
-				$current_mounts = $this->getCurrentMounts($dealer_id,$advt_obj['id'],$date1,$date2);
-			}
-			
-			$advt[$id]['current_measure'] = $current_measure[0]->count;
-			$advt[$id]['projects']['current_measure'] = $current_measure[0]->projects;
-			$advt[$id]['mounts'] = $current_mounts[0]->count;
-			$advt[$id]['projects']['mounts'] = $current_mounts[0]->projects;
+		$this->addData($advt,$projects,$dealer_id,$date1,$date2,$statuses);
+		if(!$dealer_type){
+			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,3);
+			$this->addData($advt,$projects,$dealer_id,$date1,$date2,$statuses);
+			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,8);
+			$this->addData($advt,$ids,$projects,$dealer_id,$date1,$date2,$statuses);
 		}
+		$measures = $this->getCurrentMeasures($dealer_id,$date1,$date2,"(3,8)");
+		$mounts = $this->getCurrentMounts($dealer_id,$date1,$date2,"(3,8)");
+		$this->addCurrentData($measures,$advt,'current_measure');
+		$this->addCurrentData($mounts,$advt,'mounts');
 		
-		/*foreach ($ids as $advt_id => $value) {
-			foreach ($value as $status => $projs) {
-				if($status != 'sum_done' && $status != "sum_deals"){
-					$advt[$advt_id][$status] = count($projs);
-				}
-				else{
-					if($status == 'sum_done'){
-						$advt[$advt_id][$status] += $sum_done[$advt_id];			
-					}
-					if($status == 'sum_deals'){
-						$advt[$advt_id][$status] += $sum_deals[$advt_id];			
-					}
-					
-				}
+		foreach ($advt as $id => $advt_obj){
+			foreach ($advt_obj["projects"] as $s => $ps) {
+				$advt_obj["projects"][$s] = implode(";",$ps);
 			}
-			$old_val = $advt[$advt_id]['projects'];
-			foreach ($value as $s => $ps) {
-				$value[$s] = implode(";",$ps);
-			}
-			$advt[$advt_id]['projects'] = array_merge($old_val,$value);
-		}*/
-		foreach ($advt as $key => $value) {
-			$result[] = $value;
+			$result[] = $advt_obj;
 		}
 		if(!$dealer_type){
 			$biases = [4,5,6];
@@ -161,58 +118,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			if(empty($date1) && !empty($date2)){
 				$query->where("(date_of_change <= '$date2' OR created <= '$date2')");
 			}
-			$db->setQuery($query);
-			$result = $db->loadAssocList('project_id');
-			return $result;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
-	function addData(&$advt,&$ids,$projects,$dealer_id,$date1,$date2,$statuses){
-		foreach ($projects as $id => $project) {
-			$advt_id = (empty($project["api_phone_id"])) ? 0 : $project["api_phone_id"];
- 			if(date_create($project["created"]) >= date_create($date1) && date_create($project["created"]) <= date_create($date2)){
-				$advt[$advt_id]['projects']["common"] .= $project["project_id"] . ";";
-				$advt[$advt_id]["common"]++;
-			}
-			foreach ($statuses as $key => $statuses_arr) {
-				if($key != "sum_done" && $key != "sum_deals"){
-					if(!is_null($project["new_status"]) && in_array($project["new_status"], $statuses_arr)){
-						if(!in_array($project['project_id'],$advt[$advt_id]['projects'][$key])){
-							$advt[$advt_id]['projects'][$key][] = $project['project_id'];
-							$advt[$advt_id][$key]++;
-						}
-					}
-				}
-			}
-		}
-	}
-	function getCurrentMeasures($dealer_id,$advt,$date1,$date2,$dealer_type = null){
-		try{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query
-				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
-				->from('`#__analytic_detailed`');
-			if(empty($dealer_type)){
-				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id and project_status = 1");
-			}
-			else{
-				$query->where("calculation_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type and project_status = 1");
-			}
-			if(!empty($advt) && empty($dealer_type)){
-				$query->where("api_phone_id = $advt");
-			}
-			else{
-				$query->where("api_phone_id Is NULL");	
-			}
-			/*if(!empty($dealer_type)){
-				throw new Exception($query);
-			}*/
-			
+			//throw new Exception($query);
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
@@ -222,25 +128,89 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function getCurrentMounts($dealer_id,$advt,$date1,$date2,$dealer_type = null){
+
+	function addData(&$advt,$projects,$dealer_id,$date1,$date2,$statuses){
+		$date1 = strtotime($date1);
+		$date2 = strtotime($date2);
+		foreach ($projects as $id => $project) {
+			$created = !empty($project->created) ? strtotime($project->created) : null;
+			$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
+ 			if($created >= $date1 && $created <= $date2){
+ 				if(!in_array($project->project_id,$advt[$advt_id]['projects']['common'])){
+					$advt[$advt_id]['projects']["common"][] = $project->project_id;
+					$advt[$advt_id]["common"]++;
+				}
+			}
+			foreach ($statuses as $key => $statuses_arr) {
+				if($key != "sum_done" && $key != "sum_deals"){
+					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
+						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
+							$advt[$advt_id]['projects'][$key][] = $project->project_id;
+							$advt[$advt_id][$key]++;
+						}
+					}
+				}
+				else{
+					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
+						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
+							$advt[$advt_id]['projects'][$key][] = $project->project_id;
+							$advt[$advt_id][$key] += $project->sum;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function addCurrentData($data,&$advt,$field_name){
+		foreach ($data as $key => $project) {
+			if($project->dealer_type != 3 && $project->dealer_type != 8){
+				$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
+				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
+					$advt[$advt_id]['projects'][$field_name][] = $project->project_id;
+					$advt[$advt_id][$field_name]++;
+				}
+			}
+			elseif($project->dealer_type == 3){
+				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
+					$advt['otd']['projects'][$field_name][] = $project->project_id;
+					$advt['otd'][$field_name]++;
+				}
+			}
+			elseif($project->dealer_type == 8){
+				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
+					$advt['win']['projects'][$field_name][] = $project->project_id;
+					$advt['win'][$field_name]++;
+				}
+			}
+		}
+	}
+	function getCurrentMeasures($dealer_id,$date1,$date2,$dealer_type){
 		try{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("COUNT(distinct project_id) as count,group_concat(DISTINCT project_id separator ';' ) as projects")
-				->from('`#__analytic_detailed`');
-				if(empty($dealer_type)){
-					$query->where("mount_date BETWEEN '$date1' AND '$date2' and client_dealer_id = $dealer_id");
-				}
-				else{
-					$query->where("mount_date BETWEEN '$date1' AND '$date2' and dealer_id = $dealer_id and dealer_type = $dealer_type");
-			}
-			if(!empty($advt) && empty($dealer_type)){
-				$query->where("api_phone_id = $advt");
-			}
-			else{
-				$query->where("api_phone_id Is NULL");	
-			}
+				->select("project_id,api_phone_id,dealer_type")
+				->from('`#__analytic_detailed`')
+				->where("calculation_date BETWEEN '$date1' AND '$date2' and (client_dealer_id = $dealer_id OR (dealer_id = $dealer_id and dealer_type in $dealer_type)) and project_status = 1");
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+	function getCurrentMounts($dealer_id,$date1,$date2,$dealer_type){
+		try{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("project_id,api_phone_id,dealer_type")
+				->from('`#__analytic_detailed`')
+				->where("mount_date BETWEEN '$date1' AND '$date2' and (client_dealer_id = $dealer_id OR ( dealer_id = $dealer_id and dealer_type IN $dealer_type))");
+				
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
