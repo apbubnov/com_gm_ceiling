@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  *
  * @since  1.6
  */
-class Gm_ceilingControllerDealer extends Gm_ceilingController
+class Gm_ceilingControllerDealer extends JControllerLegacy
 {
 	/**
 	 * Proxy for getModel.
@@ -266,6 +266,25 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			die(json_encode(true));
 		}
         catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
+
+	function save_data_to_session(){
+		try{			
+			$jinput = JFactory::getApplication()->input;
+			$user_id = $jinput->get("user",null,'INT');
+			$filter_city = $jinput->get('filter_city',"","STRING");
+			$filter_manager = $jinput->get('filter_manager',"","STRING");
+			$row_index = $jinput->get('rindex','','STRING');
+			if(!empty($user_id)&&((!empty($filter_city)))||!empty($row_index)){
+				$_SESSION["dealers_$user_id"] = ["filter_city"=>$filter_city,"filter_manager"=>$filter_manager,"row"=>$row_index];
+			}
+			die(json_encode(true));
+		}
+		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 

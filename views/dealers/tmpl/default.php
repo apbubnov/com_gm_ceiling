@@ -25,7 +25,10 @@ foreach ($dealers as $key => $dealer) {
     $dealers[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
     $dealers[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
 }
+$dealers = json_encode($dealers);
 $server_name = $_SERVER['SERVER_NAME'];
+$session_data = (isset($_SESSION["dealers_$userId"])) ? json_encode($_SESSION["dealers_$userId"]) : json_encode(array());
+unset($_SESSION["dealers_$userId"]);
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -119,11 +122,13 @@ $server_name = $_SERVER['SERVER_NAME'];
     var $ = jQuery,
         managers = {},
         cities = {},
-        dealers_data = JSON.parse('<?php echo json_encode($dealers); ?>');
+        userId = '<?php echo $userId;?>'
+        dealers_data = JSON.parse('<?php echo $dealers?>');
         dealers_data_length = dealers_data.length,
         tbody_dealers = document.getElementById('tbody_dealers'),
-        wheel_count_dealers = null, last_tr = null;
-
+        wheel_count_dealers = null, last_tr = null,
+        session_data = JSON.parse('<?php echo $session_data;?>');
+        console.log(session_data);
         if (Object.keys(managers).length === 0)
         {
             for(var i = 0, data_i; i < dealers_data_length; i++)
@@ -230,7 +235,13 @@ $server_name = $_SERVER['SERVER_NAME'];
     {
         var server_name = '<?php echo $server_name?>';
         $(window).resize();
-        
+        jQuery("#filter_city").val(session_data.filter_city);
+        jQuery("#filter_manager").val(session_data.filter_manager);
+        showDealers();
+        while(jQuery('#callbacksList tr').length < session_data.row){
+            print_dealers(jQuery('#callbacksList tr').length);
+        }
+        jQuery(document).scrollTop(session_data.row);
         var HelpMessageSpan = $("<span></span>"),
             HelpMessage = $(".HelpMessage");
 
@@ -499,12 +510,41 @@ $server_name = $_SERVER['SERVER_NAME'];
 
                 if (target.tagName == 'TR')
                 {
+                    var filter_manager = jQuery("#filter_manager").val();
+                    var filter_city = jQuery("#filter_city").val();
                     if(jQuery(target).data('href') != undefined){
                         if(e.which == 2){
-                            window.open(jQuery(target).data('href'));
+                           // window.open(jQuery(target).data('href'));
                         }
                         else{
-                            document.location.href = jQuery(target).data('href');
+                            jQuery.ajax({
+                                    type: 'POST',
+                                    url: "index.php?option=com_gm_ceiling&task=dealer.save_data_to_session",
+                                    data: {
+                                       user: userId,
+                                       filter_city: filter_city,
+                                       filter_manager: filter_manager,
+                                       rindex: target.rowIndex
+                                    },
+                                    success: function(data){
+                                        //document.location.href = jQuery(target).data('href');
+                                    },
+                                    dataType: "json",
+                                    async: false,
+                                    timeout: 10000,
+                                    error: function(data){
+                                        console.log(data);
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Ошибка. Сервер не отвечает"
+                                        });
+                                    }
+                                });
+                            
                         }
                     }
                     return;
