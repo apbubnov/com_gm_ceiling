@@ -514,7 +514,7 @@ unset($_SESSION["dealers_$userId"]);
                     var filter_city = jQuery("#filter_city").val();
                     if(jQuery(target).data('href') != undefined){
                         if(e.which == 2){
-                           // window.open(jQuery(target).data('href'));
+                           window.open(jQuery(target).data('href'));
                         }
                         else{
                             jQuery.ajax({
