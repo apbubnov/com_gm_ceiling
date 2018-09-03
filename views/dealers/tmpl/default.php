@@ -177,6 +177,7 @@ unset($_SESSION["dealers_$userId"]);
         var reg_name_find_dealer = new RegExp(name_find_dealer, "ig");
         var filter_manager = document.getElementById('filter_manager').value;
         var filter_city = document.getElementById('filter_city').value;
+        console.log(begin);
         for(var i = begin, data_i, iter = 0; i < dealers_data_length; i++)
         {
             data_i = dealers_data[i];
