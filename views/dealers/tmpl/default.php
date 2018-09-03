@@ -57,7 +57,7 @@ unset($_SESSION["dealers_$userId"]);
     <br>
     <table class="table one-touch-view" id="callbacksList">
         <thead>
-        <tr>
+        <tr >
             <th>
                 <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
             </th>
@@ -124,6 +124,7 @@ unset($_SESSION["dealers_$userId"]);
         cities = {},
         userId = '<?php echo $userId;?>'
         dealers_data = JSON.parse('<?php echo $dealers?>');
+        console.log(dealers_data);
         dealers_data_length = dealers_data.length,
         tbody_dealers = document.getElementById('tbody_dealers'),
         wheel_count_dealers = null, last_tr = null,
@@ -159,6 +160,8 @@ unset($_SESSION["dealers_$userId"]);
                 }
             }
         }
+        jQuery("#filter_city").val(session_data.filter_city);
+        jQuery("#filter_manager").val(session_data.filter_manager);
         showDealers();
 
     function showDealers()
@@ -200,7 +203,7 @@ unset($_SESSION["dealers_$userId"]);
                 {
                     color = '';
                 }
-                html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
+                html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
                 html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
                 html += '<td>' + data_i.client_name + '</td>';
                 html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
@@ -231,18 +234,32 @@ unset($_SESSION["dealers_$userId"]);
             last_tr = elems_tr[elems_tr.length - 1];
         }
     }
-
+    function get_dealer_index(id){
+        var rows = jQuery("#callbacksList tr");
+        var result = 0;
+        for (var i = rows.length - 1; i >= 0; i--) {
+            if(jQuery(rows[i]).data('id') == id){
+                return rows[i].rowIndex;
+            }
+        }
+    }
     jQuery(document).ready(function()
     {
         var server_name = '<?php echo $server_name?>';
         $(window).resize();
-        jQuery("#filter_city").val(session_data.filter_city);
-        jQuery("#filter_manager").val(session_data.filter_manager);
-        showDealers();
-        while(jQuery('#callbacksList tr').length < session_data.row){
-            print_dealers(jQuery('#callbacksList tr').length);
+        var counter = 0;
+        while(wheel_count_dealers < session_data.row){
+            print_dealers(wheel_count_dealers);
+            
         }
-        jQuery(document).scrollTop(session_data.row);
+        var row_index = get_dealer_index(session_data.dealer);
+        if(row_index){
+            var need_row = jQuery("#callbacksList").find('tr').eq(row_index);
+            jQuery('html, body').animate({
+                scrollTop: jQuery(need_row).offset().top
+            }, 2000);
+        }
+        //need_row.scrollTop();
         var HelpMessageSpan = $("<span></span>"),
             HelpMessage = $(".HelpMessage");
 
@@ -525,10 +542,11 @@ unset($_SESSION["dealers_$userId"]);
                                        user: userId,
                                        filter_city: filter_city,
                                        filter_manager: filter_manager,
-                                       rindex: target.rowIndex
+                                       dealer_id: jQuery(target).data('id'),
+                                       rindex: wheel_count_dealers
                                     },
                                     success: function(data){
-                                        //document.location.href = jQuery(target).data('href');
+                                        document.location.href = jQuery(target).data('href');
                                     },
                                     dataType: "json",
                                     async: false,
@@ -616,6 +634,7 @@ unset($_SESSION["dealers_$userId"]);
             if (dealers_data_length > wheel_count_dealers + 1 && inWindow(last_tr).length > 0)
             {
                 print_dealers(wheel_count_dealers + 1, dealers_data_length);
+                console.log(wheel_count_dealers);
             }
         }
         
