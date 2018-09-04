@@ -19,8 +19,6 @@ $analytic_model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
 $data = json_encode($analytic_model->getData($user->dealer_id));
 $det_acnalytic_model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_detailed_new');
 $det_data = json_encode($det_acnalytic_model->getData($user->dealer_id,'2018-01-01','2018-08-29'));
-$det_acnalytic_model2 = Gm_ceilingHelpersGm_ceiling::getModel('Analiticdetailed');
-$det_data2 = json_encode($det_acnalytic_model2->getData($user->dealer_id,'2018-01-01','2018-08-29'));
 $today = date('Y-m-d');
 echo parent::getButtonBack();
 
@@ -82,10 +80,8 @@ echo parent::getButtonBack();
     var ths = [];
     var det_ths =[];
     var det_data = JSON.parse('<?php echo $det_data?>');
-    var det_data2 = JSON.parse('<?php echo $det_data2?>');
     console.log("common",data);
     console.log("detailed",det_data);
-    console.log("detailed2",det_data2);
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#mw_projects"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
