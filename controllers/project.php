@@ -675,6 +675,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
                         }
                     }
+
                     $pr_data['mounting_check'] = json_encode($mount_sum);
                     $this->change_project_data($pr_data);
                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
@@ -687,7 +688,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $dealer = $user_model->getUserByAssociatedClient($client_id);
             if(!empty($dealer)){
-                $recoil_map_model->save($dealer->id, $project_id, $sum);
+                if(!empty($sum)){
+                    $recoil_map_model->save($dealer->id, $project_id, $sum);
+                }
             }
             
 			if ($return === false)

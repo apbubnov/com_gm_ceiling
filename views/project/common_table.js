@@ -55,9 +55,14 @@ jQuery("[name = 'include_calculation[]']").change(function(){
         if(!more_one){
             jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());
         }
-        
+       
     }
-    
+    if(jQuery("#project_total_discount span.sum").text()){
+         jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    }
+    else{
+        jQuery("#project_sum").val(jQuery("#project_total span.sum").text());
+    }
     jQuery("#calcs_self_components_total span.sum").data('oldval',jQuery("#calcs_self_components_total span.sum").text());
     check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
 });
@@ -111,7 +116,12 @@ function check_min_sum(canv_sum){
     else{
         jQuery("#project_total_discount span.dop").html(" ");
     }
-    jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    if(jQuery("#project_total_discount span.sum").text()){
+         jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    }
+    else{
+        jQuery("#project_sum").val(jQuery("#project_total span.sum").text());
+   }
 }
 function check_selected(){
     let result = false;
@@ -261,7 +271,12 @@ function change_transport(sum){
     jQuery("#calcs_self_mount_total span.sum").text(old_self_mount - old_self_transport + new_self_transport);
     jQuery("#calcs_total_border").text(old_self_total - old_self_transport + new_self_transport);
     jQuery("#transport_sum span.sum").data('selfval',new_self_transport);
-    jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    if(jQuery("#project_total_discount span.sum").text()){
+         jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    }
+    else{
+        jQuery("#project_sum").val(jQuery("#project_total span.sum").text());
+   }
 }
 
 function update_transport(id,transport,distance,distance_col){
