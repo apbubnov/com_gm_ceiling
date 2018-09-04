@@ -18,7 +18,7 @@ $user = JFactory::getUser();
 $analytic_model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
 $data = json_encode($analytic_model->getData($user->dealer_id));
 $det_acnalytic_model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_detailed_new');
-$det_data = json_encode($det_acnalytic_model->getData($user->dealer_id,'2018-01-01','2018-08-29'));
+$det_data = json_encode($det_acnalytic_model->getData($user->dealer_id));
 $today = date('Y-m-d');
 echo parent::getButtonBack();
 
