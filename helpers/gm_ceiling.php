@@ -1647,7 +1647,7 @@ class Gm_ceilingHelpersGm_ceiling
         $calc_id - id калькуляции в БД
         $data - массив данных для просчета, если новый просчет
     */
-    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null,$gm_mounters = null){
+    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null){
         try {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -1718,7 +1718,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             
-            if((!empty($service) && $service) || $gm_mounters == "service" || $empty_mount){
+            if((!empty($service) && $service == "service") || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
                     if(mb_ereg('mp[\d]+',$key)){
@@ -1726,7 +1726,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 });
             }
-            if($gm_mounters == "mount"){
+            else{
                 $results = $mount_model->getDataAll(1);
             }
             //Если существующая калькуляция
@@ -2797,11 +2797,8 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if(!$full){
                 foreach ($calculations as $calc) {
-                    if($service!="mount"){
-                        $calc_mount = self::calculate_mount(0,$calc->id,null,true,"service");
-                    }
-                    elseif($service == "mount"){
-                        $calc_mount = self::calculate_mount(0,$calc->id,null,null,"mount");
+                    if(!empty($service)){
+                        $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
                     }
                     else{
                         $calc_mount = self::calculate_mount(0,$calc->id);
@@ -2905,7 +2902,7 @@ class Gm_ceilingHelpersGm_ceiling
             $array = [$html];
             foreach($calculations as $calc){
                 if ($calc->mounting_sum > 0){
-                    if($service){
+                    if($service == "service"){
                         if($full){
                              $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single_service") . ".pdf";
                         }
@@ -2949,10 +2946,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
                 if(!empty($service) && $service){
-                    $data_mount = self::calculate_mount(0,$data['id'],null,true);
+                    $data_mount = self::calculate_mount(0,$data['id'],null,"service");
                 }
                 else{
-                    $data_mount = self::calculate_mount(0,$data['id'],null,null,$need_mount);
+                    $data_mount = self::calculate_mount(0,$data['id']);
                 }
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();

@@ -669,7 +669,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $pr_data['id'] = $project_id;
                 if(!empty($service_data)){
                     foreach ($include_calculation as $calc) {
-                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
                         $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
                         foreach ($service_data as $key => $value) {
                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
@@ -973,7 +973,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                 $pr_data['id'] = $project_id;
                                 if(!empty($service_data)){
                                     foreach ($include_calculation as $calc) {
-                                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
                                         $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
                                         foreach ($service_data as $key => $value) {
                                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
@@ -2002,7 +2002,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             else{
                 $mount_sum = [];
                 foreach ($include_calculations as $calc) {
-                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,true);
+                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
                     $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
                     $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
                     $result['transport'] = $transport;        

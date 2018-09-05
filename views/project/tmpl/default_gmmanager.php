@@ -45,14 +45,6 @@ if (!empty($subtype))
 $service_mount = get_object_vars(json_decode($this->item->mounting_check));
 $need_service =(!empty($service_mount)) ? true : false;
 
-/*ГЕНЕРАЦИЯ ПДФ*/
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-if($need_service){
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
-}
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
 
 $json_mount  = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
@@ -77,11 +69,18 @@ foreach($calculations as $calc){
             $mounter_approve = false;
         }
         $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,null,"mount")['total_gm_mounting'];
+        if($need_service){
+            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,true,true);
+        }
         Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,null,true);
-
     }
    
 }
+/*ГЕНЕРАЦИЯ ПДФ*/
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
 
 //статус проекта
 $status = $model->WhatStatusProject($_GET['id']);
@@ -89,7 +88,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
     $display = 'style="display:none;"';
 } 
 
-$total_service = $transport_service;
+$total_service = 0;
 $total_gm_mount = 0;
 $total_mount = 0;
 ?>
@@ -428,7 +427,7 @@ $total_mount = 0;
                         </td>
                         <?php if($need_service) {?>
                             <td>
-                                <?php echo $total_service;?> руб.
+                                <?php echo $total_service + $transport_service;?> руб.
                             </td>
                             <td> 
                                 <?php echo $total_gm_mount + $transport;?> руб.
