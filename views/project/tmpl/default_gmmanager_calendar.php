@@ -13,7 +13,6 @@
     $userId     = $user->get('id');
     $user_group = $user->groups;
     
-    $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
     $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
     $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -27,10 +26,6 @@
     $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
     $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
     $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-
-    $dop_num = $dop_num_model->getData($userId)->dop_number;
-    $_SESSION['user_group'] = $user_group;
-    $_SESSION['dop_num'] = $dop_num;
 
     Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);

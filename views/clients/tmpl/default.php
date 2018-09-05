@@ -11,20 +11,14 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-
 $user_group = $user->groups;
 
-$dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 
-$dop_num = $dop_num_model->getData($userId)->dop_number;
 $clients = $clients_model->getClientsAndProjects();
 foreach ($clients as $key => $value) {
     $clients[$key]->created = date("d.m.Y H:i", strtotime($value->created));
 }
-
-$_SESSION['user_group'] = $user_group;
-$_SESSION['dop_num'] = $dop_num;
 
 $jinput = JFactory::getApplication()->input;
 $type = $jinput->getString('type', NULL);
