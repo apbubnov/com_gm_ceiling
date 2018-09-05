@@ -445,12 +445,12 @@ $total_mount = 0;
                                 if($need_service){
                                     $path = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть 1</a>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть наряд службе</a>
                             <?php   }
                                 }
                                 $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
-                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть наряд бригаде</a>
                             <?php } else { ?>
                                 После утверждения бригады
                             <?php } ?>
