@@ -146,7 +146,7 @@ class Gm_ceilingModelClient extends JModelItem
 	}
 	function create($dealer_id,$manager_id=null){
 		try{
-			if(empty(manager_id)){
+			if(empty($manager_id)){
 				$manager_id = $dealer_id;
 			}
 			$date = date('Y-m-d H:i:s');
