@@ -42,9 +42,14 @@ if (!empty($subtype))
 {
     $subtype_url = "&subtype=$subtype";
 }
+$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+$need_service =(!empty($service_mount)) ? true : false;
+
 /*ГЕНЕРАЦИЯ ПДФ*/
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+if($need_service){
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
+}
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
@@ -83,8 +88,7 @@ $status = $model->WhatStatusProject($_GET['id']);
 if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status == 11) || ((int)$status[0]->project_status == 22) || $this->item->dealer_id != $user->dealer_id){
     $display = 'style="display:none;"';
 } 
-$service_mount = get_object_vars(json_decode($this->item->mounting_check));
-$need_service =(!empty($service_mount)) ? true : false;
+
 $total_service = $transport_service;
 $total_gm_mount = 0;
 $total_mount = 0;
