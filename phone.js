@@ -1,8 +1,5 @@
-var flag_hangUp = false;
 function phone(login, pass)
 {
-    //window_phone = window.open('', 'mightycall_webphone_expand', 'width=345,height=500,location=false,status=false');
-    //window.name = 'mightycall_webphone_expand';
     MightyCallWebPhone.ApplyConfig({login: login, password: pass});
     MightyCallWebPhone.Phone.Init();
     MightyCallWebPhone.Phone.Focus();
@@ -11,59 +8,32 @@ function phone(login, pass)
         var pt = callInfo.To.replace('+','');
         var pf = callInfo.From.replace('+','');
 
-        var regexp_u1 = /subtype=calendar/;
-        var regexp_u2 = /view=calculationform/;
-        var regexp_u3 = /subtype=designer/;
-        var regexp_u4 = /subtype=production/;
-        if (regexp_u1.test(window.location.href) || regexp_u2.test(window.location.href)
-            || regexp_u3.test(window.location.href) || regexp_u4.test(window.location.href))
-        {
-            var reg_phone_from = new RegExp('\&phonefrom=' + pf,'i');
-
-            if (reg_phone_from.test(location.href))
-            {
-                add_history_ph(1, "Входящий звонок с " + pf, pt, pf, undefined);
-                return;
-            }
-
+        var regexp_u1 = /view=project/;
+        if (regexp_u1.test(window.location.href)) {
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getProjectsByPhone",
-                data :{
-                    phone : callInfo.From
+                data: {
+                    phone: pf
                 },
-                success: function(data){
+                success: function(data) {
                     console.log(data);
-                    if (data !== null)
-                    {
+                    if (data !== null) {
                         var reg_proj_id;
-                        var find_proj_bool = false;
-                        for (var i = data.length; i--;)
-                        {
+                        for (var i = data.length; i--;) {
                             reg_proj_id = new RegExp('\&id=' + data[i].id,'i');
-                            if (reg_proj_id.test(location.href))
-                            {
-                                add_history_ph(data[i].client_id, "Входящий звонок с " + pf, pt, pf, undefined);
-                                find_proj_bool = true;
-                                break;
+                            if (reg_proj_id.test(location.href)) {
+                                ajaxAddNewHistory(data[i].client_id, "Входящий звонок с " + pf);
+                                return;
                             }
                         }
-                        if (!find_proj_bool)
-                        {
-                            flag_hangUp = true;
-                            MightyCallWebPhone.Phone.HangUp();
-                        }
                     }
-                    else
-                    {
-                        flag_hangUp = true;
-                        MightyCallWebPhone.Phone.HangUp();
-                    }
+                    MightyCallWebPhone.Phone.HangUp();
                 },
                 dataType: "json",
                 async: false,
                 timeout: 10000,
-                error: function(data){
+                error: function(data) {
                     console.log(data);
                     var n = noty({
                         timeout: 2000,
@@ -73,11 +43,8 @@ function phone(login, pass)
                         type: "error",
                         text: "Сервер не отвечает."
                     });
-                    flag_hangUp = true;
-                    MightyCallWebPhone.Phone.HangUp();
                 }                   
             });
-            
             return;
         }
 
@@ -86,37 +53,31 @@ function phone(login, pass)
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=getClientByPhone",
-            data :{
-                phone : callInfo.From
+            data: {
+                phone: pf
             },
-            success: function(data){
+            success: function(data) {
                 console.log(data);
-                if (data === null)
-                {
-                    create_empty_project(pt, pf);
-                }
-                else
-                {
+                if (data === null) {
+                    ajaxCreateNewClient();
+                } else {
                     var loc;
-                    if (data.dealer_type == 3)
-                    {
-                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=';
+                    if (data.dealer_type == 3) {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+data.id;
                     }
-                    else if (data.dealer_type == 0 || data.dealer_type == 1)
-                    {
-                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=';
+                    else if (data.dealer_type == 0 || data.dealer_type == 1) {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='+data.id;
+                    } else {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&id='+data.id;
                     }
-                    else
-                    {
-                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&id=';
-                    }
-                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
+                    ajaxAddNewHistory(data.id, "Входящий звонок с " + pf);
+                    location.href = loc;
                 }
             },
             dataType: "json",
             timeout: 10000,
             async: false,
-            error: function(data){
+            error: function(data) {
                 console.log(data);
                 var n = noty({
                     timeout: 2000,
@@ -130,36 +91,87 @@ function phone(login, pass)
         });
     }
 
-    function create_empty_project(pt, pf)
-    {
+    function ajaxCreateNewClient() {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+            url: "index.php?option=com_gm_ceiling&task=",
             data: {
-                client_id: 1
+                
             },
-            success: function(data){
-                data = JSON.parse(data);
-                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
-                location.href =url;
+            success: function(data) {
+                ajaxCreateNewProject(data.id);
             },
-            dataType: "text",
+            dataType: "json",
             async: false,
             timeout: 10000,
-            error: function(data){
+            error: function(data) {
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Ошибка при создании заказа. Сервер не отвечает"
+                    text: "Ошибка при создании клиента. Сервер не отвечает."
                 });
             }                   
         });
     }
 
-    function add_history_ph(id_client, comment, pt, pf, part_url)
+
+    function ajaxCreateNewProject(client_id) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=",
+            data: {
+                client_id: client_id
+            },
+            success: function(data) {
+                ajaxAddNewHistory(client_id, "Входящий звонок с " + pf);
+            },
+            dataType: "json",
+            async: false,
+            timeout: 10000,
+            error: function(data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при создании проекта. Сервер не отвечает."
+                });
+            }                   
+        });
+    }
+
+    function ajaxAddNewHistory(client_id, text) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=",
+            data: {
+                client_id: client_id,
+                text: text
+            },
+            success: function(data) {
+                
+            },
+            dataType: "json",
+            async: false,
+            timeout: 10000,
+            error: function(data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при добавлении комментария. Сервер не отвечает."
+                });
+            }                   
+        });
+    }
+
+    /*function add_history_ph(id_client, comment, pt, pf, part_url)
     {
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=addComment",
@@ -169,7 +181,7 @@ function phone(login, pass)
             },
             dataType: "json",
             async: false,
-            success: function (data) {
+            success: function(data) {
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -208,33 +220,25 @@ function phone(login, pass)
                 });
             }
         });
-    }
+    }*/
 
-    function formatDate(date)
-    {
-
+    /*function formatDate(date) {
       var dd = date.getDate();
       if (dd < 10) dd = '0' + dd;
-
       var mm = date.getMonth() + 1;
       if (mm < 10) mm = '0' + mm;
-
       var yy = date.getFullYear();
       if (yy < 10) yy = '0' + yy;
-
       var hh = date.getHours();
       if (hh < 10) hh = '0' + hh;
-
       var ii = date.getMinutes();
       if (ii < 10) ii = '0' + ii;
-
       var ss = date.getSeconds();
       if (ss < 10) ss = '0' + ss;
-
       return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-    }
+    }*/
 
-    function show_comments_ph(id_client)
+    /*function show_comments_ph(id_client)
     {
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=selectComments",
@@ -266,86 +270,12 @@ function phone(login, pass)
                 });
             }
         });
-    }
-
-    function webPhoneOnCallCompleted(callInfo)
-    {
-        if (flag_hangUp)
-        {
-            return;
-        }
-        var pt = callInfo.To.replace('+','');
-        var pf = callInfo.From.replace('+','');
-
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=getClientByPhone",
-            data :{
-                phone : pf
-            },
-            success: function(data){
-                console.log(data);
-                if (data === null)
-                {
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: "index.php?option=com_gm_ceiling&task=getClientByPhone",
-                        data :{
-                            phone : pt
-                        },
-                        success: function(data){
-                            console.log(data);
-                            if (data === null)
-                            {
-                                add_history_ph(1, "Звонок завершен", pt, pf, undefined);
-                            }
-                            else
-                            {
-                                add_history_ph(data.id, "Звонок " + pt + " завершен", pt, pf, undefined);
-                            }
-                        },
-                        dataType: "json",
-                        timeout: 10000,
-                        error: function(data){
-                            console.log(data);
-                            var n = noty({
-                                timeout: 2000,
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Сервер не отвечает."
-                            });
-                        }                   
-                    });
-                }
-                else
-                {
-                    add_history_ph(data.id, "Звонок " + pf + " завершен", pt, pf, undefined);
-                }
-            },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Сервер не отвечает."
-                });
-            }                   
-        });
-    }
+    }*/
 
     MightyCallWebPhone.Phone.OnCallIncoming.subscribe(webPhoneOnCallIncoming);
-    MightyCallWebPhone.Phone.OnCallCompleted.subscribe(webPhoneOnCallCompleted);
 }
 
-function call(num)
-{
+function call(num) {
     flag_hangUp = false;
     MightyCallWebPhone.Phone.Call(num);
     MightyCallWebPhone.Phone.Focus();
@@ -353,20 +283,16 @@ function call(num)
 
 var timer_n_c;
 
-function nearest_callback()
-{
+function nearest_callback() {
     jQuery.ajax({
         type: 'POST',
         url: "index.php?option=com_gm_ceiling&task=nearestCallback",
-        success: function(data){
+        success: function(data) {
             console.log(data);
-            if (data !== null)
-            {
+            if (data !== null) {
                 data_callback = data;
-                for (var i = data_callback.length; i--;)
-                {
-                    if (data_callback[i].notify == 0)
-                    {
+                for (var i = data_callback.length; i--;) {
+                    if (data_callback[i].notify == 0) {
                         jQuery.ajax({
                             type: 'POST',
                             url: "index.php?option=com_gm_ceiling&task=notify_new",
@@ -379,12 +305,12 @@ function nearest_callback()
                                 manager_id: data_callback[i].manager_id,
                                 type: 5
                             },
-                            success: function(data){
+                            success: function(data) {
                                 console.log(data);
                             },
                             dataType: "json",
                             timeout: 10000,
-                            error: function(data){
+                            error: function(data) {
                                 console.log(data);
                                 var n = noty({
                                     timeout: 2000,
@@ -402,7 +328,7 @@ function nearest_callback()
         },
         dataType: "json",
         timeout: 10000,
-        error: function(data){
+        error: function(data) {
             console.log(data);
             var n = noty({
                 timeout: 2000,
@@ -417,18 +343,15 @@ function nearest_callback()
     timer_n_c = setInterval(timer_nearest_callback, 600000);
 }
 
-function timer_nearest_callback()
-{
+function timer_nearest_callback() {
     jQuery.ajax({
         type: 'POST',
         url: "index.php?option=com_gm_ceiling&task=nearestCallback",
-        success: function(data){
+        success: function(data) {
             console.log(data);
-            if (data !== null)
-            {
+            if (data !== null) {
                 data_callback = data;
-                for (var i = data_callback.length; i--;)
-                {
+                for (var i = data_callback.length; i--;) {
                     jQuery.ajax({
                         type: 'POST',
                         url: "index.php?option=com_gm_ceiling&task=notify_new",
@@ -445,7 +368,7 @@ function timer_nearest_callback()
                         },
                         dataType: "json",
                         timeout: 10000,
-                        error: function(data){
+                        error: function(data) {
                             console.log(data);
                             var n = noty({
                                 timeout: 2000,
@@ -462,7 +385,7 @@ function timer_nearest_callback()
         },
         dataType: "json",
         timeout: 10000,
-        error: function(data){
+        error: function(data) {
             console.log(data);
             var n = noty({
                 timeout: 2000,
