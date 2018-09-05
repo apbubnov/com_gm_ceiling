@@ -8,7 +8,7 @@
 	 *
 	 * @since  1.6
 	 */
-	class Gm_ceilingModelDealersKey extends JModelList {
+	class Gm_ceilingModelDealers_Key extends JModelList {
 
 	    public function getData($dealer_id) {
 	        try
@@ -16,11 +16,10 @@
 	            $db = $this->getDbo();
 	            $query = $db->getQuery(true);
 
-	            $query->select('key')
-	                ->from('#__gm_ceiling_dealers_key')
+	            $query->select('`key`')
+	                ->from('`#__gm_ceiling_dealers_key`')
 	                ->where("dealer_id = $dealer_id");
 	            $db->setQuery($query);
-
 	            $items = $db->loadObject();
 	    		return $items;
 	        }
