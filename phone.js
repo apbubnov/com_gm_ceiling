@@ -94,12 +94,12 @@ function phone(login, pass)
     function ajaxCreateNewClient() {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=", //недописано
+            url: "index.php?option=com_gm_ceiling&task=client.create", 
             data: {
-                
+                phone:pf
             },
             success: function(data) {
-                ajaxCreateNewProject(data.id);
+                ajaxCreateNewProject(data-0);
             },
             dataType: "json",
             async: false,
@@ -121,12 +121,13 @@ function phone(login, pass)
     function ajaxCreateNewProject(client_id) {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=", //недописано
+            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
             data: {
                 client_id: client_id
             },
             success: function(data) {
                 ajaxAddNewHistory(client_id, "Входящий звонок с " + pf);
+                location.href = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id='+data
             },
             dataType: "json",
             async: false,
@@ -147,13 +148,20 @@ function phone(login, pass)
     function ajaxAddNewHistory(client_id, text) {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=", //недописано
+            url: "index.php?option=com_gm_ceiling&task=addComment",
             data: {
-                client_id: client_id,
-                text: text
+                id_client: client_id,
+                comment: text
             },
             success: function(data) {
-                
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Запись в историю добавлена!"
+                });
             },
             dataType: "json",
             async: false,

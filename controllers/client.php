@@ -258,8 +258,18 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 		{
 			$jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id', null, 'STRING');
+            $phone = $jinput->get('phone','','STRING');
+            if(empty($user_id)){
+            	$user= JFactory::getUser();
+            	$manager_id = $user->id;
+            	$user_id = $user->dealer_id;
+            }
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $result = $client_model->create($user_id);
+            $result = $client_model->create($user_id,$manager_id);
+            if(!empty($phone)){
+	            $client_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+	            $client_phone_model->save($result,[$phone]);
+	        }
             die(json_encode($result));
 		}
 		catch(Exception $e)

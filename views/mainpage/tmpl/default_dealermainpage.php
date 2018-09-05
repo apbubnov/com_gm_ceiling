@@ -316,8 +316,7 @@ $rest = -($total_sum) - $contributed;
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=create_empty_project",
                 data: {
-                    client_id: client_id,
-                    owner: "<?php echo $userId?>"
+                    client_id: client_id
                 },
                 success: function (data) {
                     create_precalculation(data);
