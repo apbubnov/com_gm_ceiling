@@ -1722,7 +1722,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
                     if(mb_ereg('mp[\d]+',$key)){
-                        $mp +=$mp*0.1;
+                        $mp +=$mp*0.5;
                     }
                 });
             }
@@ -2697,8 +2697,8 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 if($service == "service"){
                     $res = $mount_model->getDataAll(1);
-                    $res->transport +=$res->transport*0.1;
-                    $res->distance +=$res->distance*0.1;
+                    $res->transport +=$res->transport*0.5;
+                    $res->distance +=$res->distance*0.5;
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
                 if($res) {
