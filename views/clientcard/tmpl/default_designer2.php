@@ -2,10 +2,6 @@
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
-    $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
-    $dop_num = $dop_num_model->getData($userId)->dop_number;
-    $_SESSION['user_group'] = $user_group;
-    $_SESSION['dop_num'] = $dop_num;
 
     $clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
