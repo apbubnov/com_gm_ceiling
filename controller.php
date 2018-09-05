@@ -1471,7 +1471,7 @@ public function register_mnfctr(){
 
             $jinput = JFactory::getApplication()->input;
             $number = $jinput->get('phone', '', 'STRING');
-            $number = preg_replace('/[\(\)\-\+\s]/', '', $number);
+            $number = preg_replace('/[^\d]/', '', $number);
             if (mb_substr($number, 0, 1) === '7') {
                 $number = mb_substr($number, 1);
             }
