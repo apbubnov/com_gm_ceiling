@@ -58,6 +58,18 @@ class Gm_ceilingController extends JControllerLegacy
                 $_SESSION['dealer_type'] = $user->dealer_type;
                 if ($task == "mainpage") {
                     if (!$user->guest) {
+                        $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('Dop_numbers_of_users');
+                        $dop_num = $dop_num_model->getData($user->id);
+                        if(!empty($dop_num)){
+                            $dealers_key_model = Gm_ceilingHelpersGm_ceiling::getModel('DealersKey');
+                            throw new Exception( $dealers_key_model);
+                            
+                            $api_key = $dealers_key_model->getData($user->dealer_id);
+                            if(!empty($api_key->key)){
+                                $_SESSION['api_key'] = $api_key->key;
+                                $_SESSION['dop_num'] = $dop_num;
+                            }
+                        }
                         if (in_array("13", $groups)) {
                             $type = "managermainpage"; //Менеджер дилера
                         } elseif (in_array("21", $groups)) {
