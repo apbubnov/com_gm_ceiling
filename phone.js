@@ -4,15 +4,15 @@ function phone(login, pass)
     MightyCallWebPhone.Phone.Init();
     MightyCallWebPhone.Phone.Focus();
 
-    function webPhoneOnCallIncoming(callInfo) {
+    function webPhoneOnCallIncoming(callInfo) { //входящий
         var pt = callInfo.To.replace('+','');
         var pf = callInfo.From.replace('+','');
 
         var regexp_u1 = /view=project/;
-        if (regexp_u1.test(window.location.href)) {
+        if (regexp_u1.test(window.location.href)) { //если на вьюхе проекта
             jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=getProjectsByPhone",
+                url: "index.php?option=com_gm_ceiling&task=getProjectsByPhone", //ищем проекты по номеру
                 data: {
                     phone: pf
                 },
@@ -22,13 +22,13 @@ function phone(login, pass)
                         var reg_proj_id;
                         for (var i = data.length; i--;) {
                             reg_proj_id = new RegExp('\&id=' + data[i].id,'i');
-                            if (reg_proj_id.test(location.href)) {
+                            if (reg_proj_id.test(location.href)) {  //если находимся в проекте того кто нам звонит
                                 ajaxAddNewHistory(data[i].client_id, "Входящий звонок с " + pf);
                                 return;
                             }
                         }
                     }
-                    MightyCallWebPhone.Phone.HangUp();
+                    MightyCallWebPhone.Phone.HangUp(); //сбрасываем трубку
                 },
                 dataType: "json",
                 async: false,
@@ -52,16 +52,16 @@ function phone(login, pass)
 
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=getClientByPhone",
+            url: "index.php?option=com_gm_ceiling&task=getClientByPhone", //ищем клиента по телефону
             data: {
                 phone: pf
             },
             success: function(data) {
                 console.log(data);
                 if (data === null) {
-                    ajaxCreateNewClient();
+                    ajaxCreateNewClient(); //создаем нового клиента
                 } else {
-                    var loc;
+                    var loc; //на какую карточку будет редирект
                     if (data.dealer_type == 3) {
                         loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+data.id;
                     }
@@ -70,8 +70,8 @@ function phone(login, pass)
                     } else {
                         loc = '/index.php?option=com_gm_ceiling&view=clientcard&id='+data.id;
                     }
-                    ajaxAddNewHistory(data.id, "Входящий звонок с " + pf);
-                    location.href = loc;
+                    ajaxAddNewHistory(data.id, "Входящий звонок с " + pf); //добавляем историю
+                    location.href = loc; //редирект
                 }
             },
             dataType: "json",
@@ -94,7 +94,7 @@ function phone(login, pass)
     function ajaxCreateNewClient() {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=",
+            url: "index.php?option=com_gm_ceiling&task=", //недописано
             data: {
                 
             },
@@ -121,7 +121,7 @@ function phone(login, pass)
     function ajaxCreateNewProject(client_id) {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=",
+            url: "index.php?option=com_gm_ceiling&task=", //недописано
             data: {
                 client_id: client_id
             },
@@ -147,7 +147,7 @@ function phone(login, pass)
     function ajaxAddNewHistory(client_id, text) {
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=",
+            url: "index.php?option=com_gm_ceiling&task=", //недописано
             data: {
                 client_id: client_id,
                 text: text
