@@ -77,6 +77,9 @@ foreach($calculations as $calc){
    
 }
 /*ГЕНЕРАЦИЯ ПДФ*/
+if($need_service){
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"service");
+}
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
@@ -439,6 +442,12 @@ $total_mount = 0;
                        <?php } ?>
                         <td>
                             <?php
+                                if($need_service){
+                                    $path = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
+                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть 1</a>
+                            <?php   }
+                                }
                                 $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
