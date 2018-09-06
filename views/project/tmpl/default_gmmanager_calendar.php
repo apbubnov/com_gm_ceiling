@@ -12,7 +12,8 @@
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
-    
+    $dealer_id = $user->dealer_id;
+    $dealer_type = JFactory::getUser($dealer_id)->dealer_type;
     $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
     $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -108,6 +109,79 @@
         $project_card = $_SESSION["project_card_$project_id"];
         $phones = json_decode($project_card)->phones;
     }
+
+    $need_choose = false;
+    $jinput = JFactory::getApplication()->input;
+    //$phoneto = $jinput->get('phoneto', '0', 'STRING');
+    //$phonefrom = $jinput->get('phonefrom', '0', 'STRING');
+    $call_id = $jinput->get('call_id', 0, 'INT');
+    
+    if(!empty($this->item->api_phone_id)){
+        if ($this->item->api_phone_id == 10) {
+            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
+            if (!empty($repeat_advt->advt_id)) {
+                $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
+            } else {
+                $need_choose = true;
+            }
+        }
+        $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+        $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
+    }
+    else{
+        $need_choose = true;
+        $all_advt = $model_api_phones->getDealersAdvt($dealer_id);
+    }
+
+    /*
+    if (!empty($phoneto) && !empty($phonefrom)) {
+        $reklama = $model_api_phones->getNumberInfo($phoneto);
+        $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
+    } elseif (!empty($this->item->api_phone_id)) {
+        
+        
+        if ($this->item->api_phone_id == 10) {
+            if (!empty($repeat_advt->advt_id)) {
+                $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
+            } else {
+                $need_choose = true;
+            }
+        }
+        else {
+            $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+        }
+        $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
+    } else {
+        $need_choose = true;
+    }*/
+    
+    $cl_phones = $model_client_phones->getItemsByClientId($this->item->id_client);
+    $date_time = $this->item->project_calculation_date;
+    $date_arr = date_parse($date_time);
+    $date = $date_arr['year'] . '-' . $date_arr['month'] . '-' . $date_arr['day'];
+    $time = $date_arr['hour'] . ':00';
+    //обновляем менеджера для клиента
+    
+    if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
+        $model_client->updateClientManager($this->item->id_client, $userId);
+    }
+    
+    $projects_model->updateManagerId($userId, $this->item->id_client);
+    
+    $request_model->delete($this->item->id_client);
+    $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
+    //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
+    if($this->item->id_client!=1){
+        
+        $email = $dop_contacts->getEmailByClientID($this->item->id_client);
+    }
+    $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
+    if($client_dealer->name == $this->item->client_id){
+        $lk = true;
+    }
+    
+    $all_recoil = $recoil_model->getData();
+
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -117,62 +191,6 @@
 
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
-    <?php
-        $need_choose = false;
-        $jinput = JFactory::getApplication()->input;
-        $phoneto = $jinput->get('phoneto', '0', 'STRING');
-        $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
-        $call_id = $jinput->get('call_id', 0, 'INT');
-        
-        $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if ($this->item->api_phone_id == 10) {
-                if (!empty($repeat_advt->advt_id)) {
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                } else {
-                    $need_choose = true;
-                }
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
-        
-        $cl_phones = $model_client_phones->getItemsByClientId($this->item->id_client);
-        $date_time = $this->item->project_calculation_date;
-        $date_arr = date_parse($date_time);
-        $date = $date_arr['year'] . '-' . $date_arr['month'] . '-' . $date_arr['day'];
-        $time = $date_arr['hour'] . ':00';
-        //обновляем менеджера для клиента
-        
-        if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
-            $model_client->updateClientManager($this->item->id_client, $userId);
-        }
-        
-        $projects_model->updateManagerId($userId, $this->item->id_client);
-        
-        $request_model->delete($this->item->id_client);
-        $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
-        //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
-        if($this->item->id_client!=1){
-            
-            $email = $dop_contacts->getEmailByClientID($this->item->id_client);
-        }
-        $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
-        if($client_dealer->name == $this->item->client_id){
-            $lk = true;
-        }
-        
-        $all_recoil = $recoil_model->getData();
-    ?>
     <h5 class="center">
         <?php if (!$need_choose) { ?>
             <input id="advt_info" class="h5-input" readonly value= <?php echo '"' . $write . '"'; ?>>
@@ -234,33 +252,29 @@
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                     <td>
-                                        <input name="new_client_name" class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
+                                        <input name="new_client_name" class="inputactive"
                                         id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="ФИО клиента" type="text">
                                     </td>
-                                    <?php if($this->item->id_client == "1"){?>
-                                        <td>
-                                            <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button><br>
-                                        </td>
-                                    <?php  }?>
+                                    <td>
+                                        <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button><br>
+                                    </td>
                                 </tr>
-                                <?php if($this->item->id_client == "1"){ ?>
-                                    <tr>
-                                        <td colspan="3">
-                                            <label><b>Искать:</b></label><br>
-                                            <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-                                            <label for='radio_clients'>Клиентов</label>&nbsp;&nbsp;&nbsp;
-                                            <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-                                            <label for='radio_dealers'>Дилеров</label>&nbsp;&nbsp;&nbsp;
-                                            <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-                                            <label for='radio_designers'>Отделочников</label>
-                                        </td>
-                                    </tr>
-                                <?php }?>
+                                <tr>
+                                    <td colspan="3">
+                                        <label><b>Искать:</b></label><br>
+                                        <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+                                        <label for='radio_clients'>Клиентов</label>&nbsp;&nbsp;&nbsp;
+                                        <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+                                        <label for='radio_dealers'>Дилеров</label>&nbsp;&nbsp;&nbsp;
+                                        <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+                                        <label for='radio_designers'>Отделочников</label>
+                                    </td>
+                                </tr>
                                 <tr id="search" style="display : none;">
                                     <th>
                                         Выберите клиента из списка:
                                     </th>
-                                    <td>
+                                    <td colspan="2">
                                         <select id="found_clients" class="inputactive"></select>
                                     </td>
                                 </tr>
@@ -280,22 +294,15 @@
                                         <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
                                         <button type="button" class="btn btn-primary" id="add_phone"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
                                     </th>
-                                    <td>
-                                        <?php if($this->item->id_client == 1){?>
-                                            <input name="new_client_contacts[]" id="jform_client_contacts" class="inputactive" value="<?php echo $phonefrom;?>" placeholder="Телефон клиента" type="text">
-                                        <?php } elseif(count($cl_phones)==1) { ?>
-                                            <input name="new_client_contacts[<?php echo  '\''.$cl_phones[0]->phone.'\''?>]" id="jform_client_contacts" class="inputactive" value="<?php echo $cl_phones[0]->phone; ?>" type="text">
-                                        <?php } elseif(count($cl_phones)>1) {
-                                            foreach ($cl_phones as $value) {  ?>
-                                         <input name="new_client_contacts[<?php echo '\''.$value->phone.'\''?>]" id="jform_client_contacts" class="inputactive" value="<?php echo  strval($value->phone); ?>" type="text">
-                                        <?php }
-                                        } ?>
-                                    </td>
-                                    <?php if (count($cl_phones) == 1): ?>
+                                    
+                                    <?php foreach ($cl_phones as $value) {  ?>
+                                        <td>
+                                            <input name="new_client_contacts[<?php echo '\''.$value->phone.'\''?>]" id="jform_client_contacts" class="inputactive" value="<?php echo  strval($value->phone); ?>" type="text">
+                                        </td>
                                         <td>
                                             <button id="make_call" type="button" class="btn btn-primary"><i class="fa fa-phone" aria-hidden="true"></i></button>
                                         </td>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -303,21 +310,6 @@
                                         <div id="phones-block"></div>
                                     </td>
                                 </tr>
-                                <?php if (count($cl_phones) > 1): ?>
-                                    <tr>
-                                        <th>
-                                            Сделать звонок:
-                                        </th>
-                                        <td>
-                                            <select id="select_phones" class="inputactive">
-                                                <option value='0' disabled selected>Выберите номер для звонка:</option>
-                                                <?php foreach ($cl_phones as $item): ?>
-                                                    <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
                                 <?php if ($call_id != 0): ?>
                                     <tr>
                                         <td colspan=3>
@@ -359,7 +351,10 @@
                                     <th>Добавить адрес эл.почты</th>
                                     <td>
                                         <input name="new_email" id="jform_email" class="inputactivenotsingle" value="" placeholder="e-mail" type="text">
-                                        <button type="button" class = "btn btn-primary" id = "add_email">Ок</button>
+                                       
+                                     </td>
+                                     <td>
+                                         <button type="button" class = "btn btn-primary" id = "add_email">Ок</button>
                                      </td>
                                 <?php 
                                     $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
@@ -695,49 +690,6 @@
             if (e.keyCode === 13) {
                 document.getElementById('add_comment').click();
             }
-        }
-
-        if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1 && <?php echo $phonefrom; ?> != "0") {
-            var comment = "Входящий звонок c " +<?php echo $phonefrom;?>;
-            var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
-            if (reg_comment.test(comment)) {
-                alert('Неверный формат примечания!');
-                return;
-            }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=addComment",
-                data: {
-                    comment: comment,
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Добавлена запись в историю клиента"
-                    });
-                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
-                    show_comments();
-                    jQuery("#new_comment").val("");
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
-                }
-            });
-
         }
 
         var time = <?php echo '"'.$time.'"';?>;

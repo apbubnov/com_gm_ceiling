@@ -3,11 +3,52 @@ function phone(login, pass)
     MightyCallWebPhone.ApplyConfig({login: login, password: pass});
     MightyCallWebPhone.Phone.Init();
     MightyCallWebPhone.Phone.Focus();
+    var api_phone_id;
+    var pt,pf;
+    function getAdvtByPhone(phone){
+        jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=Api_phones.getAdvtByPhone", //ищем проекты по номеру
+                data: {
+                    phone: phone
+                },
+                success: function(data) {
+                    console.log(data);
+                    if(Object.keys(data).length){
+                        api_phone_id = data.id;
+                    }
+                    else{
+                       var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: data
+                    }); 
+                    }
+                },
+                dataType: "json",
+                async: false,
+                timeout: 10000,
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Сервер не отвечает."
+                    });
+                }                   
+            });
+    }
 
     function webPhoneOnCallIncoming(callInfo) { //входящий
-        var pt = callInfo.To.replace('+','');
-        var pf = callInfo.From.replace('+','');
-
+        pt = callInfo.To.replace('+','');
+        pf = callInfo.From.replace('+','');
+        
         var regexp_u1 = /view=project/;
         if (regexp_u1.test(window.location.href)) { //если на вьюхе проекта
             jQuery.ajax({
@@ -49,7 +90,7 @@ function phone(login, pass)
         }
 
         MightyCallWebPhone.Phone.Focus();
-
+        console.log(pf);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=getClientByPhone", //ищем клиента по телефону
@@ -59,7 +100,10 @@ function phone(login, pass)
             success: function(data) {
                 console.log(data);
                 if (data === null) {
-                    ajaxCreateNewClient(); //создаем нового клиента
+                    getAdvtByPhone(pt);
+                    if(api_phone_id){
+                        ajaxCreateNewClient(); //создаем нового клиента
+                    }
                 } else {
                     var loc; //на какую карточку будет редирект
                     if (data.dealer_type == 3) {
@@ -123,7 +167,8 @@ function phone(login, pass)
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=create_empty_project",
             data: {
-                client_id: client_id
+                client_id: client_id,
+                api_id: api_phone_id
             },
             success: function(data) {
                 ajaxAddNewHistory(client_id, "Входящий звонок с " + pf);
