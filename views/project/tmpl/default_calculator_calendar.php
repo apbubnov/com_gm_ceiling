@@ -214,130 +214,128 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
-                <div>
-                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                         <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                        <tr>
-                            <th>
-                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
-                            </th>
-                            <td>
-                                <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
-                                    <?php echo $this->item->client_id; ?>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
-                            </th>
+                <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
+                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    <tr>
+                        <th>
+                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                        </th>
+                        <td>
+                            <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
+                                <?php echo $this->item->client_id; ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                        </th>
+                        <?php
+                            if ($this->item->id_client!=1) { 
+                                $phone = $calculationsModel->getClientPhones($this->item->id_client);
+                            } else  {
+                                $phone = [];
+                            }
+                        ?>
+                        <td>
                             <?php
-                                if ($this->item->id_client!=1) { 
-                                    $phone = $calculationsModel->getClientPhones($this->item->id_client);
-                                } else  {
-                                    $phone = [];
+                                foreach ($phone AS $contact) {
+                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                                    echo "<br>";
+                                } 
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Почта</th>
+                        <td>
+                            <?php
+                                foreach ($contact_email AS $contact) {
+                                    echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                    echo "<br>";
                                 }
                             ?>
-                            <td>
-                                <?php
-                                    foreach ($phone AS $contact) {
-                                        echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
-                                        echo "<br>";
-                                    } 
-                                ?>
-                            </td>
-                        </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan = 2 style="text-align: center;">
+                            <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>    
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
+                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    <tr>
+                        <th>
+                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                        </th>
+                        <td>
+                            <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
+                                <?=$this->item->project_info;?>
+                            </a>
+                        </td> 
+                    </tr>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                        <td>
+                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                -
+                            <?php } else { ?>
+                                <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                <?php echo $jdate->format('d.m.Y H:i'); ?>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <?php if(!empty($this->item->project_calculator)):?>
                         <tr>
-                            <th>Почта</th>
-                            <td>
-                                <?php
-                                    foreach ($contact_email AS $contact) {
-                                        echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                        echo "<br>";
-                                    }
-                                ?>
-                            </td>
+                            <th>Замерщик</th>
+                            <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
                         </tr>
-                        <tr>
-                            <td colspan = 2 style="text-align: center;">
-                                <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>    
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                         <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                        <tr>
-                            <th>
-                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
-                            </th>
-                            <td>
-                                <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
-                                    <?=$this->item->project_info;?>
-                                </a>
-                            </td> 
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td>
-                                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php if(!empty($this->item->project_calculator)):?>
-                            <tr>
-                                <th>Замерщик</th>
-                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                            </tr>
-                        <?php endif;?>
+                    <?php endif;?>
 
-                    </table>
-                    <table class="table_info">
-                        <?php if(!empty($this->item->mount_data)):?>
+                </table>
+                <table class="table_info">
+                    <?php if(!empty($this->item->mount_data)):?>
+                        <tr>
+                            <th colspan="3" style="text-align: center;">Монтаж</th>
+                        </tr>
+                        <?php foreach ($this->item->mount_data as $value) { ?>                          
                             <tr>
-                                <th colspan="3" style="text-align: center;">Монтаж</th>
+                                <th><?php echo $value->time;?></th>
+                                <td><?php echo $value->stage_name;?></td>
+                                <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
                             </tr>
-                            <?php foreach ($this->item->mount_data as $value) { ?>                          
-                                <tr>
-                                    <th><?php echo $value->time;?></th>
-                                    <td><?php echo $value->stage_name;?></td>
-                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
-                                </tr>
-                            <?php }?>
-                        <?php endif;?>
-                        <tr>
-                            <th>
-                                Скидка
-                            </th>
-                            <td>
-                                <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
-                            </td>
-                            <td style="text-align: right;">
-                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                Реклама
-                            </th>
-                            <td>
-                                <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
-                            </td>
-                            <td style="text-align: right;">
-                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                            </td>
-                        <tr>
-                            <th>Примечание менеджера</th>
-                            <td>
-                                <?php echo $this->item->dealer_manager_note; ?>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                        <?php }?>
+                    <?php endif;?>
+                    <tr>
+                        <th>
+                            Скидка
+                        </th>
+                        <td>
+                            <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
+                        </td>
+                        <td style="text-align: right;">
+                             <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Реклама
+                        </th>
+                        <td>
+                            <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
+                        </td>
+                        <td style="text-align: right;">
+                             <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        </td>
+                    <tr>
+                        <th>Примечание менеджера</th>
+                        <td>
+                            <?php echo $this->item->dealer_manager_note; ?>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="col-xs-12 col-md-6 comment">
