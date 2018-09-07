@@ -315,7 +315,7 @@
                                 <input name="new_client_contacts[<?php echo '\''.$value->phone.'\''?>]" id="jform_client_contacts" class="inputactive client_phones" value="<?php echo  strval($value->phone); ?>" type="text">
                             </div>
                             <div class="col-xs-2 col-md-2" align="right">
-                                <button id="make_call" type="button" class="btn btn-primary"><i class="fa fa-phone" aria-hidden="true"></i></button>
+                                <button id="make_call" type="button" class="btn btn-primary make_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
                             </div>
                          </div>
                     <?php } ?>
@@ -1220,7 +1220,7 @@
             add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+', ''));
         });
 
-        jQuery("#make_call").click(function () {
+        jQuery(".make_call").click(function () {
             phone = jQuery("#jform_client_contacts").val();
             client_id = jQuery("#client_id").val();
             call(phone);
