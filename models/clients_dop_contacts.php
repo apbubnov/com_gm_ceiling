@@ -193,5 +193,22 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+	function updateClientId($old_id,$new_id){
+		try{
+			$db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query->update('#__gm_ceiling_clients_dop_contacts');
+			$query->set("client_id = $new_id");
+			$query->where("client_id = $old_id");
+			$db->setQuery($query);
+			$result = $db->execute();
+	        return $result;
+
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
 ?>

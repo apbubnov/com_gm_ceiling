@@ -187,5 +187,20 @@ class Gm_ceilingModelClient_phones extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function changeClientId($old_id,$new_id){
+    	try{
+    		$db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+			$query->update('#__gm_ceiling_clients_contacts');
+			$query->set("client_id = $new_id");
+			$query->where("client_id = $old_id");
+			$db->setQuery($query);
+			$db->execute();
+    	}
+    	catch(Exception $e){
+    		Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+    	}
+    }
 }
 ?>

@@ -219,7 +219,6 @@
         <input name="project_id" id = "project_id"  value="<?php echo $project_id; ?>" type="hidden">
         <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
         <input name="advt_id" id="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
-        <input name="comments_id" id="comments_id" type="hidden">
         <input name="status" id="project_status" value="" type="hidden">
         <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
         <input name="type" value="gmmanager" type="hidden">
@@ -233,7 +232,6 @@
         <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
-        <input id = "emails" name = "emails" value = "" type = "hidden"> 
         <input type="text" id="measure_info" class="inputactive" readonly style="display: none;">
     </div>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
@@ -256,7 +254,7 @@
                         <select id="advt_choose">
                             <option value="0">Выберите рекламу</option>
                             <?php foreach ($all_advt as $item) { ?>
-                                <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                                <option value="<?php echo $item['id'] ?>"><?php echo $item['advt_title'] ?></option>
                             <?php } ?>
                         </select>
                         <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="fa fa-plus-square-o" aria-hidden="true"></i></button>
@@ -328,11 +326,8 @@
                     </div>
                 <?php endif; ?>
                  <div class="row" style="margin-bottom:15px;">
-                    <div class="col-xs-10 col-md-10">
+                    <div class="col-xs-12 col-md-12">
                         <b>Эл.почта</b>
-                    </div>
-                    <div class="col-xs-2 col-md-2" align="right">
-                        <button type="button" class="btn btn-primary" id="add_email"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
                     </div>
                 </div>
                 <div id = "emails_block">
@@ -340,14 +335,22 @@
                         foreach ($email as $value) {?>
                             <div class="row" style="margin-bottom:15px;">
                                 <div class="col-xs-10 col-md-10 col-lg-10">
-                                    <input name="email[]" id="email" class="inputactive" value="<?php echo $value->contact;?>" placeholder="e-mail" type="text">
+                                    <input name="email[<?php echo $value->contact?>]" id="email" class="inputactive" value="<?php echo $value->contact;?>" placeholder="e-mail" type="text">
                                 </div>
                                 <div class="col-xs-2 col-md-2 col-lg-2" align="right">
-                                    <button class="btn btn-danger remove_email"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger remove_email" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         <?php } 
                      }?>
+                </div>
+                <div class="row" style="margin-bottom:15px;">
+                     <div class="col-xs-10 col-md-10 col-lg-10">
+                            <input name="new_email" id="new_email" class="inputactive" placeholder=" Новый e-mail" type="text">
+                        </div>
+                        <div class="col-xs-2 col-md-2" align="right">
+                            <button type="button" class="btn btn-primary" id="add_email"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
                      <div class="col-xs-12 col-md-12" align="center"><b>Дата и время замера</b></div>
@@ -472,6 +475,32 @@
                         </tr>
                     </table>
                 </div>
+                <label for="slider-table"><b>Тип:</b></label>
+                <table class="slider-table">
+                    <tr>
+                        <td></td>
+                        <td>Клиент</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Диллер</td>
+                        <td>
+                            <div class='switcher'>
+                                <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
+                                <input id='state1' class='switcher-radio-state1' type='radio'
+                                    name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
+                                <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
+                                <input id='state2' class='switcher-radio-state2' type='radio'
+                                    name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
+                                <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
+                                <input id='state3' class='switcher-radio-state3' type='radio'
+                                    name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
+                                <div class='switcher-slider'></div>
+                            </div>
+                        </td>
+                        <td>Реклама</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>  
@@ -521,34 +550,33 @@
     </div>
     <div class="modal_window" id="mw_measures_calendar"></div>
     <div class="modal_window" id="mw_find_client">
-        <table>
-            <tr>
-                <td>
-                    <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-                    <label for='radio_clients'>Клиентов</label>&nbsp;&nbsp;&nbsp;</td>
-                <td>
-                    <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-                    <label for='radio_dealers'>Дилеров</label>&nbsp;&nbsp;&nbsp;
-                </td>
-                <td>
-                    <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-                    <label for='radio_designers'>Отделочников</label>
-                </td>
-            </tr>
-            <tr id="search" style="display : none;">
-                <th>
-                    Выберите клиента из списка:
-                </th>
-                <td colspan="2">
-                    <select id="found_clients" class="inputactive"></select>
-                </td>
-            </tr>
-        </table>
+        <h4>Поиск для объединения</h4>
+        <label> Ищем:</label><br>
+        <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+        <label for='radio_clients'>Клиентов</label><br>
+        
+        <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+        <label for='radio_dealers'>Дилеров</label><br>
+            
+        <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+        <label for='radio_designers'>Отделочников</label><br>
+        <div id="search" style="display : none;">
+            <label>
+                <b>Выберите из списка:</b>
+            </label>
+            <br>
+            <select id="found_clients" class="input-gm"></select>
+        </div>
+      
     </div>
-    <div class="modal_window" id="mw_call_up">                            
-        <input name="call_date" id="call_date_up" type="datetime-local" placeholder="Дата звонка">
-        <input name="call_comment" id="call_comment_up" placeholder="Введите примечание">
-        <button class="btn btn-primary" id="add_call_and_submit_up" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+    <div class="modal_window" id="mw_call_up">
+        <h4>Перенос звонка</h4>
+        <label for="call_date_up">Новая дата звонка</label><br>                            
+        <input name="call_date" id="call_date_up"  class = "act_btn" type="datetime-local" placeholder="Дата звонка"><br>
+        <label for="call_comment_up">Комментарий</label><br>
+        <input name="call_comment" id="call_comment_up" class = "act_btn" placeholder="Введите примечание"><br>
+        <br>
+        <button class="btn btn-primary act_btn" id="add_call_and_submit_up" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
     </div>
 </div>
 
@@ -564,16 +592,24 @@
     var min_components_sum = <?php echo $min_components_sum;?>;
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div1 = jQuery("#mw_recoil");
-        var div2 = jQuery("#mw_measures_calendar");
+        var div1 = jQuery("#mw_recoil"),
+        div2 = jQuery("#mw_measures_calendar"),
+        div3 = jQuery("#mw_call_up"),
+        div4 = jQuery("#mw_find_client");
         if (!div1.is(e.target)
             && div1.has(e.target).length === 0
             && !div2.is(e.target)
-            && div2.has(e.target).length === 0) {
+            && div2.has(e.target).length === 0
+            && !div3.is(e.target)
+            && div3.has(e.target).length === 0
+            && !div4.is(e.target)
+            && div4.has(e.target).length === 0) {
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
-            jQuery("#mw_recoil").hide();
-            jQuery("#mw_measures_calendar").hide();
+            div1.hide();
+            div2.hide();
+            div3.hide();
+            div4.hide();
         }
     });
 
@@ -585,7 +621,7 @@
         {
             create_calculation(<?php echo $this->item->id; ?>);
         };
-
+        jQuery(".remove_email").click(remove_email);
         var project_card = '<?php echo $project_card; ?>';
         if (project_card != '')
         {
@@ -849,37 +885,71 @@
                 return result;
         }
 
-        jQuery("#add_email").click(function(){
-            var html = "<div class=\"row\" style=\"margin-bottom:15px;\">";
-            html += "<div class=\"col-xs-10 col-md-10\">";
-            html += "<input name=\"email[]\" id=\"email\" class=\"inputactive\" value=\"\" type=\"text\">";
-            html +="</div>";
-            html += "<div class=\"col-xs-2 col-md-2\" align=\"right\">";
-            html += "<button class='btn btn-danger remove_email' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
-            html += "</div>";
-            html += "</div>";
-            jQuery(html).appendTo("#emails_block");
-            jQuery(".remove_email").click(function () {
-                jQuery(this).closest(".row").remove();
-            });
-            /*if(jQuery("#jform_email").val()!=""){
+        jQuery("#add_email").click(function(){            
+            if(jQuery("#new_email").val()!=""){
                 jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                    data: {
+                        email:jQuery("#new_email").val(),
+                        client_id: jQuery("#client_id").val()
+                    },
+                    success: function (data) {
+                        var html = "<div class=\"row\" style=\"margin-bottom:15px;\">";
+                        html += "<div class=\"col-xs-10 col-md-10\">";
+                        html += "<input name=\"email["+jQuery("#new_email").val()+"]\" id=\"email\" class=\"inputactive\" value=\""+jQuery("#new_email").val()+"\" type=\"text\">";
+                        html +="</div>";
+                        html += "<div class=\"col-xs-2 col-md-2\" align=\"right\">";
+                        html += "<button class='btn btn-danger remove_email' type='button'><i class='fa fa-trash' aria-hidden='true' type='button'></i></button>";
+                        html += "</div>";
+                        html += "</div>";
+                        jQuery(html).appendTo("#emails_block");
+                        //jQuery(".remove_email").click(remove_email(jQuery(this).closest('.row').find('input').val()));
+                        jQuery("#emails").val(jQuery("#emails").val()+data+";");
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Почта добавлена!"
+                        });
+                        jQuery("#new_email").val("");
+                    },
+                    dataType: "text",
+                    timeout: 10000,
+                    error: function () {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка cервер не отвечает"
+                        });
+                    }
+                });
+            }
+        });
+        
+        function remove_email(){
+            var row = jQuery(this).closest('.row'),email = jQuery(this).closest('.row').find('input').val()
+            jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
                 data: {
-                    email:jQuery("#jform_email").val(),
+                    email:email,
                     client_id: jQuery("#client_id").val()
                 },
                 success: function (data) {
-                    console.log(data);
-                    jQuery("#emails").val(jQuery("#emails").val()+data+";");
+                    row.remove();
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
                         layout: 'center',
                         maxVisible: 5,
                         type: "success",
-                        text: "Почта добавлена!"
+                        text: "Почта удалена!"
                     });
                 },
                 dataType: "text",
@@ -895,9 +965,7 @@
                     });
                 }
             });
-            }*/
-        });
-
+        }
         jQuery("#advt_choose").change(function () {
             jQuery("#selected_advt").val(jQuery("#advt_choose").val());
             if(jQuery("#advt_choose").val()==17){
@@ -1130,7 +1198,11 @@
             });
         }
 
-        jQuery("#find_old_client").click(find_old_client);
+        jQuery("#find_old_client").click(function(){
+            jQuery("#mw_container").show();
+            jQuery("#mw_find_client").show("slow");
+            jQuery("#close_mw").show();
+        });
         jQuery("#radio_clients").click(find_old_client);
         jQuery("#radio_dealers").click(find_old_client);
         jQuery("#radio_designers").click(find_old_client);
@@ -1178,9 +1250,8 @@
                 url: "index.php?option=com_gm_ceiling&task=addPhoneToClient",
                 data: {
                     id: jQuery("#found_clients").val(),
-                    phones: arr,
-                    p_id: "<?php echo $this->item->id; ?>",
-                    comments: jQuery("#comments_id").val()
+                    old_id:jQuery("#client_id").val(),
+                    p_id: "<?php echo $this->item->id; ?>"
                 },
                 dataType: "json",
                 async: true,
@@ -1221,15 +1292,16 @@
         });
 
         jQuery(".make_call").click(function () {
-            phone = jQuery("#jform_client_contacts").val();
+            phone = jQuery(this).closest('.row').find('input').val();
             client_id = jQuery("#client_id").val();
             call(phone);
             add_history(client_id, "Исходящий звонок на " + phone);
         });
 
         jQuery("#broke").click(function(){
-            jQuery("#mw_call_up").show();
-
+            jQuery("#mw_container").show();
+            jQuery("#mw_call_up").show("slow");
+            jQuery("#close_mw").show();
         });
 
         jQuery("#add_call_and_submit_up").click(function(){

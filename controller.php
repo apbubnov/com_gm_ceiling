@@ -251,39 +251,31 @@ class Gm_ceilingController extends JControllerLegacy
     {
         $user = JFactory::getUser();
         $user_group = $user->groups;
-        if(array_search('16', $user_group))
+        try
         {
-            try
-            {
-                $jinput = JFactory::getApplication()->input;
-                $id = $jinput->get('id', '', 'INT');
-                $phones = $jinput->get('phones', '', 'ARRAY');
-                $comments_string = $jinput->get('comments', '', 'STRING');
-                $cl_history = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
-                if (!empty($comments_string))
-                    $comments_id = explode(";", $comments_string);
-                array_pop($comments_id);
-                if (count($comments_id) != 0) {
-                    $cl_history->updateClientId($id, $comments_id);
-                }
-                $project_id = $jinput->get('p_id', '', 'INT');
-                $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-                $cl_phones = $client_model->save($id, $phones);
-                $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                $cl_history->save($id, "Клиент звонил с нового номера");
-                $project_model->delete($project_id);
-                die(true); 
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $old_id = $jinput->get('old_id',null,'INT');
+            $project_id = $jinput->get('p_id', null, 'INT');
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $clients_dop_contacts_model =  Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $clients_dop_contacts_model->updateClientId($old_id,$id);
+            $cl_history = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+            $cl_history->updateHistoryByClientId($old_id,$id);
+            $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $client_phones_model->changeClientId($old_id, $id);
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $cl_history->save($id, "Клиент звонил с нового номера");
+            $project_model->delete($project_id);
+            $client_model->delete($old_id);
+            die(true); 
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
-            }           
-        }
-        else
-        {
-            throw new Exception("Forbidden", 403);
-        }
+        }           
+        
     }
 
     public function findOldClients()
