@@ -119,7 +119,7 @@ $data = json_encode($model->getData($date_from,$date_to));
 		var ths = jQuery("#analytic > thead  th"),key ="",total = [];
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){
-			jQuery('#analytic').append('<tr></tr>');
+			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].id+'"></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
 				let val = (data[i][key] ? data[i][key] : 0); 
@@ -141,5 +141,18 @@ $data = json_encode($model->getData($date_from,$date_to));
 				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name') ? total[key].toFixed(2) : total[key]) +'</b></td>');
 			});
 		}
+
+		jQuery("#analytic tr").click(function(){
+			var dealer_id = jQuery(this).data('dealer_id'),projects = [];
+			console.log(dealer_id);
+			data.forEach(function(elem){
+				if(elem.id == dealer_id){
+					projects = elem.projects;
+				}
+			});
+			console.log(projects);
+		});
 	}
+
+	
 </script>
