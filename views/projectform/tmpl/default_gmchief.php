@@ -303,7 +303,7 @@
                         </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
+                            <td><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->_client_id?>"><?php echo $this->item->client_id; ?></a></td>
                         </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
