@@ -475,32 +475,34 @@
                         </tr>
                     </table>
                 </div>
-                <label for="slider-table"><b>Тип:</b></label>
-                <table class="slider-table">
-                    <tr>
-                        <td></td>
-                        <td>Клиент</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Диллер</td>
-                        <td>
-                            <div class='switcher'>
-                                <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
-                                <input id='state1' class='switcher-radio-state1' type='radio'
-                                    name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
-                                <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
-                                <input id='state2' class='switcher-radio-state2' type='radio'
-                                    name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
-                                <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
-                                <input id='state3' class='switcher-radio-state3' type='radio'
-                                    name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
-                                <div class='switcher-slider'></div>
-                            </div>
-                        </td>
-                        <td>Реклама</td>
-                    </tr>
-                </table>
+                <?php if(in_array(16,$user_group)){?>
+                    <label for="slider-table"><b>Тип:</b></label>
+                    <table class="slider-table">
+                        <tr>
+                            <td></td>
+                            <td>Клиент</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Диллер</td>
+                            <td>
+                                <div class='switcher'>
+                                    <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
+                                    <input id='state1' class='switcher-radio-state1' type='radio'
+                                        name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
+                                    <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
+                                    <input id='state2' class='switcher-radio-state2' type='radio'
+                                        name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
+                                    <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
+                                    <input id='state3' class='switcher-radio-state3' type='radio'
+                                        name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
+                                    <div class='switcher-slider'></div>
+                                </div>
+                            </td>
+                            <td>Реклама</td>
+                        </tr>
+                    </table>
+                <?php }?>
             </div>
         </div>
     </div>  
