@@ -968,4 +968,29 @@ class Gm_ceilingModelProjects extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getInfoDealersAnalytic($projects){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $quadr_subquery = $db->getQuery(true);
+            $quadr_subquery
+                ->select("sum(n4)")
+                ->from("`#__gm_ceiling_calculations`")
+                ->where("project_id = p.id");
+            $query
+                ->select("distinct p.id,($quadr_subquery) as quadr")
+                ->from('`#__gm_ceiling_projects` as p')
+                ->innerJoin("`#__gm_ceiling_calculations` as calc on calc.project_id = p.id")
+                ->where("p.id in ($projects)")
+                ->order("p.id");
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

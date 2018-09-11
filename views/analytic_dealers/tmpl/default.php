@@ -147,9 +147,33 @@ $data = json_encode($model->getData($date_from,$date_to));
 			console.log(dealer_id);
 			data.forEach(function(elem){
 				if(elem.id == dealer_id){
-					projects = elem.projects;
+					projects = Object.keys(elem.projects);
 				}
+				
 			});
+			console.log(projects);
+			jQuery.ajax({
+	            url: "index.php?option=com_gm_ceiling&task=projects.getProjectsInfo",
+	            data: {
+	               projects:projects
+	            },
+	            dataType: "json",
+	            async: true,
+	            success: function (data) {
+	            	console.log(data);
+	            },
+	            error: function (data) {
+	                console.log(data.responseText);
+	                var n = noty({
+	                timeout: 2000,
+	                theme: 'relax',
+	                layout: 'center',
+	                maxVisible: 5,
+	                type: "error",
+	                text: "Произошла ошибка, попробуйте позднее!"
+	            });
+	            }
+	        });
 			console.log(projects);
 		});
 	}

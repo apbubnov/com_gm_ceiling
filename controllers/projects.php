@@ -59,4 +59,19 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
         }
     }
 
+    function getProjectsInfo(){
+    	try {
+            $jinput = JFactory::getApplication()->input;
+            $projects_arr = $jinput->get('projects', array(), 'ARRAY');
+            $model = $this->getModel('Projects', 'Gm_ceilingModel');
+            $projects_str = implode(',',$projects_arr);
+            $result = $model->getInfoDealersAnalytic($projects_str);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
 }

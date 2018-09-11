@@ -103,7 +103,8 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->from("`#__gm_ceiling_projects` AS p")
                 ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
                 ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
-                ->where("u.dealer_type IN (0,1) and p.project_status in(5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) and p.created BETWEEN '$date1' AND '$date2'")
+                ->innerJoin("`#__gm_ceiling_projects_history` as ph on p.id = ph.project_id")
+                ->where("u.dealer_type IN (0,1) and ph.new_status in(5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) and ph.date_of_change BETWEEN '$date1' AND '$date2'")
                 ->group("u.id");
             $db->setQuery($query);
 
