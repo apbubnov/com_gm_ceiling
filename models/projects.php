@@ -979,7 +979,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->from("`#__gm_ceiling_calculations`")
                 ->where("project_id = p.id");
             $query
-                ->select("distinct p.id,($quadr_subquery) as quadr")
+                ->select("distinct p.id,p.project_info,($quadr_subquery) as quadr")
                 ->from('`#__gm_ceiling_projects` as p')
                 ->innerJoin("`#__gm_ceiling_calculations` as calc on calc.project_id = p.id")
                 ->where("p.id in ($projects)")

@@ -29,9 +29,42 @@ $data = json_encode($model->getData($date_from,$date_to));
 	<tbody>
 	</tbody>
 </table>
+ <div class="modal_window_container" id="mw_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="mw_detailed" class="modal_window">
+    	<table id="detailed_analytic" class = "table_project_analitic">
+    		<thead>
+	    		<tr id="caption-tr">
+	    			<th>
+	    				№ проекта
+	    			</th>
+	    			<th>
+	    				Адрес
+	    			</th>
+	    			<th>
+	    				Квадратура
+	    			</th>
+	    		</tr>
+    		</thead>
+    		<tbody>
+    		</tbody>
+    	</table>
+	</div>
+</div>
+
 <script type="text/javascript">
 	var data = JSON.parse('<?php echo $data;?>');
-	console.log(data);
+
+	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#mw_detailed"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#mw_detailed").hide();
+            jQuery("#close-modal-window").hide();
+            jQuery("#mw_container").hide();
+        }
+    });
+
 	jQuery(document).ready(function(){
 		makeTh(jQuery("#thead"),data[0]);
 		data.shift();
@@ -161,6 +194,10 @@ $data = json_encode($model->getData($date_from,$date_to));
 	            async: true,
 	            success: function (data) {
 	            	console.log(data);
+	            	create_detailed_table(data);
+	            	jQuery("#close_mw").show();
+	                jQuery("#mw_container").show();
+	                jQuery("#mw_detailed").show('slow');
 	            },
 	            error: function (data) {
 	                console.log(data.responseText);
@@ -176,6 +213,17 @@ $data = json_encode($model->getData($date_from,$date_to));
 	        });
 			console.log(projects);
 		});
+
+		function create_detailed_table(data){
+			jQuery('#detailed_analytic tbody').empty();
+			for(let i = 0;i<data.length;i++){
+				console.log(data[i]);
+				jQuery('#detailed_analytic').append('<tr></tr>');
+				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].id+'</td>');
+				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].project_info+'</td>');
+				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].quadr+'</td>');
+			}	
+		}
 	}
 
 	
