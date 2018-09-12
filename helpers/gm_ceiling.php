@@ -1717,8 +1717,11 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            
+            if($service == "mount"){
+                $empty_mount = false;
+            }
             if((!empty($service) && $service == "service") || $empty_mount){
+                echo $service;
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
                     if(mb_ereg('mp[\d]+',$key)){
@@ -1729,6 +1732,7 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $results = $mount_model->getDataAll(1);
             }
+
             //Если существующая калькуляция
             if(!empty($calc_id)){
                 foreach ($calculation_data as $key => $item) {
@@ -2706,6 +2710,9 @@ class Gm_ceilingHelpersGm_ceiling
                     $res->transport +=$res->transport*0.5;
                     $res->distance +=$res->distance*0.5;
                 }
+                if($service == "mount"){
+                    $res = $mount_model->getDataAll(1);
+                }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
                 if($res) {
                     if($transport_type == 1) {
@@ -2798,35 +2805,25 @@ class Gm_ceilingHelpersGm_ceiling
             }
             
             foreach ($calculations as $calc) {
-                if(!empty($service)){
-                    $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
+                $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
+                $stage_sum = [];
+                if(!$full){
+                    foreach ($mount_data as $stage) {
+                        $s_sum = 0;
+                        foreach ($calc_mount['mounting_data'] as $value) {
+                           if($value['stage'] == $stage->stage){
+                                    $s_sum += $value['dealer_salary_total'];
+                           }
+                        }
+                        $stage_sum[$stage->stage] = $s_sum;
+                    }
+                    $calc->mount_sum = $stage_sum;
                 }
                 else{
-                    $calc_mount = self::calculate_mount(0,$calc->id);
-                }
-            }
-            $stage_sum = [];
-            if(!$full){
-                foreach ($mount_data as $stage) {
-                    $s_sum =0;
-                    foreach ($calc_mount['mounting_data'] as $value) {
-                       if($value['stage'] == $stage->stage){
-                                $s_sum += $value['dealer_salary_total'];
-                       }
-                    }
-                    $stage_sum[$stage->stage] = $s_sum;
-                }
-                
-            }
-            else{
-                if(!empty($service)){
-                    echo "not empty";
-                    foreach ($calculations as $calc) {
-                        $calc->mounting_sum = $service_sums[$calc->id];
-                        
-                     }
-                 }
-            }          
+                    print_r($calc_mount);
+                    $calc->mounting_sum = $calc_mount['total_dealer_mounting'];
+                }  
+            }        
             $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
             $html .= '<h2>Монтажные бригады</h2>';
@@ -2864,17 +2861,14 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $calc->n5 . '</td>';
                 $calc_sum = 0;
                 if(!$full){
-                    
                     foreach ($mount_data as $value) {
-                        
                         $html .= '<td class="center">' . $calc->mount_sum[$value->stage] . '</td>';
                         $sums[$value->stage] += $calc->mount_sum[$value->stage];
                         $calc_sum += !empty($calc->mount_sum[$value->stage]) ? $calc->mount_sum[$value->stage] : $calc->mounting_sum;
-                        
                     }
                 }
                 else{
-                    $calc_sum += !empty($calc->mount_sum[$value->stage]) ? $calc->mount_sum[$value->stage] : $calc->mounting_sum;
+                    $calc_sum = $calc->mounting_sum;
                 }
                 $html .= '<td class="center">' . $calc_sum . '</td>';
                 $html .= '</tr>';
@@ -2960,11 +2954,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-                if(!empty($service) && $service){
-                    $data_mount = self::calculate_mount(0,$data['id'],null,"service");
-                }
-                else{
-                    $data_mount = self::calculate_mount(0,$data['id']);
+                if(!empty($service)){
+                    $data_mount = self::calculate_mount(0,$data['id'],null,$service);
                 }
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
@@ -3148,7 +3139,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tbody></table>';
                 }
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                if($service){
+                if($service == "service"){
                     if(!$full){
                         $filename = md5($calc_id."mount_stage_service".$stage) . ".pdf";
                     }

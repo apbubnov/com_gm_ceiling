@@ -56,7 +56,7 @@ if(!empty($this->item->mount_data)){
     
 }
 $transport_service = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['mounter_sum'];
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"mount")['mounter_sum'];
 $mounter_approve = true;
 foreach($calculations as $calc){
     if(!empty($calc->n3)){
@@ -68,11 +68,11 @@ foreach($calculations as $calc){
         if(in_array("26", $groups)){
             $mounter_approve = false;
         }
-        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,null,"mount")['total_gm_mounting'];
+        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,"mount")['total_gm_mounting'];
         if($need_service){
-            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,true,true);
+            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"service",true);
         }
-        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,null,true);
+        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"mount",true);
     }
    
 }
@@ -80,7 +80,7 @@ foreach($calculations as $calc){
 if($need_service){
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"service");
 }
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,null);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
