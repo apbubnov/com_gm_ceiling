@@ -80,7 +80,7 @@ foreach($calculations as $calc){
 if($need_service){
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"service");
 }
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,null);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);

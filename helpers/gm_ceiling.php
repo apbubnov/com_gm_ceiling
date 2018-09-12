@@ -2770,6 +2770,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculations_model = self::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
             $full = false;
+            $service_sums = get_object_vars(json_decode($project->mounting_check));
             if(!empty($calc_ids)){
                 foreach($calculations as $key => $calculation){
                     if(!in_array($calculation->id,$calc_ids)){
@@ -2795,27 +2796,37 @@ class Gm_ceilingHelpersGm_ceiling
             if(count($mount_data) == 1 && $mount_data[0]->stage == 1){
                 $full = true;
             }
-            if(!$full){
-                foreach ($calculations as $calc) {
-                    if(!empty($service)){
-                        $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
-                    }
-                    else{
-                        $calc_mount = self::calculate_mount(0,$calc->id);
-                    }
-                    $stage_sum = [];
-                    foreach ($mount_data as $stage) {
-                        $s_sum =0;
-                        foreach ($calc_mount['mounting_data'] as $value) {
-                           if($value['stage'] == $stage->stage){
-                                    $s_sum += $value['dealer_salary_total'];
-                           }
-                        }
-                        $stage_sum[$stage->stage] = $s_sum;
-                    }
-                    $calc->mount_sum = $stage_sum;
+            
+            foreach ($calculations as $calc) {
+                if(!empty($service)){
+                    $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
                 }
-            }            
+                else{
+                    $calc_mount = self::calculate_mount(0,$calc->id);
+                }
+            }
+            $stage_sum = [];
+            if(!$full){
+                foreach ($mount_data as $stage) {
+                    $s_sum =0;
+                    foreach ($calc_mount['mounting_data'] as $value) {
+                       if($value['stage'] == $stage->stage){
+                                $s_sum += $value['dealer_salary_total'];
+                       }
+                    }
+                    $stage_sum[$stage->stage] = $s_sum;
+                }
+                
+            }
+            else{
+                if(!empty($service)){
+                    echo "not empty";
+                    foreach ($calculations as $calc) {
+                        $calc->mounting_sum = $service_sums[$calc->id];
+                        
+                     }
+                 }
+            }          
             $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
             $html .= '<h2>Монтажные бригады</h2>';
@@ -2851,8 +2862,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $calc->calculation_title . '</td>';
                 $html .= '<td class="center">' . $calc->n4 . '</td>';
                 $html .= '<td class="center">' . $calc->n5 . '</td>';
+                $calc_sum = 0;
                 if(!$full){
-                    $calc_sum = 0;
+                    
                     foreach ($mount_data as $value) {
                         
                         $html .= '<td class="center">' . $calc->mount_sum[$value->stage] . '</td>';
@@ -2860,6 +2872,9 @@ class Gm_ceilingHelpersGm_ceiling
                         $calc_sum += !empty($calc->mount_sum[$value->stage]) ? $calc->mount_sum[$value->stage] : $calc->mounting_sum;
                         
                     }
+                }
+                else{
+                    $calc_sum += !empty($calc->mount_sum[$value->stage]) ? $calc->mount_sum[$value->stage] : $calc->mounting_sum;
                 }
                 $html .= '<td class="center">' . $calc_sum . '</td>';
                 $html .= '</tr>';
