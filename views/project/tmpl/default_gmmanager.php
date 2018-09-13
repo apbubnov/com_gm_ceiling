@@ -165,12 +165,36 @@ $total_mount = 0;
                                 } ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE'); ?></th>
-                            <td><?php echo $this->item->gm_chief_note; ?></td>
+                            <th>Примечание начальника МС</th>
+                            <td>
+                                <?php
+                                    if(!empty($this->item->gm_chief_note)) {
+                                        echo $this->item->gm_chief_note; 
+                                    }
+                                    elseif(!empty($this->item->cheif_note)){
+                                        echo $this->item->cheif_note; 
+                                    }
+                                    else{
+                                        echo "Отсутствует";
+                                    }
+                                ?>    
+                            </td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE'); ?></th>
-                            <td><?php echo $this->item->gm_calculator_note; ?></td>
+                            <th>Примечание замерщика</th>
+                            <td>
+                                <?php 
+                                    if(!empty($this->item->gm_calculator_note)) {
+                                        echo $this->item->gm_calculator_note; 
+                                    }
+                                    elseif(!empty($this->item->calculator_note)){
+                                        echo $this->item->calculator_note; 
+                                    }
+                                    else{
+                                        echo "Отсутствует";
+                                    } 
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </form>

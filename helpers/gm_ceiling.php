@@ -1721,7 +1721,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $empty_mount = false;
             }
             if((!empty($service) && $service == "service") || $empty_mount){
-                echo $service;
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
                     if(mb_ereg('mp[\d]+',$key)){
@@ -2820,7 +2819,6 @@ class Gm_ceilingHelpersGm_ceiling
                     $calc->mount_sum = $stage_sum;
                 }
                 else{
-                    print_r($calc_mount);
                     $calc->mounting_sum = $calc_mount['total_dealer_mounting'];
                 }  
             }        

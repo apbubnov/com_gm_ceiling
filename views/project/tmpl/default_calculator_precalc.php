@@ -371,13 +371,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </p>
                 <div class="row center">
-                    <div class="col-md-4" style="padding-top: 25px;">
+                    <div class="col-md-6" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                     </div>
-                    <div class="col-md-4" style="padding-top: 25px;">
+                    <!-- <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
-                    </div>
-                    <div class="col-md-4" style="padding-top: 25px;">
+                    </div> -->
+                    <div class="col-md-6" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                     </div>
                 </div>
