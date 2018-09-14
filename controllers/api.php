@@ -285,7 +285,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     $result = $model->get_mounters_android($table_data);
                 }
                 
-                
                 die(json_encode($result));
             }
             catch(Exception $e)

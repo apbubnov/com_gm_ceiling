@@ -404,10 +404,18 @@ class Gm_ceilingModelApi extends JModelList
                 $query->where($where);
                 $db->setQuery($query);
                 $list_calculations = $db->loadObjectList();
+
+                $query = $db->getQuery(true);
+                $query->select("*");
+                $query->from("`#__gm_ceiling_projects_mounts`");
+                $query->where($where);
+                $db->setQuery($query);
+                $list_mounts = $db->loadObjectList();
             }
             else
             {
                 $list_calculations = array();
+                $list_mounts = array();
             }
 
             if (count($list_calculations) > 0)
@@ -514,6 +522,7 @@ class Gm_ceilingModelApi extends JModelList
             $result['rgzbn_gm_ceiling_diffusers'] = $list_diffusers;
             $result['rgzbn_gm_ceiling_cornice'] = $list_cornice;
             $result['rgzbn_gm_ceiling_profil'] = $list_profil;
+            $result['rgzbn_gm_ceiling_projects_mounts'] = $list_mounts;
 
             $change_time = strtotime($change_time);
 
