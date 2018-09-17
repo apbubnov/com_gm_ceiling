@@ -821,7 +821,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             $query[] = $query_analytic;
             if ($count_transefer > 0) $query[] = $query_transfer;
-            throw new Exception($query_transfer);
+            //throw new Exception($query_transfer);
             return $query;
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
