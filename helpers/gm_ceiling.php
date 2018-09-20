@@ -204,7 +204,7 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function registerUser($FIO, $phone, $email, $client_id, $type = null)
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null, $android_id = null)
     {
         try {
             jimport('joomla.user.helper');
@@ -234,7 +234,8 @@ class Gm_ceilingHelpersGm_ceiling
                 "groups" => array(2, 14),
                 "phone" => $phone,
                 "block" => 0,
-                "dealer_type" => $type
+                "dealer_type" => $type,
+                "android_id" => $android_id
             );
             $user = new JUser;
             if (!$user->bind($data)) {

@@ -152,7 +152,7 @@ class Gm_ceilingModelApi extends JModelList
                 }
             }
 			//создание user'а
-            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, $email, $client_id);
+            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, $email, $client_id, 1, $android_id);
 
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
             $client_model->updateClient($client_id, null, $dealer_id);
