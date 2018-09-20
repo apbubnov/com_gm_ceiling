@@ -1706,8 +1706,10 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $dealer_id = 1;   
             }
+            
             $results = $mount_model->getDataAll($dealer_id);
             $gm_mount  = $mount_model->getDataAll(1);
+
             $empty_mount = true;
             if (!empty($results)){
                 foreach ($results as $key => $value){
@@ -1720,6 +1722,7 @@ class Gm_ceilingHelpersGm_ceiling
             if($service == "mount"){
                 $empty_mount = false;
             }
+
             if((!empty($service) && $service == "service") || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
@@ -1728,9 +1731,9 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 });
             }
-            else{
+            /*else{
                 $results = $mount_model->getDataAll(1);
-            }
+            }*/
 
             //Если существующая калькуляция
             if(!empty($calc_id)){
