@@ -254,6 +254,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             
             $post['associated_client'] = $client_id;
+            $post['android_id'] = $userID;
             if (!$user->bind($post)) return false;
             if (!$user->save()) return false;
             JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
