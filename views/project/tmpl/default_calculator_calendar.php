@@ -48,13 +48,17 @@ $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
-$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+if (!empty($this->item->mounting_check)) {
+    $service_mount = get_object_vars(json_decode($this->item->mounting_check));
+}
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 if(!empty($service_mount)){
     $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
 }
 foreach ($calculations as $calculation) {
-    $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    if (!empty($service_mount)) {
+        $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    }
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
