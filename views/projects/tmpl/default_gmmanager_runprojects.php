@@ -25,6 +25,14 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
+<style>
+    .table th {
+        padding: 0.5rem;
+    }
+    .table td {
+        padding: 0.5rem;
+    }
+</style>
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 <h2 class = "center">Запущенные проекты</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects'); ?>" method="post" name="adminForm" id="adminForm">
@@ -67,7 +75,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($this->items as $i => $item):
+            <?php
+                $this_items = $this->items;
+                $items_length = count($this_items);
+            ?>
+            <?php for ($i = 0; $i < $items_length; $i++) {
+                $item = $this_items[$i];
                 $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
                 $client_id = $item->client_id;
                 $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
@@ -177,7 +190,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <?php echo $dealer->name; ?>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
             </tbody>
         </table>
     <?php else: ?>
@@ -191,13 +204,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
     <?php echo JHtml::_('form.token'); ?>
 </form>
-
-
-
-
-
-<script src="https://api.yandex.mightycall.ru/api/v2/sdk/mightycall.webphone.sdk.js"></script>
-<script src="/components/com_gm_ceiling/phone.js"></script>
 
 <?php
     $user       = JFactory::getUser();
