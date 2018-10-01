@@ -204,7 +204,7 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function registerUser($FIO, $phone, $email, $client_id, $type = null, $android_id = null)
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null)
     {
         try {
             jimport('joomla.user.helper');
@@ -234,8 +234,7 @@ class Gm_ceilingHelpersGm_ceiling
                 "groups" => array(2, 14),
                 "phone" => $phone,
                 "block" => 0,
-                "dealer_type" => $type,
-                "android_id" => $android_id
+                "dealer_type" => $type
             );
             $user = new JUser;
             if (!$user->bind($data)) {
@@ -254,7 +253,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
             
             $post['associated_client'] = $client_id;
-            $post['android_id'] = $userID;
             if (!$user->bind($post)) return false;
             if (!$user->save()) return false;
             JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
@@ -1708,10 +1706,8 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $dealer_id = 1;   
             }
-            
             $results = $mount_model->getDataAll($dealer_id);
             $gm_mount  = $mount_model->getDataAll(1);
-
             $empty_mount = true;
             if (!empty($results)){
                 foreach ($results as $key => $value){
@@ -1724,7 +1720,6 @@ class Gm_ceilingHelpersGm_ceiling
             if($service == "mount"){
                 $empty_mount = false;
             }
-
             if((!empty($service) && $service == "service") || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
@@ -2719,6 +2714,9 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
                 if($res) {
+                    $res->distance = str_replace(',','.', $res->distance);
+                    $res->transport = str_replace(',','.', $res->transport);
+                    $distance = str_replace(',','.', $distance);
                     if($transport_type == 1) {
                         $transport_sum = round(double_margin($res->transport * $distance_col, $project->gm_mounting_margin, 30));
                         $transport_sum_1 = round(margin($res->transport * $distance_col, 0));
@@ -2739,7 +2737,7 @@ class Gm_ceilingHelpersGm_ceiling
                             'distance' => $distance,
                             'distance_col'=> $distance_col,
                             'client_sum' => $transport_sum,
-                            'mounter_sum' => $transport_sum_1 
+                            'mounter_sum' => $transport_sum_1
                         );  
                     }
                     else { 
@@ -2781,9 +2779,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculations_model = self::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
             $full = false;
-            if (!empty($project->mounting_check)) {
-                $service_sums = get_object_vars(json_decode($project->mounting_check));
-            }
+            $service_sums = get_object_vars(json_decode($project->mounting_check));
             if(!empty($calc_ids)){
                 foreach($calculations as $key => $calculation){
                     if(!in_array($calculation->id,$calc_ids)){
