@@ -59,6 +59,7 @@ $items = json_encode($this->item);
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
     var phones = <?php echo json_encode($phones);?>;
+    var api_phone_id;
     console.log(phones);
     var client;
     function getClient(phone){
@@ -212,13 +213,109 @@ $items = json_encode($this->item);
             }
         }
     }
+
+    function ajaxCreateNewClient(pf,api_id) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=client.create", 
+            data: {
+                phone:pf
+            },
+            success: function(data) {
+                ajaxCreateNewProject(api_id,data-0);
+            },
+            dataType: "json",
+            async: false,
+            timeout: 10000,
+            error: function(data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при создании клиента. Сервер не отвечает."
+                });
+            }                   
+        });
+    }
+
+    function getAdvtByPhone(phone){
+        console.log(phone,'func');
+        jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=Api_phones.getAdvtByPhone", //ищем проекты по номеру
+                data: {
+                    phone: phone
+                },
+                success: function(data) {
+                    console.log(data);
+                    if(Object.keys(data).length){
+                        api_phone_id = data.id;
+                    }
+                    else{
+                       var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: data
+                    }); 
+                    }
+                },
+                dataType: "json",
+                async: false,
+                timeout: 10000,
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Сервер не отвечает."
+                    });
+                }                   
+            });
+    }
+
+    function ajaxCreateNewProject(api_phone_id,client_id){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+            data: {
+                api_id: api_phone_id,
+                client_id: client_id
+            },
+            success: function(data){
+                
+                data = JSON.parse(data);
+                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data;
+                location.href =url;
+            },
+            dataType: "text",
+            async: false,
+            timeout: 20000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }                   
+        });
+    }
     jQuery(document).ready(function()
     {
         sendDateOnMissedCalls();
 
         document.getElementById('calendar').onchange = function()
         {
-            
             sendDateOnMissedCalls();
         };
 
@@ -256,34 +353,10 @@ $items = json_encode($this->item);
                 }
                 else{
                     console.log(jQuery(this)[0].childNodes[1].innerText);
-                    pt = get_number(jQuery(this)[0].childNodes[1].innerText);
-                    pf = jQuery(this)[0].childNodes[0].innerText;
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-                        data: {
-                            client_id: 1
-                        },
-                        success: function(data){
-                            
-                            data = JSON.parse(data);
-                            url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
-                            location.href =url;
-                        },
-                        dataType: "text",
-                        async: false,
-                        timeout: 20000,
-                        error: function(data){
-                            var n = noty({
-                                timeout: 2000,
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Ошибка. Сервер не отвечает"
-                            });
-                        }                   
-                    });  
+                    var pt = get_number(jQuery(this)[0].childNodes[1].innerText),
+                        pf = jQuery(this)[0].childNodes[0].innerText;
+                        getAdvtByPhone(pt);
+                        ajaxCreateNewClient(pf,api_phone_id);  
                 }
             }
         });
