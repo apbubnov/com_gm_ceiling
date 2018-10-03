@@ -35,59 +35,83 @@ unset($_SESSION["dealers_$userId"]);
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <h2 class="center">Дилеры</h2>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+<div class="container">
+    <div class="row">
+        <h2 class="center">Дилеры</h2>
     </div>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
-        <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
-        <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+        </div>
+        <div class="col-md-4" align = "center" style="margin-bottom: 15px;">
+            <div style="display:inline-block; width: 48%; text-align: left;">
+                <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
+                <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
+            </div>
+        </div>
+        <div class="col-md-4" align="right">
+            <input type="text" id="name_find_dealer">
+            <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
     </div>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <input type="text" id="name_find_dealer">
-        <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-        <select class="input-gm" id="filter_manager">
-            <option value="">Выберите менеджера</option>
-        </select>
-        <select class="input-gm" id="filter_city">
-            <option value="">Выберите город</option>
-        </select>
+    <div class="row" align="right">
+        <div class="col-md-4">
+            <h6>Фильтры:</h6>
+        </div>
+        <div class="col-md-8">
+            <div class="col-md-4">
+                <select class="input-gm" id="filter_manager">
+                    <option value="">Выберите менеджера</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="input-gm" id="filter_city">
+                    <option value="">Выберите город</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="input-gm" id="filter_status">
+                    <option value="">Выберите статус</option>
+                </select>
+            </div>
+        </div>
     </div>
-    <br>
-    <table class="table one-touch-view" id="callbacksList">
-        <thead>
-        <tr >
-            <th>
-                <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
-            </th>
-            <th>
-               Имя
-            </th>
-            <th id="dealer_price" data-sort="">
-                Минимальная цена<br>полотно / компонент
-            </th>
-            <th>
-               Телефоны
-            </th>
-            <th>
-                Город
-            </th>
-            <th>
-               Дата регистрации
-            </th>
-            <th>
-                Менеджер
-            </th>
-            <th>
+    <div class="row">
+        <table class="table one-touch-view" id="callbacksList">
+            <thead>
+                <tr >
+                    <th>
+                        <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
+                    </th>
+                    <th>
+                       Имя
+                    </th>
+                    <th id="dealer_price" data-sort="">
+                        Минимальная цена<br>полотно / компонент
+                    </th>
+                    <th>
+                       Телефоны
+                    </th>
+                    <th>
+                        Город
+                    </th>
+                    <th>
+                       Дата регистрации
+                    </th>
+                    <th>
+                        Менеджер
+                    </th>
+                    <th>
 
-            </th>
-        </tr>
-        </thead>
-        <tbody id="tbody_dealers">
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody_dealers">
 
-        </tbody>
+            </tbody>
     </table>
+    </div>
     <div class="modal_window_container" id="mv_container">
         <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div class="modal_window" id="modal_window_create">
@@ -115,7 +139,8 @@ unset($_SESSION["dealers_$userId"]);
             <button type="button" id="send_kp" class="btn btn-primary">Отправить</button></p>
         </div>
     </div>
-
+</div>
+   
 <script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
 
 <script type="text/javascript">

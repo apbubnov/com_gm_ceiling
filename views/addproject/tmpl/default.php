@@ -111,7 +111,7 @@ $userId     = $user->get('id');
 	<div class="control-group" style="margin-bottom: 1em;">
 		<p>Выберите дату и время замера</p>
         <input type="text" id="measure_info" class="inputactive" readonly>
-        <div id="measures_calendar"></div>
+        <div id="measures_calendar" align="center"></div>
 	</div>
 	<div>
 		<button id="calculate_button" class="btn btn-primary" style="width:100%;margin-bottom: 10px;" type="button">Записать</button>

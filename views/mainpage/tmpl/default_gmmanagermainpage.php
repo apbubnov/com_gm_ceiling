@@ -47,16 +47,16 @@ $user_group = $user->groups;
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=recoil', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Откатники</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Отделочники</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fa fa-paint-brush" aria-hidden="true"></i> Отделочники</a>
 		</p>
-        <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
-        </p>
+        <!-- <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
+        </p> -->
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Застройщики</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-building" aria-hidden="true"></i> Застройщики</a>
 		</p>
         <p>
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Оконщики</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fa fa-windows" aria-hidden="true"></i> Оконщики</a>
         </p>
 	</div>
 	<div class="columns-tar">
@@ -70,12 +70,6 @@ $user_group = $user->groups;
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
 					<div class="circl-digits" id="ZapushennieDiv" style="display: none;"></div>
-			</div>
-		</div>
-		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
-					<div class="circl-digits" id="ZayavkiSSaitaDiv" style="display: none;"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">

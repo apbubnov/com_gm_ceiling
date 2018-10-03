@@ -336,11 +336,11 @@ if (empty($list['direction']))
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
 
-			$kp_cnt_query = $db->getQuery(true);
+			/*$kp_cnt_query = $db->getQuery(true);
 			$comments_cnt_query = $db->getQuery(true);
-			$dealer_instr_cnt_query = $db->getQuery(true);
+			$dealer_instr_cnt_query = $db->getQuery(true);*/
 			$manager_query = $db->getQuery(true);
-			$kp_cnt_query
+			/*$kp_cnt_query
 				->select('COUNT(*)')
 				->from('`#__users_commercial_offer` as co')
 				->where('co.user_id = u.id');
@@ -351,7 +351,7 @@ if (empty($list['direction']))
 			$dealer_instr_cnt_query
 				->select('COUNT(*)')
 				->from('`#__users_dealer_instruction` as di')
-				->where('di.user_id = u.id');
+				->where('di.user_id = u.id');*/
 			$manager_query
 				->select('`name`')
 				->from('`#__users`')
@@ -361,9 +361,9 @@ if (empty($list['direction']))
 			$query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
 				->select("GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
-				->select("($kp_cnt_query) as kp_cnt")
+				/*->select("($kp_cnt_query) as kp_cnt")
 				->select("($comments_cnt_query) as cmnt_cnt")
-				->select("($dealer_instr_cnt_query) as inst_cnt")
+				->select("($dealer_instr_cnt_query) as inst_cnt")*/
 				->select("($manager_query) as manager_name")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')

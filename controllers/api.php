@@ -115,7 +115,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                         $body .= '</div></td></tr></table>';
                         $body .= "<div style=\"width: 100%\">Инструкция по использованию: <a href=\"$site2\">Посмотреть видео</a><br>Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br>
-                                Логин: $dealer->username<br>Пароль: $dealer->username<br></div></body>";
+                                Логин: $dealer->username<br>Врменный пароль для входа: $dealer->username<br></div></body>";
                         $mailer->setSubject('Доступ в кабинет');
                         $mailer->isHtml(true);
                         $mailer->Encoding = 'base64';
@@ -381,6 +381,41 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if(!empty($_POST['u_data'])){
                 $data = json_decode($_POST['u_data']);
                 $result = $model->change_password($data);
+                //отправить письмо с новым паролем
+                $dealer = JFactory::getUser($data->user_id);
+                $email = $dealer->email;
+                $server_name = $_SERVER['SERVER_NAME'];
+                $site = "http://$server_name/index.php?option=com_users&view=login";
+                // письмо
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($email);
+                $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                $body .= '<body style="margin: 10px;">';
+                $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+                $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
+                $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+                $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+
+                $body .= '<p>Тел.: +7(473)212-34-01</p>';
+
+                $body .= '<p>Почта: gm-partner@mail.ru</p>';
+                $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+                $body .= '</div></td></tr></table>';
+                $body .= "<div style=\"width: 100%\">Здравствуйте! Пароль от Вашего кабинет на сайте $site был изменен.<br> Обновленные данные регистрации:<br>
+                        Логин: $dealer->username<br>Пароль: $data->password<br>
+                        Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br></div></body>
+                        ";
+                $mailer->setSubject('Изменение пароля от личного кабинета');
+                $mailer->isHtml(true);
+                $mailer->Encoding = 'base64';
+                $mailer->setBody($body);
+                $send = $mailer->Send();
                 die(json_encode($result));
             }
             else throw new Exception("Empty post data");
