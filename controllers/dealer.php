@@ -290,4 +290,16 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 
         }
 	}
+
+	function status(){
+		try{			
+			$dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealers');
+			$dealer_info_model->test();
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
 }

@@ -30,6 +30,14 @@ $server_name = $_SERVER['SERVER_NAME'];
 $session_data = (isset($_SESSION["dealers_$userId"])) ? json_encode($_SESSION["dealers_$userId"]) : json_encode(array());
 unset($_SESSION["dealers_$userId"]);
 ?>
+<style type="text/css">
+    .table
+    {
+        border-collapse:separate; 
+        border-spacing:0 0.5em;
+    }
+
+</style>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
     <a class="btn btn-large btn-primary"
@@ -80,7 +88,7 @@ unset($_SESSION["dealers_$userId"]);
     <div class="row">
         <table class="table one-touch-view" id="callbacksList">
             <thead>
-                <tr >
+                <tr>
                     <th>
                         <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
                     </th>
@@ -99,7 +107,7 @@ unset($_SESSION["dealers_$userId"]);
                     <th>
                        Дата регистрации
                     </th>
-                    <th>
+                    <th align>
                         Менеджер
                     </th>
                     <th>
@@ -220,14 +228,30 @@ unset($_SESSION["dealers_$userId"]);
                         data_i[key] = '-';
                     }
                 }
-                if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
+                var groups = data_i.groups.split(",");
+                if(jQuery.inArray('27',groups)!= -1){
+                    color = "style=\"outline: green solid 1px; margin-top:15px;\"";
+                }
+                if(jQuery.inArray('28',groups)!= -1){
+                    color = "style=\"outline: orange solid 1px;margin-top:15px;\"";
+                    //color = "bordercolor=\"orange\"";
+                }
+                if(jQuery.inArray('29',groups)!= -1){
+                    color = "style=\"outline: red solid 1px; margin-top:15px;\"";
+                    //color = "bordercolor=\"red\"";
+                }
+                if(jQuery.inArray('30',groups)!= -1){
+                    color = "style=\"outline: #414099 1px; margin-top:15px;\"";
+                    //color = "bordercolor=\"#d3d3f9\"";
+                }
+                /*if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
                 {
                     color = "bgcolor=\"#d3d3f9\"";
                 }
                 else
                 {
                     color = '';
-                }
+                }*/
                 html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
                 html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
                 html += '<td>' + data_i.client_name + '</td>';
