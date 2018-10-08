@@ -230,28 +230,20 @@ unset($_SESSION["dealers_$userId"]);
                 }
                 var groups = data_i.groups.split(",");
                 if(jQuery.inArray('27',groups)!= -1){
-                    color = "style=\"outline: green solid 1px; margin-top:15px;\"";
+                    color = 'style="outline: green solid 1px; margin-top:15px;"';
                 }
                 if(jQuery.inArray('28',groups)!= -1){
-                    color = "style=\"outline: orange solid 1px;margin-top:15px;\"";
-                    //color = "bordercolor=\"orange\"";
+                    color = 'style="outline: yellow solid 1px;margin-top:15px;"';
                 }
                 if(jQuery.inArray('29',groups)!= -1){
-                    color = "style=\"outline: red solid 1px; margin-top:15px;\"";
-                    //color = "bordercolor=\"red\"";
+                    color = 'style="outline: orange solid 1px; margin-top:15px;"';
                 }
                 if(jQuery.inArray('30',groups)!= -1){
-                    color = "style=\"outline: #414099 1px; margin-top:15px;\"";
-                    //color = "bordercolor=\"#d3d3f9\"";
+                    color = "style=\"outline: red solid 1px; margin-top:15px;\"";
                 }
-                /*if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
-                {
-                    color = "bgcolor=\"#d3d3f9\"";
+                if(jQuery.inArray('31',groups)!= -1){
+                    color = "style=\"outline: #414099 solid 1px; margin-top:15px;\"";
                 }
-                else
-                {
-                    color = '';
-                }*/
                 html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
                 html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
                 html += '<td>' + data_i.client_name + '</td>';

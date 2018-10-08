@@ -198,7 +198,7 @@ class Gm_ceilingModelApi_phones extends JModelList
 	        $query = $db->getQuery(true);
 	        $query->insert('#__gm_ceiling_api_phones');
 	        $query->columns('`name`, `dealer_id`');
-			$query->values("'$name', $user->id");
+			$query->values("'$name', $user->dealer_id");
 			$db->setQuery($query);
 	        $db->execute();
 	        $last_id = $db->insertid();

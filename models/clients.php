@@ -360,15 +360,15 @@ if (empty($list['direction']))
 			$query = $db->getQuery(true);
 			$query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
-				->select("GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
+				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
 				->select("($manager_query) as manager_name")
 				->from("`#__gm_ceiling_clients` as `c`")
-				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+				->innerjoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) AND `#__user_usergroup_map`.`group_id`IN (14,27,28,29,30)")
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) AND `#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 				if (!empty($manager_id))
@@ -379,6 +379,7 @@ if (empty($list['direction']))
 				{
 					$query->where("`i`.`city` = '$city'");
 				}
+
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;
