@@ -46,10 +46,14 @@ unset($_SESSION["dealers_$userId"]);
             <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
         </div>
         <div class="col-md-4" align = "center" style="margin-bottom: 15px;">
-            <div style="display:inline-block; width: 48%; text-align: left;">
+            <div class="col-md-4">
                 <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
+            </div>
+            <div class="col-md-4">
                 <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
+            </div>
+            <div class="col-md-4">
+                 <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
             </div>
         </div>
         <div class="col-md-4" align="right">
@@ -57,9 +61,9 @@ unset($_SESSION["dealers_$userId"]);
             <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
         </div>
     </div>
-    <div class="row" align="right">
+    <div class="row" align="right" style="margin-bottom: 15px">
         <div class="col-md-4">
-            <h6>Фильтры:</h6>
+            <h6><i class="fa fa-filter" aria-hidden="true"></i> Фильтры: </h6>
         </div>
         <div class="col-md-8">
             <div class="col-md-4">
@@ -77,6 +81,32 @@ unset($_SESSION["dealers_$userId"]);
                     <option value="">Выберите статус</option>
                 </select>
             </div>
+        </div>
+    </div>
+    <div class="row" align="right">
+        <div class="col-md-8" >
+            <div class="col-md-1" style="vertical-align:middle"> Заказ был:</div>
+            <div class="col-md-2">
+                0-14 <hr style="background-color:green;color:green;height:2px;">
+            </div>
+            <div class="col-md-2">
+                15-21 <hr style="background-color:yellow;color:yellow;height:2px;">
+            </div>
+            <div class="col-md-2">
+                22-28 <hr style="background-color:orange;color:orange;height:2px;">
+            </div>
+            <div class="col-md-2">
+                 больше 28 <hr style="background-color:red;color:red;height:2px;">
+            </div>
+            <div class="col-md-1" style="vertical-align:middle">
+                дней назад.
+            </div>
+            <div class="col-md-2">
+                 Нет заказов <hr style="background-color:#414099;color:#414099;height:2px;">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary" id="clear_filters" type="button">Сбросить фильтры</button>
         </div>
     </div>
     <div class="row">
@@ -347,6 +377,16 @@ unset($_SESSION["dealers_$userId"]);
                 }, 2000);
             }
         }
+        jQuery("#clear_filters").click(function(){
+            jQuery("#filter_manager").val("");
+            jQuery("#filter_city").val("");
+            jQuery("#filter_status").val("");
+            jQuery("#name_find_dealer").val("");
+            limit = 0;
+            select_size = 10;
+            tbody_dealers.innerHTML = '';
+            getDealers();
+        });
 
         $(window).scroll(function() {
             if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
@@ -456,7 +496,15 @@ unset($_SESSION["dealers_$userId"]);
                                     }
                                     else
                                     {
-                                        //location.reload();
+                                        var n = noty({
+                                                timeout: 2000,
+                                                theme: 'relax',
+                                                layout: 'center',
+                                                maxVisible: 5,
+                                                type: "success",
+                                                text: "Дилер добавлен!"
+                                            });
+                                        location.reload();
                                     }
                                 },
                                 dataType: "text",
@@ -719,17 +767,20 @@ unset($_SESSION["dealers_$userId"]);
             limit = 0;
             getDealers();
         });
-        document.getElementById('name_find_dealer').onfocus = function(){
+        jQuery('#name_find_dealer').focus = function(){
             tbody_dealers.innerHTML = '';
         };
-
+       
         document.onkeydown = function(e){
-            if (e.keyCode === 13)
+            if (e.keyCode === 13 && jQuery('#name_find_dealer').is(":focus"))
             {
-                document.getElementById('name_find_dealer').blur();
+                jQuery('#name_find_dealer').focus();
+                tbody_dealers.innerHTML = '';
+                limit = 0;
                 getDealers();
             }
         };
+        
     });
 
     var Ajax = "/index.php?option=com_gm_ceiling&task=";
