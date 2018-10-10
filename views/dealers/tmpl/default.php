@@ -83,8 +83,8 @@ unset($_SESSION["dealers_$userId"]);
             </div>
         </div>
     </div>
-    <div class="row" align="right">
-        <div class="col-md-8" >
+    <div class="row">
+        <div class="col-md-9" >
             <div class="col-md-1" style="vertical-align:middle"> Заказ был:</div>
             <div class="col-md-2">
                 0-14 <hr style="background-color:green;color:green;height:2px;">
@@ -105,7 +105,7 @@ unset($_SESSION["dealers_$userId"]);
                  Нет заказов <hr style="background-color:#414099;color:#414099;height:2px;">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3" align="right">
             <button class="btn btn-primary" id="clear_filters" type="button">Сбросить фильтры</button>
         </div>
     </div>
