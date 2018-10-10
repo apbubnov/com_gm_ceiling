@@ -86,8 +86,8 @@ class Gm_ceilingModelProjectshistory extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->delete("'`#__gm_ceiling_projects_history`'")
-				->where("project_id = $project_id and new_status in(5,10,19)");
+				->delete("`#__gm_ceiling_projects_history`")
+				->where("project_id = $project_id and new_status in (5,10,19)");
 			$db->setQuery($query);
 			$db->execute();
 		}
