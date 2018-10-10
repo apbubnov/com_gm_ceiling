@@ -279,8 +279,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->delete()
-                ->from('`#__gm_ceiling_recoil_map_project`')
+                ->delete('`#__gm_ceiling_recoil_map_project`')
                 ->where("project_id = $project_id");
             $db->setQuery($query);
             $db->execute();

@@ -390,6 +390,63 @@ if (empty($list['direction']))
         }
 	}
 
+	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size){
+		try{
+			$db    = JFactory::getDbo();
+			$client_name = $db->escape($client_name);
+			$query = $db->getQuery(true);
+			$manager_query = $db->getQuery(true);
+
+			$manager_query
+				->select('`name`')
+				->from('`#__users`')
+				->where('id = c.manager_id');
+
+			$query
+				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
+				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
+				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
+				->select("($manager_query) as manager_name")
+				->from("`#__gm_ceiling_clients` as `c`")
+				->innerjoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
+				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6)")
+				->order("`c`.`id` DESC LIMIT $limit,$select_size")
+				->group('`c`.`id`');
+				if (!empty($manager_id))
+				{
+					$query->where("`c`.`manager_id` = $manager_id");
+				}
+				if (!empty($city))
+				{
+					$query->where("`i`.`city` = '$city'");
+				}
+				if(!empty($status)){
+					$query->where("`#__user_usergroup_map`.`group_id`IN ($status)");
+				}
+				else{
+					$query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
+				}
+				
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			if(count($items)){
+				foreach ($items as $key => $dealer) {
+				    $user_dealer = JFactory::getUser($dealer->dealer_id);
+				    $items[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
+				    $items[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
+				}
+			}
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
 	public function getDesignersByClientName($client_name,$designer_type)
 	{
 		try

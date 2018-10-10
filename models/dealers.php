@@ -152,5 +152,38 @@ class Gm_ceilingModelDealers extends JModelItem
 		catch(Exception $e){
 			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
+	}
+
+	function select_dealers_city(){
+		try{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("distinct city")
+				->from('`#__gm_ceiling_dealer_info`');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			return $items;	
+		}
+		catch(Exception $e){
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}	
+
+	function get_dealers_groups(){
+		try{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->select("id,title")
+				->from('`#__usergroups`')
+				->where("parent_id = 14");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			return $items;	
+		}
+		catch(Exception $e){
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
+	}
 }

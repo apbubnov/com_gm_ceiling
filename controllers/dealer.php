@@ -278,9 +278,12 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$user_id = $jinput->get("user",null,'INT');
 			$filter_city = $jinput->get('filter_city',"","STRING");
 			$filter_manager = $jinput->get('filter_manager',"","STRING");
-			$row_index = $jinput->get('rindex','','STRING');
-			if(!empty($user_id)&&((!empty($filter_city)))||!empty($row_index)){
-				$_SESSION["dealers_$user_id"] = ["filter_city"=>$filter_city,"filter_manager"=>$filter_manager,"row"=>$row_index];
+			$filter_status = $jinput->get('filter_status',"","STRING");
+			$client = $jinput->get('client','',"STRING");
+			$limit = $jinput->get('limit','','STRING');
+			$dealer_id = $jinput->get("dealer_id","","STRING");
+			if(!empty($user_id)&&((!empty($filter_city)))||!empty($limit)||!empty($filter_manager)||!empty($filter_status)){
+				$_SESSION["dealers_$user_id"] = ["filter_city"=>$filter_city,"filter_manager"=>$filter_manager,"limit"=>$limit,"filter_status"=>$filter_status,'dealer_id'=>$dealer_id,"client"=>$client];
 			}
 			die(json_encode(true));
 		}
@@ -291,15 +294,45 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
         }
 	}
 
-	function status(){
-		try{			
-			$dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealers');
-			$dealer_info_model->test();
+	function getFilteredData(){
+		try{
+			$jinput = JFactory::getApplication()->input;
+			$filter_city = $jinput->get('filter_city',"","STRING");
+			$filter_manager = $jinput->get('filter_manager',"","STRING");
+			$filter_status = $jinput->get('filter_status',"","STRING");
+			$limit = $jinput->get("limit",0,"INT");
+			$select_size = $jinput->get("select_size","10","STRING");
+			$client_name = $jinput->get("client","","STRING");
+			$model =  Gm_ceilingHelpersGm_ceiling::getModel('clients');
+			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size);
+			die(json_encode($result));
 		}
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
+	}
+	function select_dealers_city(){
+		try{
+			$model =  Gm_ceilingHelpersGm_ceiling::getModel('dealers');
+			$result = $model->select_dealers_city();
+			die(json_encode($result));
+		}
+		catch(Exception $e)
+		{
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function get_dealers_groups(){
+		try{
+			$model =  Gm_ceilingHelpersGm_ceiling::getModel('dealers');
+			$result = $model->get_dealers_groups();
+			die(json_encode($result));
+		}
+		catch(Exception $e)
+		{
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }	
 	}
 }

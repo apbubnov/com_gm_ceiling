@@ -24,5 +24,21 @@ class Gm_ceilingControllerUsers extends JControllerForm
         }
 	}
 
+	function getUserByGroup(){
+		try
+		{
+			$dealer = JFactory::getUser();
+			$jinput = JFactory::getApplication()->input;
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+			$group_id = $jinput->get('group','',"STRING");
+			$result = $model->getUserByGroup($group_id);
+			die(json_encode($result));
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+	}
 }
 ?>

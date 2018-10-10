@@ -79,6 +79,23 @@ class Gm_ceilingModelProjectshistory extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function delete($project_id){
+    	try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->delete("'`#__gm_ceiling_projects_history`'")
+				->where("project_id = $project_id and new_status in(5,10,19)");
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     function getIdsByStatusAndAdvt($dealer_id,$advt,$statuses,$date1,$date2){
 		
         try{

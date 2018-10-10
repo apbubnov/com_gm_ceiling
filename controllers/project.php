@@ -1413,6 +1413,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $data = $model->return($id);
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            $model_projectshistory->delete($id);
             $model_projectshistory->save($id,1);
             $model_recoil_map_project = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             $model_recoil_map_project->deleteByProjId($id);
