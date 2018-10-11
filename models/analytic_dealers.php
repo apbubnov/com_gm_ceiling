@@ -140,29 +140,60 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         }
    }
 
-   function calculateCompSelfPrice($calculation = null,$components = null){
-        $price_comp = 0;$project_sum = 0;
-        $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-        if(!empty($calculation)){
+    function calculateCompSelfPrice($calculation = null,$components = null){
+        try {
+            $price_comp = 0;$project_sum = 0;
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
-        }
-        if(!empty($components)){
-            foreach ($components as  $value) {
-                if(gettype($value) == 'array'){
-                   if(!empty($value['id']) && !empty($value['component_id']))
-                        $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
-                    
-                    if(!empty($dop_params)){
-                        $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
+            if(!empty($calculation)){
+                $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                $components = Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id,null,0);
+            }
+            if(!empty($components)){
+                foreach ($components as  $value) {
+                    if(gettype($value) == 'array'){
+                       if(!empty($value['id']) && !empty($value['component_id']))
+                            $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
+                        
+                        if(!empty($dop_params)){
+                            $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
+                        }
+                    }
+                    if(gettype($value) == 'object'){
+                         $price_comp += $value->quantity*$component_model->getComponentsSelfPrice($value->component_id,$value->option_id,$value->good_id,$value->barcode,$value->article)->price;
+                         $project_sum += $value->quantity*$value->price;
                     }
                 }
-                if(gettype($value) == 'object'){
-                     $price_comp += $value->quantity*$component_model->getComponentsSelfPrice($value->component_id,$value->option_id,$value->good_id,$value->barcode,$value->article)->price;
-                     $project_sum += $value->quantity*$value->price;
-                }
             }
+            return (object)array("self" => $price_comp,"sum" => $project_sum);
         }
-        return (object)array("self" => $price_comp,"sum" => $project_sum);
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+   }
+
+    function calculateQuadratureByPeriod($date1,$date2){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            /*
+                SELECT SUM(c.n4),ph.date_of_change
+                FROM `rgzbn_gm_ceiling_projects_history` AS ph
+                LEFT JOIN `rgzbn_gm_ceiling_calculations` AS c ON c.project_id = ph.project_id
+                WHERE ph.new_status IN (5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) AND ph.date_of_change BETWEEN '2018-10-01' AND '2018-10-11'
+                GROUP BY ph.date_of_change
+            */
+            $query
+                 ->select("ph.date_of_change,SUM(c.n4)")
+                ->from("`#__gm_ceiling_projects_history` AS ph")
+                ->leftJoin('`#__gm_ceiling_calculations` AS c ON c.project_id = ph.project_id')
+                ->where("ph.new_status IN (5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) AND ph.date_of_change BETWEEN '$date1' AND '$date2'")
+                ->group("ph.date_of_change");
+            $db->setQuery($query);
+            $items = $db->loadRowList();
+            return $items;
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
    }
 }
