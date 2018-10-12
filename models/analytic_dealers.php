@@ -171,7 +171,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         }
    }
 
-    function calculateQuadratureByPeriod($date1,$date2){
+    function calculateQuadratureByPeriod($date1,$date2,$select_type){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -182,8 +182,12 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 WHERE ph.new_status IN (5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) AND ph.date_of_change BETWEEN '2018-10-01' AND '2018-10-11'
                 GROUP BY ph.date_of_change
             */
+            $format = "%d.%m.%Y";
+            if($select_type == 0){
+                $format = "%M %Y";
+            }
             $query
-                 ->select("ph.date_of_change,SUM(c.n4)")
+                ->select("DATE_FORMAT(ph.date_of_change,'$format') AS `date`,SUM(c.n4)")
                 ->from("`#__gm_ceiling_projects_history` AS ph")
                 ->leftJoin('`#__gm_ceiling_calculations` AS c ON c.project_id = ph.project_id')
                 ->where("ph.new_status IN (5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) AND ph.date_of_change BETWEEN '$date1' AND '$date2'")

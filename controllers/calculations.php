@@ -74,8 +74,21 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
-
+	function getQuadrature(){
+		try{
+			$jinput = JFactory::getApplication()->input;
+			$date1 = $jinput->get("date1","","STRING");
+			$date2 = $jinput->get("date2","","STRING");
+			$select_type = $jinput->get("type",null,"INT");
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
+			$result = $model->calculateQuadratureByPeriod($date1,$date2,$select_type);
+			die(json_encode($result));
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }

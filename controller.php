@@ -1091,7 +1091,7 @@ public function register_mnfctr(){
                                             );
                     break;
                 case 'ecola':
-                    $filter = '(`component_id` = 19 OR `component_id` = 20)';
+                    $filter = '(`component_id` = 19 OR `component_id` = 20) and count>0';
                     $arr = $model->getFilteredItems($filter);
                     foreach ($arr as $key => $value)
                     {
