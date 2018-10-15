@@ -224,10 +224,6 @@ unset($_SESSION["dealers_$userId"]);
         for(var i = 0; i < dealers_data.length; i++)
         {
             data_i = dealers_data[i];
-            if ((reg_name_find_dealer.test(data_i.client_name) || reg_name_find_dealer.test(data_i.client_contacts)) &&
-                (filter_city === data_i.city || filter_city === "") &&
-                (filter_manager === data_i.manager_id || filter_manager === ""))
-            {
                 for(var key in data_i)
                 {
                     if (data_i[key] == null)
@@ -267,7 +263,7 @@ unset($_SESSION["dealers_$userId"]);
                 }
                 html += '</tr>';
                 tbody_dealers.innerHTML += html;
-            }
+            
             html = '';
         }
     }

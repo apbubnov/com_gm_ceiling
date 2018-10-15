@@ -104,7 +104,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
                 ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
                 ->innerJoin("`#__gm_ceiling_projects_history` as ph on p.id = ph.project_id")
-                ->where("u.dealer_type IN (0,1) and ph.new_status in(5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) and ph.date_of_change BETWEEN '$date1' AND '$date2'")
+                ->where("u.dealer_type IN (0,1) and ph.new_status in(5,10,19) and ph.date_of_change BETWEEN '$date1' AND '$date2'")
                 ->group("u.id");
             $db->setQuery($query);
 
@@ -190,7 +190,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->select("DATE_FORMAT(ph.date_of_change,'$format') AS `date`,SUM(c.n4)")
                 ->from("`#__gm_ceiling_projects_history` AS ph")
                 ->leftJoin('`#__gm_ceiling_calculations` AS c ON c.project_id = ph.project_id')
-                ->where("ph.new_status IN (5,6,7,8,10,11,12,13,14,16,17,19,24,25,26,27,28,29) AND ph.date_of_change BETWEEN '$date1' AND '$date2'")
+                ->where("ph.new_status IN (5,10,19) AND ph.date_of_change BETWEEN '$date1' AND '$date2'")
                 ->group("ph.date_of_change");
             $db->setQuery($query);
             $items = $db->loadRowList();

@@ -1873,8 +1873,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $data['api_phone_id'] = $api_phone_id;
                  $result = $model_project->save($data);
             }
-            else{
-                  $model_repeat->update($project_id,$api_phone_id);
+            else{                
+                  $model_repeat->update($data['id'],$api_phone_id);
             }           
             die(json_encode($result));
         }

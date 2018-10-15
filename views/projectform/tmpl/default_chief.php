@@ -36,6 +36,7 @@ $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+$model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
@@ -115,7 +116,11 @@ preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
 $code = $code[1];
 
 $mount_sum = 0;
-
+if(!empty($this->item->api_phone_id))
+    $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
+else
+    $reklama = "";
+$all_advt = $model_api_phones->getAdvt();
 $json_mount = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
     $mount_types = $projects_mounts_model->get_mount_types(); 
@@ -179,7 +184,7 @@ echo parent::getPreloader();
                 <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
                 <input id="jform_project_gauger_old" type="hidden" name="jform_project_gauger_old" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else { echo "0"; } ?>"/>
                 <input id="jform_project_calculation_date_old" type="hidden" name="jform_project_calculation_date_old" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;} ?>"/>
-                <input id="mount" type="hidden" name="mount" value="<?php if (isset($this->item->mount_data)) { echo $this->item->mount_data; } ?>"/>
+                <input id="mount" type="hidden" name="mount" value="<?php echo $json_mount; ?>"/>
                 <input type="hidden" name="option" value="com_gm_ceiling"/>
                 <input type="hidden" name="task" value="project.approve"/>
                 <?php echo JHtml::_('form.token'); ?>
@@ -242,37 +247,7 @@ echo parent::getPreloader();
                                     <?php echo $jdate->format('d.m.Y H:i'); ?>
                                 <?php } ?>
                             </td>
-                        <?php }/* else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
-                            <th>Дата монтажа</th>
-                            <td>
-                                <?php
-                                    if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
-                                    {
-                                        echo '-';
-                                    }
-                                    else
-                                    {
-                                        $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
-                                        echo $jdate->format('d.m.Y H:i');
-                                    }
-                                ?>
-                            </td>
-                        <?php } else { ?>
-                            <th>Удобная дата монтажа для клиента</th>
-                            <td>
-                                <?php
-                                    if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
-                                    {
-                                        echo '-';
-                                    }
-                                    else
-                                    {
-                                        $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
-                                        echo $jdate->format('d.m.Y H:i');
-                                    }
-                                ?>
-                            </td>
-                        <?php }*/ ?>
+                        <?php } ?>
                     </tr>
                     <tr>
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
@@ -289,6 +264,19 @@ echo parent::getPreloader();
                     <tr>
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                         <td><?php echo $this->item->project_info; ?></td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Реклама
+                        </th>
+                        <td>
+                            <?php echo $reklama;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-primary" type="button" id="change_rek">Изменить рекламу</button>
+                        </td>
                     </tr>
                     <tr>
                         <th>Примечание менеджера</th>
@@ -385,6 +373,34 @@ echo parent::getPreloader();
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="mw_measures_calendar"></div>
     <div class="modal_window" id="mw_mounts_calendar"></div>
+    <div id="mw_advt" class="modal_window">
+                <h4>Изменение/добавление рекламы</h4>
+                <label>Выберите или добавьте новую рекламу</label>
+                <div class="row">  
+                    <div class="col-xs-6 col-md-6">
+                        <p>
+                            <label><strong>Выбрать:</strong></label>
+                        </p>
+                        <select id="advt_choose">
+                            <option value="0">Выберите рекламу</option>
+                            <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
+                                <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                         <p>
+                            <label><strong>Добавить:</strong></label>
+                        </p>
+                         <div id="new_advt_div">
+                            <p><input id="new_advt_name" placeholder="Название рекламы"></p>
+                            <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
+            </div>
 </div>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
@@ -400,14 +416,17 @@ echo parent::getPreloader();
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
     var project_id = "<?php echo $this->item->id; ?>";
     var preloader = '<?=parent::getPreloaderNotJS();?>';
-
+    var client_id = "<?php echo $this->item->id_client;?>";
     jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
         var div = jQuery("#mw_measures_calendar"); // тут указываем ID элемента
         var div1 = jQuery("#mw_mounts_calendar");
+        var div2 = jQuery("#mw_advt");
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0
             && !div1.is(e.target)
-            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();
@@ -549,6 +568,92 @@ echo parent::getPreloader();
             <?php } ?>
         });
 
+        jQuery("#change_rek").click(function(){
+            jQuery("#close_mw").show();
+            jQuery("#mw_container").show();
+            jQuery("#mw_advt").show('slow');
+        });
+
+
+        jQuery("#save_advt").click(function() {
+            if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Укажите рекламу"
+                });
+                jQuery("#advt_choose").focus();
+                return;
+            }
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.save_advt",
+                data: {
+                    project_id: project_id,
+                    api_phone_id: jQuery("#advt_choose").val(),
+                    client_id: client_id
+                },
+                dataType: "json",
+                async: true,
+                success: function(data) {
+                    document.getElementById('save_advt').style.display = 'none';
+                    document.getElementById('advt_choose').disabled = 'disabled';
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Реклама сохранена"
+                    });
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка"
+                    });
+                }
+            });
+        });
+
+        jQuery("#add_new_advt").click(function() {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
+                data: {
+                    name: jQuery("#new_advt_name").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    select = document.getElementById('advt_choose');
+                    var opt = document.createElement('option');
+                    opt.selected = true;
+                    opt.value = data.id;
+                    opt.innerHTML = data.name;
+                    select.appendChild(opt);
+                    jQuery("#new_advt_name").val('');
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "ошибка"
+                    });
+                }
+            });
+        });
     });
 
 </script>
