@@ -35,6 +35,7 @@
 			</tbody>
 		</table>
 	</div>
+    <hr style="border: none; color: #414099; background-color: #414099; height: 2px;">
 	<div class="row center">
         <div class="col-md-6" style="border: 1px #414099 solid;border-radius: 15px;">
             <div class="row">

@@ -30,6 +30,9 @@ $userId     = $user->get('id');
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
 	</p>
+    <p>      
+	    <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
+	</p>
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=manager', false); ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Запись на замер</a>
 	</p>
