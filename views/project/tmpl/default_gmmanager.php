@@ -187,8 +187,8 @@ $total_mount = 0;
                                     if(!empty($this->item->gm_calculator_note)) {
                                         echo $this->item->gm_calculator_note; 
                                     }
-                                    elseif(!empty($this->item->calculator_note)){
-                                        echo $this->item->calculator_note; 
+                                    elseif(!empty($this->item->dealer_calculator_note)){
+                                        echo $this->item->dealer_calculator_note; 
                                     }
                                     else{
                                         echo "Отсутствует";

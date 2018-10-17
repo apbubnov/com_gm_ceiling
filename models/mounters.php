@@ -313,7 +313,7 @@ class Gm_ceilingModelMounters extends JModelList
 			$query = $db->getQuery(true);
 			$query->select('name, email');
 			$query->from('#__users');
-			$query->where('id = '.$id);
+			$query->where("id in($id)");
 			$db->setQuery($query);	 
 			return $db->loadObject();
 		}

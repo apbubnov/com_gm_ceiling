@@ -38,10 +38,13 @@ unset($_SESSION["dealers_$userId"]);
         <h2 class="center">Дилеры</h2>
     </div>
     <div class="row">
-        <div class="col-md-4" align="left">
+        <div class="col-md-3" align="left">
             <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
         </div>
-        <div class="col-md-4" align = "center" style="margin-bottom: 15px;">
+        <div class="col-md-3" align="left">
+            <a href="/index.php?option=com_gm_ceiling&view=dealers&type=refused" class="btn btn-primary">Отказавшиеся от сотрудничества</a>
+        </div>
+        <div class="col-md-3" align = "center" style="margin-bottom: 15px;">
             <div class="col-md-4">
                 <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
             </div>

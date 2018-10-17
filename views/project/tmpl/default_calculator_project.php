@@ -31,7 +31,7 @@ $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-
+$model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
@@ -100,7 +100,11 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 
     $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
-
+if(!empty($this->item->api_phone_id))
+    $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
+else
+    $reklama = "";
+$all_advt = $model_api_phones->getAdvt();
 ?>
 
 <?= parent::getButtonBack(); ?>
@@ -134,6 +138,19 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                     <td><?php if ($this->item->project_mounting_date == '0000-00-00 00:00:00') echo "-"; else echo $this->item->project_mounting_date; ?></td>
                 </tr>
+                <tr>
+                    <th>
+                        Реклама
+                    </th>
+                    <td>
+                        <?php echo $reklama;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary" type="button" id="change_rek">Изменить рекламу</button>
+                    </td>
+                </tr>
                 <?php if(!empty($this->item->project_calculator)):?>
                     <tr>
                         <th>Замерщик</th>
@@ -150,7 +167,37 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
         </form>
     </div>
 </div>
-
+<div class="modal_window_container" id="mw_container">
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="mw_advt" class="modal_window">
+        <h4>Изменение/добавление рекламы</h4>
+        <label>Выберите или добавьте новую рекламу</label>
+        <div class="row">  
+            <div class="col-xs-6 col-md-6">
+                <p>
+                    <label><strong>Выбрать:</strong></label>
+                </p>
+                <select id="advt_choose">
+                    <option value="0">Выберите рекламу</option>
+                    <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
+                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                 <p>
+                    <label><strong>Добавить:</strong></label>
+                </p>
+                 <div id="new_advt_div">
+                    <p><input id="new_advt_name" placeholder="Название рекламы"></p>
+                    <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
+    </div>
+</div>
 <?php if ($this->item) : ?>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- чтото для клиенткого кабинета, потом стили применю, если не уберется это вообще -->
@@ -167,6 +214,17 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
     <script type="text/javascript">
         var $ = jQuery;
         var project_id = "<?php echo $this->item->id; ?>";
+        var client_id = "<?php echo $this->item->id_client;?>";
+        jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
+            var div = jQuery("#mw_advt");
+            if (!div.is(e.target) // если клик был не по нашему блоку
+                && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#close_mw").hide();
+                jQuery("#mw_container").hide();
+                jQuery(".modal_window").hide();
+            }
+        });
+
         jQuery(document).ready(function () {
 
             document.getElementById('add_calc').onclick = function()
@@ -240,7 +298,92 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                 });
 
             });
-                       
+            jQuery("#change_rek").click(function(){
+            jQuery("#close_mw").show();
+            jQuery("#mw_container").show();
+            jQuery("#mw_advt").show('slow');
+        });
+
+
+        jQuery("#save_advt").click(function() {
+            if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "warning",
+                    text: "Укажите рекламу"
+                });
+                jQuery("#advt_choose").focus();
+                return;
+            }
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.save_advt",
+                data: {
+                    project_id: project_id,
+                    api_phone_id: jQuery("#advt_choose").val(),
+                    client_id: client_id
+                },
+                dataType: "json",
+                async: true,
+                success: function(data) {
+                    document.getElementById('save_advt').style.display = 'none';
+                    document.getElementById('advt_choose').disabled = 'disabled';
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Реклама сохранена"
+                    });
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка"
+                    });
+                }
+            });
+        });
+
+        jQuery("#add_new_advt").click(function() {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
+                data: {
+                    name: jQuery("#new_advt_name").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    select = document.getElementById('advt_choose');
+                    var opt = document.createElement('option');
+                    opt.selected = true;
+                    opt.value = data.id;
+                    opt.innerHTML = data.name;
+                    select.appendChild(opt);
+                    jQuery("#new_advt_name").val('');
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "ошибка"
+                    });
+                }
+            });
+        });           
             jQuery("#btn_pay").click(function () {
                 var id = "<?php echo $sb_project_id ?>";
                 var number = <?php echo $project_id ?>;

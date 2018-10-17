@@ -243,7 +243,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->innerJoin('`#__user_usergroup_map` as umap on umap.user_id in (a.project_mounter)');
                         $query->where("umap.group_id = 26");
                     } else {
-                        $query->where('a.project_status in ("10", "5", "11", "16", "17")');
+                        $query->where('a.project_status in ("10", "5", "11", "16", "17","24","25","26","27","28","29")');
                     }
                     break;
                 case "chief":
@@ -257,7 +257,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
                     } else {
-                        $query->where('a.project_status in ("10", "5", "11", "16", "17", "23", "6", "7", "8")');
+                        $query->where('a.project_status in ("10", "5", "11", "16", "17", "23", "6", "7", "8","24","25","26","27","28","29")');
                     }
                     $query->where('a.deleted_by_user <> 1');
                     break;

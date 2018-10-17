@@ -53,6 +53,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					Адрес
 				</th>
 				<th class='center'>
+					Примечание
+				</th>
+				<th class='center'>
 					<?php //echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
 					Телефоны
 				</th>
@@ -87,6 +90,15 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					</td>
 					<td class="center one-touch">
 						<?php echo $this->escape($item->project_info); ?>
+					</td>
+					<td class="center one-touch">
+						<?php if(!empty($item->dealer_calculator_note)){
+							echo $item->dealer_calculator_note;
+						}
+						if(!empty($item->gm_calculator_note)){
+							echo "ГМ: ".$item->gm_calculator_note;
+						}
+						if(empty($item->dealer_calculator_note) && empty($item->gm_calculator_note) ) echo "-";?>
 					</td>
 					<td class="center one-touch">
 						<?php echo $item->client_contacts; ?>

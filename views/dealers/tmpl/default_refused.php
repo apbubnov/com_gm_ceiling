@@ -35,7 +35,7 @@ unset($_SESSION["dealers_$userId"]);
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
 <div class="container">
     <div class="row">
-        <h2 class="center">Дилеры</h2>
+        <h2 class="center">Дилеры, отказавшиеся от сотрудничества</h2>
     </div>
     <div class="row">
         <div class="col-md-6" align = "center" style="margin-bottom: 15px;">

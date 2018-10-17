@@ -29,7 +29,7 @@ class Gm_ceilingModelProjectfinished extends JModelItem {
 			
 			$query->select('projects.read_by_chief, projects.id, mp.mount_end as project_mounting_end, users.name, projects.mounter_note, projects.gm_mounter_note, projects.project_info')
 				->from('#__gm_ceiling_projects as projects')
-				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on p.id = mp.project_id")
+				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on projects.id = mp.project_id")
 				->innerJoin('#__users as users ON users.id = mp.mounter_id')
 				->where("users.dealer_id = '$user->dealer_id' and projects.project_status = '11'")
 				->order("mp.mount_end DESC");
