@@ -2958,6 +2958,9 @@ class Gm_ceilingHelpersGm_ceiling
                 if(!empty($service)){
                     $data_mount = self::calculate_mount(0,$data['id'],null,$service);
                 }
+                else{
+                    $data_mount = self::calculate_mount(0,$data['id'],null,"mount");
+                }
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
                 for($i=0;$i<count($names);$i++){

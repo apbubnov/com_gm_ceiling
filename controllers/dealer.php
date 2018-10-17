@@ -303,8 +303,9 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$limit = $jinput->get("limit",0,"INT");
 			$select_size = $jinput->get("select_size","10","STRING");
 			$client_name = $jinput->get("client","","STRING");
+			$coop = $jinput->get('coop',0,'INT');
 			$model =  Gm_ceilingHelpersGm_ceiling::getModel('clients');
-			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size);
+			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop);
 			die(json_encode($result));
 		}
 		catch(Exception $e)
@@ -334,5 +335,26 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 		{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }	
+	}
+
+	function delete(){
+		try{
+			$model =  Gm_ceilingHelpersGm_ceiling::getModel('client');
+			$jinput = JFactory::getApplication()->input;
+			$dealer_id = $jinput->get('dealer_id',null,'INT');
+			$dealer = JFactory::getUser($dealer_id); 
+			$user = JFactory::getUser();
+			if(in_array('16', $user->groups) && !empty($dealer_id)){
+				$result = $model->delete($dealer->associated_client);
+			}
+			else{
+				throw new Exception('403 Forbidden!');
+			}
+			die(json_encode($result));
+		}
+		catch(Exception $e)
+		{
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
 	}
 }

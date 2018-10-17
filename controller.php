@@ -631,7 +631,7 @@ public function register_mnfctr(){
                 $dealer_id = $jinput->get('dealer_id', '', 'INT');
                 $model_name = $jinput->get('model_name', '', 'STRING');
                 $project_id = $jinput->get('project_id', '', 'INT');
-                throw new Exception();
+                //throw new Exception();
             }
             $model = Gm_ceilingHelpersGm_ceiling::getModel($model_name);
             $model->updateDealerId($client_id,$dealer_id,$project_id);
@@ -2924,11 +2924,11 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
         
             $id = $jinput->get('user_id', null, 'INT');
-    
+            $coop = $jinput->get('coop',1,'INT');
             $user = JFactory::getUser();
             if (!$user->guest) {
                 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                $result = $users_model->refuseToCooperate($id);
+                $result = $users_model->refuseToCooperate($id,$coop);
             }
     
             die($result);
@@ -3075,7 +3075,7 @@ public function register_mnfctr(){
         {
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'calls.txt', json_encode($_POST)."\n----------\n", FILE_APPEND);
-            if (!empty($_POST['phone'])) {
+           // if (!empty($_POST['phone'])) {
                 file_put_contents($files.'calls.txt', json_encode($_POST['phone'])."\n==========\n", FILE_APPEND);
                 $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
                 $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
@@ -3084,10 +3084,12 @@ public function register_mnfctr(){
 
                 $data['client_name'] = 'Клиент с обзвона';
                 $data['client_contacts'] = explode('+', $_POST['phone'])[1];
-                 $data['dealer_id'] = 697;
+                $data['dealer_id'] = 697;
                 $data['manager_id'] = 697;
                 //die($_POST['phone'].' '.$data['client_contacts']);
                 $result = $clientform_model->save($data);
+                $this->createProject($result,43,null,null);
+
                 if (mb_ereg('[\d]', $result)) {
                     $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
                     $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
@@ -3098,10 +3100,10 @@ public function register_mnfctr(){
                     $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 697);
                 }
                 die(true);
-            }
+           /* }
             else {
                 die(false);
-            }
+            }*/
         }
         catch(Exception $e)
         {

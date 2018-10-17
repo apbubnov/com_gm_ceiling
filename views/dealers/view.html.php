@@ -19,11 +19,11 @@ jimport('joomla.application.component.view');
  */
 class Gm_ceilingViewDealers extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
 	protected $state;
-
-	protected $item;
-
-	protected $form;
 
 	protected $params;
 
@@ -38,38 +38,36 @@ class Gm_ceilingViewDealers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
 
-		$this->state  = $this->get('State');
-		$this->item   = $this->get('Data');
-		$this->params = $app->getParams('com_gm_ceiling');
-
-		if (!empty($this->item))
-		{
-			$this->form = $this->get('Form');
-		}
+		$this->state      = $this->get('State');
+		$this->items = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
+		$this->params     = $app->getParams('com_gm_ceiling');
+		$this->filterForm = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			throw new Exception(implode("\n", $errors));
 		}
-
 		
-
-		if ($this->_layout == 'edit')
-		{
-			$authorised = $user->authorise('core.create', 'com_gm_ceiling');
-
-			if ($authorised !== true)
-			{
-				throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
-			}
+		$type = $app->input->getString('type', NULL);
+		$subtype = $app->input->getString('subtype', NULL);
+		if($subtype != NULL) {
+			$tpl = $type . "_" . $subtype;
+		} else  {
+			$tpl = $type;
+		}
+		
+		$user = JFactory::getUser();
+		if($user->guest) {
+			$mainframe = &JFactory::getApplication();
+			$mainframe->redirect(JURI::root()."index.php?option=com_users&view=login","Требуется авторизация");
 		}
 
 		$this->_prepareDocument();
-
 		parent::display($tpl);
 	}
 
@@ -87,7 +85,7 @@ class Gm_ceilingViewDealers extends JViewLegacy
 		$title = null;
 
 		// Because the application sets a default page title,
-		// We need to get it from the menu item itself
+		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
 
 		if ($menu)
@@ -130,5 +128,17 @@ class Gm_ceilingViewDealers extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
+	}
+
+	/**
+	 * Check if state is set
+	 *
+	 * @param   mixed  $state  State
+	 *
+	 * @return bool
+	 */
+	public function getState($state)
+	{
+		return isset($this->state->{$state}) ? $this->state->{$state} : false;
 	}
 }

@@ -390,7 +390,7 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size){
+	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop){
 		try{
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
@@ -412,7 +412,7 @@ if (empty($list['direction']))
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6)")
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop")
 				->order("`c`.`id` DESC LIMIT $limit,$select_size")
 				->group('`c`.`id`');
 				if (!empty($manager_id))

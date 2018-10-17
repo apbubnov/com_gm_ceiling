@@ -358,14 +358,14 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	function refuseToCooperate($id)
+	function refuseToCooperate($id,$coop)
 	{
 		try
 		{
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__users`");
-			$query->set("`refused_to_cooperate` = 1");
+			$query->set("`refused_to_cooperate` = $coop");
 			$query->where("`id` = $id");
 			
 			$db->setQuery($query);

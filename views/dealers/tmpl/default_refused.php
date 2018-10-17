@@ -38,10 +38,7 @@ unset($_SESSION["dealers_$userId"]);
         <h2 class="center">Дилеры</h2>
     </div>
     <div class="row">
-        <div class="col-md-4" align="left">
-            <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
-        </div>
-        <div class="col-md-4" align = "center" style="margin-bottom: 15px;">
+        <div class="col-md-6" align = "center" style="margin-bottom: 15px;">
             <div class="col-md-4">
                 <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
             </div>
@@ -52,7 +49,7 @@ unset($_SESSION["dealers_$userId"]);
                  <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
             </div>
         </div>
-        <div class="col-md-4" align="right">
+        <div class="col-md-6" align="right">
             <input type="text" id="name_find_dealer">
             <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
         </div>
@@ -110,9 +107,6 @@ unset($_SESSION["dealers_$userId"]);
             <thead>
                 <tr>
                     <th>
-                        <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
-                    </th>
-                    <th>
                        Имя
                     </th>
                     <th id="dealer_price" data-sort="">
@@ -131,10 +125,10 @@ unset($_SESSION["dealers_$userId"]);
                         Менеджер
                     </th>
                     <th>
-
+                    	Вернуть
                     </th>
                     <th>
-                        Отказ
+                      Удалить
                     </th>
                 </tr>
             </thead>
@@ -145,16 +139,6 @@ unset($_SESSION["dealers_$userId"]);
     </div>
     <div class="modal_window_container" id="mv_container">
         <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div class="modal_window" id="modal_window_create">
-                <p><strong>Создание нового дилера</strong></p>
-                <p>ФИО:</p>
-                <p><input type="text" id="fio_dealer" placeholder = "ФИО"></p>
-                <p>Номер телефона:</p>
-                <p><input type="text" id="dealer_contacts"></p>
-                <p>Город</p>
-                <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
-                <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
-        </div>
         <div class="modal_window" id="modal_window_kp_editor">
             <p>Название КП</p>
             <p><input type ="text" class="input-gm" id="kp_name"></p>
@@ -247,20 +231,15 @@ unset($_SESSION["dealers_$userId"]);
                     color = "style=\"outline: #414099 solid 1px; margin-top:15px;\"";
                 }
                 html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-dealer_id = "'+data_i.dealer_id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
-                html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
+               /* html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';*/
                 html += '<td>' + data_i.client_name + '</td>';
                 html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
                 html += '<td>' + data_i.client_contacts + '</td>';
                 html += '<td>' + data_i.city + '</td>';
                 html += '<td>' + data_i.created + '</td>';
                 html += '<td>' + data_i.manager_name + '</td>';
-                if(data_i.dealer_type == 6){
-                    html += '<td><font face="webdings"> @ </font></td>';
-                }
-                else{
-                    html += '<td></td>';
-                }
-                html += '<td><button class="btn btn-danger refuse_coop" type="button"><i class="fa fa-ban" aria-hidden="true"></i></button></td>'
+                html += '<td><button class="btn btn-primary return" type="button"><i class="fa fa-step-backward" aria-hidden="true"></i></button></td>'
+                html += '<td><button class="btn btn-danger delete" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
                 html += '</tr>';
                 tbody_dealers.innerHTML += html;
             
@@ -291,7 +270,8 @@ unset($_SESSION["dealers_$userId"]);
                filter_status: status,
                limit : limit,
                select_size :select_size,
-               client: client
+               client: client,
+               coop:1
             },
             beforeSend: function() {
                 inProgress = true;
@@ -655,13 +635,13 @@ unset($_SESSION["dealers_$userId"]);
                     {
                         return;
                     }
-                    if(target.classList.contains("refuse_coop")){
+                    if(target.classList.contains("delete")){
                         noty({
                             theme: 'relax',
                             layout: 'center',
                             timeout: false,
                             type: "info",
-                            text: "Перевести дилера в отказ от сотрудничества?",
+                            text: "Удалить дилера?",
                             buttons:[
                                 {
                                     addClass: 'btn btn-primary', text: 'Да', onClick: function($noty) {
@@ -669,9 +649,9 @@ unset($_SESSION["dealers_$userId"]);
                                         var user_id = row.data('dealer_id');
                                         console.log(user_id);
                                         jQuery.ajax({
-                                            url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                                            url: "index.php?option=com_gm_ceiling&task=dealer.delete",
                                             data: {
-                                                user_id: user_id
+                                                dealer_id: user_id,
                                             },
                                             dataType: "json",
                                             async: false,
@@ -682,7 +662,64 @@ unset($_SESSION["dealers_$userId"]);
                                                     layout: 'center',
                                                     maxVisible: 5,
                                                     type: "success",
-                                                    text: "Переведен в отказ от сотрудничества"
+                                                    text: "Успешно удалено!"
+                                                });
+                                                row.hide();
+                                            },
+                                            error: function(data) {
+                                                console.log(data);
+                                                var n = noty({
+                                                    timeout: 2000,
+                                                    theme: 'relax',
+                                                    layout: 'center',
+                                                    maxVisible: 5,
+                                                    type: "error",
+                                                    text: "Ошибка сервера"
+                                                });
+                                            }
+                                        });
+                                        $noty.close();
+                                    }
+                                },
+                                {
+                                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                                        $noty.close();
+                                    }
+                                }
+                            ]
+                        });
+                        return;
+                    }
+
+                    if(target.classList.contains("return")){
+                    	 noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: false,
+                            type: "info",
+                            text: "Вернуть к сотрудничеству?",
+                            buttons:[
+                                {
+                                    addClass: 'btn btn-primary', text: 'Да', onClick: function($noty) {
+                                        var row = jQuery(target).closest('td').parent();
+                                        var user_id = row.data('dealer_id');
+                                        console.log(user_id);
+                                        jQuery.ajax({
+                                            url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                                            data: {
+                                                user_id: user_id,
+                                                coop:0
+                                            },
+                                            dataType: "json",
+                                            async: false,
+                                            success: function(data) {
+                                                var n = noty({
+                                                    timeout: 2000,
+                                                    theme: 'relax',
+                                                    layout: 'center',
+                                                    maxVisible: 5,
+                                                    type: "success",
+                                                    text: "Выполнено!"
                                                 });
                                                 row.hide();
                                             },
