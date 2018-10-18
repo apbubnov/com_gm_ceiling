@@ -66,7 +66,7 @@ foreach ($calculations as $calculation) {
     $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
     $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
     $self_components_sum += $calculation->dealer_self_components_sum;
-    //$calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
