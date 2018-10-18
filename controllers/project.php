@@ -195,7 +195,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 			$client_model = $this->getModel('client', 'Gm_ceilingModel');
             $user_model = $this->getModel('users', 'Gm_ceilingModel');
-           
+            $call_comment = $jinput->get('call_comment', '', 'STRING');
+            $call_date = $jinput->get('call_date', "0", 'STRING');
             $isDataDelete = $jinput->get('data_delete', '0', 'INT');
             if ($isDataDelete) {
                 $idCalc = $jinput->get('idCalcDelete', '0', 'INT');
@@ -223,8 +224,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $api_phone_id = NULL;
                 }
 
-                $call_comment = $jinput->get('call_comment', '', 'STRING');
-                $call_date = $jinput->get('call_date', "0", 'STRING');
                 $client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
                 $status = $jinput->get('status', '0', 'INT');
                 $gauger = null;
@@ -276,138 +275,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
                 $gmmanager_comment = $jinput->get('gmmanager_note', null, 'STRING');
                 $manager_comment = $jinput->get('manager_note', null, 'STRING');
-
-               /* if ($client_id == 1)
-                {
-                    $client_found_bool = false;
-                    foreach($phones as $key => $phone)
-                    {
-                        $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
-                        if (!empty($old_client))
-                        {
-                            $del_phone = $phone;
-                            unset($phones[$key]);
-                            $client_found_bool = true;
-                            break;
-                        }
-                    }
-                    if ($client_found_bool)
-                    {
-                        $client_id = $old_client->id;
-                        if ($old_client->client_name == 'Безымянный' || $old_client->client_name == '')
-                        {
-                            $client_model->updateClient($client_id, $name, $user->dealer_id);
-                            $client_model->updateClientManager($client_id, $user->id);
-                            $client_model->updateClientSex($client_id, $sex);
-                        }
-                    }
-                    else
-                    {
-                        $client_data['client_name'] = $name;
-                        $client_data['type_id'] = 1;
-                        $client_data['manager_id'] = $user->id;
-                        $client_data['dealer_id'] = $user->dealer_id;
-                        $client_data['sex'] = $sex;
-                        $client_id = $client_form_model->save($client_data);
-                    }
-                    
-                    //обновление email
-                    $dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
-                    $dop_contacts->update_client_id($emails, $client_id);
-                    // добавление проекта к откатнику
-                    if ($api_phone_id == 17) {
-                        $rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-                        $rec_model->save($recoil, $project_id, 0);
-                    }
-                    //добавление его номеров телефонов в бд
-                    if (!empty($phones))
-                    {
-                        $cl_phones_model->save($client_id, $phones);
-                    }
-                    //обновление комментов к клиенту
-                    if (count($comments_id) != 0) {
-                        $client_history_model->updateClientId($client_id, $comments_id);
-                    }
-                    if ($call_type == "client") {
-                        //обновление созданного проекта
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-						if (!empty($answer))
-						{
-							$client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
-						}
-						else
-						{
-							$client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
-						}
-                        //добавление звонка
-                        if ($call_date != "") {
-                            $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
-                            $callback_model->save($call_date, $call_comment, $client_id, $user->id);
-                            //добавление в историю что добавлен звонок
-                            $client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
-                        }
-                    } elseif ($call_type == "promo") {
-                        $client_history_model->save($client_id, "Клиент помечен как реклама.");
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
-                        $this->setMessage("Клиент помечен как реклама");
-                        $status = 21;
-                    } elseif ($call_type == "dealer") {
-                        $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                        $emails = $dop_contacts->getEmailByClientID($client_id);
-                        if (count($emails) != 0) {
-                            $email = $emails[0];
-                        } else {
-                            $email = "$client_id@$client_id";
-                        }
-                        if (empty($phones))
-                        {
-                            $reg_phone = $del_phone;
-                        }
-                        else
-                        {
-                            $reg_phone = preg_replace('/[\(\)\-\+\s]/', '', array_shift($phones));
-                        }
-                        //зарегать как user
-                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name, $reg_phone, $email, $client_id);
-
-                        $client_model->updateClient($client_id, null, $userID);
-
-                        $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-                        $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $userID);
-                        $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $userID);
-                        $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $userID);
-                        $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $userID);
-                        $gm_components_margin = $info_model->getMargin('gm_components_margin', $userID);
-                        $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $userID);
-
-                        $client_history_model->save($client_id, "Клиент переведен в дилеры.");
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
-                            $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
-                        $status = 20;
-                    }
-                    if ($client_found_bool)
-                    {
-                        if ($status == 0)
-                        {
-                            $model->delete($project_id);
-                        }
-                        else
-                        {
-                            $client_projects = $model->getProjectsByClientID($client_id);
-                            foreach ($client_projects as $key => $project)
-                            {
-                                if ($project->project_status == 0) {
-                                    $model->delete($project->id);
-                                }
-                            }
-                        }
-                    }
-                    if ($call_type == "client") {
-                        $this->setMessage("Клиент создан и $result!");
-                    }
-                }
-                elseif ($client_id != 1)
-                {*/
                 $new_phones = [];
                 $change_phones = [];
                 $newFIO = $jinput->get('new_client_name', '', 'STRING');

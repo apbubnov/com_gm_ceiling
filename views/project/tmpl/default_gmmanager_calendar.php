@@ -365,7 +365,7 @@
                         <b><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></b>
                     </div>
                     <div class="col-xs-8 col-md-8">
-                        <input name="new_address" id="jform_address" class="inputactive" value="<?php echo $street ?>" placeholder="Адрес" type="text" required="required">
+                        <input name="new_address" id="jform_address" class="inputactive" value="<?php echo $street ?>" placeholder="Адрес" type="text" >
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
@@ -373,7 +373,7 @@
                         <b>Дом / Корпус</b>
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_house" id="jform_house" value="<?php echo $house ?>" class="inputactive" placeholder="Дом" required="required" aria-required="true" type="text">
+                        <input name="new_house" id="jform_house" value="<?php echo $house ?>" class="inputactive" placeholder="Дом"  aria-required="true" type="text">
                     </div>
                     <div class="col-xs-4 col-md-4">
                         <input name="new_bdq" id="jform_bdq"  value="<?php echo $bdq ?>" class="inputactive"   placeholder="Корпус" aria-required="true" type="text">
@@ -574,14 +574,14 @@
     <div class="modal_window" id="mw_call_up">
         <h4>Перенос звонка</h4>
         <label for="call_date_up">Новая дата звонка</label><br>                            
-        <input name="call_date" id="call_date_up"  class = "act_btn" type="datetime-local" placeholder="Дата звонка"><br>
+        <input name="call_date_up" id="call_date_up"  class = "act_btn" type="datetime-local" placeholder="Дата звонка"><br>
         <label for="call_comment_up">Комментарий</label><br>
-        <input name="call_comment" id="call_comment_up" class = "act_btn" placeholder="Введите примечание"><br>
+        <input name="call_comment_up" id="call_comment_up" class = "act_btn" placeholder="Введите примечание"><br>
         <br>
         <button class="btn btn-primary act_btn" id="add_call_and_submit_up" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
     </div>
 </div>
-
+</form>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 
@@ -1074,16 +1074,7 @@
 
         jQuery("#add_call_and_submit").click(function () {
             if (jQuery("#project_status").val() == 1) {
-                if (jQuery("#jform_project_gauger").val() == 0) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Укажите время замера"
-                    });
-                } else if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
+                if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
