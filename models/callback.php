@@ -142,6 +142,8 @@ class Gm_ceilingModelCallback extends JModelList
 			$db->execute();
 			$last_id = $db->insertid();
 			
+			$history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+			$history_model->save($id_client,"Назначен звонок на".date("d.m.Y H:i:s", strtotime($jdate)));
 			return $last_id;
 		}
 		catch(Exception $e)

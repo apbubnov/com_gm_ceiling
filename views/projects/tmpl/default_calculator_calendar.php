@@ -31,81 +31,86 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 <?=parent::getButtonBack();?>
 <h2 class="center">График замеров</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>" method="post" name="adminForm" id="adminForm">
-    <div class="row-fluid toolbar">
-        <div class="span3">
-            <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>" class="btn btn-success">
-                <i class="icon-plus"></i> Добавить замер
-            </a>
-            <a class="btn btn-large btn-primary" href="/index.php?option=com_gm_ceiling&amp;view=gaugers&amp;type=chief"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-        </div>
-        <?php if (false): ?>
-            <div class="span9">
-                <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
+    <div class="container">
+        <div class="row">
+            <div class="span3">
+                <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>" class="btn btn-success">
+                    <i class="icon-plus"></i> Добавить замер
+                </a>
+                <a class="btn btn-large btn-primary" href="/index.php?option=com_gm_ceiling&amp;view=gaugers&amp;type=chief"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
             </div>
-        <?php endif; ?>
+            <?php if (false): ?>
+                <div class="span9">
+                    <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="row">
+            <table class="rwd-table" id="projectList">
+                <thead>
+                    <tr class="row">
+                        <th class='center'>
+                            №
+                        </th>
+                        <th class='center'>
+                            Дата и время замера
+                        </th>
+                        <th class='center'>
+                            Адрес
+                        </th>
+                        <th class='center'>
+                            Примечание
+                        </th>
+                        <?php if (in_array("16", $groups)):?>
+                            <th class="center">
+                                Дилер
+                            </th>
+                        <?php endif;?>
+                        <?php if (in_array("14", $groups)):?>
+                            <th class="center">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </th>
+                        <?php endif;?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        foreach ($this->items as $i => $item): 
+                            if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
+                            //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
+                            else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
+                    ?>
+                        <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
+                            <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
+                            <td data-th = "Дата/время замера" class="center one-touch">
+                                <? if ($item->calculation_date == "00.00.0000"): ?>-
+                                <? else: ?><?= $item->calculation_date; ?>
+                                <? endif; ?>
+                                <br>
+                                <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                                <? else: ?><?= $item->calculation_time; ?>
+                                <? endif; ?>
+                            </td>
+                            <td data-th = "Адрес" class="center one-touch"><?= $item->address; ?></td>
+                            <td data-th = "Примечание" class="center one-touch"><?= $item->dealer_manager_note; ?></td>
+                            <?if (in_array("16", $groups)):?>
+                                <td data-th = "Дилер" class="center one-touch"><?= $item->dealer_name; ?></td>
+                            <?endif;?>
+                            <?php if(in_array(14, $groups)){ ?>
+                                <td data-th = "Удалить" class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            <?php } ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <input type="hidden" name="task" value=""/>
+            <input type="hidden" name="boxchecked" value="0"/>
+            <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
+            <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
+        </div>
     </div>
-    <table class="rwd-table" id="projectList">
-        <thead>
-            <tr class="row">
-                <th class='center'>
-                    №
-                </th>
-                <th class='center'>
-                    Дата и время замера
-                </th>
-                <th class='center'>
-                    Адрес
-                </th>
-                <th class='center'>
-                    Примечание
-                </th>
-                <?php if (in_array("16", $groups)):?>
-                    <th class="center">
-                        Дилер
-                    </th>
-                <?php endif;?>
-                <?php if (in_array("14", $groups)):?>
-                    <th class="center">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </th>
-                <?php endif;?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                foreach ($this->items as $i => $item): 
-                    if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
-                    //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
-                    else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
-            ?>
-                <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
-                    <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
-                    <td data-th = "Дата/время замера" class="center one-touch">
-                        <? if ($item->calculation_date == "00.00.0000"): ?>-
-                        <? else: ?><?= $item->calculation_date; ?>
-                        <? endif; ?>
-                        <br>
-                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?><?= $item->calculation_time; ?>
-                        <? endif; ?>
-                    </td>
-                    <td data-th = "Адрес" class="center one-touch"><?= $item->address; ?></td>
-                    <td data-th = "Примечание" class="center one-touch"><?= $item->dealer_manager_note; ?></td>
-                    <?if (in_array("16", $groups)):?>
-                        <td data-th = "Дилер" class="center one-touch"><?= $item->dealer_name; ?></td>
-                    <?endif;?>
-                    <?php if(in_array(14, $groups)){ ?>
-                        <td data-th = "Удалить" class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                    <?php } ?>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <input type="hidden" name="task" value=""/>
-    <input type="hidden" name="boxchecked" value="0"/>
-    <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
-    <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
-    <?= JHtml::_('form.token'); ?>
+    
+    
 </form>
 
 <? if ($canDelete) : ?>

@@ -423,7 +423,6 @@
                     type: "success",
                     text: "Звонок добавлен"
                 });
-                add_history(client_id, 'Добавлен звонок на ' + date + ' ' + time + ':00');
             },
             error: function (data) {
                 var n = noty({

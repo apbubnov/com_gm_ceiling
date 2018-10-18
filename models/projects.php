@@ -179,7 +179,7 @@ class Gm_ceilingModelProjects extends JModelList
                 case "gmmanager":
                     $query->where('a.deleted_by_user = 0');
                     if ($subtype == "runprojects") {
-                        $query->where('a.project_status in (10, 11, 16, 17, 19, 24, 25, 26)');
+                        $query->where('a.project_status in (10, 11, 16, 17, 19, 24, 25, 26,27,28,29)');
                     } elseif ($subtype == "archive") {
                         $query->where('a.project_status = 12');
                     } elseif ($subtype == "refused") {
