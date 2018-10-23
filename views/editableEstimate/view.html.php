@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  *
  * @since  1.6
  */
-class Gm_ceilingVieweditableEstimate extends JViewLegacy
+class Gm_ceilingViewEditableEstimate extends JViewLegacy
 {
 	protected $state;
 

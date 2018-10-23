@@ -3110,6 +3110,86 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function audioCallGM() {
+        try
+        {
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'callsGM.txt', json_encode($_POST)."\n----------\n", FILE_APPEND);
+           // if (!empty($_POST['phone'])) {
+                file_put_contents($files.'callsGM.txt', json_encode($_POST['phone'])."\n==========\n", FILE_APPEND);
+                $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+                $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+
+                $data['client_name'] = 'Клиент с обзвона Msk';
+                $data['client_contacts'] = explode('+', $_POST['phone'])[1];
+                $data['dealer_id'] = 1;
+                $data['manager_id'] = 62;
+                //die($_POST['phone'].' '.$data['client_contacts']);
+                $result = $clientform_model->save($data);
+                $this->createProject($result,77,null,null);
+
+                if (mb_ereg('[\d]', $result)) {
+                    $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 62);
+                }
+                else
+                {
+                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 62);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 62);
+                }
+                die(true);
+           /* }
+            else {
+                die(false);
+            }*/
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function audioCallTU() {
+        try
+        {
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'callsTU.txt', json_encode($_POST)."\n----------\n", FILE_APPEND);
+           // if (!empty($_POST['phone'])) {
+                file_put_contents($files.'callsTU.txt', json_encode($_POST['phone'])."\n==========\n", FILE_APPEND);
+                $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+                $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+
+                $data['client_name'] = 'Клиент с обзвона';
+                $data['client_contacts'] = explode('+', $_POST['phone'])[1];
+                $data['dealer_id'] = 697;
+                $data['manager_id'] = 697;
+                //die($_POST['phone'].' '.$data['client_contacts']);
+                $result = $clientform_model->save($data);
+                $this->createProject($result,78,null,null);
+
+                if (mb_ereg('[\d]', $result)) {
+                    $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
+                }
+                else
+                {
+                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 697);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 697);
+                }
+                die(true);
+           /* }
+            else {
+                die(false);
+            }*/
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
     function addCallHistory() {
         try
