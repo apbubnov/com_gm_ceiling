@@ -302,7 +302,7 @@ unset($_SESSION["dealers_$userId"]);
             success: function(data){
                 console.log(data.length);
                 print_dealers(data);
-                if(data.length==10){
+                if(data.length>=10){
                     inProgress = false;
                 }
                 limit +=10;
@@ -388,6 +388,7 @@ unset($_SESSION["dealers_$userId"]);
         });
 
         $(window).scroll(function() {
+            console.log(inProgress);
             if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
                 getDealers();
             }

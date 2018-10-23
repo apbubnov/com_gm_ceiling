@@ -3265,7 +3265,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $filename = md5($project_id . "consumablesnone") . ".pdf";
             }
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-            return 1;
+            return $html;
         }
         catch(Exception $e)
         {
