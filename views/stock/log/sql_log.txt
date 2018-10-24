@@ -751,3 +751,60 @@ INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, 
 INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '467.5', '1', '2', '2018-07-18 12:22:29' ) , ( '5', '9681', '1', '2', '2018-07-18 12:22:29' ) , ( '19', '99', '1', '2', '2018-07-18 12:22:29' ) , ( '9', '6141', '1', '2', '2018-07-18 12:22:29' ) ;
 
 Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 31.07.2018 13:52:28
+UPDATE `#__gm_ceiling_components_goods` SET count = '9877' WHERE id = '695';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '5', '5', '695', '000065', 'GMDBP51', '-123', '0.5', '1', '2018-07-31 13:52:28', '535', '247', '339', '46', '2', 1902 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '5', '9877', '1', '2', '2018-07-31 13:52:28' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 01.08.2018 10:06:29
+UPDATE `#__gm_ceiling_components_goods` SET count = '470' WHERE id = '686';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '30', '11', '686', '000040', 'GMBPVH', '-5', '15', '1', '2018-08-01 10:06:29', '609', '273', '339', '47', '2', 1914 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '470', '1', '2', '2018-08-01 10:06:29' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 01.08.2018 10:18:39
+UPDATE `#__gm_ceiling_components_goods` SET count = '460' WHERE id = '686';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '30', '11', '686', '000040', 'GMBPVH', '-10', '15', '1', '2018-08-01 10:18:39', '303', '165', '339', '48', '2', 1915 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '460', '1', '2', '2018-08-01 10:18:39' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 01.08.2018 10:29:46
+UPDATE `#__gm_ceiling_components_goods` SET count = '440' WHERE id = '686';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '30', '11', '686', '000040', 'GMBPVH', '-20', '15', '1', '2018-08-01 10:29:46', '179', '143', '339', '49', '2', 1918 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '440', '1', '2', '2018-08-01 10:29:46' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 01.08.2018 10:30:28
+UPDATE `#__gm_ceiling_components_goods` SET count = '400' WHERE id = '686';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '30', '11', '686', '000040', 'GMBPVH', '-20', '15', '1', '2018-08-01 10:30:28', '177', '142', '339', '50', '2', 1920 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '400', '1', '2', '2018-08-01 10:30:28' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 15.08.2018 09:15:37
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '4973.6614469174' WHERE id = '282';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '4947.26' WHERE id = '19';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '19', '282', '23423433', '32423433', '-4.0385530825683', '80', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '19', '19', '', '', '-22.3', '80', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '377.5' WHERE id = '686';
+UPDATE `#__gm_ceiling_components_goods` SET count = '1117' WHERE id = '527';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9645' WHERE id = '695';
+UPDATE `#__gm_ceiling_components_goods` SET count = '467' WHERE id = '709';
+UPDATE `#__gm_ceiling_components_goods` SET count = '497' WHERE id = '676';
+UPDATE `#__gm_ceiling_components_goods` SET count = '361' WHERE id = '684';
+UPDATE `#__gm_ceiling_components_goods` SET count = '25' WHERE id = '705';
+UPDATE `#__gm_ceiling_components_goods` SET count = '499' WHERE id = '501';
+UPDATE `#__gm_ceiling_components_goods` SET count = '1293' WHERE id = '696';
+UPDATE `#__gm_ceiling_components_goods` SET count = '1197' WHERE id = '482';
+UPDATE `#__gm_ceiling_components_goods` SET count = '5494' WHERE id = '618';
+UPDATE `#__gm_ceiling_components_goods` SET count = '6228' WHERE id = '697';
+UPDATE `#__gm_ceiling_components_goods` SET count = '2992' WHERE id = '674';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status`, `project_id` ) VALUES ( '30', '11', '686', '000040', 'GMBPVH', '-22.5', '15', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '1', '1', '527', '000045', 'GMBR4050', '-1', '45', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '5', '5', '695', '000065', 'GMDBP51', '-232', '0.5', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '2', '2', '709', '000001', 'GMKC25', '-3', '7.5', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '16', '40', '676', '000096', 'GMKMU1512.5', '-3', '25', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '11', '636', '684', '000024', 'GMPL105', '-5', '15', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '21', '66', '705', '000018', 'GMCR90', '-5', '5', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '9', '16', '501', '000021', 'GMPLT', '-1', '30', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '3', '3', '696', '000109', 'GMPODV08', '-7', '6', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '4', '4', '482', '000002', 'GMPR', '-3', '17', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '6', '518', '618', '000111', 'GMSAM35', '-6', '0.47', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '6', '9', '697', '000113', 'GMSAM51', '-232', '0.46', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) , ( '6', '10', '674', '000114', 'GMSAM9.5', '-8', '0.35', '1', '2018-08-15 09:15:37', '911', '327', '339', '52', '2', 1923 ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '11', '377.5', '1', '2', '2018-08-15 09:15:37' ) , ( '1', '1117', '1', '2', '2018-08-15 09:15:37' ) , ( '5', '9645', '1', '2', '2018-08-15 09:15:37' ) , ( '2', '467', '1', '2', '2018-08-15 09:15:37' ) , ( '40', '497', '1', '2', '2018-08-15 09:15:37' ) , ( '636', '361', '1', '2', '2018-08-15 09:15:37' ) , ( '66', '25', '1', '2', '2018-08-15 09:15:37' ) , ( '16', '499', '1', '2', '2018-08-15 09:15:37' ) , ( '3', '1293', '1', '2', '2018-08-15 09:15:37' ) , ( '4', '1197', '1', '2', '2018-08-15 09:15:37' ) , ( '518', '5494', '1', '2', '2018-08-15 09:15:37' ) , ( '9', '6228', '1', '2', '2018-08-15 09:15:37' ) , ( '10', '2992', '1', '2', '2018-08-15 09:15:37' ) ;
+
+Ответ: Удачно!

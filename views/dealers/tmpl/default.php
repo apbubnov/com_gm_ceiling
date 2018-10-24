@@ -305,7 +305,7 @@ unset($_SESSION["dealers_$userId"]);
                 if(data.length>=10){
                     inProgress = false;
                 }
-                limit +=10;
+                limit += 10;
             },
             dataType: "json",
             async: false,
@@ -375,6 +375,8 @@ unset($_SESSION["dealers_$userId"]);
                     scrollTop: jQuery(need_row).offset().top
                 }, 2000);
             }
+            limit = +select_size;
+            select_size = 10;
         }
         jQuery("#clear_filters").click(function(){
             jQuery("#filter_manager").val("");
@@ -388,7 +390,7 @@ unset($_SESSION["dealers_$userId"]);
         });
 
         $(window).scroll(function() {
-            console.log(inProgress);
+            console.log(limit);
             if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
                 getDealers();
             }

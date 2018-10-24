@@ -670,10 +670,10 @@
         process.handler= this;
         return process;
     };
-    let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
-    let dealer_id = "<?php echo $user->dealer_id?>";
-    let data;
-    let n6_colors = JSON.parse('<?php echo $color_data;?>');
+    var calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    var dealer_id = "<?php echo $user->dealer_id?>";
+    var data;
+    var n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
         console.log('alert');
      let  help_buttons = document.getElementsByClassName('help');

@@ -134,7 +134,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
                                         ?>
                                         <input id="<?= $item->id; ?>_cost_price" value="<?php echo $cost_price; ?>"  hidden>
-                                        <input id="<?= $item->id; ?>_new_project_sum" value="<?php echo $item->new_project_sum; ?>"  hidden>
+                                        <input id="<?= $item->id; ?>_new_project_sum" value="<?php echo $item->project_sum; ?>"  hidden>
                                 </td>
                                 <?php $date = $item->project_mounting_date; ?>
                                 <td class="center one-touch">

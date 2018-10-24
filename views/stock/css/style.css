@@ -1,0 +1,10 @@
+.Page, .Page * {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+
+.Page .Title {
+    font-size: 25px;
+}

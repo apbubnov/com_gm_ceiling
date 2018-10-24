@@ -53,7 +53,7 @@ $user_group = $user->groups;
         table_body_elem.innerHTML = "";
         for (var i = 0; i < arr_calls.length; i++)
         {
-            if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == 2 || user_id == arr_calls[i].manager_id || (arr_calls[i].manager_id == 1 && dealer_type !=1 )))
+            if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == arr_calls[i].manager_id || (arr_calls[i].manager_id == 1 && dealer_type !=1 )))
             {
                 str = '';
                 if (arr_calls[i].dealer_type == 3)

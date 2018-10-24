@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  *
  * @since  1.6
  */
-class Gm_ceilingViewEditableEstimate extends JViewLegacy
+class Gm_ceilingViewEditable_estimate extends JViewLegacy
 {
 	protected $state;
 
@@ -43,10 +43,7 @@ class Gm_ceilingViewEditableEstimate extends JViewLegacy
 
 		$this->state  = $this->get('State');
 		$this->item   = $this->get('Data');
-		
 		$this->params = $app->getParams('com_gm_ceiling');
-		
-		$tpl = $app->input->getString('type', NULL);
 
 		if (!empty($this->item))
 		{
@@ -69,21 +66,6 @@ class Gm_ceilingViewEditableEstimate extends JViewLegacy
 			{
 				throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
 			}
-		}
-		
-		$this->type = $app->input->getString('type', NULL);
-		$this->subtype = $app->input->getString('subtype', NULL);
-		if($this->subtype != NULL) {
-		    if ($this->subtype == "run") $tpl = $this->type;
-			else $tpl = $this->type . "_" . $this->subtype;
-		} else {
-			$tpl = $this->type;
-		}
-		
-		$user = JFactory::getUser();
-		if($user->guest) {
-			$mainframe = &JFactory::getApplication();
-			$mainframe->redirect(JURI::root()."index.php?option=com_users&view=login","Требуется авторизация");
 		}
 
 		$this->_prepareDocument();

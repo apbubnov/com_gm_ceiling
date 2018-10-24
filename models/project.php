@@ -1873,4 +1873,69 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getMaterialsForEstimate($project_id){
+    	try
+    	{
+    		$projectsMaterialsModel = Gm_ceilingHelpersGm_ceiling::getModel('Projects_materials');
+    		$materials = $projectsMaterialsModel->getData($project_id);
+    		if(empty($materials)){
+    			$project_model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+	            $project = $project_model->getData($project_id);
+	            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client');
+	            $client = $client_model->getClientById($project->id_client);
+	            $components_data = array();
+	            $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+	            $calculations = $calculations_model->new_getProjectItems($project_id);
+	            $dealer_info = JFactory::getUser($client->dealer_id);
+	            if($dealer_info->dealer_id == 1){
+	                $dealer_info_components = $dealer_info->getComponentsPrice($dealer_info->dealer_id);
+	            }
+	            else{
+	                $dealer_info_components = $dealer_info->getComponentsPrice();
+	            }
+	            foreach($calculations as $calc){
+	                $components_data [] = Gm_ceilingHelpersGm_ceiling::calculate_components($calc->id,null,0);
+	            }
+
+	            $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+	            $components_list = $components_model->getFilteredItems();
+	            foreach ($components_list as $i => $component) {
+	                $components[$component->id] = $component;
+	            }
+	            $materials = array();
+
+	            
+	            foreach ($components_data as $component_array) {
+	                foreach ($component_array as $key1 => $component) {
+	                    if ($component['stack'] == 0) {
+	                        if(array_key_exists($component['id'], $materials)){
+	                            $materials[$component['id']]['self_total'] +=  $component['self_total'];
+	                            $materials[$component['id']]['dealer_total'] += $component['self_dealer_total'];
+	                            $materials[$component['id']]['quantity'] = Gm_ceilingHelpersGm_ceiling::rounding($materials[$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]->count_sale);
+	                        }
+	                        else{
+	                            $materials[$component['id']] = $component;
+	                        }
+	                        
+	                    }
+	                }
+	            }
+	           
+	            foreach ($components_data as $component_array) {
+	                foreach ($component_array as $key => $component) {
+	                    if ($component['stack'] == 1) {
+	                        $materials[] = $component;
+	                    }
+	                }
+	            }
+    		}
+    		return $materials;
+
+	    }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

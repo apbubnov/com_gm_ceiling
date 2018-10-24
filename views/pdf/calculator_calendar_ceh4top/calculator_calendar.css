@@ -1,0 +1,369 @@
+button, a {
+    cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+
+.Page, .Page div:not(.col) {
+    display: inline-block;
+    float: left;
+    text-align: left;
+    width: 100%;
+    height: auto;
+    color: rgb(0, 0, 0);
+}
+
+.Page .Actions div {
+    width: auto;
+}
+
+.Page button {
+    background-color: rgb(64, 65 ,154);
+}
+
+.Page .Actions button,
+.Page .Actions a {
+    display: inline-block;
+    border-radius: 5px;
+    height: 38px;
+    line-height: 38px;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    float: left;
+    border: none;
+    padding: 0 15px;
+    margin: 5px 5px 0 0;
+    cursor: pointer;
+}
+
+.Page div.Body .Client,
+.Page div.Body .Messages {
+    margin-top: 7px;
+}
+
+.Page .Body button {
+    padding: 0;
+}
+
+.Page .Body .Client table {
+    width: 100%;
+    height: auto;
+}
+
+.Page .Body .Client table tr:not(:first-child) {
+    border-top: 1px solid rgba(64,65,154,.3);
+}
+
+.Page .Body .Client table tr th {
+    padding: 15px 0;
+}
+
+.Page .Body .Client table a {
+    width: 100%;
+    float: left;
+    color: rgb(0,0,0);
+    text-decoration: none;
+}
+.Page .Body .Client table a:hover {
+    color: rgb(64,65,154);
+}
+
+.Page .Body .Client input.Discount {
+    width: calc(100% - 30px);
+    height: 30px;
+    border: 1px solid rgb(64,65,154);
+    float: left;
+    padding: 0 15px;
+    border-radius: 5px 0 0 5px;
+}
+
+.Page .Body .Client button.AddDiscount {
+    width: 30px;
+    height: 30px;
+    float: left;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 0 5px 5px 0;
+}
+
+.Page .Body .Messages .Title {
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.Page .Body .Messages textarea {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid rgb(64,65,154);
+}
+
+.Page .Body .Messages textarea.Note {
+    width: calc(100% - 30px);
+    float: left;
+    border-radius: 5px 0 0 5px;
+    min-height: 30px;
+    padding: 5px;
+}
+
+.Page .Body .Messages button.AddNote {
+    width: 30px;
+    float: left;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 0 5px 5px 0;
+}
+
+.Page .Navigation {
+    margin-top: 10px;
+}
+
+.Page .Navigation .Tabs {
+    position: relative;
+}
+.Page .Navigation .Tabs .Tab {
+    display: none;
+}
+.Page .Navigation .Tabs .TabLabel {
+    width: auto;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    margin: 0 0 -1px 0;
+    background-color: rgb(255,255,255);
+    color: rgb(64,65,154);
+    border-radius: 0 7px 0 0;
+    border: 1px solid rgb(64, 65, 154);
+    cursor: pointer;
+}
+.Page .Navigation .Tabs .Tab:not(:checked) + .TabLabel i {
+    color: rgb(64,65,154) !important;
+}
+.Page .Navigation .Tabs .Tab:not(:first-child) {
+    margin-left: 5px;
+}
+.Page .Navigation .Tabs .Tab:checked + .TabLabel {
+    background-color: rgb(64,65,154);
+    color: rgb(255,255,255);
+}
+.Page .Navigation .Tabs .Tab:checked + .TabLabel:before {
+    content: "▸ ";
+}
+.Page .Navigation .Tabs .Tab:checked + .TabLabel:after {
+    content: " ◂";
+}
+.Page .Navigation .WindowTab {
+    display: none;
+    min-height: 100px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid rgb(64, 65, 154);
+    background-color: rgb(255, 255, 255);
+}
+
+.Page .Navigation .WindowTab table {
+    width: 100%;
+}
+
+.Page .Navigation .WindowTab .TableTitle {
+    background-color: rgb(64, 65, 154);
+    color: rgb(255,255,255);
+    cursor: pointer;
+}
+
+.Page .Navigation .WindowTab .Calculate:nth-child(3n + 1) {
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Navigation .WindowTab .Calculate:nth-child(3n - 1) {
+    border-bottom: 1px dotted rgb(64, 65, 154);
+}
+
+.Page .Navigation .WindowTab input[type='radio'],
+.Page .Navigation .WindowTab input[type='checkbox'] {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+    float: left;
+}
+.Page .Navigation .WindowTab input[type='radio']:before,
+.Page .Navigation .WindowTab input[type='checkbox']:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgb(64,64,154);
+    border-radius: 50%;
+    background: #FFF;
+}
+.Page .Navigation .WindowTab input[type='checkbox']:before {
+    border-radius: 3px;
+}
+.Page .Navigation .WindowTab input[type='radio']:after,
+.Page .Navigation .WindowTab input[type='checkbox']:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgb(64,65,154);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: all .2s;
+}
+.Page .Navigation .WindowTab input[type='checkbox']:after {
+     border-radius: 3px;
+}
+.Page .Navigation .WindowTab input[type='radio']:checked:after,
+.Page .Navigation .WindowTab input[type='checkbox']:checked:after {
+    opacity: 1;
+}
+
+.Page .Navigation .WindowTab input + label {
+    width: auto;
+    height: 20px;
+    line-height: 20px;
+    margin: 5px;
+    font-size: 16px;
+    vertical-align: middle;
+    float: left;
+    cursor: pointer;
+}
+
+.Page .Navigation .WindowTab table td,
+.Page .Navigation .WindowTab table th {
+    padding: 10px;
+    min-height: 40px;
+    white-space:nowrap;
+}
+.Page .Navigation .WindowTab .TransportTR {
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Navigation .WindowTab .Transports .Title,
+.Page .Navigation .WindowTab .Transports .Block {
+    width: auto;
+    float: left;
+}
+.Page .Navigation .WindowTab .Transports .Block {
+    margin: 0 10px;
+    width: auto;
+    background-color: rgb(64,65,154);
+    border-radius: 5px;
+    overflow: hidden;
+    display: none;
+    float: right;
+}
+.Page .Navigation .WindowTab .Transports .RadioT:checked ~ .Block {
+    display: inline-block;
+}
+.Page .Navigation .WindowTab .Transports .Block .Name {
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid rgb(64,65,154);
+    color: rgb(255,255,255);
+    float: left;
+    padding: 0 15px;
+}
+.Page .Navigation .WindowTab .Transports .Block .Input {
+    width: auto;
+    height: 30px;
+    border: 1px solid rgb(64,65,154);
+    float: left;
+    padding: 0 15px;
+    border-radius: 0;
+}
+.Page .Navigation .WindowTab .Transports .Block .Button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(64,65,154);
+    color: rgb(255,255,255);
+    float: left;
+}
+
+i.fa-sort-desc {
+    position: relative;
+    top: -3px;
+}
+
+i.fa-sort-asc {
+    position: relative;
+    top: 4px;
+}
+
+@media (max-width: 767px) {
+    .bd-content {
+        padding: 0;
+    }
+
+    .Page {
+        font-size: 14px;
+    }
+
+    .Page .Actions {
+        font-size: 16px;
+    }
+
+    .Page h2 {
+        font-size: 21px;
+    }
+    .Page h3 {
+        font-size: 18px;
+    }
+
+    .Page .Body .Client,
+    .Page .Body .Messages {
+        max-width: 100%;
+        overflow-y: auto;
+        padding: 0;
+    }
+
+    .Page .Navigation * {
+        font-size: 14px !important;
+    }
+
+    .Page .Navigation .Tabs .TabLabel {
+        width: 100%;
+        border-radius: 0;
+        float: left;
+        margin: 0 0 -1px 0;
+    }
+
+    .Page .Navigation .Tabs .WindowTab {
+        margin: 0 0 -1px 0;
+    }
+
+    .Page .Navigation .WindowTab .Transports .Block {
+        margin: 5px 0;
+        width: 100% !important;
+    }
+
+    .Page .Navigation .WindowTab .Transports .Block .Name,
+    .Page .Navigation .WindowTab .Transports .Block .Input,
+    .Page .Navigation .WindowTab .Transports .Block .Button {
+        width: 100%;
+    }
+
+    .Page .Navigation .WindowTab table td,
+    .Page .Navigation .WindowTab table th {
+        display: inline-block;
+        width: 50%;
+    }
+
+    .Page .Navigation .WindowTab table td[colspan="4"],
+    .Page .Navigation .WindowTab table th[colspan="4"] {
+        width: 100%;
+    }
+}

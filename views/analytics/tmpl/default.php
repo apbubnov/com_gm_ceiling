@@ -444,7 +444,7 @@ echo parent::getButtonBack();
                                     }
                                 }
 
-                                TrOrders += '<tr class="link_row" data-href = \'/index.php?option=com_gm_ceiling&view=clientcard&id='+data[i].client_id+'\'><td>'+data[i].id+'</td><td>'+data[i].project_info+'</td><td>'+data[i].status+'</td><<td>'+sum+'</td><td>'+profit.toFixed(2)+'</td>/tr>';
+                                TrOrders += '<tr class="link_row" data-href = \'/index.php?option=com_gm_ceiling&view=clientcard&id='+data[i].client_id+'\'><td>'+data[i].id+'</td><td>'+data[i].project_info+'</td><td>'+data[i].status+'</td><<td>'+data[i].sum+'</td><td>'+parseFloat(data[i].profit).toFixed(2)+'</td>/tr>';
 
                             }
 
