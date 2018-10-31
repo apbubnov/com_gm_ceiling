@@ -1878,32 +1878,61 @@ class Gm_ceilingModelProject extends JModelItem
     	try
     	{
     		$projectsMaterialsModel = Gm_ceilingHelpersGm_ceiling::getModel('Projects_materials');
-    		$materials = $projectsMaterialsModel->getData($project_id);
-    		if(empty($materials)){
+    		$data = $projectsMaterialsModel->getData($project_id);
+    		$data = json_decode($data[0]->data);
+    		$materials['canvases'] = $data->canvases;
+            $materials['components'] = $data->components;
+
+    		if(empty($materials['canvases'])&&empty($materials['Components'])){
 	            $components_data = array();
 	            $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 	            $calculations = $calculations_model->new_getProjectItems($project_id);
 	            foreach($calculations as $calc){
 	                $components_data [] = Gm_ceilingHelpersGm_ceiling::calculate_components($calc->id,null,0);
+	                $canvases_data [] = Gm_ceilingHelpersGm_ceiling::calculate_canvases($calc->id);
 	            }
 	            $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 	            $components_list = $components_model->getFilteredItems();
 	            foreach ($components_list as $i => $component) {
 	                $components[$component->id] = $component;
 	            }
-	            $materials = array();
+                $materials = [];
+	            $materials['canvases'] = [];
+	            $materials['components'] = [];
+	            foreach ($canvases_data as $key=>$value){
+                    if (array_key_exists($value['id'], $materials['canvases'])) {
+                        $materials['canvases'][$component['id']]['total_price'] += $value['self_total'];
+                        $materials['components'][$component['id']]['quantity'] +=$value['quantity'];
+                    }
+                    else {
+                        $canvas = [];
+                        $canvas['id'] = $value['id'];
+                        $canvas['title'] = $value['manufacturer'] . ' ' . $value['sub_title'] . ' ширина ' . ($value['width'] / 100);
+                        $canvas['unit'] = 'м<sup>2</sup>';
+                        $canvas['quantity'] = $value['quantity'];
+                        $canvas['price'] = $value['self_price'];
+                        $canvas['total_price'] = $value['self_total'];
+                        $materials['canvases'][$value['id']] = $canvas;
+                        //array_push($materials['canvases'], $canvas);
+                    }
+                }
 	            foreach ($components_data as $component_array) {
 	                foreach ($component_array as $key1 => $component) {
 	                    if ($component['stack'] == 0) {
-
-                            if (array_key_exists($component['id'], $materials)) {
-                                $materials[$component['id']]['self_total'] += $component['self_total'];
-                                $materials[$component['id']]['dealer_total'] += $component['self_dealer_total'];
-                                $materials[$component['id']]['quantity'] = Gm_ceilingHelpersGm_ceiling::rounding($materials[$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]->count_sale);
+                            if (array_key_exists($component['id'], $materials['components'])) {
+                                $materials['components'][$component['id']]['total_price'] += $component['self_total'];
+                                $materials['components'][$component['id']]['quantity'] = Gm_ceilingHelpersGm_ceiling::rounding($materials['components'][$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]->count_sale);
                             } else {
-                                $materials[$component['id']] = $component;
+                                $comp = [];
+                                $comp['id'] = $component['id'];
+                                $comp['title'] = $component['title'];
+                                $comp['unit'] = $component['unit'];
+                                $comp['quantity'] = $component['quantity'];
+                                $comp['price'] = $component['self_price'];
+                                $comp['total_price'] = $component['self_total'];
+                                $materials['components'][$component['id']] = $comp;
                             }
-                            $materials[$component['id']]['count_sale'] = $components[$component['id']]->count_sale;
+                            $materials['components'][$component['id']]['count_sale'] = $components[$component['id']]->count_sale;
                         }
 	                }
 	            }
@@ -1911,7 +1940,14 @@ class Gm_ceilingModelProject extends JModelItem
 	            foreach ($components_data as $component_array) {
 	                foreach ($component_array as $key => $component) {
 	                    if ($component['stack'] == 1) {
-	                        $materials[] = $component;
+                            $comp = [];
+                            $comp['id'] = $component['id'];
+                            $comp['title'] = $component['title'];
+                            $comp['unit'] = $component['unit'];
+                            $comp['quantity'] = $component['quantity'];
+                            $comp['price'] = $component['self_price'];
+                            $comp['total_price'] = $component['self_total'];
+	                        $materials['components'][] = $comp;
 	                    }
 	                }
 	            }

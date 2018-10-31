@@ -20,12 +20,21 @@ class Gm_ceilingModelProjects_materials extends JModelItem
 
 	function save($project_id,$data){
 		try{
-			$db = $this->getDbo();
+		    $old_data = $this->getData($project_id);
+            $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query
-            	->insert('`#__gm_ceiling_projects_materials`')
-            	->columns('`project_id`,`data`')
-            	->values("$project_id,'$data'");
+		    if(empty($old_data)) {
+                $query
+                    ->insert('`#__gm_ceiling_projects_materials`')
+                    ->columns('`project_id`,`data`')
+                    ->values("$project_id,'$data'");
+            }
+            else{
+		        $query
+                    ->update('`#__gm_ceiling_projects_materials`')
+                    ->set("`data`='$data'")
+                    ->where("`project_id` = $project_id");
+            }
             $db->setQuery($query);
             $db->execute();
             return true;

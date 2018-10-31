@@ -1948,5 +1948,41 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveProjectMaterials(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('project_id',null,'INT');
+            $components = $jinput->get('components',array(),'ARRAY');
+            $canvases = $jinput->get('canvases',array(),'ARRAY');
+            $components_sum = $jinput->get('components_sum',null,'INT');
+            /*$data['project_id'] = $project_id;*/
+            $data['canvases'] = $canvases;
+            $data['components'] = $components;
+            $data['components_sum'] = $components_sum;
+            $materials_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_materials');
+            $result = $materials_model->save($project_id,json_encode($data,JSON_UNESCAPED_UNICODE));
+            die(json_encode($result));
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getProjectMaterials(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('project_id',null,'INT');
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $data = json_encode($project_model->getMaterialsForEstimate($project_id));
+            die(json_encode($data));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

@@ -1494,7 +1494,11 @@ class Gm_ceilingHelpersGm_ceiling
             $facture = $canvasesData[0]->texture_title;
             $width = floatval($canvasesData[0]->width) * 100;
             $name = $canvasesData[0]->name;
+            $canvases_data['id'] = $canvas_id;
             $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
+            $canvases_data['sub_title'] = $facture.'-'.$color_title;
+            $canvases_data['width'] = $width;
+            $canvases_data['manufacturer'] = $name;
             $canvases_data['quantity'] = $data['n4'];
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
             $canvases_data['self_price'] = round($canvases[$canvas_id]->price, 2);                                    //Себестоимость по основному прайсу

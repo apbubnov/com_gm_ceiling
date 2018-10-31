@@ -354,7 +354,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         input_value = (input_value === "")?0:input_value;
                         cost_price = (cost_price === "")?0:cost_price;
                         var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
-                        //alert(new_project_sum + " ------- " + profit);
+                        alert(new_project_sum + " ------- " + profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
                         {
                             //check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();

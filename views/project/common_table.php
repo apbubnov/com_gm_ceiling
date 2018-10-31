@@ -50,6 +50,15 @@
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
+    #table1 tr
+    {
+        border-bottom: 1px solid #414099;
+        border-top: 1px solid #414099;
+    }
+    #table1 td
+    {
+        cursor: default;
+    }
     .wtf_padding {
         padding: 0;
     }
@@ -119,11 +128,13 @@
                     </a>
                 </li>
             <?php } ?>
+            <?php if(!$this->item->project_verdict){?>
                 <li class="nav-item"> 
                     <button type="button" class="nav-link" id="add_calc" style="color:white;" <?php echo $hidden?>>
                         Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
                     </button>
                 </li>
+            <?php }?>
         </ul>
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { ?>
             <p>У Вас еще нет потолков</p>
@@ -818,14 +829,3 @@
         <?php } ?>
     </div>
 </div>
-<style type="text/css">
-    #table1 tr
-    {
-        border-bottom: 1px solid #414099;
-        border-top: 1px solid #414099;
-    }
-    #table1 td
-    {
-        cursor: default;
-    }
-</style>
