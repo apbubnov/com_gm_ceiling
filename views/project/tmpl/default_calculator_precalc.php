@@ -350,12 +350,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     <div id ="comments_divs" style="display:none;">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for = "jform_gm_calculator_note">Примечание к договору</label>
+                                <label for = "jform_gm_calculator_note">Примечание к договору/в производство</label>
                              </div>
                             <div class="col-md-2">
-                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору/в производство" aria-invalid="false"></textarea>
                             </div>
-                            
                         </div>
                         <div class="row">
                             <div class="col-md-2">

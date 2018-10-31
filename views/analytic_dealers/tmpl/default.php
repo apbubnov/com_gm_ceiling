@@ -27,6 +27,11 @@
 			<input type="date" name="date_to" id = "date_to" class="input-gm" value="<?php echo $date_to;?>">
 		</div>
 	</div>
+    <div class="row" align="right">
+        <div class="col-md-12">
+            <label style="color: #414099;font-size: 14pt">Общее количество дилеров: <b><span id="dealers_count">0</span></b></label>
+        </div>
+    </div>
 	<div class="row" style="margin-bottom: 15px;">
 		<table id = "analytic" class="analitic-table">
 			<thead id = "thead" class = "caption-style-tar">
@@ -382,6 +387,7 @@
 	}
 
 	function fill_table(data){
+        jQuery("#dealers_count").text(data.length);
 		var ths = jQuery("#analytic > thead  th"),key ="",total = [];
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){

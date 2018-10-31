@@ -300,8 +300,8 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$filter_city = $jinput->get('filter_city',"","STRING");
 			$filter_manager = $jinput->get('filter_manager',"","STRING");
 			$filter_status = $jinput->get('filter_status',"","STRING");
-			$limit = $jinput->get("limit",0,"INT");
-			$select_size = $jinput->get("select_size","10","STRING");
+			$limit = $jinput->get("limit",null,"INT");
+			$select_size = $jinput->get("select_size",null,"STRING");
 			$client_name = $jinput->get("client","","STRING");
 			$coop = $jinput->get('coop',0,'INT');
 			$model =  Gm_ceilingHelpersGm_ceiling::getModel('clients');

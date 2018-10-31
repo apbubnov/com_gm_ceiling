@@ -402,7 +402,7 @@ if (empty($list['direction']))
 				->from('`#__users`')
 				->where('id = c.manager_id');
 
-			$query
+            $query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
 				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
@@ -412,23 +412,28 @@ if (empty($list['direction']))
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop")
-				->order("`c`.`id` DESC LIMIT $limit,$select_size")
-				->group('`c`.`id`');
-				if (!empty($manager_id))
-				{
-					$query->where("`c`.`manager_id` = $manager_id");
-				}
-				if (!empty($city))
-				{
-					$query->where("`i`.`city` = '$city'");
-				}
-				if(!empty($status)){
-					$query->where("`#__user_usergroup_map`.`group_id`IN ($status)");
-				}
-				else{
-					$query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
-				}
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop");
+            if((!empty($limit) || $limit == 0)&&!empty($select_size)){
+                $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
+            }
+            else{
+                $query->order("`c`.`id` DESC");
+            }
+            $query->group('`c`.`id`');
+            if (!empty($manager_id))
+            {
+                $query->where("`c`.`manager_id` = $manager_id");
+            }
+            if (!empty($city))
+            {
+                $query->where("`i`.`city` = '$city'");
+            }
+            if(!empty($status)){
+                $query->where("`#__user_usergroup_map`.`group_id`IN ($status)");
+            }
+            else{
+                $query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
+            }
 				
 			$db->setQuery($query);
 			$items = $db->loadObjectList();

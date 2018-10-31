@@ -15,7 +15,6 @@ $userId     = $user->get('id');
 $comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
 $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
 
-
 $server_name = $_SERVER['SERVER_NAME'];
 $session_data = (isset($_SESSION["dealers_$userId"])) ? json_encode($_SESSION["dealers_$userId"]) : json_encode(array());
 unset($_SESSION["dealers_$userId"]);
@@ -55,16 +54,19 @@ unset($_SESSION["dealers_$userId"]);
                  <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
             </div>
         </div>
-        <div class="col-md-4" align="right">
+        <div class="col-md-3" align="right">
             <input type="text" id="name_find_dealer">
             <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
         </div>
     </div>
     <div class="row" align="right" style="margin-bottom: 15px">
-        <div class="col-md-4">
+        <div class="col-md-2">
+            <label style="color: #414099;font-size: 14pt">Всего дилеров: <b><span id="dealers_count">0</span></b></label>
+        </div>
+        <div class="col-md-3">
             <h6><i class="fa fa-filter" aria-hidden="true"></i> Фильтры: </h6>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="col-md-4">
                 <select class="input-gm" id="filter_manager">
                     <option value="">Выберите менеджера</option>
@@ -279,12 +281,40 @@ unset($_SESSION["dealers_$userId"]);
             }
         }
     }
-
+    function getDealersCount(city,manager,status,client) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=dealer.getFilteredData",
+            data: {
+                filter_city: city,
+                filter_manager: manager,
+                filter_status: status,
+                client: client
+            },
+            success: function(data){
+                jQuery("#dealers_count").text(data.length);
+            },
+            dataType: "json",
+            async: true,
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }
+        });
+    }
     function getDealers(){
         var city = jQuery("#filter_city").val(),
             manager = jQuery("#filter_manager").val(),
             status = jQuery("#filter_status").val(),
             client = jQuery("#name_find_dealer").val();
+        getDealersCount(city,manager,status,client);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=dealer.getFilteredData",
@@ -300,7 +330,6 @@ unset($_SESSION["dealers_$userId"]);
                 inProgress = true;
             },
             success: function(data){
-                console.log(data.length);
                 print_dealers(data);
                 if(data.length>=10){
                     inProgress = false;
@@ -330,7 +359,7 @@ unset($_SESSION["dealers_$userId"]);
                     .text(text));
     }
     jQuery(document).ready(function()
-    {   
+    {
         var dealer_to_find;
         getDataForSelects('users.getUserByGroup',{group:16},managers);
         getDataForSelects('dealer.select_dealers_city',{},cities);
@@ -390,7 +419,6 @@ unset($_SESSION["dealers_$userId"]);
         });
 
         $(window).scroll(function() {
-            console.log(limit);
             if($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
                 getDealers();
             }
@@ -673,7 +701,6 @@ unset($_SESSION["dealers_$userId"]);
                                     addClass: 'btn btn-primary', text: 'Да', onClick: function($noty) {
                                         var row = jQuery(target).closest('td').parent();
                                         var user_id = row.data('dealer_id');
-                                        console.log(user_id);
                                         jQuery.ajax({
                                             url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
                                             data: {
@@ -693,7 +720,6 @@ unset($_SESSION["dealers_$userId"]);
                                                 row.hide();
                                             },
                                             error: function(data) {
-                                                console.log(data);
                                                 var n = noty({
                                                     timeout: 2000,
                                                     theme: 'relax',
