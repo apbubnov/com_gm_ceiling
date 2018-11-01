@@ -121,7 +121,7 @@ unset($_SESSION["dealers_$userId"]);
                        Имя
                     </th>
                     <th id="dealer_price" data-sort="">
-                        Минимальная цена<br>полотно / компонент
+                        Состояние счета
                     </th>
                     <th>
                        Телефоны
@@ -220,6 +220,7 @@ unset($_SESSION["dealers_$userId"]);
     }
     function print_dealers(dealers_data)
     {
+        console.log(dealers_data);
         var html = '', color;
         var name_find_dealer = document.getElementById('name_find_dealer').value;
         var reg_name_find_dealer = new RegExp(name_find_dealer, "ig");
@@ -254,7 +255,7 @@ unset($_SESSION["dealers_$userId"]);
                 html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-dealer_id = "'+data_i.dealer_id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
                 html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
                 html += '<td>' + data_i.client_name + '</td>';
-                html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
+                html += '<td>' + data_i.rest + ' руб.</td>';
                 html += '<td>' + data_i.client_contacts + '</td>';
                 html += '<td>' + data_i.city + '</td>';
                 html += '<td>' + data_i.created + '</td>';

@@ -369,7 +369,7 @@ class Gm_ceilingModelProjects extends JModelList
         {
             $user       = JFactory::getUser();
             $userId     = $user->get('id');
-
+            $dealer_id = $user->dealer_id;
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 
@@ -444,7 +444,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "Zvonki") {
                 $query->select('count(c.id) as count')
                     ->from('#__gm_ceiling_callback as c')
-                    ->where("date_time <= '$data 23:59:59' and manager_id IN ('$userId', '1')");
+                    ->where("date_time <= '$data 23:59:59' and manager_id IN ('$userId', '$dealer_id')");
             } else 
             // менеджер (запущенные) 
             if ($status == "Zapushennie") {

@@ -175,7 +175,7 @@
             date1 = jQuery("#year1").val()+'-'+jQuery("#month1").val()+'-01';
             date2 = jQuery("#year2").val()+'-'+jQuery("#month2").val()+'-'+ new Date(jQuery("#year2").val(), jQuery("#month2").val(), 0).getDate();
         }
-        if(date1<date2){
+        if(date1<=date2){
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=calculations.getQuadrature",
@@ -190,7 +190,8 @@
                         jQuery.each(data,function(index,elem){
                             data[index][1]=parseFloat(elem[1]);
                         });
-                        drawGraphic(data);
+                        if(data.length)
+                            drawGraphic(data);
                     }
                     else{
                         var new_data = [];
@@ -220,7 +221,8 @@
                             data.push(new_data[i]);
                         }
                         console.log(data);
-                        drawGraphic(data);
+                        if(data.length)
+                            drawGraphic(data);
                     }
                     
                 },
@@ -396,13 +398,15 @@
 				key = jQuery(item).data('value');
 				let val = (data[i][key] ? data[i][key] : 0); 
 				jQuery('#analytic > tbody > tr:last').append('<td>'+ val +'</td>');
-				if(key == 'name'){
-					total[key] = '<b>Итого</b>';
-				}
-				else{
-					total[key] = (total[key]) ? total[key] + val : val;
-				}
-				
+                if(key == 'rest'){
+                    total[key] = '-';
+                }
+				else if (key == 'name') {
+                    total[key] = '<b>Итого</b>';
+                    }
+                    else {
+                        total[key] = (total[key]) ? total[key] + val : val;
+                    }
 			});
 			
 		}
@@ -410,7 +414,7 @@
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name') ? total[key].toFixed(2) : total[key]) +'</b></td>');
+				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name' && key !='rest') ? total[key].toFixed(2) : total[key]) +'</b></td>');
 			});
 		}
 

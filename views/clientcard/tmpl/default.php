@@ -410,7 +410,8 @@
             data: {
                 id_client: client_id,
                 date: date+' '+time,
-                comment: jQuery("#create_call_comment").val()
+                comment: jQuery("#create_call_comment").val(),
+                old_call: '<?php echo $call_id;?>'
             },
             dataType: "json",
             async: true,

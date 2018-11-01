@@ -913,9 +913,14 @@ public function register_mnfctr(){
             $id_client = $jinput->get('id_client', null, 'INT');
             $manager_id = $user->id;
             $comment = $jinput->get('comment', '', 'STRING');
-
+            $old_call = $jinput->get('old_call',null,'INT');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
+            if(empty($old_call)) {
+                $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
+            }
+            else{
+                $result = $callback_model->moveTime($old_call, $jdate, $comment);
+            }
 
             die($result);
         }

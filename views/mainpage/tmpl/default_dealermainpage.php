@@ -218,9 +218,13 @@ $rest = -($total_sum) - $contributed;
         <p class="center">
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
         </p>
-        <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
-        </p>
+
+        <div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+            <div class="container-for-circl">
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
+                <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
+            </div>
+        </div>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=incoming_calls', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Входящие звонки</a>
         </p>
@@ -267,6 +271,36 @@ $rest = -($total_sum) - $contributed;
 <script>
 
     jQuery(document).ready(function () {
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
+            async: true,
+            success: function(data){
+                if (data != null)
+                {
+                    if (data[0].count != 0)
+                    {
+                        document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
+                        document.getElementById('ZvonkiDiv').style.display = 'block';
+                    }
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }
+        });
+
         jQuery("#show_additional").click(function () {
             jQuery("#montages_btn").toggle();
             jQuery("#accounting_btn").toggle();

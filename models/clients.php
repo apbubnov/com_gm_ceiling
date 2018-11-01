@@ -404,6 +404,7 @@ if (empty($list['direction']))
 
             $query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
+                ->select("IFNULL(ROUND(SUM( DISTINCT `rmp`.`sum`),2),0) AS `rest`")
 				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
 				->select("($manager_query) as manager_name")
@@ -412,6 +413,7 @@ if (empty($list['direction']))
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
+                ->leftJoin("`#__gm_ceiling_recoil_map_project` AS `rmp` ON `rmp`.`recoil_id` = `u`.`id`")
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop");
             if((!empty($limit) || $limit == 0)&&!empty($select_size)){
                 $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
@@ -434,16 +436,16 @@ if (empty($list['direction']))
             else{
                 $query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
             }
-				
+
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			if(count($items)){
+			/*if(count($items)){
 				foreach ($items as $key => $dealer) {
 				    $user_dealer = JFactory::getUser($dealer->dealer_id);
 				    $items[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
 				    $items[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
 				}
-			}
+			}*/
 			return $items;
 		}
 		catch(Exception $e)

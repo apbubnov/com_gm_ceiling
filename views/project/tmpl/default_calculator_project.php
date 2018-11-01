@@ -227,11 +227,7 @@ $all_advt = $model_api_phones->getAdvt();
 
         jQuery(document).ready(function () {
 
-            document.getElementById('add_calc').onclick = function()
-            {
-                create_calculation(<?php echo $this->item->id; ?>);
-            };
-            
+
             $(".head_comsumables").click(function () {
                 e = $(this);
                 if (e.val() === "") e.val(true);

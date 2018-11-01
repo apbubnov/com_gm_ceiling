@@ -89,6 +89,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $headers['total_self_sum'] = "Себестоимость";
             $headers['comp_sum'] = "Стоимость компл-х";
             $headers['comp_self_sum'] = "Себестоимость компл-х";
+            $headers['rest'] = 'Сост.счета';
             array_unshift($dealers_and_projects , $headers);
             return $dealers_and_projects;
         } catch (Exception $e) {
@@ -100,10 +101,12 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select("u.id,u.name,GROUP_CONCAT(DISTINCT p.id SEPARATOR ';') AS projects")
+                ->select("IFNULL(ROUND(SUM( DISTINCT `rmp`.`sum`),2),0) as rest")
                 ->from("`#__gm_ceiling_projects` AS p")
                 ->leftJoin("`#__gm_ceiling_clients` AS c ON p.client_id = c.id")
                 ->innerJoin("`#__users` AS u ON c.dealer_id = u.id")
                 ->innerJoin("`#__gm_ceiling_projects_history` as ph on p.id = ph.project_id")
+                ->leftJoin("`#__gm_ceiling_recoil_map_project` AS `rmp` ON `rmp`.`recoil_id` = `u`.`id`")
                 ->where("ph.new_status in(5) and ph.date_of_change BETWEEN '$date1' AND '$date2'")
                 ->group("u.id");
             $db->setQuery($query);
