@@ -1,4 +1,4 @@
-<?php
+add_pay<?php
 
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -317,6 +317,22 @@ foreach ($dealer_history as $key => $item) {
         <div class="dealer_name"><?=$this->item->client_name;?></div>
         <div class="dealer_pay">У дилера на счету: <span><?=$dealer_history_sum;?></span></div>
         <form class="send_pay" method="post" action="/index.php?option=com_gm_ceiling&task=clientform.pay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
+                        <label for="pay_sum"><i class="fa fa-money"></i></label>
+                        <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
+                               title="Введи количество денег, которые вносит дилер" required>
+                    </div>
+                    <div class="col-mf-4">
+
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
+            </div>
             <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
             <label for="pay_sum"><i class="fa fa-money"></i></label>
             <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
