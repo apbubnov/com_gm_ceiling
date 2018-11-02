@@ -74,4 +74,17 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
         }
     }
 
+    function getUnpaidProjects(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $dealer_id = $jinput->get("dealer_id",null,"INT");
+            $model = $this->getModel('Projects', 'Gm_ceilingModel');
+            $result = $model->getUnpaidProjects($dealer_id);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }

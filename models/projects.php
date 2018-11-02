@@ -995,4 +995,24 @@ class Gm_ceilingModelProjects extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getUnpaidProjects($dealer_id){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("distinct p.id")
+                ->from('`#__gm_ceiling_projects` as p')
+                ->leftJoin("`#__gm_ceiling_clients` as c on c.id = p.client_id")
+                ->where("c.dealer_id = $dealer_id and p.paid = '0'")
+                ->order("p.id DESC");
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

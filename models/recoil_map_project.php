@@ -159,6 +159,10 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 
             $db->setQuery($query);
             $db->execute();
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $data['id'] = $project_id;
+            $data['paid'] = 1;
+            $project_model->save($data);
         }
         catch(Exception $e)
         {

@@ -52,7 +52,6 @@ foreach ($dealer_history as $key => $item) {
     $dealer_history_sum += $item->sum;
 }
 ?>
-<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/clientcard/css/dealer.css">
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
@@ -313,64 +312,97 @@ foreach ($dealer_history as $key => $item) {
             <?php endforeach;?>
         </select>
     </div>
-    <div class="modal_window modal_window_pay" id="modal_window_sum">
-        <div class="dealer_name"><?=$this->item->client_name;?></div>
-        <div class="dealer_pay">У дилера на счету: <span><?=$dealer_history_sum;?></span></div>
-        <form class="send_pay" method="post" action="/index.php?option=com_gm_ceiling&task=clientform.pay">
+    <style>
+        fieldset {
+            margin: 10px;
+            border: 2px solid #414099;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        legend{
+            width: auto;
+        }
+    </style>
+    <div class="modal_window" id="modal_window_sum">
+        <form>
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
-                        <label for="pay_sum"><i class="fa fa-money"></i></label>
-                        <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
-                               title="Введи количество денег, которые вносит дилер" required>
-                    </div>
-                    <div class="col-mf-4">
-
-                    </div>
-                    <div class="col-md-4">
-
+                <div class="row center">
+                    <div class="col-md-12">
+                        <label style="font-size: 18pt;color:#414099"><?=$this->item->client_name;?></label>
                     </div>
                 </div>
+                <div class="row right">
+                    <div class="col-md-12">
+                        <div style="color:#414099;font-size:13pt;">на счету: <b><span ><?=$dealer_history_sum;?></span></b></div>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend align="left"><label style="padding-left: auto">Внесение оплаты</label></legend>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="col-md-4">
+                                    <label for="pay_sum">Сумма</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input  class="inputactive" type="text" id="pay_sum"  name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
+                                            title="Введи количество денег, которые вносит дилер" required>
+                                </div>
+                                <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-5">
+                                    <label for="slct_project">Проект</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <select class="inputactive" id="slct_project">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-5">
+                                    <label for="pay_comment">Комментарий</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" id="pay_comment"class="inputactive" name="pay_comment" placeholder="Комментарий"
+                                           title="Введите комментарий об внесении средств" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" type="button" id="savePayment"><i class="fa fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                </fieldset>
+                <div class="row">
+                    <table class="table table-striped table_cashbox">
+                        <thead class="caption-style-tar">
+                        <tr>
+                            <th class="center">Дата</th>
+                            <th class="center">Проект</th>
+                            <th class="center">Сумма</th>
+                            <th class="center">Комментарий</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?foreach ($dealer_history as $item):?>
+                            <tr class="<?=($item->project_id != "-")?"project":"";?>" data-project="<?=$item->project_id;?>">
+                                <td><?=$item->data;?></td>
+                                <td><?=$item->project_id;?></td>
+                                <td><?=$item->sum;?></td>
+                                <td><?=$item->comment;?></td>
+                            </tr>
+                        <?endforeach;?>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="2" style="text-align: right;">Итого:</th>
+                            <th><?=$dealer_history_sum;?></th>
+                            <th></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-            <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
-            <label for="pay_sum"><i class="fa fa-money"></i></label>
-            <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
-                   title="Введи количество денег, которые вносит дилер" required>
-            <label for="pay_comment"><i class="fa fa-edit"></i></label>
-            <input type="text" id="pay_comment" class="pay_comment" name="pay_comment" placeholder="Комментарий"
-                   title="Введите комментарий об внесении средств" required>
-            <button><i class="fa fa-paper-plane"></i></button>
         </form>
-        <div class="table_size">
-            <table class="dealer_history">
-                <thead>
-                <tr>
-                    <td>Дата</td>
-                    <td>Проект</td>
-                    <td>Сумма</td>
-                    <td>Комментарий</td>
-                </tr>
-                </thead>
-                <tbody>
-                <?foreach ($dealer_history as $item):?>
-                    <tr class="<?=($item->project_id != "-")?"project":"";?>" data-project="<?=$item->project_id;?>">
-                        <td><?=$item->data;?></td>
-                        <td><?=$item->project_id;?></td>
-                        <td><?=$item->sum;?></td>
-                        <td><?=$item->comment;?></td>
-                    </tr>
-                <?endforeach;?>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <td colspan="2" style="text-align: right;">Итого:</td>
-                    <td><?=$dealer_history_sum;?></td>
-                    <td></td>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
     </div>
     <div id="call" class="modal_window">
         <p>Перенести звонок</p>
@@ -442,283 +474,47 @@ foreach ($dealer_history as $key => $item) {
         }
     });
     function ChangeSelectPrice() {
-            location.href = this.value;
-            jQuery(".SelectPrice option:first-child").prop("selected", true);
-        }
-    jQuery(".SelectPrice").change(ChangeSelectPrice);
+        location.href = this.value;
+        jQuery(".SelectPrice option:first-child").prop("selected", true);
+    }
 
-    jQuery("#new_client").click(function(){
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_client").show("slow");
-    });
-    jQuery("[name = rm_email]").click(function(){
-        var email = jQuery(this).attr("email");
-        var client_id = <?php echo $this->item->id;?>;
-
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
-            data: {
-                email: email,
-                client_id : client_id
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                add_history(client_id,"Удален email: "+email);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Письмо отправлено!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-
-    });
-    jQuery("#btn_city").click(function(){
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_city").show("slow");
-    });
-    jQuery("#change_city").click(function(){
-        var dealer_id = <?php echo $this->item->dealer_id;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=dealer.change_city",
-            data: {
-                dealer_id : dealer_id,
-                city: jQuery("#city").val()
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Город изменен"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-    jQuery("#new_send_email").click(function(){
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_send_email").show("slow");
-    });
-    jQuery("#edit").click(function() {
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_fio").show("slow");
-        jQuery("#close").show();
-    });
-    jQuery("[name = send_email]").change(function(){
-        jQuery("#email").val(jQuery(this).val());
-    });
-    jQuery("#send_email").click(function(){
-        var client_id = <?php echo $this->item->id;?>;
-        var email = jQuery("#email").val();
-        var subj = jQuery("#email_subj").val();
-        var text = jQuery("#email_text").val();
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=dealer.sendEmail",
-            data: {
-                email: email,
-                subj: subj,
-                text: text,
-                client_id : client_id
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                add_history(client_id,"Отправлен email");
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Письмо отправлено!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-    jQuery("#but_comm").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_comm").show("slow");
-        jQuery("#close").show();
-    });
-
-    jQuery("#but_login").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_login").show("slow");
-        jQuery("#close").show();
-    });
-    jQuery("#add_call").click(function(){
-        client_id = <?php echo $this->item->id;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addCall",
-            data: {
-                id_client: client_id,
-                date: jQuery("#call_date_m").val(),
-                comment: jQuery("#call_comment_m").val()
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-               add_history(client_id,"Добавлен звонок");
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Добавлен звонок"
-                });
-
-            },
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-    jQuery("#cancel").click(function(){
-        jQuery("#close").hide();
-        jQuery("#mv_container").hide();
-        jQuery("#modal_window_fio").hide();
-    });
-
-    jQuery("#cancel2").click(function(){
-        jQuery("#close").hide();
-        jQuery("#mv_container").hide();
-        jQuery("#modal_window_comm").hide();
-    });
-
-    jQuery("#cancel3").click(function(){
-        jQuery("#close").hide();
-        jQuery("#mv_container").hide();
-        jQuery("#modal_window_login").hide();
-    });
-
-    jQuery("#update_fio").click(function(){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
-            data: {	
-                client_id: "<?php echo $this->item->id;?>",
-                fio: jQuery("#new_fio").val()
-            },
-            success: function(data){
-                jQuery("#FIO").text(data);
-                jQuery("#new_fio").val("");
-                jQuery("#close-tar").hide();
-		        jQuery("#modal-window-container-tar").hide();
-		        jQuery("#modal-window-call-tar").hide();
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "ФИО обновлено!"
-                });
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function(data){
-                console.log(data);
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка!"
-                });
-            }				
-        });
-    })
-
-    jQuery('body').on('click', '.row_project', function(e)
+    function add_history(id_client, comment)
     {
-        if (jQuery(this).data('href') !== undefined)
-        {
-            document.location.href = jQuery(this).data('href');
-        }
-    });
-
-    jQuery("#add_new_project").click(function(){
         jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+            url: "index.php?option=com_gm_ceiling&task=addComment",
             data: {
-                client_id:<?php echo $this->item->id;?>
-            
+                comment: comment,
+                id_client: id_client
             },
-            success: function(data){
-                data = JSON.parse(data);
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Добавленна запись в историю клиента"
+                });
+                var pt = "<?php echo $phoneto; ?>";
+                var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
-                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id=' + data + '&call_id=' + call_id;
-                location.href =url;
+                setTimeout(function(){location.href = location.href;}, 1000);
             },
-            dataType: "text",
-            timeout: 10000,
-            error: function(data){
+            error: function (data) {
+                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Ошибка при создании заказа. Сервер не отвечает"
+                    text: "Ошибка отправки"
                 });
-            }					
+            }
         });
-    });
+    }
 
     function rb_email_click(elem)
     {
@@ -730,6 +526,24 @@ foreach ($dealer_history as $key => $item) {
         jQuery("#email_login").val(elem.value);
     }
 
+    function OpenPage() {
+        var e = jQuery("[data-href]");
+        jQuery.each(e, function (i, v) {
+            jQuery(v).click(function () {
+                document.location.href = this.dataset.href;
+            });
+        });
+    }
+        //-----------------------------------------------
+
+
+    jQuery(document).ready(function () {
+        jQuery('body').on('click', '.row_project', function(e){
+            if (jQuery(this).data('href') !== undefined)
+            {
+                document.location.href = jQuery(this).data('href');
+            }
+        });
         // фильтр по статусу
         jQuery("#select_status").change(function () {
             var status = jQuery("#select_status").val();
@@ -779,7 +593,7 @@ foreach ($dealer_history as $key => $item) {
                         {
                             tr.find(".status").text('-');
                         }
-                        
+
                         tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                         list.append(tr);
                     }
@@ -799,18 +613,264 @@ foreach ($dealer_history as $key => $item) {
                 }
             });
         });
-        function OpenPage() {
-            var e = jQuery("[data-href]");
-            jQuery.each(e, function (i, v) {
-                jQuery(v).click(function () {
-                    document.location.href = this.dataset.href;
-                });
+
+        jQuery("#but_comm").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_comm").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("#but_login").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_login").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("#add_call").click(function(){
+            client_id = <?php echo $this->item->id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addCall",
+                data: {
+                    id_client: client_id,
+                    date: jQuery("#call_date_m").val(),
+                    comment: jQuery("#call_comment_m").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Добавлен звонок");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Добавлен звонок"
+                    });
+
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
             });
-        }
-        //-----------------------------------------------
+        });
 
+        jQuery(".SelectPrice").change(ChangeSelectPrice);
 
-    jQuery(document).ready(function () {
+        jQuery("#new_client").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_client").show("slow");
+        });
+
+        jQuery("[name = rm_email]").click(function(){
+            var email = jQuery(this).attr("email");
+            var client_id = <?php echo $this->item->id;?>;
+
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
+                data: {
+                    email: email,
+                    client_id : client_id
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Удален email: "+email);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Письмо отправлено!"
+                    });
+
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery("#btn_city").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_city").show("slow");
+        });
+
+        jQuery("#change_city").click(function(){
+            var dealer_id = <?php echo $this->item->dealer_id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=dealer.change_city",
+                data: {
+                    dealer_id : dealer_id,
+                    city: jQuery("#city").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Город изменен"
+                    });
+
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery("#new_send_email").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_send_email").show("slow");
+        });
+
+        jQuery("#edit").click(function() {
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_fio").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("[name = send_email]").change(function(){
+            jQuery("#email").val(jQuery(this).val());
+        });
+
+        jQuery("#send_email").click(function(){
+            var client_id = <?php echo $this->item->id;?>;
+            var email = jQuery("#email").val();
+            var subj = jQuery("#email_subj").val();
+            var text = jQuery("#email_text").val();
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=dealer.sendEmail",
+                data: {
+                    email: email,
+                    subj: subj,
+                    text: text,
+                    client_id : client_id
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Отправлен email");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Письмо отправлено!"
+                    });
+
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery("#update_fio").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
+                data: {
+                    client_id: "<?php echo $this->item->id;?>",
+                    fio: jQuery("#new_fio").val()
+                },
+                success: function(data){
+                    jQuery("#FIO").text(data);
+                    jQuery("#new_fio").val("");
+                    jQuery("#close-tar").hide();
+                    jQuery("#modal-window-container-tar").hide();
+                    jQuery("#modal-window-call-tar").hide();
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "ФИО обновлено!"
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    console.log(data);
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+        });
+
+        jQuery("#add_new_project").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+                data: {
+                    client_id:<?php echo $this->item->id;?>
+
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    var call_id = <?php echo $call_id; ?>;
+                    url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id=' + data + '&call_id=' + call_id;
+                    location.href =url;
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при создании заказа. Сервер не отвечает"
+                    });
+                }
+            });
+        });
 
         /*Переход к проекту в воде денег*/
         $(".modal_window_pay .dealer_history tbody tr.project").click(function () {
@@ -818,7 +878,48 @@ foreach ($dealer_history as $key => $item) {
             location.href = "/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=" + $id;
         });
 
-
+        jQuery("#savePayment").click(function(){
+            var project_id = jQuery("#slct_project").val(),
+                dealer_id = jQuery("#jform_dealer_id").val(),
+                comment = jQuery("#pay_comment").val(),
+                sum = jQuery("#pay_sum").val();
+            jQuery.ajax({
+                url: '/index.php?option=com_gm_ceiling&task=clientform.pay',
+                data: {
+                    dealer_id: dealer_id,
+                    pay_sum: sum,
+                    pay_comment: comment,
+                    project_id: project_id
+                },
+                dataType: "json",
+                async: true,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Сумма успешно внесена!"
+                    });
+                    jQuery("#close").hide();
+                    jQuery("#mv_container").hide();
+                    jQuery("#modal_window_comm").hide();
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
         // фильтр по статусу
         jQuery("#select_status").change();
         //-----------------------------------------------
@@ -1003,162 +1104,118 @@ foreach ($dealer_history as $key => $item) {
                 }
             });
         }
-    });
 
-    jQuery("#back_btn").click(function (){
-        history.go(-1);
-    });
+        jQuery("#back_btn").click(function (){
+            history.go(-1);
+        });
 
-    jQuery("#add_comment").click(function ()
-    {
-        var comment = jQuery("#new_comment").val();
-        var reg_comment = /[\\\<\>\/\'\"\#]/;
-        var id_client = <?php echo $this->item->id; ?>;
-
-        if (reg_comment.test(comment) || comment === "")
+        jQuery("#add_comment").click(function ()
         {
-            alert('Неверный формат примечания!');
-            return;
-        }
+            var comment = jQuery("#new_comment").val();
+            var reg_comment = /[\\\<\>\/\'\"\#]/;
+            var id_client = <?php echo $this->item->id; ?>;
 
-        add_history(id_client, comment);
-    });
-
-    jQuery("#but_call").click(function ()
-    {
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_select_number").show("slow");
-    });
-    jQuery("#add_pay").click(function(){
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_sum").show("slow");
-    });
-    jQuery("#save_pay").click(function(){
-        var user_id = <?php echo $this->item->dealer_id;?>;
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
-            data: {
-                id: user_id,
-                sum: document.getElementById('pay_sum').value
-            },
-            success: function(data){
-                var n = noty({
-                    timeout: 5000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Сумма успешно добавлена"
-                });
-                setInterval(function() { location.reload();}, 1500);
-            },
-            dataType: "text",
-            async: false,
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка. Сервер не отвечает"
-                });
+            if (reg_comment.test(comment) || comment === "")
+            {
+                alert('Неверный формат примечания!');
+                return;
             }
-        });
-    });
-    jQuery("#select_phones").change(function ()
-    {
-        var id_client = <?php echo $this->item->id; ?>;
-        call(jQuery("#select_phones").val());
-        add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
-    });
-    jQuery("#but_callback").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_call").show("slow");
-        jQuery("#close").show();
-    });
-    jQuery("#broke").click(function(){
-        jQuery("#mv_container").show();
-        jQuery("#call").show("slow");
-        jQuery("#close").show();
-            
-    })
-    jQuery("#add_call_and_submit").click(function(){
-        client_id = <?php echo $this->item->id;?>;
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=changeCallTime",
-                    data: {
-                        id:<?php echo $call_id;?>,
-                        date: jQuery("#call_date").val(),
-                        comment: jQuery("#call_comment").val()
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                       add_history(client_id,"Звонок перенесен");
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Звонок сдвинут"
-                        });
 
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
-                });
-    })
-    function add_history(id_client, comment)
-    {
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addComment",
-            data: {
-                comment: comment,
-                id_client: id_client
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Добавленна запись в историю клиента"
-                });
-                var pt = "<?php echo $phoneto; ?>";
-                var pf = "<?php echo $phonefrom; ?>";
-                var call_id = <?php echo $call_id; ?>;
-                setTimeout(function(){location.href = location.href;}, 1000);
-            },
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка отправки"
-                });
-            }
+            add_history(id_client, comment);
         });
-    }
 
+        jQuery("#but_call").click(function ()
+        {
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_select_number").show("slow");
+        });
+        jQuery("#add_pay").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_sum").show("slow");
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=projects.getUnpaidProjects",
+                data: {
+                    dealer_id: jQuery("#jform_dealer_id").val()
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    jQuery.each(data,function(index,element){
+                        jQuery('#slct_project')
+                            .append(jQuery("<option></option>")
+                                .attr("value",element.id)
+                                .text(element.id));
+                    });
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+        jQuery("#select_phones").change(function ()
+        {
+            var id_client = <?php echo $this->item->id; ?>;
+            call(jQuery("#select_phones").val());
+            add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
+        });
+        jQuery("#but_callback").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_call").show("slow");
+            jQuery("#close").show();
+        });
+        jQuery("#broke").click(function(){
+            jQuery("#mv_container").show();
+            jQuery("#call").show("slow");
+            jQuery("#close").show();
+
+        })
+        jQuery("#add_call_and_submit").click(function(){
+            client_id = <?php echo $this->item->id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=changeCallTime",
+                data: {
+                    id:<?php echo $call_id;?>,
+                    date: jQuery("#call_date").val(),
+                    comment: jQuery("#call_comment").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Звонок перенесен");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Звонок сдвинут"
+                    });
+
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        })
+    });
 </script>

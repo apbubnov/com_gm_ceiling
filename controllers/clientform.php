@@ -328,12 +328,10 @@ class Gm_ceilingControllerClientForm extends JControllerForm
             $recoil_id = $JInput->getInt('dealer_id');
             $sum = $JInput->getFloat('pay_sum');
             $comment = $JInput->getString('pay_comment');
-
+            $project_id = $JInput->getInt('project_id');
             $recoil_map_project = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-            $recoil_map_project->insert($recoil_id, null, $sum, $comment);
-
-            $this->setMessage("Средства успешно внесены!");
-            $this->setRedirect(JRoute::_($_SERVER["HTTP_REFERER"], false));
+            $recoil_map_project->insert($recoil_id, $project_id, $sum, $comment);
+            die(json_encode(true));
         }
         catch(Exception $e)
         {
