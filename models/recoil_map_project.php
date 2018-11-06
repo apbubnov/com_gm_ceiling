@@ -150,12 +150,12 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 
             $query = $db->getQuery(true);
 
-            $project_id = (empty($project_id))?"NULL":"'$project_id'";
+            $project_id = (empty($project_id))?"NULL":"$project_id";
             $date = date("Y-m-d H:i:s");
 
             $query->insert('`#__gm_ceiling_recoil_map_project`')
                 ->columns("recoil_id, project_id, sum, date_time, comment")
-                ->values("'$recoil_id', $project_id, '$sum', '$date', '$comment'");
+                ->values("$recoil_id, $project_id, $sum, '$date', '$comment'");
 
             $db->setQuery($query);
             $db->execute();

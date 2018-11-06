@@ -1,4 +1,4 @@
-add_pay<?php
+<?php
 
 JHtml::_('formbehavior.chosen', 'select');
 
