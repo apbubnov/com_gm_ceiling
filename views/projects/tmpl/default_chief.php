@@ -40,19 +40,28 @@ usort($this->items,function($a,$b){
 });
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
+<style type="text/css">
+    .table
+    {
+        border-collapse:separate;
+        border-spacing:0 0.5em;
+    }
 
+</style>
 <?= parent::getButtonBack(); ?>
-<? if ($user->dealer_type != 2): ?>
-    <h4 class="center" style="margin-bottom: 1em;">Назначенные на монтаж и запущенные в производство</h4>
-<? else: ?>
-    <h4 class="center" style="margin-bottom: 1em;">Заказы</h4>
-<? endif; ?>
-<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post" name="adminForm" id="adminForm">
-    <? if (false): ?>
-        <div class="toolbar">
-            <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
+<h4 class="center" style="margin-bottom: 1em;">Назначенные на монтаж и запущенные в производство</h4>
+<div class="container">
+    <div class="row ">
+        <div class="col-md-1" style="vertical-align:middle"> Заказ: </div>
+        <div class="col-md-2">
+             оплачен<hr style="background-color:green;color:green;height:2px;">
         </div>
-    <? endif; ?>
+        <div class="col-md-2">
+            не оплачен <hr style="background-color:red;color:red;height:2px;">
+        </div>
+    </div>
+</div>
+<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post" name="adminForm" id="adminForm">
     <? if (count($this->items) > 0): ?>
         <table class="table table-striped one-touch-view g_table" id="projectList">
             <? if ($user->dealer_type != 2): ?>
@@ -80,8 +89,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         $canEdit = JFactory::getUser()->id == $item->created_by;
                     if ($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
-                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
-                    <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
+                        $color =  $item->paid ? 'style="outline: green solid 1px; margin-top:15px;"' : 'style="outline: red solid 1px; margin-top:15px;"';?>
+                    <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id);?>" <?php echo $color?>>
                         <td>
                             <? if ($item->project_status >= 8): ?>
                                 <button class="btn btn-primary btn-sm btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check-circle"></i></button>
