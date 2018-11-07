@@ -91,6 +91,7 @@ echo parent::getButtonBack();
             jQuery("#mw_container").hide();
         }
     });
+
     jQuery(document).ready(function(){
         makeTh(jQuery("#analytic_common > thead"),data[0]);
         makeTh(jQuery("#analytic_detailed > thead"),det_data[0]);
@@ -163,12 +164,55 @@ echo parent::getButtonBack();
             var statuses = jQuery(jQuery('#analytic_common > thead > tr')[0].children[index]).data('value');
             var date1 = jQuery("#c_date_from").val();
             var date2 = jQuery("#c_date_to").val();
+            console.log(statuses);
             if(rek_name != undefined){
-                for(let i = 0;i<data.length;i++){
-                    if(data[i]['id'] == rek_name){
-                        projects = data[i]['projects'][statuses];
+                if(statuses != "expenses") {
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i]['id'] == rek_name) {
+                            projects = data[i]['projects'][statuses];
+                        }
                     }
-                 }
+                }
+                else{
+                    var td = jQuery(target);
+                    var oldExpenses = td.text();
+                    td.empty();
+                    td.append("<div class='row'><div class='col-md-5 left' style='padding:0 0 0 0'>" +
+                                "<input type='text' class='inputactive' value='"+oldExpenses+"' name='newExpenses'></div>" +
+                                "<div class='col-md-7 left' style='padding:0 0 0 0'>" +
+                                "<button class='btn btn-primary' name='saveExpenses'><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i></button></div></div>");
+                    jQuery("[name = 'saveExpenses']").click(function () {
+                        var newExpense = jQuery(this.closest('td')).find("[name = newExpenses]").val();
+                        jQuery.ajax({
+                            url: "index.php?option=com_gm_ceiling&task=api_phones.saveExpense",
+                            data: {
+                                api_phone_id: rek_name,
+                                newExpense: newExpense
+                            },
+                            dataType: "json",
+                            async: true,
+                            success: function (data) {
+                                td.empty();
+                                td.text(newExpense);
+                                var totalTd = jQuery('#analytic_common > tbody > tr:last > td:last');
+                                var totalExpenses = totalTd.text();
+                                totalTd.text(totalExpenses - oldExpenses + +newExpense);
+
+                            },
+                            error: function (data) {
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка сохранения!"
+                                });
+                            }
+                        });
+                    })
+                    return;
+                }
             }
             else{
                 for(let i = 0;i<data.length;i++){
@@ -178,7 +222,6 @@ echo parent::getButtonBack();
             }
             console.log(projects);
             if(projects){
-
                 getProjects(projects); 
             }
             else{
@@ -193,6 +236,8 @@ echo parent::getButtonBack();
             }
         }         
     });
+
+
 
     jQuery(document).on("click", "#analytic_detailed tbody tr", function(event) {
         var target = event.target;
@@ -408,63 +453,63 @@ echo parent::getButtonBack();
 
     function getProjects(ids){
         jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
-                    data: {
-                        ids : ids
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        console.log(data);
-                        var profit = 0,sum=0;
-                        jQuery("#mw_projects").show('slow');
-                        jQuery("#close-modal-window").show();
-                        jQuery("#mw_container").show();
-                        jQuery("#table_projects").empty();
-                        if (data.length==0) {
-                            TrOrders = '<tr id="caption-data"></tr><tr><td>Проектов нет</td></tr>';        
-                            jQuery("#table_projects").append(TrOrders);
-                        } else {
-                            TrOrders = '<tr id="caption-tr"><td>Id</td><td>Адрес</td><td>Статус</td><td>Сумма</td><td>Прибыль</td></tr>';
-                            for(var i = 0;i<data.length;i++){
-                                profit = 0,sum = 0;
-                                if(data[i].new_project_sum!=0){
-                                    sum = data[i].new_project_sum;
-                                    if(data[i].new_mount_sum!=0&&data[i].new_material_sum!=0){
-                                        profit = data[i].new_project_sum -data[i].new_mount_sum-data[i].new_material_sum;
-                                    }
+            url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
+            data: {
+                ids : ids
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                console.log(data);
+                var profit = 0,sum=0;
+                jQuery("#mw_projects").show('slow');
+                jQuery("#close-modal-window").show();
+                jQuery("#mw_container").show();
+                jQuery("#table_projects").empty();
+                if (data.length==0) {
+                    TrOrders = '<tr id="caption-data"></tr><tr><td>Проектов нет</td></tr>';
+                    jQuery("#table_projects").append(TrOrders);
+                } else {
+                    TrOrders = '<tr id="caption-tr"><td>Id</td><td>Адрес</td><td>Статус</td><td>Сумма</td><td>Прибыль</td></tr>';
+                    for(var i = 0;i<data.length;i++){
+                        profit = 0,sum = 0;
+                        if(data[i].new_project_sum!=0){
+                            sum = data[i].new_project_sum;
+                            if(data[i].new_mount_sum!=0&&data[i].new_material_sum!=0){
+                                profit = data[i].new_project_sum -data[i].new_mount_sum-data[i].new_material_sum;
+                            }
+                        }
+                        else{
+                            if(data[i].project_sum){
+                                sum = data[i].project_sum;
+                                if(data[i].cost!=0){
+                                    profit = data[i].project_sum - data[i].cost;
                                 }
-                                else{
-                                    if(data[i].project_sum){
-                                        sum = data[i].project_sum;
-                                        if(data[i].cost!=0){
-                                            profit = data[i].project_sum - data[i].cost;
-                                        }
-                                        
-                                    }
-                                }
-
-                                TrOrders += '<tr class="link_row" data-href = \'/index.php?option=com_gm_ceiling&view=clientcard&id='+data[i].client_id+'\'><td>'+data[i].id+'</td><td>'+data[i].project_info+'</td><td>'+data[i].status+'</td><<td>'+data[i].sum+'</td><td>'+parseFloat(data[i].profit).toFixed(2)+'</td>/tr>';
 
                             }
-
-                            jQuery("#table_projects").append(TrOrders);
                         }
-                        jQuery(".link_row").click(function(){
-                            window.location = jQuery(this).data("href");
-                        });
-                    },
-                    error: function (data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка получения данных"
-                        });
+
+                        TrOrders += '<tr class="link_row" data-href = \'/index.php?option=com_gm_ceiling&view=clientcard&id='+data[i].client_id+'\'><td>'+data[i].id+'</td><td>'+data[i].project_info+'</td><td>'+data[i].status+'</td><<td>'+data[i].sum+'</td><td>'+parseFloat(data[i].profit).toFixed(2)+'</td>/tr>';
+
                     }
+
+                    jQuery("#table_projects").append(TrOrders);
+                }
+                jQuery(".link_row").click(function(){
+                    window.location = jQuery(this).data("href");
                 });
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения данных"
+                });
+            }
+        });
     }
     
 </script>

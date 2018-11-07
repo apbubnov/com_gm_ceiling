@@ -63,7 +63,8 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			"deals" => "Договоры",
 			"done" => "Завершенные",
 			"sum" => "Сумма",
-			"profit"=> "Прибыль"
+			"profit"=> "Прибыль",
+            "expenses" => "Затраты"
 			);
 		
 		array_unshift($result, $header);
@@ -120,6 +121,7 @@ class Gm_ceilingModelAnalytic_new extends JModelList
 			$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
 			$advt[$advt_id]['projects']["common"] .= $project->project_id . ";";
 			$advt[$advt_id]["common"]++;
+			$advt[$advt_id]['expenses'] = $project->advt_expenses;
 			foreach ($statuses as $key => $statuses_arr) {
 				if(!is_null($project->project_status) && in_array($project->project_status, $statuses_arr)){
 					$advt[$advt_id]['projects'][$key] .= $project->project_id . ";";

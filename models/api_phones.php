@@ -230,4 +230,21 @@ class Gm_ceilingModelApi_phones extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveExpense($apiPhoneId,$newExpense){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->update('`#__gm_ceiling_api_phones`');
+            $query->set("`expenses`= $newExpense");
+            $query->where("`id` = $apiPhoneId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

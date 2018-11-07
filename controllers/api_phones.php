@@ -44,5 +44,20 @@ class Gm_ceilingControllerApi_phones extends JControllerLegacy{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function saveExpense(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $apiPhoneId = $jinput->get('api_phone_id',null,'INT');
+            $newExpense = $jinput->get('newExpense',null,'DOUBLE');
+            $model = $this->getModel();
+            $model->saveExpense($apiPhoneId,$newExpense);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>
