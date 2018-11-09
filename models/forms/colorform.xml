@@ -13,7 +13,7 @@
     <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
     <field name="color_title" type="text" filter="string" required="true" label="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_TITLE" description="COM_GM_CEILING_FORM_DESC_COLOR_COLOR_TITLE" hint="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_TITLE"/>
     <field name="color_picker" type="color" default="#000000" label="Выберите цвет" description="Выбор цвета" class="color" />
-    <field name="color_canvas" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_CANVAS" description="COM_GM_CEILING_FORM_DESC_COLOR_COLOR_CANVAS" class="inputbox" input_type="list" table="#__gm_ceiling_canvases" key_field="id" value_field="name"   required="true" default=""/>
+    <!--<field name="color_canvas" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_CANVAS" description="COM_GM_CEILING_FORM_DESC_COLOR_COLOR_CANVAS" class="inputbox" input_type="list" table="#__gm_ceiling_canvases" key_field="id" value_field="name"   required="true" default=""/>-->
     <field name="color_file" type="media" directory="canvases" label="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_FILE" description="COM_GM_CEILING_FORM_DESC_COLOR_COLOR_FILE" hint="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_FILE"/>
     <field name="color_hex" type="text" filter="string" label="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_HEX" description="COM_GM_CEILING_FORM_DESC_COLOR_COLOR_HEX" hint="COM_GM_CEILING_FORM_LBL_COLOR_COLOR_HEX"/>
     <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>

@@ -1663,49 +1663,6 @@ public function register_mnfctr(){
         }
     }
 
-
-    public static function createColorImage()
-    {
-        try
-        {
-            $width = 150;
-            $height = 110;
-            $jinput = JFactory::getApplication()->input;
-            $color_code = $jinput->get('code', '', 'STRING');
-            $glyanec = $jinput->get('glyanec', '', 'INT');
-            $satin = $jinput->get('satin', '', 'INT');
-            $name = $jinput->get('col_name', '', 'STRING');
-
-            $red = hexdec(substr($color_code, 0, 2));
-            $green = hexdec(substr($color_code, 2, 2));
-            $blue = hexdec(substr($color_code, 4, 2));
-
-
-            $img = imagecreatetruecolor($width, $height) or die("Ошибка");
-            $color = imagecolorallocate($img, $red, $green, $blue);
-
-            imagefill($img, 0, 0, $color);
-            $filename = $name . "mat.png";
-            if ($satin) {
-                $filename = $name . 'sat.png';
-            }
-            if ($glyanec) {
-                $gl = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/glyanec.png');
-                imagecopy($img, $gl, 0, 0, 0, 0, $width, $height);
-                $filename = $name . 'glan.png';
-            }
-            imagepng($img, $_SERVER['DOCUMENT_ROOT'] . '/images/canvases/' . $filename);
-            $result = '/images/canvases/' . $filename . '?' . rand();
-
-            imagedestroy($img);
-            die($result);
-        }
-       catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
     public function update_margin()
     {
         try

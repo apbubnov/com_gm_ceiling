@@ -426,4 +426,45 @@ class Gm_ceilingModelColors extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function getData($type){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('*');
+            $query->from('#__gm_ceiling_colors');
+            if(!empty($type)){
+                $query->where("file LIKE '%$type%'");
+            }
+            $db->setQuery($query);
+            return $db->loadObjectList();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function save($id,$name,$color_code,$files){
+        try{
+            $db = JFactory::getDbo();
+            if(empty($id)){
+                foreach ($files as $path){
+                    $query = $db->getQuery(true);
+                    $query
+                        ->insert('`#__gm_ceiling_colors`')
+                        ->columns('`title`,`file`,`hex`')
+                        ->values("'$name','$path','$color_code'");
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+                return true;
+            }
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
