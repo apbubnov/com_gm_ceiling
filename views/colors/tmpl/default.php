@@ -63,6 +63,8 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                 <th class="center">Фактура</th>
                 <th class="center">Картинка</th>
                 <th class="center"><i class="fa fa-pencil-square" aria-hidden="true"></i></th>
+                <th class="center">Полотна</th>
+                <th class="center">Добавить полотно</th>
             </thead>
             <tbody>
             </tbody>
@@ -127,9 +129,9 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                         <fieldset>
                             <legend align="left"><label style="padding-left: auto">Цвет</label></legend>
                             <div class="row">
-                                <div class="col-md-6" id="colorPicker">
-                                    <label for="colorHex">Выберите цвет</label>
-                                    <input id = "hexColor" class="jscolor {hash:true}" >
+                                <div class="col-md-6 colorPicker" id="colorPicker">
+                                    <label for="hexColor">Выберите цвет</label>
+                                    <input id = "hexColor">
                                 </div>
                                 <div class="col-md-6" id="images">
 
@@ -153,16 +155,80 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
 
         </div>
         <div class="modal_window" id="mwEditColor">
+            <div class="row center">
+                <div class="col-md-12">
+                    <input id="colorId" value="" type="hidden">
+                    <input id="colorTexture" value="" type="hidden">
+                    <label for="colorTitleEdit">Назавние цвета:</label>
+                    <input id="colorTitleEdit" class="input-gm">
+                </div>
+            </div>
+            <div class="row center">
+                <div class="row center" style="margin-bottom: 10px">
+                    <div class="col-md-12">
+                        <label for="hexColorEdit">Цвет</label>
+                        <input id = "hexColorEdit">
+                    </div>
+                    <div class="col-md-12" id="imagesEdit">
 
+                    </div>
+                </div>
+                <div class="row center" >
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="saveColorChangesBtn">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal_window" id="mwEditCanvases">
+            <input id = "selectedColor" type="hidden">
+            <div class="row center">
+                <div class="col-md-3 center">
+                    <select id="canvasesTextureSelect" class="inputactive">
+                        <option>Выберите текстуру</option>
+                    </select>
+                </div>
+                <div class="col-md-3 center">
+                    <select id="canvasesManufacturerSelect" class="inputactive">
+                        <option>Выберите производителя</option>
+                    </select>
+                </div>
+                <div class="col-md-3 center">
+                    <input type="text" class="inputactive" id="width" placeholder="Ширина">
+                </div>
+                <div class="col-md-3 center">
+                    <input type="text" class="inputactive" id="price" placeholder="Цена">
+                </div>
+
+            </div>
+            <div class="row center">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="saveNewCanvas">Сохранить</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="canvases" class="table table_cashbox">
+                        <thead>
+                        <th class="center">Полотно</th>
+                        <th class="center"><i class="fa fa-trash" aria-hidden="true"></i></th>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<script src="/components/com_gm_ceiling/views/colors/jscolor/jscolor.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="/components/com_gm_ceiling/views/colors/colorPicker/css/colorpicker.css" />
+<script type="text/javascript" src="/components/com_gm_ceiling/views/colors/colorPicker/js/colorpicker.js"></script>
 <script type="text/javascript">
     var textures ={mat:"Мат",sat:"Сатин",glan:"Глянец",desk:"Дескор"},
         colors = [],
         newColorFiles = [];
-    
+
     function getData(){
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=colors.getColors",
@@ -191,16 +257,29 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
     function defineTexture(filename) {
         for(var i = 0; i < Object.keys(textures).length;i++){
             if(filename.indexOf(Object.keys(textures)[i]) >=0){
-                return textures[Object.keys(textures)[i]];
+                return {key:Object.keys(textures)[i],value:textures[Object.keys(textures)[i]]};
             }
         }
     }
 
     function fillTable(data){
-        var EDIT_BUTTON = '<button class="btn btn-primary" name ="editBtn"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>';
+        var EDIT_BUTTON = '<button class="btn btn-primary" name ="editBtn"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>',
+            ADD_CANVAS_BUTTON = '<button class="btn btn-primary" name ="addCanvasBtn"><i class="fa fa-plus-square" aria-hidden="true"></i></button>',
+            canvases = [],
+            canvasesTitles="";
+
         jQuery.each(data,function (index,element) {
+            canvases = (element.canvases) ? JSON.parse(element.canvases) :[] ;
+            canvasesTitles = "";
+            element.canvases = canvases;
+            for(var j = 0;j<canvases.length;j++){
+                canvasesTitles += canvases[j].name+"; ";
+            }
             jQuery("#tableColors > tbody").append("<tr/>");
-            var tr = jQuery("#tableColors > tbody > tr:last").append('<td>'+element.title+'</td><td>'+defineTexture(element.file)+'</td><td><img style="max-height: 50px" src="'+element.file+'"></td><td>'+EDIT_BUTTON+"")
+            jQuery("#tableColors > tbody > tr:last").attr("data-color_id",element.id);
+            var tr = jQuery("#tableColors > tbody > tr:last").append('<td>'+element.title+'</td><td>'+
+                defineTexture(element.file).value+'</td><td><img style="max-height: 50px" src="'+element.file+'"></td><td>'+
+                EDIT_BUTTON+'<td>'+ canvasesTitles +'</td><td>'+ ADD_CANVAS_BUTTON+'</td>')
         });
     }
 
@@ -218,17 +297,79 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
         });
         return result;
     }
+
+    function fillTexturesSelect(){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=textures.getFilteredData",
+            data: {
+                filter: "a.texture_colored = 1"
+            },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                jQuery.each(data,function (index,element) {
+                    jQuery("#canvasesTextureSelect").append('<option value='+element.id+'>'+element.texture_title+'</option>');
+                });
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения данных!"
+                });
+            }
+        });
+    }
+
+    function fillManufacturersSelect(){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=Manufacturers.getData",
+            data: {
+            },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                jQuery.each(data,function (index,element) {
+                    jQuery("#canvasesManufacturerSelect").append('<option value='+element.id+'>'+element.name+'</option>');
+                });
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения данных!"
+                });
+            }
+        });
+    }
     jQuery(document).mouseup(function (e) {
         var div = jQuery("#mwEditColor"),
-            div1 = jQuery("#mwCreateColor");
+            div1 = jQuery("#mwCreateColor"),
+            div2 = jQuery(".colorpicker"),
+            div3 = jQuery("#mwEditCanvases");
         if (!div.is(e.target)
             && div.has(e.target).length === 0 &&
             !div1.is(e.target)
-            && div1.has(e.target).length === 0) {
+            && div1.has(e.target).length === 0 &&
+            !div2.is(e.target)
+            && div2.has(e.target).length === 0 &&
+            !div3.is(e.target)
+            && div3.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
             div1.hide();
+            div2.hide();
+            div3.hide();
+            jQuery("#imagesEdit").empty();
         }
     });
 
@@ -242,15 +383,108 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
 
         });
 
+        jQuery('#hexColor').ColorPicker({
+
+            color: "#ffffff",
+            onShow: function (colpkr) {
+                jQuery(colpkr).fadeIn(500);
+                return false;
+            },
+            onHide: function (colpkr) {
+                jQuery(colpkr).fadeOut(500);
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+                jQuery('#hexColor').val('#' + hex);
+            }
+        });
         jQuery("#resetFilter").click(function () {
             fillTable(colors);
             jQuery("#textureSelect").val(0);
         });
 
         jQuery("[name = editBtn]").click(function () {
+            var color_id = jQuery(this.closest('tr')).data("color_id"),
+                color = colors[color_id];
+
             jQuery("#mw_container").show();
             jQuery("#mwEditColor").show('slow');
             jQuery("#close").show();
+            jQuery("#hexColorEdit").val(color.hex);
+            jQuery("#colorTitleEdit").val(color.title);
+            jQuery("#colorTexture").val(defineTexture(color.file).key);
+            jQuery("#colorId").val(color_id);
+            jQuery("#imagesEdit").append('<img style="max-height: 50px" src="'+color.file+'"><br>');
+            jQuery('#hexColorEdit').ColorPicker({
+
+                color: '#'+color.hex,
+                onShow: function (colpkr) {
+                    jQuery(colpkr).fadeIn(500);
+                    return false;
+                },
+                onHide: function (colpkr) {
+                    jQuery(colpkr).fadeOut(500);
+                    return false;
+                },
+                onChange: function (hsb, hex, rgb) {
+                    jQuery('#hexColorEdit').val('#' + hex);
+                }
+            });
+        });
+
+        jQuery("[name='addCanvasBtn']").click(function () {
+            jQuery("#mw_container").show();
+            jQuery("#mwEditCanvases").show('slow');
+            jQuery("#close").show();
+
+            var DELETE_BUTTON = '<button class="btn btn-danger delete_canvas"><i class="fa fa-trash" aria-hidden="true"></i></button>',
+                color_id = jQuery(this.closest('tr')).data('color_id'),
+                canvases = colors[color_id].canvases;
+            jQuery("#selectedColor").val(color_id);
+            jQuery("#canvases > tbody").empty();
+            jQuery.each(canvases,function (index,element) {
+                jQuery("#canvases > tbody").append('<tr/>');
+                jQuery("#canvases >tbody > tr:last").attr("data-canvas_id",element.id);
+                jQuery("#canvases >tbody > tr:last").append('<td>'+element.name+'</td><td>'+DELETE_BUTTON+'</td>');
+            });
+            jQuery("#width").mask("9.9");
+            fillTexturesSelect();
+            fillManufacturersSelect();
+            jQuery(".delete_canvas").click(function () {
+                var canvas_id = jQuery(this.closest('tr')).data('canvas_id');
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=canvasForm.remove",
+                    data: {
+                        id: canvas_id
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Удалено!"
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        },1000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка получения данных!"
+                        });
+                    }
+                });
+            });
         });
 
         jQuery("#addColor").click(function () {
@@ -259,16 +493,17 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
             jQuery("#close").show();
         });
 
+
+
         jQuery("#createImg").click(function () {
             var selectedCheckboxes = jQuery('input[name="texture"]:checked'),
                 selectedTextures = [],
                 hexColor = jQuery("#hexColor").val(),
                 nameColor = jQuery("#colorTitle").val();
-                //idColor = jQuery("#colorId").val();
             jQuery.each(selectedCheckboxes,function (index,elem) {
                 selectedTextures.push(elem.value);
             });
-            console.log(hexColor);
+
             if(selectedTextures.length){
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=colors.createColorImage",
@@ -350,6 +585,90 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                     });
                 }
             });
+        });
+
+        jQuery("#saveNewCanvas").click(function () {
+            var texture = jQuery("#canvasesTextureSelect").val(),
+                manufacturer = jQuery("#canvasesManufacturerSelect").val(),
+                width = jQuery("#width").val(),
+                price = jQuery("#price").val(),
+                color_id = jQuery("#selectedColor").val();
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=canvases.save",
+                data: {
+                    texture: texture,
+                    manufacturer: manufacturer,
+                    width: width,
+                    price: price,
+                    color_id: color_id
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Успешно сохранено!"
+                    });
+                   /* setTimeout(function () {
+                        location.reload(true);
+                    },1000);*/
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
+            });
+        });
+
+        jQuery("#saveColorChangesBtn").click(function () {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=colors.update",
+                data: {
+                    hexCode: jQuery("#hexColorEdit").val(),
+                    name: jQuery("#colorTitleEdit").val(),
+                    textures:[jQuery("#colorTexture").val()],
+                    idColor:jQuery("#colorId").val()
+
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Успешно сохранено!"
+                    });
+                    setTimeout(function () {
+                        location.reload(true);
+                    },1000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
+            });
+
         });
     });
 </script>

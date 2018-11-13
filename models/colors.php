@@ -429,15 +429,24 @@ class Gm_ceilingModelColors extends JModelList
 
 	function getData($type){
 	    try{
+	        /*SELECT color.*,GROUP_CONCAT(DISTINCT CONCAT(c.name,' ',c.country,' ',c.width,' ',t.texture_title) SEPARATOR ';') AS canvases
+              FROM `rgzbn_gm_ceiling_colors` AS color
+              LEFT JOIN `rgzbn_canvases` AS c ON c.color_id = color.id
+              INNER JOIN `rgzbn_gm_ceiling_textures` AS t ON c.texture_id = t.id
+              GROUP BY color.id*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query->select('*');
-            $query->from('#__gm_ceiling_colors');
+            $query->select('color.*,CONCAT("[", GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',c.id,\'","name":"\',c.name,\' \',c.country,\' \',c.width,\' \',t.texture_title,\'"}\') SEPARATOR \',\'),\']\') AS canvases');
+            $query->from('`#__gm_ceiling_colors` as color');
+            $query->leftJoin('`#__canvases` as c on c.color_id = color.id');
+            $query->leftJoin('`rgzbn_gm_ceiling_textures` AS t ON c.texture_id = t.id');
             if(!empty($type)){
-                $query->where("file LIKE '%$type%'");
+                $query->where("color.file LIKE '%$type%'");
             }
+            $query->GROUP('color.id');
+
             $db->setQuery($query);
-            return $db->loadObjectList();
+            return $db->loadAssocList('id');
         }
         catch(Exception $e)
         {
@@ -445,7 +454,7 @@ class Gm_ceilingModelColors extends JModelList
         }
     }
 
-    function save($id,$name,$color_code,$files){
+    function save($id,$name,$color_code,$files=null){
         try{
             $db = JFactory::getDbo();
             if(empty($id)){
@@ -458,6 +467,17 @@ class Gm_ceilingModelColors extends JModelList
                     $db->setQuery($query);
                     $db->execute();
                 }
+                return true;
+            }
+            else{
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`#__gm_ceiling_colors`')
+                    ->set("`title` = '$name'")
+                    ->set("`hex` = '$color_code'")
+                    ->where("`id`= $id");
+                $db->setQuery($query);
+                $db->execute();
                 return true;
             }
 

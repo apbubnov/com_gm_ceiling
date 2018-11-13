@@ -261,7 +261,26 @@ if (empty($list['direction']))
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	
+
+	function getFilteredData($filter){
+        try
+        {
+            // Создаем новый query объект.
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('distinct a.id');
+            $query->select('a.texture_title');
+            $query->from('#__gm_ceiling_textures AS a');
+            $query->where($filter);
+
+            $db->setQuery($query);
+            return $db->loadObjectList();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	//KM_CHANGED END
 
 	/**

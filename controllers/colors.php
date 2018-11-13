@@ -56,18 +56,21 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
 
         }
     }
-    function createColorImage()
+    function createColorImage($name = null,$textures=null,$color_code=null)
     {
         try
         {
             $result = [];
             $width = 150;
             $height = 110;
-            $jinput = JFactory::getApplication()->input;
-            $color_code = $jinput->get('hexCode', '', 'STRING');
-            $textures = $jinput->get('textures',[],'ARRAY');
-            $name = $jinput->get('name', '', 'STRING');
-            /*$id = $jinput->get('idColor', '', 'STRING');*/
+            $ajax = false;
+            if(empty($name)&&empty($textures)&&empty($color_code)) {
+                $jinput = JFactory::getApplication()->input;
+                $color_code = $jinput->get('hexCode', '', 'STRING');
+                $textures = $jinput->get('textures', [], 'ARRAY');
+                $name = $jinput->get('name', '', 'STRING');
+                $ajax=true;
+            }
 
             $red = hexdec(substr($color_code, 1, 2));
             $green = hexdec(substr($color_code, 3, 2));
@@ -88,7 +91,12 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
                 array_push($result ,'/images/canvases/' . $filename. '?' . rand());
             }
             imagedestroy($img);
-            die(json_encode($result));
+            if($ajax) {
+                die(json_encode($result));
+            }
+            else{
+                return $result;
+            }
         }
         catch(Exception $e)
         {
@@ -96,15 +104,31 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
         }
     }
 
-    function save(){
-	    try{
+    function save()
+    {
+        try {
             $jinput = JFactory::getApplication()->input;
             $color_code = $jinput->get('hexCode', '', 'STRING');
-            $files = $jinput->get('files',[],'ARRAY');
+            $files = $jinput->get('files', [], 'ARRAY');
             $name = $jinput->get('name', '', 'STRING');
             $id = $jinput->get('idColor', '', 'STRING');
             $model = $this->getModel();
-            $result = $model->save($id,$name,$color_code,$files);
+            $result = $model->save($id, $name, $color_code, $files);
+            die(json_encode($result));
+        } catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function update(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $color_code = $jinput->get('hexCode', '', 'STRING');
+            $name = $jinput->get('name', '', 'STRING');
+            $id = $jinput->get('idColor', '', 'STRING');
+            $textures = $jinput->get('textures',[],'ARRAY');
+            $this->createColorImage($name,$textures,$color_code);
+            $model = $this->getModel();
+            $result = $model->save($id,$name,$color_code);
             die(json_encode($result));
         }
         catch(Exception $e)

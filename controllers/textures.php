@@ -42,4 +42,20 @@ class Gm_ceilingControllerTextures extends Gm_ceilingController
 
         }
 	}
+
+	function getFilteredData(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $filter = $jinput->get('filter','','STRING');
+            $model = $this->getModel();
+            $result = $model->getFilteredData($filter);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }

@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
  * @version    CVS: 0.1.7
@@ -116,9 +116,9 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("GROUP_CONCAT(DISTINCT pm.mounter_id SEPARATOR ',') AS project_mounter")
                 ->select("GROUP_CONCAT(DISTINCT DATE_FORMAT(pm.date_time, '%d.%m.%Y %H:%i')  ORDER BY pm.date_time DESC SEPARATOR ',') AS project_mounting_date")
                 ->select("GROUP_CONCAT(CONCAT(DATE_FORMAT(pm.mount_start, '%d.%m.%Y %H:%i'),'-',DATE_FORMAT(pm.mount_end, '%d.%m.%Y %H:%i')) SEPARATOR ',')AS mounting_time")
-                
-/*                ->select('DATE_FORMAT(a.project_mounting_date, \'%d.%m.%Y %H:%i\') AS mounting_date')
-                ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')*/
+
+                /*                ->select('DATE_FORMAT(a.project_mounting_date, \'%d.%m.%Y %H:%i\') AS mounting_date')
+                                ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')*/
                 ->select('a.project_info AS address')
                 ->from('`#__gm_ceiling_projects` AS `a`')
                 ->group('id');
@@ -168,7 +168,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
                 case "chiefprojects":
                     $query->where("((a.project_status = 4 AND a.project_mounting_date IS NOT NULL AND a.project_mounting_date <> '00.00.0000 00:00')
-                    OR (a.project_status IN (5,10) AND (a.project_mounting_date IS NULL OR a.project_mounting_date = '00.00.0000 00:00')))");
+                    OR (a.project_status IN(5,10) AND (a.project_mounting_date IS NULL OR a.project_mounting_date = '00.00.0000 00:00')))");
                     $query->where('dealer_id = ' . $user->dealer_id);
                     $query->where('a.deleted_by_user <> 1');
                     break;
@@ -233,7 +233,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('c.dealer_id = '. $user->dealer_id);
                     }
                     if ($user->dealer_type == 2) {
-                        $query->where('a.project_status >= 0'); 
+                        $query->where('a.project_status >= 0');
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
@@ -241,7 +241,8 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('a.who_calculate = "1"');
                     } elseif($subtype == "service"){
                         $query->innerJoin('`#__user_usergroup_map` as umap on umap.user_id in (a.project_mounter)');
-                        $query->where("umap.group_id = 26");
+                        $query->innerJoin('`rgzbn_users` AS u ON umap.user_id = u.id');
+                        $query->where("umap.group_id IN(11,26) AND (u.dealer_id is NULL or u.dealer_id = 1 )  AND a.project_status IN(5,10,19)");
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17","24","25","26","27","28","29")');
                     }
@@ -250,7 +251,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                     $query->where('c.dealer_id = '. $user->dealer_id);
                     if ($user->dealer_type == 2) {
-                        $query->where('a.project_status >= 0'); 
+                        $query->where('a.project_status >= 0');
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
@@ -268,74 +269,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = -1');
                     break;
             }
-            /* if ($type == "managerprojects") {
-                $query->where('a.project_status = 3');
-                $query->where('dealer_id = ' . $user->dealer_id);
-            } elseif ($type == "chiefprojects") {
-                $query->where('a.project_status = 4 OR a.project_status = 5');
-                $query->where('dealer_id = ' . $user->dealer_id);
-                $query->where('a.project_mounter IS NULL');
-            } else *//* if ($type == "calculatorprojects") {
-                $query->where('a.project_status = 1');
-                $query->where('dealer_id = ' . $user->dealer_id);
-            } else *//* if ($type == "gmmanager" && $subtype == "runprojects") {
-                $query->where('a.project_status in (10,11, 16, 17)');
-            } else *//* if ($type == "gmmanager" && $subtype == "archive") {
-                $query->where('a.project_status = 12');
-            } else *//* if ($type == "gmmanager" && $subtype == "refused") {
-                $query->where('a.project_status = 22');
-            } else *//* if ($type == "gmmanager") {
-                $query->where('a.project_status = 5 or a.project_status = 4');
-                $query->where('a.project_verdict  = 1');
-            } else *//* if ($type == "manager") {
-                $query->where('dealer_id = ' . $user->dealer_id);
-                if ($subtype == "refused") {
-                    $query->where('a.project_verdict = 0');
-                } else {
-                    $query->where('a.project_status = 5');
-                    $query->where('a.project_verdict = 1');
-                }
-            } else *//* if (($type == "chief" || $type == "gmchief")&& $user->dealer_type == 2) {
-                $query->where('a.project_status >= 0'); 
-            } else *//* if (($type == "gmchief" && $subtype =="run")||($type == "chief" && $subtype =="run")) {
-                $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
-            } else *//* if ($type == "gmchief" || $type == "chief") {
-                if ($type == "gmchief" && $subtype == "gaugings") {
-                    $query->where('a.project_status in ("1")');
-                    $query->where('a.who_calculate = "1"');
-                } else {
-                    $query->where('a.project_status in ("10", "5", "11", "16", "17")');
-                }
-            } else *//* if ($type == "gmcalculator") {
-                $query->where('a.who_calculate = 1');
-                if ($subtype == "calendar") {
-                    $query->where('a.project_status = 1');
-                    $query->order('a.project_calculation_date');
-                }
-                if ($subtype == "projects") {
-                    $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
-                }
-                if ($subtype == "refused") {
-                    $query->where('a.project_verdict = 0');
-                }
-            } else *//* if ($type == "calculator") {
-                //if(in_array("14", $groups)) $query->where('( dealer_id = ' . $user->id . ')');
-                //if(in_array("21", $groups) || in_array("12", $groups)) $query->where('( dealer_id = ' . $user->dealer_id . ')');
-                if ($subtype == "calendar") {
-                    $query->where('a.project_status = 1');
-                    $query->order('a.project_calculation_date');
-                }
-                if ($subtype == "projects") {
-                    $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
-                }
-                if ($subtype == "refused") {
-                    $query->where('a.project_verdict = 0');
-                }
-            } else *//* if ($type == "dealer") {
-                $query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
-            } else *//*  {
-                $query->where('dealer_id = -1');
-            } */
+
 
             $client_id = $this->getState('filter.client_id');
             if ($client_id) $query->where('a.client_id = ' . $client_id);
@@ -351,7 +285,7 @@ class Gm_ceilingModelProjects extends JModelList
             if (!empty($orderCol) && !empty($orderDirn)) $query->order($db->escape($orderCol . ' ' . $orderDirn));
             else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
                 $query->order('a.calculation_date DESC');
-            $query->order('a.id DESC');            
+            $query->order('a.id DESC');
 
             $this->setState('list.limit', null);
 
@@ -386,7 +320,7 @@ class Gm_ceilingModelProjects extends JModelList
                         ->from('#__gm_ceiling_projects as projects')
                         ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
                         ->innerJoin("#__users as u on clients.dealer_id = u.id")
-                        ->where("projects.project_status = '1' and clients.dealer_id = '$user->dealer_id' and clients.id <> u.associated_client");    
+                        ->where("projects.project_status = '1' and clients.dealer_id = '$user->dealer_id' and clients.id <> u.associated_client");
                 } else if (in_array("21", $groups) || in_array("22", $groups)) {
                     $query->select('count(projects.id) as count')
                         ->from('#__gm_ceiling_projects as projects')
@@ -394,108 +328,108 @@ class Gm_ceilingModelProjects extends JModelList
                 }
                 $query->where('projects.deleted_by_user <> 1');
             } else
-            // замерщик (график замеров), НМС (войти как замерщик)
-            if ($status == "GaugingsGraphNMS") {
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
-                 $query->where('projects.deleted_by_user <> 1');
-            } else
-            // НМС (монтажи)
-            if ($status == "Mountings") {
-                $query->select('count(distinct p.id) as count')
-                    ->from('#__gm_ceiling_projects as p')
-                    ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
-                    ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
-                    ->where("p.project_status in ('5', '6', '7', '8', '10', '11', '16', '17','23') and m.date_time is not null and m.date_time <> '0000-00-00 00:00:00' and c.dealer_id = '$user->dealer_id'");
-                 $query->where('p.deleted_by_user <> 1');
-            } else
-            // НМС (завершенные заказы)
-            if ($status == "ComplitedMountings") {
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                    ->where("projects.project_status = '11' and clients.dealer_id = '$user->dealer_id' and projects.read_by_chief = '0'");
-                 $query->where('projects.deleted_by_user <> 1');
-            } else
-            // НМС (незавершенные заказы)
-            if ($status == "UnComplitedMountings") {
-                $query->select('count(distinct p.id) as `count`')
-                ->from('#__gm_ceiling_projects as p')
-                ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
-                ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
-                ->where("((p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
-                    OR (p.project_status in(5,10) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00')))
+                // замерщик (график замеров), НМС (войти как замерщик)
+                if ($status == "GaugingsGraphNMS") {
+                    $query->select('count(projects.id) as count')
+                        ->from('#__gm_ceiling_projects as projects')
+                        ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
+                    $query->where('projects.deleted_by_user <> 1');
+                } else
+                    // НМС (монтажи)
+                    if ($status == "Mountings") {
+                        $query->select('count(distinct p.id) as count')
+                            ->from('#__gm_ceiling_projects as p')
+                            ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
+                            ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
+                            ->where("p.project_status in ('5', '6', '7', '8', '10', '11', '16', '17','23') and m.date_time is not null and m.date_time <> '0000-00-00 00:00:00' and c.dealer_id = '$user->dealer_id'");
+                        $query->where('p.deleted_by_user <> 1');
+                    } else
+                        // НМС (завершенные заказы)
+                        if ($status == "ComplitedMountings") {
+                            $query->select('count(projects.id) as count')
+                                ->from('#__gm_ceiling_projects as projects')
+                                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                                ->where("projects.project_status = '11' and clients.dealer_id = '$user->dealer_id' and projects.read_by_chief = '0'");
+                            $query->where('projects.deleted_by_user <> 1');
+                        } else
+                            // НМС (незавершенные заказы)
+                            if ($status == "UnComplitedMountings") {
+                                $query->select('count(distinct p.id) as `count`')
+                                    ->from('#__gm_ceiling_projects as p')
+                                    ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
+                                    ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
+                                    ->where("((p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
+                    OR (p.project_status in (5,10) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00')))
                     AND c.dealer_id = $user->dealer_id AND p.deleted_by_user <> 1");
-            } else
-            // менеджер (в производстве) 
-            if ($status == "InProduction") {
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->where("project_status = 5");
-                     $query->where('projects.deleted_by_user <> 1');
-            } else 
-            //менеджер (заявки с сайта) 
-            if ($status == "ZayavkiSSaita") {
-                $query->select('count(r.id) as count')
-                    ->from('#__gm_ceiling_requests_from_promo as r');
-            } else 
-            // менеджер (звонки) 
-            if ($status == "Zvonki") {
-                $query->select('count(c.id) as count')
-                    ->from('#__gm_ceiling_callback as c')
-                    ->where("date_time <= '$data 23:59:59' and manager_id IN ('$userId', '$dealer_id')");
-            } else 
-            // менеджер (запущенные) 
-            if ($status == "Zapushennie") {
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->where("project_status in ('10', '11', '16', '17')");
-                 $query->where('projects.deleted_by_user <> 1');
-            } else 
-            // дилер (менеджер)
-            if ($status == "FindManagers") {
-                if ($id = 1) {
-                    $group = 16;
-                } else {
-                    $group = 13;
-                }
-                $query->select('users.id')
-                    ->from('#__users as users')
-                    ->innerJoin("#__user_usergroup_map as map ON map.user_id = users.id")
-                    ->where("group_id = '$group'");
-            } else 
-            // менеджер (запущенные в производстве)
-            if ($status == "RunInProduction") {
-                if ($id = 1) {
-                    if ($data != "") {
-                        $data = $data.", 1";
-                    } else {
-                        $data = $data."1";
-                    }
-                }
-                $query->select('count(projects.id) as count')
-                    ->from('#__gm_ceiling_projects as projects')
-                    ->where("project_status in ('4', '5', '10', '11', '16', '17') and read_by_manager in ($data)");
-                 $query->where('projects.deleted_by_user <> 1');
-            } else 
-            // менеджер (пропущенные)
-            if ($status == "MissedCalls") {
-                $query->select('call_id')
-                    ->from('#__gm_ceiling_missed_calls');
-            }
-            else
-                if($status == "MountService"){
-                    $query
-                        ->select("count(distinct pm.project_id) as `count`")
-                        ->from("`#__gm_ceiling_projects_mounts` as pm")
-                        ->innerJoin("`#__user_usergroup_map` as umap on umap.user_id = pm.mounter_id")
-                        ->where("umap.group_id = 26");
-                }
+                            } else
+                                // менеджер (в производстве)
+                                if ($status == "InProduction") {
+                                    $query->select('count(projects.id) as count')
+                                        ->from('#__gm_ceiling_projects as projects')
+                                        ->where("project_status = 5");
+                                    $query->where('projects.deleted_by_user <> 1');
+                                } else
+                                    //менеджер (заявки с сайта)
+                                    if ($status == "ZayavkiSSaita") {
+                                        $query->select('count(r.id) as count')
+                                            ->from('#__gm_ceiling_requests_from_promo as r');
+                                    } else
+                                        // менеджер (звонки)
+                                        if ($status == "Zvonki") {
+                                            $query->select('count(c.id) as count')
+                                                ->from('#__gm_ceiling_callback as c')
+                                                ->where("date_time <= '$data 23:59:59' and manager_id IN ('$userId', '$dealer_id')");
+                                        } else
+                                            // менеджер (запущенные)
+                                            if ($status == "Zapushennie") {
+                                                $query->select('count(projects.id) as count')
+                                                    ->from('#__gm_ceiling_projects as projects')
+                                                    ->where("project_status in ('10', '11', '16', '17')");
+                                                $query->where('projects.deleted_by_user <> 1');
+                                            } else
+                                                // дилер (менеджер)
+                                                if ($status == "FindManagers") {
+                                                    if ($id = 1) {
+                                                        $group = 16;
+                                                    } else {
+                                                        $group = 13;
+                                                    }
+                                                    $query->select('users.id')
+                                                        ->from('#__users as users')
+                                                        ->innerJoin("#__user_usergroup_map as map ON map.user_id = users.id")
+                                                        ->where("group_id = '$group'");
+                                                } else
+                                                    // менеджер (запущенные в производстве)
+                                                    if ($status == "RunInProduction") {
+                                                        if ($id = 1) {
+                                                            if ($data != "") {
+                                                                $data = $data.", 1";
+                                                            } else {
+                                                                $data = $data."1";
+                                                            }
+                                                        }
+                                                        $query->select('count(projects.id) as count')
+                                                            ->from('#__gm_ceiling_projects as projects')
+                                                            ->where("project_status in ('4', '5', '10', '11', '16', '17') and read_by_manager in ($data)");
+                                                        $query->where('projects.deleted_by_user <> 1');
+                                                    } else
+                                                        // менеджер (пропущенные)
+                                                        if ($status == "MissedCalls") {
+                                                            $query->select('call_id')
+                                                                ->from('#__gm_ceiling_missed_calls');
+                                                        }
+                                                        else
+                                                            if($status == "MountService"){
+                                                                $query
+                                                                    ->select("count(distinct pm.project_id) as `count`")
+                                                                    ->from("`#__gm_ceiling_projects_mounts` as pm")
+                                                                    ->innerJoin("`#__user_usergroup_map` as umap on umap.user_id = pm.mounter_id")
+                                                                    ->where("umap.group_id = 26");
+                                                            }
 
             $db->setQuery($query);
             $items = $db->loadObjectList();
-            return $items;    
+            return $items;
         }
         catch(Exception $e)
         {
@@ -891,9 +825,9 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where("`client`.`dealer_id` = $dealer_id");
             elseif(!$status && $search)
                 $query->where("`client`.`dealer_id` = $dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
-          // print_r((string)$query); exit;
+            // print_r((string)$query); exit;
             $db->setQuery($query);
-            
+
             $result = $db->loadObjectList();
             return $result;
         }
@@ -919,7 +853,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
-            
+
             return $result;
         }
         catch(Exception $e) {
@@ -946,7 +880,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->group('`u`.`id`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
-            
+
             return $result;
         }
         catch(Exception $e) {
@@ -986,26 +920,6 @@ class Gm_ceilingModelProjects extends JModelList
                 ->innerJoin("`#__gm_ceiling_calculations` as calc on calc.project_id = p.id")
                 ->where("p.id in ($projects)")
                 ->order("p.id");
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            
-            return $result;
-        }
-        catch(Exception $e) {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    function getUnpaidProjects($dealer_id){
-        try{
-            $db = $this->getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->select("distinct p.id")
-                ->from('`#__gm_ceiling_projects` as p')
-                ->leftJoin("`#__gm_ceiling_clients` as c on c.id = p.client_id")
-                ->where("c.dealer_id = $dealer_id and p.paid = '0'")
-                ->order("p.id DESC");
             $db->setQuery($query);
             $result = $db->loadObjectList();
 

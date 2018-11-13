@@ -211,45 +211,13 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
     	try
     	{
 	        $app   = JFactory::getApplication();
-	        $model = $this->getModel('CanvasForm', 'Gm_ceilingModel');
+	        $model = $this->getModel('Canvases', 'Gm_ceilingModel');
 	        $pk    = $app->input->getInt('id');
 
 	        $errorMessage = $model->delete($pk);
-	        if (empty($errorMessage)) $this->setMessage('Успешно удалено!', 'success');
+	        if (empty($errorMessage)) die(json_encode(true));
 	        else $this->setMessage($errorMessage, 'error');
 
-	        $httpref = getenv("HTTP_REFERER");
-	        $url  = (empty($httpref) ? 'index.php?option=com_gm_ceiling&view=canvases' : $httpref);
-	        $this->setRedirect(JRoute::_($url, false));
-
-	        // Attempt to save the data
-	//        try
-	//        {
-	//            $return = $model->delete($pk);
-	//
-	//            // Check in the profile
-	//            $model->checkin($return);
-	//
-	//            // Clear the profile id from the session.
-	//            $app->setUserState('com_gm_ceiling.edit.canvas.id', null);
-	//
-	//            $menu = $app->getMenu();
-	//            $item = $menu->getActive();
-	//            $url = (empty($item->link) ? 'index.php?option=com_gm_ceiling&view=canvases' : $item->link);
-	//
-	//            // Redirect to the list screen
-	//            $this->setMessage(JText::_('Успешно удалено!'));
-	//            $this->setRedirect(JRoute::_($url, false));
-	//
-	//            // Flush the data from the session.
-	//            $app->setUserState('com_gm_ceiling.edit.canvas.data', null);
-	//        }
-	//        catch (Exception $e)
-	//        {
-	//            $errorType = ($e->getCode() == '404') ? 'error' : 'warning';
-	//            $this->setMessage($e->getMessage(), $errorType);
-	//            $this->setRedirect('index.php?option=com_gm_ceiling&view=canvases');
-	//        }
 	    }
 	    catch(Exception $e)
         {

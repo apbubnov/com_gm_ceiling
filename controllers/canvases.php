@@ -42,6 +42,26 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
 
         }
 	}
+
+	function save(){
+	    try {
+            $jinput = JFactory::getApplication()->input;
+            $texture = $jinput->get('texture', null, 'INT');
+            $manufacturer = $jinput->get('manufacturer',null,'INT');
+            $price = $jinput->get('price','','STRING');
+            $width = $jinput->get('width','','STRING');
+            $color = $jinput->get('color_id',null,'INT');
+            $model =  $this->getModel();
+
+            $model->save($texture,$manufacturer,$price,$width,$color);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 /*
 	public function activate()
 	{
