@@ -90,8 +90,7 @@ class Gm_ceilingModelClientcard extends JModelList
 	}
 
 	function getComments($id){
-		try
-		{
+		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
@@ -102,16 +101,13 @@ class Gm_ceilingModelClientcard extends JModelList
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
 	function getProjects($id){
-		try
-		{
+		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
@@ -119,13 +115,12 @@ class Gm_ceilingModelClientcard extends JModelList
 				->select('`b`.`title` as `status`')
 				->from('`#__gm_ceiling_projects` AS `a`')
 				->innerJoin('`#__gm_ceiling_status` AS `b` ON `a`.`project_status` = `b`.`id`')
-				->where('`a`.`client_id` = '.$db->quote($db->escape($id)).' and `a`.`deleted_by_user` <> 1');
+				->where('`a`.`client_id` = '.$db->quote($db->escape($id)).' and `a`.`deleted_by_user` <> 1')
+				->order('`a`.`id` desc');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}

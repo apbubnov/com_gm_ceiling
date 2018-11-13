@@ -182,15 +182,9 @@ foreach ($dealer_history as $key => $item) {
     </div>
 </div>
 
-<br>
-<div style="width: 100%; text-align: center;">
-    <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
-</div>
-<br>
-
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
-        <p class="caption-tar">Клиенты дилера</p>
+        <p class="caption-tar">Клиенты дилера <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button></p>
         <p>
             <select id="select_status" ><option value='' selected>Выберите статус</option>
                 <?php foreach($status as $item): ?>
@@ -201,7 +195,7 @@ foreach ($dealer_history as $key => $item) {
             </select>
         </p>
         <div id="cliens_of_dealer_2">
-            <table class="table table-striped table_cashbox one-touch-view" id="clientList">
+            <table class="table table-striped table_cashbox one-touch-view g_table" id="clientList">
                 <thead>
                     <tr>
                         <th class='' >Создан</th>
@@ -224,8 +218,8 @@ foreach ($dealer_history as $key => $item) {
 </div>
 
 <div id="orders-container-tar">
-    <p class="caption-tar">Заказы</p>
-    <table id="table-orders-tar" class="table table-striped one-touch-view">
+    <p class="caption-tar">Заказы <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить заказ"></p>
+    <table id="table-orders-tar" class="table table-striped one-touch-view g_table">
         <tr>
             <td>Номер</td>
             <td>Дата</td>
@@ -252,9 +246,6 @@ foreach ($dealer_history as $key => $item) {
         <?php endforeach;?>
    
     </table>
-    <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
-    </div>
 </div>
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
