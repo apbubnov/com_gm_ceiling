@@ -386,7 +386,7 @@
                     <table style="width: 100%;">
                         <tr>
                             <td width=35%>
-                                <label id="jform_n4-lbl" for="jform_n4" class="center" > S = </label>
+                                <label id="jform_n4-lbl" for="jform_n4" class="center" > Площадь: </label>
                             </td>
                             <td width=55%>
                                 <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" placeholder="Площадь комнаты"  readonly  type="tel"> 
@@ -397,7 +397,7 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n5-lbl" for="jform_n5" class="center" > P = </label>
+                                <label id="jform_n5-lbl" for="jform_n5" class="center" > Периметр: </label>
                             </td>
                             <td width=55%>
                                 <input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9"  placeholder="Периметр комнаты" readonly  type="tel"> 
@@ -408,13 +408,35 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов = </label>
+                                <label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов: </label>
                             </td>
                             <td width=55%>
                                 <input name="jform[n9]" id="jform_n9" data-next="#jform_n27" class="form-control-input" placeholder="Кол-во углов"  readonly  type="tel"> 
                             </td>
                             <td width=10%>
                                 <label for="jform_n9" class="control-label">шт.</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width=35%>
+                                <label id="jform_n10-lbl" for="jform_n10" class="center"> Криволинейный участок: </label>
+                            </td>
+                            <td width=55%>
+                                <input name="jform[n10]" id="jform_n10" class="form-control-input"  readonly>
+                            </td>
+                            <td width=10%>
+                                <label for="jform_n10" class="control-label">м.</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width=35%>
+                                <label id="jform_n11-lbl" for="jform_n31" class="center"> Внутренний вырез: </label>
+                            </td>
+                            <td width=55%>
+                                <input name="jform[n31]" id="jform_n31" class="form-control-input" readonly>
+                            </td>
+                            <td width=10%>
+                                <label for="jform_n31" class="control-label">м.</label>
                             </td>
                         </tr>
                     </table>
@@ -676,7 +698,7 @@
     var n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
         console.log('alert');
-     let  help_buttons = document.getElementsByClassName('help');
+        let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
                     help_buttons[i].onmouseenter = function(){
                         jQuery(this.lastElementChild).show();
@@ -1397,6 +1419,7 @@
         }
         function initial_fill(){
             let n2_options = jQuery("#jform_n2 option");
+            console.log(canvas);
             if(canvas){
                 add_select_attr_to_option(n2_options,canvas.texture_id);
                 select_colors();
@@ -1433,6 +1456,8 @@
                 jQuery("#jform_n4").val(calculation.n4);
                 jQuery("#jform_n5").val(calculation.n5);
                 jQuery("#jform_n9").val(calculation.n9);
+                jQuery("#jform_n10").val(calculation.n10);
+                jQuery("#jform_n31").val(calculation.n31);
                 jQuery("#data-wrapper").show();
             }
             let filename = '<?php echo $calc_img;?>';

@@ -1629,6 +1629,19 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n31'] * $dealer_mp22                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
+            if($data['n10'] > 0){
+                //криволинейный участок
+                $gm_mp21 = margin($results->mp21, $margin['gm_canvases_margin']);
+                $dealer_mp21 = margin($gm_mp21, $margin['dealer_canvases_margin']);
+                $guild_data[] = array(
+                    "title" => "Криволинейный участок",                                              //Название
+                    "quantity" => $data['n10'],                                                      //Кол-во
+                    "gm_salary" => $gm_mp21,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n10'] * $gm_mp21,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $dealer_mp21,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n10'] * $dealer_mp21                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
             $result = [];
             $result['guild_data'] = $guild_data;
             foreach ($guild_data as $guild) {
@@ -3293,9 +3306,8 @@ class Gm_ceilingHelpersGm_ceiling
             $client_model = self::getModel('client');
             $client = $client_model->getClientById($project->id_client);
             $dealer_name = JFactory::getUser($client->dealer_id)->name;
-            $array_cut = explode('||',$data['cut_data']);
-            $cut_data = $array_cut[0];
-            $p_usadki = $array_cut[1];
+            $cut_data = $data['cut_data'];
+            $p_usadki = $data['shrink_percent'];
             $usadka = (1-$p_usadki)*100;
             $array1 = array();
             $array2 = explode(';', $data['calc_data']);

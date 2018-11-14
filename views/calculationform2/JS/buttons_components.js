@@ -34,7 +34,7 @@ const help_block_n30 = '<span class="airhelp">В расчет на 1м паря�
 
 const help_block_n29 = '<span class="airhelp">Для перехода без нишей в расчет входит 343 р. + маржа на комплектующие</br>Для перехода с нишей в расчет входит 532 о. + маржа на комплектующие</br>+ монтажная работа "переход уровня с нишей или без"</span>';
 
-const help_block_n31 = '<span class="airhelp">В расчет на 1м внутреннего выреза в цеху входит:<br><ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>10 дюбелей (красн. 6*51)</li><li>10 саморезов (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 внутренний вырез</li></ul></span>';
+/*const help_block_n31 = '<span class="airhelp">В расчет на 1м внутреннего выреза в цеху входит:<br><ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>10 дюбелей (красн. 6*51)</li><li>10 саморезов (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 внутренний вырез</li></ul></span>';*/
 
 const help_block_n11 = '<span class="airhelp">В расчет на 1м внутреннего выреза на месте входит:<ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>1м бруса (40*50)</li><li>16 дюбелей(красн. 6*51)</li><li>22 самореза (ГКД 3,5*41)</li><li>3 белых кронштейна (15*12,5)</li><li>1м гарпуна</li></ul>+ монтажная работа "внутренний вырез"</span>';
 
@@ -104,8 +104,8 @@ let arr_blocks = [
             {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n20",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
+            /*{block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},*/
+            {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n29",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
         ]
     },
@@ -149,7 +149,7 @@ let n18 = create_single_input(1,"jform_n18","jform[n18]","","Кол-во,м.","t
 let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","Кол-во,м.","tel");
 let n21 = create_single_input(1,"jform_n21","jform[n21]","","Кол-во,шт.","tel");
 let n30 = create_single_input(1,"jform_n30","jform[n30]","","Кол-во,м.","tel");
-let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");
+/*let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");*/
 let n11 = create_single_input(1,"jform_n11","jform[n11]","","Кол-во,м.","tel");
 let n32 = create_single_input(1,"jform_n32","jform[n32]","","Кол-во комнат,шт.","tel");
 let n24 = create_single_input(1,"jform_n24","jform[n24]","","Кол-во,м.","tel");
