@@ -593,7 +593,8 @@ class Gm_ceilingModelUsers extends JModelList
 				}
 			}
 			$mount_service = $this->getUserByGroup(26);
-			$free_mounter = $this->getUserByGroup(32);
+
+			$free_mounter = ($dealerId == 1 ) ? $this->getUserByGroup(32) : [];
 			$items = array_merge($items,$free_mounter,$mount_service);
 
 			return $items;

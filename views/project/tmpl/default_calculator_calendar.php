@@ -124,11 +124,32 @@ $code = $code[1];
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
 $json_mount = $this->item->mount_data;
+echo($json_mount);
+$wasDelete = false;
+$this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+/***
+ * КОООСТТТЫЫЛЬ
+*/
+foreach ($this->item->mount_data as $key=>$value) {
+    if(empty($value->mounter)){
+        $wasDelete = true;
+        unset($this->item->mount_data[$key]);
+    }
+}
+if($wasDelete){
+    if(!empty($this->item->mount_data)) {
+        $json_mount = json_encode(htmlspecialchars($this->item->mount_data));
+    }
+    else{
+        $json_mount = [];
+    }
+}
+
+/**КОНЕЦ КОСТЫЛЯ
+***/
 $stages = [];
 if(!empty($this->item->mount_data)){
-
-    $mount_types = $projects_mounts_model->get_mount_types(); 
-    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    $mount_types = $projects_mounts_model->get_mount_types();
     foreach ($this->item->mount_data as $value) {
         $value->stage_name = $mount_types[$value->stage];
         if(!array_key_exists($value->mounter,$stages)){
