@@ -409,4 +409,32 @@ class Gm_ceilingModelMounters extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function updateService($mounter_id,$inService){
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            $mounter = JFactory::getUser($mounter_id);
+            if(in_array('32',$mounter->groups) && !$inService){
+                $query
+                    ->delete('`#__user_usergroup_map`')
+                    ->where("user_id = $mounter_id && group_id = 32");
+            }
+            if(!in_array('32',$mounter->groups) && $inService){
+                $query
+                    ->insert('`#__user_usergroup_map`')
+                    ->columns('`user_id`,`group_id`')
+                    ->values("$mounter_id,32");
+            }
+
+            $db->setQuery($query);
+            return $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

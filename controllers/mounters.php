@@ -39,7 +39,21 @@ class Gm_ceilingControllerMounters extends Gm_ceilingController
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
+
+	function updateMounterInService(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $mounter_id = $jinput->get('mounter',null,'INT');
+	        $inService = $jinput->get('inService',null,'INT');
+	        $model = $this->getModel();
+	        $model->updateService($mounter_id,$inService);
+	        die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

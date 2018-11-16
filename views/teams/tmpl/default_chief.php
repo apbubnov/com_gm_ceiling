@@ -40,9 +40,21 @@ if ($user->dealer_id == 1) {
 }
 
 if (!empty($brigade_id)) {
-	foreach ($brigade_id as $value) {        
+	foreach ($brigade_id as $value) {
+	    $groups = JFactory::getUser($value->id)->groups;
+	    $checked = (in_array('32',$groups)) ? "checked" : "";
+	    $checkboxIsService ='<input type="checkbox" name="isInService" id="'.$value->id.'" data-mounter_id ="'.$value->id.'" '.$checked.' class="inp-cbx" style="display: none">
+                                <label for="'.$value->id.'" class="cbx">
+                                      <span>
+                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                      </span>
+                                    <span>В Монтажной службе</span>
+                                </label>';
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
 		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+		$calendars .= $checkboxIsService;
 		$calendars .= "</p>";
 		$names = null;
 		foreach ($brigade_mounter as $val) {
@@ -320,6 +332,33 @@ if (!empty($brigade_id)) {
 				Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
         <?php } ?>		
     });
+    jQuery("[name = isInService]").change(function(){
+        var inService = this.checked ? 1 : 0,
+            mounter_id = this.id;
+        jQuery.ajax({
+            async: false,
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=mounters.updateMounterInService",
+            data: {
+                mounter: mounter_id,
+                inService: inService
+            },
+            success: function (msg) {
+
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка"
+                });
+            }
+        });
+    })
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
         year1 = <?php echo $year1; ?>;
