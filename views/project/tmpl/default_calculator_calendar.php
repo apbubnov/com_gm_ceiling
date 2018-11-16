@@ -124,7 +124,6 @@ $code = $code[1];
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
 $json_mount = $this->item->mount_data;
-echo($json_mount);
 $wasDelete = false;
 $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
 /***
