@@ -2963,7 +2963,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null,$need_mount = null){
+    static function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null,$need_mount = null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
@@ -4219,6 +4219,28 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Начальник монтажной службы утвердил монтаж');
+                $mailer->setBody($body);
+            }
+            elseif($type == 16){
+                $db = JFactory::getDBO();
+                $q = 'SELECT u.`email` FROM `#__users` as u
+                      LEFT JOIN `#__user_usergroup_map` as um ON u.`id` = um.`user_id` WHERE um.`group_id` = 16';
+                $db->setQuery($q);
+                $users = $db->loadObjectList();
+                foreach ($users as $user) {
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
+                }
+
+                $body = "Здравствуйте. В проекте №" . $data['id']. " изменилась дата монтажа.\n";
+                foreach ($data['stages'] as $stage) {
+                    $body.= "Этап: $stage->name \n";
+                    $body.= "Cтарая дата: $stage->old_date\n";
+                    $body.= "Новая дата: $stage->new_date\n";
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Изменена дата монтажа');
                 $mailer->setBody($body);
             }
             if ($type != 5) {

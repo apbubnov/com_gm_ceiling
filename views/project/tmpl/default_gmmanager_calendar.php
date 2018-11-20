@@ -181,15 +181,15 @@
     }
     
     $all_recoil = $recoil_model->getData();
-    $street = preg_split("/.,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
+    $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
 
-    preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
+    preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
     $house = $house[1];
     preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
     $bdq = $bdq[1];
-    preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
+    preg_match("/,.квартира:.([\d\s]{1,4})/", $this->item->project_info,$apartment);
     $apartment = $apartment[1];
-    preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
+    preg_match("/,.подъезд:.([\d\s]{1,4})/", $this->item->project_info,$porch);
     $porch = $porch[1];
     preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
     $floor = $floor[1];

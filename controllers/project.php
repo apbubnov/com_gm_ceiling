@@ -1140,13 +1140,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                   }
                 );
 			// монтажи
-
+            $change_data  = [];// Массив для уведомления ГММенеджера
+            $change_data['id'] = $data->id;
+            $change_data['stages'] = [];
             $mount_types = $projects_mounts_model->get_mount_types();
 			if (!empty($mount_diff)) {
                 foreach ($mount_diff as $value) {
-                    foreach ($old_mount as $old_value) {
+                    foreach ($old_mount_data as $old_value) {
                        if($old_value->stage == $value->stage){
                             if($old_value->mounter == $value->mounter && $old_value->time != $value->time){
+                                $change_stage = (object)[];
+                                $change_stage->name = $mount_types[$value->stage];
+                                $change_stage->old_date = $old_value->time;
+                                $change_stage->new_date = $value->time;
+                                $change_data['stages'][] = $change_stage;
                                 Gm_ceilingHelpersGm_ceiling::notify($data, 8);
                                 $text = "У проекта №$data->id дата этапа монтажа '".$mount_types[$value->stage]."' перенесена на $value->time";
                                 $history_model->save($data->id_client,$text);
@@ -1163,7 +1170,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     }
                 }
 			}
-
+            if($data->project_status == 5 || $data->project_status == 10){
+                Gm_ceilingHelpersGm_ceiling::notify($change_data, 16);
+            }
 			// оповещение менеджерам
 			if ($user->dealer_type == 1 && $data->project_mounting_date != $data->old_date) {
 				Gm_ceilingHelpersGm_ceiling::notify($data, 12);
