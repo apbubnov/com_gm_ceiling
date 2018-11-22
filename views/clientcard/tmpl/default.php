@@ -13,6 +13,7 @@
     $call_id = $jinput->get('call_id', 0, 'INT');
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
+    $dealer_type = JFactory::getUser($client->dealer_id)->dealer_type;
     if (!empty($client->manager_id)) {
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
@@ -25,7 +26,7 @@
     }
     else
     {
-        if(JFactory::getUser($client->dealer_id)->dealer_type == 3 || JFactory::getUser($client->dealer_id)->dealer_type == 5)
+        if($dealer_type == 3 || $dealer_type == 5)
         {
             $subtype = 'designer';
         }
@@ -34,6 +35,7 @@
             $subtype = 'production';
         }
     }
+    $isBuilder = $dealer_type == 7; // Застройщик или нет
     // контакты клиента
     $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
@@ -292,12 +294,14 @@
     <div id="add-gauging-container-tar">
         <button type="button" id="add_new_project" class="btn btn-primary"><i class="fa fa-plus"></i> Заказ</button>
         <button type="button" id="add_new_calc" class="btn btn-primary"><i class="fa fa-plus"></i> Просчет</button>
+
+
     </div>
 </div>
 <!-- модальное окно -->
-<div class="modal-window-container">
-    <button type="button" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-call-tar" class="modal-window-tar">
+<div class="modal_window_container" id="mw_container">
+    <button type="button" id="btn_close" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="mw_call" class="modal_window">
         <p style="margin-top: 1em !important;">Введите новое ФИО клиента</p>
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
         <p>
@@ -310,28 +314,15 @@
 <script>
     var client_id = '<?php echo $this->item->id;?>';
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
+		var div = jQuery("#mw_call"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery(".btn-close").hide();
-			jQuery(".modal-window-container").hide();
-			jQuery("#modal-window-call-tar").hide();
-		}
-		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
-		if (!div1.is(e.target) // если клик был не по нашему блоку
-		    && div1.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close2-tar").hide();
-			jQuery("#modal-window-container2-tar").hide();
-			jQuery("#modal-window-enroll-tar").hide();
-		}
-		var div2 = jQuery("#modal-window-registration-tar"); // тут указываем ID элемента
-		if (!div2.is(e.target) // если клик был не по нашему блоку
-		    && div2.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close3-tar").hide();
-			jQuery("#modal-window-container3-tar").hide();
-			jQuery("#modal-window-registration-tar").hide();
+			jQuery("#btn_close").hide();
+			jQuery("#mw_container").hide();
+			jQuery("#mw_call").hide();
 		}
 	});
+
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
             type: 'POST',
@@ -343,9 +334,9 @@
             success: function(data){
                 jQuery("#FIO").text(data);
                 jQuery("#new_fio").val("");
-                jQuery(".btn-close").hide();
-		        jQuery(".modal-window-container").hide();
-		        jQuery("#modal-window-call-tar").hide();
+                jQuery("#btn_close").hide();
+                jQuery("#mw_container").hide();
+                jQuery("#mw_call").hide();
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
@@ -439,9 +430,9 @@
     });
     
     jQuery("#edit").click(function() {
-			jQuery(".modal-window-container").show();
-			jQuery("#modal-window-call-tar").show("slow");
-			jQuery(".btn-close").show();
+        jQuery("#btn_close").show();
+        jQuery("#mw_container").show();
+        jQuery("#mw_call").show("slow");
 	    });
     jQuery('body').on('click', '.row_project', function(e)
     {

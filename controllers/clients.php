@@ -56,7 +56,36 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
+
+	function createBuilderFloors(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $floorCount = $jinput->get('floors',null,'INT');
+	        $apartmentCount = $jinput->get('apartment',null,'INT');
+	        $builderId = $jinput->get('builderId',null,'INT');
+	        $model = Gm_ceilingHelpersGm_ceiling::getModel('clientForm');
+	        $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+	        $data = [];$project_data = [];
+	        $data['dealer_id'] = $builderId;
+	        for($i=0;$i<$floorCount;$i++){
+	            $data['client_name'] = "Этаж ".($i+1);
+	            $floorId = $model->save($data);
+	            $project_data['client_id'] = $floorId;
+                $project_data['project_status'] = 0;
+	            for($j=0;$j<$apartmentCount;$j++){
+                    $project_data['project_info'] = "Квартира ".($j+1);
+                    $project_data['project_note'] = "Квартира ".($j+1);
+                    $project_model->save($project_data);
+                }
+
+            }
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

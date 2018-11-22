@@ -84,7 +84,24 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function duplicate(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $ids = $jinput->get('clients_id',array(),'ARRAY');
+            $fromId = $jinput->get('idFrom',null,'INT');
+            $fromProjects = $projects_model->getClientsProjects($fromId);
+            $toProjects = [];
+            foreach ($ids as $id){
+                $toProjects = $projects_model->getClientsProjects($id);
+            }
+
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

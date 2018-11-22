@@ -29,116 +29,142 @@
     else{
         $manager_name = "-";
     }
+$client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+$client_phones = $client_phones_model->getItemsByClientId($this->item->id);
+$client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-<div id="FIO-container-tar">
-    <label id = "FIO"><?php echo $this->item->client_name; ?></label>
-    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
-    <?php if ($call_id != 0) { ?>
-        <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
-    <?php } ?>
-   
-    <br><label>Менеджер: <?php echo $manager_name;?></label>
-</div>
-<table class = "actions">
-    <tr>
-        <td>
-            <button class="btn btn-primary" type="button" id="btn_refuse">Отказ от сотрудничества</button>
-        </td>
-    </tr>
-    <tr>
-        <td class = "td-left">
-            <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
-        </td>
-    </tr>
-    <tr>
-        <td class = "td-left">
-            <button class="btn btn-primary" type="button" id="but_msk_kp">Московский застройщик КП</button>
-        </td>
-    </tr>
-    <tr>
-        <td class = "td-left">
-            <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
-        </td>
-    </tr>
-    
-</table>
-<?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
-<?php
-        $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-        $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
-        $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div style="width: 98%;">
-<div style="display: inline-block; width: 48%;">
-    <div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта застройщика: </p>
-    </div>
-    <? if (!empty($dop_contacts)) { ?>
-    <div>
-    <? foreach ($dop_contacts AS $contact) {?>
-        <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
-    </div>
-    <? } ?>
-    <div>
-        <input type="text" id="new_email" placeholder="Почта" required>
-        <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
-    </div>
-</div>
-<div style="display: inline-block; width: 48%;">
-    <div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны застройщика: </p>
-    </div>
-    <div>
-    <?php foreach($client_phones as $item) { ?>
-            <p  style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></p>
-        <?php } ?>
-    </div>
-    <div>
-        <input type="text" id="new_phone" placeholder="Телефон" required>
-        <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
-    </div>
-</div>
-</div>
-<div class="row">
-    <div class="col-sm-12" id = "calls">
-        <p class="caption-tar">История застройщика</p>
-        <div id="calls-tar">
-            <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
-            
-                <?php foreach($history as $item): ?>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
 
-                <tr>
-                    <td>
-                        <?php 
-                            $date = new DateTime($item->date_time);
-                            echo $date->Format('d.m.Y H:i');
-                        ?>
-                    </td>
-                    <td><?php echo $item->text;?></td>
-                </tr>
-
-                <?php endforeach;?>
-          
-            </table>
+                <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
+                <div class="col-md-3">
+                    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                </div>
+                <div class="col-md-3">
+                    <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+                </div>
+        </div>
+        <div class="col-md-2 left">
+            <button type="button" class="btn btn-primary" id="show_info_div">Показать инф-ю</button>
+        </div>
+        <div class="col-md-2 left">
+            <button type="button" class="btn btn-primary" id="show_actions_div">Действия</button>
         </div>
     </div>
-
-    <div class="col-xs-12" id="add-note-container-tar">
-        <label for="comments">Добавить комментарий:</label>
-        <br>
-        <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
-        <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+    <div class="row">
+        <div class="col-md-12">
+            <label style="font-size: 18pt;color: #414099;">Менеджер: <?php echo $manager_name;?></label>
+        </div>
     </div>
-</div>
+    <div class="row" id="dealer_info_div" style="display: none;">
+        <div class="col-md-6">
+            <div class="col-md-6">
+                <div>
+                    <p class = "caption-tar" style="font-size: 18px; color: #414099; text-align: left; margin-bottom: 0px;">Почта: </p>
+                </div>
+                <? if (!empty($dop_contacts)) { ?>
+                    <div>
+                        <? foreach ($dop_contacts AS $contact) {?>
+                            <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+                    </div>
+                <? } ?>
+                <div>
+                    <input type="text" id="new_email" placeholder="Почта" required>
+                    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <p class = "caption-tar" style="font-size: 18px; color: #414099; margin-bottom: 0px;">Телефоны: </p>
+                </div>
+                <div>
+                    <?php foreach($client_phones as $item) { ?>
+                        <p  style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+                    <?php } ?>
+                </div>
+                <div>
+                    <input type="text" id="new_phone" placeholder="Телефон" required>
+                    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-12" id = "calls">
+                <p class="caption-tar">История застройщика</p>
+                <div id="calls-tar">
+                    <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
+                        <?php foreach($history as $item): ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                    $date = new DateTime($item->date_time);
+                                    echo $date->Format('d.m.Y H:i');
+                                    ?>
+                                </td>
+                                <td><?php echo $item->text;?></td>
+                            </tr>
+                        <?php endforeach;?>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-12" id="add-note-container-tar">
+                <label for="comments">Добавить комментарий:</label>
+                <br>
+                <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
+                <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="actions_div" style="display: none;">
+        <table class = "actions">
+            <?php if ($call_id != 0) { ?>
+                <tr>
+                    <td>
+                        <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
+                    </td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <td class = "td-left">
+                    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
+                </td>
+            </tr>
+            <tr>
+                <td class = "td-left">
+                    <button class="btn btn-primary" type="button" id="but_msk_kp">Московский застройщик КП</button>
+                </td>
+            </tr>
+            <tr>
+                <td class = "td-left">
+                    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+                </td>
+            </tr>
 
-<br>
-<div style="width: 100%; text-align: center;">
-    <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
-</div>
-<br>
+        </table>
+        <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
+    </div>
 
+</div>
+<div class="row" style="padding:15px 15px 15px 15px;border: #414099 solid 2px;border-radius: 15px">
+        <div class="row">
+            <div class="col-md-6 center">
+                <label for="floor_count">Кол-во этажей</label><br>
+                <input type="text" id="floor_count" class="input-gm">
+            </div>
+            <div class="col-md-6 center">
+                <label for="apartment_count">Кол-во квартир на этаже</label><br>
+                <input type="text" id="apartment_count" class="input-gm">
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary" type="button" id="createFloors">Создать</button>
+            </div>
+        </div>
+</div>
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты застройщика</p>
@@ -168,7 +194,45 @@
         </div>
     </div>
 </div>
+<style>
+    fieldset {
+        margin: 10px;
+        border: 2px solid #414099;
+        padding: 4px;
+        border-radius: 4px;
+    }
+    legend{
+        width: auto;
+    }
+</style>
+<div class="row">
+    <p class="caption-tar">Дублировать замеры</p>
+    <form>
+        <div class="col-md-6">
+            <fieldset>
+                <legend>Откуда</legend>
+                <select id="copy_from_select" class="input-gm">
+                    <?php foreach ($clients_items as $floor){?>
+                        <option value="<?php echo $floor->id?>"><?php echo $floor->client_name?></option>
+                    <?php }?>
+                </select>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset >
+                <legend>Куда</legend>
+                <div id="where_duplicate">
 
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</div>
+<div class="row center">
+    <div class="col-md-12">
+        <button class="btn btn-primary" id="duplicate">Дублировать</button>
+    </div>
+</div>
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table id="table-orders-tar" class="table table-striped one-touch-view">
@@ -259,6 +323,26 @@
     </div>
 </div>
 <script>
+    function fillDuplicateInFields(value){
+        var floors = JSON.parse('<?php echo json_encode($clients_items)?>'),
+            checkbox ="";
+            jQuery.each(floors,function(index,elem){
+                if(value != elem.id) {
+                    checkbox = "<input name = \"need_duplicate\"type=\"checkbox\" id=\"" + elem.id + "\" class=\"inp-cbx\" value = \"" + elem.id + "\" style=\"display: none\">\n" +
+                        "<label for=\"" + elem.id + "\" class=\"cbx\">\n" +
+                        "<span>\n" +
+                        "<svg width=\"12px\" height=\"10px\" viewBox=\"0 0 12 10\">\n" +
+                        "<polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\n" +
+                        "</svg>\n" +
+                        "</span>\n" +
+                        "<span>" + elem.client_name + "</span>\n" +
+                        "</label>"
+                    jQuery("#where_duplicate").append(checkbox);
+                }
+            });
+
+    }
+
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
         var div2 = jQuery("#modal_window_client");
@@ -281,6 +365,40 @@
         }
     });
 
+    jQuery("#duplicate").click(function () {
+        var clients_id = [];
+        jQuery.each(jQuery("input[name='need_duplicate']:checked"),function(index,elem){
+            clients_id.push(elem.value);
+        });
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=projects.duplicate",
+            data: {
+                clients: clients_id
+            },
+            success: function(data){
+                location.reload();
+            },
+            dataType: "json",
+            timeout: 10000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка!"
+                });
+            }
+        });
+    });
+
+    jQuery("#copy_from_select").change(function(){
+       fillDuplicateInFields(this.value);
+    });
+
     jQuery("#new_client").click(function(){
         jQuery("#close").show();
 		jQuery("#mv_container").show();
@@ -291,6 +409,14 @@
         jQuery("#mv_container").show();
         jQuery("#modal_window_fio").show("slow");
         jQuery("#close").show();
+    });
+
+    jQuery("#show_actions_div").click(function () {
+        jQuery("#actions_div").toggle();
+    });
+
+    jQuery("#show_info_div").click(function () {
+        jQuery("#dealer_info_div").toggle();
     });
 
     jQuery("#but_comm").click(function (){
@@ -322,6 +448,39 @@
         jQuery("#close").hide();
         jQuery("#modal_window_container").hide();
         jQuery("#modal_window_comm").hide();
+    });
+
+    jQuery("#createFloors").click(function(){
+        var floorsCount = jQuery("#floor_count").val(),
+            apartmentCount = jQuery("#apartment_count").val(),
+            builderId = '<?php echo $client->dealer_id; ?>';
+        if(floorsCount && apartmentCount){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=clients.createBuilderFloors",
+                data: {
+                    floors: floorsCount,
+                    apartment: apartmentCount,
+                    builderId: builderId
+                },
+                success: function(data){
+                    location.reload();
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    console.log(data);
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+        }
     });
 
     jQuery("#update_fio").click(function(){
@@ -509,40 +668,42 @@
                 }
             });
         }
-
-        document.getElementById('btn_refuse').onclick = function()
-        {
-            var user_id = <?php echo $dealer->id; ?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
-                data: {
-                    user_id: user_id,
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Переведен в отказ от сотрудничества"
-                    });
-                    setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';}, 1000);
-                },
-                error: function(data) {
-                    console.log(data);
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
-            });
+        if(document.getElementById('btn_refuse')) {
+            document.getElementById('btn_refuse').onclick = function () {
+                var user_id = <?php echo $dealer->id; ?>;
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                    data: {
+                        user_id: user_id,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Переведен в отказ от сотрудничества"
+                        });
+                        setTimeout(function () {
+                            location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';
+                        }, 1000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
         }
     });
 
