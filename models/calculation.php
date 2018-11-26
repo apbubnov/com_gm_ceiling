@@ -747,4 +747,122 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function duplicate($data){
+	    try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+
+            $n13 = $data['n13'];
+            $n14 = $data['n14'];
+            $n15 = $data['n15'];
+            $n22 = $data['n22'];
+            $n23 = $data['n23'];
+            $n26 = $data['n26'];
+            $n29 = $data['n29'];
+            unset($data['n13']);
+            unset($data['n14']);
+            unset($data['n15']);
+            unset($data['n22']);
+            unset($data['n23']);
+            unset($data['n26']);
+            unset($data['n29']);
+            unset($data['dealer_id']);
+
+            $columns = array_keys($data);
+            $values = array_values($data);
+            foreach ($values as $key=>$value){
+                $values[$key] = $db->quote($value);
+            }
+            $values = implode(',',$values);
+            $query
+                ->insert($db->quoteName('#__gm_ceiling_calculations'))
+                ->columns($db->quoteName($columns))
+                ->values($values);
+            //throw new Exception($query);
+            $db->setQuery($query);
+            $db->execute();
+            $calculationId = $db->insertId();
+            if (!empty($n13)) {
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`#__gm_ceiling_fixtures`')
+                    ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
+
+                foreach ($n13 as $value) {
+                    $query->values($calculationId . ', ' . $value->n13_count . ', ' . $value->n13_type . ', ' . $value->n13_size);
+                }
+                $db->setQuery($query);
+                $db->execute();
+
+            }
+
+            if (!empty($n14)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_pipes`')
+                    ->columns('calculation_id, n14_count, n14_size');
+                foreach ($n14 as $value) {
+                    $query->values($calculationId . ', ' . $value->n14_count . ', ' . $value->n14_size);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n15)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_cornice`')
+                    ->columns('calculation_id, n15_count, n15_type, n15_size');
+                foreach ($n15 as $value) {
+                    $query->values($calculationId . ', ' . $value->n15_count . ', ' . $value->n15_type . ', ' . $value->n15_size);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n22)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_hoods`')
+                    ->columns('calculation_id, n22_count, n22_type, n22_size');
+                foreach ($n22 as $value) {
+                    $query->values($calculationId . ', ' . $value->n22_count . ', ' . $value->n22_type . ', ' . $value->n22_size);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n23)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_diffusers`')
+                    ->columns('calculation_id, n23_count, n23_size');
+                foreach ($n23 as $value) {
+                    $query->values($calculationId . ', ' . $value->n23_count . ', ' . $value->n23_size);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n26)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_ecola`')
+                    ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
+                foreach ($n26 as $value) {
+                    $query->values($calculationId . ', ' . $value->n26_count . ', ' . $value->n26_illuminator . ', ' . $value->n26_lamp);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            if (!empty($n29)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_profil`')
+                    ->columns('calculation_id, n29_count, n29_type');
+                foreach ($n29 as $value) {
+                    $query->values($calculationId . ', ' . $value->n29_count . ', ' . $value->n29_type);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            return $calculationId;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

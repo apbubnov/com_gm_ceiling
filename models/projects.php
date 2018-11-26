@@ -894,12 +894,13 @@ class Gm_ceilingModelProjects extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('id')
+                ->select('id,project_info')
                 ->from('`#__gm_ceiling_projects` as p')
                 ->where("p.client_id = $client_id");
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;
+
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

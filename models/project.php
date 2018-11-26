@@ -77,7 +77,7 @@ class Gm_ceilingModelProject extends JModelItem
 	public function &getData($id = null)
 	{
 		try
-		{
+        {
 			if ($this->_item === null)
 			{
 				$this->_item = false;

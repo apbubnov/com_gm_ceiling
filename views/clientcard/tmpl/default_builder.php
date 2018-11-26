@@ -374,7 +374,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=projects.duplicate",
             data: {
-                clients: clients_id
+                clients: clients_id,
+                idFrom: jQuery("#copy_from_select").val()
             },
             success: function(data){
                 location.reload();

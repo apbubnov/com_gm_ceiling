@@ -90,15 +90,38 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
     function duplicate(){
 	    try{
             $jinput = JFactory::getApplication()->input;
-            $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $ids = $jinput->get('clients_id',array(),'ARRAY');
+            $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $calcModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $ids = $jinput->get('clients',array(),'ARRAY');
             $fromId = $jinput->get('idFrom',null,'INT');
-            $fromProjects = $projects_model->getClientsProjects($fromId);
-            $toProjects = [];
+            $fromProjects = $projectsModel->getClientsProjects($fromId);
+            $toDupProjects = [];
             foreach ($ids as $id){
-                $toProjects = $projects_model->getClientsProjects($id);
+                foreach ($projectsModel->getClientsProjects($id) as $value)
+                    array_push($toDupProjects,$value);
+            }
+            foreach ($fromProjects as $proj){
+                $calcsId = $calculationsModel->getIdsByProjectId($proj->id);
+                foreach ($calcsId as $calcId){
+                    $calcData = $calcModel->new_getData($calcId->id);
+                    unset($calcData->id);
+                    $calcData = get_object_vars($calcData);
+                    foreach ($toDupProjects as $dupProj){
+                        if($dupProj->project_info == $proj->project_info){
+                            $calcData['project_id'] = $dupProj->id;
+                            $newCalcId = $calcModel->duplicate($calcData);
+                            $oldFileName = md5('calculation_sketch'.$calcId->id);
+                            $oldImage = $_SERVER['DOCUMENT_ROOT']."/calculation_images/$oldFileName.svg";
+                            $newFileName = md5('calculation_sketch'.$newCalcId);
+                            $newImage =  $_SERVER['DOCUMENT_ROOT']."/calculation_images/$newFileName.svg";
+                            copy($oldImage, $newImage);
+                        }
+                    }
+                }
             }
 
+            die(json_encode(true));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

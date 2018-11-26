@@ -1001,6 +1001,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     {
         try
         {
+
             $db = $this->getDbo();
             $user = JFactory::getUser();
             if (empty($user->id)) $user->id = 2;
@@ -1039,6 +1040,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                */
                 $query = $db->getQuery(true);
                 $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', 'dealer_components_sum', 'dealer_canvases_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'components_stock', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount','need_mount');
+
                 $query
                 
                     ->insert($db->quoteName('#__gm_ceiling_calculations'))
@@ -1088,6 +1090,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $db->quote($data['discount']) . ', '
                         . $db->quote($data['need_mount']));
  //print_r((string) $query); exit;
+
                 $db->setQuery($query);
                 //throw new Exception($query);
                 
@@ -1182,6 +1185,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query->insert('`#__gm_ceiling_cuttings`')
                     ->columns('id')
                     ->values($calculationId);
+
                 $db->setQuery($query);
                 $db->execute();
             } else {
@@ -1230,18 +1234,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 else $query->set('calc.n32 = ' . $db->quote($data['n32']));
                 if (empty($data['height'])) $query->set('calc.height = 0');
                 else $query->set('calc.height = ' . $db->quote($data['height']));
-                $query->set('calc.components_sum = ' . $data['components_sum']);
-                $query->set('calc.canvases_sum = ' . $data['canvases_sum']);
-                $query->set('calc.mounting_sum = ' . $data['mounting_sum']);
-                $query->set('calc.dealer_components_sum = ' . $data['dealer_components_sum']);
-                $query->set('calc.dealer_canvases_sum = ' . $data['dealer_canvases_sum']);
+                $query->set('calc.components_sum = \'' . $data['components_sum'].'\'');
+                $query->set('calc.canvases_sum = \'' . $data['canvases_sum'].'\'');
+                $query->set('calc.mounting_sum = \'' . $data['mounting_sum'].'\'');
+                $query->set('calc.dealer_components_sum = \'' . $data['dealer_components_sum'].'\'');
+                $query->set('calc.dealer_canvases_sum = \'' . $data['dealer_canvases_sum'].'\'');
                /* $query->set('calc.transport = ' . $data['transport']);*/
-                $query->set('calc.dop_krepezh = ' . $data['dop_krepezh']);
+                $query->set('calc.dop_krepezh = \'' . $data['dop_krepezh'].'\'');
                 $query->set('calc.extra_components = ' . $db->quote($data['extra_components']));
                 $query->set('calc.extra_mounting = ' . $db->quote($data['extra_mounting']));
                 $query->set('calc.components_stock = ' . $db->quote($data['components_stock']));
-                $query->set('calc.need_mount = ' . $data['need_mount']);
-                if (empty($data['color'])) $query->set('calc.color = NULL');
+                $query->set('calc.need_mount = ' . $db->quote($data['need_mount']));
+                if (empty($data['color'])) $query->set('calc.color = \'NULL\'');
                 else $query->set('calc.color = ' . $db->quote($data['color']));
                 //$query->set('calc.color = ' . $data['color']);
                 $query->set('calc.details = ' . $db->quote($data['details']));
@@ -1256,6 +1260,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 else $query->set('calc.discount = ' . $db->quote($data['discount']));
                 $query->where('calc.id = ' . $data['id']);
                // print_r((string)$query); exit;
+                //throw new Exception($query);
                 $db->setQuery($query);
                 $result = $db->execute();
 

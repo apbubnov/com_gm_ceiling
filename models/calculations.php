@@ -513,6 +513,23 @@ class Gm_ceilingModelCalculations extends JModelList {
        
     }
 
+    public function getIdsByProjectId($project_id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id')
+                ->from('#__gm_ceiling_calculations')
+                ->where('project_id = '.$project_id);
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public function updateComponents_sum($id)
     {
         try{
