@@ -461,7 +461,7 @@ echo parent::getButtonBack();
             async: true,
             success: function (data) {
                 console.log(data);
-                var profit = 0,sum=0;
+                var profit = 0,sum=0,totalSum = 0, totalProfit = 0;
                 jQuery("#mw_projects").show('slow');
                 jQuery("#close-modal-window").show();
                 jQuery("#mw_container").show();
@@ -488,12 +488,14 @@ echo parent::getButtonBack();
 
                             }
                         }
-
+                        totalSum += +sum;
+                        totalProfit += +profit;
                         TrOrders += '<tr class="link_row" data-href = \'/index.php?option=com_gm_ceiling&view=clientcard&id='+data[i].client_id+'\'><td>'+data[i].id+'</td><td>'+data[i].project_info+'</td><td>'+data[i].status+'</td><<td>'+data[i].sum+'</td><td>'+parseFloat(data[i].profit).toFixed(2)+'</td>/tr>';
 
                     }
 
                     jQuery("#table_projects").append(TrOrders);
+                    jQuery("#table_projects").append("<tr><td colspan=3><b>Итого</b></td><td>"+totalSum+"</td><td>"+totalProfit+"</td></tr>")
                 }
                 jQuery(".link_row").click(function(){
                     window.location = jQuery(this).data("href");

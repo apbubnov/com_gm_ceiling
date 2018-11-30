@@ -627,4 +627,47 @@ if (empty($list['direction']))
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function getClientsAndprojectsData($dealer_id,$stage){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("c.id AS client_id,c.client_name,GROUP_CONCAT(DISTINCT calc.id SEPARATOR ';') AS calcs,p.project_status,p.project_info,p.id,pm.mounter_id,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
+                ->from("`rgzbn_gm_ceiling_clients` AS c")
+                ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
+                ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
+                ->leftJoin("`rgzbn_gm_ceiling_projects_mounts` as pm on pm.project_id = p.id and pm.type=$stage")
+                ->where("c.dealer_id = $dealer_id")
+                ->group("p.id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            $result = [];
+            foreach ($items as $value){
+                $totalSum = 0;
+                $calcs = explode(';',$value->calcs);
+                foreach ($calcs as $calc){
+                    $mountData = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null);
+                    foreach ($mountData['mounting_data'] as $mountValue){
+                        if($mountValue['stage'] == $stage){
+                            $totalSum += $mountValue['gm_salary_total'];
+                        }
+                    }
+                }
+                $result[$value->client_id]['id'] = $value->client_id;
+                $result[$value->client_id]['name'] = $value->client_name;
+                $result[$value->client_id]['projects'][] = (object)array("id"=>$value->id,
+                                                                         "title"=>$value->project_info,
+                                                                         "value"=>($stage == 3) ? $value->quadr : $value->per,
+                                                                         "sum"=>$totalSum,
+                                                                         "mounter"=> (!empty($value->mounter_id)? JFactory::getuser($value->mounter):"" )
+                                                                        );
+            }
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -5,6 +5,14 @@
 
     $clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+    $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+    $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+    $mountTypes = $projectsMountsModel->get_mount_types();
+    unset($mountTypes[1]);
+    foreach ($mountTypes as $key=>$value){
+        $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
+    }
     $history = $historyModel->getDataByClientId($this->item->id);
     $projects = $clientcardModel->getProjects($this->item->id);
     $app = JFactory::getApplication();
@@ -12,10 +20,11 @@
     $phoneto = $jinput->get('phoneto', '', 'STRING');
     $phonefrom = $jinput->get('phonefrom', '', 'STRING');
     $call_id = $jinput->get('call_id', 0, 'INT');
-    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
-    $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+
+    //$progressData = $clients_model->getClientsAndprojectsData($client->dealer_id);
+
     $dealer = JFactory::getUser($client->dealer_id);
     if ($dealer->associated_client != $this->item->id)
     {
@@ -38,7 +47,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-
                 <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
                 <div class="col-md-3">
                     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -204,6 +212,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     legend{
         width: auto;
     }
+    .td_div{
+        border-bottom: #414099 1px solid;
+    }
 </style>
 <div class="row">
     <p class="caption-tar">Дублировать замеры</p>
@@ -212,6 +223,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <fieldset>
                 <legend>Откуда</legend>
                 <select id="copy_from_select" class="input-gm">
+                    <option value="">Выбрать этаж</option>
                     <?php foreach ($clients_items as $floor){?>
                         <option value="<?php echo $floor->id?>"><?php echo $floor->client_name?></option>
                     <?php }?>
@@ -233,7 +245,23 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         <button class="btn btn-primary" id="duplicate">Дублировать</button>
     </div>
 </div>
-<div id="orders-container-tar">
+<div class="row">
+    <ul class="nav nav-tabs" role="tablist">
+        <?php foreach ($mountTypes as $k => $mountStage) { ?>
+            <li class="nav-item">
+                <a class="nav-link mount_stage" data-toggle="tab" data-mount_type="<?php echo $k;?>" data-mount_status="<?php echo $mountStage['status'];?>" role="tab">
+                    <?php echo $mountStage['title'] ?>
+                </a>
+            </li>
+        <?php } ?>
+    </ul>
+    <table id = "report_table" class="table table-striped table_cashbox one-touch-view">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+<!--<div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table id="table-orders-tar" class="table table-striped one-touch-view">
         <tr>
@@ -244,28 +272,28 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <td>Статус</td>
         </tr>
      
-        <?php foreach($projects as $item):?>
+        <?php /*foreach($projects as $item):*/?>
 
-            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
-                <td><?php echo $item->id;?></td>
+            <tr class = "row_project" data-href="<?php /*echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id='.(int) $item->id.'&call_id='.(int) $call_id); */?>">
+                <td><?php /*echo $item->id;*/?></td>
                 <td>
-                    <?php 
+                    <?php /*
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
-                    ?>
+                    */?>
                 </td>
-                <td><?php echo $item->project_sum;?></td>
-                <td><?php echo $item->gm_manager_note; ?></td>
-                <td><?php echo $item->status; ?></td>
+                <td><?php /*echo $item->project_sum;*/?></td>
+                <td><?php /*echo $item->gm_manager_note; */?></td>
+                <td><?php /*echo $item->status; */?></td>
             </tr>
 
-        <?php endforeach;?>
+        <?php /*endforeach;*/?>
    
     </table>
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
-</div>
+</div>-->
 
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -321,9 +349,50 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
 
     </div>
+    <div id="apartment_change" class="modal_window">
+        <input id = "apartment_id" type="hidden">
+        <div align=center>
+            <p class ="cbx_p">Выполнено:</p>
+            <p>
+                <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
+                <label for="obag" class="cbx">
+                  <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                  </span>
+                  <span>обагечивание;</span>
+                </label>
+            </p>
+            <p class ="cbx_p">
+                <input type="checkbox" id="natyazhka" class="inp-cbx" data-status = "25" style="display: none">
+                <label for="natyazhka" class="cbx">
+                  <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                  </span>
+                  <span>натяжка;</span>
+                </label>
+            </p>
+            <p class ="cbx_p">
+                <input type="checkbox" id="vstavka" class="inp-cbx" data-status = "26" style="display: none">
+                <label for="vstavka" class="cbx">
+                  <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                  </span>
+                  <span>установка вставки.</span>
+                </label>
+            </p>
+        </div>
+    </div>
 </div>
 <script>
+    var progressData = [];
     function fillDuplicateInFields(value){
+        jQuery("#where_duplicate").empty();
         var floors = JSON.parse('<?php echo json_encode($clients_items)?>'),
             checkbox ="";
             jQuery.each(floors,function(index,elem){
@@ -350,10 +419,12 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         var div4 = jQuery("#modal_window_call");
         var div5 = jQuery("#call");
         var div6 = jQuery("#modal_window_select_number");
+        var div7 = jQuery("#apartment_change");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) 
-            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
+            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target) && !div7.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 
-            && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0) {
+            && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
+            && div7.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -362,6 +433,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#modal_window_call").hide();
             jQuery("#call").hide();
             jQuery("#modal_window_select_number").hide();
+            jQuery("#apartment_change").hide();
         }
     });
 
@@ -397,7 +469,13 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     });
 
     jQuery("#copy_from_select").change(function(){
-       fillDuplicateInFields(this.value);
+        console.log(this.value);
+        if(this.value){
+            fillDuplicateInFields(this.value);
+        }
+        else {
+            jQuery("#where_duplicate").empty();
+        }
     });
 
     jQuery("#new_client").click(function(){
@@ -565,8 +643,71 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery("#email_comm").val(elem.value);
     }
 
+    function drawReportTable(stage){
+        getReportData(stage);
+        var reportTable = jQuery("#report_table");
+        reportTable.empty();
+        for(var i=0,elem;i<Object.keys(progressData).length;i++) {
+            reportTable.append('<tr/>');
+            elem = progressData[Object.keys(progressData)[i]];
+            jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
+            jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
+
+            for (var j = 0, td, val, sum,mounter; j < elem.projects.length; j++) {
+                val = parseFloat(elem.projects[j].value);
+                sum = parseFloat(elem.projects[j].sum);
+                mounter = (elem.projects[j].mounter) ? elem.projects[j].mounter.name : "<select class='input-gm' type='text'></select>";
+                td = "<div class='row center'><div class='col-md-12'>" + elem.projects[j].title + "</div></div>" +
+                    "<div class='row center'>" +
+                    "<div class='col-md-6'> P=" + val.toFixed(2) + "</div><div class='col-md-6'>(" + sum.toFixed(2) + ") </div>" +
+                    "</div>" +
+                    "<div class='row center'>" +
+                    "<div class='col-md-9'>"+mounter+"</div>" +
+                    "<div class='col-md-3' style='padding:0'><button class='btn btn-primary btn-sm'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div>" +
+                    "</div>";
+                jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
+            }
+        }
+    }
+
+    function getReportData(stage){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=clients.getInfoByFloors",
+            data: {
+                dealerId: '<?php echo $client->dealer_id; ?>',
+                stage: stage
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                progressData = data;
+            },
+            error: function(data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения данных"
+                });
+            }
+        });
+    }
     jQuery(document).ready(function ()
     {
+        var firstTab = jQuery(jQuery(".mount_stage")[0]),
+            stage = firstTab.data("mount_type"),
+            status = firstTab.data("mount_status");
+        firstTab.addClass('active');
+        drawReportTable(stage);
+
+        jQuery(".mount_stage").click(function () {
+           var stage = jQuery(this).data("mount_type");
+            drawReportTable(stage);
+        });
+
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
         jQuery('#new_phone').mask('+7(999) 999-9999');

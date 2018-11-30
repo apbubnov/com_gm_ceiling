@@ -1719,6 +1719,9 @@ class Gm_ceilingHelpersGm_ceiling
                     if(empty($dealer_id)){
                         $dealer_id = 1;
                     }
+                    if($dealer->dealer_type == 7){
+                        $dealer_id = 1;
+                    }
                 }
             else{
                 $dealer_id = 1;   

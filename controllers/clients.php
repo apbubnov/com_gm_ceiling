@@ -88,4 +88,20 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getInfoByFloors(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $dealer_id = $jinput->getInt('dealerId');
+            $stage = $jinput->getInt('stage');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->getClientsAndprojectsData($dealer_id,$stage);
+
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
