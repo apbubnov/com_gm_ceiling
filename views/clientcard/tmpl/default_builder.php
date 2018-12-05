@@ -849,7 +849,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     type: "success",
                     text: "Сохранено!"
                 });
-                td.find("[name = 'mounter_div']")[0].innerHTML = mounterName;
+                td.find("[name = 'mounter_div']")[0].innerHTML = "<input type='hidden' name='mounter_id' value ="+mounterId+">"+mounterName;
                 td.find("[name = 'btn_div']").append(EDIT_BUTTON);
                 td.append(CHECK_BUTTON);
                 reassignEvents();
