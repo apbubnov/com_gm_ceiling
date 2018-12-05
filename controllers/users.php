@@ -40,5 +40,84 @@ class Gm_ceilingControllerUsers extends JControllerForm
 
         }
 	}
+    function rus2translit($string) {
+        $converter = array(
+            'а' => 'a',   'б' => 'b',   'в' => 'v',
+            'г' => 'g',   'д' => 'd',   'е' => 'e',
+            'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
+            'и' => 'i',   'й' => 'y',   'к' => 'k',
+            'л' => 'l',   'м' => 'm',   'н' => 'n',
+            'о' => 'o',   'п' => 'p',   'р' => 'r',
+            'с' => 's',   'т' => 't',   'у' => 'u',
+            'ф' => 'f',   'х' => 'h',   'ц' => 'c',
+            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
+            'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
+            'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+
+            'А' => 'A',   'Б' => 'B',   'В' => 'V',
+            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+            'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
+            'И' => 'I',   'Й' => 'Y',   'К' => 'K',
+            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+            'О' => 'O',   'П' => 'P',   'Р' => 'R',
+            'С' => 'S',   'Т' => 'T',   'У' => 'U',
+            'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
+            'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
+            'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
+            'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+        );
+        return strtr($string, $converter);
+    }
+
+	function registerMounterForBuilding(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $brigadeName = $jinput->get('name','','STRING');
+	        $brigadePhone = $jinput->get('phone','','STRING');
+	        if(!empty($brigadePhone)){
+                $brigadePhone = mb_ereg_replace('[^\d]', '', $brigadePhone);
+                if (mb_substr($brigadePhone, 0, 1) == '9' && strlen($brigadePhone) == 10)
+                {
+                    $brigadePhone = '7'.$brigadePhone;
+                }
+                if (mb_substr($brigadePhone, 0, 1) != '7')
+                {
+                    $brigadePhone = substr_replace($brigadePhone, '7', 0, 1);
+                }
+            }
+	        else{
+                $str = $this->rus2translit($brigadeName);
+                // в нижний регистр
+                $str = strtolower($str);
+                // заменям все ненужное нам на "-"
+                $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
+                // удаляем начальные и конечные '-'
+                $brigadePhone = trim($str, "-");
+            }
+            $data = array(
+                "name" => $brigadeName,
+                "username" => $brigadePhone,
+                "password" => $brigadePhone,
+                "password2" => $brigadePhone,
+                "email" => $brigadePhone."@none",
+                "groups" => array(2, 34),
+                "dealer_type" => 0,
+                "dealer_id" => 1
+            );
+            $user = new JUser;
+            if (!$user->bind($data)) {
+                throw new Exception($user->getError());
+            }
+            if (!$user->save()) {
+                throw new Exception($user->getError());
+            }
+            die(json_encode(true));
+	    }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }
 ?>

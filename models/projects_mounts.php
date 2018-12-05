@@ -93,4 +93,42 @@ class Gm_ceilingModelProjects_mounts extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function saveOrUpdateStage($projectId,$data){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("m.type as stage,m.date_time as time,m.mounter_id as mounter")
+                ->from('`#__gm_ceiling_projects_mounts`  as m')
+                ->where("m.project_id = $projectId and m.type =". $data[0]->stage." and m.mounter_id = ".$data[0]->mounter);
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            if(empty($items)){
+                foreach ($data as $value) {
+                    $query = $db->getQuery(true);
+                    $query->insert('`#__gm_ceiling_projects_mounts`');
+                    $query->columns("`project_id`,`mounter_id`,`date_time`,`type`");
+                    $query->values("$projectId,$value->mounter,'$value->time',$value->stage");
+                    $db->setQuery($query);
+                    $result = $db->execute();
+                }
+            }
+            else{
+                foreach ($data as $value) {
+                    $query = $db->getQuery(true);
+                    $query->update('`#__gm_ceiling_projects_mounts`');
+                    $query->set("`mounter_id`= $value->mounter");
+                    $query->where("project_id = $projectId and `type` = $value->stage");
+                    $db->setQuery($query);
+                    $result = $db->execute();
+                }
+            }
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

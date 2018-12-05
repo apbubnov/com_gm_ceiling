@@ -660,7 +660,8 @@ if (empty($list['direction']))
                                                                          "title"=>$value->project_info,
                                                                          "value"=>($stage == 3) ? $value->quadr : $value->per,
                                                                          "sum"=>$totalSum,
-                                                                         "mounter"=> (!empty($value->mounter_id)? JFactory::getuser($value->mounter):"" )
+                                                                         "status"=>$value->project_status,
+                                                                         "mounter"=> (!empty($value->mounter_id)? JFactory::getUser($value->mounter_id):"" )
                                                                         );
             }
             return $result;

@@ -1763,9 +1763,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
     function save_mount_data($project_id,$data = null){
         try{
+            $jinput = JFactory::getApplication()->input;
+            if(empty($project_id)){
+                $project_id = $jinput->getInt('id');
+            }
             if(!empty($project_id)){
                 if(empty($data)){
-                    $jinput = JFactory::getApplication()->input;
                     $data = $jinput->get('mount_data','','STRING');
                 }
                 if(!empty($data)){
@@ -1778,8 +1781,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     throw new Exception("Empty mounting data!");     
                 }
             }
-            else{
-                throw new Exception("Empty project_id!");                
+            else {
+                throw new Exception("Empty project_id!");
             }
 
         }
@@ -1987,6 +1990,34 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $data = json_encode($project_model->getMaterialsForEstimate($project_id));
             die(json_encode($data));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function saveStageMount(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->getInt('id');
+            if(!empty($project_id)){
+                if(empty($data)){
+                    $data = $jinput->get('mount_data','','STRING');
+                }
+                if(!empty($data)){
+                    $data = json_decode($data);
+                    $mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
+                    $result = $mounts_model->saveOrUpdateStage($project_id,$data);
+                    die(json_encode($result));
+                }
+                else{
+                    throw new Exception("Empty mounting data!");
+                }
+            }
+            else {
+                throw new Exception("Empty project_id!");
+            }
         }
         catch(Exception $e)
         {

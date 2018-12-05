@@ -626,5 +626,5 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	
+
 }
