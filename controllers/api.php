@@ -224,6 +224,25 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
         }
 
+		public 
+		function sendInfoToAndroidCallGlider()
+        {
+            try
+            {
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+                if(!empty($_POST['synchronization']))
+                {
+                    $table_data = json_decode($_POST['synchronization']);
+                    $result = $model->get_dealerInfo_androidCallGlider($table_data);
+                }
+                die(json_encode($result));
+            }
+            catch(Exception $e)
+            {
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            }
+        }
+
         public
         function sendImagesToAndroid()
         {
@@ -309,6 +328,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
             }
         }
+        
         public function check_update(){
             try
             { 
