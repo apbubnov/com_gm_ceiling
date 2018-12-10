@@ -128,23 +128,31 @@
         $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
         if (!empty($calculation->n3)) {
             $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3")[0]);
+        } else {
+            $canvas = json_encode(null);
         }
-        else $canvas = json_encode(null);
-        $calc_img_filename = md5("calculation_sketch" . $calculation_id) . ".svg";
-        if(file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . $calc_img_filename)){
-            $calc_img = '/calculation_images/' . $calc_img_filename.'?t='.time();
+
+        $calc_img_filename = md5('calculation_sketch'.$calculation_id).'.svg';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/'.$calc_img_filename)) {
+            $calc_img = '/calculation_images/'.$calc_img_filename.'?t='.time();
+        } else {
+            $calc_img = '';
         }
-        else {
-            $calc_img = "";
+
+        $cut_img_filename = md5('cut_sketch'.$calculation_id).'.svg';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].'/cut_images/'.$cut_img_filename)) {
+            $cut_img = '/cut_images/'.$cut_img_filename.'?t='.time();
+        } else {
+            $cut_img = '';
         }
+
         $project_id = $calculation->project_id;
-        if(empty($project_id)){
+        if (empty($project_id)) {
             throw new Exception("Пустой id проекта", 1);
         }
         
         $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
-    }
-    else{
+    } else {
         /* сгенерировать ошибку или создать калькуляцию? */
         throw new Exception("Пустой id калькуляции", 1);
     }
@@ -386,10 +394,10 @@
                     <table style="width: 100%;">
                         <tr>
                             <td width=35%>
-                                <label id="jform_n4-lbl" for="jform_n4" class="center" > Площадь: </label>
+                                <label id="jform_n4-lbl" for="jform_n4"> Площадь: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" placeholder="Площадь комнаты"  readonly  type="tel"> 
+                                <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" readonly> 
                             </td>
                             <td width=10%>
                                 <label for="jform_n4" class="control-label"> м<sup>2 </sup></label>
@@ -397,10 +405,10 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n5-lbl" for="jform_n5" class="center" > Периметр: </label>
+                                <label id="jform_n5-lbl" for="jform_n5"> Периметр: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9"  placeholder="Периметр комнаты" readonly  type="tel"> 
+                                <input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9" readonly> 
                             </td>
                             <td width=10%>
                                 <label for="jform_n5" class="control-label"> м </label>
@@ -408,10 +416,10 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов: </label>
+                                <label id="jform_n9-lbl" for="jform_n9"> Кол-во углов: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n9]" id="jform_n9" data-next="#jform_n27" class="form-control-input" placeholder="Кол-во углов"  readonly  type="tel"> 
+                                <input name="jform[n9]" id="jform_n9" data-next="#jform_n27" class="form-control-input" readonly> 
                             </td>
                             <td width=10%>
                                 <label for="jform_n9" class="control-label">шт.</label>
@@ -419,10 +427,10 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n10-lbl" for="jform_n10" class="center"> Криволинейный участок: </label>
+                                <label id="jform_n10-lbl" for="jform_n10"> Криволинейный участок: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n10]" id="jform_n10" class="form-control-input"  readonly>
+                                <input name="jform[n10]" id="jform_n10" class="form-control-input" readonly>
                             </td>
                             <td width=10%>
                                 <label for="jform_n10" class="control-label">м.</label>
@@ -430,7 +438,7 @@
                         </tr>
                         <tr>
                             <td width=35%>
-                                <label id="jform_n11-lbl" for="jform_n31" class="center"> Внутренний вырез: </label>
+                                <label id="jform_n11-lbl" for="jform_n31"> Внутренний вырез: </label>
                             </td>
                             <td width=55%>
                                 <input name="jform[n31]" id="jform_n31" class="form-control-input" readonly>
@@ -440,19 +448,25 @@
                             </td>
                         </tr>
                     </table>
-                    <input name = "jform[offcut_square]" id = "jform_offcut_square" type="hidden">
+                    <div id="div_for_test" style="display: none;">
+                        <label>Усаженный периметр:</label> <input id="input_n5_shrink" type="text" readonly><br>
+                        <label>Площадь обрезков:</label> <input name="jform[offcut_square]" id="jform_offcut_square" type="text" readonly><br>
+                        <label>Процент усадки:</label> <input id="input_shrink_percent" type="text" readonly><br>
+                        <label>Координаты:</label> <textarea id="input_cut_data" style="width: 600px; height: 200px;" readonly resize></textarea><br>
+                        <img id="cut_image" style="width: 100%;">
+                    </div>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
         </div>
     </div>
     <div>
-    <?php if($triangulator_pro) { ?>
+    <?php if ($triangulator_pro) { ?>
         <div class="container">
             <div class="row">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
-                    <button class = "btn btn-primary to_redactor" type = "button" style="width: 100%; margin-bottom: 25px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Изменить раскрой</button>
+                    <button class="btn btn-primary to_redactor" type="button" style="width: 100%; margin-bottom: 25px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Изменить раскрой</button>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
@@ -1464,9 +1478,8 @@
             if(filename){
                 jQuery("#sketch_image").attr('src',filename);
                 jQuery("#sketch_image_block").show();
-
             }
-        } 
+        }
         
         function obj_in_array(array,obj){
             let result = false;
@@ -1492,12 +1505,12 @@
         }
 
         document.body.onload = function(){
-            jQuery(".PRELOADER_GM").hide();
+            jQuery('.PRELOADER_GM').hide();
         };
 
         function click_after_recalc(){
             if(need_click){
-                jQuery("#calculate_button").click();
+                jQuery('#calculate_button').click();
                 jQuery('html, body').animate({
                     scrollTop: jQuery("#calculate_button").offset().top
                 }, 2000);
@@ -1507,6 +1520,17 @@
         time_end = performance.now()-time_start;
         console.log(time_end);
     });
+
+    function puf() {
+        let filename = '<?php echo $cut_img;?>';
+        if (filename) {
+            jQuery('#cut_image').attr('src', filename);
+            jQuery('#input_cut_data').val(calculation.cut_data);
+            jQuery('#input_shrink_percent').val(calculation.shrink_percent);
+            jQuery('#input_n5_shrink').val(calculation.n5_shrink);
+            jQuery('#div_for_test').show();
+        }
+    }
 
    // Подсказки по городам
     ymaps.ready(init);
