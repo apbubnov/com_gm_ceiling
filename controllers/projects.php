@@ -101,6 +101,9 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
                 foreach ($projectsModel->getClientsProjects($id) as $value)
                     array_push($toDupProjects,$value);
             }
+            foreach ($toDupProjects as $dupProj) {
+                $calculationsModel->deleteAllByProjectId($dupProj->id);
+            }
             foreach ($fromProjects as $proj){
                 $calcsId = $calculationsModel->getIdsByProjectId($proj->id);
                 foreach ($calcsId as $calcId){

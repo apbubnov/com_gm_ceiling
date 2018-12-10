@@ -648,12 +648,14 @@ if (empty($list['direction']))
                 $calcs = explode(';',$value->calcs);
                 foreach ($calcs as $calc){
                     $mountData = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null);
-                    foreach ($mountData['mounting_data'] as $mountValue){
+                    $totalSum += $mountData['stages'][$stage];
+                    /*foreach ($mountData['mounting_data'] as $mountValue){
                         if($mountValue['stage'] == $stage){
                             $totalSum += $mountValue['gm_salary_total'];
                         }
-                    }
+                    }*/
                 }
+
                 $result[$value->client_id]['id'] = $value->client_id;
                 $result[$value->client_id]['name'] = $value->client_name;
                 $result[$value->client_id]['projects'][] = (object)array("id"=>$value->id,

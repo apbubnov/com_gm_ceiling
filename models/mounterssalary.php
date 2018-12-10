@@ -31,6 +31,31 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         }
     }
 
+    function getDataById($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            if(!empty($id)){
+                $query->select("u.id,u.name,ms.sum,concat(p.project_info,' ',ms.note) as note")
+                    ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
+                    ->innerJoin('`rgzbn_users` as u on u.id = ms.mounter_id')
+                    ->innerJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
+                    ->where("ms.mounter_id = $id");
+                $db->setQuery($query);
+                $items = $db->loadObjectList();
+            }
+            else{
+                $items = [];
+            }
+
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     function save($mounterId,$projectId,$sum,$note){
         try{
             $db = JFactory::getDbo();
