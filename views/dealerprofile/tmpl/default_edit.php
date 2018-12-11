@@ -13,12 +13,14 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 
+$jinput = JFactory::getApplication()->input;
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
+$userId = (empty($jinput->getInt('id'))) ? $user->get('id') : $jinput->getInt('id');
+$userType = JFactory::getUser($userId)->dealer_type;
 $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
 $margin = $model_dealer_info->getData();
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount = $model_mount->getDataAll();
+$mount = $model_mount->getDataAll($userId);
 $gm_mount = json_encode($model_mount->getDataAll(1));
 if(!$user->getDealerInfo()->update_check) {
 	$user->setDealerInfo(["update_check" => true]);
@@ -56,46 +58,49 @@ if(!$user->getDealerInfo()->update_check) {
 </style>
 
 
-
+<?php if($userType != 7) { ?>
 <div style="width: 100%; text-align: right; margin-top: 15px;">
 	<a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
 </div>
+<?php } ?>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
-	<h3 class="caption1">Редактирование маржинальности</h3>
-	<h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
-	<div class="row">
-		<div class="col-md-4">
-			<div class="control-group">
-				<div class="control-label">
-					<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >от полотен</label>
-				</div>
-				<div class="controls">
-					<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin)?$margin->dealer_canvases_margin:0 ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="control-group">
-				<div class="control-label">
-					<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">от комплектующих</label>
-				</div>
-				<div class="controls">
-					<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="control-group">
-				<div class="control-label">
-					<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">от монтажа</label>
-				</div>
-				<div class="controls">
-					<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
-				</div>
-			</div>
-		</div>
-	</div>
-	<?php //if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
+	<input type="hidden" name="jform[dealer_id]" id="jform_dealer_id" value="<?php echo $userId?>">
+    <?php if($userType != 7) { ?>
+        <h3 class="caption1">Редактирование маржинальности</h3>
+        <h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >от полотен</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin)?$margin->dealer_canvases_margin:0 ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">от комплектующих</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">от монтажа</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />
+                    </div>
+                </div>
+            </div>
+        </div>
+	<?php } ?>
 		<h3 class="caption1">Редактирование прайса монтажа</h3>
 		<div>
 			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
@@ -469,6 +474,7 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 			</div>
 		</div>
+    <?php if($userType != 7) { ?>
 		<h3 class="caption1">Минимальная сумма заказа</h3>
 		<div class="row">
 			<div class="col-md-4">
@@ -482,7 +488,7 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 			</div>
 		</div>
-	<?php //endif ?>
+	<?php }?>
 	<div  class = "col-md-12" style="margin-top:15px;">
 		<div class = "col-md-4"></div>
 		<div class = "col-md-4">
@@ -502,48 +508,51 @@ if(!$user->getDealerInfo()->update_check) {
 		});
 
 		document.getElementById('btn_save').onclick = function() {
-			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_canvases_margin').value) ||
-				document.getElementById('jform_dealer_canvases_margin').value < 0 ||
-				document.getElementById('jform_dealer_canvases_margin').value > 99) {
-				noty({
-                    theme: 'relax',
-                    timeout: 3000,
-                    layout: 'topCenter',
-                    maxVisible: 5,
-                    type: "warning",
-                    text: "Значение маржинальности должно быть в пределе [0..99]"
-                });
-				document.getElementById('jform_dealer_canvases_margin').focus();
-				return;
-			}
-			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_components_margin').value) ||
-				document.getElementById('jform_dealer_components_margin').value < 0 ||
-				document.getElementById('jform_dealer_components_margin').value > 99) {
-				noty({
-                    theme: 'relax',
-                    timeout: 3000,
-                    layout: 'topCenter',
-                    maxVisible: 5,
-                    type: "warning",
-                    text: "Значение маржинальности должно быть в пределе [0..99]"
-                });
-				document.getElementById('jform_dealer_components_margin').focus();
-				return;
-			}
-			if (!(/^\d+$/g).test(document.getElementById('jform_dealer_mounting_margin').value) ||
-				document.getElementById('jform_dealer_mounting_margin').value < 0 ||
-				document.getElementById('jform_dealer_mounting_margin').value > 99) {
-				noty({
-                    theme: 'relax',
-                    timeout: 3000,
-                    layout: 'topCenter',
-                    maxVisible: 5,
-                    type: "warning",
-                    text: "Значение маржинальности должно быть в пределе [0..99]"
-                });
-				document.getElementById('jform_dealer_mounting_margin').focus();
-				return;
-			}
+		    if(document.getElementById('jform_dealer_canvases_margin') && document.getElementById('jform_dealer_components_margin')
+                && document.getElementById('jform_dealer_mounting_margin')){
+                if (!(/^\d+$/g).test(document.getElementById('jform_dealer_canvases_margin').value) ||
+                    document.getElementById('jform_dealer_canvases_margin').value < 0 ||
+                    document.getElementById('jform_dealer_canvases_margin').value > 99) {
+                    noty({
+                        theme: 'relax',
+                        timeout: 3000,
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Значение маржинальности должно быть в пределе [0..99]"
+                    });
+                    document.getElementById('jform_dealer_canvases_margin').focus();
+                    return;
+                }
+                if (!(/^\d+$/g).test(document.getElementById('jform_dealer_components_margin').value) ||
+                    document.getElementById('jform_dealer_components_margin').value < 0 ||
+                    document.getElementById('jform_dealer_components_margin').value > 99) {
+                    noty({
+                        theme: 'relax',
+                        timeout: 3000,
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Значение маржинальности должно быть в пределе [0..99]"
+                    });
+                    document.getElementById('jform_dealer_components_margin').focus();
+                    return;
+                }
+                if (!(/^\d+$/g).test(document.getElementById('jform_dealer_mounting_margin').value) ||
+                    document.getElementById('jform_dealer_mounting_margin').value < 0 ||
+                    document.getElementById('jform_dealer_mounting_margin').value > 99) {
+                    noty({
+                        theme: 'relax',
+                        timeout: 3000,
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "warning",
+                        text: "Значение маржинальности должно быть в пределе [0..99]"
+                    });
+                    document.getElementById('jform_dealer_mounting_margin').focus();
+                    return;
+                }
+            }
 			document.getElementById('dealer_form').submit();
 		};
 	}); 

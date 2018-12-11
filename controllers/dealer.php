@@ -48,16 +48,16 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 		try
 		{
 	        $app = JFactory::getApplication();
-	        $user = JFactory::getUser();
-	        $userID = $user->id;
 	        $jinput = $app->input;
 	        $data = $jinput->get('jform', array(), 'array');
+            $user = JFactory::getUser($data['dealer_id']);
+            unset($data['dealer_id']);
 	        $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-	        $result = $model_dealer_info->updateMarginAndMount($user->dealer_id, $data);
+	        $result = $model_dealer_info->updateMarginAndMount($user->id, $data);
 	        if($result == 1) $message = "Успешно сохранено!";
 	        else $message = "Возникла ошибка сохранения!";
 	        $this->setMessage($message);
-	        $url  = 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage';
+	        $url  = ($user->dealer_type != 7) ? 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage' : 'index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.$user->associated_client ;
 			$this->setRedirect(JRoute::_($url, false));
 		}
 		catch(Exception $e)

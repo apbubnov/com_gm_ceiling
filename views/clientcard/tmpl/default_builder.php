@@ -47,13 +47,16 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-                <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
-                <div class="col-md-3">
-                    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                </div>
-                <div class="col-md-3">
-                    <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
-                </div>
+            <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
+            <div class="col-md-2">
+                <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            </div>
+            <div class="col-md-2">
+                <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            </div>
+            <div class="col-md-2">
+                <a href="/index.php?index.php?option=com_gm_ceiling&view=dealerprofile&type=edit&id=<?php echo $dealer->id?>" class = "btn btn-primary" i>Прайс</a>
+            </div>
         </div>
         <div class="col-md-2 left">
             <button type="button" class="btn btn-primary" id="show_info_div">Показать инф-ю</button>
@@ -362,49 +365,27 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
 
     </div>
-    <div id="apartment_change" class="modal_window">
-        <input id = "apartment_id" type="hidden">
-        <div align=center>
-            <p class ="cbx_p">Выполнено:</p>
-            <p>
-                <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
-                <label for="obag" class="cbx">
-                  <span>
-                    <svg width="12px" height="10px" viewBox="0 0 12 10">
-                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                    </svg>
-                  </span>
-                  <span>обагечивание;</span>
-                </label>
-            </p>
-            <p class ="cbx_p">
-                <input type="checkbox" id="natyazhka" class="inp-cbx" data-status = "25" style="display: none">
-                <label for="natyazhka" class="cbx">
-                  <span>
-                    <svg width="12px" height="10px" viewBox="0 0 12 10">
-                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                    </svg>
-                  </span>
-                  <span>натяжка;</span>
-                </label>
-            </p>
-            <p class ="cbx_p">
-                <input type="checkbox" id="vstavka" class="inp-cbx" data-status = "26" style="display: none">
-                <label for="vstavka" class="cbx">
-                  <span>
-                    <svg width="12px" height="10px" viewBox="0 0 12 10">
-                      <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                    </svg>
-                  </span>
-                  <span>установка вставки.</span>
-                </label>
-            </p>
-        </div>
+    <div id="one_mounter_salary" class="modal_window">
+        <table id="detailed_salary" class="table_project_analitic">
+            <thead>
+                <tr class="caption_table">
+                    <td>
+                        Сумма
+                    </td>
+                    <td>
+                        Объект
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
     <div id="mounters_salary" class="modal_window">
         <table id="salary" class="table_project_analitic">
             <thead>
-                <tr id="caption-tr">
+                <tr class="caption_table">
                     <td>ФИО</td>
                     <td>Сумма,руб</td>
                 </tr>
@@ -444,19 +425,21 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     }
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
-        var div2 = jQuery("#modal_window_client");
-        var div3 = jQuery("#modal_window_comm");
-        var div4 = jQuery("#modal_window_call");
-        var div5 = jQuery("#call");
-        var div6 = jQuery("#modal_window_select_number");
-        var div7 = jQuery("#apartment_change");
-        var div8 = jQuery("#mounters_salary");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) 
-            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target) && !div7.is(e.target)&& !div8.is(e.target)
-            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 
+        var div = jQuery("#modal_window_fio"), // тут указываем ID элемента
+            div2 = jQuery("#modal_window_client"),
+            div3 = jQuery("#modal_window_comm"),
+            div4 = jQuery("#modal_window_call"),
+            div5 = jQuery("#call"),
+            div6 = jQuery("#modal_window_select_number"),
+            div7 = jQuery("#apartment_change"),
+            div8 = jQuery("#mounters_salary"),
+            div9 = jQuery("#one_mounter_salary");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
+            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
+            && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)
+            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
             && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
-            && div7.has(e.target).length === 0 && div8.has(e.target).length === 0) {
+            && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -467,6 +450,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#modal_window_select_number").hide();
             jQuery("#apartment_change").hide();
             jQuery("#mounters_salary").hide();
+            jQuery("#one_mounter_salary").hide();
         }
     });
 
@@ -537,6 +521,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery("#close").show();
     });
 
+
     jQuery("#but_msk_kp").click(function (){
         jQuery("#send_comm").attr("c_type","msk");
         jQuery("#mv_container").show();
@@ -580,6 +565,48 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     text: "Ошибка сервера"
                 });
             }
+        });
+
+        jQuery("#salary > tbody > tr").click(function () {
+            var mounterId = jQuery(this).data('id');
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
+                data: {
+                    mounterId:mounterId
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var total = 0;
+                    jQuery("#detailed_salary > tbody").empty();
+                    jQuery.each(data,function (index,el){
+                        total += +el.sum;
+                        jQuery("#detailed_salary > tbody").append('<tr/>');
+                        jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+el.note+'</td>')
+                    });
+                    jQuery("#detailed_salary > tbody").append('<tr/>');
+                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td>');
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+            jQuery("#mv_container").show();
+            jQuery("#one_mounter_salary").show();
+            jQuery("#close").show();
+
+            jQuery("#mounters_salary").hide();
+            jQuery("#close").show();
+
+
         });
     });
     jQuery("#cancel").click(function(){
@@ -631,7 +658,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
-            data: {	
+            data: {
                 client_id: "<?php echo $this->item->id;?>",
                 fio: jQuery("#new_fio").val()
             },
@@ -662,10 +689,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     type: "error",
                     text: "Ошибка!"
                 });
-            }				
+            }
         });
     })
-    
+
     jQuery('body').on('click', '.row_project', function(e)
     {
         if (jQuery(this).data('href') !== undefined)
@@ -680,7 +707,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             url: "index.php?option=com_gm_ceiling&task=create_empty_project",
             data: {
                 client_id:<?php echo $this->item->id;?>
-            
+
             },
             success: function(data){
                 data = JSON.parse(data);
@@ -699,7 +726,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     type: "error",
                     text: "Ошибка при создании заказа. Сервер не отвечает"
                 });
-            }					
+            }
         });
     });
 
@@ -1148,7 +1175,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     jQuery("#broke").click(function(){
         jQuery("#mv_container").show();
         jQuery("#call").show("slow");
-        jQuery("#close").show(); 
+        jQuery("#close").show();
     });
 
     jQuery("#add_call_and_submit").click(function(){

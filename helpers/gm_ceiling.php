@@ -1715,11 +1715,13 @@ class Gm_ceilingHelpersGm_ceiling
             if(!empty($client_id)){
                     $client_model = self::getModel('client');
                     $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
-                    $dealer_id = $dealer->dealer_id;
-                    if(empty($dealer_id)){
-                        $dealer_id = 1;
-                    }
                     if($dealer->dealer_type == 7){
+                        $dealer_id = $dealer->id;
+                    }
+                    else{
+                       $dealer_id = $dealer->dealer_id;
+                    }
+                    if(empty($dealer_id)){
                         $dealer_id = 1;
                     }
                 }
@@ -2087,7 +2089,7 @@ class Gm_ceilingHelpersGm_ceiling
                         );
                     }
                     //со вставкой
-                    if ($data['n6'] > 0) {
+                    if ($data['n6'] > 0 || $data['n20'] > 0) {
                         if ($data['color'] > 0) {
                             $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                             $color = $color_model->getData($data['color']);
@@ -2095,13 +2097,14 @@ class Gm_ceilingHelpersGm_ceiling
                         } else {
                             $name = "Вставка (ПВХ)";
                         }
+                        $quantity = ($data['n6']>0) ? $data['n5'] + $data['n20'] : $data['n20'];
                         $mounting_data[] = array(
                             "title" => $name,                                                                        //Название
-                            "quantity" => $data['n5'],                                                                //Кол-во
+                            "quantity" => $quantity,                                                                //Кол-во
                             "gm_salary" => $results->mp10,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $data['n5'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $quantity * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $results->mp10,                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $quantity * $results->mp10,                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=> 4
                         );
                     }
@@ -2672,6 +2675,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_margin = 0;
             $total_with_gm_dealer_margin = 0;
             $total_with_dealer_margin = 0;
+            $stages = [];
             foreach ($mounting_data as $mounting_item) {
                 $mounting_item['gm_salary_total'] = $mounting_item['gm_salary_total'];
                 $mounting_item['dealer_salary_total'] = $mounting_item['dealer_salary_total'];
@@ -2680,14 +2684,16 @@ class Gm_ceilingHelpersGm_ceiling
                 $total_with_gm_margin += $mounting_item['total_with_gm_margin'];
                 $total_with_gm_dealer_margin += $mounting_item['total_with_gm_dealer_margin'];
                 $total_with_dealer_margin += $mounting_item['total_with_dealer_margin'];
+                $stages[$mounting_item['stage']] += $mounting_item['gm_salary_total'];
             }
-           
+
             $result['mounting_data'] = $mounting_data;
             $result['total_gm_mounting'] =  $total_gm_mounting + $transport;
             $result['total_dealer_mounting'] =  $total_dealer_mounting;
             $result['total_with_gm_margin'] = $total_with_gm_margin;
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
-            $result['total_with_dealer_margin'] = $total_with_dealer_margin;      
+            $result['total_with_dealer_margin'] = $total_with_dealer_margin;
+            $result['stages'] = $stages;
             return $result;
         }
         catch(Exception $e)
