@@ -626,5 +626,23 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
+	function getUserByEmailAndUsername($email,$username){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`')
+                ->from('`#__users` AS `u`')
+                ->where("email = '$email' and username = '$username'");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 
 }

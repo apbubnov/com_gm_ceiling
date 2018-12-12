@@ -1594,8 +1594,8 @@ public function register_mnfctr(){
             $project_data['state'] = 1;
             if (!empty($client_id)) {
                 $project_data['client_id'] = $client_id;
-            } else {
-                $project_data['client_id'] = $id;
+            } elseif($client_id == 0) {
+                $project_data['client_id'] = 0;
             }
             if(!empty($api_phone_id)){
                 $project_data['api_phone_id'] = $api_phone_id;

@@ -42,10 +42,9 @@ $user_group = $user->groups;
 <script>
     var del_click_bool = false;
 
-    var arr_calls = JSON.parse('<?php echo json_encode($this->item); ?>');
+    var arr_calls = [];
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
-    var dealer_type = '<?php echo $user->dealer_type?>';
     function show_calls()
     {
         var str;
@@ -53,8 +52,6 @@ $user_group = $user->groups;
         table_body_elem.innerHTML = "";
         for (var i = 0; i < arr_calls.length; i++)
         {
-            if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == arr_calls[i].manager_id || (arr_calls[i].manager_id == 1 && dealer_type !=1 )))
-            {
                 str = '';
                 if (arr_calls[i].dealer_type == 3)
                 {
@@ -78,17 +75,43 @@ $user_group = $user->groups;
                 str += '<td><button class="btn btn-danger btn-sm" type="button" onclick="del_call('+arr_calls[i].id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
                 str += '</tr>';
                 table_body_elem.innerHTML += str;
-            }
         }
     }
 
+    function getData(){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=callback.getData",
+            data: {
+                userId: user_id,
+                date: jQuery('#calendar').val()
+            },
+            success: function(data){
+                console.log(12312);
+                arr_calls = data;
+                show_calls();
+            },
+            dataType:"json",
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка!"
+                });
+            }
+        });
+    }
     jQuery(document).ready(function()
     {
-        
-        show_calls();
+
+        getData();
 
         document.getElementById('calendar').onchange = function(){
-            show_calls();
+            getData();
         };
 
         jQuery('body').on('click', 'tr', function(e)

@@ -68,7 +68,26 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }*/
+   /* public function WTF(){
+        $db = JFactory::getDbo();
+        for($i=1;$i<100000;$i++){
+            try {
+                $client = rand(1, 1087);
+                $status = rand(1, 10);
+                $query = $db->getQuery(true);
+                $query->insert('rgzbn_gm_ceiling_clients_statuses_map')
+                    ->columns('`client_id`,`status_id`')
+                    ->values("$client,$status");
+                $db->setQuery($query);
+                $db->execute();
+            }
+            catch(Exception $e){
+                $i--;
+                continue;
+            }
+        }
 
+    }*/
     /*public function costyl_original_sketch(){
         try
         {

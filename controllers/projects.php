@@ -119,6 +119,12 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
                             $newFileName = md5('calculation_sketch'.$newCalcId);
                             $newImage =  $_SERVER['DOCUMENT_ROOT']."/calculation_images/$newFileName.svg";
                             copy($oldImage, $newImage);
+                            //раскрой
+                            $oldCutFileName = md5('cut_sketch'.$calcId->id);
+                            $oldCutImage = $_SERVER['DOCUMENT_ROOT']."/cut_images/$oldCutFileName.svg";
+                            $newCutFileName = md5('cut_sketch'.$newCalcId);
+                            $newCutImage =  $_SERVER['DOCUMENT_ROOT']."/cut_images/$newCutFileName.svg";
+                            copy($oldCutImage, $newCutImage);
                         }
                     }
                 }

@@ -138,6 +138,71 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             die($e->getMessage());
         }
     }
+
+    public function register(){
+        try{
+            $result = json_encode(null);
+            if(!empty($_POST['r_data'])) {
+                $register_data = json_decode($_POST['r_data']);
+                if(!empty($register_data)) {
+                    $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
+                    // в нижний регистр
+                    $str = strtolower($str);
+                    // заменям все ненужное нам на "-"
+                    $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
+                    // удаляем начальные и конечные '-'
+                    $username = trim($str, "-");
+                    //cсздание associated_client
+                    $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+                    $client_data['client_name'] = $register_data->fio;
+                    $client_id = $clientform_model->save($client_data);
+
+                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                    $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
+                    if (!empty($id)) {
+                        $result = json_encode((object)array("id" => $id->id));
+                    } else {
+                        $data = array(
+                            "name" => $register_data->fio,
+                            "username" => $username,
+                            "password" => $username,
+                            "password2" => $username,
+                            "email" => $register_data->email,
+                            "groups" => array(2),
+                            "dealer_type" => 1,
+                            "associated_client" => $client_id,
+                            "android_id" => $register_data->android_id
+                        );
+                        $user = new JUser;
+                        if (!$user->bind($data)) {
+                            throw new Exception($user->getError());
+                        }
+                        if (!$user->save()) {
+                            throw new Exception($user->getError());
+                        }
+                        $userID = $user->id;
+                        $user =& JUser::getInstance((int)$userID);
+
+                        $update['dealer_id'] = $userID;
+
+
+                        if (!$user->bind($update)) return false;
+                        if (!$user->save()) return false;
+                        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+                        $client_model->updateClient($client_id, null, $userID);
+
+                        $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
+                        $dop_contacts_model->save($client_id, 1, $email);
+                        $result = json_encode((object)array("id" => $userID));
+                    }
+                }
+            }
+            die($result);
+        }
+        catch (Exception $e){
+            die($e->getMessage());
+        }
+    }
         public
         function addDataFromAndroid()
         {

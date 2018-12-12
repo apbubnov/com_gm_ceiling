@@ -40,7 +40,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
 
         }
 	}
-    function rus2translit($string) {
+/*    function rus2translit($string) {
         $converter = array(
             'а' => 'a',   'б' => 'b',   'в' => 'v',
             'г' => 'g',   'д' => 'd',   'е' => 'e',
@@ -67,7 +67,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
             'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
         );
         return strtr($string, $converter);
-    }
+    }*/
 
 	function registerMounterForBuilding(){
 	    try{
@@ -86,7 +86,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 }
             }
 	        else{
-                $str = $this->rus2translit($brigadeName);
+                $str = Gm_ceilingHelpersGm_ceiling::rus2translit($brigadeName);
                 // в нижний регистр
                 $str = strtolower($str);
                 // заменям все ненужное нам на "-"

@@ -472,7 +472,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             dataType: "json",
             timeout: 10000,
             error: function(data){
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
@@ -486,7 +485,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     });
 
     jQuery("#copy_from_select").change(function(){
-        console.log(this.value);
         if(this.value){
             fillDuplicateInFields(this.value);
         }
@@ -555,7 +553,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             },
             error: function(data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -588,7 +585,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td>');
                 },
                 error: function(data) {
-                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -640,7 +636,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 dataType: "json",
                 timeout: 10000,
                 error: function(data){
-                    console.log(data);
+
                     var n = noty({
                         theme: 'relax',
                         timeout: 2000,
@@ -680,7 +676,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             dataType: "text",
             timeout: 10000,
             error: function(data){
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
@@ -755,7 +750,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     mounter = "<input type='hidden' name='mounter_id' value='"+elem.projects[j].mounter.id+"'>"+elem.projects[j].mounter.name;
                     if(+elem.projects[j].status < stage+25)
                     {
-                        console.log(+elem.projects[j].status < stage+25)
                         acceptDoneBtn = CHECK_BUTTON;
                         button = EDIT_BUTTON;
                     }
@@ -792,7 +786,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 progressData = data;
             },
             error: function(data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -817,10 +810,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 jQuery.each(data,function(index,element){
                     mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
                 });
-                console.log(mountersOption);
             },
             error: function(data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -883,7 +874,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 element.remove();
             },
             error: function(data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -917,7 +907,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 td.find('.edit_mounter')[0].remove();
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -974,7 +963,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     setTimeout(location.reload(),10000);
                 },
                 error: function(data) {
-                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1031,7 +1019,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     jQuery("#modal_window_comm").hide();
                 },
                 error: function(data) {
-                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1059,7 +1046,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     location.reload();
                 },
                 error: function(data) {
-                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1087,7 +1073,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     location.reload();
                 },
                 error: function(data) {
-                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1123,7 +1108,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         }, 1000);
                     },
                     error: function (data) {
-                        console.log(data);
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
@@ -1202,7 +1186,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -1238,7 +1221,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -1273,7 +1255,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 setTimeout(function(){location.reload();}, 1000);
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
