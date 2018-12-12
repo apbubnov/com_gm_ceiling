@@ -32,7 +32,6 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $color = $jinput->get('color', 0, 'int');
             $manufacturer = $jinput->get('manufacturer', 0, 'int');
             $width = $jinput->get('width', 0, 'INT'); //ширина полотна
-            $user_id = $jinput->get('user_id', 0, 'int');
             $calc_id = $jinput->get('calc_id', 0, 'int');
             $length_arr = $jinput->get('arr_length', null, 'array'); //длины сторон
             $arr_points = $jinput->get('arr_points', null, 'array'); //координаты раскроя
@@ -61,7 +60,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
 
             $client_calc_img = base64_decode($calc_img);
-            $client_calc_img = preg_replace('/<text [^\<\>]+>\d+<\/text>/', "", $client_calc_img);
+            $client_calc_img = preg_replace('/<text [^\<\>]+>\d+\.{0,1}\d*<\/text>/', '', $client_calc_img);
 
             $filename_calc = md5('calculation_sketch'.$calc_id);
             $filename_client_calc = md5('calculation_sketch_client'.$calc_id);
@@ -119,7 +118,6 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             die(true);
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 }
