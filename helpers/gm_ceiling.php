@@ -343,7 +343,6 @@ class Gm_ceilingHelpersGm_ceiling
                         'n22' => 'int',
                         'n23' => 'int',
                         'n24' => 'string', //Сложность к месту доступа
-                        'n25' => 'int',
                         'n26' => 'int',
                         'n27' => 'string',
                         'n28' => 'int',
@@ -3315,8 +3314,15 @@ class Gm_ceilingHelpersGm_ceiling
             $client_model = self::getModel('client');
             $client = $client_model->getClientById($project->id_client);
             $dealer_name = JFactory::getUser($client->dealer_id)->name;
-            $cut_data = $data['cut_data'];
-            $p_usadki = $data['shrink_percent'];
+            if(!empty($data['shrink_percent'])) {
+                $cut_data = $data['cut_data'];
+                $p_usadki = $data['shrink_percent'];
+            }
+            else{
+                $array_cut = explode('||',$data['cut_data']);
+                $cut_data = $array_cut[0];
+                $p_usadki = $array_cut[1];
+            }
             $usadka = (1-$p_usadki)*100;
             $array1 = array();
             $array2 = explode(';', $data['calc_data']);
