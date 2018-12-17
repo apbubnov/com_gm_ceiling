@@ -101,10 +101,203 @@ class Gm_ceilingModelProjects extends JModelList
      *
      * @since    1.6
      */
-    protected function getListQuery()
-    {
-        try
-        {
+    //  protected function getListQuery() {
+    //     try {
+    //         $db = $this->getDbo();
+    //         $query = $db->getQuery(true);
+
+    //         $query->select('`p`.`id`,
+    //                         `p`.`created_by`,
+    //                         `p`.`modified_by`,
+    //                         `p`.`client_id`,
+    //                         `p`.`project_info`,
+    //                         `p`.`project_status`,
+    //                         `p`.`project_calculation_date`,
+    //                         `st`.`title` AS `status`,
+    //                         `p`.`project_calculator`,
+    //                         `p`.`project_note`
+    //                         ')
+    //             ->select('DATE_FORMAT(a.project_calculation_date, \'%d.%m.%Y\') AS calculation_date')
+    //             ->select('CONCAT(DATE_FORMAT(a.project_calculation_date, \'%H:%i\'),\'-\',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), \'%H:%i\')) AS calculation_time')
+    //             ->select("GROUP_CONCAT(DISTINCT pm.mounter_id SEPARATOR ',') AS project_mounter")
+    //             ->select("GROUP_CONCAT(DISTINCT DATE_FORMAT(pm.date_time, '%d.%m.%Y %H:%i')  ORDER BY pm.date_time DESC SEPARATOR ',') AS project_mounting_date")
+    //             ->select("GROUP_CONCAT(CONCAT(DATE_FORMAT(pm.mount_start, '%d.%m.%Y %H:%i'),'-',DATE_FORMAT(pm.mount_end, '%d.%m.%Y %H:%i')) SEPARATOR ',')AS mounting_time")
+
+    //             ->select('a.project_info AS address')
+    //             ->from('`#__gm_ceiling_projects` AS `a`')
+    //             ->group('id');
+
+    //         $query->select('status.title AS `status`, status.id AS status_id')
+    //             ->join('LEFT', '`#__gm_ceiling_status` AS `status` ON status.id = a.project_status');
+
+    //         $query->select('`client`.client_name AS `client_name`, `client`.dealer_id as dealer_id')
+    //             ->join('LEFT', '`#__gm_ceiling_clients` AS `client` ON client.id = a.client_id');
+
+    //         $query->select('dealer.name AS `dealer_name`')
+    //             ->join('LEFT', '`#__users` as `dealer` ON dealer.id = `client`.dealer_id');
+
+    //         $query->select(' client_contact.phone AS `client_contacts`')
+    //             ->join('LEFT', '`#__gm_ceiling_clients_contacts` AS `client_contact` ON client_contact.client_id = a.client_id');
+
+    //         $query->select('(SUM(calculation.components_sum) + SUM(calculation.canvases_sum)) AS self_price,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings')
+    //             ->select('((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum')
+    //             ->select('((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum')
+    //             ->select('((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum')
+    //             ->join('LEFT', '`#__gm_ceiling_calculations` AS `calculation` ON calculation.project_id = a.id');
+
+    //         $query->leftJoin("`#__gm_ceiling_projects_mounts` AS pm ON a.id = pm.project_id");
+    //         $sql_query = (string)$query;
+
+    //         $query = $db->getQuery(true);
+    //         $query->select('a.*')
+    //             ->select('(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum')
+    //             ->select('self_price')
+    //             ->from('(' . $sql_query . ') AS a');
+
+    //         $user = JFactory::getUser();
+    //         $userId = $user->get('id');
+    //         $groups = $user->get('groups');
+
+    //         $app = JFactory::getApplication();
+    //         $type = $app->input->getString('type', NULL);
+    //         $subtype = $app->input->getString('subtype', NULL);
+
+    //         switch ($type) {
+    //             case "managerprojects":
+    //                 $query->where('a.project_status = 3');
+    //                 $query->where('dealer_id = ' . $user->dealer_id);
+    //                 break;
+    //             case "chiefprojects":
+    //                 $query->where("((a.project_status = 4 AND a.project_mounting_date IS NOT NULL AND a.project_mounting_date <> '00.00.0000 00:00')
+    //                 OR (a.project_status IN(5,10) AND (a.project_mounting_date IS NULL OR a.project_mounting_date = '00.00.0000 00:00')))");
+    //                 $query->where('dealer_id = ' . $user->dealer_id);
+    //                 $query->where('a.deleted_by_user <> 1');
+    //                 break;
+    //             case "calculatorprojects":
+    //                 $query->where('a.project_status = 1');
+    //                 $query->where('dealer_id = ' . $user->dealer_id);
+    //                 break;
+    //             case "gmmanager":
+    //                 $query->where('a.deleted_by_user = 0');
+    //                 if ($subtype == "runprojects") {
+    //                     $query->where('a.project_status in (10, 11, 16, 17, 19, 24, 25, 26,27,28,29)');
+    //                 } elseif ($subtype == "archive") {
+    //                     $query->where('a.project_status = 12');
+    //                 } elseif ($subtype == "refused") {
+    //                     $query->where('a.project_status = 22');
+    //                 } else {
+    //                     $query->where('a.project_status = 5 or a.project_status = 4');
+    //                     $query->where('a.project_verdict  = 1');
+    //                 }
+    //                 break;
+    //             case "manager":
+    //                 $query->where('dealer_id = ' . $user->dealer_id);
+    //                 if ($subtype == "refused") {
+    //                     $query->where('a.project_verdict = 0');
+    //                     $query->where('a.project_status in (2,3,15)');
+    //                 } else {
+    //                     $query->where('a.project_status = 5');
+    //                     $query->where('a.project_verdict = 1');
+    //                 }
+    //                 break;
+    //             case "gmcalculator":
+    //                 //$query->where('a.who_calculate = 1');
+    //                 if ($subtype == "calendar") {
+    //                     $query->where('a.project_status = 1');
+    //                     $query->where("a.project_calculator = '$user->id'");
+    //                     $query->order('a.project_calculation_date');
+    //                 } elseif ($subtype == "projects") {
+    //                     $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
+    //                 } elseif ($subtype == "refused") {
+    //                     $query->where('a.project_verdict = 0');
+    //                 }
+    //                 break;
+    //             case "calculator":
+    //                 if (in_array("14", $groups)) {
+    //                     $query->where('( dealer_id = ' . $user->id . ')');
+    //                 } elseif (in_array("21", $groups) || in_array("12", $groups)) {
+    //                     $query->where('( dealer_id = ' . $user->dealer_id . ')');
+    //                 }
+    //                 if ($subtype == "calendar") {
+    //                     $query->where('a.project_status = 1');
+    //                     $query->order('a.project_calculation_date');
+    //                 } elseif ($subtype == "projects") {
+    //                     $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
+    //                 } elseif ($subtype == "refused") {
+    //                     $query->where('a.project_verdict = 0');
+    //                 }
+    //                 $query->where('a.deleted_by_user <> 1');
+    //                 break;
+    //             case "gmchief":
+    //                 $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+    //                 if($subtype!="service"){
+    //                     $query->where('c.dealer_id = '. $user->dealer_id);
+    //                 }
+    //                 if ($user->dealer_type == 2) {
+    //                     $query->where('a.project_status >= 0');
+    //                 } elseif ($subtype =="run") {
+    //                     $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
+    //                 } elseif ($subtype == "gaugings") {
+    //                     $query->where('a.project_status in ("1")');
+    //                     $query->where('a.who_calculate = "1"');
+    //                 } elseif($subtype == "service"){
+    //                     $query->innerJoin('`#__user_usergroup_map` as umap on umap.user_id in (a.project_mounter)');
+    //                     $query->innerJoin('`rgzbn_users` AS u ON umap.user_id = u.id');
+    //                     $query->where("umap.group_id IN(11,26) AND (u.dealer_id is NULL or u.dealer_id = 1 )  AND a.project_status IN(5,10,19)");
+    //                 } else {
+    //                     $query->where('a.project_status in ("10", "5", "11", "16", "17","24","25","26","27","28","29")');
+    //                 }
+    //                 break;
+    //             case "chief":
+    //                 $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+    //                 $query->where('c.dealer_id = '. $user->dealer_id);
+    //                 if ($user->dealer_type == 2) {
+    //                     $query->where('a.project_status >= 0');
+    //                 } elseif ($subtype =="run") {
+    //                     $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
+    //                 } elseif ($subtype == "gaugings") {
+    //                     $query->where('a.project_status in ("1")');
+    //                     $query->where('a.who_calculate = "0"');
+    //                 } else {
+    //                     $query->where('a.project_status in ("10", "5", "11", "16", "17", "23", "6", "7", "8","24","25","26","27","28","29")');
+    //                 }
+    //                 $query->where('a.deleted_by_user <> 1');
+    //                 break;
+    //             case "dealer":
+    //                 $query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
+    //                 break;
+    //             default:
+    //                 $query->where('dealer_id = -1');
+    //                 break;
+    //         }
+
+
+    //         $client_id = $this->getState('filter.client_id');
+    //         if ($client_id) $query->where('a.client_id = ' . $client_id);
+
+    //         // Filtering project_status
+    //         $filter_project_status = $this->state->get("filter.project_status");
+    //         if ($filter_project_status != '') $query->where("a.project_status = '" . $db->escape($filter_project_status) . "'");
+
+    //         // Add the list ordering clause.
+    //         $orderCol = $this->state->get('list.ordering');
+    //         $orderDirn = $this->state->get('list.direction');
+
+    //         if (!empty($orderCol) && !empty($orderDirn)) $query->order($db->escape($orderCol . ' ' . $orderDirn));
+    //         else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
+    //             $query->order('a.calculation_date DESC');
+    //         $query->order('a.id DESC');
+
+    //         $this->setState('list.limit', null);
+
+    //         return $query;
+    //     } catch(Exception $e) {
+    //         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+    //     }
+    // }
+
+    protected function getListQuery() {
+        try {
             // Create a new query object.
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -290,9 +483,7 @@ class Gm_ceilingModelProjects extends JModelList
             $this->setState('list.limit', null);
 
             return $query;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

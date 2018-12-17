@@ -1,6 +1,5 @@
 <?php
-    if ($_SERVER['SERVER_NAME'] == 'calc.gm-vrn.ru')
-    {
+    if ($_SERVER['SERVER_NAME'] == 'calc.gm-vrn.ru') {
         require_once('metrika.php');
     }
     defined('_JEXEC') or die;
@@ -711,7 +710,6 @@
     var data;
     var n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
-        console.log('alert');
         let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
                     help_buttons[i].onmouseenter = function(){
@@ -879,7 +877,6 @@
             let status  = jQuery(this).attr("status");
             data = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id,"status":status};
             if(user_id){
-                console.log(user_id);
                 record_to_mesure(data);
             }
             else{
@@ -937,7 +934,6 @@
                     success: function(result){
                        if(result.verification == true){
                         data["user_id"] = result.user_id;
-                        console.log(data);
                         record_to_mesure(data);
                        }
                        else{
@@ -976,7 +972,6 @@
                     async: false,
                     success: function(data){
                         if(!data){
-                            console.log('NF');
                             record_to_mesure(data);
                         }
                         else{
@@ -999,7 +994,6 @@
         }
 
         jQuery("#rec_auth").click(function(){
-            console.log(jQuery(this).attr('auth_data'));
             verify_password(jQuery(this).attr('auth_data'),jQuery("#pass").val());
         });
         /*_________________*/
@@ -1068,7 +1062,6 @@
         };
         
         function select_colors(){
-            console.log(1);
             let colors = [];
             canvases_data_of_selected_texture = [];
 
@@ -1241,7 +1234,6 @@
                     url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}${gm_mounters}`,
                     data: data,
                     success: function(data){
-                        console.log(data);
                         if(api == 1){
                             jQuery("#sum_info").show();
                             jQuery('html, body').animate({
@@ -1292,7 +1284,6 @@
 
         //Запрос к серверу на отправку сметы на почту
         jQuery( "#send_to_email" ).click(function(){
-            console.log(jQuery("#jform_id").val());
             var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
             if(reg.test(jQuery("#send_email").val())){
                  jQuery.ajax({
@@ -1343,22 +1334,28 @@
             submit_form_sketch();
 		});
        
-        jQuery("#btn_add_components").click(function(){
-            if(api == 1){
+        jQuery("#btn_add_components").click(function() {
+            if (api == 1) {
                 include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components_client.js');
-            }
-            else{
+            } else {
                 if (jQuery('[data-parent = "btn_add_components"]').length < 1) {
                     include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
                 } else {
                     jQuery('[data-parent = "btn_add_components"]').toggle();
+                    /*var elems = jQuery('[data-parent]');
+                    for (var i = elems.length, el; i--;) {
+                        if (elems[i].getAttribute('data-parent') !== 'btn_add_components') {
+                            jQuery(elems[i]).css('display','none');
+                        }
+
+                    }*/
                     jQuery('[data-parent = "basic_work"]').toggle();
                     jQuery('[data-parent = "light_cptn"]').toggle();
                     jQuery('[data-parent = "oter_mount_cptn"]').toggle();
                     jQuery('[data-parent = "need_mount"]').toggle();
+
                 }
             }
-           
             //setTimeout(event_help_proccess, 2000);
         });
         
@@ -1433,7 +1430,6 @@
         }
         function initial_fill(){
             let n2_options = jQuery("#jform_n2 option");
-            console.log(canvas);
             if(canvas){
                 add_select_attr_to_option(n2_options,canvas.texture_id);
                 select_colors();
@@ -1518,7 +1514,6 @@
         }
         setTimeout(click_after_recalc,500);
         time_end = performance.now()-time_start;
-        console.log(time_end);
     });
 
     function puf() {

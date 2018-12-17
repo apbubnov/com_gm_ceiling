@@ -34,7 +34,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 	  </div>
 
-	<table class="table table-striped one-touch-view" id="projectList">
+	<table class="table table-striped one-touch-view g_table" id="projectList">
 		<thead>
 			<tr>
 				<th class='center'>
