@@ -75,7 +75,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                                 <? else: echo $item->calculation_time;
                                 endif; ?>
                             </td>
-                            <td class="center one-touch"><?= $item->address; ?><br><?= $item->client_contacts; ?></td>
+                            <td class="center one-touch"><?= $item->project_info; ?><br><?= $item->client_contacts; ?></td>
                             <td class="center one-touch"><?= $item->client_name; ?></td>
                             <?php if(in_array(14, $groups)){ ?>
                                 <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
