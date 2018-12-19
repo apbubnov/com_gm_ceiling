@@ -87,7 +87,7 @@ $subtype = $jinput->getString('subtype', '', 'STRING');
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
                 </td>
-                <td class="center one-touch"><?= $item->address; ?></td>
+                <td class="center one-touch"><?= $item->project_info; ?></td>
                 <td class="center one-touch"><?= $item->client_contacts; ?></td>
                 <td class="center one-touch"><?= $item->client_name; ?></td>
             </tr>

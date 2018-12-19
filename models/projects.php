@@ -161,7 +161,6 @@ class Gm_ceilingModelProjects extends JModelList
                             ((SUM(`calcs`.`mounting_sum`) * 100) /
                                 (100 - `p`.`dealer_mounting_margin`)
                             ) AS `mounting_margin_sum`,
-                            `calcs`.`project_id`
                             `p`.`gm_canvases_margin`,
                             `p`.`gm_components_margin`,
                             `p`.`gm_mounting_margin`,
@@ -228,38 +227,51 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case "gmmanager":
+                    $query->select('`p`.`created_by`,
+                                    `p`.`client_name`,
+                                    `p`.`client_contacts`,
+                                    `p`.`project_info`,
+                                    `p`.`status`
+                                ');
                     $query->where('`p`.`deleted_by_user` = 0');
 
                     if ($subtype == "runprojects") {
                         $query->select('`p`.`client_id`,
-                                        `p`.`created_by`,
                                         `p`.`transport`,
                                         `p`.`distance`,
                                         `p`.`distance_col`,
                                         `p`.`new_mount_sum`,
                                         `p`.`project_sum`,
                                         `p`.`new_project_sum`,
-                                        `p`.`new_material_sum`
+                                        `p`.`new_material_sum`,
+                                        `p`.`project_calculation_date`,
+                                        `p`.`project_mounting_date`
                                 ');
                         $query->where('`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29)');
 
                     } elseif ($subtype == "archive") {
+                        $query->select('`p`.`dealer_id`,
+                                        `p`.`project_status`,
+                                        `p`.`new_project_sum`,
+                                        `p`.`project_sum`,
+                                        `p`.`closed`
+                                ');
                         $query->where('`p`.`project_status` = 12');
 
                     } elseif ($subtype == "refused") {
+                        $query->select('`p`.`dealer_id`,
+                                        `p`.`calculation_date`,
+                                        `p`.`calculation_time`
+                                    ');
                         $query->where('`p`.`project_status` = 22');
 
                     } else {
-                        $query->select('`p`.`created_by`,
-                                        `p`.`project_mounting_date`,
+                        $query->select('`p`.`project_mounting_date`,
                                         `p`.`gm_calculator_note`,
                                         `p`.`dealer_calculator_note`,
-                                        `p`.`dealer_name`,
-                                        `p`.`project_info`,
-                                        `p`.`client_contacts`,
-                                        `p`.`client_name`
+                                        `p`.`dealer_name`
                                     ');
-                        $query->where('`p`.`project_status IN (4, 5)');
+                        $query->where('`p`.`project_status` IN (4, 5)');
                     }
                     break;
 
@@ -345,23 +357,24 @@ class Gm_ceilingModelProjects extends JModelList
             }
 
 
-            $client_id = $this->getState('filter.client_id');
-            if ($client_id) $query->where('a.client_id = ' . $client_id);
+            // $client_id = $this->getState('filter.client_id');
+            // if ($client_id) $query->where('a.client_id = ' . $client_id);
 
-            // Filtering project_status
-            $filter_project_status = $this->state->get("filter.project_status");
-            if ($filter_project_status != '') $query->where("a.project_status = '" . $db->escape($filter_project_status) . "'");
+            // // Filtering project_status
+            // $filter_project_status = $this->state->get("filter.project_status");
+            // if ($filter_project_status != '') $query->where("a.project_status = '" . $db->escape($filter_project_status) . "'");
 
-            // Add the list ordering clause.
-            $orderCol = $this->state->get('list.ordering');
-            $orderDirn = $this->state->get('list.direction');
+            // // Add the list ordering clause.
+            // $orderCol = $this->state->get('list.ordering');
+            // $orderDirn = $this->state->get('list.direction');
 
-            if (!empty($orderCol) && !empty($orderDirn)) $query->order($db->escape($orderCol . ' ' . $orderDirn));
-            else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
-                $query->order('a.calculation_date DESC');
-            $query->order('a.id DESC');
+            // if (!empty($orderCol) && !empty($orderDirn)) $query->order($db->escape($orderCol . ' ' . $orderDirn));
+            // else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
+            //     $query->order('a.calculation_date DESC');
 
-            $this->setState('list.limit', null);
+            $query->order('`p`.`id` DESC');
+
+            //$this->setState('list.limit', null);
 
             return $query;
         } catch(Exception $e) {
