@@ -75,9 +75,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <td class="center one-touch">
                             <?php echo $item->id; ?>
                         </td>
-                        <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
+                        <?php $jdate = new JDate(JFactory::getDate($item->project_calculation_date)); ?>
                         <td class="center one-touch">
-                            <? if ($item->project_calculation_date == "00.00.0000 00:00"): ?> -
+                            <? if ($item->project_calculation_date == '0000-00-00 00:00'): ?> -
                             <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
                             <? endif; ?>
                         </td>

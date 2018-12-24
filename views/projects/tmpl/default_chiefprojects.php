@@ -68,10 +68,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                             <td class="center one-touch"><?= $item->id; ?></td>
                             <td class="center one-touch">
-                                <? if ($item->calculation_date == "00.00.0000"): ?> -
-                                <? else: echo $item->calculation_date;
+                                <? if ($item->project_calculation_date == '0000-00-00'): ?> -
+                                <? else: echo $item->project_calculation_date;
                                 endif;?><br><?
-                                if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?> -
+                                if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?> -
                                 <? else: echo $item->calculation_time;
                                 endif; ?>
                             </td>

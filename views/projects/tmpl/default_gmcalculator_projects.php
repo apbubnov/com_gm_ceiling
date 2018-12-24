@@ -65,7 +65,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<tbody>
 			<?php foreach ($this->items as $i => $item) :
                 if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
-                else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
+                else if (in_array("17", $groups) && $item->dealer_id != 1) continue;
 			if($item->project_status!=2) {?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 				<?php $dealer = JFactory::getUser($item->dealer_id); ?>
@@ -78,12 +78,12 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $item->id; ?>
 					</td>
                     <td class="center one-touch">
-                        <? if ($item->calculation_date == "00.00.0000"): ?>-
-                        <? else: ?><?= $item->calculation_date; ?>
+                        <? if ($item->project_calculation_date == '0000-00-00'): ?>-
+                        <? else: ?><?= $item->project_calculation_date; ?>
                         <? endif; ?>
                     </td>
                     <td class="center one-touch">
-                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                        <? if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?>-
                         <? else: ?><?= $item->calculation_time; ?>
                         <? endif; ?>
                     </td>
@@ -124,7 +124,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         <tbody>
         <?php foreach ($this->items as $i => $item) :
             if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
-            else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
+            else if (in_array("17", $groups) && $item->dealer_id != 1) continue;
             if($item->project_status!=2) {?>
                 <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
                 <?php $dealer = JFactory::getUser($item->dealer_id); ?>

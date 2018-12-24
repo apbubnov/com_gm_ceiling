@@ -248,7 +248,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     </select>
                 </td>
                 <td>
-                    <?php if($item->project_calculation_date== "0000-00-00 00:00:00") { ?>
+                    <?php if($item->project_calculation_date== '0000-00-00 00:00:00') { ?>
                         -
                     <?php } else { ?>
                         <?php $jdate = new JDate(JFactory::getDate($item->project_calculation_date)); ?>

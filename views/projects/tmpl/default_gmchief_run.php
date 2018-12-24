@@ -100,7 +100,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         </td>
                         <td class="center one-touch">
                             <?php //$dealer = JFactory::getUser($item->dealer_id); ?>
-                            <?php echo $item->dealer_name;; ?>
+                            <?php echo $item->dealer_name; ?>
                         </td>
                         <td class="center one-touch">
                             <?php $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>

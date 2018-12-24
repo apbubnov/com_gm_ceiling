@@ -24,7 +24,6 @@ $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-print_r($this->items);
 ?>
 <style>
     .table th {
@@ -162,13 +161,31 @@ print_r($this->items);
                         <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
-                        <?php $item->project_calculation_date?>
+                        <?php
+                            if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00') {
+                                echo '-';
+                            } else {
+                                echo date('d.m.Y h:i', strtotime($item->project_calculation_date));
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $item->project_mounting_date;?>
+                        <?php
+                            if (empty($item->project_mounting_date) || $item->project_mounting_date == '00.00.0000 00:00') {
+                                echo '-';
+                            } else {
+                                echo $item->project_mounting_date;
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $this->escape($item->project_info); ?>
+                        <?php
+                            if (empty($item->project_info)) {
+                                echo '-';
+                            } else {
+                                echo $this->escape($item->project_info);
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->client_name.'<br>'.$item->client_contacts; ?>

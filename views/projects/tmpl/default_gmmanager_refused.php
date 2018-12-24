@@ -48,7 +48,7 @@ $subtype = $jinput->getString('subtype', '', 'STRING');
                 <?= JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата замера', 'calculation_date', $listDirn, $listOrder); ?>
+                <?= JHtml::_('grid.sort', 'Дата замера', 'project_calculation_date', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Время замера', 'calculation_time', $listDirn, $listOrder); ?>
@@ -78,12 +78,12 @@ $subtype = $jinput->getString('subtype', '', 'STRING');
                 <td class="center one-touch"><?= $item->id; ?></td>
                 <td class="center one-touch"><?= $item->status; ?></td>
                 <td class="center one-touch">
-                    <? if ($item->calculation_date == "00.00.0000"): ?>-
-                    <? else: ?><?= $item->calculation_date; ?>
+                    <? if ($item->project_calculation_date == '0000-00-00'): ?>-
+                    <? else: ?><?= $item->project_calculation_date; ?>
                     <? endif; ?>
                 </td>
                 <td class="center one-touch">
-                    <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                    <? if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?>-
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
                 </td>

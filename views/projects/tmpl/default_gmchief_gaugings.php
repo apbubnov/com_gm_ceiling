@@ -47,25 +47,25 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             <thead>
                 <tr>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'Номер договора', 'p.id', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE', 'a.project_calculation_date', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE', 'p.project_calculation_date', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'Замерщик', 'a.project_calculator', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'Замерщик', 'p.project_calculator', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'p.project_info', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'Телефоны', 'p.client_contacts', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'p.gm_manager_note', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'p.client_id', $listDirn, $listOrder); ?>
                     </th>
                 </tr>
             </thead>
@@ -75,9 +75,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <td class="center one-touch">
                             <?php echo $item->id; ?>
                         </td>
-                        <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
+                        <?php $jdate = new JDate(JFactory::getDate($item->project_calculation_date)); ?>
                         <td class="center one-touch">
-                            <? if ($item->project_calculation_date == "00.00.0000 00:00"): ?> -
+                            <? if ($item->project_calculation_date == '0000-00-00 00:00'): ?> -
                             <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
                             <? endif; ?>
                         </td>

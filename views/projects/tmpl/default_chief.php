@@ -151,12 +151,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                             <? else: ?><?= $date; ?>
                             <? endif; ?>
                         </td>
-                        <td class="center one-touch"><?= $item->address; ?></td>
+                        <td class="center one-touch"><?= $item->project_info; ?></td>
                         <td class="center one-touch"><?= $item->client_contacts; ?> <br> <?= $item->client_name; ?></td>
                         <?php if ($item->project_mounter) {
                             $mounter = "";
                             foreach ($item->project_mounter as $value) {
-                                $mounter  .= JFactory::getUser($value)->name."; ";
+                                $mounter .= JFactory::getUser($value)->name."; ";
                             }
                         } ?>
                         <td class="center one-touch"><?php echo round($item->self_price,2);?></td>
