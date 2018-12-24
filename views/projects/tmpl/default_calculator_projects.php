@@ -93,14 +93,11 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=' . $item->id); ?>">
                     <td class="center one-touch"><?= $item->id; ?></td>
                     <td class="center one-touch">
-                        <? if ($item->calculation_date == "00.00.0000"): ?>-
-                        <? else: ?><?= $item->calculation_date; ?>
-                        <? endif; ?><br>
-                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?><?= $item->calculation_time; ?>
+                        <? if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00'): ?>-
+                        <? else: ?><?= date('d.m.Y h:i', strtotime($item->project_calculation_date)); ?>
                         <? endif; ?>
                     </td>
-                    <td class="center one-touch"><?= $item->address; ?></td>
+                    <td class="center one-touch"><?= $item->project_info; ?></td>
                     <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
                     <td class="center one-touch"><?= $item->status; ?></td>
                 </tr>

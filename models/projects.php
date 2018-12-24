@@ -173,8 +173,7 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`distance`,
                             `p`.`distance_col`,
                             `p`.`quickly`,
-                            `p`.`api_phone_id`,
-                            `p`.`deleted_by_user`
+                            `p`.`api_phone_id`
                         ');
             $subquery->from('`#__gm_ceiling_projects` AS `p`');
             $subquery->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
@@ -183,10 +182,22 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery->leftJoin('`#__gm_ceiling_clients_contacts` AS `cl_con` ON `cl_con`.`client_id` = `p`.`client_id`');
             $subquery->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
             $subquery->leftJoin("`#__gm_ceiling_calculations` AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
+            $subquery->where('`p`.`deleted_by_user` = 0');
             $subquery->group('`p`.`id`');
 
             $query = $db->getQuery(true);
             $query->select('`p`.`id`,
+                        `p`.`created_by`,
+                        `p`.`dealer_id`,
+                        `p`.`client_id`,
+                        `p`.`client_name`,
+                        `p`.`client_contacts`,
+                        `p`.`project_info`,
+                        `p`.`project_status`,
+                        `p`.`status`,
+                        `p`.`project_calculator`,
+                        `p`.`project_calculation_date`,
+                        `p`.`calculation_time`,
                         (`p`.`components_margin_sum` +
                             `p`.`canvases_margin_sum` +
                             `p`.`mounting_margin_sum`
@@ -206,15 +217,7 @@ class Gm_ceilingModelProjects extends JModelList
                 //     $query->where('`p`.`project_status` = 3');
                 //     $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                 //     break;
-                case "chiefprojects":
-                    $query->select('`p`.`created_by`,
-                                    `p`.`dealer_id`,
-                                    `p`.`calculation_date`,
-                                    `p`.`calculation_time`,
-                                    `p`.`project_info`,
-                                    `p`.`client_contacts`,
-                                    `p`.`client_name`
-                                ');
+                case 'chiefprojects':
                     $query->where("((`p`.`project_status` = 4
                                     AND `p`.`project_mounting_date` IS NOT NULL
                                     AND `p`.`project_mounting_date` <> '00.00.0000 00:00')
@@ -222,47 +225,31 @@ class Gm_ceilingModelProjects extends JModelList
                                         AND (`p`.`project_mounting_date` IS NULL
                                             OR `p`.`project_mounting_date` = '00.00.0000 00:00')))
                                     AND `p`.`dealer_id` = $user->dealer_id
-                                    AND `p`.`deleted_by_user` = 0
                                 ");
                     break;
 
-                case "gmmanager":
-                    $query->select('`p`.`created_by`,
-                                    `p`.`client_name`,
-                                    `p`.`client_contacts`,
-                                    `p`.`project_info`,
-                                    `p`.`status`
-                                ');
-                    $query->where('`p`.`deleted_by_user` = 0');
+                case 'gmmanager':
 
-                    if ($subtype == "runprojects") {
-                        $query->select('`p`.`client_id`,
-                                        `p`.`transport`,
+                    if ($subtype == 'runprojects') {
+                        $query->select('`p`.`transport`,
                                         `p`.`distance`,
                                         `p`.`distance_col`,
                                         `p`.`new_mount_sum`,
                                         `p`.`project_sum`,
                                         `p`.`new_project_sum`,
                                         `p`.`new_material_sum`,
-                                        `p`.`project_calculation_date`,
                                         `p`.`project_mounting_date`
                                 ');
                         $query->where('`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29)');
 
-                    } elseif ($subtype == "archive") {
-                        $query->select('`p`.`dealer_id`,
-                                        `p`.`project_status`,
-                                        `p`.`new_project_sum`,
+                    } elseif ($subtype == 'archive') {
+                        $query->select('`p`.`new_project_sum`,
                                         `p`.`project_sum`,
                                         `p`.`closed`
                                 ');
                         $query->where('`p`.`project_status` = 12');
 
-                    } elseif ($subtype == "refused") {
-                        $query->select('`p`.`dealer_id`,
-                                        `p`.`calculation_date`,
-                                        `p`.`calculation_time`
-                                    ');
+                    } elseif ($subtype == 'refused') {
                         $query->where('`p`.`project_status` = 22');
 
                     } else {
@@ -275,84 +262,117 @@ class Gm_ceilingModelProjects extends JModelList
                     }
                     break;
 
-                case "manager":
-                    $query->where('dealer_id = ' . $user->dealer_id);
-                    if ($subtype == "refused") {
-                        $query->where('a.project_verdict = 0');
-                        $query->where('a.project_status in (2,3,15)');
+                case 'manager':
+                    $query->where('dealer_id = '.$user->dealer_id);
+
+                    if ($subtype == 'refused') {
+                        $query->where('`p`.`project_status` IN (2, 3, 15)');
+
                     } else {
-                        $query->where('a.project_status = 5');
-                        $query->where('a.project_verdict = 1');
+                        $query->where('`p`.`project_status` = 5');
                     }
                     break;
-                case "gmcalculator":
-                    //$query->where('a.who_calculate = 1');
-                    if ($subtype == "calendar") {
-                        $query->where('a.project_status = 1');
-                        $query->where("a.project_calculator = '$user->id'");
-                        $query->order('a.project_calculation_date');
-                    } elseif ($subtype == "projects") {
-                        $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
-                    } elseif ($subtype == "refused") {
-                        $query->where('a.project_verdict = 0');
+
+                case 'gmcalculator':
+                    $query->select('`p`.`gm_manager_note`');
+
+                    if ($subtype == 'calendar') {
+                        $query->where('`p`.`project_status` = 1');
+                        $query->where("`p`.`project_calculator` = $user->id");
+                        $query->order('`p`.`project_calculation_date`');
+
+                    } elseif ($subtype == 'projects') {
+                        $query->where('`p`.`project_status` BETWEEN 5 AND 15');
+
+                    } elseif ($subtype == 'refused') {
+                        $query->where('`p`.`project_status` IN (2, 3)');
                     }
                     break;
-                case "calculator":
-                    if (in_array("14", $groups)) {
-                        $query->where('( dealer_id = ' . $user->id . ')');
-                    } elseif (in_array("21", $groups) || in_array("12", $groups)) {
-                        $query->where('( dealer_id = ' . $user->dealer_id . ')');
+
+                case 'calculator':
+                    $query->select('`p`.`gm_manager_note`,
+                                    `p`.`dealer_manager_note`
+                                ');
+
+                    if (in_array(14, $groups)) {
+                        $query->where('(`p`.`dealer_id` = '.$user->id.')');
+                    } elseif (in_array(21, $groups) || in_array(12, $groups)) {
+                        $query->where('(`p`.`dealer_id` = '.$user->dealer_id.')');
                     }
-                    if ($subtype == "calendar") {
-                        $query->where('a.project_status = 1');
-                        $query->order('a.project_calculation_date');
-                    } elseif ($subtype == "projects") {
-                        $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
-                    } elseif ($subtype == "refused") {
-                        $query->where('a.project_verdict = 0');
+
+                    if ($subtype == 'calendar') {
+                        $query->where('`p`.`project_status` = 1');
+                        $query->order('`p`.`project_calculation_date`');
+
+                    } elseif ($subtype == 'projects') {
+                        $query->where('`p`.`project_status` BETWEEN 5 AND 15');
+
+                    } elseif ($subtype == 'refused') {
+                        $query->where('`p`.`project_status` IN (2, 3, 15)');
                     }
-                    $query->where('a.deleted_by_user <> 1');
                     break;
-                case "gmchief":
-                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
-                    if($subtype!="service"){
-                        $query->where('c.dealer_id = '. $user->dealer_id);
+
+                case 'gmchief':
+                    $query->select('`p`.`gm_manager_note`,
+                                    `p`.`project_mounter`,
+                                    `p`.`project_mounting_date`
+                                ');
+
+                    if($subtype != 'service'){
+                        $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                     }
-                    if ($user->dealer_type == 2) {
-                        $query->where('a.project_status >= 0');
-                    } elseif ($subtype =="run") {
-                        $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
-                    } elseif ($subtype == "gaugings") {
-                        $query->where('a.project_status in ("1")');
-                        $query->where('a.who_calculate = "1"');
-                    } elseif($subtype == "service"){
-                        $query->innerJoin('`#__user_usergroup_map` as umap on umap.user_id in (a.project_mounter)');
-                        $query->innerJoin('`rgzbn_users` AS u ON umap.user_id = u.id');
-                        $query->where("umap.group_id IN(11,26) AND (u.dealer_id is NULL or u.dealer_id = 1 )  AND a.project_status IN(5,10,19)");
+
+                    if ($subtype == 'run') {
+                        $query->select('`p`.`closed`');
+                        $query->where('`p`.`project_status` = 12');
+
+                    } elseif ($subtype == 'gaugings') {
+                        $query->where('`p`.`project_status` = 1');
+                        $query->where('`p`.`dealer_id` = 1');
+
+                    } elseif ($subtype == 'service') {
+                        $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
+                        $query->where("`umap`.`group_id` IN (11, 26) AND (`p`.`dealer_id` is NULL OR `p`.`dealer_id` = 1 ) AND `p`.`project_status` IN (5, 10, 19)");
+
                     } else {
-                        $query->where('a.project_status in ("10", "5", "11", "16", "17","24","25","26","27","28","29")');
+                        $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29)');
                     }
                     break;
-                case "chief":
-                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
-                    $query->where('c.dealer_id = '. $user->dealer_id);
-                    if ($user->dealer_type == 2) {
-                        $query->where('a.project_status >= 0');
-                    } elseif ($subtype =="run") {
-                        $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
-                    } elseif ($subtype == "gaugings") {
-                        $query->where('a.project_status in ("1")');
-                        $query->where('a.who_calculate = "0"');
+
+                case 'chief':
+                    $query->select('`p`.`gm_manager_note`,
+                                    `p`.`dealer_manager_note`,
+                                    `p`.`project_mounter`,
+                                    `p`.`project_mounting_date`,
+                                    `p`.`transport`,
+                                    `p`.`distance`,
+                                    `p`.`distance_col`,
+                                    `p`.`new_mount_sum`,
+                                    `p`.`project_sum`,
+                                    `p`.`new_project_sum`,
+                                    `p`.`new_material_sum`,
+                                    `p`.`self_price`,
+                                    `p`.`count_ceilings`
+                                ');
+
+                    $query->where('`p`.`dealer_id` = '.$user->dealer_id);
+
+                    if ($subtype == 'run') {
+                        $query->select('`p`.`closed`');
+                        $query->where('`p`.`project_status` = 12');
+
+                    } elseif ($subtype == 'gaugings') {
+                        $query->where('`p`.`project_status` = 1');
+
                     } else {
-                        $query->where('a.project_status in ("10", "5", "11", "16", "17", "23", "6", "7", "8","24","25","26","27","28","29")');
+                        $query->where('`p`.`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29)');
                     }
-                    $query->where('a.deleted_by_user <> 1');
                     break;
-                case "dealer":
-                    $query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
+
+                case 'dealer':
+                    $query->where('(`p`.`dealer_id` = '.$user->id.' OR `p`.`dealer_id` = '.$user->dealer_id.')');
                     break;
                 default:
-                    $query->where('dealer_id = -1');
                     break;
             }
 

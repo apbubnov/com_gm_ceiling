@@ -68,14 +68,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                             <td class="center one-touch"><?= $item->id; ?></td>
                             <td class="center one-touch">
-                                <? if ($item->calculation_date == "00.00.0000"): ?> -
-                                <? else: echo $item->calculation_date;
+                                <? if ($item->project_calculation_date == '0000-00-00'): ?> -
+                                <? else: echo $item->project_calculation_date;
                                 endif;?><br><?
-                                if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?> -
+                                if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?> -
                                 <? else: echo $item->calculation_time;
                                 endif; ?>
                             </td>
-                            <td class="center one-touch"><?= $item->address; ?><br><?= $item->client_contacts; ?></td>
+                            <td class="center one-touch"><?= $item->project_info; ?><br><?= $item->client_contacts; ?></td>
                             <td class="center one-touch"><?= $item->client_name; ?></td>
                             <?php if(in_array(14, $groups)){ ?>
                                 <td class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>

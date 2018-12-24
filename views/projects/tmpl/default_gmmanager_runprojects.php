@@ -37,37 +37,37 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 <h2 class = "center">Запущенные проекты</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects'); ?>" method="post" name="adminForm" id="adminForm">
     <?php if (count($this->items) > 0): ?>
-        <div class="toolbar">
-            <?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-        </div>
-        <table class="table table-striped one-touch-view" id="projectList">
+<!--         <div class="toolbar">
+            <?php //echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
+        </div> -->
+        <table class="table table-striped one-touch-view g_table" id="projectList">
             <thead>
             <tr>
                 <th class='center'> 
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                    Номер договора
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
+                    Статус
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Дата замера', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'Дата замера', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    Дата замера
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Дата монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'Дата монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    Дата монтажа
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Дата закрытия проекта', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                    Адрес
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
-                </th>
-                <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
-                </th>
-                <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                    Клиент
                 </th>
                 <th class="center">
                     Дилер
@@ -92,7 +92,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
                         <?php if(!($dealer->dealer_type == 1 || $dealer->dealer_type == 0) || $user->dealer_id == $dealer->dealer_id):?>
-                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
+                        <button class="btn btn-sm btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check"></i></button>
                         <?endif;?>
                         <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.5);">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
@@ -106,9 +106,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 </p>
                             </div>
                         </div>
-                    <?php if ($item->project_status == 12) { ?>
-                         <i class='fa fa-check' aria-hidden='true'></i> Выполнено
-                    <?php } ?>
                     </td>
                     <td class="center one-touch">
                         <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
@@ -164,27 +161,34 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $item->project_mounting_date;?>
+                        <?php
+                            if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00') {
+                                echo '-';
+                            } else {
+                                echo date('d.m.Y h:i', strtotime($item->project_calculation_date));
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
-                    <?php $item->project_calculation_date?>
+                        <?php
+                            if (empty($item->project_mounting_date) || $item->project_mounting_date == '00.00.0000 00:00') {
+                                echo '-';
+                            } else {
+                                echo $item->project_mounting_date;
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
-                        <?php if($item->closed == "0000-00-00") { ?>
-                            -
-                        <?php } else { ?>
-                            <?php $jdate = new JDate($item->closed); ?>
-                            <?php echo $jdate->format('d.m.Y'); ?>
-                        <?php } ?>
+                        <?php
+                            if (empty($item->project_info)) {
+                                echo '-';
+                            } else {
+                                echo $this->escape($item->project_info);
+                            }
+                        ?>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $this->escape($item->project_info); ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_contacts; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_name; ?>
+                        <?php echo $item->client_name.'<br>'.$item->client_contacts; ?>
                     </td>
                     <td class="center one-touch">
                         <?php echo $dealer->name; ?>

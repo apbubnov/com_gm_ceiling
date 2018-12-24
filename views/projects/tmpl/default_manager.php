@@ -74,7 +74,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_STATUS_OPTION_'.$item->project_status); ?>
 					</td>
 					<td class="center one-touch">
-						<?php if($item->project_calculation_date == "0000-00-00") { ?>
+						<?php if($item->project_calculation_date == '0000-00-00') { ?>
 							-
 						<?php } else { ?>
 							<?php $jdate = new JDate($item->project_calculation_date); ?>
@@ -82,11 +82,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php } ?>
 					</td>
 					<td class="center one-touch">
-						<?php if($item->project_calculation_daypart == "0") { ?>
-							-
-						<?php } else { ?>
-							<?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_' . $item->project_calculation_daypart); ?>
-						<?php } ?>
+							<?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_'.$item->calculation_time); ?>
 					</td>
 					<td class="center one-touch">
 						<?php echo $this->escape($item->project_info); ?>

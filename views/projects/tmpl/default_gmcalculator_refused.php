@@ -88,14 +88,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $item->id; ?>
 					</td>
                     <td class="center one-touch">
-							<?php if($item->project_calculation_date != "0000-00-00 00:00:00") { ?>
+							<?php if($item->project_calculation_date != '0000-00-00 00:00:00') { ?>
 								<?php $jdate = new JDate($item->project_calculation_date); ?>
 								 <?php echo $jdate->format('d.m.Y'); ?>
 						<?php } else { ?> -
 						<?php } ?>
 					</td>
 					<td class="center one-touch">
-							<?php if($item->project_calculation_date != "0000-00-00 00:00:00") { ?>
+							<?php if($item->project_calculation_date != '0000-00-00 00:00:00') { ?>
 								<?php $jdate = new JDate($item->project_calculation_date); ?>
 								 <?php echo $jdate->format('H:i'); ?>
 						<?php } else { ?> -

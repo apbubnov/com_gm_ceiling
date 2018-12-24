@@ -45,25 +45,25 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<thead>
 			<tr>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'Номер договора', 'p.id', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Дата замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'Дата замера', 'p.project_calculation_date', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Время замера', 'a.project_mounting_daypart', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'Время замера', 'p.calculation_time', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'p.project_info', $listDirn, $listOrder); ?>
                 </th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'Телефоны', 'p.client_contacts', $listDirn, $listOrder); ?>
 				</th>
                 <th>
-                    <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'p.gm_manager_note', $listDirn, $listOrder); ?>
                 </th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'p.client_id', $listDirn, $listOrder); ?>
 				</th>
 				<?php
 					$user  = JFactory::getUser();
@@ -81,25 +81,25 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			<?php foreach ($this->items as $i => $item) : ?>
 			<?
 			if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
-			else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
+			else if (in_array("17", $groups) && $item->dealer_id != 1) continue;
 			?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
-				<?php if($user->dealer_id == $item->dealer_id || $item->who_calculate == 1) {?>
+				<?php if($user->dealer_id == $item->dealer_id || $item->dealer_id == 1) {?>
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.(int) $item->id); ?>">
 					<td class="center one-touch">
 						<?php echo $item->id; ?>
 					</td>
                     <td class="center one-touch">
-                        <? if ($item->calculation_date == "00.00.0000"): ?>-
-                        <? else: ?><?= $item->calculation_date; ?>
+                        <? if ($item->project_calculation_date == '0000-00-00'): ?>-
+                        <? else: ?><?= $item->project_calculation_date; ?>
                         <? endif; ?>
                     </td>
                     <td class="center one-touch">
-                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                        <? if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?>-
                         <? else: ?><?= $item->calculation_time; ?>
                         <? endif; ?>
                     </td>
@@ -153,14 +153,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         <?php foreach ($this->items as $i => $item) : ?>
             <?
             if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
-            else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
+            else if (in_array("17", $groups) && $item->dealer_id != 1) continue;
             ?>
             <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
             <?php endif; ?>
-            <?php if($user->dealer_id == $item->dealer_id || $item->who_calculate == 1) {?>
+            <?php if($user->dealer_id == $item->dealer_id || $item->dealer_id == 1) {?>
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.(int) $item->id); ?>">
                     <td class="center one-touch">
                         <?php echo $item->id; ?>

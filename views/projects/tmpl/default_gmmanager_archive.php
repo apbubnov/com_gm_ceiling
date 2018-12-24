@@ -85,7 +85,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <?php echo $item->status; ?>
                     </td>
                     <td class="center one-touch">
-                        <?php if($item->closed == "0000-00-00") { ?>
+                        <?php if($item->closed == "0000-00-00" || empty($item->closed)) { ?>
                             -
                         <?php } else { ?>
                             <?php $jdate = new JDate($item->closed); ?>

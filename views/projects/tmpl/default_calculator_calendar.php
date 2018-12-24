@@ -83,15 +83,11 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
                             <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
                             <td data-th = "Дата/время замера" class="center one-touch">
-                                <? if ($item->calculation_date == "00.00.0000"): ?>-
-                                <? else: ?><?= $item->calculation_date; ?>
-                                <? endif; ?>
-                                <br>
-                                <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
-                                <? else: ?><?= $item->calculation_time; ?>
+                                <? if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00'): ?>-
+                                <? else: ?><?= date('d.m.Y h:i', strtotime($item->project_calculation_date)); ?>
                                 <? endif; ?>
                             </td>
-                            <td data-th = "Адрес" class="center one-touch"><?= $item->address; ?></td>
+                            <td data-th = "Адрес" class="center one-touch"><?= $item->project_info; ?></td>
                             <td data-th = "Примечание" class="center one-touch"><?= $item->dealer_manager_note; ?></td>
                             <?if (in_array("16", $groups)):?>
                                 <td data-th = "Дилер" class="center one-touch"><?= $item->dealer_name; ?></td>
