@@ -633,37 +633,42 @@ if (empty($list['direction']))
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("c.id AS client_id,c.client_name,GROUP_CONCAT(DISTINCT calc.id SEPARATOR ';') AS calcs,p.project_status,p.project_info,p.id,pm.mounter_id,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
+                ->select("c.id AS client_id,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
+                p.project_status,p.project_info,p.id,cm.mounter_id,SUM(DISTINCT calc.n7) as n7,SUM(DISTINCT calc.n4) AS quadr,SUM(DISTINCT calc.n5) AS per")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
-                ->leftJoin("`rgzbn_gm_ceiling_projects_mounts` as pm on pm.project_id = p.id and pm.type=$stage")
+                ->leftJoin("`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id AND cm.stage_id = $stage")
+                /*->leftJoin("`rgzbn_gm_ceiling_projects_mounts` as pm on pm.project_id = p.id and pm.type=$stage")*/
                 ->where("c.dealer_id = $dealer_id")
                 ->group("p.id");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];
-            foreach ($items as $value){
-                $totalSum = 0;
-                $calcs = explode(';',$value->calcs);
-                foreach ($calcs as $calc){
-                    $mountData = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null);
-                    $totalSum += $mountData['stages'][$stage];
-                    /*foreach ($mountData['mounting_data'] as $mountValue){
-                        if($mountValue['stage'] == $stage){
-                            $totalSum += $mountValue['gm_salary_total'];
-                        }
-                    }*/
-                }
+            $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+            $priceMount = $mountModel->getDataAll($dealer_id);
 
+            foreach ($items as $value){
+                $calcsData = [];
+                $calcsMounts = json_decode($value->calcs);
+                foreach ($calcsMounts as $calc){
+                    $calcsData[$calc->calc_id]['id'] = $calc->calc_id;
+                    $calcsData[$calc->calc_id]['title'] = $calc->title;
+                    $calcsData[$calc->calc_id]['sum'] = $calc->sum;
+                    if(!empty($calc->mounter)) {
+                        $calcsData[$calc->calc_id]['mounters'][] =  JFactory::getUser($calc->mounter);
+                    }
+                }
                 $result[$value->client_id]['id'] = $value->client_id;
                 $result[$value->client_id]['name'] = $value->client_name;
                 $result[$value->client_id]['projects'][] = (object)array("id"=>$value->id,
                                                                          "title"=>$value->project_info,
                                                                          "value"=>($stage == 3) ? $value->quadr : $value->per,
-                                                                         "sum"=>$totalSum,
+                                                                         "calcs"=>$calcsData,
+                                                                         "sum"=>$value->total_sum,
                                                                          "status"=>$value->project_status,
-                                                                         "mounter"=> (!empty($value->mounter_id)? JFactory::getUser($value->mounter_id):"" )
+                                                                         "n7"=>$value->n7,
+                                                                         "n7_cost"=>$value->n7 * $priceMount->mp13
                                                                         );
             }
             return $result;

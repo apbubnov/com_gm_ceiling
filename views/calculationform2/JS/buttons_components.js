@@ -74,39 +74,39 @@ let arr_blocks = [
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
-            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
-            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_n6",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
-            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
+            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
+            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_basic_work",btn_id:"btn_n14",btn_text:"Трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
+            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_basic_work",btn_id:"btn_n16",btn_text:"Шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
         ]
     },
     {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_basic_work",btn_id:"btn_light_cptn",btn_text:"Освещение",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
-            {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
-            {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
-            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png", parent: "light_cptn"},        
+            {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
+            {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_light_cptn",btn_id:"btn_n13",btn_text:"Светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
+            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_light_cptn",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png", parent: "light_cptn"},
         ]
     },
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_oter_mount_cptn",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0,kind_btn:"0", img: "tile.png", parent: "oter_mount_cptn"},
             {block_id:"block_n8",btn_cont_id:"btn_cont_n7",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
-            {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n7",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0,kind_btn:"0", img: "screw.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_dop_krepezh",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0,kind_btn:"0", img: "slozhnost.png", parent: "oter_mount_cptn"},
-            {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_n24",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0,kind_btn:"0", img: "hammer.png", parent: "oter_mount_cptn"},        
-            {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_extra_mounting",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0,kind_btn:"0", img: "drcomplect.png", parent: "oter_mount_cptn"},
-            {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1,kind_btn:"0", img: "drcomplect.png", parent: "oter_mount_cptn"},
-            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_components_stock",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_height",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0,kind_btn:"0", img: "amplifier.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_n18",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n23",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n20",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
+            {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_oter_mount_cptn",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0,kind_btn:"0", img: "screw.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_oter_mount_cptn",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0,kind_btn:"0", img: "slozhnost.png", parent: "oter_mount_cptn"},
+            {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_oter_mount_cptn",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0,kind_btn:"0", img: "hammer.png", parent: "oter_mount_cptn"},
+            {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_oter_mount_cptn",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0,kind_btn:"0", img: "drcomplect.png", parent: "oter_mount_cptn"},
+            {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_oter_mount_cptn",btn_id:"btn_components_stock",btn_text:"Доп. комплектующие со склада",need_ajax : 1,kind_btn:"0", img: "drcomplect.png", parent: "oter_mount_cptn"},
+            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_oter_mount_cptn",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_oter_mount_cptn",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0,kind_btn:"0", img: "amplifier.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_oter_mount_cptn",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_oter_mount_cptn",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_oter_mount_cptn",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_oter_mount_cptn",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
             /*{block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},*/
-            {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n29",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
         ]
     },
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}
@@ -114,7 +114,7 @@ let arr_blocks = [
 ];
 
 arr_blocks.forEach(function(item){
-    generate_block(item);
+    generate_block(item,0);
 });
 
 let n_data = {};
@@ -134,7 +134,7 @@ let n6_src = {
         {id:'jform_n6_2',value:0,text:"Вставка не нужна",selected:true},
         {id:'jform_n6_1',value:"color",text:"Цветная вставка"},
         {id:'jform_n6',value:314,text:"Белая вставка"},
-      
+
     ]
 };
 let n6 =  create_radios_group(n6_src);
@@ -159,7 +159,7 @@ let height_src = {
         {id:'max_height',value:1,text:"больше 3х метров"},
         {id:'min_height',value:0,text:"меньше 3х метров",selected:true}
     ]
-    
+
 }
 let height = create_radios_group(height_src);
 
@@ -355,7 +355,7 @@ function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_aja
 /* ______________ */
 /* radio buttons */
 function create_single_radio(name,id,value,text,selected){
-    
+
     let checked_attr = (selected) ? 'checked = "checked"': '';
     return `<div style="display: inline-block; width: 100%;">
                 <input name="${name}" id="${id}" class="radio" value="${value}" ${checked_attr} type="radio">
@@ -365,9 +365,9 @@ function create_single_radio(name,id,value,text,selected){
 
 function create_radios_group(object){
     result = '<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">';
-   
+
     for(let i=object.values.length;i--;){
-        
+
         result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text,(object.values[i].selected) ? object.values[i].selected : null);
     }
     result += '</div>';
@@ -389,7 +389,7 @@ function create_single_input(input_type,id,name,text,placeholder,type,min=null,m
     if(input_type == 2){
         return `<div class="form-group">
                 <select name="${name}" id="${id}"  class="form-control" placeholder="${placeholder}"></select>
-            </div>`; 
+            </div>`;
     }
     if(input_type == 3){
         return `<div class="form-group Area Type">
@@ -398,7 +398,7 @@ function create_single_input(input_type,id,name,text,placeholder,type,min=null,m
                     <div class="Selects Type"></div>
                 </div>`;
     }
-   
+
 }
 //кнопка добавить
 function create_add_button(id){
@@ -417,7 +417,7 @@ function create_block_with_divs(object){
                
               </div>`;
     return result;
-              
+
 }
 function create_captions(columns){
     result = `<div class="form-group" style="margin-bottom: 0em;">`;
@@ -449,16 +449,15 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     let cont =  create_container("",col_id, var_name);
     let element = eval(var_name);
 
-    if(!document.getElementById(col_id)){
+    if (!document.getElementById(col_id)) {
+        console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
-        jQuery(`#${col_id}`).append(element); 
-    }
-    else{
+        jQuery(`#${col_id}`).append(element);
+    } else {
         jQuery(`#${col_id}`).toggle();
-        
     }
     toggle_color(jQuery(this));
-    
+
     if(!n_data[var_name]){
         if(need_ajax){
             if(var_name == 'n13'){
@@ -486,7 +485,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     jQuery(".clear_form_group").click(function(){
         jQuery(this).closest(".form-group").remove();
     });
-}); 
+});
 
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
@@ -497,7 +496,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
         let element = eval(parent);
         if(!document.getElementById(col_id)){
             jQuery(`#${id_block}`).after(cont);
-            jQuery(`#${col_id}`).append(element); 
+            jQuery(`#${col_id}`).append(element);
         }
         else{
             jQuery(`#${col_id}`).toggle();
@@ -510,12 +509,11 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
             jQuery("#with_mount").attr("checked",true);
         }
     } else {
-
         if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
             arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
-                        generate_block(item2);
+                        generate_block(item2,1);
                     });
                 }
             });
@@ -568,20 +566,20 @@ function open_general_blocks() {
                  btn_name = obj.btn_id;
                 prop_name = obj.key;
             }
-           
+
             if (btn_name && !in_array(arr_parent,btn_name)){
-               arr_parent.push(btn_name);  
+               arr_parent.push(btn_name);
             }
             if(prop_name && !in_array(calc_props,prop_name)){
                 calc_props.push(prop_name);
             }
-        } 
+        }
     }
     if(calculation['mounting_sum'] > 0){
         arr_parent.push("btn_need_mount");
     }
     arr_parent.forEach(function(item){
-        jQuery(`#${item}`).trigger("click");        
+        jQuery(`#${item}`).trigger("click");
     });
     open_blocks(calc_props);
 }
@@ -636,8 +634,8 @@ function open_blocks(props){
 let change_event_radio = function(){
     jQuery(`[name = '${this.name}']`).attr('checked',false);
 
-    jQuery(this).attr("checked",true); 
-    
+    jQuery(this).attr("checked",true);
+
     if(this.name == 'jform[n28]' && this.value !=0){
         if(jQuery('[name = "need_mount"]').length){
             jQuery("#jform_need_mount_inside").show();
@@ -645,18 +643,18 @@ let change_event_radio = function(){
         else{
             jQuery("#btn_need_mount").trigger("click");
 
-        } 
+        }
         if(jQuery('#without').attr("fix")!="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
-            jQuery('#with_mount').attr("checked",true); 
+            jQuery('#with_mount').attr("checked",true);
         }
 
-        
+
     }
    if(this.name == 'jform[n28]' && this.value ==0){
          if( jQuery('#with_mount').attr("fix") !="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
-            jQuery('#without').attr("checked",true); 
+            jQuery('#without').attr("checked",true);
             jQuery("#jform_need_mount_inside").hide();
         }
 
@@ -718,10 +716,10 @@ function fill_calc_data(){
                     }
                     for(let j = 0;j<n13_objs.length;j++){
                         jQuery("[name = 'n13_count[]']")[j].value = n13_objs[j]['n13_count'];
-                        check_select_option('n13_type[]',j,n13_objs[j]['n13_type']);                        
+                        check_select_option('n13_type[]',j,n13_objs[j]['n13_type']);
                         check_select_option('n13_ring[]',j,n13_objs[j]['n13_size']);
                     }
-                    
+
                     break;
                 case 'n26':
                     let n26_objs = calculation[Object.keys(calculation)[i]];
@@ -745,7 +743,7 @@ function fill_calc_data(){
                     }
                     break;
                 case 'n15':
-                case 'n27': 
+                case 'n27':
                 case 'n16':
                     jQuery('#jform_n27').val(calculation['n27']);
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
@@ -758,7 +756,7 @@ function fill_calc_data(){
                     for(let j = 0;j<n15_objs.length;j++){
                         jQuery("[name = 'n15_count[]']")[j].value = n15_objs[j]['n15_count'];
                         check_select_option('n15_type[]',j,n15_objs[j]['n15_type']);
-                        
+
                         check_select_option('n15_size[]',j,n15_objs[j]['n15_size']);
                     }
                     break;
@@ -769,7 +767,7 @@ function fill_calc_data(){
                     }
                     for(let j = 0;j<n22_objs.length;j++){
                         jQuery("[name = 'n22_count[]']")[j].value = n22_objs[j]['n22_count'];
-                        check_select_option('n22_type[]',j,n22_objs[j]['n22_type']);                        
+                        check_select_option('n22_type[]',j,n22_objs[j]['n22_type']);
                         check_select_option('n22_diam[]',j,n22_objs[j]['n22_size']);
                     }
                     break;
@@ -801,7 +799,7 @@ function fill_calc_data(){
                     for(let j = 0;j<Object.keys(extra_comp_data).length;j++){
                         jQuery("[name = 'extra_components_title[]']")[j].value = extra_comp_data[Object.keys(extra_comp_data)[j]]['title'];
                         jQuery("[name = 'extra_components_value[]']")[j].value = extra_comp_data[Object.keys(extra_comp_data)[j]]['value'];
-                       
+
                     }
                 break;
                 case 'extra_mounting':
@@ -812,12 +810,12 @@ function fill_calc_data(){
                     for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
                         jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
                         jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
-                       
+
                     }
                 break;
                 case 'components_stock':
                 let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    
+
                      for(let j = 1;j<Object.keys(stock_data).length;j++){
                         jQuery(`#add_${Object.keys(calculation)[i]}`).click();
                     }
@@ -825,8 +823,8 @@ function fill_calc_data(){
                         jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
                         jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
                         jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
-                       
-                    }  
+
+                    }
                 break;
                 default:
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
@@ -834,14 +832,13 @@ function fill_calc_data(){
        }
     }
     time_end = performance.now()-time_start;
-        console.log(time_end);
 }
-let show_color_switch = function(){    
+let show_color_switch = function(){
         data = n6_colors;
         var items = "<div class='center'>";
         jQuery.each( data, function( key, val ) {
             items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
-        
+
         });
         items += "</div>";
         modal({
@@ -850,7 +847,7 @@ let show_color_switch = function(){
             text: items,
             size: 'large',
             onShow: function() {
-                jQuery(".click_color_1").click(function(){ 
+                jQuery(".click_color_1").click(function(){
                     jQuery("#n6_color_img").prop( "src", jQuery( this ).data("color_img_1"));
                     jQuery("#jform_n6_1").val(jQuery( this ).data("color_id_1"));
                     jQuery("#n6_color_img").show();
@@ -859,7 +856,7 @@ let show_color_switch = function(){
                 });
             },
             callback: function(result) {
-                
+
 
             },
             autoclose: false,
@@ -883,8 +880,8 @@ let show_color_switch = function(){
                 buttons: '.modal-buttons',
                 closebtn: '.click_color_1'
             }
-        });                     
-    
+        });
+
 
 };
 
@@ -928,7 +925,7 @@ let change_select_event = function(){
         if(this.id == 'n22'){
             target_name = `${this.id}_diam[]`;
         }
-         
+
         jQuery('option', jQuery(`[name = '${target_name}']`)[index]).remove();
         for(let i=0;i<options.length;i++){
             jQuery(`[name = '${target_name}']`)[index].append(options[i]);
@@ -946,7 +943,7 @@ let change_select_event = function(){
         jQuery('option', jQuery(`[name = '${target_name}']`)[index]).remove();
         for(let i=0;i<options.length;i++){
             jQuery(`[name = '${target_name}']`)[index].append(options[i]);
-        } 
+        }
     }
 }
 function check_select_option(name,index,value){
@@ -965,10 +962,10 @@ function check_select_option(name,index,value){
 function getSelectIndex(selects,obj){
     for (key in selects) {
         if(selects[key]==obj){
-            
+
             index = key;
         }
-        
+
     }
     return index;
 }
@@ -999,18 +996,18 @@ function get_n_data(var_name){
                 timeout: 1500,
                 type: "error",
                 text: "Сервер не отвечает!"
-            }); 
+            });
         }
     });
 }
 
 let btn_add_event = function(){
-    
+
     let id = this.id.replace("add_","");
     let html = create_body(eval(`${id.replace("jform_","")}_src`).columns);
     let select_names = {};
     jQuery(`#${id}_block_html`).append(html);
-    let select_data; 
+    let select_data;
     if(id == 'n15' || id.replace("jform_","") == 'n15' ){
         select_data = n_data['n16'];
     }
@@ -1058,9 +1055,9 @@ function toggle_color(element){
         element.css("background-color", "#414099");
     }
 }
-function generate_block(object){
+function generate_block(object,type=0){
     let cnt = create_container(object.block_id,object.btn_cont_id, object.parent);
-    jQuery(`#${object.prev_id}`).after(cnt);
+    (type == 1) ? jQuery(`#${object.prev_id}`).append(cnt) : jQuery(`#${object.prev_id}`).after(cnt);
     if(object.kind_btn == 2) {
         jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
     } else {
@@ -1160,9 +1157,10 @@ function SelectItem(e) {
     }
 }
 
-function empty( mixed_var ) { 
-
-    return ( mixed_var === "" || mixed_var === 0  || mixed_var === "0" || mixed_var === null  || mixed_var === false  ||  ( mixed_var instanceof Array && mixed_var.length === 0 ) ||  mixed_var === "[]" || mixed_var ==="{}" );
+function empty( mixed_var ) {
+    return (mixed_var === "" || (mixed_var - 0) === 0 || mixed_var === "0" || mixed_var === null ||
+        mixed_var === false || (mixed_var instanceof Array && mixed_var.length === 0) ||
+        mixed_var === "[]" || mixed_var ==="{}");
 }
 
 function ClearSelect(e) {

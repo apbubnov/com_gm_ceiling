@@ -104,7 +104,7 @@ $project_total_discount = ($project_total_discount > $min_project_sum ) ? $proje
 $month = date("n");
 $year = date("Y");
 $FlagCalendar = [3, $user->dealer_id];
-$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+
 //----------------------------------------------------------------------------------
 
 // все замерщики
@@ -123,7 +123,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-
+<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->id_client;?>">В карточку</a>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php

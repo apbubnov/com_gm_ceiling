@@ -63,7 +63,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
 
             $query->insert('`#__gm_ceiling_mounters_salary`')
                 ->columns('`mounter_id`,`project_id`,`sum`,`note`')
-                ->values("$mounterId,$projectId,'$sum','$note'");
+                ->values("$mounterId,$projectId,$sum,'$note'");
             $db->setQuery($query);
             $db->execute();
             return true;

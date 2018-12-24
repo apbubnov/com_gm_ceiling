@@ -2675,6 +2675,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin = 0;
             $total_with_dealer_margin = 0;
             $stages = [];
+            $calcMountData['id'] = $data['id'];
             foreach ($mounting_data as $mounting_item) {
                 $mounting_item['gm_salary_total'] = $mounting_item['gm_salary_total'];
                 $mounting_item['dealer_salary_total'] = $mounting_item['dealer_salary_total'];
@@ -2683,7 +2684,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $total_with_gm_margin += $mounting_item['total_with_gm_margin'];
                 $total_with_gm_dealer_margin += $mounting_item['total_with_gm_dealer_margin'];
                 $total_with_dealer_margin += $mounting_item['total_with_dealer_margin'];
-                $stages[$mounting_item['stage']] += $mounting_item['gm_salary_total'];
+                $stages[$mounting_item['stage']] += $mounting_item['dealer_salary_total'];
             }
 
             $result['mounting_data'] = $mounting_data;
@@ -2693,6 +2694,9 @@ class Gm_ceilingHelpersGm_ceiling
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
             $result['total_with_dealer_margin'] = $total_with_dealer_margin;
             $result['stages'] = $stages;
+            $calcMountData['stages'] = $stages;
+            $calcsMountModel = self::getModel('calcs_mount');
+            $calcsMountModel->save($calcMountData);
             return $result;
         }
         catch(Exception $e)
