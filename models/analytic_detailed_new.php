@@ -30,7 +30,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"sum_deals"=>[4,5]);
+		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"profit"=>[12],"sum_deals"=>[4,5]);
 		$advt['otd']['id'] = "otd";
 		$advt['otd']['advt_title'] = 'Отделочники';
 		$advt['win']['id'] = "win";
@@ -78,7 +78,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			"measures" => (object)array("head_name"=>"Замеры","bias"=>$biases[1],"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
 			"deal" => (object)array("head_name"=>"Договоры","bias"=>$biases[1],"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
 			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]),
-			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма"))
+			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма","profit"=>"Прибыль"))
 			);
 		array_unshift($result, $header);
 		if($dealer_type){
@@ -142,7 +142,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 				}
 			}
 			foreach ($statuses as $key => $statuses_arr) {
-				if($key != "sum_done" && $key != "sum_deals"){
+				if($key != "sum_done" && $key != "sum_deals" && $key != "profit"){
 					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
 						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
 							$advt[$advt_id]['projects'][$key][] = $project->project_id;
@@ -154,7 +154,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
 						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
 							$advt[$advt_id]['projects'][$key][] = $project->project_id;
-							$advt[$advt_id][$key] += $project->sum;
+							$advt[$advt_id][$key] += ($key != "profit") ? $project->sum : $project->profit;
 						}
 					}
 				}
