@@ -635,7 +635,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
-            if (empty($data['calculation_title']))
+            if (empty($data['calculation_title']) || $data['calculation_title'] == "Без имени")
             {
                 $db = JFactory::getDBO();
                 $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
