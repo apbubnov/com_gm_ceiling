@@ -381,7 +381,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <!-- расчеты для проекта -->
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
-    <?php if ($this->item->project_verdict == 0) { ?>
+    <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
         <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
             <div class="row center">
                 <div class="col-md-6">

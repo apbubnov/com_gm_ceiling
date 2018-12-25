@@ -383,7 +383,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         </td>
                     </tr>
                 </table>
-                <?php if ($this->item->project_verdict == 0) { ?>
+                <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                     <a class="btn  btn-primary" id="rec_to_measurement">
                         Записать на замер
                     </a>

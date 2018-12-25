@@ -160,7 +160,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
         <input name="type" value="calculator" type="hidden">
         <input name="subtype" value="calendar" type="hidden">
-        <input id="project_verdict" name="project_verdict" value="<?php echo $this->item->project_verdict;?>" type="hidden">
+        <input id="project_verdict" name="project_verdict" value="0" type="hidden">
         <input id="project_status" name="project_status" value="<?php echo $this->item->project_status;?>" type="hidden">
         <input name="data_change" value="0" type="hidden">
         <input name="data_delete" value="0" type="hidden">
@@ -292,7 +292,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
-            <?php if ($this->item->project_verdict == 0) { ?>
+            <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                 <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <div class="row center">
                         <div class="col-md-6" style="padding-top: 25px;" align="center">

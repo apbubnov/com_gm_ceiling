@@ -87,7 +87,6 @@ $user_group = $user->groups;
                 date: jQuery('#calendar').val()
             },
             success: function(data){
-                console.log(12312);
                 arr_calls = data;
                 show_calls();
             },

@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
  */
 /* включаем библиотеку для формирования PDF */
 include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
+const VERDICT_STATUSES = [4,5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {

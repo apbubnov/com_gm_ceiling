@@ -303,7 +303,7 @@
 
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
-            <?php if ($this->item->project_verdict == 0) { ?>
+            <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                 <div class="row center">
                     <div class="col-md-6">
                         <p>
