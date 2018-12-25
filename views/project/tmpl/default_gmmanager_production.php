@@ -50,7 +50,7 @@ $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
-$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+$service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
 foreach ($calculations as $calculation) {
      $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);

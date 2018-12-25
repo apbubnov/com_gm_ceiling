@@ -224,7 +224,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             
 
             $query
- 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.mounting_check')
+ 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.calcs_mounting_sum')
                 ->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
 				->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
@@ -248,7 +248,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 foreach ($items2 as $val) {
                     if ($value->id == $val->project_id) {
                         $value->n5 += $val->n5;
-                        if(!empty($value->mounting_check)){
+                        if(!empty($value->calcs_mounting_sum)){
                         	$mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val->id,null,null,"mount")["total_gm_mounting"];
                         }
                         else{

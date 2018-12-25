@@ -48,8 +48,8 @@ $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
-if (!empty($this->item->mounting_check)) {
-    $service_mount = get_object_vars(json_decode($this->item->mounting_check));
+if (!empty($this->item->calcs_mounting_sum)) {
+    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
 }
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 if(!empty($service_mount)){

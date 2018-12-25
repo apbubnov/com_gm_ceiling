@@ -2809,7 +2809,6 @@ class Gm_ceilingHelpersGm_ceiling
             $calculations_model = self::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
             $full = false;
-            $service_sums = get_object_vars(json_decode($project->mounting_check));
             if(!empty($calc_ids)){
                 foreach($calculations as $key => $calculation){
                     if(!in_array($calculation->id,$calc_ids)){

@@ -843,13 +843,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
                                         }
                                     }
-                                    $pr_data['mounting_check'] = json_encode($mount_sum);
+                                    $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
                                     $this->change_project_data($pr_data);
                                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
                                     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation,"service");
                                 }
                                 else{
-                                      $pr_data['mounting_check'] = "";
+                                      $pr_data['calcs_mounting_sum'] = "";
                                 }
 							}
 							
@@ -1950,7 +1950,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
             $data['id'] = $project_id;
-            $data['mounting_check'] = '';
+            $data['calcs_mounting_sum'] = '';
             $project_model->save($data);
             $projects_mounts_model->delete($project_id);
             die(json_encode(true));

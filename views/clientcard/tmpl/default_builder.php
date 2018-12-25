@@ -796,7 +796,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 }
                 var value = (stage == 3) ? "S=" : "P=";
                 var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
-                "<div class='col-md-6'>Плитка"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
+                "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
                 "</div>" : "";
                 td = "<div class='row center'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
                     "<div class='row center' style='font-size:11pt;font-style:italic;'>" +

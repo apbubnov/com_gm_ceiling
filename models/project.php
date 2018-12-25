@@ -524,7 +524,7 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
-			if($project_id > 0 && ($check == 0 || $check == 1)){
+			/*if($project_id > 0 && ($check == 0 || $check == 1)){
 				$table = $this->getTable();
 				$table->load($project_id);
 				if($type == 0) {
@@ -547,7 +547,7 @@ class Gm_ceilingModelProject extends JModelItem
 				$return = $table->store();
 			}
 
-			return $return;
+			return $return;*/
 		}
 		catch(Exception $e)
         {

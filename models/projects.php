@@ -86,7 +86,7 @@ class Gm_ceilingModelProjects extends JModelList
             if (isset($list['direction'])) $this->setState('list.direction', $list['direction']);
 
             // List state information.
-            parent::populateState($ordering, $direction);
+            //parent::populateState($ordering, $direction);
         }
         catch(Exception $e)
         {
