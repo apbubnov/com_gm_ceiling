@@ -38,13 +38,7 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $app = JFactory::getApplication();
-            $start = $app->input->getInt('start', 0);
             $user = JFactory::getUser();
-            /*if ($start == 0)
-            {
-                $app->input->set('limitstart', 0);
-            }*/
-
             $view = $app->input->getCmd('view', 'components');
             $task = $app->input->getCmd('task', 'components');
             $subtype = $app->input->getCmd('subtype', NULL);
@@ -134,7 +128,7 @@ class Gm_ceilingController extends JControllerLegacy
     /* Функция для AJAX-изменения комментария бухгалтера. */
     public function change_buh_note()
     {
-        try
+       /* try
         {
             $jinput = JFactory::getApplication()->input;
         
@@ -152,7 +146,7 @@ class Gm_ceilingController extends JControllerLegacy
        catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+        }*/
     }
 
     /* Функция для AJAX-изменения статуса договора. */
@@ -222,10 +216,10 @@ class Gm_ceilingController extends JControllerLegacy
     {
         try
         {
-            $jinput = JFactory::getApplication()->input;
-        
+           /* $jinput = JFactory::getApplication()->input;
+
             $id = $jinput->get('id', '0', 'INT');
-    
+
             $extra_spend_title = $jinput->get('extra_spend_title', '', 'ARRAY');
             $extra_spend_value = $jinput->get('extra_spend_value', '', 'ARRAY');
             $extra_spend = array();
@@ -238,11 +232,11 @@ class Gm_ceilingController extends JControllerLegacy
                 }
             }
             $extra_spend = json_encode($extra_spend, JSON_FORCE_OBJECT);
-    
+
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $result = $project_model->update_spend($id, $extra_spend);
-    
-            die($result);
+
+            die($result);*/
         }
        catch(Exception $e)
         {
