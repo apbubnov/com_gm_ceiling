@@ -218,7 +218,13 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     .td_div{
         border-bottom: #414099 1px solid;
     }
+    hr {
+        border: 0;
+        height: 2px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(65,64,153, 0.75), rgba(0, 0, 0, 0));
+    }
 </style>
+<hr>
 <div class="row">
     <p class="caption-tar">Дублировать замеры</p>
     <form>
@@ -248,6 +254,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         <button class="btn btn-primary" id="duplicate">Дублировать</button>
     </div>
 </div>
+<hr>
 <div class="row center">
     <p class="caption-tar">Добавить бригаду</p>
     <label for="new_mounter_name">ФИО/Название</label>
@@ -256,6 +263,19 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     <input type="text" id="new_mounter_phone" class="input-gm">
     <button class="btn btn-primary" id="create_mounter">Cоздать</button>
 </div>
+<hr>
+<div class="row center" style="margin-bottom: 5px;">
+    <p class="caption-tar">Генерация PDF</p>
+    <div class="col-md-12">
+        <?php foreach ($mountTypes as $k => $mountStage) { ?>
+            <input name="stage" id="<?php echo "stage_$k" ?>" class="radio" value="<?php echo $k?>" type="radio">
+            <label for="<?php echo "stage_$k" ?>"><?php echo $mountStage['title']?></label>
+            <br>
+        <?php }?>
+        <button type="button" id="generate_pdf" class="btn btn-primary">Сгенерировать PDF</button>
+    </div>
+</div>
+<hr>
 <div class="row">
     <ul class="nav nav-tabs" role="tablist">
         <?php foreach ($mountTypes as $k => $mountStage) { ?>
@@ -277,40 +297,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы</button>
     </div>
 </div>
-<!--<div id="orders-container-tar">
-    <p class="caption-tar">Заказы</p>
-    <table id="table-orders-tar" class="table table-striped one-touch-view">
-        <tr>
-            <td>Номер</td>
-            <td>Дата</td>
-            <td>Сумма</td>
-            <td>Примечание</td>
-            <td>Статус</td>
-        </tr>
-     
-        <?php /*foreach($projects as $item):*/?>
-
-            <tr class = "row_project" data-href="<?php /*echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id='.(int) $item->id.'&call_id='.(int) $call_id); */?>">
-                <td><?php /*echo $item->id;*/?></td>
-                <td>
-                    <?php /*
-                        $date = new DateTime($item->created);
-                        echo $date->Format('d.m.Y');
-                    */?>
-                </td>
-                <td><?php /*echo $item->project_sum;*/?></td>
-                <td><?php /*echo $item->gm_manager_note; */?></td>
-                <td><?php /*echo $item->status; */?></td>
-            </tr>
-
-        <?php /*endforeach;*/?>
-   
-    </table>
-    <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
-    </div>
-</div>-->
-
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_fio" class="modal_window">
@@ -395,7 +381,31 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             </tbody>
         </table>
     </div>
-</div>
+    <div id="add_mounters" class="modal_window">
+        <input type="hidden" id="selected_project">
+        <input type="hidden" id="selected_floor">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" id="all_calcs_mounter">
+
+                </div>
+                <div class="col-md-8">
+                    <h4>Назначить бригады попотолочно</h4>
+                    <table id="calcsMounters" class="table_project_analitic">
+                        <thead>
+                        <tr class="caption_table">
+                            <td>Комната</td>
+                            <td>Монтажники</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
     var progressData = [],
         mountersOption = "<option>Выберите</option>";
@@ -433,13 +443,15 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             div6 = jQuery("#modal_window_select_number"),
             div7 = jQuery("#apartment_change"),
             div8 = jQuery("#mounters_salary"),
-            div9 = jQuery("#one_mounter_salary");
+            div9 = jQuery("#one_mounter_salary"),
+            div10 = jQuery("#add_mounters");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
             && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
-            && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)
+            && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
             && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
-            && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0) {
+            && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
+            && div10.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -451,6 +463,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#apartment_change").hide();
             jQuery("#mounters_salary").hide();
             jQuery("#one_mounter_salary").hide();
+            jQuery("#add_mounters").hide();
         }
     });
 
@@ -492,6 +505,33 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#where_duplicate").empty();
         }
     });
+    jQuery("#generate_pdf").click(function () {
+        var stage = jQuery("[name='stage']:checked").val();
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=generateBuilderPDF",
+            data: {
+                id:'<?php echo $client->dealer_id; ?>',
+                stage: stage,
+                stageName:jQuery(".mount_stage.active")[0].innerText
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                var win = window.open(data.url, '_blank');
+                win.focus();
+            },
+            error: function(data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
 
     jQuery("#new_client").click(function(){
         jQuery("#close").show();
@@ -526,6 +566,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery("#modal_window_comm").show("slow");
         jQuery("#close").show();
     });
+
 
     jQuery("#but_callback").click(function (){
         jQuery("#mv_container").show();
@@ -740,39 +781,111 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
             jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
 
-            for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button; j < elem.projects.length; j++) {
+            for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
                 val = parseFloat(elem.projects[j].value);
                 sum = parseFloat(elem.projects[j].sum);
+                n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
+                n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
                 mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
                 acceptDoneBtn = "";
                 button = ACCEPT_BUTTON;
-                if(elem.projects[j].mounter){
-                    mounter = "<input type='hidden' name='mounter_id' value='"+elem.projects[j].mounter.id+"'>"+elem.projects[j].mounter.name;
-                    if(+elem.projects[j].status < stage+25)
-                    {
-                        acceptDoneBtn = CHECK_BUTTON;
-                        button = EDIT_BUTTON;
-                    }
-                    else{
-                        acceptDoneBtn = "";
-                        button = "";
-                    }
 
+                if(+elem.projects[j].status < stage+25)
+                {
+                    acceptDoneBtn = CHECK_BUTTON;
                 }
-                td = "<div class='row center'><div class='col-md-12'>" + elem.projects[j].title + "</div></div>" +
-                    "<div class='row center'>" +
-                    "<div class='col-md-6'> P=" + val.toFixed(2) + "</div><div class='col-md-6'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
+                var value = (stage == 3) ? "S=" : "P=";
+                var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
+                "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
+                "</div>" : "";
+                td = "<div class='row center'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
+                    "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
+                    "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
                     "</div>" +
-                    "<div class='row center'>" +
-                    "<div class='col-md-9' name='mounter_div'>"+mounter+"</div>" +
-                    "<div class='col-md-3' name='btn_div' style='padding:0'>"+button+"</div>" +
+                        n7 +
+                    "<div class='row center' style='margin-bottom: 5px'>" +
+                    "<div class='col-md-12' name='mounter_div'><button name = 'btn_mounters'class='btn btn-primary btn-sm'>Монтажники</buuton></div>" +
                     "</div>";
                 td+= acceptDoneBtn;
                 jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
             }
         }
+        jQuery("[name='btn_mounters']").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#add_mounters").show("slow");
+            jQuery("#close").show();
+            jQuery("#all_calcs_mounter").empty();
+            jQuery("#save_all_calcs_mounter").empty();
+            var td = jQuery(this).closest('td'),
+                floorId = jQuery(this).closest('tr').data('id'),
+                projectId = td.data('id'),
+                project = progressData[floorId].projects.find(obj=>{return obj.id == projectId}),
+                calcs = project.calcs,
+                mounters,tr,
+                trAdd = '<div class="row">' +
+                    '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
+                    '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
+                    '</div>';
+            jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ потолки</h4>");
+            if(project.status < stage+25) {
+                jQuery("#all_calcs_mounter").append(trAdd);
+            }
+            else{
+                jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
+            }
+            jQuery("#selected_floor").val(floorId);
+            jQuery("#selected_project").val(projectId);
+
+            fillMountersTable(project.status,stage,calcs);
+
+            jQuery(".edit_mounter").click(function(){
+                jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+                jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
+                this.remove();
+
+                reassignEvents();
+
+            });
+
+            reassignEvents();
+        });
     }
 
+    function fillMountersTable(projectStatus,stage,calcs){
+        console.log(projectStatus,stage);
+    var mounters,tr,
+        trAdd = '<div class="row">' +
+            '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
+            '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
+            '</div>';
+        jQuery("#calcsMounters > tbody").empty();
+        jQuery.each(calcs,function(index,elem){
+            jQuery("#calcsMounters > tbody").append('<tr/>');
+            jQuery("#calcsMounters > tbody > tr:last").attr('data-calc_id',elem.id);
+            mounters = elem.mounters;
+            tr ='<td>'+elem.title+'</td><td>';
+            if(mounters) {
+                mounters.forEach(function (el) {
+                    if(projectStatus < stage+25) {
+                        tr += '<div class="row">' +
+                            '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
+                            '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
+                            '</div>';
+                    }
+                    else{
+                        tr += '<div class="row">' +
+                            '<div class="col-md-12" name = "mounter_div">' + el.name + '</div>' +
+                            '</div>';
+                    }
+                });
+            }
+            else{
+                tr+=trAdd;
+            }
+            tr+='</td>';
+            jQuery("#calcsMounters > tbody > tr:last").append(tr);
+        });
+    }
     function getReportData(stage){
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=clients.getInfoByFloors",
@@ -828,37 +941,50 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery('.accept_mounter').click(function(){
             saveMounter(this);
         });
-
         jQuery(".edit_mounter").click(function(){
             jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
-            jQuery(this.closest('td')).find("[name = 'btn_div']").append(ACCEPT_BUTTON);
+            jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
             this.remove();
 
             reassignEvents();
 
         });
-
-        jQuery("[name = 'check_btn']").click(function () {
-            saveSum(this);
-        });
     }
 
-    function saveMounter(element){
+    function saveMounter(element) {
         var td = jQuery(element).closest('td'),
             mounterId = td.find('select').val(),
             mounterName = td.find('select option:selected').text(),
             stage = jQuery('.active.mount_stage').data("mount_type"),
-            projectId = td.data('id'),
-            data = JSON.stringify([{"mounter":mounterId,"stage":stage,"time":""}]);
+            calcId = jQuery(element).closest('tr').data('calc_id'),
+            floorId = jQuery("#selected_floor").val(),
+            projectId = jQuery("#selected_project").val(),
+            allCallcsMount = false,
+            calcsId = [],
+            project = progressData[floorId].projects.find(obj => {
+                return obj.id == projectId
+            });
+        if (!calcId) {
+            calcsId = Object.keys(project.calcs);
+            var mounterSelect = jQuery("#all_calcs_mounter").find('select');
+            mounterId = mounterSelect.val();
+            mounterName = mounterSelect.find('option:selected').text();
+            td = jQuery("#all_calcs_mounter");
+            allCallcsMount = true;
+        }
+        console.log(calcId,calcsId,stage,mounterId);
         jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=project.saveStageMount",
+
+            url: "index.php?option=com_gm_ceiling&task=Calcs_mounts.updateMounter",
             data: {
-                id: projectId,
-                mount_data: data
+                calcId: calcId,
+                calcsId:calcsId,
+                stage: stage,
+                mounterId: mounterId
             },
             dataType: "json",
             async: false,
-            success: function(data) {
+            success: function (data) {
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -867,13 +993,27 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     type: "success",
                     text: "Сохранено!"
                 });
-                td.find("[name = 'mounter_div']")[0].innerHTML = "<input type='hidden' name='mounter_id' value ="+mounterId+">"+mounterName;
+
+                if(allCallcsMount){
+                    var calcs = progressData[floorId].projects.find(obj => {return obj.id == projectId}).calcs;
+                    jQuery.each(calcs,function(index,elem){
+                       elem.mounters = [data];
+                    });
+                    //поменять данные в таблице
+                    fillMountersTable(project.status,stage,calcs);
+
+                }else{
+                    progressData[floorId].projects.find(obj => {
+                        return obj.id == projectId
+                    }).calcs[calcId].mounters = [data];
+                }
+
+                td.find("[name = 'mounter_div']")[0].innerHTML = "<input type='hidden' name='mounter_id' value =" + mounterId + ">" + mounterName;
                 td.find("[name = 'btn_div']").append(EDIT_BUTTON);
-                td.append(CHECK_BUTTON);
                 reassignEvents();
                 element.remove();
             },
-            error: function(data) {
+            error: function (data) {
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -884,27 +1024,29 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 });
             }
         });
+
     }
 
     function saveSum(elem) {
-        var td = jQuery(elem.closest('td')),
+        var floorId = jQuery(elem).closest('tr').data('id'),
+            td = jQuery(elem.closest('td')),
             sum = td.find('.sum').text(),
-            mounterId = td.find('[name = "mounter_id"]').val(),
             projectId = td.data('id'),
-            stage = jQuery('.active.mount_stage').data("mount_type");
+            stage = jQuery('.active.mount_stage').data("mount_type"),
+            project = progressData[floorId].projects.find(obj=>{return obj.id == projectId}),
+            calcs = project.calcs;
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
             data: {
-                mounterId: mounterId,
+                calcs: calcs,
                 projectId: projectId,
-                sum: sum,
                 stage: stage
             },
             dataType: "json",
             async: false,
             success: function (data) {
                 elem.remove();
-                td.find('.edit_mounter')[0].remove();
+                project.status = stage+25;
             },
             error: function (data) {
                 var n = noty({
@@ -921,6 +1063,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
     jQuery(document).ready(function ()
     {
+        jQuery(jQuery("[name='stage']")[0]).attr("checked","true");
         getMounters();
         var firstTab = jQuery(jQuery(".mount_stage")[0]),
             stage = firstTab.data("mount_type"),

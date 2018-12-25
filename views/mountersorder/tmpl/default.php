@@ -23,7 +23,7 @@ $stage = $jinput->get('stage', null, 'INT');
 $calc_sum_stage = 0;
 $project_model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 $project_data = $project_model->getData($project);
-$service = !empty(json_decode($project_data->mounting_check)) ? true : false; 
+$service = !empty(json_decode($project_data->calcs_mounting_sum)) ? true : false;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);

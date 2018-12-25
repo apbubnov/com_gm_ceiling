@@ -38,13 +38,7 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $app = JFactory::getApplication();
-            $start = $app->input->getInt('start', 0);
             $user = JFactory::getUser();
-            /*if ($start == 0)
-            {
-                $app->input->set('limitstart', 0);
-            }*/
-
             $view = $app->input->getCmd('view', 'components');
             $task = $app->input->getCmd('task', 'components');
             $subtype = $app->input->getCmd('subtype', NULL);
@@ -134,7 +128,7 @@ class Gm_ceilingController extends JControllerLegacy
     /* Функция для AJAX-изменения комментария бухгалтера. */
     public function change_buh_note()
     {
-        try
+       /* try
         {
             $jinput = JFactory::getApplication()->input;
         
@@ -152,7 +146,7 @@ class Gm_ceilingController extends JControllerLegacy
        catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+        }*/
     }
 
     /* Функция для AJAX-изменения статуса договора. */
@@ -222,10 +216,10 @@ class Gm_ceilingController extends JControllerLegacy
     {
         try
         {
-            $jinput = JFactory::getApplication()->input;
-        
+           /* $jinput = JFactory::getApplication()->input;
+
             $id = $jinput->get('id', '0', 'INT');
-    
+
             $extra_spend_title = $jinput->get('extra_spend_title', '', 'ARRAY');
             $extra_spend_value = $jinput->get('extra_spend_value', '', 'ARRAY');
             $extra_spend = array();
@@ -238,11 +232,11 @@ class Gm_ceilingController extends JControllerLegacy
                 }
             }
             $extra_spend = json_encode($extra_spend, JSON_FORCE_OBJECT);
-    
+
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $result = $project_model->update_spend($id, $extra_spend);
-    
-            die($result);
+
+            die($result);*/
         }
        catch(Exception $e)
         {
@@ -3293,12 +3287,62 @@ public function register_mnfctr(){
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 
-    function test(){
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf2(58);
+    function generateBuilderPDF(){
+       try{
+           $jinput = JFactory::getApplication()->input;
+           $builderId = $jinput->getInt('id');
+           $stage = $jinput->getInt('stage');
+           $stageName = $jinput->get('stageName','',"STRING");
+           $objectName = JFactory::getUser($builderId)->name;
+           $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+           $data = $model->getClientsAndprojectsData($builderId,$stage);
+           $valueTitle = ($stage == 3) ? "S=" : "P=";
+           $html = "<h1>Объект: $objectName($stageName)</h1>";
+           $html .= "<table style='width:100%;border-collapse: collapse;'>";
+           foreach($data as $floor){
+               $html .="<tr>";
+               $html .="<td style='width: 7%'>";
+               $html .= $floor['name'];
+               $html .="</td>";
+               foreach ($floor['projects'] as $project){
+                   $html .= "<td>";
+                   $html .= "<div style='font-size:9pt;'>";
+                        $html .= "<div><b>".$project->title."</b></div>";
+                   $html .= "</div>";
+                   $html .= "<div  style='font-size:9pt;font-style:italic;'>";
+                        $html .= "<div>".$valueTitle.$project->value." (".$project->sum.")</div>";
+                   $html .="</div>";
+                   if($stage == 2) {
+                       $html .= "<div style='font-size:9pt;font-style:italic;'>";
+                            $html .= "<div>Плитка=" . $project->n7 . "(" . $project->n7_cost . ")</div>";
+                       $html .="</div>";
+                   }
+                   $html .= "<div>_____________</div>";
+                   $html .= "</td>";
+               }
+               $html .= "</tr>";
+           }
+           $html .= "</table>";
+           $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
+           $filename = md5($builderId."blank".$stage) . ".pdf";
+           $mpdf = new mPDF('utf-8', "A4", '6', '', 1, 2, 1, 1, 1, 1);
+           $mpdf->showImageErrors = true;
+           $mpdf->SetDisplayMode('fullpage');
+           $mpdf->list_indent_first_level = 0;
+           $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
+           $mpdf->WriteHTML($stylesheet, 1);
+           $mpdf->WriteHTML($html, 2);
+           $mpdf->Output($sheets_dir . $filename, 'F');
+
+           $result['url'] = "/tmp/".$filename;
+           die(json_encode($result));
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
     }
 }
 

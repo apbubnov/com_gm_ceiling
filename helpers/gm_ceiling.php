@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
  */
 /* включаем библиотеку для формирования PDF */
 include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
+const VERDICT_STATUSES = [4,5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {
@@ -634,7 +635,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
-            if (empty($data['calculation_title']))
+            if (empty($data['calculation_title']) || $data['calculation_title'] == "Без имени")
             {
                 $db = JFactory::getDBO();
                 $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
@@ -2675,6 +2676,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin = 0;
             $total_with_dealer_margin = 0;
             $stages = [];
+            $calcMountData['id'] = $data['id'];
             foreach ($mounting_data as $mounting_item) {
                 $mounting_item['gm_salary_total'] = $mounting_item['gm_salary_total'];
                 $mounting_item['dealer_salary_total'] = $mounting_item['dealer_salary_total'];
@@ -2683,7 +2685,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $total_with_gm_margin += $mounting_item['total_with_gm_margin'];
                 $total_with_gm_dealer_margin += $mounting_item['total_with_gm_dealer_margin'];
                 $total_with_dealer_margin += $mounting_item['total_with_dealer_margin'];
-                $stages[$mounting_item['stage']] += $mounting_item['gm_salary_total'];
+                $stages[$mounting_item['stage']] += $mounting_item['dealer_salary_total'];
             }
 
             $result['mounting_data'] = $mounting_data;
@@ -2693,6 +2695,9 @@ class Gm_ceilingHelpersGm_ceiling
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
             $result['total_with_dealer_margin'] = $total_with_dealer_margin;
             $result['stages'] = $stages;
+            $calcMountData['stages'] = $stages;
+            $calcsMountModel = self::getModel('calcs_mount');
+            $calcsMountModel->save($calcMountData);
             return $result;
         }
         catch(Exception $e)
@@ -2804,7 +2809,6 @@ class Gm_ceilingHelpersGm_ceiling
             $calculations_model = self::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
             $full = false;
-            $service_sums = get_object_vars(json_decode($project->mounting_check));
             if(!empty($calc_ids)){
                 foreach($calculations as $key => $calculation){
                     if(!in_array($calculation->id,$calc_ids)){

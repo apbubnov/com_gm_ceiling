@@ -1001,23 +1001,35 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     {
         try
         {
+            /*n3,n4,n5,n5_shrink,n9,n10,n31,shrink_percent,calc_data,cut_data,original_sketch,offctu_square
+            сохраняются на контроллере skecth (controllers/sketch.php)*/
+            $date_created = date("Y-m-d H:i:s");
+            $columns = [
+                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n19","n20","n21","n24","n25","n27","n28",
+                "n30","n32","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
+                "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount",
+                "color","details","discount","manager_note"
+            ];
+            $calculationId = $data['id'];
 
             $db = $this->getDbo();
-            $user = JFactory::getUser();
-            if (empty($user->id)) $user->id = 2;
-            //эта функция на всякий случай, если вдруг цвет не запишется, пока причину потери цвета найти не могу!
-   /*         if(!empty($data['n3']) && empty($data['color']) && ($data['n2'] == 2 || $data['n2'] == 4 || $data['n2'] == 6 || $data['n2'] == 29))
-            {
-                $query = $db->getQuery(true);
-                $query
-                    ->select(' canvases.id AS canvases_id, canvases.color_id')
-                    ->from('`#__gm_ceiling_canvases` AS canvases')
-                    ->where('canvases.id =' . $data['n3'] . ' AND canvases.color_id IS NOT NULL');
-                $db->setQuery($query);
-                $color_id = $db->loadObject()->color_id;
-                $data['color'] = $color_id;
-            }*/
+            $query = $db->getQuery(true);
+            $query
+                ->update('`#__gm_ceiling_calculations`')
+                ->set('checked_out_time = ' . $db->quote($date_created));
+            foreach ($columns as $column){
+                if(!empty($data[$column])){
+                    $value = (gettype($data[$column]) == "string") ? "'".$data[$column]."'" : $data[$column];
+                    $query->set("$column = $value");
+                }
+            }
+            $query->where('id = ' . $data['id']);
 
+            $db->setQuery($query);
+            $db->execute();
+
+
+            /*сохранение комлектующих, которые имеют виды*/
             $n13 = json_decode($data['n13']);
             $n14 = json_decode($data['n14']);
             $n15 = json_decode($data['n15']);
@@ -1026,431 +1038,138 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $n26 = json_decode($data['n26']);
             $n29 = json_decode($data['n29']);
             
-            $calculationId = $data['id'];
-            $date_created = date("Y-m-d H:i:s");
+
+
             if (!empty($n29)) {
                 foreach ($n29 as $key => $value) $n29[$key][0] = str_replace(",",".", $value[0]);
             }
-
-            $data['n16'] = ($data['n16'] == 1) ? '1' : '0';
-            if (empty($calculationId)) {
-               /* foreach ($data as  $key => $value) if ($value === "") $data[$key] = "NULL";
-                if($data['n2'] == 0) $data['n2'] = "NULL";
-                if($data['n3'] == 0) $data['n3'] = "NULL";
-               */
+            if ($del_flag) {
                 $query = $db->getQuery(true);
-                $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', 'dealer_components_sum', 'dealer_canvases_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'components_stock', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount','need_mount');
+                $query->delete($db->quoteName('#__gm_ceiling_fixtures'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
 
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_pipes'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_cornice'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_hoods'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_diffusers'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_ecola'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_profil'));
+                $query->where('calculation_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            if (!empty($n13)) {
+                $query = $db->getQuery(true);
                 $query
-                
-                    ->insert($db->quoteName('#__gm_ceiling_calculations'))
-                    ->columns($db->quoteName($columns))
-                    ->values( 
-                        $data['id'] . ', '
-                        . $data['state'] . ', '
-                        . $data['checked_out'] . ', '
-                        . $db->quote($date_created) . ', '
-                        . $user->id . ', '
-                        . $user->id . ', '
-                        . $db->quote($data['calculation_title']) . ', '
-                        . $data['project_id'] . ', '
-                        . $data['n6'] . ', '
-                        . $data['n7'] . ', '
-                        . $data['n8'] . ', '
-                        . $data['n9'] . ', '
-                        . $data['n10'] . ', '
-                        . $data['n11'] . ', '
-                        . $data['n12'] . ', '
-                        . $data['n16'] . ', '
-                        . $data['n17'] . ', '
-                        . $data['n18'] . ', '
-                        . $data['n19'] . ', '
-                        . $data['n20'] . ', '
-                        . $data['n21'] . ', '
-                        . $data['n24'] . ', '
-                        . $data['n25'] . ', '
-                        . $data['n27'] . ', '
-                        . $data['n28'] . ', '
-                        . $data['n30'] . ', '
-                        . $data['n31'] . ', '
-                        . $data['n32'] . ', '
-                        . $data['height'] . ', '
-                        . $data['components_sum'] . ', '
-                        . $data['canvases_sum'] . ', '
-                        . $data['dealer_components_sum'] . ', '
-                        . $data['dealer_canvases_sum'] . ', '
-                        . $data['mounting_sum'] . ', '
-                        /*. $data['transport'] . ', '*/
-                        . $data['dop_krepezh'] . ', '
-                        . $db->quote($data['extra_components']) . ', '
-                        . $db->quote($data['extra_mounting']) . ', '
-                        . $db->quote($data['components_stock']) . ', '
-                        . $db->quote($data['color']) . ', '
-                        . $db->quote($data['details']) . ', '
-                        . $db->quote($data['discount']) . ', '
-                        . $db->quote($data['need_mount']));
- //print_r((string) $query); exit;
+                    ->insert('`#__gm_ceiling_fixtures`')
+                    ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
 
-                $db->setQuery($query);
-                //throw new Exception($query);
-                
-                $db->execute();
-
-
-                $query = $db->getQuery(true);
-                $query->from('`#__gm_ceiling_calculations` AS calc')
-                    ->select('calc.id AS id')
-                    ->where('calc.checked_out_time = ' . $db->quote($date_created));
-                $db->setQuery($query);
-                $calculationId = ($db->loadObject())->id;
-
-
-                if (!empty($n13)) {
-                    $query = $db->getQuery(true);
-                    $query
-                        ->insert('`#__gm_ceiling_fixtures`')
-                        ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
-
-                    foreach ($n13 as $value) {
+                foreach ($n13 as $value) {
+                    if (!empty($value[0]))
                         $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-
                 }
-
-                if (!empty($n14)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_pipes`')
-                        ->columns('calculation_id, n14_count, n14_size');
-                    foreach ($n14 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n15)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_cornice`')
-                        ->columns('calculation_id, n15_count, n15_type, n15_size');
-                    foreach ($n15 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n22)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_hoods`')
-                        ->columns('calculation_id, n22_count, n22_type, n22_size');
-                    foreach ($n22 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n23)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_diffusers`')
-                        ->columns('calculation_id, n23_count, n23_size');
-                    foreach ($n23 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n26)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_ecola`')
-                        ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
-                    foreach ($n26 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                
-                if (!empty($n29)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_profil`')
-                        ->columns('calculation_id, n29_count, n29_type');
-                    foreach ($n29 as $value) {
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_cuttings`')
-                    ->columns('id')
-                    ->values($calculationId);
-
                 $db->setQuery($query);
                 $db->execute();
-            } else {
-                //print_r($data); exit;
-                
-                $query = $db->getQuery(true);
-                $query->update('`#__gm_ceiling_calculations` AS calc')
-                    ->set('calc.checked_out_time = ' . $db->quote($date_created))
-                    ->set('calc.calculation_title = ' . $db->quote($data['calculation_title']));
-                if (empty($data['n6'])) $query->set('calc.n6 = 0');
-                else $query->set('calc.n6 = ' . $db->quote($data['n6']));
-                if (empty($data['n7'])) $query->set('calc.n7 = 0');
-                else $query->set('calc.n7 = ' . $db->quote($data['n7']));
-                if (empty($data['n8'])) $query->set('calc.n8 = 0');
-                else $query->set('calc.n8 = ' . $db->quote($data['n8']));
-                if (empty($data['n10'])) $query->set('calc.n10 = 0');
-                else $query->set('calc.n10 = ' . $db->quote($data['n10']));
-                if (empty($data['n11'])) $query->set('calc.n11 = 0');
-                else $query->set('calc.n11 = ' . $db->quote($data['n11']));
-                if (empty($data['n12'])) $query->set('calc.n12 = 0');
-                else $query->set('calc.n12 = ' . $db->quote($data['n12']));
-                $query->set('calc.n16 = ' . $db->quote($data['n16']));
-                if (empty($data['n17'])) $query->set('calc.n17 = 0');
-                else $query->set('calc.n17 = ' . $db->quote($data['n17']));
-                if (empty($data['n18'])) $query->set('calc.n18 = 0');
-                else $query->set('calc.n18 = ' . $db->quote($data['n18']));
-                if (empty($data['n19'])) $query->set('calc.n19 = 0');
-                else $query->set('calc.n19 = ' . $db->quote($data['n19']));
-                if (empty($data['n20'])) $query->set('calc.n20 = 0');
-                else $query->set('calc.n20 = ' . $db->quote($data['n20']));
-                if (empty($data['n21'])) $query->set('calc.n21 = 0');
-                else $query->set('calc.n21 = ' . $db->quote($data['n21']));
-                if (empty($data['n24'])) $query->set('calc.n24 = 0');
-                else $query->set('calc.n24 = ' . $db->quote($data['n24']));
-                if (empty($data['n25'])) $query->set('calc.n25 = 0');
-                else $query->set('calc.n25 = ' . $db->quote($data['n25']));
-                if (empty($data['n27'])) $query->set('calc.n27 = 0');
-                else $query->set('calc.n27 = ' . $db->quote($data['n27']));
-                if (empty($data['n28'])) $query->set('calc.n28 = 0');
-                else $query->set('calc.n28 = ' . $db->quote($data['n28']));
-                if (empty($data['n30'])) $query->set('calc.n30 = 0');
-                else $query->set('calc.n30 = ' . $db->quote($data['n30']));
-                if (empty($data['n31'])) $query->set('calc.n31 = 0');
-                else $query->set('calc.n31 = ' . $db->quote($data['n31']));
-                if (empty($data['n32'])) $query->set('calc.n32 = 0');
-                else $query->set('calc.n32 = ' . $db->quote($data['n32']));
-                if (empty($data['height'])) $query->set('calc.height = 0');
-                else $query->set('calc.height = ' . $db->quote($data['height']));
-                $query->set('calc.components_sum = \'' . $data['components_sum'].'\'');
-                $query->set('calc.canvases_sum = \'' . $data['canvases_sum'].'\'');
-                $query->set('calc.mounting_sum = \'' . $data['mounting_sum'].'\'');
-                $query->set('calc.dealer_components_sum = \'' . $data['dealer_components_sum'].'\'');
-                $query->set('calc.dealer_canvases_sum = \'' . $data['dealer_canvases_sum'].'\'');
-               /* $query->set('calc.transport = ' . $data['transport']);*/
-                $query->set('calc.dop_krepezh = \'' . $data['dop_krepezh'].'\'');
-                $query->set('calc.extra_components = ' . $db->quote($data['extra_components']));
-                $query->set('calc.extra_mounting = ' . $db->quote($data['extra_mounting']));
-                $query->set('calc.components_stock = ' . $db->quote($data['components_stock']));
-                $query->set('calc.need_mount = ' . $db->quote($data['need_mount']));
-                if (empty($data['color'])) $query->set('calc.color = \'NULL\'');
-                else $query->set('calc.color = ' . $db->quote($data['color']));
-                //$query->set('calc.color = ' . $data['color']);
-                $query->set('calc.details = ' . $db->quote($data['details']));
-               // if (!empty($data['calc_image'])) $query->set('calc.calc_image = ' . $db->quote($data['calc_image']));
-               
-
-               /* if (empty($data['distance'])) $query->set('calc.distance = 0');
-                else $query->set('calc.distance = ' . $db->quote($data['distance']));
-                if (empty($data['distance_col'])) $query->set('calc.distance_col = 0');
-                else $query->set('calc.distance_col = ' . $db->quote($data['distance_col']));*/
-                if (empty($data['discount'])) $query->set('calc.discount = 0');
-                else $query->set('calc.discount = ' . $db->quote($data['discount']));
-                $query->where('calc.id = ' . $data['id']);
-               // print_r((string)$query); exit;
-                //throw new Exception($query);
-                $db->setQuery($query);
-                $result = $db->execute();
-
-                if ($del_flag) {
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_fixtures'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_pipes'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_cornice'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_hoods'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_diffusers'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_ecola'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->delete($db->quoteName('#__gm_ceiling_profil'));
-                    $query->where('calculation_id = ' . $data['id']);
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-
-                if (!empty($n13)) {
-                    $query = $db->getQuery(true);
-                    $query
-                        ->insert('`#__gm_ceiling_fixtures`')
-                        ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
-
-                    foreach ($n13 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-
-                if (!empty($n14)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_pipes`')
-                        ->columns('calculation_id, n14_count, n14_size');
-                    foreach ($n14 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n15)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_cornice`')
-                        ->columns('calculation_id, n15_count, n15_type, n15_size');
-                    foreach ($n15 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n22)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_hoods`')
-                        ->columns('calculation_id, n22_count, n22_type, n22_size');
-                    foreach ($n22 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n23)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_diffusers`')
-                        ->columns('calculation_id, n23_count, n23_size');
-                    foreach ($n23 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n26)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_ecola`')
-                        ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
-                    foreach ($n26 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-                if (!empty($n29)) {
-                    $query = $db->getQuery(true);
-                    $query->insert('`#__gm_ceiling_profil`')
-                        ->columns('calculation_id, n29_count, n29_type');
-                    foreach ($n29 as $value) {
-                        if (!empty($value[0]))
-                            $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] );
-                    }
-                    $db->setQuery($query);
-                    $db->execute();
-                }
-
-            }
-    /*
-            if (!empty($data['project_discount'])) {
-
-                $query = $db->getQuery(true);
-                $query->update('`#__gm_ceiling_projects` AS project')
-                    ->set('project.project_discount = ' . $db->quote($data['project_discount']))
-                    ->where('project.id = ' . $data['project_id']);
-                $db->setQuery($query);
-                $result = $db->execute();
             }
 
-    */
-            if (empty($calculationId)) return false;
-            else return $calculationId;
+            if (!empty($n14)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_pipes`')
+                    ->columns('calculation_id, n14_count, n14_size');
+                foreach ($n14 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n15)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_cornice`')
+                    ->columns('calculation_id, n15_count, n15_type, n15_size');
+                foreach ($n15 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n22)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_hoods`')
+                    ->columns('calculation_id, n22_count, n22_type, n22_size');
+                foreach ($n22 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n23)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_diffusers`')
+                    ->columns('calculation_id, n23_count, n23_size');
+                foreach ($n23 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n26)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_ecola`')
+                    ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
+                foreach ($n26 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if (!empty($n29)) {
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_profil`')
+                    ->columns('calculation_id, n29_count, n29_type');
+                foreach ($n29 as $value) {
+                    if (!empty($value[0]))
+                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] );
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
 
-    //
-    //		$id    = (!empty($data['id'])) ? $data['id'] : (int) $this->getState('calculation.id');
-    //		$state = (!empty($data['state'])) ? 1 : 0;
-    //
-    //
-    //		if ($id)
-    //		{
-    //			// Check the user can edit this item
-    //			$authorised = $user->authorise('core.edit', 'com_gm_ceiling') || $authorised = $user->authorise('core.edit.own', 'com_gm_ceiling');
-    //		}
-    //		else
-    //		{
-    //			// Check the user can create new items in this section
-    //			$authorised = $user->authorise('core.create', 'com_gm_ceiling');
-    //		}
-    //
-    //		if ($authorised !== true)
-    //		{
-    //			//throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 403);
-    //		}
-    //
-    //		$groups = $user->get('groups');
-    //
-    //
-    //		//Если менеджер дилера, то показывать дилерских клиентов
-    //		if(empty($data['dealer_id'])) {
-    //			if(isset($user->dealer_id)) {
-    //				$data['dealer_id'] = $user->dealer_id;
-    //			} else {
-    //				$data['dealer_id'] = 2;
-    //			}
-    //		}
-    //
-    //
-    //		$table = $this->getTable();
-    //
-    //		if ($table->save($data) === true)
-    //		{
-    //			$return = $table->id;
-    //		}
-    //		else
-    //		{
-    //			$return = false;
-    //		}
-    //
-    //	return $return;
+
+           return $calculationId;
         }
         catch(Exception $e)
         {

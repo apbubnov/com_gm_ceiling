@@ -516,7 +516,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
             }
             $data->project_sum = $sum;
-			$data->project_verdict = 1;
+			//$data->project_verdict = 1;
 			$calculations = $calculationsModel->new_getProjectItems($data->id);
 			$all_calculations = array();
 			foreach($calculations as $calculation){
@@ -569,7 +569,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$project_data = $model->getData($project_id);
 						$project_data->project_status = 3;
 						$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
-						$project_data->project_verdict = 0;
+						//$project_data->project_verdict = 0;
 						$project_data->client_id = 	$client_id;
 						$project_data->api_phone_id = 10;
 
@@ -778,7 +778,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
                     $project_status = $jinput->get('project_status', '0', 'INT');
 
-					$data->project_verdict = $project_verdict;
+					//$data->project_verdict = $project_verdict;
 					
                     $data->project_status = $project_status;
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -795,7 +795,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						if($user->dealer_type!=2 && $project_verdict == 1) 
 						{
 							if(empty($mount_data)){
-								$data->project_verdict = 0;
+								//$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
 								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
@@ -810,7 +810,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							}
 							else{
 								if($project_status == 4){
-									$data->project_verdict = 0;
+									//$data->project_verdict = 0;
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж.".$mount_str );
 									//$return = $model->activate($data, 4);
@@ -843,13 +843,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
                                         }
                                     }
-                                    $pr_data['mounting_check'] = json_encode($mount_sum);
+                                    $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
                                     $this->change_project_data($pr_data);
                                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
                                     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation,"service");
                                 }
                                 else{
-                                      $pr_data['mounting_check'] = "";
+                                      $pr_data['calcs_mounting_sum'] = "";
                                 }
 							}
 							
@@ -923,7 +923,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							$client_id = $data->id_client_num;
 							$project_data->project_status = 3;
 							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
-							$project_data->project_verdict = 0;
+							//$project_data->project_verdict = 0;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
 							$project_data->client_id = $client_id;
@@ -1950,7 +1950,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
             $data['id'] = $project_id;
-            $data['mounting_check'] = '';
+            $data['calcs_mounting_sum'] = '';
             $project_model->save($data);
             $projects_mounts_model->delete($project_id);
             die(json_encode(true));

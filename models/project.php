@@ -524,7 +524,7 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
-			if($project_id > 0 && ($check == 0 || $check == 1)){
+			/*if($project_id > 0 && ($check == 0 || $check == 1)){
 				$table = $this->getTable();
 				$table->load($project_id);
 				if($type == 0) {
@@ -547,7 +547,7 @@ class Gm_ceilingModelProject extends JModelItem
 				$return = $table->store();
 			}
 
-			return $return;
+			return $return;*/
 		}
 		catch(Exception $e)
         {
@@ -580,7 +580,6 @@ class Gm_ceilingModelProject extends JModelItem
 			$db = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query->update('`#__gm_ceiling_projects`')
-				->set('project_verdict = ' . $db->quote($data->project_verdict))
 				->set('project_note = ' . $db->quote($data->project_note))
 				->set('gm_calculator_note = ' . $db->quote($data->gm_calculator_note))
 				->set('dealer_calculator_note = ' . $db->quote($data->dealer_calculator_note))
@@ -640,7 +639,6 @@ class Gm_ceilingModelProject extends JModelItem
 			$table = $this->getTable();
 			if($id > 0) {
 				$table->load($id);
-				if($project_status == 1) $table->project_verdict = "0";
 				$table->project_status = $project_status;
 			}
 			$return = $table->store();
@@ -1011,7 +1009,6 @@ class Gm_ceilingModelProject extends JModelItem
 	        $query = $db->getQuery(true);
 	        $query->update('`#__gm_ceiling_projects` AS projects')
 	            ->set('projects.project_status = 1')
-                ->set('projects.project_verdict = 0')
 	            ->where('projects.id = ' . $id);
 	        $db->setQuery($query);
 	        $return = $db->execute();
@@ -1234,7 +1231,6 @@ class Gm_ceilingModelProject extends JModelItem
 		{
 			$table = $this->getTable();
 			$table->load(0);
-			$table->project_verdict = $copy_data->project_verdict;
 			$table->project_note = $copy_data->project_note;
 			$table->gm_calculator_note = $copy_data->gm_calculator_note;
 			$table->dealer_calculator_note = $copy_data->dealer_calculator_note;

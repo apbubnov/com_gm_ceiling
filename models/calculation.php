@@ -760,6 +760,8 @@ class Gm_ceilingModelCalculation extends JModelItem
             $n23 = $data['n23'];
             $n26 = $data['n26'];
             $n29 = $data['n29'];
+            $mountData = $data['mountData'];
+
             unset($data['n13']);
             unset($data['n14']);
             unset($data['n15']);
@@ -768,6 +770,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             unset($data['n26']);
             unset($data['n29']);
             unset($data['dealer_id']);
+            unset($data['mountData']);
 
             $columns = array_keys($data);
             $values = array_values($data);
@@ -783,6 +786,19 @@ class Gm_ceilingModelCalculation extends JModelItem
             $db->setQuery($query);
             $db->execute();
             $calculationId = $db->insertId();
+
+            if(!empty($mountData)){
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`rgzbn_gm_ceiling_calcs_mount`')
+                    ->columns('`calculation_id`, `stage_id`, `sum`');
+                foreach ($mountData as $mountItem) {
+                    $query->values($calculationId . ', ' . $mountItem->stage_id . ', ' . $mountItem->sum);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+
             if (!empty($n13)) {
                 $query = $db->getQuery(true);
                 $query

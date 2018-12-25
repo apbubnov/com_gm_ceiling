@@ -50,7 +50,7 @@ $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
-$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+$service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
 foreach ($calculations as $calculation) {
      $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -104,7 +104,7 @@ $project_total_discount = ($project_total_discount > $min_project_sum ) ? $proje
 $month = date("n");
 $year = date("Y");
 $FlagCalendar = [3, $user->dealer_id];
-$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+
 //----------------------------------------------------------------------------------
 
 // все замерщики
@@ -123,7 +123,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-
+<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->id_client;?>">В карточку</a>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php
@@ -404,7 +404,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                     </div> 
             </div>
             <table class="table calculation_sum">
-                <?php if ($this->item->project_verdict == 0) { ?>
+                <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                     <tr>
                         <td style=" padding-left:0;"><a class="btn btn-primary" id="change_discount">Изменить величину
                                 скидки</a></td>
@@ -435,7 +435,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
     </div>
     </div>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-    <?php if ($this->item->project_verdict == 0) { ?>  
+    <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
         <button class="btn  btn-primary" id="run_in_production" type="button">
             Запустить в производство
         </button>

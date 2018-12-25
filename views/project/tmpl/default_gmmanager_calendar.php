@@ -436,7 +436,7 @@
                         <label for='client'>Да</label>
                     </div>
                 </div> -->
-                <?php if ($this->item->project_verdict == 0) {
+                <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) {
                     $skidka = 0;
                     if (!empty($calculation_total)) {
                         $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100;
@@ -509,7 +509,7 @@
     </div>  
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
-    <?php if ($this->item->project_verdict == 0) { ?>
+    <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
         <divclass="container">
             <div class="row">
                 <div class="col-xs-12 col-xm-12 col-md-4 col-lg-4">

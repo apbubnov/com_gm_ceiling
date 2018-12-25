@@ -93,6 +93,7 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $calcModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
             $ids = $jinput->get('clients',array(),'ARRAY');
             $fromId = $jinput->get('idFrom',null,'INT');
             $fromProjects = $projectsModel->getClientsProjects($fromId);
@@ -110,6 +111,8 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
                     $calcData = $calcModel->new_getData($calcId->id);
                     unset($calcData->id);
                     $calcData = get_object_vars($calcData);
+                    $mountData = $calcsMountModel->getData($calcId->id);
+                    $calcData['mountData'] = $mountData;
                     foreach ($toDupProjects as $dupProj){
                         if($dupProj->project_info == $proj->project_info){
                             $calcData['project_id'] = $dupProj->id;

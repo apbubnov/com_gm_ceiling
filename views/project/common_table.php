@@ -128,7 +128,7 @@
                     </a>
                 </li>
             <?php } ?>
-            <?php if(!$this->item->project_verdict){?>
+            <?php if(!in_array($this->item->project_status,VERDICT_STATUSES)){?>
                 <li class="nav-item"> 
                     <button type="button" class="nav-link" id="add_calc" style="color:white;" <?php echo $hidden?>>
                         Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
@@ -551,8 +551,11 @@
 
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
-                                <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>" <?php echo $hidden; ?>>Изменить расчет</a>
-                            <?php  
+
+                                <?php if(!in_array($this->item->project_status,VERDICT_STATUSES)){ ?>
+                                    <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>" <?php echo $hidden; ?>>Изменить расчет</a>
+                                <?php }?>
+                                <?php
                             } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">

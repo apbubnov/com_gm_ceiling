@@ -42,7 +42,7 @@ if (!empty($subtype))
 {
     $subtype_url = "&subtype=$subtype";
 }
-$service_mount = get_object_vars(json_decode($this->item->mounting_check));
+$service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
 $need_service =(!empty($service_mount)) ? true : false;
 
 

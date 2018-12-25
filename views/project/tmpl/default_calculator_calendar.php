@@ -48,8 +48,8 @@ $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
-if (!empty($this->item->mounting_check)) {
-    $service_mount = get_object_vars(json_decode($this->item->mounting_check));
+if (!empty($this->item->calcs_mounting_sum)) {
+    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
 }
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 if(!empty($service_mount)){
@@ -381,7 +381,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <!-- расчеты для проекта -->
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
-    <?php if ($this->item->project_verdict == 0) { ?>
+    <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
         <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
             <div class="row center">
                 <div class="col-md-6">

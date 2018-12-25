@@ -447,7 +447,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                     </div>
             </div>
             <table class="table calculation_sum">
-                <?php if ($this->item->project_verdict == 0) { ?>
+                <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                     <tr>
                         <td style=" padding-left:0;"><a class="btn btn-primary" id="change_discount">Изменить величину
                                 скидки</a></td>
@@ -481,7 +481,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
     
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
    
-       <?php if ($this->item->project_verdict == 0) { ?>
+       <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
             <table>
                 <tr>
                     <td>
