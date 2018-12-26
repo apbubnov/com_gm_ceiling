@@ -1099,7 +1099,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
                 ->from('#__gm_ceiling_projects as projects')
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.who_calculate = '$who' and clients.dealer_id = '$dealer' and projects.project_status NOT IN (2, 3, 9, 15, 20, 21, 22)");
+                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'  and clients.dealer_id = '$dealer' and projects.project_status NOT IN (2, 3, 9, 15, 20, 21, 22)");
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
@@ -1107,7 +1107,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->from('#__gm_ceiling_day_off as day_off')
                 ->LeftJoin("#__user_usergroup_map as map ON day_off.id_user = map.user_id")
                 ->LeftJoin("#__users as users ON day_off.id_user = users.id")
-                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and users.dealer_id = '$dealer'" );
             $db->setQuery($query2);
             $items2 = $db->loadObjectList();
             
