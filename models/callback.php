@@ -21,7 +21,7 @@
 class Gm_ceilingModelCallback extends JModelList
 {
 	
-	function getData($filter = null)
+	function gettingData($filter = null)
 	{
 		try
 		{
@@ -37,7 +37,6 @@ class Gm_ceilingModelCallback extends JModelList
 			    $query->where($filter);
             }
 			$db->setQuery($query);
-			
 			$items = $db->loadObjectList();
 			return $items;
 		}
