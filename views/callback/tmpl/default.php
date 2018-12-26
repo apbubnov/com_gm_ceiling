@@ -40,16 +40,21 @@ $user_group = $user->groups;
     function show_calls() {
         var calendar_elem_value = document.getElementById('calendar').value;
         table_body_elem.innerHTML = '';
+        var scrollTrIndex = localStorage.getItem('viewCallbackTrIndex');
+        if (!scrollTrIndex) {
+            scrollTrIndex = 0;
+        }
         for (var i = 0; i < arr_calls.length; i++) {
-            setTimeout(printTr, 0, arr_calls[i]);
+            setTimeout(printTr, 0, arr_calls[i], i, scrollTrIndex);
         }
 
-        function printTr(arr_calls_i) {
+        function printTr(arr_calls_i, i, scrollTrIndex) {
             var str, tr, td;
             if (arr_calls_i.dealer_type !== null) {
                 arr_calls_i.dealer_type = arr_calls_i.dealer_type-0;
             }
             tr = table_body_elem.insertRow();
+            //tr.setAttribute('id', 'trCall'+arr_calls_i.id);
             tr.setAttribute('data-callId', arr_calls_i.id-0);
             tr.setAttribute('data-dealerType', arr_calls_i.dealer_type);
             tr.setAttribute('data-clientId', arr_calls_i.client_id-0);
@@ -63,6 +68,9 @@ $user_group = $user->groups;
             td.innerHTML = '<button class="btn btn-danger btn-sm" type="button" data-id="'+arr_calls_i.id+'"><i class="fa fa-trash" aria-hidden="true"></i></button>';
             td.getElementsByTagName('button')[0].onclick = del_call;
             tr.onclick = clickTr;
+            if (scrollTrIndex !== 0 && scrollTrIndex < i) {
+                setTimeout(scrollToSavedTrIndex, 100);
+            }
         }
     }
 
@@ -95,6 +103,11 @@ $user_group = $user->groups;
 
     function clickTr(e) {
         if (this.getAttribute('data-clientId') && !del_click_bool) {
+            var prevTrIndex = jQuery(this)[0].rowIndex - 2;
+            if (prevTrIndex > 0) {
+                localStorage.setItem('viewCallbackTrIndex', prevTrIndex);
+            }
+            
             var type = this.getAttribute('data-dealerType')-0;
             var url;
             if (type === 3) {
@@ -111,9 +124,21 @@ $user_group = $user->groups;
         del_click_bool = false;
     }
 
+    function scrollToSavedTrIndex() {
+        var scrollTrIndex = localStorage.getItem('viewCallbackTrIndex');
+        if (scrollTrIndex) {
+            var need_row = jQuery(table_body_elem).find('tr').eq(scrollTrIndex);
+            jQuery('html, body').animate({
+                scrollTop: jQuery(need_row).offset().top
+            }, 500);
+            localStorage.removeItem('viewCallbackTrIndex');
+
+        }
+    }
+
     jQuery(document).ready(function() {
         getData();
-
+        
         document.getElementById('calendar').onchange = function(){
             getData();
         };
