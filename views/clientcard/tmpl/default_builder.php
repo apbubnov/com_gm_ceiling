@@ -592,9 +592,16 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         jQuery("#mv_container").show();
         jQuery("#mounters_salary").show("slow");
         jQuery("#close").show();
+        var projectsId = [];
+        jQuery.each(progressData,function(index,el){
+            for(var i = 0;i<el.projects.length;i++){
+                projectsId.push(el.projects[i].id);
+            }
+        });
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=MountersSalary.getData",
             data: {
+                ids : projectsId
             },
             dataType: "json",
             async: false,
@@ -624,7 +631,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
                 data: {
-                    mounterId:mounterId
+                    mounterId:mounterId,
+                    ids:projectsId
                 },
                 dataType: "json",
                 async: false,

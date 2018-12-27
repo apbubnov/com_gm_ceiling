@@ -39,8 +39,14 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
 
     function getData(){
         try{
+            $jinput = JFactory::getApplication()->input;
+            $projectsId = $jinput->get('ids',array(),"ARRAY");
+            $filter = "";
+            if(!empty($projectsId)){
+                $filter = "ms.project_id IN (".implode(',',$projectsId).")";
+            }
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $result = $model->getData();
+            $result = $model->getData($filter);
             die(json_encode($result));
         }
         catch(Exception $e)
@@ -53,8 +59,10 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
         try{
             $jinput = JFactory::getApplication()->input;
             $mounterId = $jinput->getInt('mounterId');
+            $projectsId = $jinput->get('ids',array(),"ARRAY");
+            $projectFilter = (!empty($projectsId)) ? "AND ms.project_id IN(".implode(",",$projectsId).")" : "";
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $result = $model->getDataById($mounterId);
+            $result = $model->getDataById($mounterId,$projectFilter);
             die(json_encode($result));
         }
         catch(Exception $e)
