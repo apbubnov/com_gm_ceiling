@@ -734,6 +734,12 @@
     });
     jQuery('document').ready(function()
     {
+        jQuery("#jform_calculation_title").focusin(function(){
+            jQuery("#jform_calculation_title").val("");
+        });
+        jQuery("#jform_calculation_title").focusout(function(){
+            jQuery("#jform_calculation_title").val(calculation.calculation_title);
+        });
         jQuery("#phone").mask("+7 (999) 999-99-99")
         var time_end,time_start = performance.now();
         if(user_id){

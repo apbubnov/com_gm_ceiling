@@ -265,8 +265,21 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 </div>
 <hr>
 <div class="row center" style="margin-bottom: 5px;">
-    <p class="caption-tar">Генерация PDF</p>
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <p class="caption-tar">Общая информация по объекту</p>
+        <div class="row">
+            <div class="col-md-12">
+                Общий периметр: <span id="common_perimiter"></span> м.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Общая площадь: <span id="common_square"></span> м<sup>2</sup>.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <p class="caption-tar">Генерация PDF</p>
         <?php foreach ($mountTypes as $k => $mountStage) { ?>
             <input name="stage" id="<?php echo "stage_$k" ?>" class="radio" value="<?php echo $k?>" type="radio">
             <label for="<?php echo "stage_$k" ?>"><?php echo $mountStage['title']?></label>
@@ -292,9 +305,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         </tbody>
     </table>
 </div>
+
 <div class="row center">
     <div class="col-md-12">
-        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы</button>
+        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы о бригадам</button>
     </div>
 </div>
 <div id="mv_container" class="modal_window_container">
@@ -775,6 +789,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         getReportData(stage);
         var reportTable = jQuery("#report_table");
         reportTable.empty();
+        var temp_sums = [];
         for(var i=0,elem;i<Object.keys(progressData).length;i++) {
             reportTable.append('<tr/>');
             elem = progressData[Object.keys(progressData)[i]];
@@ -784,12 +799,18 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
                 val = parseFloat(elem.projects[j].value);
                 sum = parseFloat(elem.projects[j].sum);
+                if(temp_sums[elem.name]) {
+                    temp_sums[elem.name] += val;
+                }
+                else{
+                    temp_sums[elem.name] = val;
+
+                }
                 n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
                 n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
                 mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
                 acceptDoneBtn = "";
                 button = ACCEPT_BUTTON;
-
                 if(+elem.projects[j].status < stage+25)
                 {
                     acceptDoneBtn = CHECK_BUTTON;
@@ -809,6 +830,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 td+= acceptDoneBtn;
                 jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
             }
+
         }
         jQuery("[name='btn_mounters']").click(function (){
             jQuery("#mv_container").show();
@@ -849,6 +871,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             reassignEvents();
         });
+        console.log(temp_sums);
     }
 
     function fillMountersTable(projectStatus,stage,calcs){
@@ -897,6 +920,31 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             async: false,
             success: function(data) {
                 progressData = data;
+            },
+            error: function(data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения данных"
+                });
+            }
+        });
+    }
+    function getCommonData(){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=clients.getCommonInfo",
+            data: {
+                dealerId: '<?php echo $client->dealer_id; ?>'
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                console.log(data);
+                jQuery("#common_perimiter").text(data.perimeter);
+                jQuery("#common_square").text(data.quadrature);
             },
             error: function(data) {
                 var n = noty({
@@ -1063,6 +1111,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
     jQuery(document).ready(function ()
     {
+        getCommonData();
         jQuery(jQuery("[name='stage']")[0]).attr("checked","true");
         getMounters();
         var firstTab = jQuery(jQuery(".mount_stage")[0]),

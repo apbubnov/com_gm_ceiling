@@ -692,6 +692,16 @@ class Gm_ceilingModelCalculation extends JModelItem
         {
             $data['project_id'] = $proj_id;
             $table = $this->getTable();
+            $db = JFactory::getDBO();
+            $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . $proj_id . ' AND `calculation_title` LIKE  \'%Потолок%\'';
+            $db->setQuery($query);
+            $calculations = $db->loadObjectList();
+            $indexes = []; $index = 1;
+            foreach ($calculations as $calculation) {
+                $indexes[] = intval(str_replace("Потолок ", "", $calculation->calculation_title));
+                if (in_array($index, $indexes)) $index += 1;
+            }
+            $data['calculation_title'] = "Потолок $index";
 			if ($table->save($data) === true)
 			{
 				return (int)$table->id;
