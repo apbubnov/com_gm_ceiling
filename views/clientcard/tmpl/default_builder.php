@@ -1005,6 +1005,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 reassignEvents();
 
             });
+
         }
 
         function saveMounter(element) {
@@ -1090,12 +1091,16 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 projectId = td.data('id'),
                 stage = jQuery('.active.mount_stage').data("mount_type"),
                 project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
-                calcs = project.calcs;
-            alert(progressData[floorId].name);
+                calcs = project.calcs,
+                data=[];
+            jQuery.each(calcs,function(index,elem){
+                data.push({id:elem.id,title:elem.title,mounter:elem.mounters[0].id,sum:elem.sum});
+            });
+            console.log(data);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
                 data: {
-                    calcs: calcs,
+                    calcs: JSON.stringify(data),
                     projectId: projectId,
                     stage: stage,
                     floorName: progressData[floorId].name
@@ -1182,6 +1187,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 var stage = jQuery(this).data("mount_type");
                 drawReportTable(stage);
                 reassignEvents();
+                jQuery("[name = 'check_btn']").click(function () {
+                    saveSum(this);
+                });
             });
 
             jQuery("[name = 'check_btn']").click(function () {
