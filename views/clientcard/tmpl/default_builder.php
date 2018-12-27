@@ -308,7 +308,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
 <div class="row center">
     <div class="col-md-12">
-        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы о бригадам</button>
+        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
     </div>
 </div>
 <div id="mv_container" class="modal_window_container">
