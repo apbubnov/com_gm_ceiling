@@ -15,13 +15,14 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $calcsMounts = $jinput->get('calcs',array(),"ARRAY");
             $projectId = $jinput->getInt('projectId');
             $stage = $jinput->get("stage","","STRING");
+            $floorName =  $jinput->get("floorName","","STRING");
             //модели
             $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
 
             $stagesNames = $projectsMountsModel->get_mount_types();
             foreach ($calcsMounts as $calc){
-                $note = $calc['title']." ".$stagesNames[$stage];
+                $note = $floorName." ".$calc['title']." ".$stagesNames[$stage];
                 $model->save($calc['mounters'][0]['id'],$projectId,$calc['sum'],$note);
             }
 
