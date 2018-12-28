@@ -734,6 +734,12 @@
     });
     jQuery('document').ready(function()
     {
+        jQuery("#jform_calculation_title").focusin(function(){
+            jQuery("#jform_calculation_title").val("");
+        });
+        jQuery("#jform_calculation_title").focusout(function(){
+            jQuery("#jform_calculation_title").val(calculation.calculation_title);
+        });
         jQuery("#phone").mask("+7 (999) 999-99-99")
         var time_end,time_start = performance.now();
         if(user_id){
@@ -1522,6 +1528,7 @@
             jQuery('#cut_image').attr('src', filename);
             jQuery('#input_cut_data').val(calculation.cut_data);
             jQuery('#input_shrink_percent').val(calculation.shrink_percent);
+            jQuery('#jform_offcut_square').val(calculation.offcut_square);
             jQuery('#input_n5_shrink').val(calculation.n5_shrink);
             jQuery('#div_for_test').show();
         }
