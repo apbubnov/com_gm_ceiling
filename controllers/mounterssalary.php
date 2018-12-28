@@ -12,17 +12,19 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
         try{
             $jinput = JFactory::getApplication()->input;
             //данные
-            $calcsMounts = $jinput->get('calcs',array(),"ARRAY");
+            $calcsMounts = $jinput->get('calcs',"","STRING");
             $projectId = $jinput->getInt('projectId');
             $stage = $jinput->get("stage","","STRING");
+            $floorName =  $jinput->get("floorName","","STRING");
             //модели
             $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
 
+            $calcsMounts = json_decode($calcsMounts);
             $stagesNames = $projectsMountsModel->get_mount_types();
             foreach ($calcsMounts as $calc){
-                $note = $calc['title']." ".$stagesNames[$stage];
-                $model->save($calc['mounters'][0]['id'],$projectId,$calc['sum'],$note);
+                $note = $floorName." ".$calc->title." ".$stagesNames[$stage];
+                $model->save($calc->mounter,$projectId,$calc->sum,$note);
             }
 
             $data['id'] = $projectId;
@@ -39,8 +41,14 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
 
     function getData(){
         try{
+            $jinput = JFactory::getApplication()->input;
+            $projectsId = $jinput->get('ids',array(),"ARRAY");
+            $filter = "";
+            if(!empty($projectsId)){
+                $filter = "ms.project_id IN (".implode(',',$projectsId).")";
+            }
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $result = $model->getData();
+            $result = $model->getData($filter);
             die(json_encode($result));
         }
         catch(Exception $e)
@@ -53,8 +61,10 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
         try{
             $jinput = JFactory::getApplication()->input;
             $mounterId = $jinput->getInt('mounterId');
+            $projectsId = $jinput->get('ids',array(),"ARRAY");
+            $projectFilter = (!empty($projectsId)) ? "AND ms.project_id IN(".implode(",",$projectsId).")" : "";
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $result = $model->getDataById($mounterId);
+            $result = $model->getDataById($mounterId,$projectFilter);
             die(json_encode($result));
         }
         catch(Exception $e)

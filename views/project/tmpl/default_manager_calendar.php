@@ -64,7 +64,7 @@ $counter = 0;
 $month = date("n");
 $year = date("Y");
 $FlagCalendar = [3, $user->dealer_id];
-$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+
 //----------------------------------------------------------------------------------
 
 // все замерщики

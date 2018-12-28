@@ -2695,6 +2695,12 @@ class Gm_ceilingHelpersGm_ceiling
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
             $result['total_with_dealer_margin'] = $total_with_dealer_margin;
             $result['stages'] = $stages;
+
+            if(empty($stages)){
+                $stages[2] = 0;
+                $stages[3] = 0;
+                $stages[4] = 0;
+            }
             $calcMountData['stages'] = $stages;
             $calcsMountModel = self::getModel('calcs_mount');
             $calcsMountModel->save($calcMountData);
@@ -3849,88 +3855,64 @@ class Gm_ceilingHelpersGm_ceiling
     public static function notify($data, $type){
         try {
             $mailer = JFactory::getMailer();
-            $em = '';
-                //'kostikkuzmenko@mail.ru';
-                //'popowa.alinochka';
-                //'al.p.bubnov@gmail.com';
-            $em1 = 'g';//'gmvrn1510@gmail.com';
             $config = JFactory::getConfig();
             $sender = array(
                 $config->get('mailfrom'),
                 $config->get('fromname')
             );
             $mailer->setSender($sender);
-            // throw new Exception("fdf");
             $client = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
             $mounterModel = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-            //throw new Exception("fdf");
+
             if ($type == 0) {
                 //Уведомление о записи на замер
-                if($data['who_calculate'] == 0){
-                    $group_id = 22;
-                }
-                else {
-                    $group_id = 21;
-                }
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` ='.$group_id;
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
-                foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
-                }
+                $gauger = JFactory::getUser($data['project_calculator']);
+                $mailer->addRecipient($gauger->email);
                 $body = "Здравствуйте. На сайте произведена новая запись на замер\n\n";
-                if (!empty($data['client_name']))
+                if (!empty($data['client_name'])) {
                     $body .= "Имя клиента: " . $data['client_name'] . "\n";
-                elseif (!empty($data['client_name-top']))
-                    $body .= "Имя клиента: " . $data['client_name-top'] . "\n";
-                if (!empty($data['client_contacts']))
-                    if (is_array($data['client_contacts'])) foreach ($data['client_contacts'] as $key => $value) {
-                        $body .= "Телефон клиента: " . $value . "\n";
-                    }
-                    else {
+                }
+                if (!empty($data['client_contacts'])) {
+                    if (is_array($data['client_contacts'])) {
+                        foreach ($data['client_contacts'] as $key => $value) {
+                            $body .= "Телефон клиента: " . $value . "\n";
+                        }
+                    } else {
                         $body .= "Телефон клиента: " . $data['client_contacts'] . "\n";
                     }
-                elseif (!empty($data['client_contacts-top']))
-                    $body .= "Телефон клиента: " . $data['client_contacts-top'] . "\n";
-                if (!empty($data['project_info']))
-                    $body .= "Адрес: " . $data['project_info'] . "\n";
-                elseif (!empty($data['project_info-top']))
-                    $body .= "Адрес: " . $data['project_info-top'] . "\n";
-                if (($data['project_calculation_date'] != "0000-00-00")) {
-                    $jdate = new JDate(JFactory::getDate($data['project_calculation_date']));
-                    $body .= "Удобная дата замера: " . $jdate->format('d.m.Y') . "\n";
-                } elseif ($data['project_calculation_date'] == "0000-00-00") {
-                    $body .= "Удобная дата замера: не указано \n";
                 }
-                if (($data['project_calculation_daypart'] != "00:00")) {
-                    $body .= "Удобное время замера: " . $data['project_calculation_daypart'] . "\n";
-                } elseif ($data['project_calculation_daypart'] == "00:00") {
-                    $body .= "Удобное время замера: не указано \n";
-                }
-                if (!empty($data['project_note']))
-                    $body .= "Примечание клиента: " . $data['project_note'] . "\n";
-                elseif (!empty($data['project_note-top']))
-                    $body .= "Примечание клиента: " . $data['project_note-top'] . "\n";
-                if ($em || $em1) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
-                }
+                $address = $data['project_info'];
+                if (!empty($data['project_info_house'])) $address .= ", дом: " . $data['project_info_house'];
+                if (!empty($data['project_info_bdq'])) $address .= ", корпус: " . $data['project_info_bdq'];
+                if (!empty($data['project_apartment'])) $address .= ", квартира: " . $data['project_apartment'];
+                if (!empty($data['project_info_porch'])) $address .= ", подъезд: " . $data['project_info_porch'];
+                if (!empty($data['project_info_floor'])) $address .= ", этаж: " . $data['project_info_floor'];
+                if (!empty($data['project_info_code'])) $address .= ", код: " . $data['project_info_code'];
+                $body .= "Адрес: " . $address . "\n";
+                $body .= "Дата замера: " . $data['project_calculation_date'] . "\n";
+
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новая запись на замер');
                 $mailer->setBody($body);
             } elseif ($type == 1) {
                 //Уведомление о назначении договора на монтаж
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 17';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
-                foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
+                $user_model = self::getModel('users');
+                if($data->dealer_id == 1){
+                    //отправка начальнику МС ГМ
+                    $users = $user_model->getUserByGroup(17);
                 }
+                else{
+                    //отправка  начальнику МС дилера и самому дилеру
+                    $users = $user_model->getUsersByGroupAndDealer(13,$data->dealer_id);
+                    $dealer = JFactory::getUser($data->dealer_id);
+                    array_push($users,$dealer);
+                }
+                foreach ($users as $user) {
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
+                }
+
                 $dopinfo = $client->getInfo($data->client_id);
                 $body = "Здравствуйте. Новый договор " . $data->id . " ожидает монтажа!\n\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
@@ -3940,98 +3922,116 @@ class Gm_ceilingHelpersGm_ceiling
                     $body .= "Дата и время монтажа: " . $data->project_mounting_date . "\n";
                 $body .= "Примечание клиента: " . $data->project_note . "\n";
                 $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                if ($em || $em1) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
-                }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор назначен на монтаж');
                 $mailer->setBody($body);
             } elseif ($type == 2) {
                 //Уведомление об отправке договора в производство
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
                 }
                 $dopinfo = $client->getInfo($data->id_client);
                 $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство\n\n";
                 $body .= "Имя клиента: " . $data->client_id . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
-                $body .= "Примечание клиента: " . $data->project_note . "\n";
-                $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
-                if ($data->new_project_sum) $body .= "Сумма договора: " . $data->new_project_sum . "\n";
-                else $body .= "Сумма договора: " . $data->project_sum . "\n";
-                if ($em || $em1) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
+
+                if(!empty($data->dealer_calculator_note)){
+                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
                 }
+                if(!empty($data->gm_calculator_note)){
+                    $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
+                }
+                if(!empty($data->dealer_chief_note)){
+                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
+                }
+                if(!empty($data->gm_chief_note)){
+                    $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
+                }
+                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
+                $body .= "Сумма договора: " . $sum . "\n";
+                $user = JFactory::getUser();
+                $dealer = JFactory::getUser($user->dealer_id);
+                $body .= "Дилер: " . $dealer->name . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор в производстве');
                 $mailer->setBody($body);
             } elseif ($type == 3) {
                 //Уведомление о выполнении договора
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
+                $user_model = self::getModel('users');
+                if($data->dealer_id == 1){
+                    //отправка менеджерам ГМ
+                    $users = $user_model->getUserByGroup(16);
+                }
+                else{
+                    //отправка менеджерам дилера и самому дилеру
+                    $users = $user_model->getUsersByGroupAndDealer(13,$data->dealer_id);
+                    $dealer = JFactory::getUser($data->dealer_id);
+                    array_push($users,$dealer);
+                }
                 foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
                 }
                 $dopinfo = $client->getInfo($data->client_id);
-                $q = 'SELECT * FROM  `#__gm_ceiling_clients` as t1 where t1.`id`=' . $data->client_id;
-                $db->setQuery($q);
-                $client = $db->loadObject();
                 $body = "Здравствуйте.  Договор № " . $data->id . " выполнен \n\n";
-                $body .= "Номер договора: " . $data->id . "\n";
-                if ($data->new_project_sum) $body .= "Сумма договора: " . $data->new_project_sum . "\n";
-                else $body .= "Сумма договора: " . $data->project_sum . "\n";
+                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->projecct_sum;
+                $body .= "Сумма договора: " . $sum . "\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
-                if (!empty($data->project_note))
-                    $body .= "Примечание клиента: " . $data->project_note . "\n";
-                if (!empty($data->gm_calculator_note))
+                if(!empty($data->dealer_calculator_note)){
+                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
+                }
+                if(!empty($data->gm_calculator_note)){
                     $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                if (!empty($data->gm_chief_note))
+                }
+                if(!empty($data->dealer_chief_note)){
+                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
+                }
+                if(!empty($data->gm_chief_note)){
                     $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
-                if ($em || $em1) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
+                }
+                if(!empty($data->mounter_note)){
+                    $body .= "Примечание монтажной бригады: " . $data->mounter_note . "\n";
+                }
+                if(!empty($data->gm_mounter_note)){
+                    $body .= "Примечание монтажной бригады ГМ: " . $data->gm_mounter_note . "\n";
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Договор выполнен');
                 $mailer->setBody($body);
             } elseif ($type == 4) {
                 //Уведомление об отправке договора в отказы
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
+                $user_model = self::getModel('users');
+                if($data->dealer_id == 1){
+                    //отправка менеджерам ГМ
+                    $users = $user_model->getUserByGroup(16);
+                }
+                else{
+                    //отправка менеджерам дилера и самому дилеру
+                    $users = $user_model->getUsersByGroupAndDealer(13,$data->dealer_id);
+                    $dealer = JFactory::getUser($data->dealer_id);
+                    array_push($users,$dealer);
+                }
                 foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
                 }
                 $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте. Договор " . $data->id . " перемещен в отказы.\n\n";
+                $body = "Здравствуйте. Проект " . $data->id . " перемещен в отказы.\n\n";
                 $body .= "Имя клиента: " . $data->client_id . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
                 $body .= "Причина отказа: " . $data->dealer_calculator_note . "\n";
-                if ($em || $em1) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
-                }
+                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
+                $body .= "Сумма проекта:" .$sum ."\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Договор перемещен в отказы');
                 $mailer->setBody($body);
@@ -4048,30 +4048,41 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->addRecipient($data->email);
             } elseif ($type == 6) {
                 //Уведомление об отправке договора в производство и отказы
-                $db = JFactory::getDBO();
-                $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-                      LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
-                    $mailer->addRecipient($user->email);
+                    if(!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
                 }
                 $dopinfo = $client->getInfo($data->client_id);
-                $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство, а неотмеченные Вами потолки перемещены в отказы под номером " . $data->refuse_id . "!\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+                $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство, несколько потолков перемещены в отказы под номером " . $data->refuse_id . "!\n\n";
+                $body .= "Имя клиента: " . $data->client_id . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
                 $body .= "Адрес: " . $data->project_info . "\n";
-                $body .= "Примечание клиента: " . $data->project_note . "\n";
-                $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
-                if ($data->new_project_sum) $body .= "Сумма договора: " . $data->new_project_sum . "\n";
-                else $body .= "Сумма договора: " . $data->project_sum . "\n";
+
+                if(!empty($data->dealer_calculator_note)){
+                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
+                }
+                if(!empty($data->gm_calculator_note)){
+                    $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
+                }
+                if(!empty($data->dealer_chief_note)){
+                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
+                }
+                if(!empty($data->gm_chief_note)){
+                    $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
+                }
+                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
+                $body .= "Сумма договора: " . $sum . "\n";
+                $user = JFactory::getUser();
+                $dealer = JFactory::getUser($user->dealer_id);
+                $body .= "Дилер: " . $dealer->name . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор в производстве');
                 $mailer->setBody($body);
             } elseif ($type == 7) {
                 //Уведомление о назначении договора на монтаж нужной бригаде
-                $db = JFactory::getDBO();
                 if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
                 $dopinfo = $client->getInfo($data->id_client);
                 $body = "Здравствуйте! Новый договор " . $data->id . " ожидает монтажа!\n\n";
@@ -4100,7 +4111,6 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             } elseif ($type == 8) {
                 //Уведомление о изменении времени на монтаж нужной бригаде
-                $db = JFactory::getDBO();
                 if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
                 $dopinfo = $client->getInfo($data->id_client);
                 $body = "Здравствуйте, " . $mounters->name . ". У договора " . $data->id . " изменилась дата(время) монтажа!\n\n";
@@ -4114,29 +4124,19 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($data->project_mounting_date != "0000-00-00 00:00:00")
                     $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
                 $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                if ($em) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
-                }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Изменена дата(время) монтажа');
                 $mailer->setBody($body);
                 $mailer->addRecipient($mounters->email);
             } elseif ($type == 9) {
                 //Уведомление о изменении бригады
-                $db = JFactory::getDBO();
                 if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->old_mounter);
                 $dopinfo = $client->getInfo($data->id_client);
                 $jdate1 = new JDate(JFactory::getDate($data->old_date));
                 $body = "Здравствуйте, " . $mounters->name . ". Монтаж договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                if ($em) {
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                    $body .= "Дилер: " . $dealer->name . "\n";
-                }
+
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Монтаж отменен');
                 $mailer->setBody($body);
@@ -4241,17 +4241,13 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setBody($body);
             }
             elseif($type == 16){
-                $db = JFactory::getDBO();
-                $q = 'SELECT u.`email` FROM `#__users` as u
-                      LEFT JOIN `#__user_usergroup_map` as um ON u.`id` = um.`user_id` WHERE um.`group_id` = 16';
-                $db->setQuery($q);
-                $users = $db->loadObjectList();
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
                     if(!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-
                 $body = "Здравствуйте. В проекте №" . $data['id']. " изменилась дата монтажа.\n";
                 foreach ($data['stages'] as $stage) {
                     $body.= "Этап: $stage->name \n";
@@ -4261,12 +4257,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Изменена дата монтажа');
                 $mailer->setBody($body);
-            }
-            if ($type != 5) {
-                $mailer->addRecipient($em);
-            }
-            if ($type < 4 && $type != 1) {
-                $mailer->addRecipient($em1);
             }
             $send = $mailer->Send();
             return 1;

@@ -1,43 +1,43 @@
 <?php
-    $user       = JFactory::getUser();
-    $userId     = $user->get('id');
-    $user_group = $user->groups;
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$user_group = $user->groups;
 
-    $clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
-    $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
-    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-    $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-    $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
-    $mountTypes = $projectsMountsModel->get_mount_types();
-    unset($mountTypes[1]);
-    foreach ($mountTypes as $key=>$value){
-        $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
-    }
-    $history = $historyModel->getDataByClientId($this->item->id);
-    $projects = $clientcardModel->getProjects($this->item->id);
-    $app = JFactory::getApplication();
-    $jinput = $app->input;
-    $phoneto = $jinput->get('phoneto', '', 'STRING');
-    $phonefrom = $jinput->get('phonefrom', '', 'STRING');
-    $call_id = $jinput->get('call_id', 0, 'INT');
-    $client = $client_model->getClientById($this->item->id);
-    $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+$clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
+$historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+$projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+$mountTypes = $projectsMountsModel->get_mount_types();
+unset($mountTypes[1]);
+foreach ($mountTypes as $key=>$value){
+    $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
+}
+$history = $historyModel->getDataByClientId($this->item->id);
+$projects = $clientcardModel->getProjects($this->item->id);
+$app = JFactory::getApplication();
+$jinput = $app->input;
+$phoneto = $jinput->get('phoneto', '', 'STRING');
+$phonefrom = $jinput->get('phonefrom', '', 'STRING');
+$call_id = $jinput->get('call_id', 0, 'INT');
+$client = $client_model->getClientById($this->item->id);
+$clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
 
-    //$progressData = $clients_model->getClientsAndprojectsData($client->dealer_id);
+//$progressData = $clients_model->getClientsAndprojectsData($client->dealer_id);
 
-    $dealer = JFactory::getUser($client->dealer_id);
-    if ($dealer->associated_client != $this->item->id)
-    {
-        throw new Exception("this is not dealer", 403);
-    }
-    
-    
-    if(!empty($client->manager_id)){
-        $manager_name = JFactory::getUser($client->manager_id)->name;
-    }
-    else{
-        $manager_name = "-";
-    }
+$dealer = JFactory::getUser($client->dealer_id);
+if ($dealer->associated_client != $this->item->id)
+{
+    throw new Exception("this is not dealer", 403);
+}
+
+
+if(!empty($client->manager_id)){
+    $manager_name = JFactory::getUser($client->manager_id)->name;
+}
+else{
+    $manager_name = "-";
+}
 $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
 $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
@@ -67,7 +67,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     </div>
     <div class="row">
         <div class="col-md-12">
-           <!-- <label style="font-size: 18pt;color: #414099;">Менеджер: <?php /*echo $manager_name;*/?></label>-->
+            <!-- <label style="font-size: 18pt;color: #414099;">Менеджер: <?php /*echo $manager_name;*/?></label>-->
         </div>
     </div>
     <div class="row" id="dealer_info_div" style="display: none;">
@@ -160,21 +160,21 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
 </div>
 <div class="row" style="padding:15px 15px 15px 15px;border: #414099 solid 2px;border-radius: 15px">
-        <div class="row">
-            <div class="col-md-6 center">
-                <label for="floor_count">Кол-во этажей</label><br>
-                <input type="text" id="floor_count" class="input-gm">
-            </div>
-            <div class="col-md-6 center">
-                <label for="apartment_count">Кол-во квартир на этаже</label><br>
-                <input type="text" id="apartment_count" class="input-gm">
-            </div>
+    <div class="row">
+        <div class="col-md-6 center">
+            <label for="floor_count">Кол-во этажей</label><br>
+            <input type="text" id="floor_count" class="input-gm">
         </div>
-        <div class="row center">
-            <div class="col-md-12">
-                <button class="btn btn-primary" type="button" id="createFloors">Создать</button>
-            </div>
+        <div class="col-md-6 center">
+            <label for="apartment_count">Кол-во квартир на этаже</label><br>
+            <input type="text" id="apartment_count" class="input-gm">
         </div>
+    </div>
+    <div class="row center">
+        <div class="col-md-12">
+            <button class="btn btn-primary" type="button" id="createFloors">Создать</button>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
@@ -186,15 +186,15 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
                         <td class="one-touch">
                             <?php
-                                if($item->created == "0000-00-00") {
-                                    echo "-";
-                                } else {
-                                    $jdate = new JDate($item->created);
-                                    $created = $jdate->format("d.m.Y");
-                                    echo $created;
-                                }
+                            if($item->created == "0000-00-00") {
+                                echo "-";
+                            } else {
+                                $jdate = new JDate($item->created);
+                                $created = $jdate->format("d.m.Y");
+                                echo $created;
+                            }
                             ?>
-                            
+
                         </td>
                         <td class="one-touch"><?php echo $item->client_name; ?></td>
                         <td class="one-touch"><?php echo $item->client_contacts; ?></td>
@@ -265,8 +265,21 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 </div>
 <hr>
 <div class="row center" style="margin-bottom: 5px;">
-    <p class="caption-tar">Генерация PDF</p>
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <p class="caption-tar">Общая информация по объекту</p>
+        <div class="row">
+            <div class="col-md-12">
+                Общий периметр: <span id="common_perimiter"></span> м.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Общая площадь: <span id="common_square"></span> м<sup>2</sup>.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <p class="caption-tar">Генерация PDF</p>
         <?php foreach ($mountTypes as $k => $mountStage) { ?>
             <input name="stage" id="<?php echo "stage_$k" ?>" class="radio" value="<?php echo $k?>" type="radio">
             <label for="<?php echo "stage_$k" ?>"><?php echo $mountStage['title']?></label>
@@ -292,9 +305,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         </tbody>
     </table>
 </div>
+
 <div class="row center">
     <div class="col-md-12">
-        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы</button>
+        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
     </div>
 </div>
 <div id="mv_container" class="modal_window_container">
@@ -317,21 +331,21 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     </div>
     <div id="modal_window_comm" class="modal_window">
         <? if (!empty($dop_contacts)) { ?>
-        <div style="margin-top: 10px;">
-        <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click(this)'><? echo $contact->contact; ?><br>
-        <? }?>
-        </div>
+            <div style="margin-top: 10px;">
+                <? foreach ($dop_contacts AS $contact) {?>
+                    <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click(this)'><? echo $contact->contact; ?><br>
+                <? }?>
+            </div>
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
         <p><input type="text" id="email_comm" placeholder="Почта" required></p>
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
     <div id="modal_window_call" class="modal_window">
-            <label>Добавить звонок</label><br>
-            <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
-            <input id="call_comment_m" placeholder="Введите примечание"><br>
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <label>Добавить звонок</label><br>
+        <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
+        <input id="call_comment_m" placeholder="Введите примечание"><br>
+        <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </div>
     <div id="modal_window_select_number" class="modal_window">
         <p>Выберите номер для звонка:</p>
@@ -343,25 +357,25 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         </select>
     </div>
     <div id="call" class="modal_window">
-            <p>Перенести звонок</p>
-            <p>Дата звонка</p>
-            <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
-            <p>Примечание</p>
-            <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
-            <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+        <p>Перенести звонок</p>
+        <p>Дата звонка</p>
+        <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
+        <p>Примечание</p>
+        <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
 
     </div>
     <div id="one_mounter_salary" class="modal_window">
         <table id="detailed_salary" class="table_project_analitic">
             <thead>
-                <tr class="caption_table">
-                    <td>
-                        Сумма
-                    </td>
-                    <td>
-                        Объект
-                    </td>
-                </tr>
+            <tr class="caption_table">
+                <td>
+                    Сумма
+                </td>
+                <td>
+                    Объект
+                </td>
+            </tr>
             </thead>
             <tbody>
 
@@ -371,10 +385,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     <div id="mounters_salary" class="modal_window">
         <table id="salary" class="table_project_analitic">
             <thead>
-                <tr class="caption_table">
-                    <td>ФИО</td>
-                    <td>Сумма,руб</td>
-                </tr>
+            <tr class="caption_table">
+                <td>ФИО</td>
+                <td>Сумма,руб</td>
+            </tr>
             </thead>
             <tbody>
 
@@ -406,17 +420,17 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             </div>
         </div>
     </div>
-<script>
-    var progressData = [],
-        mountersOption = "<option>Выберите</option>";
-    var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
-        ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
-        CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>";
+    <script>
+        var progressData = [],
+            mountersOption = "<option>Выберите</option>";
+        var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
+            ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
+            CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>";
 
-    function fillDuplicateInFields(value){
-        jQuery("#where_duplicate").empty();
-        var floors = JSON.parse('<?php echo json_encode($clients_items)?>'),
-            checkbox ="";
+        function fillDuplicateInFields(value){
+            jQuery("#where_duplicate").empty();
+            var floors = JSON.parse('<?php echo json_encode($clients_items)?>'),
+                checkbox ="";
             jQuery.each(floors,function(index,elem){
                 if(value != elem.id) {
                     checkbox = "<input name = \"need_duplicate\"type=\"checkbox\" id=\"" + elem.id + "\" class=\"inp-cbx\" value = \"" + elem.id + "\" style=\"display: none\">\n" +
@@ -432,244 +446,52 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 }
             });
 
-    }
-
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_fio"), // тут указываем ID элемента
-            div2 = jQuery("#modal_window_client"),
-            div3 = jQuery("#modal_window_comm"),
-            div4 = jQuery("#modal_window_call"),
-            div5 = jQuery("#call"),
-            div6 = jQuery("#modal_window_select_number"),
-            div7 = jQuery("#apartment_change"),
-            div8 = jQuery("#mounters_salary"),
-            div9 = jQuery("#one_mounter_salary"),
-            div10 = jQuery("#add_mounters");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
-            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
-            && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)
-            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
-            && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
-            && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
-            && div10.has(e.target).length === 0) {
-            jQuery("#close").hide();
-            jQuery("#mv_container").hide();
-            jQuery("#modal_window_fio").hide();
-            jQuery("#modal_window_client").hide();
-            jQuery("#modal_window_comm").hide();
-            jQuery("#modal_window_call").hide();
-            jQuery("#call").hide();
-            jQuery("#modal_window_select_number").hide();
-            jQuery("#apartment_change").hide();
-            jQuery("#mounters_salary").hide();
-            jQuery("#one_mounter_salary").hide();
-            jQuery("#add_mounters").hide();
         }
-    });
 
-    jQuery("#duplicate").click(function () {
-        var clients_id = [];
-        jQuery.each(jQuery("input[name='need_duplicate']:checked"),function(index,elem){
-            clients_id.push(elem.value);
-        });
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=projects.duplicate",
-            data: {
-                clients: clients_id,
-                idFrom: jQuery("#copy_from_select").val()
-            },
-            success: function(data){
-                location.reload();
-            },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка!"
-                });
-            }
-        });
-    });
-
-    jQuery("#copy_from_select").change(function(){
-        if(this.value){
-            fillDuplicateInFields(this.value);
-        }
-        else {
-            jQuery("#where_duplicate").empty();
-        }
-    });
-    jQuery("#generate_pdf").click(function () {
-        var stage = jQuery("[name='stage']:checked").val();
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=generateBuilderPDF",
-            data: {
-                id:'<?php echo $client->dealer_id; ?>',
-                stage: stage,
-                stageName:jQuery(".mount_stage.active")[0].innerText
-            },
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                var win = window.open(data.url, '_blank');
-                win.focus();
-            },
-            error: function(data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-
-    jQuery("#new_client").click(function(){
-        jQuery("#close").show();
-		jQuery("#mv_container").show();
-		jQuery("#modal_window_client").show("slow");
-    });
-
-    jQuery("#edit").click(function() {
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_fio").show("slow");
-        jQuery("#close").show();
-    });
-
-    jQuery("#show_actions_div").click(function () {
-        jQuery("#actions_div").toggle();
-    });
-
-    jQuery("#show_info_div").click(function () {
-        jQuery("#dealer_info_div").toggle();
-    });
-
-    jQuery("#but_comm").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_comm").show("slow");
-        jQuery("#close").show();
-    });
-
-
-    jQuery("#but_msk_kp").click(function (){
-        jQuery("#send_comm").attr("c_type","msk");
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_comm").show("slow");
-        jQuery("#close").show();
-    });
-
-
-    jQuery("#but_callback").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_call").show("slow");
-        jQuery("#close").show();
-    });
-
-    jQuery("#show_salary").click(function (){
-        jQuery("#mv_container").show();
-        jQuery("#mounters_salary").show("slow");
-        jQuery("#close").show();
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=MountersSalary.getData",
-            data: {
-            },
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                jQuery("#salary > tbody").empty();
-                jQuery.each(data,function (index,el) {
-                    jQuery("#salary > tbody").append('<tr/>');
-                    jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
-                    jQuery("#salary > tbody > tr:last").append('<td>'+el.name+'</td><td>'+el.total+'</td>')
-                });
-
-            },
-            error: function(data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
+        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+            var div = jQuery("#modal_window_fio"), // тут указываем ID элемента
+                div2 = jQuery("#modal_window_client"),
+                div3 = jQuery("#modal_window_comm"),
+                div4 = jQuery("#modal_window_call"),
+                div5 = jQuery("#call"),
+                div6 = jQuery("#modal_window_select_number"),
+                div7 = jQuery("#apartment_change"),
+                div8 = jQuery("#mounters_salary"),
+                div9 = jQuery("#one_mounter_salary"),
+                div10 = jQuery("#add_mounters");
+            if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
+                && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
+                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)
+                && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
+                && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
+                && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
+                && div10.has(e.target).length === 0) {
+                jQuery("#close").hide();
+                jQuery("#mv_container").hide();
+                jQuery("#modal_window_fio").hide();
+                jQuery("#modal_window_client").hide();
+                jQuery("#modal_window_comm").hide();
+                jQuery("#modal_window_call").hide();
+                jQuery("#call").hide();
+                jQuery("#modal_window_select_number").hide();
+                jQuery("#apartment_change").hide();
+                jQuery("#mounters_salary").hide();
+                jQuery("#one_mounter_salary").hide();
+                jQuery("#add_mounters").hide();
             }
         });
 
-        jQuery("#salary > tbody > tr").click(function () {
-            var mounterId = jQuery(this).data('id');
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
-                data: {
-                    mounterId:mounterId
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    var total = 0;
-                    jQuery("#detailed_salary > tbody").empty();
-                    jQuery.each(data,function (index,el){
-                        total += +el.sum;
-                        jQuery("#detailed_salary > tbody").append('<tr/>');
-                        jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+el.note+'</td>')
-                    });
-                    jQuery("#detailed_salary > tbody").append('<tr/>');
-                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td>');
-                },
-                error: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
+        jQuery("#duplicate").click(function () {
+            var clients_id = [];
+            jQuery.each(jQuery("input[name='need_duplicate']:checked"),function(index,elem){
+                clients_id.push(elem.value);
             });
-            jQuery("#mv_container").show();
-            jQuery("#one_mounter_salary").show();
-            jQuery("#close").show();
-
-            jQuery("#mounters_salary").hide();
-            jQuery("#close").show();
-
-
-        });
-    });
-    jQuery("#cancel").click(function(){
-        jQuery("#close").hide();
-        jQuery("#mv_container").hide();
-        jQuery("#modal_window_fio").hide();
-    });
-
-    jQuery("#cancel2").click(function(){
-        jQuery("#close").hide();
-        jQuery("#modal_window_container").hide();
-        jQuery("#modal_window_comm").hide();
-    });
-
-    jQuery("#createFloors").click(function(){
-        var floorsCount = jQuery("#floor_count").val(),
-            apartmentCount = jQuery("#apartment_count").val(),
-            builderId = '<?php echo $client->dealer_id; ?>';
-        if(floorsCount && apartmentCount){
             jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=clients.createBuilderFloors",
+                url: "index.php?option=com_gm_ceiling&task=projects.duplicate",
                 data: {
-                    floors: floorsCount,
-                    apartment: apartmentCount,
-                    builderId: builderId
+                    clients: clients_id,
+                    idFrom: jQuery("#copy_from_select").val()
                 },
                 success: function(data){
                     location.reload();
@@ -677,7 +499,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 dataType: "json",
                 timeout: 10000,
                 error: function(data){
-
                     var n = noty({
                         theme: 'relax',
                         timeout: 2000,
@@ -688,156 +509,494 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     });
                 }
             });
-        }
-    });
+        });
 
-    jQuery("#update_fio").click(function(){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
-            data: {
-                client_id: "<?php echo $this->item->id;?>",
-                fio: jQuery("#new_fio").val()
-            },
-            success: function(data){
-                jQuery("#FIO").text(data);
-                jQuery("#new_fio").val("");
-                jQuery("#close").hide();
-		        jQuery("#mv_container").hide();
-		        jQuery("#modal_window_fio").hide();
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "ФИО обновлено!"
-                });
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка!"
-                });
+        jQuery("#copy_from_select").change(function(){
+            if(this.value){
+                fillDuplicateInFields(this.value);
+            }
+            else {
+                jQuery("#where_duplicate").empty();
             }
         });
-    })
-
-    jQuery('body').on('click', '.row_project', function(e)
-    {
-        if (jQuery(this).data('href') !== undefined)
-        {
-            document.location.href = jQuery(this).data('href');
-        }
-    });
-
-    jQuery("#add_new_project").click(function(){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-            data: {
-                client_id:<?php echo $this->item->id;?>
-
-            },
-            success: function(data){
-                data = JSON.parse(data);
-                var call_id = <?php echo $call_id; ?>;
-                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id=' + data + '&call_id=' + call_id;
-                location.href =url;
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при создании заказа. Сервер не отвечает"
-                });
-            }
-        });
-    });
-
-    function rb_email_click(elem)
-    {
-        jQuery("#email_comm").val(elem.value);
-    }
-
-    function drawReportTable(stage){
-        getReportData(stage);
-        var reportTable = jQuery("#report_table");
-        reportTable.empty();
-        for(var i=0,elem;i<Object.keys(progressData).length;i++) {
-            reportTable.append('<tr/>');
-            elem = progressData[Object.keys(progressData)[i]];
-            jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
-            jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
-
-            for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
-                val = parseFloat(elem.projects[j].value);
-                sum = parseFloat(elem.projects[j].sum);
-                n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
-                n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
-                mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
-                acceptDoneBtn = "";
-                button = ACCEPT_BUTTON;
-
-                if(+elem.projects[j].status < stage+25)
-                {
-                    acceptDoneBtn = CHECK_BUTTON;
+        jQuery("#generate_pdf").click(function () {
+            var stage = jQuery("[name='stage']:checked").val();
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=generateBuilderPDF",
+                data: {
+                    id:'<?php echo $client->dealer_id; ?>',
+                    stage: stage,
+                    stageName:jQuery(".mount_stage.active")[0].innerText
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var win = window.open(data.url, '_blank');
+                    win.focus();
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
                 }
-                var value = (stage == 3) ? "S=" : "P=";
-                var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
-                "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
-                "</div>" : "";
-                td = "<div class='row center'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
-                    "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
-                    "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
-                    "</div>" +
-                        n7 +
-                    "<div class='row center' style='margin-bottom: 5px'>" +
-                    "<div class='col-md-12' name='mounter_div'><button name = 'btn_mounters'class='btn btn-primary btn-sm'>Монтажники</buuton></div>" +
-                    "</div>";
-                td+= acceptDoneBtn;
-                jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
-            }
-        }
-        jQuery("[name='btn_mounters']").click(function (){
-            jQuery("#mv_container").show();
-            jQuery("#add_mounters").show("slow");
+            });
+        });
+
+        jQuery("#new_client").click(function(){
             jQuery("#close").show();
-            jQuery("#all_calcs_mounter").empty();
-            jQuery("#save_all_calcs_mounter").empty();
-            var td = jQuery(this).closest('td'),
-                floorId = jQuery(this).closest('tr').data('id'),
-                projectId = td.data('id'),
-                project = progressData[floorId].projects.find(obj=>{return obj.id == projectId}),
-                calcs = project.calcs,
-                mounters,tr,
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_client").show("slow");
+        });
+
+        jQuery("#edit").click(function() {
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_fio").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("#show_actions_div").click(function () {
+            jQuery("#actions_div").toggle();
+        });
+
+        jQuery("#show_info_div").click(function () {
+            jQuery("#dealer_info_div").toggle();
+        });
+
+        jQuery("#but_comm").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_comm").show("slow");
+            jQuery("#close").show();
+        });
+
+
+        jQuery("#but_msk_kp").click(function (){
+            jQuery("#send_comm").attr("c_type","msk");
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_comm").show("slow");
+            jQuery("#close").show();
+        });
+
+
+        jQuery("#but_callback").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_call").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("#show_salary").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#mounters_salary").show("slow");
+            jQuery("#close").show();
+            var projectsId = [];
+            jQuery.each(progressData,function(index,el){
+                for(var i = 0;i<el.projects.length;i++){
+                    projectsId.push(el.projects[i].id);
+                }
+            });
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=MountersSalary.getData",
+                data: {
+                    ids : projectsId
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    jQuery("#salary > tbody").empty();
+                    jQuery.each(data,function (index,el) {
+                        jQuery("#salary > tbody").append('<tr/>');
+                        jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
+                        jQuery("#salary > tbody > tr:last").append('<td>'+el.name+'</td><td>'+el.total+'</td>')
+                    });
+
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+
+            jQuery("#salary > tbody > tr").click(function () {
+                var mounterId = jQuery(this).data('id');
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
+                    data: {
+                        mounterId:mounterId,
+                        ids:projectsId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        var total = 0;
+                        jQuery("#detailed_salary > tbody").empty();
+                        jQuery.each(data,function (index,el){
+                            total += +el.sum;
+                            jQuery("#detailed_salary > tbody").append('<tr/>');
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+el.note+'</td>')
+                        });
+                        jQuery("#detailed_salary > tbody").append('<tr/>');
+                        jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td>');
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+                jQuery("#mv_container").show();
+                jQuery("#one_mounter_salary").show();
+                jQuery("#close").show();
+
+                jQuery("#mounters_salary").hide();
+                jQuery("#close").show();
+
+
+            });
+        });
+        jQuery("#cancel").click(function(){
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            jQuery("#modal_window_fio").hide();
+        });
+
+        jQuery("#cancel2").click(function(){
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_comm").hide();
+        });
+
+        jQuery("#createFloors").click(function(){
+            var floorsCount = jQuery("#floor_count").val(),
+                apartmentCount = jQuery("#apartment_count").val(),
+                builderId = '<?php echo $client->dealer_id; ?>';
+            if(floorsCount && apartmentCount){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=clients.createBuilderFloors",
+                    data: {
+                        floors: floorsCount,
+                        apartment: apartmentCount,
+                        builderId: builderId
+                    },
+                    success: function(data){
+                        location.reload();
+                    },
+                    dataType: "json",
+                    timeout: 10000,
+                    error: function(data){
+
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!"
+                        });
+                    }
+                });
+            }
+        });
+
+        jQuery("#update_fio").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
+                data: {
+                    client_id: "<?php echo $this->item->id;?>",
+                    fio: jQuery("#new_fio").val()
+                },
+                success: function(data){
+                    jQuery("#FIO").text(data);
+                    jQuery("#new_fio").val("");
+                    jQuery("#close").hide();
+                    jQuery("#mv_container").hide();
+                    jQuery("#modal_window_fio").hide();
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "ФИО обновлено!"
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+        })
+
+        jQuery('body').on('click', '.row_project', function(e)
+        {
+            if (jQuery(this).data('href') !== undefined)
+            {
+                document.location.href = jQuery(this).data('href');
+            }
+        });
+
+        jQuery("#add_new_project").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+                data: {
+                    client_id:<?php echo $this->item->id;?>
+
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    var call_id = <?php echo $call_id; ?>;
+                    url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id=' + data + '&call_id=' + call_id;
+                    location.href =url;
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при создании заказа. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+
+        function rb_email_click(elem)
+        {
+            jQuery("#email_comm").val(elem.value);
+        }
+
+        function drawReportTable(stage){
+            getReportData(stage);
+            var reportTable = jQuery("#report_table");
+            reportTable.empty();
+            var temp_sums = [];
+            for(var i=0,elem;i<Object.keys(progressData).length;i++) {
+                reportTable.append('<tr/>');
+                elem = progressData[Object.keys(progressData)[i]];
+                jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
+                jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
+
+                for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
+                    val = parseFloat(elem.projects[j].value);
+                    sum = parseFloat(elem.projects[j].sum);
+                    if(temp_sums[elem.name]) {
+                        temp_sums[elem.name] += val;
+                    }
+                    else{
+                        temp_sums[elem.name] = val;
+
+                    }
+                    n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
+                    n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
+                    mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+                    acceptDoneBtn = "";
+                    button = ACCEPT_BUTTON;
+                    if(+elem.projects[j].status < stage+25)
+                    {
+                        acceptDoneBtn = CHECK_BUTTON;
+                    }
+                    var value = (stage == 3) ? "S=" : "P=";
+                    var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
+                        "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
+                        "</div>" : "";
+                    td = "<div class='row center'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
+                        "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
+                        "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
+                        "</div>" +
+                        n7 +
+                        "<div class='row center' style='margin-bottom: 5px'>" +
+                        "<div class='col-md-12' name='mounter_div'><button name = 'btn_mounters'class='btn btn-primary btn-sm'>Монтажники</buuton></div>" +
+                        "</div>";
+                    td+= acceptDoneBtn;
+                    jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
+                }
+
+            }
+            jQuery("[name='btn_mounters']").click(function (){
+                jQuery("#mv_container").show();
+                jQuery("#add_mounters").show("slow");
+                jQuery("#close").show();
+                jQuery("#all_calcs_mounter").empty();
+                jQuery("#save_all_calcs_mounter").empty();
+                var td = jQuery(this).closest('td'),
+                    floorId = jQuery(this).closest('tr').data('id'),
+                    projectId = td.data('id'),
+                    project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
+                    calcs = project.calcs,
+                    mounters,tr,
+                    trAdd = '<div class="row">' +
+                        '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
+                        '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
+                        '</div>';
+                jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ потолки</h4>");
+                if(project.status < stage+25) {
+                    jQuery("#all_calcs_mounter").append(trAdd);
+                }
+                else{
+                    jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
+                }
+                jQuery("#selected_floor").val(floorId);
+                jQuery("#selected_project").val(projectId);
+
+                fillMountersTable(project.status,stage,calcs);
+
+                jQuery(".edit_mounter").click(function(){
+                    jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+                    jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
+                    this.remove();
+
+                    reassignEvents();
+
+                });
+
+                reassignEvents();
+            });
+            console.log(temp_sums);
+        }
+
+        function fillMountersTable(projectStatus,stage,calcs){
+            console.log(projectStatus,stage);
+            var mounters,tr,
                 trAdd = '<div class="row">' +
                     '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
                     '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
                     '</div>';
-            jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ потолки</h4>");
-            if(project.status < stage+25) {
-                jQuery("#all_calcs_mounter").append(trAdd);
-            }
-            else{
-                jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
-            }
-            jQuery("#selected_floor").val(floorId);
-            jQuery("#selected_project").val(projectId);
+            jQuery("#calcsMounters > tbody").empty();
+            jQuery.each(calcs,function(index,elem){
+                jQuery("#calcsMounters > tbody").append('<tr/>');
+                jQuery("#calcsMounters > tbody > tr:last").attr('data-calc_id',elem.id);
+                mounters = elem.mounters;
+                tr ='<td>'+elem.title+'</td><td>';
+                if(mounters) {
+                    mounters.forEach(function (el) {
+                        if(projectStatus < stage+25) {
+                            tr += '<div class="row">' +
+                                '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
+                                '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
+                                '</div>';
+                        }
+                        else{
+                            tr += '<div class="row">' +
+                                '<div class="col-md-12" name = "mounter_div">' + el.name + '</div>' +
+                                '</div>';
+                        }
+                    });
+                }
+                else{
+                    tr+=trAdd;
+                }
+                tr+='</td>';
+                jQuery("#calcsMounters > tbody > tr:last").append(tr);
+            });
+        }
+        function getReportData(stage){
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=clients.getInfoByFloors",
+                data: {
+                    dealerId: '<?php echo $client->dealer_id; ?>',
+                    stage: stage
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    progressData = data;
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных"
+                    });
+                }
+            });
+        }
+        function getCommonData(){
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=clients.getCommonInfo",
+                data: {
+                    dealerId: '<?php echo $client->dealer_id; ?>'
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    console.log(data);
+                    jQuery("#common_perimiter").text(data.perimeter);
+                    jQuery("#common_square").text(data.quadrature);
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных"
+                    });
+                }
+            });
+        }
+        function getMounters(){
+            var option;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=users.getUserByGroup",
+                data: {
+                    group: 34
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    jQuery.each(data,function(index,element){
+                        mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
+                    });
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
 
-            fillMountersTable(project.status,stage,calcs);
-
+        function reassignEvents(){
+            jQuery('.accept_mounter').click(function(){
+                saveMounter(this);
+            });
             jQuery(".edit_mounter").click(function(){
                 jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
                 jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
@@ -847,265 +1006,71 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             });
 
-            reassignEvents();
-        });
-    }
-
-    function fillMountersTable(projectStatus,stage,calcs){
-        console.log(projectStatus,stage);
-    var mounters,tr,
-        trAdd = '<div class="row">' +
-            '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
-            '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
-            '</div>';
-        jQuery("#calcsMounters > tbody").empty();
-        jQuery.each(calcs,function(index,elem){
-            jQuery("#calcsMounters > tbody").append('<tr/>');
-            jQuery("#calcsMounters > tbody > tr:last").attr('data-calc_id',elem.id);
-            mounters = elem.mounters;
-            tr ='<td>'+elem.title+'</td><td>';
-            if(mounters) {
-                mounters.forEach(function (el) {
-                    if(projectStatus < stage+25) {
-                        tr += '<div class="row">' +
-                            '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
-                            '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
-                            '</div>';
-                    }
-                    else{
-                        tr += '<div class="row">' +
-                            '<div class="col-md-12" name = "mounter_div">' + el.name + '</div>' +
-                            '</div>';
-                    }
-                });
-            }
-            else{
-                tr+=trAdd;
-            }
-            tr+='</td>';
-            jQuery("#calcsMounters > tbody > tr:last").append(tr);
-        });
-    }
-    function getReportData(stage){
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=clients.getInfoByFloors",
-            data: {
-                dealerId: '<?php echo $client->dealer_id; ?>',
-                stage: stage
-            },
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                progressData = data;
-            },
-            error: function(data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка получения данных"
-                });
-            }
-        });
-    }
-    function getMounters(){
-        var option;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=users.getUserByGroup",
-            data: {
-                group: 34
-            },
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                jQuery.each(data,function(index,element){
-                    mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
-                });
-            },
-            error: function(data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    }
-
-    function reassignEvents(){
-        jQuery('.accept_mounter').click(function(){
-            saveMounter(this);
-        });
-        jQuery(".edit_mounter").click(function(){
-            jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
-            jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
-            this.remove();
-
-            reassignEvents();
-
-        });
-    }
-
-    function saveMounter(element) {
-        var td = jQuery(element).closest('td'),
-            mounterId = td.find('select').val(),
-            mounterName = td.find('select option:selected').text(),
-            stage = jQuery('.active.mount_stage').data("mount_type"),
-            calcId = jQuery(element).closest('tr').data('calc_id'),
-            floorId = jQuery("#selected_floor").val(),
-            projectId = jQuery("#selected_project").val(),
-            allCallcsMount = false,
-            calcsId = [],
-            project = progressData[floorId].projects.find(obj => {
-                return obj.id == projectId
-            });
-        if (!calcId) {
-            calcsId = Object.keys(project.calcs);
-            var mounterSelect = jQuery("#all_calcs_mounter").find('select');
-            mounterId = mounterSelect.val();
-            mounterName = mounterSelect.find('option:selected').text();
-            td = jQuery("#all_calcs_mounter");
-            allCallcsMount = true;
         }
-        console.log(calcId,calcsId,stage,mounterId);
-        jQuery.ajax({
 
-            url: "index.php?option=com_gm_ceiling&task=Calcs_mounts.updateMounter",
-            data: {
-                calcId: calcId,
-                calcsId:calcsId,
-                stage: stage,
-                mounterId: mounterId
-            },
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Сохранено!"
+        function saveMounter(element) {
+            var td = jQuery(element).closest('td'),
+                mounterId = td.find('select').val(),
+                mounterName = td.find('select option:selected').text(),
+                stage = jQuery('.active.mount_stage').data("mount_type"),
+                calcId = jQuery(element).closest('tr').data('calc_id'),
+                floorId = jQuery("#selected_floor").val(),
+                projectId = jQuery("#selected_project").val(),
+                allCallcsMount = false,
+                calcsId = [],
+                project = progressData[floorId].projects.find(function(obj){
+                    return obj.id == projectId
                 });
-
-                if(allCallcsMount){
-                    var calcs = progressData[floorId].projects.find(obj => {return obj.id == projectId}).calcs;
-                    jQuery.each(calcs,function(index,elem){
-                       elem.mounters = [data];
-                    });
-                    //поменять данные в таблице
-                    fillMountersTable(project.status,stage,calcs);
-
-                }else{
-                    progressData[floorId].projects.find(obj => {
-                        return obj.id == projectId
-                    }).calcs[calcId].mounters = [data];
-                }
-
-                td.find("[name = 'mounter_div']")[0].innerHTML = "<input type='hidden' name='mounter_id' value =" + mounterId + ">" + mounterName;
-                td.find("[name = 'btn_div']").append(EDIT_BUTTON);
-                reassignEvents();
-                element.remove();
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
+            if (!calcId) {
+                calcsId = Object.keys(project.calcs);
+                var mounterSelect = jQuery("#all_calcs_mounter").find('select');
+                mounterId = mounterSelect.val();
+                mounterName = mounterSelect.find('option:selected').text();
+                td = jQuery("#all_calcs_mounter");
+                allCallcsMount = true;
             }
-        });
-
-    }
-
-    function saveSum(elem) {
-        var floorId = jQuery(elem).closest('tr').data('id'),
-            td = jQuery(elem.closest('td')),
-            sum = td.find('.sum').text(),
-            projectId = td.data('id'),
-            stage = jQuery('.active.mount_stage').data("mount_type"),
-            project = progressData[floorId].projects.find(obj=>{return obj.id == projectId}),
-            calcs = project.calcs;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
-            data: {
-                calcs: calcs,
-                projectId: projectId,
-                stage: stage
-            },
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                elem.remove();
-                project.status = stage+25;
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    }
-
-    jQuery(document).ready(function ()
-    {
-        jQuery(jQuery("[name='stage']")[0]).attr("checked","true");
-        getMounters();
-        var firstTab = jQuery(jQuery(".mount_stage")[0]),
-            stage = firstTab.data("mount_type"),
-            status = firstTab.data("mount_status");
-        firstTab.addClass('active');
-        drawReportTable(stage);
-
-        jQuery('.accept_mounter').click(function(){
-           saveMounter(this);
-        });
-
-        jQuery(".edit_mounter").click(function(){
-            jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
-            jQuery(this.closest('td')).find("[name = 'btn_div']").append(ACCEPT_BUTTON);
-            this.remove();
-            reassignEvents();
-
-        });
-        jQuery("#new_mounter_phone").mask('+7(999) 999-9999');
-        jQuery("#create_mounter").click(function () {
-            var name = jQuery("#new_mounter_name").val(),
-                phone = jQuery("#new_mounter_phone").val();
+            console.log(calcId,calcsId,stage,mounterId);
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=users.registerMounterForBuilding",
+
+                url: "index.php?option=com_gm_ceiling&task=Calcs_mounts.updateMounter",
                 data: {
-                    name: name,
-                    phone: phone
+                    calcId: calcId,
+                    calcsId:calcsId,
+                    stage: stage,
+                    mounterId: mounterId
                 },
                 dataType: "json",
                 async: false,
-                success: function(data) {
+                success: function (data) {
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
                         layout: 'center',
                         maxVisible: 5,
                         type: "success",
-                        text: "Добавлено!"
+                        text: "Сохранено!"
                     });
-                    setTimeout(location.reload(),10000);
+
+                    if(allCallcsMount){
+                        var calcs = progressData[floorId].projects.find(function(obj) {return obj.id == projectId}).calcs;
+                        jQuery.each(calcs,function(index,elem){
+                            elem.mounters = [data];
+                        });
+                        //поменять данные в таблице
+                        fillMountersTable(project.status,stage,calcs);
+
+                    }else{
+                        progressData[floorId].projects.find(function(obj) {
+                            return obj.id == projectId
+                        }).calcs[calcId].mounters = [data];
+                    }
+
+                    td.find("[name = 'mounter_div']")[0].innerHTML = "<input type='hidden' name='mounter_id' value =" + mounterId + ">" + mounterName;
+                    td.find("[name = 'btn_div']").append(EDIT_BUTTON);
+                    reassignEvents();
+                    element.remove();
                 },
-                error: function(data) {
+                error: function (data) {
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1116,141 +1081,181 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     });
                 }
             });
-        })
 
+        }
 
-        jQuery(".mount_stage").click(function () {
-           var stage = jQuery(this).data("mount_type");
+        function saveSum(elem) {
+            var floorId = jQuery(elem).closest('tr').data('id'),
+                td = jQuery(elem.closest('td')),
+                sum = td.find('.sum').text(),
+                projectId = td.data('id'),
+                stage = jQuery('.active.mount_stage').data("mount_type"),
+                project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
+                calcs = project.calcs,
+                data=[];
+            jQuery.each(calcs,function(index,elem){
+                data.push({id:elem.id,title:elem.title,mounter:elem.mounters[0].id,sum:elem.sum});
+            });
+            console.log(data);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
+                data: {
+                    calcs: JSON.stringify(data),
+                    projectId: projectId,
+                    stage: stage,
+                    floorName: progressData[floorId].name
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    elem.remove();
+                    project.status = stage+25;
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        jQuery(document).ready(function ()
+        {
+            getCommonData();
+            jQuery(jQuery("[name='stage']")[0]).attr("checked","true");
+            getMounters();
+            var firstTab = jQuery(jQuery(".mount_stage")[0]),
+                stage = firstTab.data("mount_type"),
+                status = firstTab.data("mount_status");
+            firstTab.addClass('active');
             drawReportTable(stage);
-            reassignEvents();
-        });
 
-        jQuery("[name = 'check_btn']").click(function () {
-            saveSum(this);
-        });
-        document.getElementById('calls-tar').scrollTop = 9999;
-        jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
-        jQuery('#new_phone').mask('+7(999) 999-9999');
-
-        jQuery("#send_comm").click(function(){
-            var user_id = <?php echo $client->dealer_id; ?>;
-            var type = null;
-            if(jQuery(this).attr("c_type") == "msk"){
-                type = 2;
-            }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
-                data: {
-                    user_id: user_id,
-                    email: jQuery("#email_comm").val(),
-                    dealer_type: 7,
-                    type:type
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Коммерческое предложение отправленно"
-                    });
-                    jQuery("#close").hide();
-                    jQuery("#mv_container").hide();
-                    jQuery("#modal_window_comm").hide();
-                },
-                error: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
+            jQuery('.accept_mounter').click(function(){
+                saveMounter(this);
             });
-        });
 
-        document.getElementById('add_email').onclick = function()
-        {
-            var client_id = <?php echo $client->id; ?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
-                data: {
-                    client_id: client_id,
-                    email: document.getElementById('new_email').value
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    location.reload();
-                },
-                error: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
-            });
-        }
+            jQuery(".edit_mounter").click(function(){
+                jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+                jQuery(this.closest('td')).find("[name = 'btn_div']").append(ACCEPT_BUTTON);
+                this.remove();
+                reassignEvents();
 
-        document.getElementById('add_phone').onclick = function()
-        {
-            var client_id = <?php echo $client->id; ?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
-                data: {
-                    client_id: client_id,
-                    phone: document.getElementById('new_phone').value
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    location.reload();
-                },
-                error: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
             });
-        }
-        if(document.getElementById('btn_refuse')) {
-            document.getElementById('btn_refuse').onclick = function () {
-                var user_id = <?php echo $dealer->id; ?>;
+            jQuery("#new_mounter_phone").mask('+7(999) 999-9999');
+            jQuery("#create_mounter").click(function () {
+                var name = jQuery("#new_mounter_name").val(),
+                    phone = jQuery("#new_mounter_phone").val();
                 jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                    url: "index.php?option=com_gm_ceiling&task=users.registerMounterForBuilding",
                     data: {
-                        user_id: user_id,
+                        name: name,
+                        phone: phone
                     },
                     dataType: "json",
                     async: false,
-                    success: function (data) {
+                    success: function(data) {
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
                             type: "success",
-                            text: "Переведен в отказ от сотрудничества"
+                            text: "Добавлено!"
                         });
-                        setTimeout(function () {
-                            location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';
-                        }, 1000);
+                        setTimeout(location.reload(),10000);
                     },
-                    error: function (data) {
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            })
+
+
+            jQuery(".mount_stage").click(function () {
+                var stage = jQuery(this).data("mount_type");
+                drawReportTable(stage);
+                reassignEvents();
+                jQuery("[name = 'check_btn']").click(function () {
+                    saveSum(this);
+                });
+            });
+
+            jQuery("[name = 'check_btn']").click(function () {
+                saveSum(this);
+            });
+            document.getElementById('calls-tar').scrollTop = 9999;
+            jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
+            jQuery('#new_phone').mask('+7(999) 999-9999');
+
+            jQuery("#send_comm").click(function(){
+                var user_id = <?php echo $client->dealer_id; ?>;
+                var type = null;
+                if(jQuery(this).attr("c_type") == "msk"){
+                    type = 2;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
+                    data: {
+                        user_id: user_id,
+                        email: jQuery("#email_comm").val(),
+                        dealer_type: 7,
+                        type:type
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Коммерческое предложение отправленно"
+                        });
+                        jQuery("#close").hide();
+                        jQuery("#mv_container").hide();
+                        jQuery("#modal_window_comm").hide();
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('add_email').onclick = function()
+            {
+                var client_id = <?php echo $client->id; ?>;
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                    data: {
+                        client_id: client_id,
+                        email: document.getElementById('new_email').value
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(data) {
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
@@ -1262,152 +1267,214 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     }
                 });
             }
-        }
-    });
+
+            document.getElementById('add_phone').onclick = function()
+            {
+                var client_id = <?php echo $client->id; ?>;
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+                    data: {
+                        client_id: client_id,
+                        phone: document.getElementById('new_phone').value
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+            if(document.getElementById('btn_refuse')) {
+                document.getElementById('btn_refuse').onclick = function () {
+                    var user_id = <?php echo $dealer->id; ?>;
+                    jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                        data: {
+                            user_id: user_id,
+                        },
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            var n = noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Переведен в отказ от сотрудничества"
+                            });
+                            setTimeout(function () {
+                                location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';
+                            }, 1000);
+                        },
+                        error: function (data) {
+                            var n = noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка сервера"
+                            });
+                        }
+                    });
+                }
+            }
+        });
 
 
-    jQuery("#back_btn").click(function (){
-        history.go(-1);
-    });
+        jQuery("#back_btn").click(function (){
+            history.go(-1);
+        });
 
-    jQuery("#add_comment").click(function ()
-    {
-        var comment = jQuery("#new_comment").val();
-        var reg_comment = /[\\\<\>\/\'\"\#]/;
-        var id_client = <?php echo $this->item->id; ?>;
-
-        if (reg_comment.test(comment) || comment === "")
+        jQuery("#add_comment").click(function ()
         {
-            alert('Неверный формат примечания!');
-            return;
+            var comment = jQuery("#new_comment").val();
+            var reg_comment = /[\\\<\>\/\'\"\#]/;
+            var id_client = <?php echo $this->item->id; ?>;
+
+            if (reg_comment.test(comment) || comment === "")
+            {
+                alert('Неверный формат примечания!');
+                return;
+            }
+
+            add_history(id_client, comment);
+        });
+
+        jQuery("#but_call").click(function ()
+        {
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_select_number").show("slow");
+        });
+
+        jQuery("#select_phones").change(function ()
+        {
+            var id_client = <?php echo $this->item->id; ?>;
+            call(jQuery("#select_phones").val());
+            add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
+        });
+
+        jQuery("#broke").click(function(){
+            jQuery("#mv_container").show();
+            jQuery("#call").show("slow");
+            jQuery("#close").show();
+        });
+
+        jQuery("#add_call_and_submit").click(function(){
+            client_id = <?php echo $this->item->id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=changeCallTime",
+                data: {
+                    id:<?php echo $call_id;?>,
+                    date: jQuery("#call_date").val(),
+                    comment: jQuery("#call_comment").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Звонок перенесен");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Звонок сдвинут"
+                    });
+
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        jQuery("#add_call").click(function(){
+            client_id = <?php echo $this->item->id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addCall",
+                data: {
+                    id_client: client_id,
+                    date: jQuery("#call_date_m").val(),
+                    comment: jQuery("#call_comment_m").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    add_history(client_id,"Добавлен звонок");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Добавлен звонок"
+                    });
+
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        function add_history(id_client, comment)
+        {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addComment",
+                data: {
+                    comment: comment,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Добавленна запись в историю клиента"
+                    });
+                    setTimeout(function(){location.reload();}, 1000);
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
         }
 
-        add_history(id_client, comment);
-    });
-
-    jQuery("#but_call").click(function ()
-    {
-        jQuery("#close").show();
-        jQuery("#mv_container").show();
-        jQuery("#modal_window_select_number").show("slow");
-    });
-
-    jQuery("#select_phones").change(function ()
-    {
-        var id_client = <?php echo $this->item->id; ?>;
-        call(jQuery("#select_phones").val());
-        add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
-    });
-
-    jQuery("#broke").click(function(){
-        jQuery("#mv_container").show();
-        jQuery("#call").show("slow");
-        jQuery("#close").show();
-    });
-
-    jQuery("#add_call_and_submit").click(function(){
-        client_id = <?php echo $this->item->id;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=changeCallTime",
-            data: {
-                id:<?php echo $call_id;?>,
-                date: jQuery("#call_date").val(),
-                comment: jQuery("#call_comment").val()
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-               add_history(client_id,"Звонок перенесен");
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Звонок сдвинут"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-    jQuery("#add_call").click(function(){
-        client_id = <?php echo $this->item->id;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addCall",
-            data: {
-                id_client: client_id,
-                date: jQuery("#call_date_m").val(),
-                comment: jQuery("#call_comment_m").val()
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-               add_history(client_id,"Добавлен звонок");
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Добавлен звонок"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
-    });
-
-    function add_history(id_client, comment)
-    {
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addComment",
-            data: {
-                comment: comment,
-                id_client: id_client
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Добавленна запись в историю клиента"
-                });
-                setTimeout(function(){location.reload();}, 1000);
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка отправки"
-                });
-            }
-        });
-    }
-
-</script>
+    </script>

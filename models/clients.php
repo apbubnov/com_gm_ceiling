@@ -678,4 +678,32 @@ if (empty($list['direction']))
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getCommonData($dealer_id){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $db->setQuery($query);
+            $query
+                ->select("c.id AS client_id,c.client_name,SUM( DISTINCT calc.n4) AS quadr,SUM(DISTINCT calc.n5) AS per")
+                ->from("`rgzbn_gm_ceiling_clients` AS c")
+                ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
+                ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
+                ->leftJoin("`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id")
+                ->where("c.dealer_id = $dealer_id")
+                ->group("c.id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            $result = (object)array("perimeter"=>0,"quadrature"=>0);
+            foreach ($items as $item) {
+                $result->perimeter += $item->per;
+                $result->quadrature += $item->quadr;
+            }
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

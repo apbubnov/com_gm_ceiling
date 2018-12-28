@@ -395,6 +395,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 <div class="col-md-6">
                     <p>
                         <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
+                        <div id="ref_comment" style="display:none;">
+                            <label for= "ref_note" >Примечание:</label><br>
+                            <textarea name="ref_note" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
+                            <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                        </div>
                     </p>
                     <p>
                         <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
@@ -1367,11 +1372,15 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             };
 
             jQuery("#refuse").click(function(){
+                jQuery("#ref_comment").toggle();
                 jQuery('#project_status').val(3);
                 jQuery("#project_verdict").val(0);
+                //document.getElementById('form-client').submit();
+            });
+            jQuery("#refuse_submit").click(function(){
+                jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
                 document.getElementById('form-client').submit();
             });
-
             jQuery("#save_advt").click(function() {
                 if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {
                     noty({

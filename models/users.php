@@ -112,7 +112,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->values("$user_id, '$code', $manager_id");
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -138,7 +138,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->values("$user_id, '$code', $manager_id");
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -175,7 +175,7 @@ class Gm_ceilingModelUsers extends JModelList
 				{
 					$manager_id = 1;
 				}
-				
+
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 
 				if ($type_kp == 0 && $user->dealer_type == 6)
@@ -204,7 +204,7 @@ class Gm_ceilingModelUsers extends JModelList
 					$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
 					$client_id,$manager_id);
 				}
-				
+
 
 				$query = $db->getQuery(true);
 				$query->update('`#__users_commercial_offer`');
@@ -248,7 +248,7 @@ class Gm_ceilingModelUsers extends JModelList
 				{
 					$manager_id = 1;
 				}
-				
+
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 				if($short == 2){
 					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрено видео Быстрый заказ',
@@ -258,7 +258,7 @@ class Gm_ceilingModelUsers extends JModelList
 					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрена инструкция по использованию программы',
 					$client_id,$manager_id);
 				}
-				
+
 
 				$query = $db->getQuery(true);
 				$query->update('`#__users_dealer_instruction`');
@@ -286,7 +286,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->where("`change_time` < NOW() - INTERVAL 1 WEEK AND `status` = 0");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			
+
 			return $items;
 		}
 		catch(Exception $e)
@@ -307,7 +307,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->where("`i`.`city` = '$city'");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			
+
 			return $items;
 		}
 		catch(Exception $e)
@@ -325,10 +325,10 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->update("`#__users`");
 			$query->set("`name` = '$name'");
 			$query->where("`associated_client` = $associated_client");
-			
+
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -346,10 +346,10 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select('*');
 			$query->from("`#__users`");
 			$query->where("`associated_client` = $associated_client");
-			
+
 			$db->setQuery($query);
 			$item = $db->loadObject();
-			
+
 			return $item;
 		}
 		catch(Exception $e)
@@ -367,10 +367,10 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->update("`#__users`");
 			$query->set("`refused_to_cooperate` = $coop");
 			$query->where("`id` = $id");
-			
+
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -401,7 +401,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$db->setQuery($query);
 				$db->execute();
 			}
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -431,7 +431,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$db->setQuery($query);
 				$db->execute();
 			}
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -450,7 +450,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$query->where("`id` = $id");
 				$db->setQuery($query);
 				$db->execute();
-			
+
 				return true;
 			}
 			catch(Exception $e)
@@ -469,7 +469,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$query->where("`id` = $id");
 				$db->setQuery($query);
 				$db->execute();
-			
+
 				return true;
 			}
 			catch(Exception $e)
@@ -487,7 +487,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->where("`id` = $dealer_id");
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			return true;
 		}
 		catch(Exception $e)
@@ -616,7 +616,7 @@ class Gm_ceilingModelUsers extends JModelList
 				->where("`g`.`group_id` = $group_id");
 			$db->setQuery($query);
 			//throw new Exception($query);
-			
+
 			$items = $db->loadObjectList();
 			return $items;
 		}
@@ -644,5 +644,24 @@ class Gm_ceilingModelUsers extends JModelList
         }
     }
 
+    function getUsersByGroupAndDealer($group_id,$dealer_id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`, `u`.`name`, `u`.`email`')
+                ->from('`#__users` AS `u`')
+                ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+                ->where("`g`.`group_id` = $group_id and u.dealer_id = $dealer_id");
+            $db->setQuery($query);
+            //throw new Exception($query);
 
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

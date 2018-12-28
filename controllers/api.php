@@ -145,17 +145,15 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if(!empty($_POST['r_data'])) {
                 $register_data = json_decode($_POST['r_data']);
                 if(!empty($register_data)) {
-                    $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
+                   // $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
+                    $str = explode("@",$register_data->email)[0];
                     // в нижний регистр
                     $str = strtolower($str);
                     // заменям все ненужное нам на "-"
                     $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
                     // удаляем начальные и конечные '-'
                     $username = trim($str, "-");
-                    //cсздание associated_client
-                    $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-                    $client_data['client_name'] = $register_data->fio;
-                    $client_id = $clientform_model->save($client_data);
+
 
                     $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                     $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
@@ -170,7 +168,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                             "email" => $register_data->email,
                             "groups" => array(2),
                             "dealer_type" => 1,
-                            "associated_client" => $client_id,
                             "android_id" => $register_data->android_id
                         );
                         $user = new JUser;
@@ -182,9 +179,12 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         }
                         $userID = $user->id;
                         $user =& JUser::getInstance((int)$userID);
-
+                        //cсздание associated_client
+                        $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+                        $client_data['client_name'] = $register_data->fio;
+                        $client_id = $clientform_model->save($client_data);
                         $update['dealer_id'] = $userID;
-
+                        $update['associated_client'] = $client_id;
 
                         if (!$user->bind($update)) return false;
                         if (!$user->save()) return false;
@@ -194,6 +194,63 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
                         $dop_contacts_model->save($client_id, 1, $email);
                         $result = json_encode((object)array("id" => $userID));
+                    }
+                }
+            }
+            die($result);
+        }
+        catch (Exception $e){
+            die($e->getMessage());
+        }
+    }
+
+    function registerUser(){
+        try{
+            $result = json_encode(null);
+            if(!empty($_POST['r_data'])) {
+                $register_data = json_decode($_POST['r_data']);
+                if (!empty($register_data)) {
+                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                    $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
+                    if (!empty($id)) {
+                        $result = json_encode((object)array("id" => $id->id));
+                    } else {
+                        $data = array(
+                            "name" => $register_data->fio,
+                            "username" => $register_data->username,
+                            "password" => $register_data->username,
+                            "password2" => $register_data->username,
+                            "email" => $register_data->email,
+                            "groups" => array(2,$register_data->group)
+                        );
+                        $user = new JUser;
+                        if (!$user->bind($data)) {
+                            throw new Exception($user->getError());
+                        }
+                        if (!$user->save()) {
+                            throw new Exception($user->getError());
+                        }
+                        $userID = $user->id;
+                        $result = json_encode((object)array("id" => $userID));
+
+                        $mailer = JFactory::getMailer();
+                        $config = JFactory::getConfig();
+                        $sender = array(
+                            $config->get('mailfrom'),
+                            $config->get('fromname')
+                        );
+                        $mailer->setSender($sender);
+                        $mailer->addRecipient($register_data->email);
+                        $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                        $body .= '<body style="margin: 10px;">';
+                        $body .= "Здравствуйте! Данные для доступа к приложению:<br>";
+                        $body .= "Логин:$register_data->username<br>Пароль:$register_data->username";
+                        $body .= "</body>";
+                        $mailer->setSubject('Регистрационные данные');
+                        $mailer->isHtml(true);
+                        $mailer->Encoding = 'base64';
+                        $mailer->setBody($body);
+                        $send = $mailer->Send();
                     }
                 }
             }

@@ -859,14 +859,13 @@ class Gm_ceilingModelProject extends JModelItem
 	public function update_project_after_call($id,$client_id,$date,$address,$gmmanager_comment,$manager_comment,$status,$api_id=null,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
 		try
 		{
-			$who_calculate = 0;
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
-			if (in_array("15", $user_group)||in_array("16", $user_group)||in_array("17", $user_group)
+			/*if (in_array("15", $user_group)||in_array("16", $user_group)||in_array("17", $user_group)
 			||in_array("18", $user_group)||in_array("19", $user_group)||in_array("20", $user_group)||in_array("23", $user_group||
 			$user->dealer_id = 1 )) {
-				$who_calculate = 1;
-			}
+
+			}*/
 			$table = $this->getTable();
 			if($id > 0) {
 				$table->load($id);
@@ -878,8 +877,6 @@ class Gm_ceilingModelProject extends JModelItem
 				$table->project_status = $status;
 				if(!empty($api_id)) $table->api_phone_id = $api_id;
 				$table->read_by_manager = $manager_id;
-				
-                $table->who_calculate = $who_calculate;
                 if(!empty($gauger)){
                     $table->project_calculator = $gauger;
                 }

@@ -1005,7 +1005,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             сохраняются на контроллере skecth (controllers/sketch.php)*/
             $date_created = date("Y-m-d H:i:s");
             $columns = [
-                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n19","n20","n21","n24","n25","n27","n28",
+                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n19","n20","n21","n24","n27","n28",
                 "n30","n32","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
                 "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount",
                 "color","details","discount","manager_note"
@@ -1018,13 +1018,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 ->update('`#__gm_ceiling_calculations`')
                 ->set('checked_out_time = ' . $db->quote($date_created));
             foreach ($columns as $column){
-                if(!empty($data[$column])){
+               // if(!empty($data[$column])){
                     $value = (gettype($data[$column]) == "string") ? "'".$data[$column]."'" : $data[$column];
                     $query->set("$column = $value");
-                }
+                //}
             }
             $query->where('id = ' . $data['id']);
-
             $db->setQuery($query);
             $db->execute();
 

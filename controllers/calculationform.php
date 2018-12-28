@@ -172,100 +172,12 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data['n12'] = json_encode($n12_array, JSON_FORCE_OBJECT);
 
 
-	/*
-			//Забиваем массив светильников в одну переменную
-			if(isset($data['n13_advanced'])) {
-				if($data['n13_advanced'] && $n13_array['n13_count'.$i]!="") {
-					$n13_array = array();
-					$n13_num = $jinput->get('n13_num', '0', 'INT');
-					$n13_array['n13_num'] = $n13_num;
-					for($i = 1; $i <= $n13_num; $i++) {
-						$n13_array['n13_ring'.$i] = $jinput->get('n13_ring' . $i, '0', 'INT');
-						//$n13_array['n13_platform'.$i] = $jinput->get('n13_platform' . $i, '0', 'INT');
-						$n13_array['n13_type'.$i] = $jinput->get('n13_type' . $i, '0', 'INT');
-						$n13_array['n13_count'.$i] = $jinput->get('n13_count' . $i, '0', 'INT');
-					}
-					$data['n13'] = json_encode($n13_array, JSON_FORCE_OBJECT);
-				}
-			}
 
-			//Забиваем массив обвода труб в одну переменную
-			if(isset($data['n14_advanced'])) {
-				if($data['n14_advanced']) {
-					$n14_array = array();
-					$n14_num = $jinput->get('n14_num', '0', 'INT');
-					$n14_array['n14_num'] = $n14_num;
-					for($i = 1; $i <= $n14_num; $i++) {
-						$n14_array['n14_type'.$i] = $jinput->get('n14_type' . $i, '0', 'INT');
-						$n14_array['n14_count'.$i] = $jinput->get('n14_count' . $i, '0', 'INT');
-					}
-					$data['n14'] = json_encode($n14_array, JSON_FORCE_OBJECT);
-				}
-			}
-				
-			if(isset($data['n22_advanced'])) { 
-			
-				if($data['n22_advanced']) {
-					$n22_array = array();
-					$n22_num = $jinput->get('n22_num', '0', 'INT');
-					$n22_array['n22_num'] = $n22_num;
-					for($i = 1; $i <= $n22_num; $i++) {
-						$n22_array['n22_diam'.$i] = $jinput->get('n22_diam' . $i, '0', 'INT');
-						$n22_array['n22_type'.$i] = $jinput->get('n22_type' . $i, '0', 'INT');
-						$n22_array['n22_count'.$i] = $jinput->get('n22_count' . $i, '0', 'INT');
-					}
-					$data['n22'] = json_encode($n22_array, JSON_FORCE_OBJECT);
-				}
-			}
-			
-			if(isset($data['n23_advanced'])) {
-				if($data['n23_advanced']) {
-					$n23_array = array();
-					$n23_num = $jinput->get('n23_num', '0', 'INT');
-					$n23_array['n23_num'] = $n23_num;
-					for($i = 1; $i <= $n23_num; $i++) {
-						$n23_array['n23_type'.$i] = $jinput->get('n23_type' . $i, '0', 'INT');
-						$n23_array['n23_count'.$i] = $jinput->get('n23_count' . $i, '0', 'INT');
-					}
-					$data['n23'] = json_encode($n23_array, JSON_FORCE_OBJECT);
-				}
-			}
-	*/
 			if(empty($data['calculation_title'])) {
 				$data['calculation_title'] = "Безымянный потолок";
 			}
 			
-			$times = array(
-				0 => "09:00:00",
-				1 => "10:00:00",
-				2 => "11:00:00",
-				3 => "12:00:00",
-				4 => "13:00:00",
-				5 => "14:00:00",
-				6 => "15:00:00",
-				7 => "16:00:00",
-				8 => "17:00:00",
-				9 => "18:00:00",
-				10 => "19:00:00",
-				11 => "20:00:00",
-				12 => "21:00:00"
-			);
-			
-			$times2 = array(
-				0 => "10:00:00",
-				1 => "11:00:00",
-				2 => "12:00:00",
-				3 => "13:00:00",
-				4 => "14:00:00",
-				5 => "15:00:00",
-				6 => "16:00:00",
-				7 => "17:00:00",
-				8 => "18:00:00",
-				9 => "19:00:00",
-				10 => "20:00:00",
-				11 => "21:00:00",
-				12 => "22:00:00"
-			);
+
 			
 			$user = JFactory::getUser();
 			

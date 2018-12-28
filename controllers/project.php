@@ -398,6 +398,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $data_notify['project_calculation_date'] = $date;
                     $data_notify['project_calculation_daypart'] = $time;
                     $data_notify['project_note'] = $gmmanager_comment;
+                    $data_notify['project_calculator'] = $gauger;
+
                     Gm_ceilingHelpersGm_ceiling::notify($data_notify, 0);
                 }
                 if ($data->project_status != $status) {
@@ -1223,6 +1225,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel'); 
 			$data = $model->approvemanager($id,$ready_date_time,$quickly);
+
 			$res = $model->getNewData($id);
 
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
@@ -1234,7 +1237,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 			$client  = $client_model->getClientById($res->client_id);
 			$dealer_id = $client->dealer_id;
-			
+            $data->dealer_id = $dealer_id;
             foreach ($calculations as $calculation) {
                 $material_sum += $calculation->components_sum + $calculation->canvases_sum;
             }

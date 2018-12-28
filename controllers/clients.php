@@ -104,4 +104,18 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getCommonInfo(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $dealer_id = $jinput->getInt('dealerId');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->getCommonData($dealer_id);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
