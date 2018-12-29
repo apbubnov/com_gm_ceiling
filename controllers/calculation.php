@@ -304,7 +304,21 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 		catch(Exception $e)
         {
            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
+
+	function recalcMount(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $calcsId = $jinput->get('calcs',array(), 'ARRAY');
+            foreach ($calcsId as $id){
+                Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
+            }
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

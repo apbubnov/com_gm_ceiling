@@ -289,6 +289,12 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     </div>
 </div>
 <hr>
+<div class="row center">
+    <div class="col-md-12">
+        <button class="btn btn-primary" type="button" id="btn_recalc">Пересчитать всё</button>
+    </div>
+</div>
+<hr>
 <div class="row">
     <ul class="nav nav-tabs" role="tablist">
         <?php foreach ($mountTypes as $k => $mountStage) { ?>
@@ -805,6 +811,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
 
                 for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
+                    var mountersArr = [];
                     val = parseFloat(elem.projects[j].value);
                     sum = parseFloat(elem.projects[j].sum);
                     if(temp_sums[elem.name]) {
@@ -814,6 +821,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         temp_sums[elem.name] = val;
 
                     }
+                    var mountersStr = '<div class="row" style="font-size:9pt;">';
                     n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
                     n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
                     mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
@@ -823,6 +831,19 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     {
                         acceptDoneBtn = CHECK_BUTTON;
                     }
+                    jQuery.each(elem.projects[j].calcs,function(ind,el){
+                        if(el.mounters && el.mounters.length){
+
+                            if (mountersArr.indexOf(el.mounters[0].name) == -1) {
+                                mountersArr.push(el.mounters[0].name);
+                            }
+
+                        }
+                    });
+                    for(var z=0;z<mountersArr.length;z++){
+                        mountersStr += '<div>'+mountersArr[z]+'<div>';
+                    }
+                    mountersStr += '</div>';
                     var value = (stage == 3) ? "S=" : "P=";
                     var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
@@ -834,7 +855,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         n7 +
                         "<div class='row center' style='margin-bottom: 5px'>" +
                         "<div class='col-md-12' name='mounter_div'><button name = 'btn_mounters'class='btn btn-primary btn-sm'>Монтажники</buuton></div>" +
-                        "</div>";
+                        "</div>"
+                        + mountersStr;
                     td+= acceptDoneBtn;
                     jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
                 }
@@ -1147,6 +1169,47 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 
             });
             jQuery("#new_mounter_phone").mask('+7(999) 999-9999');
+
+            jQuery("#btn_recalc").click(function(){
+                var calcsId =[];
+                jQuery.each(progressData,function(ind,el){
+                    for(var i=0;i<el.projects.length;i++){
+                        jQuery.each(el.projects[i].calcs,function(n,calc){
+                            calcsId.push(calc.id);
+                        });
+                    }
+                });
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=calculation.recalcMount",
+                    data: {
+                        calcs: calcsId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Успешно!"
+                        });
+                        setTimeout(location.reload(),10000);
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
+
             jQuery("#create_mounter").click(function () {
                 var name = jQuery("#new_mounter_name").val(),
                     phone = jQuery("#new_mounter_phone").val();
