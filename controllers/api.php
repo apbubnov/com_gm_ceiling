@@ -158,7 +158,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                     $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
                     if (!empty($id)) {
-                        $result = json_encode(JFactory::getUser($id));
+                        $result = json_encode(JFactory::getUser($id->id));
                     } else {
                         $data = array(
                             "name" => $register_data->fio,
