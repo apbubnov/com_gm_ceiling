@@ -1528,6 +1528,7 @@
             jQuery('#cut_image').attr('src', filename);
             jQuery('#input_cut_data').val(calculation.cut_data);
             jQuery('#input_shrink_percent').val(calculation.shrink_percent);
+            jQuery('#jform_offcut_square').val(calculation.offcut_square);
             jQuery('#input_n5_shrink').val(calculation.n5_shrink);
             jQuery('#div_for_test').show();
         }
