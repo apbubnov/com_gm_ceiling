@@ -1182,10 +1182,12 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=calculation.recalcMount",
                     data: {
-                        calcs: calcsId
+                        calcs: JSON.stringify(calcsId)
                     },
+                    method : 'POST',
                     dataType: "json",
                     async: false,
+
                     success: function(data) {
                         var n = noty({
                             timeout: 2000,

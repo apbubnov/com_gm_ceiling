@@ -158,7 +158,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                     $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
                     if (!empty($id)) {
-                        $result = json_encode((object)array("id" => $id->id));
+                        $result = json_encode(JFactory::getUser($id));
                     } else {
                         $data = array(
                             "name" => $register_data->fio,
@@ -167,8 +167,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                             "password2" => $username,
                             "email" => $register_data->email,
                             "groups" => array(2),
-                            "dealer_type" => 1,
-                            "android_id" => $register_data->android_id
+                            "dealer_type" => 1
                         );
                         $user = new JUser;
                         if (!$user->bind($data)) {
@@ -185,7 +184,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $client_id = $clientform_model->save($client_data);
                         $update['dealer_id'] = $userID;
                         $update['associated_client'] = $client_id;
-
+                        $update["android_id"] = $userID;
                         if (!$user->bind($update)) return false;
                         if (!$user->save()) return false;
                         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
@@ -193,7 +192,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
                         $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
                         $dop_contacts_model->save($client_id, 1, $email);
-                        $result = json_encode((object)array("id" => $userID));
+                        $result = json_encode(JFactory::getUser($userID));
                     }
                 }
             }

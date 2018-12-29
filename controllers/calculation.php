@@ -310,7 +310,8 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 	function recalcMount(){
 	    try{
             $jinput = JFactory::getApplication()->input;
-            $calcsId = $jinput->get('calcs',array(), 'ARRAY');
+            $calcsId = $jinput->get('calcs',"", 'STRING');
+            $calcsId = json_decode($calcsId);
             foreach ($calcsId as $id){
                 Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
             }
