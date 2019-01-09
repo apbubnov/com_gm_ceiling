@@ -372,6 +372,14 @@ $server_name = $_SERVER['SERVER_NAME'];
 				},
 				error: function(data) {
 					console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при сохранении!Проверьте данные!"
+                    });
 				}
 			});
         });

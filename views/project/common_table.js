@@ -357,6 +357,22 @@ jQuery("#sh_estimate").click(function () {
     })
 });
 
+jQuery('#create_pdfs').click(function(){
+    jQuery.ajax({
+        type: 'POST',
+        url: "/index.php?option=com_gm_ceiling&task=createPdfs",
+        data: {
+            id:project_id
+        },
+        success: function(data) {
+            location.reload();
+        },
+        error: function(data) {
+            console.log(data);
+        }
+    });
+});
+
 function save_data_to_session(action_type,id=null,obj=null){
     var phones = [];
         var s = window.location.href;
