@@ -135,31 +135,36 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 	}
 
 	function save_mounter() {
-		$jinput = JFactory::getApplication()->input;
-		$model = $this->getModel('Teamform', 'Gm_ceilingModel');
+		try {
+			$jinput = JFactory::getApplication()->input;
+			$model = $this->getModel('Teamform', 'Gm_ceilingModel');
 
-		$name_mount = $jinput->get('name-mount', '', 'string');
-        $phone_mount = $jinput->get('phone-mount', '', 'string');
-        $id_brigade = $jinput->get('id_brigade', 0, 'int');
-		$phone_mount = preg_replace('/[\(\)\-\+\s]/', '', $phone_mount);
+			$name_mount = $jinput->get('name-mount', '', 'string');
+	        $phone_mount = $jinput->get('phone-mount', '', 'string');
+	        $id_brigade = $jinput->get('id_brigade', 0, 'int');
+			$phone_mount = preg_replace('/[\(\)\-\+\s]/', '', $phone_mount);
 
-		if (!empty($_FILES['pasport']['name'])) {
-			// Проверяем, что при загрузке не произошло ошибок
-			if ($_FILES['pasport']['error'] == 0) {
-				// Если файл загружен успешно, то проверяем - графический ли он
-				if (substr($_FILES['pasport']['type'], 0, 5) == 'image') {
-					// Читаем содержимое файла
-					$pasport = file_get_contents($_FILES['pasport']['tmp_name']);
+			if (!empty($_FILES['pasport']['name'])) {
+				// Проверяем, что при загрузке не произошло ошибок
+				if ($_FILES['pasport']['error'] == 0) {
+					// Если файл загружен успешно, то проверяем - графический ли он
+					if (substr($_FILES['pasport']['type'], 0, 5) == 'image') {
+						// Читаем содержимое файла
+						$pasport = file_get_contents($_FILES['pasport']['tmp_name']);
+					}
 				}
 			}
-		}
 
-		if ($name_mount != null && $phone_mount != null) {
-			$id = $model->SaveMounters($name_mount, $phone_mount, $pasport);
+			if ($name_mount != null) {
+				$id = $model->SaveMounters($name_mount, $phone_mount, $pasport);
+				$model->SaveMountersMap($id_brigade, $id);
+			} else {
+				throw new Exception("Empty name!", 0);
+			}
+			die(true);
+		} catch {
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
-
-		$model->SaveMountersMap($id_brigade, $id);
-		die(true);
 	}
 
 	/**
