@@ -41,22 +41,7 @@ class Gm_ceilingControllerTeam extends JControllerLegacy {
 			$id_brigade = $_POST['brigade'];
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Team');
 			$model->MoveBrigade($id_mounter, $id_brigade);
-			$current_brigade = $_POST['current_brigade'];
-			$mounters = $model->GetMounters($current_brigade);
-			
-			$json = [];
-			$i = 0;
-			if (!empty($mounters)) {
-				$str = "[";
-				foreach ($mounters as $value) {
-					$json[$i] = ["id" => $value->id, "name" => $value->name, "phone" => $value->phone];
-					$str .= substr(json_encode($json[$i]), 0, -1).",\"passport\":\"data:image/png;base64,".base64_encode($value->pasport)."\"},";
-					$i++;
-				}
-				$str = substr($str, 0, -1)."]";
-				//throw new Exception($str);
-				die($str);
-			}
+			die(true);
 		}
 		catch(Exception $e)
         {

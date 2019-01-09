@@ -162,7 +162,7 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 				throw new Exception("Empty name!", 0);
 			}
 			die(true);
-		} catch {
+		} catch(Exception $e) {
 			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
 	}
