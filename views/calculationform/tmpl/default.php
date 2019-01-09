@@ -49,7 +49,6 @@
 	if(in_array('16', $user_group) && $subtype == 'production'){
 		$gm_mounters = true;
 	}
-	throw new Exception($gm_mounters);
 	//определение с монтажными работами или без
 	if ($_GET['id'] == 0) {
 		$need_mount_for_radio = 0;

@@ -326,7 +326,10 @@
                             </tr>
                         <?php } ?>
                         <tr style="background-color: rgba(0,0,0,0.15);">
-                            <th colspan="4" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
+                            <th colspan="2" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
+                            <th colspan="2" class="section_header">
+                                <button class = "btn btn-primary" type="button" id = "create_pdfs">Перегенерировать</button>
+                            </th>
                         </tr>
                         <tr style="background-color: rgba(0,0,0,0.05);">
                             <th colspan="4" class="section_estimate" style="display: none;">Сметы:</th>

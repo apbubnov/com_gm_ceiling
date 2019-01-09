@@ -1107,7 +1107,9 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (!empty($data['n1']) && $data['n1'] != 29 && $data['n6']) {
                 $n5_count = ceil($data['n5']);
-                $component_count[$data['n6']] += $n5_count;
+                $component_count[$data['n6']] += $n5_count+1; //запас 1м
+                //на каждые 15 углов +1м
+                $component_count[$data['n6']] += intdiv($data['n9'],15);
             }
             //люстры
             $component_count[$items_5[0]->id] += $data['n12'] * 3;

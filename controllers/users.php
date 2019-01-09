@@ -13,7 +13,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
             $user_id = $jinput->get('user_id', null, 'INT');
 
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-			$result = $model->delete($user_id, $dealer->id);
+			$result = $model->delete($user_id, $dealer->dealer_id);
 			
 			die(json_encode($result));
 		}
