@@ -52,12 +52,13 @@ class Gm_ceilingModelTeamform extends JModelItem {
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-
-			$query->insert('#__gm_ceiling_mounters_map')
-			->columns('id_mounter, id_brigade')
-			->values('"'.$mounter.'", "'.$brigade.'"');
-			$db->setQuery($query);
-			$db->execute();
+			if(!empty($mounter)) {
+                $query->insert('#__gm_ceiling_mounters_map')
+                    ->columns('id_mounter, id_brigade')
+                    ->values('"' . $mounter . '", "' . $brigade . '"');
+                $db->setQuery($query);
+                $db->execute();
+            }
 		}
 		catch(Exception $e)
         {
