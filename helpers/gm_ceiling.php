@@ -2047,14 +2047,14 @@ class Gm_ceilingHelpersGm_ceiling
                             "stage"=>2
                         );
                     }
-                    if ($data['n5'] > 0) {
+                    if ($data['n4'] > 0) {
                         $mounting_data[] = array(
                             "title" => "Натяжка полотна",                                                                    //Название
-                            "quantity" => $data['n5'],                                                                //Кол-во
+                            "quantity" => $data['n4'],                                                                //Кол-во
                             "gm_salary" => $results->mp47,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $data['n5'] * $results->mp47,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $data['n4'] * $results->mp47,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp47,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n5'] * $results->mp47,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n4'] * $results->mp47,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=>3
                         );
                     }
