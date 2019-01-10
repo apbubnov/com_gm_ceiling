@@ -881,9 +881,9 @@
             let date_time = `${jQuery("#rec_date").val()} ${jQuery("#rec_time").val()}`;
             let phone = jQuery("#phone").val();
             let status  = jQuery(this).attr("status");
-            data = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id,"status":status};
+            dataForMeasure = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id,"status":status};
             if(user_id){
-                record_to_mesure(data);
+                record_to_mesure(dataForMeasure);
             }
             else{
                 check_user(phone);
@@ -915,6 +915,7 @@
                     });
                 },
                 error: function(data){
+                    console.log(data);
                     var n = noty({
                         theme: 'relax',
                         timeout: 2000,
@@ -978,7 +979,7 @@
                     async: false,
                     success: function(data){
                         if(!data){
-                            record_to_mesure(data);
+                            record_to_mesure(dataForMeasure);
                         }
                         else{
                             jQuery("#modal_window_rec_to_mesure").hide();
@@ -987,6 +988,7 @@
                         }
                     },
                     error: function(data){
+                        console.log(data);
                         var n = noty({
                             theme: 'relax',
                             timeout: 2000,

@@ -42,6 +42,8 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $drawing_data = $jinput->get('drawing_data', '', 'string');
 
             $original_sketch = base64_encode(gzcompress($drawing_data, 9));
+            $calc_data = '';
+            $cut_data = '';
 
             for ($i = 0; $i < count($arr_points); $i++) {
                 $points_polonta = '';

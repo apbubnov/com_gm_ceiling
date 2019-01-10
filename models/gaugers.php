@@ -350,7 +350,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 	public function getFreeGaugers($date_time){
 		try
 		{
-			$all_gaugers = $this->getDatas(1);
+			$all_gaugers = $this->getDealerGaugers(1);
 			$gaugers_id = [];
 			foreach ($all_gaugers as $gauger) {
 				array_push($gaugers_id,$gauger->id);
@@ -414,7 +414,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 		try
 		{
 			$result = [];
-	        $all_gaugers = $this->getDatas(1);
+	        $all_gaugers = $this->getDealerGaugers(1);
 	        $gaugers_count = count($all_gaugers);
 	        $times = [
 	            "09:00:00" => $gaugers_count,
