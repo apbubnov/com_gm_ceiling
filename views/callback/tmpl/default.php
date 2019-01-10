@@ -17,7 +17,7 @@ $user_group = $user->groups;
 <form>
     <?=parent::getButtonBack();?>
     <input type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
-    <table class="table table-striped one-touch-view g_table" id="callbacksList">
+    <table class="small_table table_cashbox table-striped" id="callbacksList">
         <thead>
         <tr>
             <th>ФИО клиента</th>
@@ -47,6 +47,7 @@ $user_group = $user->groups;
         for (var i = 0; i < arr_calls.length; i++) {
             setTimeout(printTr, 0, arr_calls[i], i, scrollTrIndex);
         }
+        reduceGTable();
 
         function printTr(arr_calls_i, i, scrollTrIndex) {
             var str, tr, td;
