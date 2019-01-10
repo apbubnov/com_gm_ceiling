@@ -3898,7 +3898,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setBody($body);
             } elseif ($type == 1) {
                 //Уведомление о назначении договора на монтаж
-                $user_model = self::getModel('users');
+                /*$user_model = self::getModel('users');
                 if($data->dealer_id == 1){
                     //отправка начальнику МС ГМ
                     $users = $user_model->getUserByGroup(17);
@@ -3926,7 +3926,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор назначен на монтаж');
-                $mailer->setBody($body);
+                $mailer->setBody($body);*/
             } elseif ($type == 2) {
                 //Уведомление об отправке договора в производство
                 $user_model = self::getModel('users');
