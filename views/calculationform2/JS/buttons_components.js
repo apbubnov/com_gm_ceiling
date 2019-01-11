@@ -265,8 +265,17 @@ let n29_src = {
         {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
     ]
 }
-let n29 =  create_block_with_divs(n29_src);
+let corner_src = {
+    name : 'jform[corner]',
+    values : [
+        {id:'jform_corner',value:0,text:"Мебельный",selected:true},
+        {id:'jform_corner_1',value:1,text:"Металлический"}
+    ]
+}
 
+let n29 =  create_block_with_divs(n29_src);
+//n29 += '<h4>Выберите тип уголков</h4>';
+//n29 += create_radios_group(corner_src);
 let extra_components_src = {
     id : 'extra_components',
     name : 'jform[extra_components]',

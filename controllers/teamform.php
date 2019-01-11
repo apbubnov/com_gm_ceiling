@@ -124,7 +124,7 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 						'msg' => $e->getMessage(),
 						'code' => $e->getCode(),
 					),
-				));
+				),JSON_UNESCAPED_UNICODE );
 				die($result);
 			}
 		}

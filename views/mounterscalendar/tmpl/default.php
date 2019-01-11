@@ -32,104 +32,97 @@
 
 <div id="content-tar">
     <h2 class="center tar-color-414099">Календарь работ</h2>
-    <div id="prev-button-container">
-        <button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-    </div>
-    <div id="calendar-container">
+    <div id="calendar-container" class="row center" style="padding-bottom: 10px">
         <?php echo $calendar; ?>
     </div>
-    <div id="next-button-container">
-        <button id="button-next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-    </div>
-    <div id="legenda-container" class="tar-color-414099">
-        <table id="legenda">
-            <tr>
-                <td class="right">
+    <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
                     <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/ff3d3d.png" alt="Красный">
-                </td>
-                <td class="left">Новый монтаж. Не просмотрен</td>
-                <td class="right">
-                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/414099.png" alt="Синий">
-                </td>
-                <td class="left">Монтаж в работе</td>
-            </tr>
-            <tr>
-                <td class="right">
+                </div>
+                <div class="col-md-8 legend_text">Не просмотреный монтаж</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-4">
                     <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/fff23d.png" alt="Желтый">
-                </td>
-                <td class="left">Новый монтаж. Просмотрен</td>
-                <td class="right">
-                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/461f08.png" alt="Коричневый">
-                </td>
-                <td class="left">Монтаж недовыполнен</td>
-            </tr>
-            <tr>
-                <td class="right">
-                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/d3d3f9.png" alt="Голубой">
-                </td>
-                <td class="left">Выходные часы</td>
-                <td class="right">
+                </div>
+                <div class="col-md-8 legend_text">Просмотреный монтаж</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
                     <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/1ffe4e.png" alt="Зеленый">
-                </td>
-                <td class="left">Монтаж выполнен</td>
-            </tr>
-            <tr>
-                <td class="right"></td>
-                <td class="left"></td>
-                <td class="right">
-                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый">
-                </td>
-                <td class="left">Заказ закрыт</td>
-            </tr>
-        </table>
+                </div>
+                <div class="col-md-8 legend_text" legend_tezt>Монтаж выполнен</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/d3d3f9.png" alt="Голубой">
+                </div>
+                <div class="col-md-8 legend_text">Выходные часы</div>
+            </div>
+        </div>
     </div>
-    <div id="modal-window-with-table">
-        <button type="button" id="close-modal-window"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="window-with-table">
-            <table id="table-mounting"></table>
+    <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/414099.png" alt="Синий">
+                </div>
+                <div  class="col-md-8 legend_text">Монтаж в работе</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/461f08.png" alt="Коричневый">
+                </div>
+                <div class="col-md-8 legend_text">Монтаж недовыполнен</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый">
+                </div>
+                <div  class="col-md-8 legend_text">Заказ закрыт</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal_window_container" id="mw_container">
+        <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+
+        <div class="modal_window" id="window-with-table">
+            <table id="table-mounting" class="rwd-table">
+                <thead>
+                    <tr>
+                        <th id="selected_data" colspan="7"></th>
+                    </tr>
+                    <tr id="caption-tr" style="font-size: 9pt;">
+                        <th>Время</th>
+                        <th>Адрес</th>
+                        <th>Телефоны</th>
+                        <th>Периметр</th>
+                        <th>З/П</th>
+                        <th>Примечание</th>
+                        <th>Статус</th>
+                        <th>Этап</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
 <script type='text/javascript'>
     // листание календаря
-    month_old = 0;
-    year_old = 0;
-    jQuery("#button-next").click(function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-        }
-        if (month == 12) {
-            month = 1;
-            year++;
-        } else {
-            month++;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
-    jQuery("#button-prev").click(function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-            month = month_old;
-            year = year_old;
-        }
-        if (month == 1) {
-            month = 12;
-            year--;
-        } else {
-            month--;
-        }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
-    });
+
+
     function update_calendar(month, year) {
         jQuery.ajax({
             type: 'POST',
@@ -145,6 +138,12 @@
                 jQuery("#calendar-container").empty();
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
+                jQuery("#prev").click(function () {
+                    scrollCalendar(0);
+                });
+                jQuery("#next").click(function () {
+                    scrollCalendar(1);
+                });
             },
             dataType: "text",
             timeout: 10000,
@@ -193,8 +192,8 @@
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#window-with-table").hide();
-            jQuery("#close-modal-window").hide();
-            jQuery("#modal-window-with-table").hide();
+            jQuery("#close_mw").hide();
+            jQuery("#mw_container").hide();
         }
     });
 
@@ -205,8 +204,8 @@
         WhatDay(id);
         ListOfWork(kind, ChooseDay, ChooseMonth, ChooseYear);
         jQuery("#window-with-table").show('slow');
-        jQuery("#close-modal-window").show();
-        jQuery("#modal-window-with-table").show();
+        jQuery("#close_mw").show();
+        jQuery("#mw_container").show();
     });
     jQuery("#calendar-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite, .old-project", function () {
         kind = "no-empty";
@@ -214,8 +213,8 @@
         WhatDay(id);
         ListOfWork(kind, ChooseDay, ChooseMonth, ChooseYear);
         jQuery("#window-with-table").show('slow');
-        jQuery("#close-modal-window").show();
-        jQuery("#modal-window-with-table").show();
+        jQuery("#close_mw").show();
+        jQuery("#mw_container").show();
     });
 
     // функция узнать выбранный день, месяц, год
@@ -239,9 +238,12 @@
             month = 0+month;
         }
         date = year+"-"+month+"-"+day;
-        jQuery("#table-mounting").empty();
+        var outputDate = day+"."+month+"."+year;
+        jQuery("#table-mounting > tbody").empty();
+        jQuery("#selected_data").text(outputDate);
         if (kind == "empty") {
-            TrOrders = '<tr id="caption-data"><td colspan=2>'+day+'-'+month+'-'+year+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';  
+            jQuery("#caption-tr").hide();
+            TrOrders = '<tr><td colspan=7>В данный момент на этот день монтажей нет</td></tr>';
              jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
@@ -256,12 +258,11 @@
                             TrOrders += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
                         }); 
                     }
-                    jQuery("#table-mounting").append(TrOrders);
+                    jQuery("#table-mounting > tbody").append(TrOrders);
                 }
             });
         } else if (kind == "no-empty") {
-            TrOrders2 = '<tr id="caption-data"><td colspan="7">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>P</td><td>З/П</td><td>Примечание</td><td>Статус</td><td>Этап</td></tr>';
-            jQuery("#table-mounting").append(TrOrders2);
+            jQuery("#caption-tr").show();
              jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
@@ -302,42 +303,15 @@
                                     note2 = "<br>Примечание замерщика: "+element.dealer_calculator_note;
                                 }
                             }
-                            if (element.details == 1) {
+                            /*if (element.details == 1) {
                                 comment_calc = "<br>Есть примечание к потолку";
                             } else {
                                 comment_calc = "";
-                            }
+                            }*/
+                            var comment = note+" "+note2;
                             // статусы
                             status = element.project_status;
-                            
-                            /*if (element.project_status == 5 ) {
-                                status = "В производстве";
-                            }
-                            if (element.project_status == 6 ) {
-                                status = "На раскрое";
-                            }
-                            if (element.project_status == 7 ) {
-                                status = "Укомплектован";
-                            }
-                            if (element.project_status == 8 ) {
-                                status = "Выдан";
-                            }
-                            if (element.project_status == 10 ) {
-                                status = "Ожидание монтажа";
-                            }
-                            if (element.project_status == 12 ) {
-                                status = "Заказ закрыт";
-                            }
-                            if (element.project_status == 16 ) {
-                                status = "Монтаж";
-                            }
-                            if()
-                            if (element.project_status == 11 ) {
-                                status = "Монтаж выполнен";
-                            }
-                            if (element.project_status == 17 ) {
-                                status = "Монтаж недовыполнен";
-                            }*/
+
                             if (element.read_by_mounter == 0) {
                                 status += " <strong>/ Не прочитан</strong>";
                             }
@@ -355,11 +329,11 @@
                                 break;
                             }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}${note2}${comment_calc}</td><td>${status}</td><td>${type}</td></tr>`;
-                            jQuery("#table-mounting").append(TrOrders2);
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td data-th="Дата мотажа">${outputDate+" "+element.project_mounting_date}</td><td data-th="Адрес">${adress}</td><td data-th="Телефоны">${element.client_phones}</td><td data-th="Периметр">${perimeter}</td><td data-th="Зарплата">${salary}</td><td data-th="Комментарий" id="comment_calc${element.id}">${comment}</td><td data-th="Статус">${status}</td><td data-th="Этап">${type}</td></tr>`;
+                            jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
-                            jQuery("#table-mounting").append(TrOrders2);
+                            jQuery("#table-mounting > tbody").append(TrOrders2);
                         }                  
                     });
                 }
@@ -390,15 +364,48 @@
             location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
         }
     }
-
+    /*
+    *type == 0 листание назад
+    *type == 1 листание вперед
+    */
+    function scrollCalendar(type){
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+            month = month_old;
+            year = year_old;
+        }
+        if(type == 0) {
+            if (month == 1) {
+                month = 12;
+                year--;
+            } else {
+                month--;
+            }
+        }
+        if(type == 1){
+            if (month == 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    }
     jQuery(document).ready(function () {
-        // кнопки на телефон маленькие
-        if (screen.width < 768) {
-            jQuery(".perimeter").empty();
-			jQuery("#button-prev").css({"width":"25px"});
-			jQuery("#button-next").css({"width":"25px"});
-		}
-        // --------------------------------
+        month_old = 0;
+        year_old = 0;
+        jQuery("#prev").click(function () {
+            scrollCalendar(0);
+        });
+        jQuery("#next").click(function () {
+            scrollCalendar(1);
+        });
     });
 
 </script>

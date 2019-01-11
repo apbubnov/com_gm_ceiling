@@ -13,6 +13,7 @@
     if(in_array('16',$user_groups)){
         $is_gmmanager = true;
     }
+    $displayNone = (!in_array($this->project_status,VERDICT_STATUSES)) ?  "style=\"display:none;\"" : "";
 /*    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
@@ -153,7 +154,7 @@
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
                                 <td class="include_calculation" >
-                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden; ?> style="cursor: pointer;">
+                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden; ?> <?php echo $displayNone;?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
                                     <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
@@ -208,7 +209,7 @@
                         <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="4">Транспортные расходы</th>
                         </tr>
-                        <tr>
+                        <tr <?php echo $displayNone;?>>
                             <td colspan="4">
                                 <p>
                                     <input name="transport" class="radio" id ="transport" value="1" type="radio" <?php if($this->item->transport == 1 ) echo "checked"?>>

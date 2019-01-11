@@ -1752,9 +1752,10 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 });
             }
-            /*else{
-                $results = $mount_model->getDataAll(1);
-            }*/
+            //если проект в монтажной службе, чтобы бригада видела зп по прайсу ГМ(он вроде бы прайс службы)
+            if($service == "serviceSelf"){
+                $results = $gm_mount;
+            }
 
             //Если существующая калькуляция
             if(!empty($calc_id)){
@@ -2049,14 +2050,16 @@ class Gm_ceilingHelpersGm_ceiling
                             "stage"=>2
                         );
                     }
-                    if ($data['n4'] > 0) {
+                    $dealerType = JFactory::getUser($dealer_id)->dealer_type;
+                    $n4val = ($dealerType == 7) ? $data['n4'] : $data['n5'];
+                    if ($n4val > 0) {
                         $mounting_data[] = array(
                             "title" => "Натяжка полотна",                                                                    //Название
-                            "quantity" => $data['n4'],                                                                //Кол-во
+                            "quantity" => $n4val,                                                                //Кол-во
                             "gm_salary" => $results->mp47,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $data['n4'] * $results->mp47,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $n4val * $results->mp47,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp47,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n4'] * $results->mp47,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $n4val * $results->mp47,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=>3
                         );
                     }
@@ -2725,7 +2728,7 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             $project_model = self::getModel('Project');
             $mount_model = self::getModel('mount');
-            $dealer_info_model = self::getModel('Dealer_info');
+            //$dealer_info_model = self::getModel('Dealer_info');
             if(!empty($project_id)){
                 $project = $project_model->getData($project_id);
                 $transport_type = $project->transport;
@@ -4386,7 +4389,11 @@ class Gm_ceilingHelpersGm_ceiling
             $table = "";
             $table .= '<table class="calendar-table" cellspacing="0" colls="7">';
             // заголовок календаря
-            $table .= '<tr><td colspan="7" class="caption-month"><p>' . $ArMonths[$month] . ' ' . $year . 'г.</p></td></tr>';
+            $table .= '<tr>';
+            $table .= '<td><button class="btn btn-primary btn-sm" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></td>';
+            $table .= '<td colspan="5" class="caption-month"><p>' . $ArMonths[$month] . ' ' . $year . 'г.</p></td>';
+            $table .='<td><button class="btn btn-primary btn-sm" id="next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>';
+            $table .='</tr>';
             // создание и заполнение ячеек под дни
             $table .= '<tr>';
             for ($d = 0; $d < 7; $d++) {
@@ -4722,17 +4729,17 @@ class Gm_ceilingHelpersGm_ceiling
                         }                    
                         // заполнение дней
                         if ($DayMounter[$j - $first_day_of_week + 1][0] == "red") {
-                            $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "yellow") {
-                            $table .= '<td class="day-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="day-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "navy") {
-                            $table .= '<td class="day-in-work" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="day-in-work" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "brown") {
-                            $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
-                            $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if($DayMounter[$j - $first_day_of_week + 1][0] == "blue") {
-                            $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                            $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else {
                             if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
                                 $table .= '<td class="day-off2" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';

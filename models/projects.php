@@ -332,7 +332,7 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } elseif ($subtype == 'service') {
                         $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
-                        $query->where("`umap`.`group_id` IN (11, 26) AND (`p`.`dealer_id` is NULL OR `p`.`dealer_id` = 1 ) AND `p`.`project_status` IN (5, 10, 19)");
+                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19)");
 
                     } else {
                         $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29)');
@@ -721,7 +721,8 @@ class Gm_ceilingModelProjects extends JModelList
                                                                     ->select("count(distinct pm.project_id) as `count`")
                                                                     ->from("`#__gm_ceiling_projects_mounts` as pm")
                                                                     ->innerJoin("`#__user_usergroup_map` as umap on umap.user_id = pm.mounter_id")
-                                                                    ->where("umap.group_id = 26");
+                                                                    ->innerJoin("`#__gm_ceiling_projects` as p on p.id = pm.project_id")
+                                                                    ->where("umap.group_id = 26 and p.deleted_by_user = 0 and `p`.`project_status` IN (5, 10, 19) ");
                                                             }
 
             $db->setQuery($query);
