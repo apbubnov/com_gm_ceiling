@@ -219,11 +219,10 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
         {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query2 = $db->getQuery(true);
-            $query4 = $db->getQuery(true);
-            
 
-            $query
+            /*
+             * оставил на всякий если будет косячить новый код*/
+            /*$query
  	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.calcs_mounting_sum')
                 ->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
@@ -233,45 +232,60 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
             $db->setQuery($query);
             $items = $db->loadObjectList();
-
-            $query2->select('calculations.id, calculations.project_id, calculations.n5, calculations.mounting_sum , calculations.details')
+            $query->clear();
+            $query->select('calculations.id, calculations.project_id, calculations.n5, calculations.mounting_sum , calculations.details')
                 ->from('#__gm_ceiling_calculations as calculations')
                 ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
                 ->innerJoin('#__gm_ceiling_projects_mounts as pm on calculations.project_id = pm.project_id')
                 ->where("pm.mounter_id = '$id' and projects.`project_status` > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'");
-            $db->setQuery($query2);
+            $db->setQuery($query);
             $items2 = $db->loadObjectList();
+            $query->clear();*/
+            $query
+                ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.calcs_mounting_sum')
+                ->select('SUM(DISTINCT c.n5) as n5,sum(DISTINCT c.mounting_sum) as mounting_sum')
+                ->select('GROUP_CONCAT(DISTINCT cc.phone separator \';\n\') as client_phones')
+                ->select('GROUP_CONCAT(DISTINCT c.id separator \';\') as calcs_id')
+                ->from('`#__gm_ceiling_projects_mounts` as pm')
+                ->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
+                ->leftJoin('`#__gm_ceiling_clients_contacts` as cc on cc.client_id = p.client_id')
+                ->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
+                ->innerJoin('`#__gm_ceiling_calculations` as c on c.project_id = p.id')
+                ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
+                ->order('pm.date_time');
 
-            $user = JFactory::getUser();
-            
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
             foreach ($items as $value) {
-                foreach ($items2 as $val) {
-                    if ($value->id == $val->project_id) {
-                        $value->n5 += $val->n5;
-                        if(!empty($value->calcs_mounting_sum)){
-                        	$mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val->id,null,null,"mount")["total_gm_mounting"];
-                        }
-                        else{
-                        	$mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val->id)["total_gm_mounting"];
-                        }
+                $calcs = explode(';',$value->calcs_id);
+
+                foreach ($calcs as $val) {
+                    if(!empty($value->calcs_mounting_sum)){
+                        $mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val,null,"serviceSelf")["total_gm_mounting"];
                         $value->mounting_sum += $mount_sum;
-					}
-					if (!empty($val->details)) {
+                    }
+					/*if (!empty($val->details)) {
 						$value->details = 1;
 					} else {
 						if ($value->details != 1) {
 							$value->details = 0;
 						}
-					}
+					}*/
 				}
-				$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
+                if(!empty($value->calcs_mounting_sum)) {
+                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id,"mount");
+                }
+                else{
+
+                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
+                }
 				$value->mounting_sum += $transport["mounter_sum"];
             }
-
-            $query4->select('date_from, date_to')
+            $query->clear();
+            $query->select('date_from, date_to')
                 ->from('#__gm_ceiling_day_off')
                 ->where("id_user = $id and date_from between '$date 00:00:00' and '$date 23:59:59'");
-            $db->setQuery($query4);
+            $db->setQuery($query);
             $items4 = $db->loadObject();
 
             // объединение с выходным днем

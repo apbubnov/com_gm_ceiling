@@ -1,4 +1,4 @@
-div {
+button-prevdiv {
     font-family: Cuprum;    
 }
 
@@ -27,11 +27,6 @@ div {
     margin-right: 15px;
 }
 
-#calendar-container {
-    display: inline-block;
-    float: left;
-    width: calc(100% - 80px);
-}
 
 @media screen and  (min-width: 400px) {
     .caption-month, .weekday {
@@ -56,9 +51,6 @@ div {
     }
     #next-button-container {
         width: 50px;
-    }
-    #calendar-container {
-        width: calc(100% - 130px);
     }
 }
 
@@ -94,18 +86,7 @@ div {
     -webkit-transition: 0.3s;
 }
 
-#window-with-table {
-    display: none;
-    width: 80%;
-    margin-left: 10%;
-    background-color: #ffffff;
-    text-align: center;
-    padding: 20px;
-    transform: translateY(50px);
-    overflow-x: auto;
-    max-height: calc(100% - 100px);
-    overflow-y: auto;
-}
+
 
 @media screen and (min-width: 992px) {
     #window-with-table {
@@ -122,24 +103,7 @@ div {
     }
 }
 
-#table-mounting {
-    min-width: 300px;
-    width: 100%;
-    color: #414099;
-    text-align: center !important;
-}
 
-#table-mounting td {
-    border: 1px solid #414099;
-    padding: 5px;
-    text-align: center !important;
-}
-
-@media screen and (min-width: 992px) {
-    #table-mounting td {
-        padding: 10px;
-    }
-}
 
 #caption-tr, #caption-data td {
     background-color: #d3d3f9;
@@ -174,11 +138,8 @@ div {
 }
 
 .legenda_modal {
-    max-width: 55px;
+    max-width: 75%;
 }
-
-@media screen and (min-width: 992px) {
-    .legenda_modal {
-        width: 100%;
-    }
+.legend_text{
+    font-size: 10pt;
 }

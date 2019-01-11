@@ -274,8 +274,8 @@ let corner_src = {
 }
 
 let n29 =  create_block_with_divs(n29_src);
-n29 += '<h4>Выберите тип уголков</h4>';
-n29 += create_radios_group(corner_src);
+//n29 += '<h4>Выберите тип уголков</h4>';
+//n29 += create_radios_group(corner_src);
 let extra_components_src = {
     id : 'extra_components',
     name : 'jform[extra_components]',
