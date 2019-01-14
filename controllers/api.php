@@ -212,7 +212,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                     $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
                     if (!empty($id)) {
-                        $result = json_encode((object)array("id" => $id->id));
+                        $result = json_encode((object)array("id" => $id->id, "username" => $register_data->username));
                     } else {
                         $data = array(
                             "name" => $register_data->fio,
@@ -220,6 +220,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                             "password" => $register_data->username,
                             "password2" => $register_data->username,
                             "email" => $register_data->email,
+                            "dealer_id" => $register_data->dealer_id,
                             "groups" => array(2,$register_data->group)
                         );
                         $user = new JUser;
@@ -230,7 +231,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                             throw new Exception($user->getError());
                         }
                         $userID = $user->id;
-                        $result = json_encode((object)array("id" => $userID));
+                        $result = json_encode((object)array("id" => $userID, "username" => $register_data->username));
 
                         $mailer = JFactory::getMailer();
                         $config = JFactory::getConfig();

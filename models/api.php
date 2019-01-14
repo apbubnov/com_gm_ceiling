@@ -807,9 +807,8 @@ class Gm_ceilingModelApi extends JModelList
         }
     }
 
-public function get_dealerInfo_androidCallGlider($data){
-        try{
-           
+public function get_dealerInfo_androidCallGlider($data) {
+        try {
             $db = $this->getDbo();
             $change_time = $db->escape($data->change_time, false);
             $dealer_id = $db->escape($data->dealer_id, false);
@@ -817,25 +816,22 @@ public function get_dealerInfo_androidCallGlider($data){
             $query = $db->getQuery(true);
             $query->select("*");
             $query->from("`#__gm_ceiling_clients`");
-            $query->where("change_time > '$change_time' and dealer_id = $dealer_id");
+            $query->where("dealer_id = $dealer_id");
             $db->setQuery($query);
             $list_clients = $db->loadObjectList();
 
-            if (count($list_clients) > 0)
-            {
-                //контакты
-                $where = "";
-                foreach ($list_clients as $key => $value)
-                {
-                    $id = $value->id;
-                    if ($key == count($list_clients) - 1)
-                    {
-                        $where .= "`client_id`=$id";
+            if (count($list_clients) > 0) {
+                $where = "change_time > '$change_time'";
+                $groupIds = '';
+                foreach ($list_clients as $key => $value) {
+                    if ($key == count($list_clients) - 1) {
+                        $groupIds .= $value->id;
+                    } else {
+                        $groupIds .= $value->id.',';
                     }
-                    else
-                    {
-                        $where .= "`client_id`=$id OR ";
-                    }
+                }
+                if (!empty($groupIds)) {
+                    $where .= " AND `client_id` IN ($groupIds)";
                 }
 
                 $query = $db->getQuery(true);
@@ -887,84 +883,6 @@ public function get_dealerInfo_androidCallGlider($data){
                 $db->setQuery($query);
                 $list_clients_statuses_map = $db->loadObjectList();
             }
-            else
-            {
-
-            	$query = $db->getQuery(true);
-            	$query->select("*");
-            	$query->from("`#__gm_ceiling_clients`");
-            	$query->where("dealer_id = $dealer_id");
-            	$db->setQuery($query);
-            	$list_clients = $db->loadObjectList();
-
-            	$where = "change_time > '$change_time'";
-
-            	if (count($list_clients) > 0){
-	
-                	$list_clients = array();
-
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_clients_contacts`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_contacts = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_client_history`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_client_history = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_callback`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_calls = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_clients_dop_contacts`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_contacts_dop = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_calls_status_history`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_calls_status_history = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_callback`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_callback = $db->loadObjectList();
-	
-            	    $query = $db->getQuery(true);
-            	    $query->select("*");
-            	    $query->from("`#__gm_ceiling_clients_statuses_map`");
-            	    $query->where($where);
-            	    $db->setQuery($query);
-            	    $list_clients_statuses_map = $db->loadObjectList();
-
-            	} else {
-
-                $list_clients = array();
-                $list_contacts = array();
-                $list_client_history = array();
-                $list_calls = array();
-                $list_contacts_dop = array();
-                $list_calls_status_history = array();
-                $list_callback = array();
-                $list_clients_statuses_map = array();
-
-            	}
-            }
 
             $query = $db->getQuery(true);
             $query->select("*");
@@ -987,56 +905,58 @@ public function get_dealerInfo_androidCallGlider($data){
             $db->setQuery($query);
             $list_api_phones = $db->loadObjectList();
 
-					$result = [];
-            		if (empty($list_clients) && empty($list_clients) && empty($list_clients) && 
-            			empty($list_clients) && empty($list_clients) && empty($list_clients) && 
-            			empty($list_clients) && empty($list_clients) && empty($list_clients) && empty($list_clients)) 
-            		{
-            			$result = null;
-            		} else {
-           				$result['rgzbn_gm_ceiling_clients'] = $list_clients;
-           				$result['rgzbn_gm_ceiling_clients_contacts'] =  $list_contacts;
-           				$result['rgzbn_gm_ceiling_clients_dop_contacts'] =  $list_contacts_dop;
-           				$result['rgzbn_gm_ceiling_callback'] =  $list_callback;
-           				$result['rgzbn_gm_ceiling_client_history'] =  $list_client_history;
-           				$result['rgzbn_gm_ceiling_calls_status_history'] =  $list_calls_status_history;
-           				$result['rgzbn_gm_ceiling_calls_status'] =  $list_calls_status;
-           				$result['rgzbn_gm_ceiling_clients_statuses'] =  $list_clients_statuses;
-           				$result['rgzbn_gm_ceiling_api_phones'] =  $list_api_phones;
-           				$result['rgzbn_gm_ceiling_clients_statuses_map'] =  $list_clients_statuses_map;
-            		}
+            $query = $db->getQuery(true);
+            $query->select("*");
+            $query->from("`rgzbn_users`");
+            $query->where("change_time > '$change_time' and dealer_id = $dealer_id");
+            $db->setQuery($query);
+            $list_users = $db->loadObjectList();
 
+			$result = [];
+    		if (empty($list_clients) && empty($list_contacts) && empty($list_contacts_dop) && 
+    			empty($list_callback) && empty($list_client_history) && empty($list_calls_status_history) && 
+    			empty($list_calls_status) && empty($list_clients_statuses) && empty($list_api_phones) && 
+                empty($list_clients_statuses_map) && empty($list_users)
+                ) {
+    			$result = null;
+    		} else {
+   				$result['rgzbn_gm_ceiling_clients'] = $list_clients;
+   				$result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
+   				$result['rgzbn_gm_ceiling_clients_dop_contacts'] = $list_contacts_dop;
+   				$result['rgzbn_gm_ceiling_callback'] = $list_callback;
+   				$result['rgzbn_gm_ceiling_client_history'] = $list_client_history;
+   				$result['rgzbn_gm_ceiling_calls_status_history'] = $list_calls_status_history;
+   				$result['rgzbn_gm_ceiling_calls_status'] = $list_calls_status;
+   				$result['rgzbn_gm_ceiling_clients_statuses'] = $list_clients_statuses;
+   				$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
+   				$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
+                $result['rgzbn_users'] = $list_users;
+    		}
             return $result;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public function get_measure_time($date){
-        try{
+    public function get_measure_time($date) {
+        try {
             $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
             return $gauger_model->getFreeGaugingTimes($date);
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public function rec_to_measure($data){
-        try{
-            if(!empty($data->user_id)){
+    public function rec_to_measure($data) {
+        try {
+            if (!empty($data->user_id)) {
 
                 $client_id = JFactory::getUser($data->user_id)->associated_client;
                 $dealer_id = $data->user_id;
-            }
-            else{
-                if(!empty($data->name)){
+            } else {
+                if (!empty($data->name)){
                      $name = delete_string_characters($data->name);
-                }
-                else {
+                } else {
                     $name = "Клиент";
                 }
                 foreach ($data as $key => $value) {
@@ -1052,7 +972,7 @@ public function get_dealerInfo_androidCallGlider($data){
                 if ($client_id == 'client_found') {
                     return 'client_found';
                 }
-                if($name == "Клиент"){
+                if($name == "Клиент") {
                     $name.=$client_id;
                 }
                 //создание user'а
@@ -1068,14 +988,14 @@ public function get_dealerInfo_androidCallGlider($data){
                 die('empty advt!');
             }
             $status = 1;
-            if(!empty($data->status)){
+            if (!empty($data->status)) {
                 $status = $data->status;
             }
             $address = $data->address;
             $date_time = $data->date_time;
             $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
             $gaug_id = $gauger_model->getFreeGaugers($date_time)[0];
-            if(empty($gaug_id)){
+            if (empty($gaug_id)) {
                 $gaug_id = null;
             }
             $project_data = [
@@ -1089,15 +1009,14 @@ public function get_dealerInfo_androidCallGlider($data){
 
             $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
             $project = $projectform_model->save($project_data);
-            if(!empty($data->calc_id)){
+            if (!empty($data->calc_id)) {
                 $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $calculationModel->changeProjectId($data->calc_id, $project);
             }
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            if($status == 1){
+            if ($status == 1) {
                 $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);    
-            }
-            elseif($status == 5){
+            } elseif ($status == 5) {
                 $callback_model->save(date("Y-m-d H:i:s"), "Клиент запустил договор в производство через гмпотолки. Уточнить данные", $client_id, 1);
             }
             $result = [
@@ -1106,40 +1025,34 @@ public function get_dealerInfo_androidCallGlider($data){
                         "project_id" => $project
                         ];
             return (object)$result;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public function change_password($data){
-        try{
+    public function change_password($data) {
+        try {
             $user = JFactory::getUser($data->user_id);
-            if(!empty($data->old_password)){
+            if (!empty($data->old_password)) {
                 $verifyPass = JUserHelper::verifyPassword($data->old_password, $user->password, $user->id);
-                if($verifyPass){
+                if ($verifyPass) {
                     return $this->change_pass($user->id,$data->password);
                 }
                 else return false;
             }
-            else{
+            else {
                 return $this->change_pass($user->id,$data->password);
             }
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public function change_pass($user_id,$pass){
-        try{
+    public function change_pass($user_id,$pass) {
+        try {
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('Users');
             return $user_model->change_user_pass($user_id,$pass);
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
