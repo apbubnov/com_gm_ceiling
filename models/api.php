@@ -59,19 +59,18 @@ class Gm_ceilingModelApi extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];
-            $commonMeasures = 0;
-            $commonDeals = 0;
+
             foreach ($items as $item){
-                $commonMeasures += $item->measures;
-                $commonDeals += $item->deals;
+
                 $projects = explode(';',$item->projects);
                 foreach($projects as $project){
                     $result[$item->manager_id][$item->client_id] = json_decode($project);
                 }
+                $result[$item->manager_id]['measures'] += $item->measures;
+                $result[$item->manager_id]['deals'] += $item->deals;
 
             }
-            $result['measures'] = $commonMeasures;
-            $result['deals'] = $commonDeals;
+
             return $result;
         }
         catch(Exception $e)
