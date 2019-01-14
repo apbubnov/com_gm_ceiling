@@ -450,7 +450,25 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
             }
         }
-        
+
+        public function getManagersAnalytic(){
+            try{
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+                if(!empty($_POST['data']))
+                {
+                    $data = json_decode($_POST['data']);
+                    $date1 = $data->date1;
+                    $date2 = $data->date2;
+                    $managers = implode(',',$data->managers);
+                    $result = $model->getProjectsAnalytic($date1,$date2,$managers);
+                }
+                die(json_encode($result));
+            }
+            catch(Exception $e)
+            {
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            }
+        }
         public function check_update(){
             try
             { 

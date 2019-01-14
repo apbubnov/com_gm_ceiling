@@ -23,6 +23,66 @@ class Gm_ceilingModelApi extends JModelList
         parent::__construct($config);
     }
 
+    function getProjectByStatus($statuses){
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("COUNT(DISTINCT d.project_id)")
+            ->from("`rgzbn_analytic_detailed` AS d")
+            ->where("d.client_id = a.client_id AND d.new_status in $statuses");
+        return $query;
+    }
+    public function getProjectsAnalytic($date1,$date2,$managers){
+        try{
+            /*SELECT a.client_id,c.manager_id,
+            (SELECT COUNT(DISTINCT d.project_id) FROM `rgzbn_analytic_detailed` AS d WHERE d.client_id = a.client_id AND d.new_status = 1)  AS measures,
+            (SELECT COUNT(DISTINCT d.project_id) FROM `rgzbn_analytic_detailed` AS d WHERE d.client_id = a.client_id AND d.new_status = 4) AS deals,
+            CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{"project_id":"',a.project_id,'","sum":"',a.sum,'","status":"',a.new_status,'"}') SEPARATOR ','),']') AS projects
+            FROM `rgzbn_analytic_detailed` AS a
+            INNER JOIN `rgzbn_gm_ceiling_clients` AS c ON a.client_id = c.id
+            WHERE a.date_of_change BETWEEN '2018-01-01' AND '2019-01-04' AND a.new_status IN(1,4)
+            GROUP BY a.client_id
+            */
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $measuresCountQuery = $this->getProjectByStatus("(1)");
+            $dealsCountQuery = $this->getProjectByStatus("(4,5)");
+            $query
+                ->select("a.client_id,c.manager_id")
+                ->select("($measuresCountQuery) as measures")
+                ->select("($dealsCountQuery) as deals")
+                ->select("GROUP_CONCAT(DISTINCT CONCAT('{\"project_id\":\"',a.project_id,'\",\"sum\":\"',a.sum,'\",\"status\":\"',a.new_status,'\"}') SEPARATOR ';') AS projects")
+                ->from("`rgzbn_analytic_detailed` AS a")
+                ->innerJoin("`rgzbn_gm_ceiling_clients` AS c ON a.client_id = c.id")
+                ->where("a.date_of_change BETWEEN '$date1' AND '$date2' AND a.new_status IN(1,4,5) and manager_id IN ($managers)")
+                ->group("a.client_id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            $result = [];
+            $commonMeasures = 0;
+            $commonDeals = 0;
+            foreach ($items as $item){
+                $commonMeasures += $item->measures;
+                $commonDeals += $item->deals;
+                $projects = explode(';',$item->projects);
+                foreach($projects as $project){
+                    $result[$item->manager_id][$item->client_id] = json_decode($project);
+                }
+
+            }
+            $result['measures'] = $commonMeasures;
+            $result['deals'] = $commonDeals;
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            die($e->getMessage());
+            /*$date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);*/
+        }
+    }
     public function save_or_update_data_from_android($table, $data)
     {
         try
