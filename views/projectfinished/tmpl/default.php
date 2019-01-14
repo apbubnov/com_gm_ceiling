@@ -43,11 +43,10 @@ $server_name = $_SERVER['SERVER_NAME'];
 			<th>Адрес</th>
 		</tr>
 		<?php foreach ($projects as $value) {
-			if ($value->read_by_chief == 0) { 
 				if ($user->dealer_id == 1) { ?>
-					<tr onclick="location.replace('http://<?php echo $server_name;?>/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
+					<tr onclick="location.replace('/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
 				<?php } else {?>
-					<tr onclick="location.replace('http://<?php echo $server_name;?>/index.php?option=com_gm_ceiling&view=projectform&type=chief&id=<?php echo $value->id; ?>');">
+					<tr onclick="location.replace('/index.php?option=com_gm_ceiling&view=projectform&type=chief&id=<?php echo $value->id; ?>');">
 				<?php }?>
 					<td><?php echo $value->id; ?></td>
 					<td><?php echo $value->project_mounting_end; ?></td>
@@ -62,26 +61,8 @@ $server_name = $_SERVER['SERVER_NAME'];
 					</td>
 					<td><?php echo $value->project_info; ?></td>
 				</tr>
-		<?php }
-		} ?>
-		<?php foreach ($projects as $value) {
-			if ($value->read_by_chief == 1) { ?>
-				<tr>
-					<td><?php echo $value->id; ?></td>
-					<td><?php echo $value->project_mounting_end; ?></td>
-					<td><?php echo $value->name; ?></td>
-					<td><?php
-							if ($user->dealer_id == 1) {
-								echo $value->gm_mounter_note;
-							} else {
-								echo $value->mounter_note;
-							}
-						?>
-					</td>
-					<td><?php echo $value->project_info; ?></td>
-				</tr>
-		<?php }
-		} ?>
+
+		<?php } ?>
 	</table>
 </div>
 

@@ -253,34 +253,38 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 ->innerJoin('`#__gm_ceiling_calculations` as c on c.project_id = p.id')
                 ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
                 ->order('pm.date_time');
-
             $db->setQuery($query);
             $items = $db->loadObjectList();
-            foreach ($items as $value) {
-                $calcs = explode(';',$value->calcs_id);
-
-                foreach ($calcs as $val) {
-                    if(!empty($value->calcs_mounting_sum)){
-                        $mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$val,null,"serviceSelf")["total_gm_mounting"];
-                        $value->mounting_sum += $mount_sum;
-                    }
-					/*if (!empty($val->details)) {
-						$value->details = 1;
-					} else {
-						if ($value->details != 1) {
-							$value->details = 0;
-						}
-					}*/
-				}
-                if(!empty($value->calcs_mounting_sum)) {
-                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id,"mount");
-                }
-                else{
-
-                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
-                }
-				$value->mounting_sum += $transport["mounter_sum"];
+            if(count($items == 1) && empty($items[0]->id)){
+                $items = [];
             }
+            foreach ($items as $value) {
+                if(!empty($value->id)) {
+                    $calcs = explode(';', $value->calcs_id);
+
+                    foreach ($calcs as $val) {
+                        if (!empty($value->calcs_mounting_sum)) {
+                            $mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $val, null, "serviceSelf")["total_gm_mounting"];
+                            $value->mounting_sum += $mount_sum;
+                        }
+                        /*if (!empty($val->details)) {
+                            $value->details = 1;
+                        } else {
+                            if ($value->details != 1) {
+                                $value->details = 0;
+                            }
+                        }*/
+                    }
+                    if (!empty($value->calcs_mounting_sum)) {
+                        $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id, "mount");
+                    } else {
+
+                        $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
+                    }
+                    $value->mounting_sum += $transport["mounter_sum"];
+                }
+            }
+
             $query->clear();
             $query->select('date_from, date_to')
                 ->from('#__gm_ceiling_day_off')
