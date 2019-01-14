@@ -646,7 +646,7 @@ class Gm_ceilingModelProjects extends JModelList
                             $query->select('count(projects.id) as count')
                                 ->from('#__gm_ceiling_projects as projects')
                                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                                ->where("projects.project_status = '11' and clients.dealer_id = '$user->dealer_id' and projects.read_by_chief = '0'");
+                                ->where("projects.project_status = '11' and clients.dealer_id = '$user->dealer_id'");
                             $query->where('projects.deleted_by_user <> 1');
                         } else
                             // НМС (незавершенные заказы)

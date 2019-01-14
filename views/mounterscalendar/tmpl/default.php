@@ -98,7 +98,7 @@
             <table id="table-mounting" class="rwd-table">
                 <thead>
                     <tr>
-                        <th id="selected_data" colspan="7"></th>
+                        <th id="selected_data" colspan="8"></th>
                     </tr>
                     <tr id="caption-tr" style="font-size: 9pt;">
                         <th>Время</th>
@@ -243,7 +243,7 @@
         jQuery("#selected_data").text(outputDate);
         if (kind == "empty") {
             jQuery("#caption-tr").hide();
-            TrOrders = '<tr><td colspan=7>В данный момент на этот день монтажей нет</td></tr>';
+            TrOrders = '<tr><td colspan=8>В данный момент на этот день монтажей нет</td></tr>';
              jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
