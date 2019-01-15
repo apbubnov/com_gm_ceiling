@@ -277,6 +277,11 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 Общая площадь: <span id="common_square"></span> м<sup>2</sup>.
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                Общая себестоимость: <span id="common_self_sum"></span> м<sup>2</sup>.
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
         <p class="caption-tar">Генерация PDF</p>
@@ -975,6 +980,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     console.log(data);
                     jQuery("#common_perimiter").text(data.perimeter);
                     jQuery("#common_square").text(data.quadrature);
+                    jQuery("#common_self_sum").text(data.self_sum + data.mount_sum);
                 },
                 error: function(data) {
                     var n = noty({

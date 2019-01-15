@@ -686,6 +686,8 @@ if (empty($list['direction']))
             $db->setQuery($query);
             $query
                 ->select("c.id AS client_id,c.client_name,SUM( DISTINCT calc.n4) AS quadr,SUM(DISTINCT calc.n5) AS per")
+                ->select("SUM(cm.sum) AS mount_sum")
+                ->select("GROUP_CONCAT(DISTINCT p.id SEPARATOR ';') AS projects")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
@@ -694,11 +696,31 @@ if (empty($list['direction']))
                 ->group("c.id");
             $db->setQuery($query);
             $items = $db->loadObjectList();
-            $result = (object)array("perimeter"=>0,"quadrature"=>0);
+            $result = (object)array("perimeter"=>0,"quadrature"=>0,"mount_sum"=>0);
+            $projects = "";
             foreach ($items as $item) {
                 $result->perimeter += $item->per;
                 $result->quadrature += $item->quadr;
+                $result->mount_sum += $item->mount_sum;
+                $projects .= (empty($projects)) ? $item->projects : ';'.$item->projects ;
             }
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $analyticModel =Gm_ceilingHelpersGm_ceiling::getModel('analytic_dealers');
+            $projects = explode(';',$projects);
+            if(!empty($projects)){
+                foreach ($projects as $id) {
+                    if(!empty($id))
+                        $calcs = $calculation_model->getDataForAnalytic($id);
+                    if(!empty($calcs)){
+                        foreach ($calcs as $calc) {
+                            $data = $analyticModel->calculateSelfPrice($calc,0.05,$id);
+                            $sum += $data["sum"];
+                        }
+                    }
+                    $total_self_sum += $sum;
+                }
+            }
+            $result->self_sum = $total_self_sum;
             return $result;
         }
         catch(Exception $e)
