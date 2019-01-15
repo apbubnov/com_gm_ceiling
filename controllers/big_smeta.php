@@ -162,6 +162,31 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }*/
+   function costyl_mp(){
+       try
+       {
+           $db = JFactory::getDbo();
+           $query = $db->getQuery(true);
+           $query->select('user_id,mp11')
+               ->from('`rgzbn_gm_ceiling_mount`');
+           $db->setQuery($query);
+
+           $items = $db->loadObjectList();
+
+           foreach ($items as $value) {
+               $query = $db->getQuery(true);
+               $query->update('`rgzbn_gm_ceiling_mount`')
+                   ->set("mp11_3 = $value->mp11")
+                   ->where("user_id = $value->user_id");
+               $db->setQuery($query);
+               $db->execute();
+
+           }
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+   }
     public function transport()
     {
         try

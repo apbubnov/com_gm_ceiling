@@ -1747,8 +1747,13 @@ class Gm_ceilingHelpersGm_ceiling
             if((!empty($service) && $service == "service") || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
-                    if(mb_ereg('mp[\d]+',$key)){
-                        $mp +=$mp*0.5;
+                    /*обагечивание и натяжка наценка 20%*/
+                    if($key == "mp1" || $key == "mp31" || $key == "mp32" || $key == "mp47" ){
+                        $mp += $mp*0.2;
+                    }
+                    /*все остальное 30%*/
+                    if(mb_ereg('mp[\d]+',$key) && $key!="mp1" && $key!="mp31" && $key!="mp32" && $key!="mp47"){
+                        $mp += $mp*0.3;
                     }
                 });
             }
@@ -2137,10 +2142,12 @@ class Gm_ceilingHelpersGm_ceiling
                     if($data['n16']){
                         $cornice = "Закладная под шторный карниз / Скрытый (ПВХ)";
                         $cornice1 = "Установка шторного карниза / Скрытый (ПВХ)";
+                        $mp11Val = $results->mp11_3;
                     }
                     else {
                         $cornice = "Закладная под шторный карниз / Обычный (ПВХ)";
                         $cornice1 = "Установка шторного карниза / Обычный (ПВХ)";
+                        $mp11Val = $results->mp11;
                     }
                     //Установка светильников
                     if (count($n13) > 0) {
@@ -2294,10 +2301,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => $cornice,                                                            //Название
                             "quantity" => $data['n27'],                                                     //Кол-во
-                            "gm_salary" => $results->mp11,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $data['n27'] * $results->mp11,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp11,                                              //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $data['n27'] * $results->mp11,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $mp11Val,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $data['n27'] * $mp11Val,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $mp11Val,                                              //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n27'] * $mp11Val,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=> 2
                         );
                         $mounting_data[] = array(
@@ -2747,8 +2754,8 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 if($service == "service"){
                     $res = $mount_model->getDataAll(1);
-                    $res->transport +=$res->transport*0.5;
-                    $res->distance +=$res->distance*0.5;
+                    //$res->transport +=$res->transport*0.5;
+                    //$res->distance +=$res->distance*0.5;
                 }
                 if($service == "mount"){
                     $res = $mount_model->getDataAll(1);

@@ -228,6 +228,14 @@ if(!$user->getDealerInfo()->update_check) {
 						<input type="text" name="jform[mp47]" id="jform_mp47" value=<?php echo ($mount->mp47)?$mount->mp47:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 					</div>
 				</div>
+                <!--<div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_mp47-lbl" for="jform_mp" >Натяжка ниши закрытой</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[mp47]" id="jform_mp47" value=<?php /*echo ($mount->mp47)?$mount->mp47:0 */?> class="required" style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>-->
 			</div>
 			<div class = "col-md-4">
 				<div class="control-group">
@@ -238,6 +246,14 @@ if(!$user->getDealerInfo()->update_check) {
 						<input type="text" name="jform[mp11]" id="jform_mp11" value=<?php echo ($mount->mp11)?$mount->mp11:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 					</div>
 				</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_mp11_3-lbl" for="jform_mp11_3" >Закладная под скрытый карниз</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[mp11_3]" id="jform_mp11_3" value=<?php echo ($mount->mp11)?$mount->mp11_3:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
 				<div class="control-group">
 					<div class="control-label">
 						<label id="jform_mp11_2-lbl" for="jform_mp11_2" >Установка шторного карниза</label>

@@ -32,7 +32,6 @@
         $mounters = explode(',',$item->project_mounter);
         foreach($mounters as $mounter_id){
             $mounter = JFactory::getUser($mounter_id);
-            print_r($mounter->groups);
             if(in_array('26',$mounter->groups)){
                 $flag = true;
                 break;
