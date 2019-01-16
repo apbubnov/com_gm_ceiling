@@ -252,6 +252,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 ->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
                 ->innerJoin('`#__gm_ceiling_calculations` as c on c.project_id = p.id')
                 ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
+                ->group('p.id')
                 ->order('pm.date_time');
             $db->setQuery($query);
             $items = $db->loadObjectList();
