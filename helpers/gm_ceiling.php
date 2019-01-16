@@ -4253,6 +4253,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setBody($body);
             }
             elseif($type == 16){
+                //throw new Exception(print_r($data,true));
                 $user_model = self::getModel('users');
                 $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
@@ -4261,11 +4262,17 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 $body = "Здравствуйте. В проекте №" . $data['id']. " изменилась дата монтажа.\n";
-                foreach ($data['stages'] as $stage) {
+                $body .= "Старая данные о монтаже: \n";
+                foreach ($data['old_data'] as $stage) {
                     $body.= "Этап: $stage->name \n";
-                    $body.= "Cтарая дата: $stage->old_date\n";
-                    $body.= "Новая дата: $stage->new_date\n";
+                    $body.= "Дата: $stage->time\n";
                 }
+                $body .= "Новые данные о монтаже: \n";
+                foreach ($data['new_data'] as $stage) {
+                    $body.= "Этап: $stage->name \n";
+                    $body.= "Дата: $stage->time\n";
+                }
+
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Изменена дата монтажа');
                 $mailer->setBody($body);

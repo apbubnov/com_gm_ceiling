@@ -1144,18 +1144,25 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			// монтажи
             $change_data  = [];// Массив для уведомления ГММенеджера
             $change_data['id'] = $data->id;
-            $change_data['stages'] = [];
+            $change_data['new_data'] = $mount_diff;
+            $change_data['old_data'] = $old_mount_data;
             $mount_types = $projects_mounts_model->get_mount_types();
+            foreach($mount_diff as $value){
+                $value->name = $mount_types[$value->stage];
+            }
+            foreach($old_mount_data as $value){
+                $value->name = $mount_types[$value->stage];
+            }
 			if (!empty($mount_diff)) {
                 foreach ($mount_diff as $value) {
                     foreach ($old_mount_data as $old_value) {
                        if($old_value->stage == $value->stage){
                             if($old_value->mounter == $value->mounter && $old_value->time != $value->time){
-                                $change_stage = (object)[];
+                               /* $change_stage = (object)[];
                                 $change_stage->name = $mount_types[$value->stage];
                                 $change_stage->old_date = $old_value->time;
                                 $change_stage->new_date = $value->time;
-                                $change_data['stages'][] = $change_stage;
+                                $change_data['stages'][] = $change_stage;*/
                                 Gm_ceilingHelpersGm_ceiling::notify($data, 8);
                                 $text = "У проекта №$data->id дата этапа монтажа '".$mount_types[$value->stage]."' перенесена на $value->time";
                                 $history_model->save($data->id_client,$text);
@@ -1473,6 +1480,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$table->load($project_id);
 			$data = $table;
 			$data->new_project_sum = $new_value;
+			$data->dealer_id = $user->dealer_id;
 			$check_done = $model->new_getProjectItems($project_id);
 			if($check_done->check_mount_done == 0 && $check == 1) {
 				$new_value = $check_done->new_project_sum + $new_value;
