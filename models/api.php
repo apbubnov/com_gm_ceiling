@@ -874,8 +874,8 @@ public function get_dealerInfo_androidCallGlider($data) {
             $dealer_id = $db->escape($data->dealer_id, false);
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`#__gm_ceiling_clients`");
+            $query->select('id');
+            $query->from('`#__gm_ceiling_clients`');
             $query->where("dealer_id = $dealer_id");
             $db->setQuery($query);
             $list_clients = $db->loadObjectList();
@@ -900,7 +900,7 @@ public function get_dealerInfo_androidCallGlider($data) {
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts = $db->loadObjectList();
-
+                
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`#__gm_ceiling_client_history`");
@@ -943,6 +943,13 @@ public function get_dealerInfo_androidCallGlider($data) {
                 $db->setQuery($query);
                 $list_clients_statuses_map = $db->loadObjectList();
             }
+
+            $query = $db->getQuery(true);
+            $query->select('*');
+            $query->from('`#__gm_ceiling_clients`');
+            $query->where("change_time > '$change_time' AND dealer_id = $dealer_id");
+            $db->setQuery($query);
+            $list_clients = $db->loadObjectList();
 
             $query = $db->getQuery(true);
             $query->select("*");

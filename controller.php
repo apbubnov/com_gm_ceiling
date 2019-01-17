@@ -91,11 +91,12 @@ class Gm_ceilingController extends JControllerLegacy
                         elseif (in_array("33", $groups)) {
                             $type = "mastermainpage";//производитель
                         }
+                        elseif (in_array('35', $groups)) {
+                            $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=calls_analitic', false));//аналитик звонков
+                        }
                         if (!empty($type)) {
-                            $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
+                            $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
                             $app->input->set('type', $type);
-                        } else {
-                            $this->setRedirect(JRoute::_('index.php', false));
                         }
                     } else {
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
