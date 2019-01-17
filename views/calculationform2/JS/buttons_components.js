@@ -44,6 +44,10 @@ const help_block_height = '<span class="airhelp">В расчет входит д
 
 const help_block_n24 = '<span class="airhelp">В расчет входит монтажная работа "сложность доступа". Считается по метрам.</span>';
 
+const help_block_n33 = '<span class="airhelp">В расчет входит монтажная работа "монтаж люка"/"обход люка". Считается по количеству/по метрам.</span>';
+
+const help_block_n34 = '<span class="airhelp">В расчет входит монтажная работа "светодиодная лента прокладка, проклейка" и "монтаж и подключения блока питания". Считается по метрам.</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -100,11 +104,12 @@ let arr_blocks = [
             {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
             {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_oter_mount_cptn",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
             {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_oter_mount_cptn",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n33",btn_cont_id:"btn_cont_n33",prev_id:"block_oter_mount_cptn",btn_id:"btn_n33",btn_text:"Люк",need_ajax : 0,kind_btn:"0", img: "luke.png", parent: "oter_mount_cptn"},
             {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_oter_mount_cptn",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
             {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_oter_mount_cptn",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
-            /*{block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},*/
+            {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
         ]
@@ -166,12 +171,27 @@ let height = create_radios_group(height_src);
 let cornice_src = {
     name : 'jform[n16]',
     values : [
-        {id:'jform_n16',value:0,text:"Обычный карниз",selected:true},
-        {id:'jform_n16_1',value:1,text:"Скрытый карниз"}
+        {id:'jform_n16_1',value:1,text:"Скрытый карниз"},
+        {id:'jform_n16',value:0,text:"Обычный карниз",selected:true}
+    ]
+}
+
+let niche_src = {
+    name : 'jform[niche]',
+    values : [
+        {id:'jform_niche_plastic200',value:5,text:"с пластиком 200мм"},
+        {id:'jform_niche_plastic150',value:4,text:"с пластиком 150мм"},
+        {id:'jform_niche_plastic100',value:3,text:"с пластиком 100мм"},
+        {id:'jform_niche_сlose',value:2,text:"Закрытая ниша"},
+        {id:'jform_niche_open',value:1,text:"Открытая ниша",selected:true}
     ]
 }
 let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
 n16 += create_radios_group(cornice_src);
+n16+='<div id = "niches" style="display:none;">';
+n16 += '<h4>Выберите тип ниши:</h4>';
+n16 +=  create_radios_group(niche_src);
+n16+='</div>';
 
 let need_mount_src = {
     name : 'need_mount',
@@ -256,6 +276,10 @@ let n23_src = {
 }
 let n23 =  create_block_with_divs(n23_src);
 
+let n33 = create_single_input(1,"jform_n33","jform[n33]","Введите кол-во люков:","Кол-во,шт.","tel");
+n33 += create_single_input(1,"jform_n33_2","jform[n33_2]","Обход люка:","Кол-во,м.","tel");
+
+
 let n29_src = {
     id : 'jform_n29',
     name : 'jform[n29]',
@@ -306,6 +330,8 @@ let extra_mounting_src = {
 }
 let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
+let n34 = create_single_input(1,"jform_n34","jform[n34]","Диодная лента,м","Кол-во,м.","tel");
+n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питания,шт","Кол-во,шт.","tel");
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
 /* контейнер и колонки */
@@ -459,7 +485,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     let element = eval(var_name);
 
     if (!document.getElementById(col_id)) {
-        console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element);
     } else {
@@ -486,13 +511,21 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     for(let i = btns_add.length;i--;){
         btns_add[i].onclick = btn_add_event;
     }
-    jQuery("[name = 'jform[n6]'").click(change_radio);
+    jQuery("[name = 'jform[n6]']").click(change_radio);
     let inputs = jQuery('input[type=tel]');
     [].forEach.call(inputs,function(el){
         el.addEventListener("keypress",auto_replace);
     });
     jQuery(".clear_form_group").click(function(){
         jQuery(this).closest(".form-group").remove();
+    });
+    jQuery("[name = 'jform[n16]']").click(function () {
+        if(this.value == 1){
+            jQuery("#niches").show();
+        }
+        else{
+            jQuery("#niches").hide();
+        }
     });
 });
 
@@ -1039,7 +1072,7 @@ let btn_add_event = function(){
     //событие на изменение селектов
     let wanted_id = `${id.replace("jform_","")}_type[]`;
     if(wanted_id == 'n13_type[]' || wanted_id == 'n22_type[]' || wanted_id == 'n15_type[]'){
-        let classname = jQuery(`[name = '${wanted_id}'`);
+        let classname = jQuery(`[name = '${wanted_id}']`);
         Array.from(classname).forEach(function(element) {
             element.addEventListener('change',change_select_event);
         });

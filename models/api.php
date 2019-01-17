@@ -43,6 +43,7 @@ class Gm_ceilingModelApi extends JModelList
             WHERE a.date_of_change BETWEEN '2018-01-01' AND '2019-01-04' AND a.new_status IN(1,4)
             GROUP BY a.client_id
             */
+
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $measuresCountQuery = $this->getProjectByStatus("(1)");
@@ -64,7 +65,7 @@ class Gm_ceilingModelApi extends JModelList
 
                 $projects = explode(';',$item->projects);
                 foreach($projects as $project){
-                    $result[$item->manager_id][$item->client_id] = json_decode($project);
+                    $result[$item->manager_id][$item->client_id][] = json_decode($project);
                 }
                 $result[$item->manager_id]['measures'] += $item->measures;
                 $result[$item->manager_id]['deals'] += $item->deals;
