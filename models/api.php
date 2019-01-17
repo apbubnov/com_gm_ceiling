@@ -899,7 +899,7 @@ public function get_dealerInfo_androidCallGlider($data) {
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts = $db->loadObjectList();
-
+                
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`#__gm_ceiling_client_history`");
