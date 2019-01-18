@@ -1168,7 +1168,14 @@ public function register_mnfctr(){
                                         'id' => 16,
                                         'title' => 'По кривой (с нишей)',
                                     );
-
+                    $items->n29_type[] = array(
+                                        'id' => 17,
+                                        'title' => 'Профиль LED',
+                                    );
+                                    $items->n29_type[] = array(
+                                        'id' => 18,
+                                        'title' => 'Профиль КП',
+                                    );
                     break;
             }
             

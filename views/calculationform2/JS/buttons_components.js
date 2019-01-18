@@ -105,11 +105,14 @@ let arr_blocks = [
             {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_oter_mount_cptn",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
             {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_oter_mount_cptn",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33",btn_cont_id:"btn_cont_n33",prev_id:"block_oter_mount_cptn",btn_id:"btn_n33",btn_text:"Люк",need_ajax : 0,kind_btn:"0", img: "luke.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n33_2",btn_cont_id:"btn_cont_n33",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_oter_mount_cptn",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
             {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_oter_mount_cptn",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n20_1",btn_cont_id:"btn_cont_n20",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
         ]
@@ -146,7 +149,10 @@ let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
 let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
 let n17 = create_single_input(1,"jform_n17","jform[n17]","","Кол-во,м.","tel");
-let n20 = create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","tel");
+let n20 = '<h4>Разделитель</h4>'
+n20 += create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","tel");
+n20 += '<h4>Отбойник</h4>'
+n20 += create_single_input(1,"jform_n20_1","jform[n20_1]","","Кол-во,м.","tel");
 let n7 = create_single_input(1,"jform_n7","jform[n7]","Керамическая","Кол-во,м.","tel");
 n7 += create_single_input(1,"jform_n8","jform[n8]","Керамогранит","Кол-во,м.","tel");
 //let n8 = create_single_input(1,"jform_n8","jform[n8]","","Кол-во,м.","tel");
@@ -276,7 +282,7 @@ let n23_src = {
 }
 let n23 =  create_block_with_divs(n23_src);
 
-let n33 = create_single_input(1,"jform_n33","jform[n33]","Введите кол-во люков:","Кол-во,шт.","tel");
+let n33 = create_single_input(1,"jform_n33","jform[n33]","Лючок:","Кол-во,м.","tel");
 n33 += create_single_input(1,"jform_n33_2","jform[n33_2]","Обход люка:","Кол-во,м.","tel");
 
 
@@ -623,6 +629,7 @@ function open_general_blocks() {
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");
     });
+    console.log(calc_props);
     open_blocks(calc_props);
 }
 function get_parent(n) {
@@ -665,6 +672,14 @@ function open_blocks(props){
             case 'n8':
             case 'n7':
                 jQuery('#btn_n7').trigger("click")
+                break;
+            case 'n33_2':
+            case 'n33':
+                jQuery('#btn_n33').trigger("click")
+                break;
+            case 'n34_2':
+            case 'n34':
+                jQuery('#btn_n34').trigger("click")
                 break;
             default:
                 if(!empty(jQuery(`#btn_${props[i]}`)[0])){
@@ -791,6 +806,17 @@ function fill_calc_data(){
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
                     check_radio(values,value);
+                    if(calculation[Object.keys(calculation)[i]] == 1){
+                        jQuery("#niches").show();
+                        jQuery.each(jQuery("[name = 'jform[niche]']"),function (index,elem) {
+                            jQuery(elem).removeAttr("checked");
+                        });
+                        jQuery.each(jQuery("[name = 'jform[niche]']"),function (index,elem) {
+                            if(elem.value == calculation.niche){
+                                jQuery(elem).attr("checked","checked");
+                            }
+                        });
+                    }
                     let n15_objs = calculation['n15'];
                     for(let j = 1;j<n15_objs.length;j++){
                         jQuery(`#add_jform_n15`).click();

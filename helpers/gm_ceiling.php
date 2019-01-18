@@ -340,6 +340,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n18' => 'string', //Укрепление стены
                         'n19' => 'string', //Провод
                         'n20' => 'string', //Разделитель
+                        'n20_1' => 'string', //отбойник
                         'n21' => 'string', //Пожарная сигнализация
                         'n22' => 'int',
                         'n23' => 'int',
@@ -1049,7 +1050,7 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`co`.`title`  LIKE('%ПВХ%') AND `c`.`title` LIKE('%Профиль%')";
             $items_654 = $components_model->getFilteredItems($filter);
 
-            $filter = "`co`.`title`  LIKE('%ПВХ%') AND `c`.`title` LIKE('%Отбойник%')";
+            $filter = "`co`.`title`  LIKE('%аллюм%') AND `c`.`title` LIKE('%Отбойник%')";
             $items_64 = $components_model->getFilteredItems($filter);
 
             $filter = "`co`.`title`  LIKE('%10 * 12.5 см.%') AND `c`.`title` LIKE('%Кронштейн%')";
@@ -1063,6 +1064,9 @@ class Gm_ceilingHelpersGm_ceiling
 
             $filter = "`co`.`title`  LIKE('%200%') AND `c`.`title` LIKE('%Пластик%')";
             $items_729 = $components_model->getFilteredItems($filter);
+
+            $filter = "`co`.`title`  LIKE('%телевизионный%') AND `c`.`title` LIKE('%Кабель%')";
+            $items_730 = $components_model->getFilteredItems($filter);
 
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
@@ -1155,11 +1159,26 @@ class Gm_ceilingHelpersGm_ceiling
                     
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
-                            if ($profil[1] == 12 || $profil[1] == 13) {
-                                $component_count[$items_659[0]->id] += $profil[0];
-                            } elseif ($profil[1] == 15 || $profil[1] == 16) {
-                                $component_count[$items_660[0]->id] += $profil[0];
+                            switch($profil[1]){
+                                case 12 :
+                                case 13 :
+                                    $component_count[$items_659[0]->id] += $profil[0];
+                                    break;
+                                case 15:
+                                case 16:
+                                    $component_count[$items_660[0]->id] += $profil[0];
+                                    break;
+                                case 17:
+                                    $component_count[$items_730[0]->id] += $profil[0];
+                                    $component_count[$items_732[0]->id] += $profil[0]*3;
+                                    break;
+                                case 18:
+                                    $component_count[$items_731[0]->id] += $profil[0];
+                                    $component_count[$items_732[0]->id] += $profil[0]*3;
+                                    break;
                             }
+
+
                         }
                     }
                 }
@@ -1276,10 +1295,22 @@ class Gm_ceilingHelpersGm_ceiling
                 if (count($n29) > 0) {
                     foreach ($n29 as $profil) {
                         if ($profil->n29_count > 0) {
-                            if ($profil->n29_type == 12 || $profil->n29_type == 13) {
-                                $component_count[$items_659[0]->id] += $profil->n29_count;
-                            } elseif ($profil->n29_type == 15 || $profil->n29_type == 16) {
-                                $component_count[$items_660[0]->id] += $profil->n29_count;
+                            switch($profil->n29_type) {
+                                case 12:
+                                case 13:
+                                    $component_count[$items_659[0]->id] += $profil->n29_count;
+                                    break;
+                                case 15:
+                                case 16:
+                                    $component_count[$items_660[0]->id] += $profil->n29_count;
+                                case 17:
+                                    $component_count[$items_730[0]->id] += $profil[0];
+                                    $component_count[$items_732[0]->id] += $profil[0] * 3;
+                                    break;
+                                case 18:
+                                    $component_count[$items_731[0]->id] += $profil[0];
+                                    $component_count[$items_732[0]->id] += $profil[0] * 3;
+                                    break;
                             }
                         }
                     }
@@ -1358,6 +1389,20 @@ class Gm_ceilingHelpersGm_ceiling
                /* $component_count[$items_430[0]->id] += $data['n27'] * 2;
                 $component_count[$items_8[0]->id] += $data['n27'] * 4;*/
             }
+            //лючок
+            if($data['n33']>0){
+                $component_count[$items_1[0]->id] += $data['n33'];
+                $component_count[$items_726[0]->id] += $data['n33']*2;
+            }
+
+            //Люк
+            if($data['n33_2']>0){
+                $component_count[$items_1[0]->id] += $data['n33_2'];
+                $component_count[$items_236[0]->id] += $data['n33_2'];
+                $component_count[$items_726[0]->id] += $data['n33_2']*2;
+                $component_count[$items_730[0]->id] += $data['n33_2'];
+            }
+
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
             $component_count[$items_430[0]->id] += $data['n17'] * 3;
@@ -1386,6 +1431,17 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $component_count[$items_35[0]->id] += $n20_count * 2.5;
             }
+            //Отбойник
+            $component_count[$items_1[0]->id] += $data['n20_1'];
+            $component_count[$items_6[0]->id] += $data['n20_1'] * 3;
+            $component_count[$items_9[0]->id] += $data['n20_1'] * 20;
+            $component_count[$items_5[0]->id] += $data['n20_1'] * 3;
+
+            $n20_1_count = intval($data['n20_1'] / 2.5);
+            if ((double)($data['n20_1'] * 10 % 25) > 0) {
+                $n20_1_count++;
+            }
+            $component_count[$items_35[0]->id] += $n20_1_count * 2.5;
             //Дополнительный крепеж
             $component_count[$items_9[0]->id] += $data['dop_krepezh'] * 10;
             if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['dop_krepezh'] / 2;
@@ -2035,6 +2091,12 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($profil->n29_count > 0 && $profil->n29_type == 16) {
                                     $count_profil_4 += $profil->n29_count;
                                 }
+                                if ($profil->n29_count > 0 && $profil->n29_type == 17) {
+                                    $count_profil_5 += $profil->n29_count;
+                                }
+                                if ($profil->n29_count > 0 && $profil->n29_type == 18) {
+                                    $count_profil_6 += $profil->n29_count;
+                                }
                                 break;
                             
                             default:
@@ -2049,6 +2111,12 @@ class Gm_ceilingHelpersGm_ceiling
                                 }
                                  if ($profil[0] > 0 && $profil[1] == 16) {
                                     $count_profil_4 += $profil[0];
+                                }
+                                if ($profil[0] > 0 && $profil[1] == 17) {
+                                    $count_profil_5 += $profil[0];
+                                }
+                                if ($profil[0] > 0 && $profil[1] == 18) {
+                                    $count_profil_6 += $profil[0];
                                 }
                                 break;
                         }
@@ -2235,7 +2303,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     if($data['n16']){
                         $cornice = "Закладная под шторный карниз / Скрытый (ПВХ)";
-                        $cornice1 = "Установка шторного карниза / Скрытый (ПВХ)";
+                        $cornice1 = "Установка шторного карниза в бетон/ Скрытый (ПВХ)";
                     }
                     else {
                         $cornice = "Закладная под шторный карниз / Обычный (ПВХ)";
@@ -2387,6 +2455,28 @@ class Gm_ceilingHelpersGm_ceiling
                                 "stage"=> 2
                             );
                         }
+                        if ($count_profil_5 > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Второй уровень безщелевой с натяжкой LED",                                                    //Название
+                                "quantity" => $count_profil_5,                                                    //Кол-во
+                                "gm_salary" => $results->mp57,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_profil_5 * $results->mp57,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp57,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_5 * $results->mp57,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
+                            );
+                        }
+                        if ($count_profil_6 > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Второй уровень безщелевой с натяжкой ",                                                    //Название
+                                "quantity" => $count_profil_6,                                                    //Кол-во
+                                "gm_salary" => $results->mp58,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_profil_6 * $results->mp58,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp58,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_profil_6 * $results->mp58,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "stage"=> 2
+                            );
+                        }
                     }
                     //шторный карниз
                     if ($data['n27'] > 0) {
@@ -2435,6 +2525,15 @@ class Gm_ceilingHelpersGm_ceiling
                                 case 5:
                                     $nicheTitle = "Монтаж ниши с пластиком";
                                     $mountPrice = $results->mp55;
+                                    $mounting_data[] = array(
+                                        "title" => "Монтаж пластика под плинтус",                                                            //Название
+                                        "quantity" => $data['n27'],                                                     //Кол-во
+                                        "gm_salary" => $results->mp57,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
+                                        "gm_salary_total" => $data['n27'] * $results->mp57,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                        "dealer_salary" => $results->mp57,                                              //Себестоимость монтажа дилера (зарплата монтажников)
+                                        "dealer_salary_total" => $data['n27'] * $results->mp57,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                        "stage" => 3
+                                    );
                                     break;
                             }
                             $mounting_data[] = array(
@@ -2505,7 +2604,20 @@ class Gm_ceilingHelpersGm_ceiling
                             "stage"=> 2
                         );
                     }
-                    
+
+                    //Отбойник
+                    if ($data['n20_1'] > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Отбойник (ПВХ)",                                                        //Название
+                            "quantity" => $data['n20_1'],                                                        //Кол-во
+                            "gm_salary" => $results->mp9_1,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $data['n20_1'] * $results->mp9_1,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp9_1,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n20_1'] * $results->mp9_1,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage"=> 2
+                        );
+                    }
+
                     if ($data['n32'] > 0) {
                         $mounting_data[] = array(
                             "title" => "Слив воды (ПВХ)",                                                        //Название
