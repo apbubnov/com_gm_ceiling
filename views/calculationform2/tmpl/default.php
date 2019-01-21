@@ -1411,7 +1411,7 @@
         }
 
         //если есть комплектующие раскрыть
-        if(calculation.components_sum > 0){
+        if(calculation.components_sum > 0 || calculation.need_mount == 1){
                 jQuery("#btn_add_components").trigger("click");
             }
 
