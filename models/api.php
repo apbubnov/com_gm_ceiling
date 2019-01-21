@@ -43,6 +43,7 @@ class Gm_ceilingModelApi extends JModelList
             WHERE a.date_of_change BETWEEN '2018-01-01' AND '2019-01-04' AND a.new_status IN(1,4)
             GROUP BY a.client_id
             */
+
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $measuresCountQuery = $this->getProjectByStatus("(1)");
@@ -61,11 +62,17 @@ class Gm_ceilingModelApi extends JModelList
             $result = [];
 
             foreach ($items as $item){
+                $result[$item->manager_id]['clients'][] = $item->client_id;
 
                 $projects = explode(';',$item->projects);
+                $client_projects = [];
+
                 foreach($projects as $project){
-                    $result[$item->manager_id][$item->client_id] = json_decode($project);
+                    $client_projects[$item->client_id][] = json_decode($project);
+                    //$result[$item->manager_id]['projects']['client_id'] = $item->client_id;
+
                 }
+                $result[$item->manager_id]['projects'][]=$client_projects;
                 $result[$item->manager_id]['measures'] += $item->measures;
                 $result[$item->manager_id]['deals'] += $item->deals;
 
@@ -972,9 +979,10 @@ public function get_dealerInfo_androidCallGlider($data) {
             $list_api_phones = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`rgzbn_users`");
-            $query->where("change_time > '$change_time' and dealer_id = $dealer_id");
+            $query->select("`u`.*, `um`.`group_id`");
+            $query->from("`rgzbn_users` as `u`");
+            $query->innerJoin('`rgzbn_user_usergroup_map` as `um` on `u`.`id` = `um`.`user_id`');
+            $query->where("`u`.`change_time` > '$change_time' and `u`.`dealer_id` = $dealer_id and (`u`.`id` = $dealer_id or `um`.`group_id` = 13)");
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
