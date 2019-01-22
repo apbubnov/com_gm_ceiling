@@ -161,7 +161,7 @@ $user_group = $user->groups;
                         arr_calls.splice(i, 1);
                     }
                 }
-                show_calls();
+                jQuery('tr[data-callid="'+id+'"]').remove();
             },
             timeout: 10000,
             error: function(data){
