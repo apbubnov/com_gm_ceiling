@@ -979,9 +979,10 @@ public function get_dealerInfo_androidCallGlider($data) {
             $list_api_phones = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`rgzbn_users`");
-            $query->where("change_time > '$change_time' and dealer_id = $dealer_id");
+            $query->select("`u`.*, `um`.`group_id`");
+            $query->from("`rgzbn_users` as `u`");
+            $query->innerJoin('`rgzbn_user_usergroup_map` as `um` on `u`.`id` = `um`.`user_id`');
+            $query->where("`u`.`change_time` > '$change_time' and `u`.`dealer_id` = $dealer_id and (`u`.`id` = $dealer_id or `um`.`group_id` = 13)");
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
