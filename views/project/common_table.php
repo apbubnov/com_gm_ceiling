@@ -13,7 +13,7 @@
     if(in_array('16',$user_groups)){
         $is_gmmanager = true;
     }
-    $displayNone = (!in_array($this->project_status,VERDICT_STATUSES)) ?  "style=\"display:none;\"" : "";
+    $displayNone = (in_array($this->project_status,VERDICT_STATUSES)) ?  "style=\"display:none;\"" : "";
 /*    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);

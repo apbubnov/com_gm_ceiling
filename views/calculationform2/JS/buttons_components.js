@@ -48,6 +48,8 @@ const help_block_n33 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n34 = '<span class="airhelp">В расчет входит монтажная работа "светодиодная лента прокладка, проклейка" и "монтаж и подключения блока питания". Считается по метрам.</span>';
 
+const help_block_n35 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -107,9 +109,10 @@ let arr_blocks = [
             {block_id:"block_n33",btn_cont_id:"btn_cont_n33",prev_id:"block_oter_mount_cptn",btn_id:"btn_n33",btn_text:"Люк",need_ajax : 0,kind_btn:"0", img: "luke.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33_2",btn_cont_id:"btn_cont_n33",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_oter_mount_cptn",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_oter_mount_cptn",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_oter_mount_cptn",btn_id:"btn_n20",btn_text:"Разделитель/Отбойник",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
             {block_id:"block_n20_1",btn_cont_id:"btn_cont_n20",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n35",btn_cont_id:"btn_cont_n35",prev_id:"block_oter_mount_cptn",btn_id:"btn_n35",btn_text:"Контурный профиль",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
@@ -340,6 +343,7 @@ let n34 = create_single_input(1,"jform_n34","jform[n34]","Диодная лен�
 n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питания,шт","Кол-во,шт.","tel");
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
+let n35 = create_single_input(1,"jform_n35","jform[n35]","Контурный профиль,м","Кол-во,м.","tel");
 /* контейнер и колонки */
 function create_container(cnt_id,col_id, parent){
     return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">

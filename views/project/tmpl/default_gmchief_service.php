@@ -171,6 +171,14 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                                 </a>
                             </td> 
                         </tr>
+                    <tr>
+                        <th>
+                           Примечание
+                        </th>
+                        <td colspan=2>
+                           <?php echo $this->item->dealer_chief_note; ?>
+                        </td>
+                    </tr>
                 </table>
             </div>
             <div class="col-md-6">

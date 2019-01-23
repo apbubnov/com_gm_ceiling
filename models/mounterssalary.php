@@ -63,13 +63,17 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-
-            $query->insert('`#__gm_ceiling_mounters_salary`')
-                ->columns('`mounter_id`,`project_id`,`sum`,`note`')
-                ->values("$mounterId,$projectId,$sum,'$note'");
-            $db->setQuery($query);
-            $db->execute();
-            return true;
+            if(!empty(mounterId)){
+                $query->insert('`#__gm_ceiling_mounters_salary`')
+                    ->columns('`mounter_id`,`project_id`,`sum`,`note`')
+                    ->values("$mounterId,$projectId,$sum,'$note'");
+                $db->setQuery($query);
+                $db->execute();
+                return true;
+            }
+            else{
+                throw new Exception("empty_mounter");
+            }
         }
         catch(Exception $e)
         {

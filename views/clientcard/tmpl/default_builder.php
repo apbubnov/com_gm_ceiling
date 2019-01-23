@@ -1120,36 +1120,54 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 stage = jQuery('.active.mount_stage').data("mount_type"),
                 project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
                 calcs = project.calcs,
-                data=[];
+                data=[],
+                mounterExist = true;
+
             jQuery.each(calcs,function(index,elem){
-                data.push({id:elem.id,title:elem.title,mounter:elem.mounters[0].id,sum:elem.sum});
-            });
-            console.log(data);
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
-                data: {
-                    calcs: JSON.stringify(data),
-                    projectId: projectId,
-                    stage: stage,
-                    floorName: progressData[floorId].name
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    elem.remove();
-                    project.status = stage+25;
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
+                if(elem.mounters){
+                    data.push({id:elem.id,title:elem.title,mounter:elem.mounters[0].id,sum:elem.sum});
+                }
+                else{
+                    mounterExist = false;
                 }
             });
+            if(mounterExist){
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
+                    data: {
+                        calcs: JSON.stringify(data),
+                        projectId: projectId,
+                        stage: stage,
+                        floorName: progressData[floorId].name
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        elem.remove();
+                        project.status = stage+25;
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+            else{
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Не выбрана бригада"
+                });
+            }
         }
 
         jQuery(document).ready(function ()

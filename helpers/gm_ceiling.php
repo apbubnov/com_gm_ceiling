@@ -356,6 +356,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n33_2' => 'string',//обход люка
                         'n34' => 'string', //диодная лента
                         'n34_2' => 'int', // блок питания
+                        'n35' => 'string',//контурный профиль
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -1068,6 +1069,18 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`co`.`title`  LIKE('%телевизионный%') AND `c`.`title` LIKE('%Кабель%')";
             $items_730 = $components_model->getFilteredItems($filter);
 
+            $filter = "`co`.`title`  LIKE('%ПЛ75(Прозет)%') AND `c`.`title` LIKE('%Профиль%')";
+            $items_731 = $components_model->getFilteredItems($filter); //профиль ЛЭД
+
+            $filter = "`co`.`title`  LIKE('%КП%') AND `c`.`title` LIKE('%Профиль%')";
+            $items_732 = $components_model->getFilteredItems($filter); // профиль КП
+
+            $filter = "`co`.`title`  LIKE('%металлич 90*90*65%') AND `c`.`title` LIKE('%Кронштейн%')";
+            $items_733 = $components_model->getFilteredItems($filter); //уголок
+
+            $filter = "`co`.`title` like ('%?%') and `c`.`title` like ('%МДФ%')";
+            $items_734 = $components_model->getFilteredItems($filter);
+
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
             //throw new Exception(gettype($n13_costyl[0]));
@@ -1078,7 +1091,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 }
             }
-            $component_count[$items_4[0]->id] += $cnt_costyl/2;
+            //$component_count[$items_4[0]->id] += $cnt_costyl/2;
             
             if (!empty($data['n1']) && $data['n1'] != 29) {
                 if ($data['n28'] !=0){
@@ -1130,9 +1143,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (!empty($data['n1']) && $data['n1'] != 29 && $data['n6']) {
                 $n5_count = ceil($data['n5']);
-                $component_count[$data['n6']] += $n5_count+1; //запас 1м
-                //на каждые 15 углов +1м
-                $component_count[$data['n6']] += intdiv($data['n9'],15);
+                $component_count[$data['n6']] += $n5_count+0.5; //запас 0.5м
             }
             //люстры
             $component_count[$items_5[0]->id] += $data['n12'] * 3;
@@ -1140,7 +1151,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_10[0]->id] += $data['n12'] * 8;
             $component_count[$items_16[0]->id] += $data['n12'];
             //$component_count[$items_556[0]->id] += $data['n12'];
-            $component_count[$items_4[0]->id] += $data['n12'] * 0.5;
+            //$component_count[$items_4[0]->id] += $data['n12'] * 0.5;
             $component_count[$items_58[0]->id] += $data['n12'];
             $component_count[$items_3[0]->id] += $data['n12'] * 2;
             if ($data['n12'] > 0) {
@@ -1169,12 +1180,14 @@ class Gm_ceilingHelpersGm_ceiling
                                     $component_count[$items_660[0]->id] += $profil[0];
                                     break;
                                 case 17:
-                                    $component_count[$items_730[0]->id] += $profil[0];
-                                    $component_count[$items_732[0]->id] += $profil[0]*3;
+                                    $component_count[$items_731[0]->id] += $profil[0];
+                                    $component_count[$items_733[0]->id] += $profil[0]*3;
+                                    $component_count[$items_734[0]->id] += $profil[0];
                                     break;
                                 case 18:
-                                    $component_count[$items_731[0]->id] += $profil[0];
-                                    $component_count[$items_732[0]->id] += $profil[0]*3;
+                                    $component_count[$items_732[0]->id] += $profil[0];
+                                    $component_count[$items_733[0]->id] += $profil[0]*3;
+                                    $component_count[$items_734[0]->id] += $profil[0];
                                     break;
                             }
 
@@ -1304,12 +1317,14 @@ class Gm_ceilingHelpersGm_ceiling
                                 case 16:
                                     $component_count[$items_660[0]->id] += $profil->n29_count;
                                 case 17:
-                                    $component_count[$items_730[0]->id] += $profil[0];
-                                    $component_count[$items_732[0]->id] += $profil[0] * 3;
+                                    $component_count[$items_731[0]->id] += $profil->n29_count;
+                                    $component_count[$items_733[0]->id] += $profil->n29_count * 3;
+                                    $component_count[$items_734[0]->id] += $profil->n29_count;
                                     break;
                                 case 18:
-                                    $component_count[$items_731[0]->id] += $profil[0];
-                                    $component_count[$items_732[0]->id] += $profil[0] * 3;
+                                    $component_count[$items_732[0]->id] += $profil->n29_count;
+                                    $component_count[$items_733[0]->id] += $profil->n29_count * 3;
+                                    $component_count[$items_734[0]->id] += $profil->n29_count;
                                     break;
                             }
                         }
@@ -2166,6 +2181,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage"=>2
                     );
                 }
+                if($data['n35']>0){
+                    $mounting_data[] = array(
+                        "title" => "Монтаж контурного профиля",                                                        //Название
+                        "quantity" => $data['n35'],                                                        //Кол-во
+                        "gm_salary" => $results->mp61,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n35'] * $results->mp61,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp61,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n35'] * $results->mp61,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
                 //только для ПВХ
                 if (!empty($data['n1']) &&  $data['n1'] != 29) {
                     if($data['height'] == 1){
@@ -2219,6 +2245,9 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $dealerType = JFactory::getUser($dealer_id)->dealer_type;
                     $n4val = ($dealerType == 7) ? $data['n4'] : $data['n5'];
+                    if($data['n16']){
+                        $n4val -= $data['n27'];
+                    }
                     if ($n4val > 0) {
                         $mounting_data[] = array(
                             "title" => "Натяжка полотна",                                                                    //Название
@@ -2484,17 +2513,17 @@ class Gm_ceilingHelpersGm_ceiling
                             $mounting_data[] = array(
                                 "title" => $cornice,                                                            //Название
                                 "quantity" => $data['n27'],                                                     //Кол-во
-                                "gm_salary" => $results->mp11,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $data['n27'] * $results->mp11,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp11,                                              //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $data['n27'] * $results->mp11,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "gm_salary" => $results->mp60,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $data['n27'] * $results->mp60,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp60,                                              //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $data['n27'] * $results->mp60,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                                 "stage" => 2
                             );
                             $mounting_data[] = array(
                                 "title" => $cornice1,                                                            //Название
                                 "quantity" => $data['n27'],                                                     //Кол-во
                                 "gm_salary" => $results->mp11_2,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $data['n27'] * $results->mp11_2,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $data['n27'] * $results->mp11_2,                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp11_2,                                              //Себестоимость монтажа дилера (зарплата монтажников)
                                 "dealer_salary_total" => $data['n27'] * $results->mp11_2,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                                 "stage" => 3
