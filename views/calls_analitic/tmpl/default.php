@@ -16,9 +16,11 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $model_calls = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 
-$outcoming_bad = json_encode($model_calls->selectCallHistoryByStatus(1));
-$outcoming_good = json_encode($model_calls->selectCallHistoryByStatus(2));
-$incoming = json_encode($model_calls->selectCallHistoryByStatus(3));
+$user = JFactory::getUser();
+
+$outcoming_bad = json_encode($model_calls->selectCallHistoryByStatus(1, $user->dealer_id));
+$outcoming_good = json_encode($model_calls->selectCallHistoryByStatus(2, $user->dealer_id));
+$incoming = json_encode($model_calls->selectCallHistoryByStatus(3, $user->dealer_id));
 
 echo parent::getButtonBack();
 

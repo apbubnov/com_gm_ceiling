@@ -286,7 +286,7 @@ class Gm_ceilingModelCallback extends JModelList
         }
 	}
 
-	function selectCallHistoryByStatus($status) {
+	function selectCallHistoryByStatus($status, $dealerId) {
 		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
@@ -294,7 +294,7 @@ class Gm_ceilingModelCallback extends JModelList
 			$query->from('`#__gm_ceiling_calls_status_history` AS `h`');
 			$query->leftJoin('`#__gm_ceiling_clients` AS `c` ON `h`.`client_id` = `c`.`id`');
 			$query->leftJoin('`#__users` AS `u` ON `h`.`manager_id` = `u`.`id`');
-			$query->where("`status` = $status");
+			$query->where("`h`.`status` = $status and `u`.`dealer_id` = $dealerId");
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
