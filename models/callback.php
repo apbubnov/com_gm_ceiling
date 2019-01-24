@@ -290,7 +290,7 @@ class Gm_ceilingModelCallback extends JModelList
 		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`h`.`client_id`, `h`.`date_time`, `c`.`client_name`, `u`.`name` AS `manager_name`');
+			$query->select('`h`.`client_id`, `h`.`change_time`, `c`.`client_name`, `u`.`name` AS `manager_name`');
 			$query->from('`#__gm_ceiling_calls_status_history` AS `h`');
 			$query->leftJoin('`#__gm_ceiling_clients` AS `c` ON `h`.`client_id` = `c`.`id`');
 			$query->leftJoin('`#__users` AS `u` ON `h`.`manager_id` = `u`.`id`');

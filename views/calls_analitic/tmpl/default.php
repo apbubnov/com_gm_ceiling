@@ -96,7 +96,7 @@ echo parent::getButtonBack();
 			tr = info.insertRow();
 			tr.setAttribute('data-clientId', arr[i].client_id-0);
 			td = tr.insertCell();
-            td.innerHTML = arr[i].date_time;
+            td.innerHTML = arr[i].change_time;
             td = tr.insertCell();
             td.innerHTML = arr[i].client_name;
             td = tr.insertCell();
@@ -130,17 +130,17 @@ echo parent::getButtonBack();
 		}
 
 		for (var i = outcoming_bad.length; i--;) {
-			if (outcoming_bad[i].date_time >= date1 && outcoming_bad[i].date_time <= date2) {
+			if (outcoming_bad[i].change_time >= date1 && outcoming_bad[i].change_time <= date2) {
 				arr_s1.push(outcoming_bad[i]);
 			}
 		}
 		for (var i = outcoming_good.length; i--;) {
-			if (outcoming_good[i].date_time >= date1 && outcoming_good[i].date_time <= date2) {
+			if (outcoming_good[i].change_time >= date1 && outcoming_good[i].change_time <= date2) {
 				arr_s2.push(outcoming_good[i]);
 			}
 		}
 		for (var i = incoming.length; i--;) {
-			if (incoming[i].date_time >= date1 && incoming[i].date_time <= date2) {
+			if (incoming[i].change_time >= date1 && incoming[i].change_time <= date2) {
 				arr_s3.push(incoming[i]);
 			}
 		}
