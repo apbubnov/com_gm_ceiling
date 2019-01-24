@@ -122,4 +122,21 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getCanvasesByTextureAndManufacturer() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $textureId = $jinput->get('textureId', 0, 'int');
+            $manufacturerId = $jinput->get('manufacturerId', 0, 'int');
+
+            $canv_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
+            $filter = "`texture_id` = $textureId AND `manufacturer_id` = $manufacturerId AND `count` > 0";
+            $result  = $canv_model->getFilteredItemsCanvas($filter);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
