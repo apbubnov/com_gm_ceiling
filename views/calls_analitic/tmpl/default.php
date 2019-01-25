@@ -21,6 +21,8 @@ $user = JFactory::getUser();
 $outcoming_bad = json_encode($model_calls->selectCallHistoryByStatus(1, $user->dealer_id));
 $outcoming_good = json_encode($model_calls->selectCallHistoryByStatus(2, $user->dealer_id));
 $incoming = json_encode($model_calls->selectCallHistoryByStatus(3, $user->dealer_id));
+$presentation = json_encode($model_calls->selectCallHistoryByStatus(4, $user->dealer_id));
+$lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id));
 
 echo parent::getButtonBack();
 
@@ -42,6 +44,8 @@ echo parent::getButtonBack();
 		<tr id="s1"><td>Исходящие недозвоны</td><td id="outcoming_bad"></td></tr>
 		<tr id="s2"><td>Исходящие дозвоны</td><td id="outcoming_good"></td></tr>
 		<tr id="s3"><td>Входящие звонки</td><td id="incoming"></td></tr>
+		<tr id="s4"><td>Презентация</td><td id="presentation"></td></tr>
+		<tr id="s5"><td>Лид</td><td id="lid"></td></tr>
 	</tbody>
 	<tfoot>
 		<tr><td>Итого</td><td id="sum"></td></tr>
@@ -61,15 +65,19 @@ echo parent::getButtonBack();
 	var outcoming_bad = JSON.parse('<?php echo $outcoming_bad; ?>');
 	var outcoming_good = JSON.parse('<?php echo $outcoming_good; ?>');
 	var incoming = JSON.parse('<?php echo $incoming; ?>');
+	var presentation = JSON.parse('<?php echo $presentation; ?>');
+	var lid = JSON.parse('<?php echo $lid; ?>');
 
 	var td_outcoming_bad = document.getElementById('outcoming_bad');
 	var td_outcoming_good = document.getElementById('outcoming_good');
 	var td_incoming = document.getElementById('incoming');
+	var td_presentation = document.getElementById('presentation');
+	var td_lid = document.getElementById('lid');
 	var td_sum = document.getElementById('sum');
 
 	var info = document.getElementById('info');
 
-	var arr_s1 = [], arr_s2 = [], arr_s3 = [];
+	var arr_s1 = [], arr_s2 = [], arr_s3 = [], arr_s4 = [], arr_s5 = [];
 
 	document.getElementById('date1').onchange = show;
 	document.getElementById('date2').onchange = show;
@@ -84,6 +92,8 @@ echo parent::getButtonBack();
 	document.getElementById('s1').onclick = sClick;
 	document.getElementById('s2').onclick = sClick;
 	document.getElementById('s3').onclick = sClick;
+	document.getElementById('s4').onclick = sClick;
+	document.getElementById('s5').onclick = sClick;
 
 	function sClick() {
 		var tr, td, arr = window[String('arr_'+this.id)];
@@ -109,8 +119,6 @@ echo parent::getButtonBack();
 			}
 		}
 	}
-
-
 
 	function show() {
 		arr_s1 = [];
@@ -144,10 +152,22 @@ echo parent::getButtonBack();
 				arr_s3.push(incoming[i]);
 			}
 		}
+		for (var i = presentation.length; i--;) {
+			if (presentation[i].change_time >= date1 && presentation[i].change_time <= date2) {
+				arr_s4.push(presentation[i]);
+			}
+		}
+		for (var i = lid.length; i--;) {
+			if (lid[i].change_time >= date1 && lid[i].change_time <= date2) {
+				arr_s5.push(lid[i]);
+			}
+		}
 		td_outcoming_bad.innerHTML = arr_s1.length;
 		td_outcoming_good.innerHTML = arr_s2.length;
 		td_incoming.innerHTML = arr_s3.length;
-		td_sum.innerHTML = arr_s1.length + arr_s2.length + arr_s3.length;
+		td_presentation.innerHTML = arr_s4.length;
+		td_lid.innerHTML = arr_s5.length;
+		td_sum.innerHTML = arr_s1.length + arr_s2.length + arr_s3.length + arr_s4.length + arr_s5.length;
 	}
 
 
