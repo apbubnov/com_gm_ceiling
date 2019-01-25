@@ -36,8 +36,9 @@ echo parent::getButtonBack();
 	}
 </style>
 <h2>Аналитика звонков</h2>
+<button type="button" class="btn btn-primary" id="show_all">Показать за всё время</button>
 <div class="analitic-actions">
-	Выбрать с <input type="date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date" id="date2"  value="<?= date('Y-m-d'); ?>"> <button type="button" class="btn btn-primary" id="show_all">Показать всё</button>
+	Выбрать с <input type="date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date" id="date2"  value="<?= date('Y-m-d'); ?>">
 </div>
 <table class="small_table">
 	<tbody>
