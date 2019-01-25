@@ -125,6 +125,8 @@ echo parent::getButtonBack();
 		arr_s1 = [];
 		arr_s2 = [];
 		arr_s3 = [];
+		arr_s4 = [];
+		arr_s5 = [];
 		var date1 = document.getElementById('date1').value;
 		var date2 = document.getElementById('date2').value;
 		if (date2 == '') {
