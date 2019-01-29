@@ -23,6 +23,7 @@ $user_group = $user->groups;
             <th>ФИО клиента</th>
             <th>Дата</th>
             <th>Примечание</th>
+            <th>Менеджер</th>
             <th></th>
         </tr>
         </thead>
@@ -65,6 +66,8 @@ $user_group = $user->groups;
             td.innerHTML = arr_calls_i.date_time;
             td = tr.insertCell();
             td.innerHTML = arr_calls_i.comment;
+            td = tr.insertCell();
+            td.innerHTML = arr_calls_i.manager_name;
             td = tr.insertCell();
             td.innerHTML = '<button class="btn btn-danger btn-sm" type="button" data-id="'+arr_calls_i.id+'"><i class="fa fa-trash" aria-hidden="true"></i></button>';
             td.getElementsByTagName('button')[0].onclick = del_call;

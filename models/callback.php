@@ -28,10 +28,17 @@ class Gm_ceilingModelCallback extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('`a`.`id`,`a`.`client_id`,`a`.`date_time`,`a`.`comment`, `c`.`client_name`, `u`.`dealer_type`')
+			$query->select('`a`.`id`,
+							`a`.`client_id`,
+							`a`.`date_time`,
+							`a`.`comment`,
+							`c`.`client_name`,
+							`u`.`dealer_type`,
+							`us`.`name` as `manager_name`')
 				->from('`#__gm_ceiling_callback` as `a`')
 				->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
 				->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
+				->innerJoin('`#__users` as `us` ON `a`.`manager_id` = `us`.`id`')
 				->order('`date_time` DESC');
 			if(!empty($filter)){
 			    $query->where($filter);
