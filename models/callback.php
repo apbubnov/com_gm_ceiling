@@ -28,10 +28,17 @@ class Gm_ceilingModelCallback extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('`a`.`id`,`a`.`client_id`,`a`.`date_time`,`a`.`comment`, `c`.`client_name`, `u`.`dealer_type`')
+			$query->select('`a`.`id`,
+							`a`.`client_id`,
+							`a`.`date_time`,
+							`a`.`comment`,
+							`c`.`client_name`,
+							`u`.`dealer_type`,
+							`us`.`name` as `manager_name`')
 				->from('`#__gm_ceiling_callback` as `a`')
 				->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
 				->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
+				->innerJoin('`#__users` as `us` ON `a`.`manager_id` = `us`.`id`')
 				->order('`date_time` DESC');
 			if(!empty($filter)){
 			    $query->where($filter);
@@ -145,7 +152,7 @@ class Gm_ceilingModelCallback extends JModelList
 			$last_id = $db->insertid();
 			
 			$history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
-			$history_model->save($id_client,"Назначен звонок на".date("d.m.Y H:i:s", strtotime($jdate)));
+			$history_model->save($id_client,'Назначен звонок на '.date("d.m.Y H:i:s", strtotime($jdate)));
 			return $last_id;
 		}
 		catch(Exception $e)
@@ -286,15 +293,15 @@ class Gm_ceilingModelCallback extends JModelList
         }
 	}
 
-	function selectCallHistoryByStatus($status) {
+	function selectCallHistoryByStatus($status, $dealerId) {
 		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`h`.`client_id`, `h`.`date_time`, `c`.`client_name`, `u`.`name` AS `manager_name`');
+			$query->select('`h`.`client_id`, `h`.`change_time`, `c`.`client_name`, `u`.`name` AS `manager_name`');
 			$query->from('`#__gm_ceiling_calls_status_history` AS `h`');
 			$query->leftJoin('`#__gm_ceiling_clients` AS `c` ON `h`.`client_id` = `c`.`id`');
 			$query->leftJoin('`#__users` AS `u` ON `h`.`manager_id` = `u`.`id`');
-			$query->where("`status` = $status");
+			$query->where("`h`.`status` = $status and `u`.`dealer_id` = $dealerId");
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;

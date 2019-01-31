@@ -3182,6 +3182,15 @@ public function register_mnfctr(){
             elseif ($status == 3) {
                 $model_client_history->save($client_id, 'Входящий звонок');
             }
+            elseif ($status == 4) {
+                $model_client_history->save($client_id, 'Презентация');
+                $model_call->addCallHistory($manager_id, $client_id, 2);
+            }
+            elseif ($status == 5) {
+                $model_client_history->save($client_id, 'Лид');
+                $model_call->addCallHistory($manager_id, $client_id, 2);
+                $model_call->addCallHistory($manager_id, $client_id, 4);
+            }
             die(true);
         }
         catch(Exception $e)

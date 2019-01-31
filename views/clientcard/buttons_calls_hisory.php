@@ -1,14 +1,23 @@
-<?php if(array_search('16', $user_group)) { ?>
+<?php if (array_search('16', $user_group) || array_search('13', $user_group)) { ?>
 <div>
-	<center>
-    <button class="btn btn-primary" id="btn_outcoming_bad" type="button">Исходящий недозвон</button>
-    <button class="btn btn-primary" id="btn_outcoming_good" type="button">Исходящий дозвон</button>
-    <button class="btn btn-primary" id="btn_incoming" type="button">Входящий звонок</button>
-    </center>
+    <div class="col-md-2"></div>
+	<div class="col-md-5">
+        <select id="select_call_status" class="form-control">
+            <option value="1">Исходящий недозвон</option>
+            <option value="2">Исходящий дозвон</option>
+            <option value="3">Входящий звонок</option>
+            <option value="4">Презентация</option>
+            <option value="5">Лид</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary" id="btn_addCallHistory" type="button">Добавить статус</button>
+    </div>
+    <div class="col-md-2"></div>
 </div>
 
 <script type="text/javascript">
-	function addCallHistory(status){
+	function addCallHistory(status) {
 		jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=addCallHistory",
@@ -21,7 +30,7 @@
             },
             dataType: "json",
             timeout: 10000,
-            error: function(data){
+            error: function(data) {
                 console.log(data);
                 var n = noty({
                     theme: 'relax',
@@ -34,14 +43,9 @@
             }				
         });
 	}
-	document.getElementById('btn_outcoming_bad').onclick = function() {
-		addCallHistory(1);
-	};
-	document.getElementById('btn_outcoming_good').onclick = function() {
-		addCallHistory(2);
-	};
-	document.getElementById('btn_incoming').onclick = function() {
-		addCallHistory(3);
+	document.getElementById('btn_addCallHistory').onclick = function() {
+        var status = document.getElementById('select_call_status').value;
+		addCallHistory(status);
 	};
 </script>
 <?php } ?>
