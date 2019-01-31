@@ -14,18 +14,9 @@
         $is_gmmanager = true;
     }
     $displayNone = (in_array($this->project_status,VERDICT_STATUSES)) ?  "style=\"display:none;\"" : "";
-/*    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
-    foreach($calculations as $calc){
-        if(!empty($calc->n3)){
-            Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
-            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(1,$calc->id);  
-        }
-
-    }*/
+    if(in_array('17',$user_groups)){
+        $service_mount = null;
+    }
 ?>
 <style>
     .center-left {

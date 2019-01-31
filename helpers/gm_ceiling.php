@@ -343,11 +343,13 @@ class Gm_ceilingHelpersGm_ceiling
                         'n20_1' => 'string', //отбойник
                         'n21' => 'string', //Пожарная сигнализация
                         'n22' => 'int',
+                        'n22_1' => 'string',
                         'n23' => 'int',
                         'n24' => 'string', //Сложность к месту доступа
                         'n26' => 'int',
                         'n27' => 'string',
                         'n28' => 'int',
+                        'remove_n28' => 'string',
                         'n29' => 'string',
                         'n30' => 'string',
                         'n31' => 'string',
@@ -1820,19 +1822,10 @@ class Gm_ceilingHelpersGm_ceiling
                     foreach ($extra_mounting_decode as $extra_mounting)
                         $calculation_data["extra_mounting_array"][] = $extra_mounting;
                 $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
-                if (floatval($calculation_data["mounting_sum"]) == 0 && $calculation_data["need_mount"] != 1)
-                    $calculation_data["need_mount"] = 0;
-                else if (!$calculation_data["need_mount_extra"])
+
+               if (!$calculation_data["need_mount_extra"])
                     $calculation_data["need_mount"] = 1;
-                else {
-                    $calculation_data["need_mount"] = 0;
-                    $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $calculation_data);
-                    $first = round($first["total_gm_mounting"], 0);
-                    if ($first == floatval($calculation_data["mounting_sum"]))
-                        $calculation_data["need_mount"] = 0;
-                    else
-                        $calculation_data["need_mount"] = 1;
-                }
+
                 $project_id = $calculation_data['project_id'];
             }
             $project_model = self::getModel('project');
@@ -1858,7 +1851,7 @@ class Gm_ceilingHelpersGm_ceiling
             $empty_mount = true;
             if (!empty($results)){
                 foreach ($results as $key => $value){
-                    if(!empty($value) && mb_ereg('mp[\d]+',$key)){
+                    if(!empty(floatval($value)) && mb_ereg('mp[\d]+',$key)){
                         $empty_mount = false;
                         break;
                     }
@@ -1866,7 +1859,9 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if($service == "mount"){
                 $empty_mount = false;
+
             }
+
             if((!empty($service) && $service == "service") || $empty_mount){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
@@ -1880,6 +1875,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 });
             }
+            
             //если проект в монтажной службе, чтобы бригада видела зп по прайсу ГМ(он вроде бы прайс службы)
             if($service == "serviceSelf"){
                 $results = $gm_mount;
@@ -1933,8 +1929,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (!is_array($data['n29'])) $n29 = json_decode($data['n29']);
                 else $n29 = $data['n29'];
             }
-            if (!array_key_exists('need_mount', $data))
-                $data["need_mount"] = 1;
+
             $mounting_data = [];
             $guild_data = [];
         
@@ -2037,6 +2032,28 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         
                     }
+                }
+                if($data['n22_1'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Монтаж пластикового короба(вытяжка)",                                                        //Название
+                        "quantity" => $data['n22_1'],                                                        //Кол-во
+                        "gm_salary" => $results->mp62,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n22_1'] * $results->mp62,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp62,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n22_1'] * $results->mp62,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
+                if($data['remove_n28'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Демонтаж старого профиля",                                                        //Название
+                        "quantity" => $data['remove_n28'],                                                        //Кол-во
+                        "gm_salary" => $results->mp63,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>$data['remove_n28'] * $results->mp63,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp63,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>$data['remove_n28'] * $results->mp63,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>1
+                    );
                 }
                 if ((is_array($n23) || is_object($n23)) && count($n23) > 0) {
                     foreach ($n23 as $diffuzor) {
@@ -2206,7 +2223,9 @@ class Gm_ceilingHelpersGm_ceiling
                         $mp31 = $results->mp31;
                         $mp32 = $results->mp32;
                     }
-                    
+                    if($data['n16']){
+                        $data['n5'] -= $data['n27'];
+                    }
                     //периметр
                     if ($data['n5'] > 0 && $data['n28'] == 3) {
                         $mounting_data[] = array(
@@ -3131,7 +3150,7 @@ class Gm_ceilingHelpersGm_ceiling
             for($i=0;$i<count($client_contacts);$i++){
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
-            if(count($mount_data) == 1 && $mount_data[0]->stage == 1){
+            if((count($mount_data) == 1 && $mount_data[0]->stage == 1)||empty($mount_data)){
                 $full = true;
             }
             
@@ -3169,6 +3188,24 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= "<h2>Даты монтажа </h2>";
             foreach ($mount_data as $value) {
                  $html .= "<b>$value->stage_name</b>:$value->time<br>";
+            }
+            if(!empty($project->gm_manager_note)){
+                $html .= "<h2>Примечание ГМ Менеджера: $project->gm_manager_note </h2>";
+            }
+            if(!empty($project->gm_calculator_note)){
+                $html .= "<h2>Примечание ГМ Замерщика: $project->gm_calculator_note </h2>";
+            }
+            if(!empty($project->gm_chief_note)){
+                $html .= "<h2>Примечание ГМ НМС: $project->gm_chief_note </h2>";
+            }
+            if(!empty($project->dealer_manager_note)){
+                $html .= "<h2>Примечание Менеджера: $project->dealer_manager_note </h2>";
+            }
+            if(!empty($project->dealer_calculator_note)){
+                $html .= "<h2>Примечание Замерщика: $project->dealer_calculator_note </h2>";
+            }
+            if(!empty($project->dealer_chief_note)){
+                $html .= "<h2>Примечание НМС: $project->dealer_chief_note </h2>";
             }
             $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
             $html .= '<table border="0" cellspacing="0" width="100%">
@@ -3234,13 +3271,11 @@ class Gm_ceilingHelpersGm_ceiling
                 if(!empty($calc->details)){
                     $html .= "$calc->calculation_title: $calc->details;<br>";
                 }
-                else 
-                    $html .= "$calc->calculation_title:Отсутствует;<br>";
             }
             //$html .= "<pagebreak />";
             $array = [$html];
             foreach($calculations as $calc){
-                if ($calc->mounting_sum > 0){
+                if ($calc->need_mount){
                     if($service == "service"){
                         if($full){
                              $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single_service") . ".pdf";
@@ -3254,16 +3289,18 @@ class Gm_ceilingHelpersGm_ceiling
                     else{
                         if($full){
                              $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+
                         }
                         else{
                             foreach ($mount_data as $value) {
+
                                 $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
                             }
                         }
                     }
                 }
-                //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
             }
+            //throw new Exception(print_r($array,true));
             $filename = ($service && $service!="mount") ? md5($project_id . "mount_common_service") . ".pdf" : md5($project_id . "mount_common") . ".pdf";
             
             

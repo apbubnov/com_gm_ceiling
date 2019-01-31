@@ -685,7 +685,7 @@ if (empty($list['direction']))
             $query = $db->getQuery(true);
             $db->setQuery($query);
             $query
-                ->select("c.id AS client_id,c.client_name,SUM( DISTINCT calc.n4) AS quadr,SUM(DISTINCT calc.n5) AS per")
+                ->select("c.id AS client_id,c.client_name,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
                 ->select("SUM(cm.sum) AS mount_sum")
                 ->select("GROUP_CONCAT(DISTINCT p.id SEPARATOR ';') AS projects")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")

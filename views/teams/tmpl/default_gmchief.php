@@ -599,11 +599,26 @@ foreach ($brigade_id as $value) {
 								if (element.read_by_mounter == 0) {
 									status += " / Не прочитан";
 								}
-								if (element.note == null) {
-									note = "";
-								} else {
-									note = element.note;
-								}
+								console.log(element);
+								var note = "";
+								if(element.gm_calculator_note){
+								    note+="ГМ Замерщик: " + element.gm_calculator_note + "; ";
+                                }
+                                if(element.gm_manager_note){
+                                    note+="ГМ Менеджер: " + element.gm_manager_note+ "; ";
+                                }
+                                if(element.gm_chief_note){
+                                    note+="ГМ НМС: " + element.gm_chief_note+ "; ";
+                                }
+                                if(element.dealer_calculator_note){
+                                    note+="Замерщик: " + element.dealer_calculator_note+ "; ";
+                                }
+                                if(element.dealer_manager_note){
+                                    note+="Менеджер: " + element.dealer_manager_note+ "; ";
+                                }
+                                if(element.dealer_chief_note){
+                                    note+="НМС: " + element.dealer_chief_note+ "; ";
+                                }
 								perimeter = +element.perimeter;
 								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {

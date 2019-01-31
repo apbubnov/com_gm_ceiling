@@ -21,7 +21,6 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
-
 /*_____________блок для всех моделей/models block________________*/ 
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -717,11 +716,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             var client_id = "<?php echo $this->item->id_client;?>";
             var client_name = "<?php echo $this->item->client_id;?>";
             jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
-            document.getElementById('add_calc').onclick = function()
-            {
-                create_calculation(<?php echo $this->item->id; ?>);
-            };
-            
+            if(document.getElementById('add_calc')) {
+                document.getElementById('add_calc').onclick = function () {
+                    create_calculation(<?php echo $this->item->id; ?>);
+                };
+            }
 
             if (document.getElementById('comments'))
             {

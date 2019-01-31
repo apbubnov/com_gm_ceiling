@@ -225,6 +225,7 @@
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
 	<input name = "width" id = "width" value = "" type = "hidden">
+    <input name = "texturesData" id = "texturesData" value ="" type="hidden">
 	<input name = "texture" id = "texture" value = "" type = "hidden">
 	<input name = "color" id = "color" value = "" type = "hidden">
 	<input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
@@ -737,9 +738,6 @@
         jQuery("#jform_calculation_title").focusin(function(){
             jQuery("#jform_calculation_title").val("");
         });
-        jQuery("#jform_calculation_title").focusout(function(){
-            jQuery("#jform_calculation_title").val(calculation.calculation_title);
-        });
         jQuery("#phone").mask("+7 (999) 999-99-99")
         var time_end,time_start = performance.now();
         if(user_id){
@@ -1010,14 +1008,15 @@
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
         let textures = [];
         let canvases_data_of_selected_texture = [];
-        
+        console.log(canvases_data);
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
         fill_calc_data();
         //var event_help_proccess = event_help.process();
         event_help();
-
+        var texturesData = [];
         jQuery.each(canvases_data, function(key,value){
+            //для заполнения на просчетной
             let texture = {id:value.texture_id, name: value.texture_title};
             if(!obj_in_array(textures,texture)){
                 textures.push(texture);
@@ -1026,8 +1025,26 @@
                                 .text(texture.name);
                 jQuery("#jform_n2").append(option);
             }
+            //для отправки на чертилку
+            let texture2 = {id:value.texture_id, title: value.texture_title};
+            let manufacturer2 = {id:value.manufacturer_id,name:value.name};
+
+            var textureExist = jQuery.map(texturesData,function(el,index){
+                if(el.texture.id == texture2.id)
+                    return index;
+            });
+            if(!textureExist.length){
+                texturesData.push({texture:texture2,manufacturers:[manufacturer2]});
+            }
+            else{
+                var manufacturers = texturesData[textureExist[0]].manufacturers;
+                if(!obj_in_array(manufacturers,manufacturer2)){
+                    manufacturers.push(manufacturer2);
+                }
+            }
+
+
         });
-        
         select_colors();
         initial_fill();
 
@@ -1160,6 +1177,7 @@
                 return 0;
             });
             jQuery("#width").val(JSON.stringify(width_polotna));
+            jQuery("#texturesData").val(JSON.stringify(texturesData));
             if(canvas && canvas.filled){
                 jQuery("#auto").val(1);
             }
@@ -1242,6 +1260,7 @@
                     url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}${gm_mounters}`,
                     data: data,
                     success: function(data){
+                        console.log(data);
                         if(api == 1){
                             jQuery("#sum_info").show();
                             jQuery('html, body').animate({
@@ -1433,6 +1452,8 @@
             if(calculation && calculation.original_sketch){
                 document.getElementById('walls').value = calculation.original_sketch;
             }
+            console.log(jQuery("#width").val());
+            console.log(jQuery("#texturesData").val());
             document.getElementById('form_url').submit();
             
         }

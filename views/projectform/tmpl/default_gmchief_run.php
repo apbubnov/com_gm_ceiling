@@ -380,6 +380,20 @@ echo parent::getPreloader();
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE'); ?></th>
                         <td><?php echo $this->item->gm_chief_note; ?></td>
                     </tr>
+
+                    <tr>
+                        <th>Примечание менеджера дилера</th>
+                        <td><?php echo $this->item->dealer_manager_note; ?></td>
+                    </tr>
+
+                    <tr>
+                        <th>Примечание замерщика дилера</th>
+                        <td><?php echo $this->item->dealer_calculator_note; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Примечание НМС дилера</th>
+                        <td><?php echo $this->item->dealer_chief_note; ?></td>
+                    </tr>
                     <tr>
                         <th>Замерщик</th>
                         <td><?php echo JFactory::getUser($this->item->project_calculator)->name; ?></td>

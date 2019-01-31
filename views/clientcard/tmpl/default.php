@@ -42,6 +42,9 @@
     $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     //-----------------
+    $group_id = ($user->dealer_id == 1) ? 16 : 13;
+    $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+    $managers = $usersModel->getUsersByGroupAndDealer($group_id,$user->dealer_id);
 ?>
 
 <style>
@@ -69,19 +72,19 @@
 <button id="back_btn" class="btn btn-primary" style="margin-bottom: 1em;"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <h3 class="center">Карточка клиента</h3>
 <div id="FIO-container-tar">
-    
-        <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
-        <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-        <?php if ($user->dealer_type != 1){ ?>
-            <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
-        <?php } ?>
-            <?php if ($call_id != 0) { ?>
-                <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
-            <?php } ?>
-            <br>
-        <?php if ($user->dealer_type != 1){ ?>
-            <label>Менеджер: <?php echo $manager_name;?></label>
-        <?php } ?>
+    <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
+    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <?php if ($user->dealer_type != 1){ ?>
+        <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+    <?php } ?>
+    <?php if ($call_id != 0) { ?>
+        <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
+    <?php } ?>
+    <br>
+    <label>Менеджер:<span id="manager_name"><?php echo $manager_name;?></span></label>
+    <?php if(count($managers)){?>
+        <button type="button" id="edit_manager" value="" class = "btn btn-primary"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
+    <?php }?>
    
 </div>
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
@@ -309,19 +312,41 @@
             <button type="button" id="cancel" class="btn btn-primary">Отмена</button>
         </p>
     </div>
+    <div id="mw_change_manager" class="modal_window">
+        <p style="margin-top: 1em !important;">Изменение менеджера</p>
+        <p><select id="new_manager">
+                <?php foreach ($managers as $manager){?>
+                    <option value = <?php echo $manager->id;?>><?php echo $manager->name;?></option>
+                <?php }?>
+            </select> </p>
+        <p>
+            <button type="button" id="save_new_manager" class="btn btn-primary">Сохранить</button>
+            <button type="button" class="btn btn-primary cancel">Отмена</button>
+        </p>
+    </div>
 </div>
 
 <script>
     var client_id = '<?php echo $this->item->id;?>';
-    	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-		var div = jQuery("#mw_call"); // тут указываем ID элемента
-		if (!div.is(e.target) // если клик был не по нашему блоку
-		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#btn_close").hide();
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+    var div = jQuery("#mw_call"), // тут указываем ID элемента
+        div1 = jQuery("#mw_change_manager");
+    if (!div.is(e.target) // если клик был не по нашему блоку
+        && div.has(e.target).length === 0 &&
+        div1.is(e.target) // если клик был не по нашему блоку
+        && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#btn_close").hide();
 			jQuery("#mw_container").hide();
 			jQuery("#mw_call").hide();
+            jQuery("#mw_change_manager").hide();
 		}
 	});
+
+    jQuery("#edit_manager").click(function () {
+        jQuery("#btn_close").show();
+        jQuery("#mw_container").show();
+        jQuery("#mw_change_manager").show("slow");
+    });
 
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
@@ -361,7 +386,36 @@
             }				
         });
     });
-
+    jQuery("#save_new_manager").click(function () {
+        console.log(jQuery("#new_manager").val());
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=client.updateManager",
+            data: {
+                client_id:client_id,
+                manager_id: jQuery("#new_manager").val()
+            },
+            success: function(data){
+                jQuery("#btn_close").hide();
+                jQuery("#mw_container").hide();
+                jQuery("#mw_change_manager").hide;
+                jQuery("#manager_name")[0].innerHTML = data;
+            },
+            dataType: "json",
+            timeout: 10000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка!"
+                });
+            }
+        });
+    });
     document.getElementById('btn_open_callback').onclick = function(){
         var cont = document.getElementById('callback_cont');
         if (cont.style.display == 'block') {

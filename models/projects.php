@@ -332,7 +332,7 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } elseif ($subtype == 'service') {
                         $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
-                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19)");
+                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29)");
 
                     } else {
                         $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29)');

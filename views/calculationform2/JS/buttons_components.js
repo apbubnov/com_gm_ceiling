@@ -1,5 +1,7 @@
 const help_block_n28 = '<span class="airhelp">В расчет входит багет (2,5 м) </br>А также на 1 м багета:<ul style="text-align: left;"><li>10 саморезов (ГДК 3,5*51)</li><li>10 дюбелей (красн. 6*51)</li></ul>+ монтажная работа по обагечиванию</span>';
 
+const help_block_remove_n28 = '<span class="airhelp">В расчет входит монтажная работа "демонтаж старого профиля"</span>';
+
 const help_block_n6 = '<span class="airhelp"><img src="/images/vstavka.jpg" width="280"/><br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>В расчет входит вставка по периметру + монтажная работа по установке вставки</span>';
 
 const help_block_n12 = '<span class="airhelp">В расчет входит:<ul style="text-align: left;"><li>3 самореза (ГДК 3,5*51)</li><li>3 дюбеля (красн. 6*51)</li><li>8 саморезов (п/сф 305*9,5 цинк)</li><li>1 шуруп кольцо (6*40)</li><li>2 клеммные пары</li><li>1 круглое кольцо (50)</li><li>1 платформа под люстру (тарелка)</li><li>4 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li></ul>+ монтажная работа по установке люстр</span>';
@@ -80,6 +82,7 @@ let arr_blocks = [
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
+            {block_id:"block_remove_n28",btn_cont_id:"btn_cont_remove_n28",prev_id:"block_basic_work",btn_id:"btn_remove_n28",btn_text:"Демонтаж профиля",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
             {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
             {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_basic_work",btn_id:"btn_n14",btn_text:"Трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
             {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_basic_work",btn_id:"btn_n16",btn_text:"Шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
@@ -105,6 +108,7 @@ let arr_blocks = [
             {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_oter_mount_cptn",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0,kind_btn:"0", img: "amplifier.png", parent: "oter_mount_cptn"},
             {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
             {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_oter_mount_cptn",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n22_1",btn_cont_id:"btn_cont_n22",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_oter_mount_cptn",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33",btn_cont_id:"btn_cont_n33",prev_id:"block_oter_mount_cptn",btn_id:"btn_n33",btn_text:"Люк",need_ajax : 0,kind_btn:"0", img: "luke.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33_2",btn_cont_id:"btn_cont_n33",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
@@ -148,6 +152,7 @@ let n6_src = {
 
     ]
 };
+let remove_n28 = create_single_input(1,"jform_remove_n28","jform[remove_n28]","Введите кол-во старого профиля,м.:","Кол-во,м.","tel");
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
 let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
@@ -273,7 +278,8 @@ let n22_src = {
     ]
 }
 let n22 =  create_block_with_divs(n22_src);
-
+n22 += '<h4>Пластиковый короб(монтаж)</h4>';
+n22+= create_single_input(1,"jform_n22_1","jform[n22_1]"," Пластиковый короб,м.","м.","tel");
 let n23_src = {
     id : 'jform_n23',
     name : 'jform[n23]',
@@ -680,6 +686,10 @@ function open_blocks(props){
             case 'n33_2':
             case 'n33':
                 jQuery('#btn_n33').trigger("click")
+                break;
+            case 'n22':
+            case 'n22_1':
+                jQuery('#btn_n22').trigger("click")
                 break;
             case 'n34_2':
             case 'n34':

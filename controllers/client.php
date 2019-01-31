@@ -392,4 +392,20 @@ class Gm_ceilingControllerClient extends JControllerLegacy
 
         }
 	}
+
+	function updateManager(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $clientId = $jinput->getInt('client_id');
+	        $managerId = $jinput->getInt('manager_id');
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client');
+            $client_model->updateClientManager($clientId,$managerId);
+            die(json_encode(JFactory::getUser($managerId)->name, JSON_UNESCAPED_UNICODE));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }

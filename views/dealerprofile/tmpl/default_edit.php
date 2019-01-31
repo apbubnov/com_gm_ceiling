@@ -132,6 +132,14 @@ if(!$user->getDealerInfo()->update_check) {
 						<input type="text" name="jform[mp32]" id="jform_mp32" value=<?php echo ($mount->mp32)?$mount->mp32:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
 					</div>
 				</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_mp63-lbl" for="jform_mp63" >Демонтаж старого профиля</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[mp63]" id="jform_mp63" value=<?php echo $mount->mp63?$mount->mp63:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
 				<div class="control-group">
 					<div class="control-label">
 						<label id="jform_mp2-lbl" for="jform_mp2">Закладная под люстру планочная</label>
@@ -350,6 +358,15 @@ if(!$user->getDealerInfo()->update_check) {
 						<input type="text" name="jform[mp12]" id="jform_mp12" value=<?php echo $mount->mp12?$mount->mp12:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 					</div>
 				</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_mp62-lbl" for="jform_mp62" >Вытяжка(пластиковый короб)</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[mp62]" id="jform_mp62" value=<?php echo $mount->mp62?$mount->mp62:0?> class="required" style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
+
 				<div class="control-group">
 					<div class="control-label">
 						<label id="jform_mp13-lbl" for="jform_mp13" >Крепление в плитку</label>

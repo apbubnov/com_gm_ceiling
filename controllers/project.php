@@ -1144,7 +1144,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			// монтажи
             $change_data  = [];// Массив для уведомления ГММенеджера
             $change_data['id'] = $data->id;
-            $change_data['new_data'] = $mount_diff;
+            $calcServiceMount['new_data'] = $mount_diff;
             $change_data['old_data'] = $old_mount_data;
             $mount_types = $projects_mounts_model->get_mount_types();
             foreach($mount_diff as $value){
@@ -1891,7 +1891,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $mount_sum = [];
                 foreach ($include_calculations as $calc) {
                     $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
-                    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
+                    if(!empty($project_id)){
+                        $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
+                    }
                     $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
                     $result['transport'] = $transport;        
                 }
