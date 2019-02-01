@@ -35,14 +35,17 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
 <?=parent::getButtonBack();?>
 <div class="container">
     <div class="row" style="margin: 10px 0 10px 0">
-        <div class="col-md-4">
-            <button class="btn btn-primary" id="addColor" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить</button>
+        <div class="col-md-3">
+            <button class="btn btn-primary" id="addColor" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить цвет</button>
         </div>
-        <div class="col-md-8">
-            <div class="col-md-4">
+        <div class="col-md-3">
+            <button class="btn btn-primary" id="addTexture" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить фактуру</button>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-3">
                 <label><b>Фильтр</b></label>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <select id="textureSelect" class="input-gm">
                     <option value = "0">Выберите текстуру</option>
                     <option value = "mat">Мат</option>
@@ -220,6 +223,27 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                 </div>
             </div>
         </div>
+        <div class="modal_window" id="mw_addTexture">
+            <div class="row" style="margin-bottom: 15px">
+                <label for="textureName">Название фактуры</label><br>
+                <input id = "textureName" class="input-gm">
+
+                <input type="checkbox" id="colored"  class="inp-cbx" style="display: none">
+                <label for="colored" class="cbx">
+                                      <span>
+                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                      </span>
+                    <span>Цветная</span>
+                </label>
+            </div>
+            <div class="row center">
+                <div class="col-md-12">
+                    <button id="saveTexture" type="button" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <link rel="stylesheet" media="screen" type="text/css" href="/components/com_gm_ceiling/views/colors/colorPicker/css/colorpicker.css" />
@@ -354,7 +378,8 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
         var div = jQuery("#mwEditColor"),
             div1 = jQuery("#mwCreateColor"),
             div2 = jQuery(".colorpicker"),
-            div3 = jQuery("#mwEditCanvases");
+            div3 = jQuery("#mwEditCanvases"),
+            div4 = jQuery("#mw_addTexture");
         if (!div.is(e.target)
             && div.has(e.target).length === 0 &&
             !div1.is(e.target)
@@ -362,13 +387,16 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
             !div2.is(e.target)
             && div2.has(e.target).length === 0 &&
             !div3.is(e.target)
-            && div3.has(e.target).length === 0) {
+            && div3.has(e.target).length === 0 &&
+            !div4.is(e.target)
+            && div4.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
             div1.hide();
             div2.hide();
             div3.hide();
+            div4.hide();
             jQuery("#imagesEdit").empty();
         }
     });
@@ -493,8 +521,48 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
             jQuery("#close").show();
         });
 
+        jQuery("#addTexture").click(function(){
+            jQuery("#mw_container").show();
+            jQuery("#mw_addTexture").show('slow');
+            jQuery("#close").show();
+        });
 
-
+        jQuery("#saveTexture").click(function () {
+            var is_colored = (jQuery("#colored").attr('checked'))? 1 : 0;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=textures.save",
+                data: {
+                    title: jQuery("#textureName").val(),
+                    is_colored:is_colored
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Фактура добавлена!"
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
+            });
+        });
         jQuery("#createImg").click(function () {
             var selectedCheckboxes = jQuery('input[name="texture"]:checked'),
                 selectedTextures = [],

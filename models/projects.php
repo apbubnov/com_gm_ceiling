@@ -125,6 +125,7 @@ class Gm_ceilingModelProjects extends JModelList
                             GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
                                             ORDER BY `pm`.`date_time` DESC SEPARATOR \',\'
                             ) AS `project_mounting_date`,
+                            `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
                                                         ) SEPARATOR \',\'
@@ -181,6 +182,7 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery->leftJoin('`#__users` as `u` ON `u`.`id` = `cl`.`dealer_id`');
             $subquery->leftJoin('`#__gm_ceiling_clients_contacts` AS `cl_con` ON `cl_con`.`client_id` = `p`.`client_id`');
             $subquery->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
+            $subquery->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
             $subquery->leftJoin("`#__gm_ceiling_calculations` AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
             $subquery->where('`p`.`deleted_by_user` = 0');
             $subquery->group('`p`.`id`');
@@ -315,10 +317,11 @@ class Gm_ceilingModelProjects extends JModelList
                 case 'gmchief':
                     $query->select('`p`.`gm_manager_note`,
                                     `p`.`project_mounter`,
-                                    `p`.`project_mounting_date`
+                                    `p`.`project_mounting_date`,
+                                    `p`.`mounter_dealer_id`
                                 ');
 
-                    if($subtype != 'service'){
+                    if ($subtype != 'service' && !empty($subtype)) {
                         $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                     }
 
@@ -336,6 +339,7 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } else {
                         $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29)');
+                        $query->where("`p`.`mounter_dealer_id` = $user->dealer_id");
                     }
                     break;
 
@@ -395,7 +399,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->order('`p`.`id` DESC');
 
             //$this->setState('list.limit', null);
-            throw new Exception($query);
+
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

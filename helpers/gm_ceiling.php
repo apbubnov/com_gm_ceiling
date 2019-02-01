@@ -3053,12 +3053,13 @@ class Gm_ceilingHelpersGm_ceiling
                 if(empty($res->user_id)) {
                     $res->user_id = 1;
                 }
+
                 if($service == "service"){
                     $res = $mount_model->getDataAll(1);
                     //$res->transport +=$res->transport*0.5;
                     //$res->distance +=$res->distance*0.5;
                 }
-                if($service == "mount"){
+                else{
                     $res = $mount_model->getDataAll(1);
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
@@ -3142,10 +3143,11 @@ class Gm_ceilingHelpersGm_ceiling
                     $value->stage_name = $mount_types[$value->stage];
                 }
             }
-            if(!empty($project->calcs_mounting_sum) && $mounter_approve){
+            if(!empty($project->calcs_mounting_sum) && in_array(17,JFactory::getUser()->groups)){
                 $service = "serviceSelf";
             }
             $transport = self::calculate_transport($project_id,$service);
+            //throw new Exception(print_r($transport,true));
             $brigade = JFactory::getUser($project->project_mounter);
             $client_contacts_model = self::getModel('client_phones');
             $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
@@ -3323,7 +3325,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-                if(!empty($project->calcs_mounting_sum) && !in_array(26, JFactory::getUser($mounter)->groups)){
+                if(!empty($project->calcs_mounting_sum) && in_array(17, JFactory::getUser()->groups)){
                     $service = "serviceSelf";
                 }
                 if(!empty($service)){
