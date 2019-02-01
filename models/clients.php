@@ -685,26 +685,23 @@ if (empty($list['direction']))
             $query = $db->getQuery(true);
             $db->setQuery($query);
             $query
-                ->select("c.id AS client_id,c.client_name,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
-                ->select("SUM(cm.sum) AS mount_sum")
-                ->select("GROUP_CONCAT(DISTINCT p.id SEPARATOR ';') AS projects")
-                ->from("`rgzbn_gm_ceiling_clients` AS c")
-                ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
-                ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
-                ->leftJoin("`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id")
+                ->select("DISTINCT calc.id,calc.n4 as s,calc.n5 as p,c.id AS client_id,c.client_name,SUM(cm.sum) AS mount_sum")
+                ->from ('`rgzbn_gm_ceiling_calculations` AS calc')
+                ->innerjoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = calc.project_id')
+                ->leftJoin('`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id')
+                ->innerjoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
                 ->where("c.dealer_id = $dealer_id")
-                ->group("c.id");
+                ->group("calc.id");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = (object)array("perimeter"=>0,"quadrature"=>0,"mount_sum"=>0);
-            $projects = "";
+
             foreach ($items as $item) {
-                $result->perimeter += $item->per;
-                $result->quadrature += $item->quadr;
+                $result->perimeter += $item->p;
+                $result->quadrature += $item->s;
                 $result->mount_sum += $item->mount_sum;
-                $projects .= (empty($projects)) ? $item->projects : ';'.$item->projects ;
             }
-            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+           /* $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $analyticModel =Gm_ceilingHelpersGm_ceiling::getModel('analytic_dealers');
             $projects = explode(';',$projects);
             if(!empty($projects)){
@@ -719,8 +716,8 @@ if (empty($list['direction']))
                     }
                     $total_self_sum += $sum;
                 }
-            }
-            $result->self_sum = $total_self_sum;
+            }*/
+            $result->self_sum = 0;// $total_self_sum;
             return $result;
         }
         catch(Exception $e)
