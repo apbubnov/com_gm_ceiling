@@ -22,13 +22,11 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
             $date = $jinput->get('date','','STRING');
             $dealerId = JFactory::getUser($id)->dealer_id;
             $filter = (!empty($date)) ? "DATE_FORMAT(a.date_time,'%Y-%m-%d') <= '$date' and" : "";
-            $filter .= "(a.manager_id = $id or a.manager_id = $dealerId)";
+            $filter .= "(`a`.`manager_id` = $id or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $id)";
             $model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $result = $model->gettingData($filter);
             die(json_encode($result));
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
