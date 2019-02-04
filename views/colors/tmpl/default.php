@@ -20,6 +20,14 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $userGroups = $user->group;
 $canEdit = (in_array('16',$userGroups)) ? true : false;
+
+$texturesModel = Gm_ceilingHelpersGm_ceiling::getModel('textures');
+$textures = $texturesModel->getFilteredData('a.texture_colored = 1');
+foreach($textures as $key=>$texture){
+    $textures[$key]->short_name = strtolower(substr(Gm_ceilingHelpersGm_ceiling::rus2translit($texture->texture_title),0,3));
+}
+$jsonTextures = json_encode($textures);
+print_r($textures);
 ?>
 <style>
     fieldset {
@@ -89,42 +97,17 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                         <fieldset>
                             <legend align="left"><label style="padding-left: auto">Фактура</label></legend>
                             <div align="left">
-                                <input type="checkbox" name="texture" id="mat" value="mat" class="inp-cbx" style="display: none">
-                                <label for="mat" class="cbx">
+                                <?php foreach ($textures as $texture){?>
+                                    <input type="checkbox" name="texture" id="<?php echo $texture->short_name;?>" value="<?php echo $texture->short_name;?>" class="inp-cbx" style="display: none">
+                                    <label for="<?php echo $texture->short_name;?>" class="cbx">
                                       <span>
                                         <svg width="12px" height="10px" viewBox="0 0 12 10">
                                           <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                                         </svg>
                                       </span>
-                                    <span>Мат</span>
-                                </label><br>
-                                <input type="checkbox" name="texture" id="sat" value="sat" class="inp-cbx" style="display: none">
-                                <label for="sat" class="cbx">
-                                      <span>
-                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                        </svg>
-                                      </span>
-                                    <span>Сатин</span>
-                                </label><br>
-                                <input type="checkbox" name="texture" id="glan" value="glan" class="inp-cbx" style="display: none">
-                                <label for="glan" class="cbx">
-                                      <span>
-                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                        </svg>
-                                      </span>
-                                    <span>Глянец</span>
-                                </label><br>
-                                <input type="checkbox" name="texture" id="desk" value="desk" class="inp-cbx" style="display: none">
-                                <label for="desk" class="cbx">
-                                      <span>
-                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                        </svg>
-                                      </span>
-                                    <span>Ткань</span>
-                                </label><br>
+                                        <span><?php echo $texture->texture_title;?></span>
+                                    </label><br>
+                                <?php } ?>
                             </div>
                         </fieldset>
                     </div>
@@ -249,7 +232,7 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
 <link rel="stylesheet" media="screen" type="text/css" href="/components/com_gm_ceiling/views/colors/colorPicker/css/colorpicker.css" />
 <script type="text/javascript" src="/components/com_gm_ceiling/views/colors/colorPicker/js/colorpicker.js"></script>
 <script type="text/javascript">
-    var textures ={mat:"Мат",sat:"Сатин",glan:"Глянец",desk:"Дескор"},
+    var textures = JSON.parse('<?php echo $jsonTextures;?>'),
         colors = [],
         newColorFiles = [];
 
@@ -279,9 +262,10 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
     }
 
     function defineTexture(filename) {
-        for(var i = 0; i < Object.keys(textures).length;i++){
-            if(filename.indexOf(Object.keys(textures)[i]) >=0){
-                return {key:Object.keys(textures)[i],value:textures[Object.keys(textures)[i]]};
+        for(var i = 0; i <textures.length;i++){
+            console.log(filename,textures[i].short_name)
+            if(filename.indexOf(textures[i].short_name) >=0){
+                return {key:textures[i].short_name,value:textures[i].texture_title};
             }
         }
     }
@@ -543,7 +527,7 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
                         theme: 'relax',
                         layout: 'center',
                         maxVisible: 5,
-                        type: "error",
+                        type: "success",
                         text: "Фактура добавлена!"
                     });
                     setTimeout(function () {

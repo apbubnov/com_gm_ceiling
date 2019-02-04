@@ -459,6 +459,7 @@ class Gm_ceilingModelColors extends JModelList
             $db = JFactory::getDbo();
             if(empty($id)){
                 foreach ($files as $path){
+                    $path = explode('?',$path)[0];
                     $query = $db->getQuery(true);
                     $query
                         ->insert('`#__gm_ceiling_colors`')
