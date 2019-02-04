@@ -38,12 +38,12 @@ if(!empty($this->item->mount_data)){
     foreach ($calculations as $calc) {
         foreach ($stages as $key => $value) {
            foreach ($value as $val) {
-              Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$key,$val->stage,$val->time);
+              Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$key,$val->stage,$val->time,null,1);
            }
-            
+
         }
     }
-   
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 }
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
@@ -66,12 +66,7 @@ if(!empty($service_mount)){
     $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
 }
 foreach ($calculations as $calculation) {
-    if (!empty($service_mount)) {
-        $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-    }
-    else{
-        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-    }
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);

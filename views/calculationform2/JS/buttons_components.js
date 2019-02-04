@@ -211,8 +211,10 @@ n16+='</div>';
 let need_mount_src = {
     name : 'need_mount',
     values : [
-        {id:'with_mount',value:1,text:"Нужен"},
+        {id:'with_mount',value:1,text:"Нужен(свой прайс)"},
+        {id:'with_service',value:2,text:"Нужен(Монтажная служба)",selected:true},
         {id:'without',value:0,text:"Не нужен",selected:true}
+
     ]
 }
 let need_mount =  create_radios_group(need_mount_src);

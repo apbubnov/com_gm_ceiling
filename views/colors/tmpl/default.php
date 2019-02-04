@@ -27,7 +27,6 @@ foreach($textures as $key=>$texture){
     $textures[$key]->short_name = strtolower(substr(Gm_ceilingHelpersGm_ceiling::rus2translit($texture->texture_title),0,3));
 }
 $jsonTextures = json_encode($textures);
-print_r($textures);
 ?>
 <style>
     fieldset {
@@ -263,7 +262,6 @@ print_r($textures);
 
     function defineTexture(filename) {
         for(var i = 0; i <textures.length;i++){
-            console.log(filename,textures[i].short_name)
             if(filename.indexOf(textures[i].short_name) >=0){
                 return {key:textures[i].short_name,value:textures[i].texture_title};
             }
