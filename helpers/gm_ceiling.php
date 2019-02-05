@@ -515,7 +515,8 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            $data['components_stock'] = json_encode($components_stock, JSON_FORCE_OBJECT);
+            //может отвалиться
+            $data['components_stock'] = json_encode($components_stock, JSON_UNESCAPED_UNICODE);
             //Получаем массив из переменной дополнительных комплектующих
             $extra_components_title = $jinput->get('extra_components_title', '-', 'ARRAY');
             $extra_components_value = $jinput->get('extra_components_value', '-', 'ARRAY');
@@ -530,7 +531,8 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            $data['extra_components'] = json_encode($extra_components, JSON_FORCE_OBJECT);
+            //может отвалиться
+            $data['extra_components'] = json_encode($extra_components, JSON_UNESCAPED_UNICODE);
             //Получаем массив из переменной дополнительных монтажных работ
             $extra_mounting_title = $jinput->get('extra_mounting_title', '-', 'ARRAY');
             $extra_mounting_value = $jinput->get('extra_mounting_value', '-', 'ARRAY');
@@ -545,7 +547,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
+            $data['extra_mounting'] = json_encode($extra_mounting, JSON_UNESCAPED_UNICODE);
             //}
             $data["need_mount"] = $need_mount;
             //Получаем объект дилера
@@ -591,6 +593,7 @@ class Gm_ceilingHelpersGm_ceiling
             }*/
             //Итоговая сумма компонентов
             $total_sum = 0;
+            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 100 : 0;
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
             $gm_components_sum = 0;
@@ -611,6 +614,9 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['canv_arr'] = $canvases_data;
             $ajax_return['comp_arr'] = $components_data;
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $data['guild_data']['total_dealer_guild'], 2);
+            if($ajax_return['total_sum'] < $min_sum){
+                $ajax_return['total_sum'] = $min_sum;
+            }
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
@@ -621,6 +627,10 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['mounting_arr'] = $mounting_data;
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
+            if($data['canvases_sum'] + $data['components_sum'] < $min_sum ){
+                $data['canvases_sum'] = $min_sum;
+                $data['components_sum'] = 0;
+            }
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
             $data['dealer_components_sum'] = $dealer_components_sum;
             $data['mounting_sum'] = $total_gm_mounting;

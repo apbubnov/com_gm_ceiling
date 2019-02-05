@@ -576,39 +576,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            /* foreach ($items as $item)
-             {
-                 if (isset($item->canvas_texture) && $item->canvas_texture != '')
-                 {
-                     if (is_object($item->canvas_texture))
-                     {
-                         $item->canvas_texture = \Joomla\Utilities\ArrayHelper::fromObject($item->canvas_texture);
-                     }
 
-                     $values = (is_array($item->canvas_texture)) ? $item->canvas_texture : explode(',', $item->canvas_texture);
-                     $textValue = array();
-
-                     foreach ($values as $value)
-                     {
-                         $db = JFactory::getDbo();
-                         $query = $db->getQuery(true);
-                         $query
-                             ->select('`#__gm_ceiling_textures_2460714`.`texture_title`')
-                             ->from($db->quoteName('#__gm_ceiling_textures', '#__gm_ceiling_textures_2460714'))
-                             ->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-                         $db->setQuery($query);
-                         $results = $db->loadObject();
-
-                         if ($results)
-                         {
-                             $textValue[] = $results->texture_title;
-                         }
-                     }
-
-                     $item->canvas_texture = !empty($textValue) ? implode(', ', $textValue) : $item->canvas_texture;
-                 }
-
-             }*/
 
             return $items;
         }
@@ -832,6 +800,51 @@ class Gm_ceilingModelCanvases extends JModelList
                 ->where("`id` = $id");
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+        /*SELECT
+        FROM	`rgzbn_gm_ceiling_canvases` AS `c`
+        INNER JOIN	`rgzbn_gm_ceiling_textures` AS `t` ON
+        `c`.`texture_id` = `t`.`id`
+        INNER JOIN	`rgzbn_gm_ceiling_canvases_manufacturers` AS `m` ON
+        `c`.`manufacturer_id` = `m`.`id`
+        GROUP BY	`c`.`texture_id`
+        ORDER BY	`c`.`texture_id`
+        ;*/
+    function getCanvasesTextures(){
+        try{
+
+          $db= $this->getDbo();
+          $query = $db->getQuery(true);
+          $query
+              ->select("CONCAT( '{\"texture\": {\"id\": \"',
+                                `c`.`texture_id`, '\", \"title\": \"',
+                                `t`.`texture_title`,
+                                '\"}, \"manufacturers\": [',
+                                GROUP_CONCAT(
+                                DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `m`.`name`, '\"}')
+                                SEPARATOR ', '
+                                ),
+                                ']}'
+                                ) AS `textures_data`")
+              ->from("`rgzbn_gm_ceiling_canvases` AS `c`")
+              ->innerJoin("`rgzbn_gm_ceiling_textures` AS `t` ON `c`.`texture_id` = `t`.`id`")
+              ->innerJoin("`rgzbn_gm_ceiling_canvases_manufacturers` AS `m` ON `c`.`manufacturer_id` = `m`.`id`")
+              ->group("`c`.`texture_id`")
+              ->order("`c`.`texture_id`");
+          $db->setQuery($query);
+          $items = $db->loadObjectList();
+          $result = [];
+          foreach($items as $item){
+              array_push($result,json_decode($item->textures_data));
+          }
+          return $result;
+
         }
         catch(Exception $e)
         {
