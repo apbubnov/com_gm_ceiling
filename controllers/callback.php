@@ -16,13 +16,22 @@ defined('_JEXEC') or die;
 class Gm_ceilingControllerCallback extends Gm_ceilingController
 {
     function getData(){
-        try{
+        try {
+            $user = JFactory::getUser($id);
+            $dealerId = $user->dealer_id;
+            $groups = $user->get('groups');
+
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('userId');
             $date = $jinput->get('date','','STRING');
-            $dealerId = JFactory::getUser($id)->dealer_id;
+
             $filter = (!empty($date)) ? "DATE_FORMAT(a.date_time,'%Y-%m-%d') <= '$date' and" : "";
-            $filter .= "(`a`.`manager_id` = $id or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $id)";
+            if (in_array('35', $groups)) {
+                $filter .= "(`c`.`dealer_id` = $dealerId or `us`.`dealer_id` = $dealerId)";
+            } else {
+                $filter .= "(`a`.`manager_id` = $id or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $id)";
+            }
+            
             $model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $result = $model->gettingData($filter);
             die(json_encode($result));
