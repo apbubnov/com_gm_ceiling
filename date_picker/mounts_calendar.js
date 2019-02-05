@@ -414,8 +414,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	                },
 	                success: function(data) {
 	                	var transport = data['transport'];
-	                	delete data['transport']; 
-	                	
+	                	delete data['transport'];
 	                	var old_mount_sum = 0, new_mount_sum = 0;
 	                	jQuery.each(data,function(index,elem){
 	                		if (typeof self_data !== 'undefined' || self_data !== null) {

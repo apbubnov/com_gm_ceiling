@@ -399,7 +399,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->order('`p`.`id` DESC');
 
             //$this->setState('list.limit', null);
-            throw new Exception($query);
+
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

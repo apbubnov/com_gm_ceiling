@@ -339,4 +339,22 @@ if (empty($list['direction']))
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	public function save($title,$is_colored){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $db->setQuery($query);
+            $query
+                ->insert('`rgzbn_gm_ceiling_textures`')
+                ->columns('`texture_title`,`texture_colored`')
+                ->values("'$title',$is_colored");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

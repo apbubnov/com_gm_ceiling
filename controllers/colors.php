@@ -83,12 +83,16 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             imagefill($img, 0, 0, $color);
             foreach ($textures as $value){
                 $filename = $name.$value.".png";
-                if($value == "glan"){
+                if($value == "gly"){
                     $gl = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/glyanec.png');
                     imagecopy($img, $gl, 0, 0, 0, 0, $width, $height);
                 }
+                if($value == "sat"){
+                    $sat = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/sat.png');
+                    imagecopy($img, $sat, 0, 0, 0, 0, $width, $height);
+                }
                 imagepng($img, $_SERVER['DOCUMENT_ROOT'] . '/images/canvases/' . $filename);
-                array_push($result ,'/images/canvases/' . $filename. '?' . rand());
+                array_push($result ,'images/canvases/' . $filename. '?' . rand());
             }
             imagedestroy($img);
             if($ajax) {
