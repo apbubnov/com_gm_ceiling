@@ -68,11 +68,11 @@ foreach($calculations as $calc){
         if(in_array("26", $groups)){
             $mounter_approve = false;
         }
-        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,"mount")['total_gm_mounting'];
+        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,"serviceSelf")['total_gm_mounting'];
         if($need_service){
             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"service",true);
         }
-        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"mount",true);
+        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"serviceSelf",true);
     }
    
 }
@@ -80,7 +80,7 @@ foreach($calculations as $calc){
 if($need_service){
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"service");
 }
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"mount");
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"serviceSelf");
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);

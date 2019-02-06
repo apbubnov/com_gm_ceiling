@@ -419,8 +419,8 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	                	jQuery.each(data,function(index,elem){
 	                		if (typeof self_data !== 'undefined' || self_data !== null) {
 	                			old_mount_sum += self_data[index].mount_data;
-		                		new_mount_sum += elem['total_gm_mounting'];
-		                		self_data[index].mount_data = elem['total_gm_mounting'];
+		                		new_mount_sum += elem['total_dealer_mounting'];
+		                		self_data[index].mount_data = elem['total_dealer_mounting'];
 							}
 	                	});
 	                	console.log(jQuery("#transport_sum span.sum").data('selfval'));

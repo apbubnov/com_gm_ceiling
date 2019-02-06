@@ -536,7 +536,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if(!empty($service_data)){
                     foreach ($include_calculation as $calc) {
                         $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
-                        $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                        $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
                         foreach ($service_data as $key => $value) {
                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
                         }
@@ -840,7 +840,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                 if(!empty($service_data)){
                                     foreach ($include_calculation as $calc) {
                                         $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
-                                        $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                                        $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
                                         foreach ($service_data as $key => $value) {
                                             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
                                         }
@@ -1894,7 +1894,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     if(!empty($project_id)){
                         $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
                     }
-                    $mount_sum[$calc] =  $result[$calc]['total_gm_mounting'];
+                    $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
                     $result['transport'] = $transport;        
                 }
                 die(json_encode($result));
