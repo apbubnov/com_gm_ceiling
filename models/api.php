@@ -117,7 +117,7 @@ class Gm_ceilingModelApi extends JModelList
                 {
                     foreach ($value as $column => $column_value)
                     {
-                        $column_value = mb_ereg_replace("[^a-zA-Zа-яёА-ЯЁ\s\d\,\.\_\/\(\)\-\:]", "", $column_value);
+                        $column_value = mb_ereg_replace("[^a-zA-Zа-яёА-ЯЁ\s\d\,\.\_\/\(\)\-\:\@]", "", $column_value);
                         if($column != "image" && $column != "cut_image"){
                             $columns .= '`'.$column.'`,';
                             $columns_values .= '\''.$column_value.'\',';
