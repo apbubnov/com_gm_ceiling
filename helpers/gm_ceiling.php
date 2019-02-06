@@ -1128,7 +1128,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $component_count[$items_233[0]->id] += $data['n11'];
             }
-            // внутренний вырез
+            // внутренний вырез на месте
             if ($data['n11'] > 0) {
                 $component_count[$items_1[0]->id] += $data['n11'];
                 if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['n11'];
@@ -1141,7 +1141,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $component_count[$data['n6']] += $data['n11'];
                 } else $component_count[$items_vstavka_bel[0]->id] += $data['n11'];
             }
-            //для Димы
+            //внутренний вырез в цеху
             if ($data['n31'] > 0) {
                 $component_count[$items_9[0]->id] += $data['n31'] * 10;
                 $component_count[$items_5[0]->id] += $data['n31'] * 10;
@@ -1154,8 +1154,8 @@ class Gm_ceilingHelpersGm_ceiling
 
             }
             if (!empty($data['n1']) && $data['n1'] != 29 && $data['n6']) {
-                $n5_count = ceil($data['n5']);
-                $component_count[$data['n6']] += $n5_count+0.5; //запас 0.5м
+
+                $component_count[$data['n6']] += $data['n5']+0.5; //запас 0.5м
             }
             //люстры
             $component_count[$items_5[0]->id] += $data['n12'] * 3;
