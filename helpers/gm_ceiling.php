@@ -5359,19 +5359,19 @@ class Gm_ceilingHelpersGm_ceiling
     public static function generatePassword($length) {
         $pass = '';
         for ($i = $length; $i--;) {
-            $temp = rand(0, 3);
+            $temp = random_int(1, 3);
             switch ($temp) {
                 case 1:
-                    $symbol = chr(rand(47, 57));
+                    $symbol = chr(random_int(48, 57));
                     break;
                 case 2:
-                    $symbol = chr(rand(64, 90));
+                    $symbol = chr(random_int(65, 90));
                     break;
                 case 3:
-                    $symbol = chr(rand(96, 122));
+                    $symbol = chr(random_int(97, 122));
                     break;
                 default:
-                    $symbol = chr(rand(47, 57));
+                    $symbol = chr(random_int(97, 122));
                     break;
             }
             $pass .= $symbol;
