@@ -1385,12 +1385,12 @@ class Gm_ceilingHelpersGm_ceiling
                 switch ($data['niche']){
                     case 1 :
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_654[0]->id] += $data['n27'];
+                        $component_count[$items_11[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         break;
                     case 2 :
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_654[0]->id] += $data['n27'];
+                        $component_count[$items_11[0]->id] += $data['n27'];
                         $component_count[$items_64[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         break;
