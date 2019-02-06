@@ -31,12 +31,12 @@
     $triangulator_pro = 0;
     if(in_array('16',$user_groups)){
         $triangulator_pro = 1;
+        $min_sum = 100;
 	}
 
     $type = $jinput->get('type', '', 'STRING');
     $subtype = $jinput->get('subtype', '', 'STRING');
     $precalculation = $jinput->get('precalculation', '', 'STRING');
-    $recalc = $jinput->get('recalc', 0, 'INT');
     $seam = $jinput->get('seam', 0, 'INT');
     $api = $jinput->get('api', 0, 'INT');
     $device = $jinput->get('device','',"STRING");
@@ -115,21 +115,51 @@
     $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
     /*____________________end_______________________  */
     $color_data = json_encode($components_model->getColor());
-    $canvases_data = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
+
+    $texturesData = json_encode($canvases_model->getCanvasesTextures());
+
     $calculation_id = $jinput->get('calc_id',0,'INT');
     if(!empty($calculation_id)){
         $calculation =  $calculation_model->new_getData($calculation_id);
         if (empty($calculation)) {
             throw new Exception("Расчет не найден", 1);
         }
+        if(!empty($calculation->n3)){
+            $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
+        }
+
+        if(!empty($canvas)){
+            $filter = "texture_id = $canvas->texture_id and manufacturer_id = $canvas->manufacturer_id and count>0";
+            if(!empty($canvas->color_id)){
+                $filter .= " and color_id = $canvas->color_id";
+            }
+            $widths_data = $canvases_model->getFilteredItemsCanvas($filter);
+            $arr_widths = [];$widths = [];
+            foreach($widths_data as $value){
+                $width = (float)$value->width*100;
+                if(!in_array($width,$arr_widths)){
+                    array_push($arr_widths,$width);
+                    array_push($widths,(object)array("width"=>$width,"price"=>$value->price));
+                }
+            }
+            usort($widths,function($a,$b){
+               if($a->width < $b->width){
+                   return 1;
+                }
+                if($a->width > $b->width){
+                    return -1;
+                }
+                return 0;
+            });
+            $widths = json_encode($widths);
+            $texture_title = $canvas->texture_title;
+            $manufacturer_title = $canvas->name." ".$canvas->width;
+            $color_file = $canvas->color_file;
+        }
         $calculation->extra_components = addslashes($calculation->extra_components);
         $calculation->extra_mounting = addslashes($calculation->extra_mounting);
         $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
-        if (!empty($calculation->n3)) {
-            $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3")[0]);
-        } else {
-            $canvas = json_encode(null);
-        }
+
 
         $calc_img_filename = md5('calculation_sketch'.$calculation_id).'.svg';
         if (file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/'.$calc_img_filename)) {
@@ -223,20 +253,17 @@
 </div>
 <!-- форма для чертилки-->
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
-	<input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
-	<input name = "width" id = "width" value = "" type = "hidden">
     <input name = "texturesData" id = "texturesData" value ="" type="hidden">
-	<input name = "texture" id = "texture" value = "" type = "hidden">
-	<input name = "color" id = "color" value = "" type = "hidden">
-	<input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
-    <input name = "auto" id = "auto" value="" type = "hidden">
+    <input name = "texture" id = "texture" value = "<?php echo $canvas->texture_id?>" type = "hidden">
+    <input name = "color" id = "color" value = "<?php echo $canvas->color_id?>" type = "hidden">
+    <input name = "manufacturer" id = "manufacturer" value = "<?php echo $canvas->manufacturer_id?>" type = "hidden">
     <input name = "walls" id = "walls" value="" type= "hidden">
+    <input name = "width" id = "width" value ='<?php echo $widths?>' type="hidden">
     <input name = "calc_id" id = "calc_id" value="<?php echo $calculation_id;?>" type = "hidden">
     <input name = "n4" id="n4" value="" type ="hidden">
     <input name = "n5" id="n5" value="" type ="hidden">
     <input name = "n9" id="n9" value="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
-	<input name="proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
     <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
     <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
     <input name="precalculation" id="precalculation" value="<?php echo $precalculation_url; ?>" type="hidden">
@@ -258,108 +285,13 @@
         </div>
         <div class="col-sm-4"></div>
     </div>
-    <!-- Фактура -->
-    <div class="container for_api">
-        <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <p>
-                <span class="caption_step">Шаг 1:</span> <strong>Выберите фактуру и производителя</strong> 
-                    </br>(рядом с каждой кнопкой в знаке вопроса подробно описано что входит в этот пункт)
-                </p>
-            </div>
-            <div class="col-sm-4"></div>
-        </div>
-    </div>
-    <div class="container for_dealer">
-        <div class="row sm-margin-bottom">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <h4>Характеристики полотна</h4>
-            </div>
-            <div class="col-sm-4"></div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="col-sm-4"></div>
-        <div class="row sm-margin-bottom">
-            <div class="col-sm-4">
-                <table class="table_calcform" style="margin-bottom: 5px;">
-                    <tr>
-                        <td class="td_calcform1" style="text-align: left;">
-                            <label id="jform_n2-lbl" for="jform_n2"></label>
-                        </td>
-                        <td class="td_calcform2">
-                            <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
-                                <div class="help_question">?</div>
-                                <span class="airhelp">
-                                    <strong>Выберите фактуру для Вашего будущего потолка</strong>
-                                    <ul style="text-align: left;">
-                                        <li>Матовый больше похож на побелку</li>
-                                        <li>Сатин – на крашенный потолок</li>
-                                        <li>Глянец – имеет легкий отблеск</li>
-                                    </ul>									
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <select id="jform_n2" name="jform[n2]" class="form-control inputbox">
-                </select>
-            </div>
-        </div>
-        <div class="col-sm-4"></div>
-    </div>
-    <!-- Ширина -->
-    <input type = "hidden" id = "width" name = 'jform[width]'>
-    <!-- Цвет -->
-    <div class="container">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            <div style="width: 100%; text-align: left;">
-                <label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
-            </div>
-            <button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px; display:none;' /></button>
-            <input id="jform_color" name="jform[color]"  type="hidden">
-        </div>
-        <div class="col-sm-4">
-        </div>
-    </div>
-    <!-- Производитель -->
-    <div class="container">
-        <div class="col-sm-4"></div>
-        <div class="row sm-margin-bottom">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <table class="table_calcform" style="margin-bottom: 5px;">
-                        <tr>
-                            <td class="td_calcform1" style="text-align: left;">
-                                <label id="jform_proizv-lbl" for="jform_proizv"></label>
-                            </td>
-                            <td class="td_calcform2">
-                                <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
-                                    <div class="help_question">?</div>
-                                    <span class="airhelp">
-                                        От производителя материала зависит качество потолка и его цена!									
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <select id="jform_proizv" name="jform[proizv]" class="form-control inputbox">
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4"></div>
-    </div>
     <!-- начертить -->
     <div class="container for_api">
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
                 <p>
-                    <span class="caption_step">Шаг 2:</span> <strong>Начертите потолок</strong>
+                    <span class="caption_step">Шаг 1:</span> <strong>Начертите потолок</strong>
                     </br>Начертите контур помещения, вид сверху.
                     <span class="help" style="text-decoration: underline; color: #0275d8; padding: 0 0 0 5px;">
                         Пример
@@ -394,10 +326,36 @@
                     <table style="width: 100%;">
                         <tr>
                             <td width=35%>
-                                <label id="jform_n4-lbl" for="jform_n4"> Площадь: </label>
+                                <label id="jform_texture-lbl" for="jform_n4"> Текстура: </label>
+                            </td>
+                            <td width=65%>
+                                <input name="jform[texture]" class="form-control-input" id="jform_texture" value="<?php echo $texture_title?>" data-next="#jform_proizv" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width=35%>
+                                <label id="jform_proizv-lbl" for="jform_proizv"> Производитель: </label>
+                            </td>
+                            <td width=65%>
+                                <input name="jform[proizv]" class="form-control-input" id="jform_proizv" value="<?php echo $manufacturer_title?>" data-next="#jform_color" readonly>
+                            </td>
+                        </tr>
+                        <?php if(!empty($color_file)){?>
+                            <tr>
+                                <td width=35%>
+                                    <label id="jform_color-lbl" for="jform_color"> Цвет: </label>
+                                </td>
+                                <td width=65%>
+                                    <img src="<?php echo $color_file?>" style="height:55px">
+                                </td>
+                            </tr>
+                        <?php }?>
+                        <tr>
+                            <td width=35%>
+                                <label id="jform_color-lbl" for="jform_n4"> Площадь: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" readonly> 
+                                <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" readonly>
                             </td>
                             <td width=10%>
                                 <label for="jform_n4" class="control-label"> м<sup>2 </sup></label>
@@ -477,7 +435,7 @@
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
                 <p>
-                    <span class="caption_step">Шаг 3:</span> <strong>Добавьте дополнительные работы</strong>
+                    <span class="caption_step">Шаг 2:</span> <strong>Добавьте дополнительные работы</strong>
                     </br>Добавьте дополнительные работы, которые необходимы в Вашем потолке, например, люстры, трубы и т.д.
                 </p>
             </div>
@@ -499,7 +457,7 @@
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
                 <p style="margin-bottom: 0;">
-                    <span class="caption_step">Шаг 4:</span> <strong>Расчитайте стоимость своего потолка</strong>
+                    <span class="caption_step">Шаг 3:</span> <strong>Расчитайте стоимость своего потолка</strong>
                 </p>
             </div>
             <div class="col-sm-4"></div>
@@ -690,7 +648,7 @@
 <script>
     var user_id = "<?php echo $user_id;?>";
     var advt = "<?php echo $advt;?>"
-
+    var texturesData = '<?php echo $texturesData?>';
     Function.prototype.process= function(state){
         var process= function(){
             var args= arguments;
@@ -757,15 +715,13 @@
             jQuery("#show_rec").show();
             jQuery("#show_run").show();
             jQuery(".for_dealer").hide();
-            jQuery("#jform_n2-lbl").text("Выберите фактуру Вашего будущего потолка");
-            jQuery("#jform_proizv-lbl").html('Выберите производителя материала. Все представленные позиции прошли проверку в "Центре гигиены и эпидемиологии в Воронежской области". <a href="../../../../../files/Conclusion.pdf">Заключения</a>');
+            jQuery("#jform_proizv-lbl").html('Производитель<br><a href="../../../../../files/Conclusion.pdf">Заключения</a>');
             jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Дополнительные работы');
             
         } else {
             jQuery(".for_api").hide();
             jQuery(".for_dealer").show();
-            jQuery("#jform_n2-lbl").text("Выберите фактуру полотна");
-            jQuery("#jform_proizv-lbl").text("Выберите производителя");
+
             jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Добавить монтаж и комплектующие');
         }
         if (device == "web") {
@@ -1005,26 +961,13 @@
         /*_________________*/
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
-        let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
-        let textures = [];
-        let canvases_data_of_selected_texture = [];
-        console.log(canvases_data);
-        let canvas = JSON.parse('<?php echo $canvas;?>');
-        let need_click = <?php echo $recalc;?>; 
+
+
         fill_calc_data();
         //var event_help_proccess = event_help.process();
         event_help();
-        var texturesData = [];
-        jQuery.each(canvases_data, function(key,value){
-            //для заполнения на просчетной
-            let texture = {id:value.texture_id, name: value.texture_title};
-            if(!obj_in_array(textures,texture)){
-                textures.push(texture);
-                let option = jQuery("<option></option>")
-                                .attr("value", +texture.id)
-                                .text(texture.name);
-                jQuery("#jform_n2").append(option);
-            }
+
+       /* jQuery.each(canvases_data, function(key,value){
             //для отправки на чертилку
             let texture2 = {id:value.texture_id, title: value.texture_title};
             let manufacturer2 = {id:value.manufacturer_id,name:value.name};
@@ -1044,13 +987,7 @@
             }
 
 
-        });
-        select_colors();
-        initial_fill();
-
-        document.getElementById('jform_n2').onchange = select_colors;
-        jQuery('.click_color').change(select_manufacturers);
-        document.getElementById('jform_proizv').onchange = select_widths;
+        });*/
 
         document.getElementById('cancel_button').onclick = function()
         {
@@ -1085,151 +1022,6 @@
                 location.href = url;
             }
         };
-        
-        function select_colors(){
-            let colors = [];
-            canvases_data_of_selected_texture = [];
-
-            jQuery.each(canvases_data, function(key,value){
-                let select_texture = document.getElementById('jform_n2').value;
-                if (value.texture_id === select_texture)
-                {
-                    canvases_data_of_selected_texture.push(value);
-                    let color = value.color_id;
-                    if(!in_array(colors, color) && color !== null){
-                        colors.push(color);
-                    }
-                }
-            });
-            if(canvas && canvas.filled){
-                jQuery("#auto").val(1);
-            }
-            jQuery("#color_img").prop( "src", "");
-            jQuery("#color_img").hide();
-            jQuery("#jform_color").val("");
-            if(colors.length>0){
-                jQuery("#jform_color_switch-lbl").show();
-                jQuery("#color_switch").show();
-            }
-            else{
-                jQuery("#jform_color_switch-lbl").hide();
-                jQuery("#color_switch").hide();
-            }
-            if(canvas && !canvas.filled && canvas.color_id){
-                fill_selected_color(canvas.color_file,canvas.color_id);
-            }
-            select_manufacturers();
-        }
-
-        function select_manufacturers()
-        {
-            let manufacturers = [];
-            let select_texture = document.getElementById('jform_n2').value;
-            let select_color = (document.getElementById('jform_color').value) ? document.getElementById('jform_color').value : null;
-            jQuery("#jform_proizv").empty();
-            jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                if (value.texture_id === select_texture && value.color_id === select_color)
-                {
-                    let proizv = value.name;
-                    if(!in_array(manufacturers, proizv)){
-                        manufacturers.push(proizv);
-                        let option = jQuery("<option></option>")
-                                        .attr("value", value.manufacturer_id)
-                                        .text(proizv);
-                        jQuery("#jform_proizv").append(option);
-                    }
-                }
-            });
-            if(canvas && canvas.filled){
-                jQuery("#auto").val(1);
-            }
-            select_widths();
-        }
-
-        function select_widths()
-        {
-            let arr_widths = [];
-            let select_proizv = document.getElementById('jform_proizv').value;
-            let select_color = document.getElementById('jform_color').value;
-            if (select_color == "" || select_color == 0)
-            {
-                select_color = null;
-            }
-            let width_polotna = [];
-            jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                if (value.manufacturer_id === select_proizv && value.color_id === select_color )
-                {
-                    let width = Math.round(value.width * 100);
-    
-                    if(!in_array(arr_widths, width)){
-                        arr_widths.push(width);
-                        width_polotna.push({width:width,price:+value.price});
-                    }
-                }
-            });
-            width_polotna.sort(function (a, b) {
-                if (a.width < b.width) {
-                    return 1;
-                }
-                if (a.width > b.width) {
-                    return -1;
-                }
-                return 0;
-            });
-            jQuery("#width").val(JSON.stringify(width_polotna));
-            jQuery("#texturesData").val(JSON.stringify(texturesData));
-            if(canvas && canvas.filled){
-                jQuery("#auto").val(1);
-            }
-        }
-        //выбор цвета
-        jQuery( "#color_switch" ).click(function(){
-            var items = "<div class='center'>";
-            jQuery.each(canvases_data_of_selected_texture, function( key, val ) {
-                items += `<button class='click_color' type='button' data-color_id='${+val.color_id}' data-color_img='${val.color_file}'><img src='${val.color_file}'/><div class='color_title1'>${val.color_title}</div><div class='color_title2'>${val.color_title}</div></button>`;
-    
-            });
-            items += "</div>";
-            modal({
-                type: 'info',
-                title: 'Выберите цвет',
-                text: items,
-                size: 'large',
-                onShow: function() {
-                    jQuery(".click_color").click(function(){
-                        fill_selected_color(jQuery(this).data("color_img"),jQuery( this ).data("color_id"));
-                        select_manufacturers();
-                    });
-                },
-                callback: function(result) {
-                    
-                },
-                autoclose: false,
-                center: true,
-                closeClick: true,
-                closable: true,
-                theme: 'xenon',
-                animate: true,
-                background: 'rgba(0,0,0,0.35)',
-                zIndex: 1050,
-                buttonText: {
-                    ok: 'Позвоните мне',
-                    cancel: 'Закрыть'
-                },
-                template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn" id = "modal_close_color"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
-                _classes: {
-                    box: '.modal-box',
-                    boxInner: ".modal-inner",
-                    title: '.modal-title',
-                    content: '.modal-text',
-                    buttons: '.modal-buttons',
-                    closebtn: '.click_color'
-                }
-            });
-            document.getElementById('modal_close_color').onclick = function(){
-                jQuery("#modal-window").hide();
-            };						
-        });
         //начертить
         jQuery("#sketch_switch").click(function(){
             jQuery("#walls").val("");
@@ -1238,10 +1030,6 @@
         });
         //рассчитать
         jQuery("#calculate_button").click(function(){
-            let recalc = jQuery("#auto").val();
-            if(recalc){
-                submit_form_sketch();
-            }
             data = jQuery( "#form-calculation").serialize();
             jQuery("#under_calculate").show();
             var calculate_button = jQuery( this );
@@ -1436,58 +1224,16 @@
 
         function submit_form_sketch()
 	    {
-            var regexp_d = /^\d+$/;
-            if (!regexp_d.test(document.getElementById('jform_n2').value)
-                || !regexp_d.test(document.getElementById('user_id').value))
-            {
-                alert("Неверный формат входных данных!");
-                return;
-            }
-            document.getElementById('texture').value = document.getElementById('jform_n2').value;
-            document.getElementById('color').value = document.getElementById('jform_color').value;
-            document.getElementById('manufacturer').value=document.getElementById('jform_proizv').value;
             document.getElementById('n4').value = document.getElementById('jform_n4').value;
             document.getElementById('n5').value = document.getElementById('jform_n5').value;
             document.getElementById('n9').value = document.getElementById('jform_n9').value;
             if(calculation && calculation.original_sketch){
                 document.getElementById('walls').value = calculation.original_sketch;
             }
-            console.log(jQuery("#width").val());
+            document.getElementById('texturesData').value = texturesData;
             console.log(jQuery("#texturesData").val());
             document.getElementById('form_url').submit();
             
-        }
-        function initial_fill(){
-            let n2_options = jQuery("#jform_n2 option");
-            if(canvas){
-                add_select_attr_to_option(n2_options,canvas.texture_id);
-                select_colors();
-                let proizv_options = jQuery("#jform_proizv option");
-                add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
-                if(canvas.color_id){
-                    jQuery("#jform_color_switch-lbl").show();
-                    jQuery("#color_switch").show();
-                }
-                select_widths();
-                canvas.filled = true;
-            } 
-            if(calculation.manager_note){
-                jQuery("#jform_manager_note").val(calculation.manager_note);
-            }
-        }
-   
-        function fill_selected_color(src,color_id){
-            jQuery("#color_img").prop( "src", src);
-            jQuery("#color_img").show();
-            jQuery("#jform_color").val(color_id);
-        }
-
-        function add_select_attr_to_option(options,value){
-            options.each(function(){
-                if(jQuery(this).attr('value') === value){
-                    jQuery(this).attr('selected','selected');
-                }
-            });
         }
 
         function fill_calc_data(){
@@ -1533,16 +1279,6 @@
             jQuery('.PRELOADER_GM').hide();
         };
 
-        function click_after_recalc(){
-            if(need_click){
-                jQuery('#calculate_button').click();
-                jQuery('html, body').animate({
-                    scrollTop: jQuery("#calculate_button").offset().top
-                }, 2000);
-            }
-        }
-        setTimeout(click_after_recalc,500);
-        time_end = performance.now()-time_start;
     });
 
     function puf() {
@@ -1557,27 +1293,4 @@
         }
     }
 
-   // Подсказки по городам
-    ymaps.ready(init);
-    var Data = {};
-    function init() {
-        // Подключаем поисковые подсказки к полю ввода.
-        var suggestView = new ymaps.SuggestView('address');
-        input = jQuery('#address');
-
-        suggestView.events.add('select', function (e) {
-            var s = e.get('item').value.replace('Россия, ','');
-            input.val(s);
-        });
-
-        Data.ProjectInfoYMaps = jQuery("#address").siblings("ymaps");
-        Data.ProjectInfoYMaps.click(hideYMaps);
-    }
-
-    function hideYMaps() {
-        setTimeout(function () {
-            Data.ProjectInfoYMaps.hide();
-            jQuery("#house").focus();
-        }, 75);
-    }
 </script>
