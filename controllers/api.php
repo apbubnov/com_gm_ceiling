@@ -151,11 +151,12 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     if (!empty($id)) {
                         $result = json_encode(JFactory::getUser($id->id));
                     } else {
+                        $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
                         $data = array(
                             "name" => $register_data->fio,
                             "username" => $username,
-                            "password" => $username,
-                            "password2" => $username,
+                            "password" => $pass,
+                            "password2" => $pass,
                             "email" => $register_data->email,
                             "groups" => array(2),
                             "dealer_type" => 1
@@ -184,6 +185,21 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
                         $dop_contacts_model->save($client_id, 1, $email);
                         $result = json_encode(JFactory::getUser($userID));
+
+                        $mailer = JFactory::getMailer();
+                        $config = JFactory::getConfig();
+                        $sender = array(
+                            $config->get('mailfrom'),
+                            $config->get('fromname')
+                        );
+                        $mailer->setSender($sender);
+                        $mailer->addRecipient($register_data->email);
+                        $body .= "Здавствуйте! Благодарим вас за регистрацию в приложении!\n";
+                        $body .= "Логин: $username\n";
+                        $body .= "Пароль: $pass\n";
+                        $mailer->setSubject('Регистрация в планировщике звонков');
+                        $mailer->setBody($body);
+                        $mailer->send();
                     }
                 }
             }

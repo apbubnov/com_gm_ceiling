@@ -5341,6 +5341,29 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
+    public static function generatePassword($length) {
+        $pass = '';
+        for ($i = $length; $i--;) {
+            $temp = rand(0, 3);
+            switch ($temp) {
+                case 1:
+                    $symbol = chr(rand(47, 57));
+                    break;
+                case 2:
+                    $symbol = chr(rand(64, 90));
+                    break;
+                case 3:
+                    $symbol = chr(rand(96, 122));
+                    break;
+                default:
+                    $symbol = chr(rand(47, 57));
+                    break;
+            }
+            $pass .= $symbol;
+        }
+        return $pass;
+    }
+
     static function rus2translit($string) {
         $converter = array(
             'а' => 'a',   'б' => 'b',   'в' => 'v',
