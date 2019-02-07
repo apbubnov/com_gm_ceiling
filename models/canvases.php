@@ -749,8 +749,7 @@ class Gm_ceilingModelCanvases extends JModelList
     }
 
     public function saveCuts($id, $data, $canvas_area) {
-        try
-        {
+        try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->delete("`#__gm_ceiling_cuttings`")
@@ -758,8 +757,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $db->setQuery($query);
             $db->execute();
 
-            if (!empty($data))
-            {
+            if (!empty($data)) {
                 $data = $db->escape($data, true);
                 $query = $db->getQuery(true);
                 $query->insert("`#__gm_ceiling_cuttings`")
@@ -768,41 +766,35 @@ class Gm_ceilingModelCanvases extends JModelList
                 $db->setQuery($query);
                 $db->execute();
             }
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function save($texture,$manufacturer,$price,$width,$color){
-        try{
+    function save($texture, $manufacturer, $price, $width, $color) {
+        try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
                 ->insert("`#__gm_ceiling_canvases`")
-                ->columns("`texture_id`,`color_id`,`manufacturer_id`,`width`,`price`,`count`")
-                ->values("$texture,$color,$manufacturer,'$width',$price,1");
+                ->columns("`texture_id`, `color_id`, `manufacturer_id`, `width`, `price`, `count`")
+                ->values("$texture, $color, $manufacturer, '$width', $price, 1");
             $db->setQuery($query);
 
             $db->execute();
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function delete($id){
-        try{
+        try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->delete("`#__gm_ceiling_canvases`")
                 ->where("`id` = $id");
             $db->setQuery($query);
             $db->execute();
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

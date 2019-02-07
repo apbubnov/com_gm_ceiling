@@ -43,28 +43,23 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
         }
 	}
 	function getColors(){
-	    try{
+	    try {
 	        $jinput = JFactory::getApplication()->input;
 	        $type = $jinput->get('type','','STRING');
 	        $model = $this->getModel();
 	        $result = $model->getData($type);
 	        die(json_encode($result));
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
-    function createColorImage($name = null,$textures=null,$color_code=null)
-    {
-        try
-        {
+    function createColorImage($name = null,$textures=null,$color_code=null) {
+        try {
             $result = [];
             $width = 150;
             $height = 110;
             $ajax = false;
-            if(empty($name)&&empty($textures)&&empty($color_code)) {
+            if (empty($name) && empty($textures) && empty($color_code)) {
                 $jinput = JFactory::getApplication()->input;
                 $color_code = $jinput->get('hexCode', '', 'STRING');
                 $textures = $jinput->get('textures', [], 'ARRAY');
@@ -79,18 +74,17 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             $green = hexdec(substr($color_code, 3, 2));
             $blue = hexdec(substr($color_code, 5, 2));
 
-
             $img = imagecreatetruecolor($width, $height) or die("Ошибка");
             $color = imagecolorallocate($img, $red, $green, $blue);
 
             imagefill($img, 0, 0, $color);
-            foreach ($textures as $value){
+            foreach ($textures as $value) {
                 $filename = $name.$value.".png";
-                if($value == "gly"){
+                if ($value == "gly") {
                     $gl = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/glyanec.png');
                     imagecopy($img, $gl, 0, 0, 0, 0, $width, $height);
                 }
-                if($value == "sat"){
+                if ($value == "sat") {
                     $sat = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/sat.png');
                     imagecopy($img, $sat, 0, 0, 0, 0, $width, $height);
                 }
@@ -100,19 +94,15 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             imagedestroy($img);
             if($ajax) {
                 die(json_encode($result));
-            }
-            else{
+            } else {
                 return $result;
             }
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function save()
-    {
+    function save() {
         try {
             $jinput = JFactory::getApplication()->input;
             $color_code = $jinput->get('hexCode', '', 'STRING');
@@ -126,8 +116,9 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    function update(){
-        try{
+
+    function update() {
+        try {
             $jinput = JFactory::getApplication()->input;
             $color_code = $jinput->get('hexCode', '', 'STRING');
             $name = $jinput->get('name', '', 'STRING');
@@ -137,9 +128,7 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             $model = $this->getModel();
             $result = $model->save($id,$name,$color_code);
             die(json_encode($result));
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
