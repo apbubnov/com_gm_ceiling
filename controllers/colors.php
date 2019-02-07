@@ -72,9 +72,9 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
                 $ajax=true;
             }
 
-            $red = hexdec(substr($color_code, 1, 2));
-            $green = hexdec(substr($color_code, 3, 2));
-            $blue = hexdec(substr($color_code, 5, 2));
+            $red = hexdec(substr($color_code, 0, 2));
+            $green = hexdec(substr($color_code, 2, 2));
+            $blue = hexdec(substr($color_code, 4, 2));
 
 
             $img = imagecreatetruecolor($width, $height) or die("Ошибка");
