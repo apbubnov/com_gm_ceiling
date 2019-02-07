@@ -3760,21 +3760,23 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
-            $html .= '<th >Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
+            $html .= '<th>Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
             $html .= '</tr>';
-            $html .= ' </tbody>';
+            $html .= '</tbody>';
             $html .= '</table>';
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
-            $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th> <td>'.$usadka.'</td> ';
+            $html .= '<th>Площадь:</th><td class="td-val">' . $data['n4'] . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td class="td-val">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th><td class="td-val">'.$usadka.'</td> ';
             $html .= '</tr>';
             $html .= '<tr>';
-            $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+            $html .= '<th>Периметр:</th><td class="td-val">' . $data['n5'] . 'м</td>
+                      <th>Кол-во углов:</th><td class="td-val">' . $data['n9'] . '</td>
+                      <th>Криволинейный участок:</th><td class="td-val">' . $data['n10'] . '</td>';
             $html .= '</tr>';
-            $html .= ' </tbody>';
+            $html .= '</tbody>';
             $html .= '</table>';
             $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
             $mpdf->WriteHTML($stylesheet, 1);
