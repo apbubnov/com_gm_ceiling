@@ -63,7 +63,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            if(!empty(mounterId)){
+            if(!empty($mounterId)){
                 $query->insert('`#__gm_ceiling_mounters_salary`')
                     ->columns('`mounter_id`,`project_id`,`sum`,`note`')
                     ->values("$mounterId,$projectId,$sum,'$note'");
@@ -79,5 +79,28 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    function delete($mounterId,$projectId){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            if(!empty($mounterId) && !empty($projectId)){
+                $query
+                    ->delete('`#__gm_ceiling_mounters_salary`')
+                    ->where("mounter_id = $mounterId and project_id = $projectId");
+                $db->setQuery($query);
+                $db->execute();
+                return true;
+            }
+            else{
+                throw new Exception("empty_mounter");
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
     }
 }
