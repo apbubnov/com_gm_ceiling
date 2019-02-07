@@ -22,6 +22,9 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
 
             $calcsMounts = json_decode($calcsMounts);
             $stagesNames = $projectsMountsModel->get_mount_types();
+            foreach ($calcsMounts as $calc) {
+                $model->delete($calc->mounter, $projectId);
+            }
             foreach ($calcsMounts as $calc){
                 $note = $floorName." ".$calc->title." ".$stagesNames[$stage];
                 $model->save($calc->mounter,$projectId,$calc->sum,$note);

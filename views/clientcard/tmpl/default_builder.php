@@ -436,7 +436,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             mountersOption = "<option>Выберите</option>";
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
-            CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>";
+            CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
+            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button></div></div>";
 
         function fillDuplicateInFields(value){
             jQuery("#where_duplicate").empty();
@@ -835,6 +836,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     if(+elem.projects[j].status < stage+25)
                     {
                         acceptDoneBtn = CHECK_BUTTON;
+
+                    }
+                    else{
+                        acceptDoneBtn = REFRESH_BUTTON;
                     }
                     jQuery.each(elem.projects[j].calcs,function(ind,el){
                         if(el.mounters && el.mounters.length){
@@ -1123,14 +1128,18 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 data=[],
                 mounterExist = true;
 
-            jQuery.each(calcs,function(index,elem){
-                if(elem.mounters){
-                    data.push({id:elem.id,title:elem.title,mounter:elem.mounters[0].id,sum:elem.sum});
-                }
-                else{
-                    mounterExist = false;
-                }
-            });
+                jQuery.each(calcs, function (index, elem) {
+                    if (elem.mounters) {
+                        data.push({id: elem.id, title: elem.title, mounter: elem.mounters[0].id, sum: elem.sum});
+                    }
+                    else {
+                        if(elem.name == "check_sum") {
+                            mounterExist = false;
+                        }
+                    }
+                });
+
+            console.log( JSON.stringify(data));
             if(mounterExist){
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
@@ -1143,8 +1152,20 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        elem.remove();
-                        project.status = stage+25;
+                        if(elem.name == "check_sum") {
+                            elem.remove();
+                            project.status = stage + 25;
+                        }
+                        else{
+                            var n = noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Обновлено!"
+                            });
+                        }
                     },
                     error: function (data) {
                         var n = noty({
@@ -1276,12 +1297,13 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 var stage = jQuery(this).data("mount_type");
                 drawReportTable(stage);
                 reassignEvents();
-                jQuery("[name = 'check_btn']").click(function () {
+                jQuery(".sum_btn").click(function () {
                     saveSum(this);
                 });
+                jQuery("")
             });
 
-            jQuery("[name = 'check_btn']").click(function () {
+            jQuery(".sum_btn").click(function () {
                 saveSum(this);
             });
             document.getElementById('calls-tar').scrollTop = 9999;
