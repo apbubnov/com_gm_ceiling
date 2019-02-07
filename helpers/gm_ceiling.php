@@ -1093,6 +1093,9 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`co`.`title` like ('%?%') and `c`.`title` like ('%МДФ%')";
             $items_734 = $components_model->getFilteredItems($filter);
 
+            $filter = "`co`.`title` like ('%Контурный%') and `c`.`title` like ('%Профиль%')";
+            $items_735 = $components_model->getFilteredItems($filter);
+
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
             //throw new Exception(gettype($n13_costyl[0]));
@@ -1429,7 +1432,14 @@ class Gm_ceilingHelpersGm_ceiling
                 $component_count[$items_726[0]->id] += $data['n33_2']*2;
                 $component_count[$items_730[0]->id] += $data['n33_2'];
             }
-
+            //контурный профиль
+            if($data['n35'] > 0){
+                $component_count[$items_735[0]->id] += $data['n35'];
+                /* $component_count[$items_9[0]->id] += $data['n5'] * 10;
+                   $component_count[$items_5[0]->id] += $data['n5'] * 10;
+                   $component_count[$items_233[0]->id] += $data['n11'];
+                */
+            }
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
             $component_count[$items_430[0]->id] += $data['n17'] * 2;
@@ -2255,10 +2265,10 @@ class Gm_ceilingHelpersGm_ceiling
 
                     }
                     if($data['n16']){
-                        $data['n5'] -= $data['n27'];
+                        $n5val = $data['n5'] - $data['n27'];
                     }
                     //вычитаем из периметра потолка крепление в плитку и керамогранит
-                    $n5val = (($data['n5'] - ($data['n7'] + $data['n8'])) > 0) ? $data['n5'] - ($data['n7'] + $data['n8']) : 0;
+                    $n5val = (($n5val-  $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
                     if($n5val) {
                         //выбор типа профиля
                         if ($data['n28'] == 3) {
@@ -2299,9 +2309,6 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $dealerType = JFactory::getUser($dealer_id)->dealer_type;
                     $n4val = ($dealerType == 7) ? $data['n4'] : $data['n5'];
-                    if($data['n16']){
-                        $n4val -= $data['n27'];
-                    }
                     if ($n4val > 0) {
                         $mounting_data[] = array(
                             "title" => "Натяжка полотна",                                                                    //Название
