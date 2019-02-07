@@ -144,7 +144,7 @@ $jsonTextures = json_encode($textures);
                 <div class="col-md-12">
                     <input id="colorId" value="" type="hidden">
                     <input id="colorTexture" value="" type="hidden">
-                    <label for="colorTitleEdit">Назавние цвета:</label>
+                    <label for="colorTitleEdit">Название цвета:</label>
                     <input id="colorTitleEdit" class="input-gm">
                 </div>
             </div>
@@ -284,7 +284,7 @@ $jsonTextures = json_encode($textures);
             jQuery("#tableColors > tbody").append("<tr/>");
             jQuery("#tableColors > tbody > tr:last").attr("data-color_id",element.id);
             var tr = jQuery("#tableColors > tbody > tr:last").append('<td>'+element.title+'</td><td>'+
-                defineTexture(element.file).value+'</td><td><img style="max-height: 50px" src="'+element.file+'"></td><td>'+
+                defineTexture(element.file).value+'</td><td><img style="max-height: 50px" src="'+element.file+"<?= '?t='.time(); ?>"+'"></td><td>'+
                 EDIT_BUTTON+'<td>'+ canvasesTitles +'</td><td>'+ ADD_CANVAS_BUTTON+'</td>')
         });
     }
@@ -424,7 +424,7 @@ $jsonTextures = json_encode($textures);
             jQuery("#colorTitleEdit").val(color.title);
             jQuery("#colorTexture").val(defineTexture(color.file).key);
             jQuery("#colorId").val(color_id);
-            jQuery("#imagesEdit").append('<img style="max-height: 50px" src="'+color.file+'"><br>');
+            jQuery("#imagesEdit").append('<img style="max-height: 50px" src="'+color.file+"<?= '?t='.time(); ?>"+'"><br>');
             jQuery('#hexColorEdit').ColorPicker({
 
                 color: '#'+color.hex,
@@ -568,7 +568,7 @@ $jsonTextures = json_encode($textures);
                         newColorFiles = data;
                         jQuery("#images").empty();
                         for (var i = 0;i<data.length;i++){
-                            jQuery("#images").append('<img style="max-height: 50px" src="'+data[i]+'"><br>');
+                            jQuery("#images").append('<img style="max-height: 50px" src="'+data[i]+"<?= '?t='.time(); ?>"+'"><br>');
                         }
 
                     },
@@ -681,7 +681,7 @@ $jsonTextures = json_encode($textures);
             });
         });
 
-        jQuery("#saveColorChangesBtn").click(function () {
+        jQuery("#saveColorChangesBtn").click(function() {
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=colors.update",
                 data: {
@@ -689,7 +689,6 @@ $jsonTextures = json_encode($textures);
                     name: jQuery("#colorTitleEdit").val(),
                     textures:[jQuery("#colorTexture").val()],
                     idColor:jQuery("#colorId").val()
-
                 },
                 dataType: "json",
                 async: false,

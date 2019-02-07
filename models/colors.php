@@ -454,23 +454,22 @@ class Gm_ceilingModelColors extends JModelList
         }
     }
 
-    function save($id,$name,$color_code,$files=null){
-        try{
+    function save($id, $name, $color_code, $files=null) {
+        try {
             $db = JFactory::getDbo();
-            if(empty($id)){
-                foreach ($files as $path){
-                    $path = explode('?',$path)[0];
+            if (empty($id)) {
+                foreach ($files as $path) {
+                    $path = explode('?', $path)[0];
                     $query = $db->getQuery(true);
                     $query
                         ->insert('`#__gm_ceiling_colors`')
-                        ->columns('`title`,`file`,`hex`')
-                        ->values("'$name','$path','$color_code'");
+                        ->columns('`title`, `file`, `hex`')
+                        ->values("'$name', '$path', '$color_code'");
                     $db->setQuery($query);
                     $db->execute();
                 }
                 return true;
-            }
-            else{
+            } else {
                 $query = $db->getQuery(true);
                 $query
                     ->update('`#__gm_ceiling_colors`')
@@ -481,10 +480,7 @@ class Gm_ceilingModelColors extends JModelList
                 $db->execute();
                 return true;
             }
-
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
