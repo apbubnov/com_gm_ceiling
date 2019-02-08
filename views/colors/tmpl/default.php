@@ -663,9 +663,9 @@ $jsonTextures = json_encode($textures);
                         type: "success",
                         text: "Успешно сохранено!"
                     });
-                   /* setTimeout(function () {
+                    setTimeout(function () {
                         location.reload(true);
-                    },1000);*/
+                    },1000);
                 },
                 error: function (data) {
                     console.log(data);
