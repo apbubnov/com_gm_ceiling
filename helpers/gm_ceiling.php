@@ -2264,9 +2264,11 @@ class Gm_ceilingHelpersGm_ceiling
                         $gm_mp32 = $gm_mount->mp32;
 
                     }
+                    $n5val = $data['n5'];
                     if($data['n16']){
                         $n5val = $data['n5'] - $data['n27'];
                     }
+
                     //вычитаем из периметра потолка крепление в плитку и керамогранит
                     $n5val = (($n5val-  $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
                     if($n5val) {
@@ -3009,7 +3011,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[$i]['price_with_gm_margin'] = margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin);
                 $mounting_data[$i]['total_with_gm_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_margin'], 2);
                 //Добавление маржи ГМ и дилера, если монтаж производит Дилер с помощью ГМ
-                $mounting_data[$i]['price_with_gm_dealer_margin'] = double_margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin, $dealer_mounting_margin);
+                $mounting_data[$i]['price_with_gm_dealer_margin'] = double_margin($mounting_data[$i]['dealer_salary'], $gm_mounting_margin, $dealer_mounting_margin);
                 $mounting_data[$i]['total_with_gm_dealer_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_dealer_margin'], 2);
                 //Добавление маржи дилера, если монтаж производит Дилер с помощью ГМ
                 $mounting_data[$i]['price_with_dealer_margin'] = margin($mounting_data[$i]['dealer_salary'], $dealer_mounting_margin);
@@ -5358,62 +5360,104 @@ class Gm_ceilingHelpersGm_ceiling
             if ($objectDealerPrice->price != $Price) $updatePrice .= $objectDealerPrice->price;
             if ($value != 0) $updatePrice .= $valueSTR . (($percent)?"%":"");
             return $updatePrice;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
     public static function generatePassword($length) {
-        $pass = '';
-        for ($i = $length; $i--;) {
-            $temp = random_int(1, 3);
-            switch ($temp) {
-                case 1:
-                    $symbol = chr(random_int(48, 57));
-                    break;
-                case 2:
-                    $symbol = chr(random_int(65, 90));
-                    break;
-                case 3:
-                    $symbol = chr(random_int(97, 122));
-                    break;
-                default:
-                    $symbol = chr(random_int(97, 122));
-                    break;
+        try {
+            $pass = '';
+            for ($i = $length; $i--;) {
+                $temp = random_int(1, 3);
+                switch ($temp) {
+                    case 1:
+                        $symbol = chr(random_int(48, 57));
+                        break;
+                    case 2:
+                        $symbol = chr(random_int(65, 90));
+                        break;
+                    case 3:
+                        $symbol = chr(random_int(97, 122));
+                        break;
+                    default:
+                        $symbol = chr(random_int(97, 122));
+                        break;
+                }
+                $pass .= $symbol;
             }
-            $pass .= $symbol;
+            return $pass;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-        return $pass;
     }
 
     static function rus2translit($string) {
-        $converter = array(
-            'а' => 'a',   'б' => 'b',   'в' => 'v',
-            'г' => 'g',   'д' => 'd',   'е' => 'e',
-            'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
-            'и' => 'i',   'й' => 'y',   'к' => 'k',
-            'л' => 'l',   'м' => 'm',   'н' => 'n',
-            'о' => 'o',   'п' => 'p',   'р' => 'r',
-            'с' => 's',   'т' => 't',   'у' => 'u',
-            'ф' => 'f',   'х' => 'h',   'ц' => 'c',
-            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
-            'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
-            'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+        try {
+            $converter = array(
+                'а' => 'a',   'б' => 'b',   'в' => 'v',
+                'г' => 'g',   'д' => 'd',   'е' => 'e',
+                'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
+                'и' => 'i',   'й' => 'y',   'к' => 'k',
+                'л' => 'l',   'м' => 'm',   'н' => 'n',
+                'о' => 'o',   'п' => 'p',   'р' => 'r',
+                'с' => 's',   'т' => 't',   'у' => 'u',
+                'ф' => 'f',   'х' => 'h',   'ц' => 'c',
+                'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
+                'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
+                'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
 
-            'А' => 'A',   'Б' => 'B',   'В' => 'V',
-            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
-            'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
-            'И' => 'I',   'Й' => 'Y',   'К' => 'K',
-            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
-            'О' => 'O',   'П' => 'P',   'Р' => 'R',
-            'С' => 'S',   'Т' => 'T',   'У' => 'U',
-            'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
-            'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
-            'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
-            'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
-        );
-        return strtr($string, $converter);
+                'А' => 'A',   'Б' => 'B',   'В' => 'V',
+                'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+                'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
+                'И' => 'I',   'Й' => 'Y',   'К' => 'K',
+                'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+                'О' => 'O',   'П' => 'P',   'Р' => 'R',
+                'С' => 'S',   'Т' => 'T',   'У' => 'U',
+                'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
+                'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
+                'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
+                'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+            );
+            return strtr($string, $converter);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
+
+    public static function getProjectsNotes($project_id) {
+        try {
+            $model_project = self::getModel('project');
+            $result = $model_project->getProjectsNotes($project_id);
+            foreach ($result as $key => $value) {
+                $user = JFactory::getUser($value->user_id);
+                $groups = $user->get('groups');
+
+                /*if (in_array("13", $groups)) { //Менеджер дилера
+                    $result[$key]-> = 
+                } elseif (in_array("21", $groups)) { //Замерщик дилера
+                    $type = "calculatormainpage";
+                } elseif (in_array("12", $groups)) { //Начальник МС дилера
+                    $type = "chiefmainpage";
+                } elseif (in_array("14", $groups)) { //Дилер
+                    $type = "dealermainpage";
+                } elseif (in_array("16", $groups)) { //Менеджер ГМ
+                    $type = "gmmanagermainpage";
+                } elseif (in_array("17", $groups)) { //Начальник МС ГМ
+                    $type = "gmchiefmainpage";
+                } elseif (in_array("22", $groups)) { //Замерщик ГМ
+                    $type = "gmcalculatormainpage";
+                } elseif (in_array("19", $groups)) { //Кладовщик ГМ
+                    $type = "gmstock";
+                } elseif (in_array("11", $groups)) { //монтажная бригада
+                    $type = "mountersmainpage";
+                } else {
+
+                }*/
+            }
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

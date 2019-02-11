@@ -1981,4 +1981,24 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
+    function getProjectsNotes($project_id) {
+    	try {
+    		if (empty($project_id)) {
+    			return false;
+    		}
+    		$db = JFactory::getDbo();
+
+	        $query = $db->getQuery(true);
+	        $query
+	        	->select('`project_id`, `user_id`, `note`')
+	            ->from('`#__gm_ceiling_projects_notes`')
+	            ->where("`project_id` = $project_id");
+	        $db->setQuery($query);
+	        $result = $db->loadObjectList();
+	        return $result;
+    	} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
