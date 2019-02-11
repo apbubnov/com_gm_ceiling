@@ -2037,5 +2037,21 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function addNote($project_id, $note) {
+        try {
+            if (empty($project_id) && empty($note)) {
+                $jinput = JFactory::getApplication()->input;
+                $project_id = $jinput->getInt('project_id');
+                $note = $jinput->get('note', '', 'STRING');
+            }
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $result = $project_model->saveNote($project_id, $note);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
 ?>

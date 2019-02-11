@@ -1948,10 +1948,37 @@ class Gm_ceilingModelProject extends JModelItem
     		}
     		return $materials;
 
-	    }
-        catch(Exception $e)
-        {
+	    } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveNote($project_id, $note) {
+    	try {
+    		$user_id = JFactory::getUser()->id;
+    		if (empty($project_id) && empty($user_id) && empty($note)) {
+    			return false;
+    		}
+    		$db = JFactory::getDbo();
+
+    		$query = $db->getQuery(true);
+	        $query
+	            ->delete('`#__gm_ceiling_projects_notes`')
+	            ->where("`project_id` = $project_id AND `user_id` = $user_id")
+	        $db->setQuery($query);
+	        $db->execute();
+
+	        $query = $db->getQuery(true);
+	        $query
+	            ->insert('`#__gm_ceiling_projects_notes`')
+	            ->columns('`project_id`, `user_id`, `note`')
+	            ->values("$project_id, $user_id, '$note'")
+	        $db->setQuery($query);
+	        $db->execute();
+	        return true;
+    	} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
