@@ -1964,7 +1964,7 @@ class Gm_ceilingModelProject extends JModelItem
     		$query = $db->getQuery(true);
 	        $query
 	            ->delete('`#__gm_ceiling_projects_notes`')
-	            ->where("`project_id` = $project_id AND `user_id` = $user_id")
+	            ->where("`project_id` = $project_id AND `user_id` = $user_id");
 	        $db->setQuery($query);
 	        $db->execute();
 
@@ -1972,7 +1972,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $query
 	            ->insert('`#__gm_ceiling_projects_notes`')
 	            ->columns('`project_id`, `user_id`, `note`')
-	            ->values("$project_id, $user_id, '$note'")
+	            ->values("$project_id, $user_id, '$note'");
 	        $db->setQuery($query);
 	        $db->execute();
 	        return true;
