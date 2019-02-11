@@ -438,3 +438,34 @@ function save_data_to_session(action_type,id=null,obj=null){
         }
     });
 }
+
+var btn_add_note = document.getElementById('btn_add_note');
+if (btn_add_note) {
+    btn_add_note.onclick = addNote;
+}
+
+function addNote() {
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=project.addNote",
+        data: {
+            project_id: project_id,
+            note: document.getElementById('textarea_note').value
+        },
+        success: function(data) {
+            location.reload();
+        },
+        dataType: "json",
+        timeout: 10000,
+        error: function(data) {
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка при добавлении примечания"
+            });
+        }
+    }); 
+}

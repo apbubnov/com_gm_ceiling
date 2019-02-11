@@ -132,8 +132,6 @@
         $whatCalendar = 1;
         $FlagCalendar = [2, $user->dealer_id];
     }
-    $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
-    $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
     //----------------------------------------------------------------------------------
 
     // все бригады
@@ -365,26 +363,11 @@
                     </table>
                     <?php if ($this->item->project_status == 1) { ?>
                         <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
-                        <div class="calendar_wrapper" style="background: #ffffff">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                    </td>
-                                    <td style="width: 100%">
-                                        <div id="calendar1" style="padding: 1em">
-                                            <?php echo $calendar1; ?>
-                                        </div>
-                                        <div id="calendar2" style="padding: 1em">
-                                            <?php echo $calendar2; ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                            <div>
+                                <label><strong>Время замера</strong></label>
+                                <div id="measures_calendar"></div>
+                                <input id="measure_info" readonly>
+                            </div>
                     <?php } else if ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) { ?>
                         <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
                         <div id="calendar_mount" align="center"></div>
@@ -436,12 +419,15 @@
     </div>
     <div class="modal_window_container" id="mw_container">
         <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-       <div id="mw_mounts_calendar" class="modal_window"></div>
+        <div id="mw_mounts_calendar" class="modal_window"></div>
+        <div class="modal_window" id="mw_measures_calendar" style="border: 2px solid black; border-radius: 4px;"></div>
     </div>
 <?php } ?>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript">
+    init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
@@ -467,7 +453,7 @@
 
     // показать историю
     function show_comments() {
-        var id_client = <?php echo $this->item->id_client;?>;
+        var id_client = <?php echo $this->item->client_id;?>;
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=selectComments",
             data: {
@@ -550,7 +536,7 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
+            var id_client = <?php echo $this->item->client_id;?>;
             if (reg_comment.test(comment) || comment === "") {
                 alert('Неверный формат примечания!');
                 return;
