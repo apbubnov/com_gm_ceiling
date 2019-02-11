@@ -620,7 +620,7 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
-            $ajax_return['mounting_sum'] = $total_gm_mounting;
+            $ajax_return['mounting_sum'] = $total_dealer_mounting;
             $ajax_return['dealer_components_sum'] = $dealer_components_sum;
             $ajax_return['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data["guild_data"]["total_dealer_guild"];
             $ajax_return['dealer_mounting_sum'] = $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild;
@@ -2264,9 +2264,11 @@ class Gm_ceilingHelpersGm_ceiling
                         $gm_mp32 = $gm_mount->mp32;
 
                     }
+                    $n5val = $data['n5'];
                     if($data['n16']){
                         $n5val = $data['n5'] - $data['n27'];
                     }
+
                     //вычитаем из периметра потолка крепление в плитку и керамогранит
                     $n5val = (($n5val-  $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
                     if($n5val) {
@@ -3009,7 +3011,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[$i]['price_with_gm_margin'] = margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin);
                 $mounting_data[$i]['total_with_gm_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_margin'], 2);
                 //Добавление маржи ГМ и дилера, если монтаж производит Дилер с помощью ГМ
-                $mounting_data[$i]['price_with_gm_dealer_margin'] = double_margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin, $dealer_mounting_margin);
+                $mounting_data[$i]['price_with_gm_dealer_margin'] = double_margin($mounting_data[$i]['dealer_salary'], $gm_mounting_margin, $dealer_mounting_margin);
                 $mounting_data[$i]['total_with_gm_dealer_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_dealer_margin'], 2);
                 //Добавление маржи дилера, если монтаж производит Дилер с помощью ГМ
                 $mounting_data[$i]['price_with_dealer_margin'] = margin($mounting_data[$i]['dealer_salary'], $dealer_mounting_margin);
@@ -3515,7 +3517,7 @@ class Gm_ceilingHelpersGm_ceiling
                                     $html .= '<td class="center">' . $item['quantity'] . '</td>';
                                     $html .= '<td class="center">' . round($item['dealer_salary_total'], 2) . '</td>';
                                     $html .= '</tr>';
-                                    $total_sum += round($item['gm_salary_total'], 2);
+                                    $total_sum += round($item['dealer_salary_total'], 2);
                                  }
                             }
                             else{
