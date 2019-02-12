@@ -580,13 +580,6 @@ class Gm_ceilingModelProject extends JModelItem
 			$db = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query->update('`#__gm_ceiling_projects`')
-				->set('project_note = ' . $db->quote($data->project_note))
-				->set('gm_calculator_note = ' . $db->quote($data->gm_calculator_note))
-				->set('dealer_calculator_note = ' . $db->quote($data->dealer_calculator_note))
-				->set('gm_manager_note = ' . $db->quote($data->gm_manager_note))
-				->set('dealer_manager_note = ' . $db->quote($data->dealer_manager_note))
-				->set('gm_chief_note = ' . $db->quote($data->gm_chief_note))
-				->set('dealer_chief_note = ' . $db->quote($data->dealer_chief_note))
 				->set('project_sum = ' . $db->quote($data->project_sum))
 				//->set('project_mounting_date = ' . $db->quote($data->project_mounting_date))
 				->set('project_status = ' . $db->quote($status));
@@ -923,8 +916,6 @@ class Gm_ceilingModelProject extends JModelItem
 			$table = $this->getTable();
 			if($data->id > 0) {
 				$table->load($data->id);
-				$table->gm_chief_note = $data->gm_chief_note;
-				$table->dealer_chief_note = $data->dealer_chief_note;
 				/*if ($data->project_mounting_date != "00-00-0000 00:00:00") {
 					$table->project_mounting_date = $data->project_mounting_date;
 					if ($user->dealer_type == 1 && $data->project_status == 4) {
@@ -972,7 +963,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $return = $db->execute();
 
 			$query = $db->getQuery(true);
-			$query ->select("p.id, p.client_id, p.project_info, GROUP_CONCAT(distinct mp.date_time SEPARATOR ';') as project_mounting_date, p.project_note, 	p.gm_calculator_note")
+			$query ->select("p.id, p.client_id, p.project_info, GROUP_CONCAT(distinct mp.date_time SEPARATOR ';') as project_mounting_date")
 				->from('`#__gm_ceiling_projects` as p')
 				->innerJoin("`#__gm_ceiling_projects_mounts` as mp on mp.project_id = p.id")
 	            ->where('p.id = ' . $id)
@@ -1009,7 +1000,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $return = $db->execute();
 
 			$query = $db->getQuery(true);
-			$query ->select("id, client_id, project_info, project_note, 	gm_calculator_note")
+			$query ->select("id, client_id, project_info")
 				->from('`#__gm_ceiling_projects`')
 	            ->where('id = ' . $id);
             $db->setQuery($query);
@@ -1226,13 +1217,6 @@ class Gm_ceilingModelProject extends JModelItem
 		{
 			$table = $this->getTable();
 			$table->load(0);
-			$table->project_note = $copy_data->project_note;
-			$table->gm_calculator_note = $copy_data->gm_calculator_note;
-			$table->dealer_calculator_note = $copy_data->dealer_calculator_note;
-			$table->gm_manager_note = $copy_data->gm_manager_note;
-			$table->gm_chief_note = $copy_data->gm_chief_note;
-			$table->dealer_manager_note = $copy_data->dealer_manager_note;
-			$table->dealer_chief_note = $copy_data->dealer_chief_note;
 			$table->project_mounting_date = $copy_data->project_mounting_date;
 			$table->project_status = $status;
             $return = $table->store();
