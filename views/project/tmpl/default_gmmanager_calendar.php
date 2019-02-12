@@ -403,13 +403,6 @@
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
-                    <div class="col-xs-6 col-md-6"><b>Примечание менеджера</b></div>
-                    <div class="col-xs-6 col-md-6">
-                        <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
-                            value="<?php echo $this->item->gm_manager_note; ?>">
-                    </div>
-                </div>
-                <div class="row" style="margin-bottom:15px;">
                     <div class="col-xs-4 col-md-4"><b>Менеджер</b></div>
                     <div class="col-xs-8 col-md-8">
                         <input name="Manager_name" id="manager_name" class="inputhidden"
