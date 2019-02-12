@@ -1399,19 +1399,19 @@ class Gm_ceilingHelpersGm_ceiling
                         break;
                     case 3:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_727[0]->id] += $data['n27'];
                         break;
                     case 4:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_728[0]->id] += $data['n27'];
                         break;
                     case 5:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_729[0]->id] += $data['n27'];
                         break;
@@ -3852,6 +3852,18 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</table>';
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
+            $footer .= '<table>';
+            $footer .= '<tr>';
+            $footer .= "<td>Отгрузку разрешил:</td><td>_________  ".JFactory::getUser()->name."</td><td>Принял:</td><td>_______________</td>";
+            $footer .= '</tr>';
+            $footer .= '<tr>';
+            $footer .= '<td>Отпустил ______________</td><td>____________</td>';
+            $footer .= '</tr>';
+            $footer .= '</table>';
+            $footer .= '<div align="right" style="width: 100%;font-size: 14pt">';
+            $footer .= 'Сумма:'. ($data['canvases_sum'] + $data['components_sum']).'р.';
+            $footer .= '</div>';
+            $mpdf->SetHTMLFooter($footer);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
             if($mpdf->y < $unusedSpaceH){
                 $min_height = ($unusedSpaceH -5)*3.779528;
@@ -3864,6 +3876,7 @@ class Gm_ceilingHelpersGm_ceiling
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
                 $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
             $html .= '</div>';
+
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
             $filename = md5($calc_id . 'cutpdf') . '.pdf';
