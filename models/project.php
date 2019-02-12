@@ -856,7 +856,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
-	public function update_project_after_call($id,$client_id,$date,$address,$gmmanager_comment,$manager_comment,$status,$api_id=null,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
+	public function update_project_after_call($id,$client_id,$date,$address,$status,$api_id=null,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
 		try
 		{
 			$user = JFactory::getUser();
@@ -872,8 +872,6 @@ class Gm_ceilingModelProject extends JModelItem
 				$table->client_id = $client_id;
 				$table->project_info = $address;
 				$table->project_calculation_date = $date;
-				$table->gm_manager_note = $gmmanager_comment;
-				$table->dealer_manager_note = $manager_comment;
 				$table->project_status = $status;
 				if(!empty($api_id)) $table->api_phone_id = $api_id;
 				$table->read_by_manager = $manager_id;
