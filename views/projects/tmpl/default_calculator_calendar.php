@@ -93,15 +93,15 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                                 $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
                                 if (!empty($project_notes->gm_manager_note)) {
                                     echo '<b>'.$project_notes->gm_manager_note->description.':</b> ';
-                                    echo $project_notes->gm_manager_note->value;
+                                    echo $project_notes->gm_manager_note->value.'<br>';
                                 }
                                 if (!empty($project_notes->dealer_manager_note)) {
                                     echo '<b>'.$project_notes->dealer_manager_note->description.':</b> ';
-                                    echo $project_notes->dealer_manager_note->value;
+                                    echo $project_notes->dealer_manager_note->value.'<br>';
                                 }
                                 if (!empty($project_notes->dealer_note)) {
                                     echo '<b>'.$project_notes->dealer_note->description.':</b> ';
-                                    echo $project_notes->dealer_note->value;
+                                    echo $project_notes->dealer_note->value.'<br>';
                                 }
                             ?>
                             </td>
