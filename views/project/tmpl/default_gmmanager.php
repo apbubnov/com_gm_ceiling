@@ -165,22 +165,6 @@ $total_mount = 0;
                                 } ?></td>
                         </tr>
                         <tr>
-                            <th>Примечание начальника МС</th>
-                            <td>
-                                <?php
-                                    if(!empty($this->item->gm_chief_note)) {
-                                        echo $this->item->gm_chief_note; 
-                                    }
-                                    elseif(!empty($this->item->cheif_note)){
-                                        echo $this->item->cheif_note; 
-                                    }
-                                    else{
-                                        echo "Отсутствует";
-                                    }
-                                ?>    
-                            </td>
-                        </tr>
-                        <tr>
                             <th>Примечание замерщика</th>
                             <td>
                                 <?php 

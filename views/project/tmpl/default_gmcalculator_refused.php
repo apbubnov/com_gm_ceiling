@@ -75,12 +75,6 @@ $server_name = $_SERVER['SERVER_NAME'];
 						</td>
 					</tr>
 					<tr>
-						<th>Примечание клиента</th>
-						<td>
-							<?php echo $this->item->project_note; ?>
-						</td>
-					</tr>
-					<tr>
 						<th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
 						<td><?php if($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
 								-

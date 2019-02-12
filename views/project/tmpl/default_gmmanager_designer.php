@@ -400,15 +400,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Примечание менеджера</th>
-                                    <td>
-                                        <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
-                                               value="<?php if (isset($_SESSION['manager_comment'])) {
-                                                   echo $_SESSION['manager_comment'];
-                                               } else echo $this->item->gm_manager_note; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"

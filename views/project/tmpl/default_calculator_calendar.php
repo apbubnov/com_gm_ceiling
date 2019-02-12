@@ -354,12 +354,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <td style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                         </td>
-                    <tr>
-                        <th>Примечание менеджера</th>
-                        <td>
-                            <?php echo $this->item->dealer_manager_note; ?>
-                        </td>
-                    </tr>
                 </table>
             </div>
 
