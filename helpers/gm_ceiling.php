@@ -5428,33 +5428,46 @@ class Gm_ceilingHelpersGm_ceiling
     public static function getProjectsNotes($project_id) {
         try {
             $model_project = self::getModel('project');
-            $result = $model_project->getProjectsNotes($project_id);
-            foreach ($result as $key => $value) {
+            $notes = $model_project->getProjectsNotes($project_id);
+            $result = (object) array();
+
+            foreach ($notes as $key => $value) {
                 $user = JFactory::getUser($value->user_id);
                 $groups = $user->get('groups');
 
-                /*if (in_array("13", $groups)) { //Менеджер дилера
-                    $result[$key]-> = 
+                if (in_array("13", $groups)) { //Менеджер дилера
+                    $result->dealer_manager_note->value = $value->note;
+                    $result->dealer_manager_note->description = 'Примечание менеджера дилера';
                 } elseif (in_array("21", $groups)) { //Замерщик дилера
-                    $type = "calculatormainpage";
+                    $result->dealer_calculator_note->value = $value->note;
+                    $result->dealer_calculator_note->description = 'Примечание замерщика дилера';
                 } elseif (in_array("12", $groups)) { //Начальник МС дилера
-                    $type = "chiefmainpage";
+                    $result->dealer_chief_note->value = $value->note;
+                    $result->dealer_chief_note->description = 'Примечание начальника МС дилера';
                 } elseif (in_array("14", $groups)) { //Дилер
-                    $type = "dealermainpage";
+                    $result->dealer_note->value = $value->note;
+                    $result->dealer_note->description = 'Примечание дилера';
                 } elseif (in_array("16", $groups)) { //Менеджер ГМ
-                    $type = "gmmanagermainpage";
+                    $result->gm_manager_note->value = $value->note;
+                    $result->gm_manager_note->description = 'Примечание менеджера ГМ';
                 } elseif (in_array("17", $groups)) { //Начальник МС ГМ
-                    $type = "gmchiefmainpage";
+                    $result->gm_chief_note->value = $value->note;
+                    $result->gm_chief_note->description = 'Примечание МС ГМ';
                 } elseif (in_array("22", $groups)) { //Замерщик ГМ
-                    $type = "gmcalculatormainpage";
+                    $result->gm_calculator_note->value = $value->note;
+                    $result->gm_calculator_note->description = 'Примечание замерщика ГМ';
                 } elseif (in_array("19", $groups)) { //Кладовщик ГМ
-                    $type = "gmstock";
+                    $result->gm_stockman_note->value = $value->note;
+                    $result->gm_stockman_note->description = 'Примечание кладовщика ГМ';
                 } elseif (in_array("11", $groups)) { //монтажная бригада
-                    $type = "mountersmainpage";
+                    $result->gm_mounter_note->value = $value->note;
+                    $result->gm_mounter_note->description = 'Примечание монтажной бригады';
                 } else {
-
-                }*/
+                    $result->common_note->value = $value->note;
+                    $result->common_note->description = 'Примечание';
+                }
             }
+            return $result;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

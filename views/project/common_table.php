@@ -105,15 +105,26 @@
         }
     }
 </style>
-
+<hr>
+    <?php
+    $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectsNotes($this->item->id);
+    foreach ($project_notes as $key => $value) { ?>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-4 no_padding"><b><?= $value->description; ?>:</b></div>
+            <div class="col-md-6 no_padding"><?= $value->value; ?></div>
+        </div>
+    <?php } ?>
+<hr>
 <div class="row">
     <div class="col-md-3 no_padding"><b>Ввести примечание:</b></div>
-    <div class="col-md-6 no_padding">
+    <div class="col-md-6 col-xs-9 no_padding">
         <textarea class="inputactive" id="textarea_note" style="width: 98%;"></textarea>
     </div>
-    <div class="col-md-3 no_padding">
+    <div class="col-md-3 col-xs-3 no_padding">
         <button type="button" class="btn btn-primary" id="btn_add_note">Ок</button>
     </div>
+</div>
+<div class="row">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
         <!-- Nav tabs -->
