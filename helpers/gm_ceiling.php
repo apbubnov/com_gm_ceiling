@@ -5425,10 +5425,10 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    public static function getProjectsNotes($project_id) {
+    public static function getProjectNotes($project_id) {
         try {
             $model_project = self::getModel('project');
-            $notes = $model_project->getProjectsNotes($project_id);
+            $notes = $model_project->getProjectNotes($project_id);
             $result = (object) array();
 
             foreach ($notes as $key => $value) {

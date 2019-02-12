@@ -107,7 +107,7 @@
 </style>
 <hr>
     <?php
-    $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectsNotes($this->item->id);
+    $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
     foreach ($project_notes as $key => $value) { ?>
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-md-4 no_padding"><b><?= $value->description; ?>:</b></div>
