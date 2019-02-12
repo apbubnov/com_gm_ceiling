@@ -1252,11 +1252,24 @@ function SelectItem(e) {
     }
 }
 
-function empty( mixed_var ) {
-    return (mixed_var === "" || (mixed_var - 0) === 0 || mixed_var === "0" || mixed_var === null ||
-        mixed_var === false || (mixed_var instanceof Array && mixed_var.length === 0) ||
-        mixed_var === "[]" || mixed_var ==="{}");
-}
+/*function empty( mixed_var ) {
+    return (mixed_var === "" ||
+        (mixed_var - 0) === 0 ||
+        mixed_var === "0" ||
+        mixed_var === null ||
+        mixed_var === false ||
+        (mixed_var instanceof Array && mixed_var.length === 0) ||
+        mixed_var === "[]" ||
+        mixed_var ==="{}" ||
+        mixed_var === "null" ||
+        mixed_var === undefined ||
+        mixed_var === "undefined" ||
+        mixed_var === {} ||
+        (mixed_var instanceof String && mixed_var.trim() === "") ||
+        mixed_var === "0000-00-00" ||
+        mixed_var === "0000-00-00 00:00:00"
+    );
+}*/
 
 function ClearSelect(e) {
     setTimeout(function () {

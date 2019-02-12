@@ -120,9 +120,8 @@
 </div>
 
 <script type='text/javascript'>
+    var notes;
     // листание календаря
-
-
     function update_calendar(month, year) {
         jQuery.ajax({
             type: 'POST',
@@ -273,49 +272,46 @@
                 },
                 success: function(msg) {
                     console.log(msg);
-                    var status, type, note, note2, comment_calc, project, adress, perimeter;
+                    var status, type, note = "", comment_calc, project, adress, perimeter;
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
                             adress = element.project_info;
                             perimeter = element.n5;
+                            getProjectNotes(project);
                             // комменты
-                            if (<?php echo $dealerId; ?> == 1) {
-                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null" || element.gm_chief_note == "") {
-                                    note = "";
-                                } else {
-                                    note = "Примечание НМС: "+element.gm_chief_note;
+                            jQuery.each(notes,function (index,elem) {
+                                if (<?php echo $dealerId; ?> == 1) {
+                                   if(index == "gm_chief_note"){
+                                       note = elem.description + ":" + elem.value;
+                                   }
+                                    if(index == "gm_calculator_note"){
+                                        note += elem.description + ":" + elem.value;
+                                    }
+                                    console.log(note);
+
+                                } else{
+                                    if (index == "dealer_chief_note") {
+                                        note += elem.description + ":" + elem.value;
+                                    }
+                                    if (index == "dealer_calculator_note") {
+                                        note += elem.description + ":" + elem.value;
+                                    }
+
                                 }
-                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null" || element.gm_calculator_note == "") {
-                                    note2 = "";
-                                } else {
-                                    note2 = "<br>Примечание замерщика: "+element.gm_calculator_note;
+                                if (index == "dealer_note") {
+                                    note += elem.description + ":" + elem.value;
                                 }
-                            } else {
-                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null" || element.dealer_chief_note == "") {
-                                    note = "";
-                                } else {
-                                    note = "Примечание НМС: "+element.dealer_chief_note;
-                                }
-                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null" || element.dealer_calculator_note == "") {
-                                    note2 = "";
-                                } else {
-                                    note2 = "<br>Примечание замерщика: "+element.dealer_calculator_note;
-                                }
-                            }
-                            /*if (element.details == 1) {
-                                comment_calc = "<br>Есть примечание к потолку";
-                            } else {
-                                comment_calc = "";
-                            }*/
-                            var comment = note+" "+note2;
+                            });
+
+
                             // статусы
                             status = element.project_status;
 
                             if (element.read_by_mounter == 0) {
                                 status += " <strong>/ Не прочитан</strong>";
                             }
-                            salary = element.mounting_sum;
+                            salary = element.m_sum;
                            
 
                             switch (element.type) {
@@ -329,7 +325,7 @@
                                 break;
                             }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td data-th="Дата мотажа">${outputDate+" "+element.project_mounting_date}</td><td data-th="Адрес">${adress}</td><td data-th="Телефоны">${element.client_phones}</td><td data-th="Периметр">${perimeter}</td><td data-th="Зарплата">${salary}</td><td data-th="Комментарий" id="comment_calc${element.id}">${comment}</td><td data-th="Статус">${status}</td><td data-th="Этап">${type}</td></tr>`;
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td data-th="Дата мотажа">${outputDate+" "+element.project_mounting_date}</td><td data-th="Адрес">${adress}</td><td data-th="Телефоны">${element.client_phones}</td><td data-th="Периметр">${perimeter}</td><td data-th="Зарплата">${salary}</td><td data-th="Комментарий" id="comment_calc${element.id}">${note}</td><td data-th="Статус">${status}</td><td data-th="Этап">${type}</td></tr>`;
                             jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
@@ -340,7 +336,29 @@
             });
         }
     }
-
+    function getProjectNotes(project_id){
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?option=com_gm_ceiling&task=project.getProjectNotes",
+            dataType: 'json',
+            data: {
+                project_id: project_id
+            },
+            async:false,
+            success: function(msg) {
+                notes = msg;
+            },
+            error: function(msg) {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка получения примечаний"
+                });
+            }
+        });
+    }
     function ReplaceToOrder(project, month, ReadOrNot, stage) {
         month--;
         console.log(project);

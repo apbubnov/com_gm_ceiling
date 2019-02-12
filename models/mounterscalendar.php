@@ -259,22 +259,16 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             if(count($items == 1) && empty($items[0]->id)){
                 $items = [];
             }
+            //throw new Exception(print_r($items,true));
+            $user = JFactory::getUser();
+            $service = ($user->dealer_id == 1) ? "serviceSelf" : "";
             foreach ($items as $value) {
                 if(!empty($value->id)) {
+                    $value->m_sum = 0;
                     $calcs = explode(';', $value->calcs_id);
-
                     foreach ($calcs as $val) {
-                        if (!empty($value->calcs_mounting_sum)) {
-                            $mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $val, null, "serviceSelf")["total_gm_mounting"];
-                            $value->mounting_sum += $mount_sum;
-                        }
-                        /*if (!empty($val->details)) {
-                            $value->details = 1;
-                        } else {
-                            if ($value->details != 1) {
-                                $value->details = 0;
-                            }
-                        }*/
+                        $mount_sum = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $val, null,$service)["total_dealer_mounting"];
+                        $value->m_sum += $mount_sum;
                     }
                     if (!empty($value->calcs_mounting_sum)) {
                         $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id, "mount");
@@ -282,7 +276,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
                         $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
                     }
-                    $value->mounting_sum += $transport["mounter_sum"];
+                    $value->m_sum += $transport["mounter_sum"];
                 }
             }
 
