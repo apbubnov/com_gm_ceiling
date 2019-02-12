@@ -1981,7 +1981,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
-    function getProjectsNotes($project_id) {
+    function getProjectNotes($project_id) {
     	try {
     		if (empty($project_id)) {
     			return false;

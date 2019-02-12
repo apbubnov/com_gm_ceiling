@@ -2053,5 +2053,18 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
+    function getProjectNotes($project_id) {
+        try {
+            if (empty($project_id)) {
+                $jinput = JFactory::getApplication()->input;
+                $project_id = $jinput->getInt('project_id');
+            }
+            $result = Gm_ceilingHelpersGm_ceiling::getProjectNotes($project_id);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
 ?>
