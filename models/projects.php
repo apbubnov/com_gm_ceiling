@@ -130,15 +130,6 @@ class Gm_ceilingModelProjects extends JModelList
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
                                                         ) SEPARATOR \',\'
                             ) AS `mounting_time`,
-                            `p`.`project_note`,
-                            `p`.`gm_calculator_note`,
-                            `p`.`dealer_calculator_note`,
-                            `p`.`gm_manager_note`,
-                            `p`.`gm_chief_note`,
-                            `p`.`dealer_chief_note`,
-                            `p`.`dealer_manager_note`,
-                            `p`.`gm_mounter_note`,
-                            `p`.`mounter_note`,
                             `p`.`project_discount`,
                             `p`.`created`,
                             `p`.`closed`,
@@ -256,8 +247,6 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } else {
                         $query->select('`p`.`project_mounting_date`,
-                                        `p`.`gm_calculator_note`,
-                                        `p`.`dealer_calculator_note`,
                                         `p`.`dealer_name`
                                     ');
                         $query->where('`p`.`project_status` IN (4, 5)');
@@ -276,7 +265,6 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmcalculator':
-                    $query->select('`p`.`gm_manager_note`');
 
                     if ($subtype == 'calendar') {
                         $query->where('`p`.`project_status` = 1');
@@ -292,9 +280,6 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'calculator':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`dealer_manager_note`
-                                ');
 
                     if (in_array(14, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->id.')');
@@ -315,8 +300,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmchief':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`project_mounter`,
+                    $query->select('`p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`mounter_dealer_id`
                                 ');
@@ -344,9 +328,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'chief':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`dealer_manager_note`,
-                                    `p`.`project_mounter`,
+                    $query->select('`p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`transport`,
                                     `p`.`distance`,
