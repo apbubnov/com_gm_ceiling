@@ -1224,7 +1224,7 @@ class Gm_ceilingModelProjects extends JModelList
                           DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date`,
                           `calc`.`id` AS `calc_id`,
                           `calc`.`components_sum` + `calc`.`canvases_sum` AS `sum`,
-                          `u`.`username` AS `dealer_name`')
+                          `u`.`name` AS `dealer_name`')
                     ->from('`#__gm_ceiling_projects` AS `p`')
                         ->innerJoin('`#__gm_ceiling_projects_history` AS `ph` ON
                                         `p`.`id` = `ph`.`project_id`')
