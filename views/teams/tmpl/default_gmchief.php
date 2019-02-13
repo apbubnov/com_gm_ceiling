@@ -596,6 +596,25 @@ foreach ($brigade_id as $value) {
 								} else if (element.project_status == 19) {
 									status = "Заказ собран";
 								}
+                                else if (element.project_status == 24) {
+                                    status = "Выполнено обагечивание";
+                                }
+                                else if (element.project_status == 25) {
+                                    status = "Выполнена натяжка";
+                                }
+                                else if (element.project_status == 26) {
+                                    status = "Установлена вставка";
+                                }
+                                else if (element.project_status == 27) {
+                                    status = "Монтаж багета";
+                                }
+                                else if (element.project_status == 28) {
+                                    status = "Натяжка";
+                                }
+                                else if (element.project_status == 29) {
+                                    status = "Установка вставки";
+                                }
+
 								if (element.read_by_mounter == 0) {
 									status += " / Не прочитан";
 								}

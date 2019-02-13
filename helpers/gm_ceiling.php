@@ -1399,19 +1399,19 @@ class Gm_ceilingHelpersGm_ceiling
                         break;
                     case 3:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_727[0]->id] += $data['n27'];
                         break;
                     case 4:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_728[0]->id] += $data['n27'];
                         break;
                     case 5:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27'];
+                        $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_729[0]->id] += $data['n27'];
                         break;
@@ -3852,6 +3852,21 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</table>';
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
+            $footer ='<hr style="color:#414099;size:4px">';
+            $footer .= '<div class="left">';
+            $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
+            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+            $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
+            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+            $footer .= '</div>';
+            $footer .= '<div class="right">';
+            $footer .= "<span>Принял:</span><div class='lines'> _______________  __________________</div>";
+            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+            $footer .= '</div>';
+            $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
+            $footer .= '<b>Сумма:'. ($data['canvases_sum'] + $data['components_sum']).'р.</b>';
+            $footer .= '</div>';
+            $mpdf->SetHTMLFooter($footer);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
             if($mpdf->y < $unusedSpaceH){
                 $min_height = ($unusedSpaceH -5)*3.779528;
@@ -3864,6 +3879,7 @@ class Gm_ceilingHelpersGm_ceiling
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
                 $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
             $html .= '</div>';
+
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
             $filename = md5($calc_id . 'cutpdf') . '.pdf';
@@ -3873,6 +3889,7 @@ class Gm_ceilingHelpersGm_ceiling
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+
     }
     /*функция генерации pdf для менеджера*/
     public static function create_manager_estimate($need_price,$calc_id=null,$data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null){
@@ -5005,13 +5022,13 @@ class Gm_ceilingHelpersGm_ceiling
                                         if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
                                             $DayMounters[$r] = "yellow";
                                         }
-                                        if ($value[2] == 16) {
+                                        if ($value[2] == 16 || $value[2] == 24 || $value[2] == 25 || $value[2] == 26|| $value[2] == 27 || $value[2] == 28 || $value[2] == 29 ) {
                                             $DayMounters[$r] = "navy";
                                         }
                                         if ($value[2] == 17) {
                                             $DayMounters[$r] = "brown";
                                         }
-                                        if ($value[2] == 11) {
+                                        if ($value[2] == 11 ) {
                                             $DayMounters[$r] = "green";
                                         }
                                         if ($value[2] == 12) {

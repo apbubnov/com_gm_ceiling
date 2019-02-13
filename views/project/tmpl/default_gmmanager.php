@@ -60,7 +60,8 @@ $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"m
 $mounter_approve = true;
 foreach($calculations as $calc){
     if(!empty($calc->n3)){
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
+        Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
     }
 
     foreach ($this->item->mount_data as $key => $value) {
@@ -247,7 +248,6 @@ $total_mount = 0;
                                 <?php } else { ?>
                                     -
                                 <?php } ?>
-                            </td>
                             </td>
                             <td>
                                 <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>

@@ -159,7 +159,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                             "password2" => $pass,
                             "email" => $register_data->email,
                             "groups" => array(2),
-                            "dealer_type" => 1
+                            "dealer_type" => 1,
+                            "settings" => "{\"CheckTimeCallback\":10,\"CheckTimeCall\":5}"
                         );
                         $user = new JUser;
                         if (!$user->bind($data)) {
