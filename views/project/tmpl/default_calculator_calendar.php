@@ -354,12 +354,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <td style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                         </td>
-                    <tr>
-                        <th>Примечание менеджера</th>
-                        <td>
-                            <?php echo $this->item->dealer_manager_note; ?>
-                        </td>
-                    </tr>
                 </table>
             </div>
 
@@ -371,7 +365,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         <td><label> Добавить комментарий: </label></td>
                     </tr>
                     <tr>
-                        <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                        <td width = 100%><textarea  class = "inputactive" id="new_comment"></textarea></td>
                         <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
                         </button></td>
                     </tr>

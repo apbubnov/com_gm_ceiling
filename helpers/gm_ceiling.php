@@ -3852,6 +3852,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</table>';
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
+
             $footer ='<hr style="color:#414099;size:4px">';
             $footer .= '<div class="left">';
             $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
@@ -3865,6 +3866,7 @@ class Gm_ceilingHelpersGm_ceiling
             $footer .= '</div>';
             $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
             $footer .= '<b>Сумма:'. ($data['canvases_sum'] + $data['components_sum']).'р.</b>';
+
             $footer .= '</div>';
             $mpdf->SetHTMLFooter($footer);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;

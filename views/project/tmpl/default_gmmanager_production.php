@@ -395,7 +395,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                     <td><label> Добавить комментарий: </label></td>
                                 </tr>
                                 <tr>
-                                    <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                    <td width = 100%><textarea  class = "inputactive" id="new_comment"></textarea></td>
                                     <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
                                     </button></td>
                                 </tr>

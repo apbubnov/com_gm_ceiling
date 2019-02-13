@@ -130,15 +130,6 @@ class Gm_ceilingModelProjects extends JModelList
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
                                                         ) SEPARATOR \',\'
                             ) AS `mounting_time`,
-                            `p`.`project_note`,
-                            `p`.`gm_calculator_note`,
-                            `p`.`dealer_calculator_note`,
-                            `p`.`gm_manager_note`,
-                            `p`.`gm_chief_note`,
-                            `p`.`dealer_chief_note`,
-                            `p`.`dealer_manager_note`,
-                            `p`.`gm_mounter_note`,
-                            `p`.`mounter_note`,
                             `p`.`project_discount`,
                             `p`.`created`,
                             `p`.`closed`,
@@ -256,8 +247,6 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } else {
                         $query->select('`p`.`project_mounting_date`,
-                                        `p`.`gm_calculator_note`,
-                                        `p`.`dealer_calculator_note`,
                                         `p`.`dealer_name`
                                     ');
                         $query->where('`p`.`project_status` IN (4, 5)');
@@ -276,7 +265,6 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmcalculator':
-                    $query->select('`p`.`gm_manager_note`');
 
                     if ($subtype == 'calendar') {
                         $query->where('`p`.`project_status` = 1');
@@ -292,9 +280,6 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'calculator':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`dealer_manager_note`
-                                ');
 
                     if (in_array(14, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->id.')');
@@ -315,8 +300,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmchief':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`project_mounter`,
+                    $query->select('`p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`mounter_dealer_id`
                                 ');
@@ -344,9 +328,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'chief':
-                    $query->select('`p`.`gm_manager_note`,
-                                    `p`.`dealer_manager_note`,
-                                    `p`.`project_mounter`,
+                    $query->select('`p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`transport`,
                                     `p`.`distance`,
@@ -1210,7 +1192,7 @@ class Gm_ceilingModelProjects extends JModelList
     }
 
     function getInfoDealersAnalytic($projects){
-        try{
+        try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $quadr_subquery = $db->getQuery(true);
@@ -1228,9 +1210,43 @@ class Gm_ceilingModelProjects extends JModelList
             $result = $db->loadObjectList();
 
             return $result;
-        }
-        catch(Exception $e) {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getProjectsForBuh($dateFrom, $dateTo) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`p`.`id` AS `project_id`,
+                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date`,
+                          `calc`.`id` AS `calc_id`,
+                          `calc`.`components_sum` + `calc`.`canvases_sum` AS `sum`,
+                          `u`.`name` AS `dealer_name`')
+                    ->from('`#__gm_ceiling_projects` AS `p`')
+                        ->innerJoin('`#__gm_ceiling_projects_history` AS `ph` ON
+                                        `p`.`id` = `ph`.`project_id`')
+                        ->leftJoin('`#__gm_ceiling_calculations` AS `calc` ON
+                                        `calc`.`project_id` = `p`.`id`')
+                        ->innerJoin('`rgzbn_gm_ceiling_clients` AS `cl` ON
+                                        `p`.`client_id` = `cl`.`id`')
+                        ->innerJoin('`rgzbn_users` AS `u` ON
+                                        `cl`.`dealer_id` = `u`.`id`')
+                    ->where("`ph`.`date_of_change` >= '$dateFrom' AND
+                             `ph`.`date_of_change` <= '$dateTo' AND
+                             `ph`.`new_status` = 5")
+                    ->group('`calc`.`id`')
+                    ->order('`ph`.`date_of_change`,
+                             `project_id`,
+                             `calc_id`');
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

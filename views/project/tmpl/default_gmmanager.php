@@ -165,38 +165,6 @@ $total_mount = 0;
                                     echo "<br>";
                                 } ?></td>
                         </tr>
-                        <tr>
-                            <th>Примечание начальника МС</th>
-                            <td>
-                                <?php
-                                    if(!empty($this->item->gm_chief_note)) {
-                                        echo $this->item->gm_chief_note; 
-                                    }
-                                    elseif(!empty($this->item->cheif_note)){
-                                        echo $this->item->cheif_note; 
-                                    }
-                                    else{
-                                        echo "Отсутствует";
-                                    }
-                                ?>    
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Примечание замерщика</th>
-                            <td>
-                                <?php 
-                                    if(!empty($this->item->gm_calculator_note)) {
-                                        echo $this->item->gm_calculator_note; 
-                                    }
-                                    elseif(!empty($this->item->dealer_calculator_note)){
-                                        echo $this->item->dealer_calculator_note; 
-                                    }
-                                    else{
-                                        echo "Отсутствует";
-                                    } 
-                                ?>
-                            </td>
-                        </tr>
                     </table>
                 </form>
             </div>

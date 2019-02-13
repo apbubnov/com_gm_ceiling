@@ -49,12 +49,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 						</td>
 					</tr>
 					<tr>
-						<th>Примечание клиента</th>
-						<td>
-							<?=$this->item->project_note;?>
-						</td>
-					</tr>
-					<tr>
 						<th><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART');?></th>
 						<td><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_'.$this->item->project_calculation_daypart);?></td>
 					</tr>

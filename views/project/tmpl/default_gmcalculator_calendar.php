@@ -116,6 +116,7 @@
     }
     //----------------------------------------------------------------------------------
     $server_name = $_SERVER['SERVER_NAME'];
+    $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
 ?>
 
 <style>
@@ -273,12 +274,6 @@
                                  <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                             </td>
                         </tr>
-                        <tr>
-                            <th>Примечание менеджера</th>
-                            <td>
-                                <?php echo $this->item->dealer_manager_note; ?>
-                            </td>
-                        </tr>
                     </table>
                 </div>
             </div>
@@ -290,7 +285,7 @@
                         <td><label> Добавить комментарий: </label></td>
                     </tr>
                     <tr>
-                        <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                        <td width = 100%><textarea  class = "inputactive" id="new_comment"></textarea></td>
                         <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
                         </button></td>
                     </tr>
@@ -341,7 +336,7 @@
                     <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
                     <br>
                     <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label><br>
-                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea>
+                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
                 </div>
             </div>
             <div class="row center">

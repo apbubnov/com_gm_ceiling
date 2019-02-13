@@ -51,14 +51,6 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         <? $contacts = $model->getClientPhone($this->item->client_id); ?>
                         <td><?php  foreach ($contacts as $phone) { echo $phone->client_contacts; echo "<br>"; }?></td>
 					</tr>
-					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE'); ?></th>
-						<td><?php echo $this->item->gm_chief_note; ?></td>
-					</tr>
-					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE'); ?></th>
-						<td><?php echo $this->item->gm_calculator_note; ?></td>
-					</tr>
 				</table>
 			</form>
 		</div>

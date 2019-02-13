@@ -273,8 +273,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if (!empty($code)) $address .= ", код: " . $code;
 
                 $cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
-                $gmmanager_comment = $jinput->get('gmmanager_note', null, 'STRING');
-                $manager_comment = $jinput->get('manager_note', null, 'STRING');
                 $new_phones = [];
                 $change_phones = [];
                 $newFIO = $jinput->get('new_client_name', '', 'STRING');
@@ -313,10 +311,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $rep_proj = $rep_model->getDataByProjectId($project_id);
                     if (empty($rep_proj) || $without_advt == 1) {
                         // условия на статус
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $status, $api_phone_id, $user->id, $gauger);
                     } else {
                         // условия на статус
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, 10, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $status, 10, $user->id, $gauger);
                         $rep_upd = $rep_model->update($project_id, $api_phone_id);
                     }
 
@@ -341,9 +339,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                     $rep_proj = $rep_model->getDataByProjectId($project_id);
                     if (empty($rep_proj) || $without_advt == 1) {
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, 21, $api_phone_id, $user->id, $gauger);
                     } else {
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, 10, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, 21, 10, $user->id, $gauger);
                         $rep_upd = $rep_model->update($project_id, $api_phone_id);
                     }
 
@@ -377,10 +375,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                     $rep_proj = $rep_model->getDataByProjectId($project_id);
                     if (empty($rep_proj) || $without_advt == 1) {
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                             $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                     } else {
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, 10, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, 20, 10, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                             $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         $rep_upd = $rep_model->update($project_id, $api_phone_id);
                     }
@@ -570,7 +568,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_id = $data->id_client;
 						$project_data = $model->getData($project_id);
 						$project_data->project_status = 3;
-						$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
+						$this->addNote($project_id, "Не вошедшие в договор №".$data->id);
 						//$project_data->project_verdict = 0;
 						$project_data->client_id = 	$client_id;
 						$project_data->api_phone_id = 10;
@@ -647,14 +645,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             }
 			$data->project_sum =  $jinput->get('project_sum',0, 'INT');
 
-			$chief_note = $jinput->get('chief_note',"","STRING");
-			if($type === "gmcalculator") {
-				$data->gm_calculator_note = $jinput->get('gm_calculator_note', '', 'STRING');
-				$data->gm_chief_note = $chief_note;
-			} else {
-				$data->dealer_calculator_note = $jinput->get('gm_calculator_note', '', 'STRING');
-				$data->dealer_chief_note = $chief_note;
-			}
+			$chief_note = $jinput->get('chief_note','','STRING');
+            if (!empty($chief_note)) {
+                $this->addNote($project_id, $chief_note);
+            }
+            $gm_calculator_note = $jinput->get('gm_calculator_note', '', 'STRING');
+            if (!empty($gm_calculator_note)) {
+                $this->addNote($project_id, $gm_calculator_note);
+            }
+            $dealer_calculator_note = $jinput->get('dealer_calculator_note', '', 'STRING');
+			if (!empty($dealer_calculator_note)) {
+                $this->addNote($project_id, $dealer_calculator_note);
+            }
+
 			$street = $jinput->get('new_address', '', 'STRING');
 			$house = $jinput->get('new_house', '', 'STRING');
 			$bdq = $jinput->get('new_bdq', '', 'STRING');
@@ -924,7 +927,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 							$client_id = $data->id_client_num;
 							$project_data->project_status = 3;
-							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
+                            $this->addNote($project_id, "Не вошедшие в договор №".$data->id);
 							//$project_data->project_verdict = 0;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
@@ -1096,8 +1099,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$type = $jinput->get('type', '', 'STRING');
 			$subtype = $jinput->get('subtype', '', 'STRING');
 
-			$data->gm_chief_note = $get_data['gm_chief_note'];
-            $data->dealer_chief_note = $get_data['dealer_chief_note'];
+			if (!empty($get_data['gm_chief_note'])) {
+                $this->addNote($project_id, $get_data['gm_chief_note']);
+            }
+            if (!empty($get_data['dealer_chief_note'])) {
+                $this->addNote($project_id, $get_data['dealer_chief_note']);
+            }
             //$mount_data = json_decode($get_data['mount']);
 
 			// замеры
