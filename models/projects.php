@@ -1192,7 +1192,7 @@ class Gm_ceilingModelProjects extends JModelList
     }
 
     function getInfoDealersAnalytic($projects){
-        try{
+        try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $quadr_subquery = $db->getQuery(true);
@@ -1210,9 +1210,43 @@ class Gm_ceilingModelProjects extends JModelList
             $result = $db->loadObjectList();
 
             return $result;
-        }
-        catch(Exception $e) {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getProjectsForBuh($dateFrom, $dateTo) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`p`.`id` AS `project_id`,
+                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date`,
+                          `calc`.`id` AS `calc_id`,
+                          `calc`.`components_sum` + `calc`.`canvases_sum` AS `sum`,
+                          `u`.`username` AS `dealer_name`')
+                    ->from('`#__gm_ceiling_projects` AS `p`')
+                        ->innerJoin('`#__gm_ceiling_projects_history` AS `ph` ON
+                                        `p`.`id` = `ph`.`project_id`')
+                        ->leftJoin('`#__gm_ceiling_calculations` AS `calc` ON
+                                        `calc`.`project_id` = `p`.`id`')
+                        ->innerJoin('`rgzbn_gm_ceiling_clients` AS `cl` ON
+                                        `p`.`client_id` = `cl`.`id`')
+                        ->innerJoin('`rgzbn_users` AS `u` ON
+                                        `cl`.`dealer_id` = `u`.`id`')
+                    ->where("`ph`.`date_of_change` >= '$dateFrom' AND
+                             `ph`.`date_of_change` <= '$dateTo' AND
+                             `ph`.`new_status` = 5")
+                    ->group('`calc`.`id`')
+                    ->order('`ph`.`date_of_change`,
+                             `project_id`,
+                             `calc_id`');
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
