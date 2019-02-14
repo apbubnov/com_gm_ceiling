@@ -111,7 +111,7 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`client_id`,
                             `cl`.`client_name`,
                             `cl`.`dealer_id`,
-                            GROUP_CONCAT(DISTINCT `cl_con`.`phone` SEPARATOR \',\') AS `client_contacts`,
+                            GROUP_CONCAT(DISTINCT `cl_con`.`phone` SEPARATOR \', \') AS `client_contacts`,
                             `u`.`name` AS `dealer_name`,
                             `p`.`project_info`,
                             `p`.`project_status`,
@@ -121,14 +121,14 @@ class Gm_ceilingModelProjects extends JModelList
                                    DATE_FORMAT(DATE_ADD(`p`.`project_calculation_date`, INTERVAL 1 HOUR), \'%H:%i\')
                             ) AS `calculation_time`,
                             `p`.`project_calculator`,
-                            GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \',\') AS `project_mounter`,
+                            GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \', \') AS `project_mounter`,
                             GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
-                                            ORDER BY `pm`.`date_time` DESC SEPARATOR \',\'
+                                            ORDER BY `pm`.`date_time` DESC SEPARATOR \', \'
                             ) AS `project_mounting_date`,
                             `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
-                                                        ) SEPARATOR \',\'
+                                                        ) SEPARATOR \', \'
                             ) AS `mounting_time`,
                             `p`.`project_discount`,
                             `p`.`created`,
@@ -300,7 +300,9 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmchief':
-                    $query->select('`p`.`project_mounter`,
+                    $query->select('`p`.`quadrature`,
+                                    `p`.`dealer_name`,
+                                    `p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`mounter_dealer_id`
                                 ');
