@@ -17,8 +17,12 @@ JHtml::_('formbehavior.chosen', 'select');
 ?>
 
 <style type="text/css">
-    td {
+    /*td {
         vertical-align: middle;
+        width: calc(14% - 1px);
+    }
+    th {
+        width: calc(14% - 2px);
     }
     table {
         border-collapse: collapse;
@@ -30,7 +34,6 @@ JHtml::_('formbehavior.chosen', 'select');
     td, th {
         padding: 5px 10px;
         display: inline-block;
-        width: calc(16% - 1px);
         vertical-align: top;
         border-top: none !important;
         border-bottom: none !important; 
@@ -45,28 +48,32 @@ JHtml::_('formbehavior.chosen', 'select');
     }
     tbody tr {
         border-bottom: 1px dashed darkgray;
-    }
+    }*/
 </style>
 
 С <input type="date" class="" id="calendarFrom" value="<?php echo '0000-00-00';?>">
 По <input type="date" class="" id="calendarTo" value="<?php echo date('Y-m-d');?>">
 <button type="button" class="btn btn-primary" id="btn_show">Показать</button>
 <hr>
-<table class="table" id="projectList">
+<table class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" id="projectList">
 	<thead>
 		<tr>
 			<th>№</th>
 			<th>ID проекта</th>
-			<th>Дата</th>
+			<th>Дата производства</th>
 			<th>ID потолка</th>
-			<th>Сумма</th>
+			<th>Сумма по полотнам</th>
 			<th>Дилер</th>
+            <th>Дата создания</th>
 		</tr>
 	</thead>
 	<tbody id="projectList_tbody"></tbody>
 </table>
 <h4 id="h4_common_sum"></h4>
 
+<link href="/libraries/MDB-Free_4.7.1/css/addons/datatables.min.css" rel="stylesheet">
+<script type="text/javascript" src="/libraries/MDB-Free_4.7.1/js/mdb.min.js"></script>
+<script type="text/javascript" src="/libraries/MDB-Free_4.7.1/js/addons/datatables.min.js"></script>
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
@@ -90,6 +97,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 showTableData(data);
             },
             dataType:"json",
+            async: false,
             timeout: 10000,
             error: function(data){
                 var n = noty({
@@ -115,18 +123,27 @@ JHtml::_('formbehavior.chosen', 'select');
             td = tr.insertCell();
             td.innerHTML = data[i].project_id;
             td = tr.insertCell();
-            td.innerHTML = data[i].date;
+            td.innerHTML = data[i].date_production;
             td = tr.insertCell();
             td.innerHTML = data[i].calc_id;
             td = tr.insertCell();
-            td.innerHTML = data[i].sum;
+            td.innerHTML = data[i].canvases_sum;
             td = tr.insertCell();
             td.innerHTML = data[i].dealer_name;
             td = tr.insertCell();
-            if (!empty(data[i].sum)) {
-                com_sum += data[i].sum-0;
+            td.innerHTML = data[i].date_created;
+            if (!empty(data[i].canvases_sum)) {
+                com_sum += data[i].canvases_sum-0;
             }
         }
-        document.getElementById('h4_common_sum').innerHTML = 'Общая сумма: '+com_sum;
+        document.getElementById('h4_common_sum').innerHTML = 'Общая сумма: '+com_sum.toFixed(2);
+
+        jQuery('#projectList').DataTable({
+            "scrollY": "50vh",
+            "scrollCollapse": true,
+            "paging": false,
+            "ordering": false
+        });
+        jQuery('.dataTables_length').addClass('bs-select');
     }
 </script>

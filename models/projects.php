@@ -1221,10 +1221,11 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
             $query
                 ->select('`p`.`id` AS `project_id`,
-                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date`,
+                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date_production`,
                           `calc`.`id` AS `calc_id`,
-                          `calc`.`components_sum` + `calc`.`canvases_sum` AS `sum`,
-                          `u`.`name` AS `dealer_name`')
+                          `calc`.`canvases_sum`,
+                          `u`.`name` AS `dealer_name`,
+                          DATE_FORMAT(`p`.`created`, \'%d.%m.%Y\') AS `date_created`')
                     ->from('`#__gm_ceiling_projects` AS `p`')
                         ->innerJoin('`#__gm_ceiling_projects_history` AS `ph` ON
                                         `p`.`id` = `ph`.`project_id`')
