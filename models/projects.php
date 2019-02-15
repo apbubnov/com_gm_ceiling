@@ -265,6 +265,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmcalculator':
+                    $query->select('`p`.`dealer_name`');
 
                     if ($subtype == 'calendar') {
                         $query->where('`p`.`project_status` = 1');
@@ -283,8 +284,10 @@ class Gm_ceilingModelProjects extends JModelList
 
                     if (in_array(14, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->id.')');
-                    } elseif (in_array(21, $groups) || in_array(12, $groups)) {
+                    } elseif (in_array(12, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->dealer_id.')');
+                    } elseif (in_array(21, $groups)) {
+                        $query->where('(`p`.`project_calculator` = '.$user->id.')');
                     }
 
                     if ($subtype == 'calendar') {
