@@ -891,4 +891,23 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function updateSum($calcId,$sum){
+	    try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`#__gm_ceiling_calculations`')
+                ->set("canvases_sum = $sum")
+                ->set('components_sum = 0')
+                ->where("id = $calcId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

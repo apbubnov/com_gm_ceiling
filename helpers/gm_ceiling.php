@@ -3128,8 +3128,14 @@ class Gm_ceilingHelpersGm_ceiling
 
                     }
                     elseif($transport_type == 2) {
-                        $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
-                        $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
+                        if($distance<=50){
+                            $transport_sum = 500;
+                            $transport_sum_1 = 500;
+                        }
+                        else {
+                            $transport_sum = ($res->distance * $distance + $res->transport) * $distance_col;
+                            $transport_sum_1 = ($res->distance * $distance + $res->transport) * $distance_col;
+                        }
                         $result = array(
                             'transport' => 'Выезд за город',
                             'distance' => $distance,
@@ -3192,9 +3198,11 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             if(in_array(17,JFactory::getUser()->groups)){
-                $service = "serviceSelf";
+                $isNMS = true;
             }
-
+            if($isNMS){
+                $service =  "serviceSelf";
+            }
             $transport = self::calculate_transport($project_id,$service);
             //throw new Exception(print_r($transport,true));
             $brigade = JFactory::getUser($project->project_mounter);
@@ -3208,6 +3216,9 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             foreach ($calculations as $calc) {
+                if($calc->need_mount == 2 && !$isNMS){
+                    $service = "service";
+                }
                 $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
 
                 $stage_sum = [];
@@ -3328,30 +3339,29 @@ class Gm_ceilingHelpersGm_ceiling
             //$html .= "<pagebreak />";
             $array = [$html];
             foreach($calculations as $calc){
-                if ($calc->need_mount){
-                    if($service == "service"){
-                        if($full){
-                             $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single_service") . ".pdf";
-                        }
-                        else{
-                            foreach ($mount_data as $value) {
-                                $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage_service".$value->stage) . ".pdf";
-                            }
-                        }
+                if($calc->need_mount == 2 && !$isNMS){
+                    if($full){
+                         $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single_service") . ".pdf";
                     }
                     else{
-                        if($full){
-                             $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
-
-                        }
-                        else{
-                            foreach ($mount_data as $value) {
-
-                                $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
-                            }
+                        foreach ($mount_data as $value) {
+                            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage_service".$value->stage) . ".pdf";
                         }
                     }
                 }
+                else{
+                    if($full){
+                         $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+
+                    }
+                    else{
+                        foreach ($mount_data as $value) {
+
+                            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_stage".$value->stage) . ".pdf";
+                        }
+                    }
+                }
+
             }
             //throw new Exception(print_r($array,true));
             $filename = ($service && $service!="serviceSelf") ? md5($project_id . "mount_common_service") . ".pdf" : md5($project_id . "mount_common") . ".pdf";
@@ -3374,18 +3384,18 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-
+                if($data['need_mount'] == 2){
+                    $service = "service";
+                }
                 if(!empty($service)){
                     $data_mount = self::calculate_mount(0,$data['id'],null,$service);
                 }
-                else{
-                    if(in_array(17,JFactory::getUser()->groups)){
-                        $service = "serviceSelf";
-                        $data_mount = self::calculate_mount(0, $data['id'], null,$service);
-                    }
-                    else {
-                        $data_mount = self::calculate_mount(0, $data['id'], null);
-                    }
+                else {
+                    $data_mount = self::calculate_mount(0, $data['id'], null);
+                }
+                if(in_array(17,JFactory::getUser()->groups)){
+                    $service = "serviceSelf";
+                    $data_mount = self::calculate_mount(0, $data['id'], null,$service);
                 }
 
 
@@ -3461,7 +3471,6 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
                 }
                 $mounting_data = $data_mount['mounting_data'];
-                //throw new Exception(print_r($mounting_data,true));
                 if ($data['mounting_sum'] != 0 || !empty($need_mount)) {
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
@@ -3854,18 +3863,18 @@ class Gm_ceilingHelpersGm_ceiling
             $mpdf->WriteHTML($html, 2);
 
             $footer ='<hr style="color:#414099;size:4px">';
-            $footer .= '<div class="left">';
+            $footer .= '<div class="left_f">';
             $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
             $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
             $footer .= '</div>';
-            $footer .= '<div class="right">';
+            $footer .= '<div class="right_f">';
             $footer .= "<span>Принял:</span><div class='lines'> _______________  __________________</div>";
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
             $footer .= '</div>';
             $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
-            $footer .= '<b>Сумма:'. ($data['canvases_sum'] + $data['components_sum']).'р.</b>';
+            $footer .= '<b>Сумма:'. $data['canvases_sum'] .'р.</b>';
 
             $footer .= '</div>';
             $mpdf->SetHTMLFooter($footer);
