@@ -111,7 +111,7 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`client_id`,
                             `cl`.`client_name`,
                             `cl`.`dealer_id`,
-                            GROUP_CONCAT(DISTINCT `cl_con`.`phone` SEPARATOR \',\') AS `client_contacts`,
+                            GROUP_CONCAT(DISTINCT `cl_con`.`phone` SEPARATOR \', \') AS `client_contacts`,
                             `u`.`name` AS `dealer_name`,
                             `p`.`project_info`,
                             `p`.`project_status`,
@@ -121,14 +121,14 @@ class Gm_ceilingModelProjects extends JModelList
                                    DATE_FORMAT(DATE_ADD(`p`.`project_calculation_date`, INTERVAL 1 HOUR), \'%H:%i\')
                             ) AS `calculation_time`,
                             `p`.`project_calculator`,
-                            GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \',\') AS `project_mounter`,
+                            GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \', \') AS `project_mounter`,
                             GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
-                                            ORDER BY `pm`.`date_time` DESC SEPARATOR \',\'
+                                            ORDER BY `pm`.`date_time` DESC SEPARATOR \', \'
                             ) AS `project_mounting_date`,
                             `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
-                                                        ) SEPARATOR \',\'
+                                                        ) SEPARATOR \', \'
                             ) AS `mounting_time`,
                             `p`.`project_discount`,
                             `p`.`created`,
@@ -265,6 +265,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmcalculator':
+                    $query->select('`p`.`dealer_name`');
 
                     if ($subtype == 'calendar') {
                         $query->where('`p`.`project_status` = 1');
@@ -283,8 +284,10 @@ class Gm_ceilingModelProjects extends JModelList
 
                     if (in_array(14, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->id.')');
-                    } elseif (in_array(21, $groups) || in_array(12, $groups)) {
+                    } elseif (in_array(12, $groups)) {
                         $query->where('(`p`.`dealer_id` = '.$user->dealer_id.')');
+                    } elseif (in_array(21, $groups)) {
+                        $query->where('(`p`.`project_calculator` = '.$user->id.')');
                     }
 
                     if ($subtype == 'calendar') {
@@ -300,7 +303,9 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmchief':
-                    $query->select('`p`.`project_mounter`,
+                    $query->select('`p`.`quadrature`,
+                                    `p`.`dealer_name`,
+                                    `p`.`project_mounter`,
                                     `p`.`project_mounting_date`,
                                     `p`.`mounter_dealer_id`
                                 ');
@@ -1221,10 +1226,11 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
             $query
                 ->select('`p`.`id` AS `project_id`,
-                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date`,
+                          DATE_FORMAT(`ph`.`date_of_change`, \'%d.%m.%Y\') AS `date_production`,
                           `calc`.`id` AS `calc_id`,
-                          `calc`.`components_sum` + `calc`.`canvases_sum` AS `sum`,
-                          `u`.`name` AS `dealer_name`')
+                          `calc`.`canvases_sum`,
+                          `u`.`name` AS `dealer_name`,
+                          DATE_FORMAT(`p`.`created`, \'%d.%m.%Y\') AS `date_created`')
                     ->from('`#__gm_ceiling_projects` AS `p`')
                         ->innerJoin('`#__gm_ceiling_projects_history` AS `ph` ON
                                         `p`.`id` = `ph`.`project_id`')

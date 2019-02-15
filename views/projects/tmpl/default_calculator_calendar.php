@@ -63,7 +63,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         </th>
                         <?php if (in_array("16", $groups)):?>
                             <th class="center">
-                                Дилер
+                                Клиент
                             </th>
                         <?php endif;?>
                         <?php if (in_array("14", $groups)):?>
@@ -76,9 +76,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <tbody>
                     <?php
                         foreach ($this->items as $i => $item): 
-                            if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
-                            //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
-                            else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
                     ?>
                         <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
                             <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
@@ -91,10 +88,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <td data-th = "Примечание" class="center one-touch">
                             <?php
                                 $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
-                                if (!empty($project_notes->gm_manager_note)) {
-                                    echo '<b>'.$project_notes->gm_manager_note->description.':</b> ';
-                                    echo $project_notes->gm_manager_note->value.'<br>';
-                                }
                                 if (!empty($project_notes->dealer_manager_note)) {
                                     echo '<b>'.$project_notes->dealer_manager_note->description.':</b> ';
                                     echo $project_notes->dealer_manager_note->value.'<br>';
@@ -103,11 +96,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                                     echo '<b>'.$project_notes->dealer_note->description.':</b> ';
                                     echo $project_notes->dealer_note->value.'<br>';
                                 }
+                                if (!empty($project_notes->dealer_calculator_note)) {
+                                    echo '<b>'.$project_notes->dealer_calculator_note->description.':</b> ';
+                                    echo $project_notes->dealer_calculator_note->value.'<br>';
+                                }
                             ?>
                             </td>
-                            <?if (in_array("16", $groups)):?>
-                                <td data-th = "Дилер" class="center one-touch"><?= $item->dealer_name; ?></td>
-                            <?endif;?>
+                            <td class="center one-touch"><?= $item->client_name; ?><br><?= $item->client_contacts; ?></td>
                             <?php if(in_array(14, $groups)){ ?>
                                 <td data-th = "Удалить" class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                             <?php } ?>
@@ -117,8 +112,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             </table>
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="boxchecked" value="0"/>
-            <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
-            <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
         </div>
     </div>
     

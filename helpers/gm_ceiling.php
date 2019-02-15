@@ -5465,13 +5465,13 @@ class Gm_ceilingHelpersGm_ceiling
 
                 if (in_array("13", $groups)) { //Менеджер дилера
                     $result->dealer_manager_note->value = $value->note;
-                    $result->dealer_manager_note->description = 'Примечание менеджера дилера';
+                    $result->dealer_manager_note->description = 'Примечание менеджера';
                 } elseif (in_array("21", $groups)) { //Замерщик дилера
                     $result->dealer_calculator_note->value = $value->note;
-                    $result->dealer_calculator_note->description = 'Примечание замерщика дилера';
+                    $result->dealer_calculator_note->description = 'Примечание замерщика';
                 } elseif (in_array("12", $groups)) { //Начальник МС дилера
                     $result->dealer_chief_note->value = $value->note;
-                    $result->dealer_chief_note->description = 'Примечание начальника МС дилера';
+                    $result->dealer_chief_note->description = 'Примечание начальника МС';
                 } elseif (in_array("14", $groups)) { //Дилер
                     $result->dealer_note->value = $value->note;
                     $result->dealer_note->description = 'Примечание дилера';
@@ -5480,7 +5480,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $result->gm_manager_note->description = 'Примечание менеджера ГМ';
                 } elseif (in_array("17", $groups)) { //Начальник МС ГМ
                     $result->gm_chief_note->value = $value->note;
-                    $result->gm_chief_note->description = 'Примечание МС ГМ';
+                    $result->gm_chief_note->description = 'Примечание начальника МС ГМ';
                 } elseif (in_array("22", $groups)) { //Замерщик ГМ
                     $result->gm_calculator_note->value = $value->note;
                     $result->gm_calculator_note->description = 'Примечание замерщика ГМ';
@@ -5488,8 +5488,8 @@ class Gm_ceilingHelpersGm_ceiling
                     $result->gm_stockman_note->value = $value->note;
                     $result->gm_stockman_note->description = 'Примечание кладовщика ГМ';
                 } elseif (in_array("11", $groups)) { //монтажная бригада
-                    $result->gm_mounter_note->value = $value->note;
-                    $result->gm_mounter_note->description = 'Примечание монтажной бригады';
+                    $result->mounter_note->value = $value->note;
+                    $result->mounter_note->description = 'Примечание монтажной бригады';
                 } else {
                     $result->common_note->value = $value->note;
                     $result->common_note->description = 'Примечание';

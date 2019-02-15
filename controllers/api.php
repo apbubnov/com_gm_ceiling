@@ -137,14 +137,13 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $register_data = json_decode($_POST['r_data']);
                 if(!empty($register_data)) {
                    // $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
-                    $str = explode("@",$register_data->email)[0];
+                    $str = explode('@', $register_data->email)[0];
                     // в нижний регистр
                     $str = strtolower($str);
                     // заменям все ненужное нам на "-"
                     $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
                     // удаляем начальные и конечные '-'
-                    $username = trim($str, "-");
-
+                    $username = trim($str, '-');
 
                     $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                     $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
@@ -177,7 +176,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $client_id = $clientform_model->save($client_data);
                         $update['dealer_id'] = $userID;
                         $update['associated_client'] = $client_id;
-                        $update["android_id"] = $userID;
+                        $update['android_id'] = $userID;
                         if (!$user->bind($update)) return false;
                         if (!$user->save()) return false;
                         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
@@ -198,7 +197,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $body .= "Здавствуйте! Благодарим вас за регистрацию в приложении!\n";
                         $body .= "Логин: $username\n";
                         $body .= "Пароль: $pass\n";
-                        $mailer->setSubject('Регистрация в планировщике звонков');
+                        $mailer->setSubject('Регистрация в приложении');
                         $mailer->setBody($body);
                         $mailer->send();
                     }
