@@ -516,7 +516,25 @@
                         </div>
                         <div class="col-sm-4"></div>
 					</div>
-				</div>			
+				</div>
+                <?php if($triangulator_pro){?>
+                    <div class="container" id = "new_sum_container">
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4 center">
+                               <label for="new_sum">
+                                   Введите новую сумму
+                               </label><br>
+                                <input type="tel" id = new_sum class="input-gm">
+                                <button class="btn btn-primary btn-sm" id ="save_new_sum" type="button">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                </button>
+
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                    </div>
+                <?php }?>
 				<div class="container smeta_hide">
 					<div class="row" style="margin-bottom: 5px;">
 						<div class="col-sm-4"></div>
@@ -778,6 +796,35 @@
                         });
                     }
                 }); 
+            }
+        }
+
+        if(document.getElementById('save_new_sum')){
+            document.getElementById('save_new_sum').onclick = function(){
+                console.log(calculation.id,jQuery("#new_sum").val());
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=calculation.updateSum',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        calcId: calculation.id,
+                        sum: jQuery("#new_sum").val()
+                    },
+                    success: function(data){
+                        jQuery("#final_price").text(jQuery("#new_sum").val());
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
             }
         }
         /*Rec to measure*/

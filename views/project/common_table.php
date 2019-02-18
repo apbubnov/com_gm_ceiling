@@ -1,11 +1,7 @@
 <?php
     $jinput = JFactory::getApplication()->input;
-    $flag_hidden = "";
     $type = $jinput->get('type', '', 'STRING');
     $subtype = $jinput->get('subtype', '', 'STRING');
-    if($subtype == "project" || $subtype == "refused"){
-       $hidden = "hidden";
-    }
     if(empty($user)){
         $user = JFactory::getUser();
     }
@@ -13,10 +9,21 @@
     if(in_array('16',$user_groups)){
         $is_gmmanager = true;
     }
-    $displayNone = (in_array($this->project_status,VERDICT_STATUSES)) ?  "style=\"display:none;\"" : "";
-    if(in_array('17',$user_groups)){
-        $service_mount = null;
+    $isBuilder = (JFactory::getUser($this->item->dealer_id)->dealer_type == 7);//проект застройщика или нет
+    $needShow = !(in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder);
+    $displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder)?  "style=\"display:none;\"" : "";//скрыть элемент
+    if(!empty($this->item->calcs_mounting_sum)){
+        $service_mount = true ;
     }
+    else{
+        foreach ($calculations as $calculation){
+            if($calculation->need_mount == 2){
+                $service_mount = true;
+                break;
+            }
+        }
+    }
+
 ?>
 <style>
     .center-left {
@@ -139,9 +146,9 @@
                     </a>
                 </li>
             <?php } ?>
-            <?php if(!in_array($this->item->project_status,VERDICT_STATUSES)){?>
+            <?php if($needShow){?>
                 <li class="nav-item"> 
-                    <button type="button" class="nav-link" id="add_calc" style="color:white;" <?php echo $hidden?>>
+                    <button type="button" class="nav-link" id="add_calc" style="color:white;">
                         Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
                     </button>
                 </li>
@@ -164,7 +171,7 @@
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
                                 <td class="include_calculation" >
-                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden; ?> <?php echo $displayNone;?> style="cursor: pointer;">
+                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $displayNone;?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
                                     <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
@@ -385,8 +392,9 @@
                             </tr>
                             <?php foreach ($calculations as $calculation) { ?>
                                 <tr class="section_estimate" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                    <?php 
-                                        $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
+                                    <?php
+                                        $filename = ($calculation->need_mount == 2)? "mount_single_service" : "mount_single";
+                                        $path = "/costsheets/" . md5($calculation->id . $filename) . ".pdf";
                                         $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
                                     ?>
                                     <td>
@@ -406,11 +414,8 @@
                                     }
                                     else {
                                         foreach ($mount_data as $value) {
-                                            if(!empty($service_mount)){
-                                                $path = "/costsheets/" . md5($calculation->id.'mount_stage_service'.$value->stage).'.pdf';
-                                            }else{
-                                                $path = "/costsheets/" . md5($calculation->id.'mount_stage_service'.$value->stage).'.pdf';
-                                            }
+                                            $filename = ($calculation->need_mount == 2) ? 'mount_stage_service' : 'mount_stage';
+                                            $path = "/costsheets/" . md5($calculation->id.$filename.$value->stage).'.pdf';
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                                 switch ($value->stage) {
                                                     case 2:
@@ -456,15 +461,10 @@
                         <!-- общий наряд на монтаж--> 
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr class="section_estimate" style="display: none;">
-
-                                <?php if(!empty($service_mount)){
-                                        $path = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
-                                    }
-                                    else{
-                                        $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
-                                    } ?>
-                                    
-                                    
+                                <?php
+                                    $filename = ($service_mount)? "mount_common_service" :"mount_common";
+                                    $path = "/costsheets/" . md5($this->item->id . $filename) . ".pdf";
+                                 ?>
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                         <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общий наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">
@@ -549,28 +549,18 @@
                 ?>
                         <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                             <div class="other_tabs">
-                            <?php if($this->item->project_status < 5 || $this->item->project_status == 22)
-                            {
-                                $type_url = '';
-                                if (!empty($type))
-                                {
+                            <?php if($needShow){
+                                $type_url = ''; $subtype_url = '';
+                                if (!empty($type)){
                                     $type_url = "&type=$type";
                                 }
-
-                                $subtype_url = '';
-                                if (!empty($subtype))
-                                {
+                                if (!empty($subtype)){
                                     $subtype_url = "&subtype=$subtype";
                                 }
-
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
-
-                                <?php if(!in_array($this->item->project_status,VERDICT_STATUSES)){ ?>
-                                    <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>" <?php echo $hidden; ?>>Изменить расчет</a>
-                                <?php }?>
-                                <?php
-                            } ?>
+                                <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
+                            <?php } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
                                         <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
@@ -835,8 +825,8 @@
                                                 </table>
                                             <?php } ?>
                                     </div>
-                                    <?php if($this->item->project_status < 5 || $this->item->project_status == 22){?>
-                                        <button class="btn btn-danger delete_calc" data-calculation_id = "<?php echo $calculation->id;?>" style="margin:10px;" type="button" <?php echo $hidden?>> Удалить потолок </button>
+                                    <?php if($needShow){?>
+                                        <button class="btn btn-danger delete_calc" data-calculation_id = "<?php echo $calculation->id;?>" style="margin:10px;" type="button" > Удалить потолок </button>
                                     <?php } ?>
                                 </div>
                             </div>

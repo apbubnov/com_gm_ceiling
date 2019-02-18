@@ -322,4 +322,19 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function updateSum(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $calcId = $jinput->get('calcId',"", 'STRING');
+            $sum = $jinput->get('sum',"", 'STRING');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $result = $model->updateSum($calcId,$sum);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
