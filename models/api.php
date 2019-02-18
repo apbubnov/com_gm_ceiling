@@ -1111,11 +1111,9 @@ public function get_dealerInfo_androidCallGlider($data) {
                 $verifyPass = JUserHelper::verifyPassword($data->old_password, $user->password, $user->id);
                 if ($verifyPass) {
                     return $this->change_pass($user->id,$data->password);
-                }
-                else return false;
-            }
-            else {
-                return $this->change_pass($user->id,$data->password);
+                } else return false;
+            } else {
+                return false;
             }
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
