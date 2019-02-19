@@ -635,7 +635,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
             if(!empty($mount_data)){
                 $mount_str = "";
-                $mount_dates = array();
                 $mount_types = $projects_mounts_model->get_mount_types();
                 foreach ($mount_data as $value) {
                     $value->stage_name = $mount_types[$value->stage];
@@ -644,20 +643,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
             }
 			$data->project_sum =  $jinput->get('project_sum',0, 'INT');
-
-			$chief_note = $jinput->get('chief_note','','STRING');
-            if (!empty($chief_note)) {
-                $this->addNote($project_id, $chief_note);
+            //получение примечаний
+			$mount_note = $jinput->get('mount_note','','STRING');
+            if (!empty($mount_note)) {
+                $this->addNote($project_id, $mount_note,5);
             }
-            $gm_calculator_note = $jinput->get('gm_calculator_note', '', 'STRING');
-            if (!empty($gm_calculator_note)) {
-                $this->addNote($project_id, $gm_calculator_note);
+            $production_note = $jinput->get('production_note', '', 'STRING');
+            if (!empty($production_note)) {
+                $this->addNote($project_id, $production_note,4);
             }
-            $dealer_calculator_note = $jinput->get('dealer_calculator_note', '', 'STRING');
-			if (!empty($dealer_calculator_note)) {
-                $this->addNote($project_id, $dealer_calculator_note);
+            $refuse_note = $jinput->get('ref_note','','STRING');
+            if (!empty($refuse_note)) {
+                $this->addNote($project_id, $refuse_note,3);
             }
-
 			$street = $jinput->get('new_address', '', 'STRING');
 			$house = $jinput->get('new_house', '', 'STRING');
 			$bdq = $jinput->get('new_bdq', '', 'STRING');

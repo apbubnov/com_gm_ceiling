@@ -408,41 +408,45 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
             </div>
             <div class="row center">
-                <h4>Назначить дату монтажа</h4>
-                <div id="calendar_mount" align="center"></div>
+                <div class="col-md-6">
+                    <h4>Назначить дату монтажа</h4>
+                    <div id="calendar_mount" align="center"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <h4>Назначить дату готовности полотен</h4>
+                        <input type="datetime-local" id="date_canvas_ready">
+                        <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                    </div>
+                    <div class="row" >
+                        <div id ="comments_divs">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Ввести примечания</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b><label for = "jform_production_note">Примечание в производство</label></b>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea name="production_note" class="input-gm" id="jform_production_note" placeholder="Примечание в производство" aria-invalid="false"></textarea>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b><label for = "jform_mount_note">Примечание к монтажу</label></b>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
-            <div class="row center" id = "ready_wrapper">
-                <h4>Назначить дату готовности полотен</h4>
-                <input type="datetime-local" id="date_canvas_ready">
-                <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
-            </div>
+
             <hr>
-            <div class = "container" style="padding-left: 0px;">
-                <div class="row">
-                    <div class="col-md-1">
-                        <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
-                    </div>
-                </div>
-                <div id ="comments_divs" style="display:none;">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for = "jform_gm_calculator_note">Примечание к договору/в производство</label>
-                         </div>
-                        <div class="col-md-2">
-                            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору/в производство" aria-invalid="false"></textarea>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label for = "jform_chief_note">Примечание к монтажу</label>
-                        </div>
-                        <div class="col-md-2">
-                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                 <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
             </p>

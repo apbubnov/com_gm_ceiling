@@ -3355,7 +3355,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-
+                if(!empty($project->calcs_mounting_sum)){
+                    $service = "service";
+                }
                 $data_mount = self::calculate_mount(0,$data['id'],null,$service);
 
                 $names = $calculations_model->FindAllMounters($mounter);
@@ -3778,22 +3780,6 @@ class Gm_ceilingHelpersGm_ceiling
             $html_cut .= '</table>';
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html_cut, 2);
-            $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-            if($mpdf->y < $unusedSpaceH){
-                $min_height = ($unusedSpaceH -5)*3.779528;
-                $max_height_attr = " max-height:$min_height;";
-            }
-            else{
-                $max_height_attr = "";
-            }
-            $html= '<div align="center" style="width: 100%;">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
-            $html .= '</div>';
-            $html .= '<pagebreak>';
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html, 2);
-            $mpdf->WriteHTML($html_cut, 2);
             $footer ='<hr style="color:#414099;size:4px">';
             $footer .= '<div class="left_f">';
             $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
@@ -3807,7 +3793,6 @@ class Gm_ceilingHelpersGm_ceiling
             $footer .= '</div>';
             $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
             $footer .= '<b>Сумма:'. $data['canvases_sum'] .'р.</b>';
-
             $footer .= '</div>';
             $mpdf->SetHTMLFooter($footer);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
@@ -3824,6 +3809,9 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</div>';
 
             $mpdf->WriteHTML($stylesheet, 1);
+            $mpdf->WriteHTML($html, 2);
+            $mpdf->WriteHTML('<pagebreak>', 2);
+            $mpdf->WriteHTML($html_cut, 2);
             $mpdf->WriteHTML($html, 2);
             $filename = md5($calc_id . 'cutpdf') . '.pdf';
             $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');

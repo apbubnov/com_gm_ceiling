@@ -47,7 +47,20 @@
     $total_perimeter = 0;
     $calculation_total_discount = 0;
     $calculations = $calculationsModel->new_getProjectItems($this->item->id);
+    if (!empty($this->item->calcs_mounting_sum)) {
+        $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
+    }
+    $calculations = $calculationsModel->new_getProjectItems($this->item->id);
+    if(!empty($service_mount)){
+        $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
+}
     foreach ($calculations as $calculation) {
+        if (!empty($service_mount)) {
+            $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        }
+        else{
+            $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        }
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
         $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
         $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
@@ -55,7 +68,7 @@
         $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
         $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
         $self_components_sum += $calculation->dealer_self_components_sum;
-        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+
         $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
         $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
         $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);

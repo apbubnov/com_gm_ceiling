@@ -18,98 +18,178 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
-if ($month1 == 12) {
-    $month2 = 1;
-    $year2 = $year1 + 1;
-} else {
-    $month2 = $month1 + 1;
-    $year2 = $year1;
+
+/*_____________блок для всех моделей/models block________________*/
+$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+$projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+
+/*________________________________________________________________*/
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+$client_sum_transport = $transport['client_sum'];
+$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+$self_calc_data = [];
+$self_canvases_sum = 0;
+$self_components_sum = 0;
+$self_mounting_sum = 0;
+$project_self_total = 0;
+$project_total = 0;
+$project_total_discount = 0;
+$total_square = 0;
+$total_perimeter = 0;
+$calculation_total_discount = 0;
+$calculations = $calculationsModel->new_getProjectItems($this->item->id);
+foreach ($calculations as $calculation) {
+    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
+    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+    $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+    $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+    $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+    $self_components_sum += $calculation->dealer_self_components_sum;
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
+    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+    $calculation->n13 = $calculationform_model->n13_load($calculation->id);
+    $calculation->n14 = $calculationform_model->n14_load($calculation->id);
+    $calculation->n15 = $calculationform_model->n15_load($calculation->id);
+    $calculation->n22 = $calculationform_model->n22_load($calculation->id);
+    $calculation->n23 = $calculationform_model->n23_load($calculation->id);
+    $calculation->n26 = $calculationform_model->n26_load($calculation->id);
+    $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $total_square +=  $calculation->n4;
+    $total_perimeter += $calculation->n5;
+    $project_total += $calculation->calculation_total;
+    $project_total_discount += $calculation->calculation_total_discount;
+    $self_calc_data[$calculation->id] = array(
+        "canv_data" => $calculation->dealer_self_canvases_sum,
+        "comp_data" => $calculation->dealer_self_components_sum,
+        "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+        "square" => $calculation->n4,
+        "perimeter" => $calculation->n5,
+        "sum" => $calculation->calculation_total,
+        "sum_discount" => $calculation->calculation_total_discount
+    );
+    $calculation_total = $calculation->calculation_total;
+    $calculation_total_discount =  $calculation->calculation_total_discount;
 }
+$self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
+$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
 
-$jdate = new JDate($this->item->project_mounting_from);
-$current_from = $jdate->format('Y-m-d H:i:s');
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
+$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
 
-$jdate = new JDate($this->item->project_mounting_to);
-$current_to = $jdate->format('Y-m-d H:i:s');
+$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
+
+$del_flag = 0;
+$project_total = $project_total + $client_sum_transport;
+$project_total_discount = $project_total_discount  + $client_sum_transport;
+
+
+$json_mount = $this->item->mount_data;
+$stages = [];
+if(!empty($this->item->mount_data)){
+    $mount_types = $projects_mounts_model->get_mount_types();
+    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    foreach ($this->item->mount_data as $value) {
+        $value->stage_name = $mount_types[$value->stage];
+        if(!array_key_exists($value->mounter,$stages)){
+            $stages[$value->mounter] = array((object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
+        else{
+            array_push($stages[$value->mounter],(object)array("stage"=>$value->stage,"time"=>$value->time));
+        }
+    }
+}
+//----------------------------------------------------------------------------------
+$server_name = $_SERVER['SERVER_NAME'];
+$project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
 ?>
 <?= parent::getButtonBack(); ?>
-<?php if ($this->item) : ?>
-    <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id); ?>
 
     <div class="container">
         <div class="row">
-            <div class="col-xl item_fields">
-                <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
+            <h1>Отключено из-за переизбытка плохого кода</h1>
+            <!--<div class="col-xl item_fields">
+                <h4>Информация по проекту № <?php /*echo $this->item->id */?></h4>
                 <form id="form-client"
                       action="/index.php?option=com_gm_ceiling&task=project.save_mount"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <table class="table">
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
+                            <th><?php /*echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); */?></th>
+                            <td><?php /*echo $this->item->client_id; */?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <?php $contacts = $model->getClientPhone($this->item->client_id); ?>
-                            <td><?php foreach ($contacts as $phone) echo $phone->client_contacts; ?></td>
+                            <th><?php /*echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); */?></th>
+
+                            <td><?php /*foreach ($contacts as $phone) echo $phone->client_contacts; */?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
+                            <th><?php /*echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); */?></th>
+                            <td><?php /*echo $this->item->project_info; */?></td>
                         </tr>
 
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td> <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                <?php if ($jdate->format('d.m.Y') == "00.00.0000" || $jdate->format('d.m.Y') == '30.11.-0001') { ?>
+                            <th><?php /*echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); */?></th>
+                            <td> <?php /*$jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); */?>
+                                <?php /*if ($jdate->format('d.m.Y') == "00.00.0000" || $jdate->format('d.m.Y') == '30.11.-0001') { */?>
                                     -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('d.m.Y'); ?>
-                                <?php } ?></td>
+                                <?php /*} else { */?>
+                                    <?php /*echo $jdate->format('d.m.Y'); */?>
+                                <?php /*} */?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                            <td><?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                <?php if ($jdate->format('H:i') == "00:00") { ?>
+                            <th><?php /*echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); */?></th>
+                            <td><?php /*$jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); */?>
+                                <?php /*if ($jdate->format('H:i') == "00:00") { */?>
                                     -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('H:i'); ?>
-                                <?php } ?>
+                                <?php /*} else { */?>
+                                    <?php /*echo $jdate->format('H:i'); */?>
+                                <?php /*} */?>
                             </td>
                         </tr>
                         <tr>
                             <th>Дата и время монтажа</th>
-                            <td><?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                                <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
+                            <td><?php /*$jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); */?>
+                                <?php /*if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { */?>
                                     -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                <?php } ?>
+                                <?php /*} else { */?>
+                                    <?php /*echo $jdate->format('d.m.Y H:i'); */?>
+                                <?php /*} */?>
                             </td>
                         </tr>
                         <tr>
                             <th>Монтажная бригада</th>
-                            <?php $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project'); ?>
-                            <?php $mount = $mount_model->getMount($this->item->id); ?>
-                            <td><?php echo $mount->name; ?></td>
+                            <?php /*$mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project'); */?>
+                            <?php /*$mount = $mount_model->getMount($this->item->id); */?>
+                            <td><?php /*echo $mount->name; */?></td>
                         </tr>
                     </table>
-                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                    <input name="id" value="<?php echo $this->item->id; ?>" type="hidden">
+                    <?php /*$jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); */?>
+                    <input name="id" value="<?php /*echo $this->item->id; */?>" type="hidden">
                     <input name="type" value="gmchief" type="hidden">
                     <input id="jform_project_mounting_from" type="hidden" name="jform[project_mounting_from]"
-                           value="<?php echo $jdate->format('H:i'); ?>"/>
+                           value="<?php /*echo $jdate->format('H:i'); */?>"/>
                     <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]"
-                           value="<?php echo $jdate->format('d.m.Y H:i'); ?>"/>
+                           value="<?php /*echo $jdate->format('d.m.Y H:i'); */?>"/>
                     <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]"
-                           value="<?php echo ($mount->project_mounter) ? $mount->project_mounter : '1'; ?>"/>
-                    <?php if ($this->item->project_status == 10) { ?>
+                           value="<?php /*echo ($mount->project_mounter) ? $mount->project_mounter : '1'; */?>"/>
+                    <?php /*if ($this->item->project_status >= 10 ) { */?>
                         <a class="btn btn btn-primary"
                            id="change_data">Изменить дату и время монтажа
                         </a>
                         <?php
-                    } ?>
+/*                    } */?>
                     <div class="calendar_wrapper" style="display: none;">
                         <table>
                             <tr>
@@ -118,7 +198,7 @@ $current_to = $jdate->format('Y-m-d H:i:s');
                                 </td>
                                 <td>
                                     <div id="calendar">
-                                        <?php echo $calendar; ?>
+                                        <?php /*echo $calendar; */?>
                                     </div>
                                 </td>
                                 <td>
@@ -136,13 +216,11 @@ $current_to = $jdate->format('Y-m-d H:i:s');
                         </div>
                     </div>
 
-                <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-
-            </div>
-            </form>
+                <?php /*include_once('components/com_gm_ceiling/views/project/common_table.php'); */?>
+            </div>-->
         </div>
     </div>
-    </div>
+
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
@@ -329,9 +407,3 @@ $current_to = $jdate->format('Y-m-d H:i:s');
             })
         };
     </script>
-
-    <?php
-else:
-    echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
-endif;
-?>

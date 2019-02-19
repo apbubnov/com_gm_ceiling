@@ -332,11 +332,11 @@
                     <div id="calendar_mount" align="center"></div>
                 </div>
                 <div class = "col-xs-12 col-md-6">
-                    <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note">Примечание к договору</label><br>
-                    <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                    <b><label id="jform_production_note-lbl" for="jform_production_note">Примечание в производство</label></b><br>
+                    <textarea name="production_note" id="jform_production_note" class="input-gm" placeholder="Примечание в производство" aria-invalid="false"></textarea>
                     <br>
-                    <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label><br>
-                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                    <b><label id="jform_mount_note-lbl" for="jform_mount_note" class="">Примечание к монтажу</label></b><br>
+                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
                 </div>
             </div>
             <div class="row center">
