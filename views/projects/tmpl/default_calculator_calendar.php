@@ -81,7 +81,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
                             <td data-th = "Дата/время замера" class="center one-touch">
                                 <? if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00'): ?>-
-                                <? else: ?><?= date('d.m.Y h:i', strtotime($item->project_calculation_date)); ?>
+                                <? else: ?><?= date('d.m.Y H:i', strtotime($item->project_calculation_date)); ?>
                                 <? endif; ?>
                             </td>
                             <td data-th = "Адрес" class="center one-touch"><?= $item->project_info; ?></td>
