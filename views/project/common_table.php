@@ -393,9 +393,9 @@
                             <?php foreach ($calculations as $calculation) { ?>
                                 <tr class="section_estimate" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                                     <?php
-                                        $filename = ($calculation->need_mount == 2)? "mount_single_service" : "mount_single";
+                                        $filename = "mount_single_dealer";
                                         $path = "/costsheets/" . md5($calculation->id . $filename) . ".pdf";
-                                        $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                        $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single_dealer") . ".pdf", "id" => $calculation->id);
                                     ?>
                                     <td>
                                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -414,7 +414,7 @@
                                     }
                                     else {
                                         foreach ($mount_data as $value) {
-                                            $filename = ($calculation->need_mount == 2) ? 'mount_stage_service' : 'mount_stage';
+                                            $filename = 'mount_stage_dealer';
                                             $path = "/costsheets/" . md5($calculation->id.$filename.$value->stage).'.pdf';
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                                 switch ($value->stage) {
@@ -462,7 +462,7 @@
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr class="section_estimate" style="display: none;">
                                 <?php
-                                    $filename = ($service_mount)? "mount_common_service" :"mount_common";
+                                    $filename = "mount_common_dealer";
                                     $path = "/costsheets/" . md5($this->item->id . $filename) . ".pdf";
                                  ?>
                                 <td>
@@ -477,7 +477,7 @@
                                     <?php } else { ?>
                                         -
                                     <?php }
-                                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
+                                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common_dealer") . ".pdf", "id" => $this->item->id);
                                         $json2 = json_encode($pdf_names);
                                     ?>
                                 </td>

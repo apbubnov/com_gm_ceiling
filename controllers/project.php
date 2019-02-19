@@ -1098,7 +1098,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('Callback');
 			$type = $jinput->get('type', '', 'STRING');
 			$subtype = $jinput->get('subtype', '', 'STRING');
-
+            if (empty($project_id)) {
+                $project_id = $data->id;
+            }
 			if (!empty($get_data['gm_chief_note'])) {
                 $this->addNote($project_id, $get_data['gm_chief_note']);
             }
@@ -1153,6 +1155,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $change_data['id'] = $data->id;
             $calcServiceMount['new_data'] = $mount_diff;
             $change_data['old_data'] = $old_mount_data;
+            $change_data['new_data'] = $mount_data;
             $mount_types = $projects_mounts_model->get_mount_types();
             foreach($mount_diff as $value){
                 $value->name = $mount_types[$value->stage];
@@ -2047,14 +2050,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
     function addNote($project_id, $note) {
         try {
+            $die = false;
             if (empty($project_id) && empty($note)) {
                 $jinput = JFactory::getApplication()->input;
                 $project_id = $jinput->getInt('project_id');
                 $note = $jinput->get('note', '', 'STRING');
+                $die = true;
             }
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $result = $project_model->saveNote($project_id, $note);
-            die(json_encode($result));
+            if ($die) {
+                die(json_encode($result));
+            } else {
+                return $result;
+            }
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
