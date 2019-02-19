@@ -1101,6 +1101,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             if (empty($project_id)) {
                 $project_id = $data->id;
             }
+
 			if (!empty($get_data['gm_chief_note'])) {
                 $this->addNote($project_id, $get_data['gm_chief_note']);
             }
