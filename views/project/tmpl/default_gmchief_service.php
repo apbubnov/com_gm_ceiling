@@ -284,6 +284,10 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                     <?php endif;?>
                 </table>
             </div>
+            <?php $notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
+            foreach ($notes as $note) {
+                echo "<b>".$note->description.":</b> ".$note->value."<br>";
+                }?>
         </div>
         <!-- расчеты для проекта -->
         <div class="row">

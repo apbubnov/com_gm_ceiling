@@ -143,7 +143,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->from("#__gm_ceiling_calculations as calculations")
 				->where("calculations.project_id = projects.id");
 
-		 	$query->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary, projects.dealer_manager_note,projects.dealer_calculator_note, projects.dealer_chief_note, projects.gm_manager_note,projects.gm_calculator_note, projects.gm_chief_note,projects.read_by_mounter, projects.project_status")
+		 	$query->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary,projects.read_by_mounter, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = projects.id')
 				->where("m.mounter_id = '$id' and m.date_time between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 12, 17, 19,24,25,26,27,28,29)")

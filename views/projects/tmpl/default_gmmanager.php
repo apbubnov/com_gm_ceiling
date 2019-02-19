@@ -92,13 +92,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $this->escape($item->project_info); ?>
 					</td>
 					<td class="center one-touch">
-						<?php if(!empty($item->dealer_calculator_note)){
-							echo $item->dealer_calculator_note;
-						}
-						if(!empty($item->gm_calculator_note)){
-							echo "ГМ: ".$item->gm_calculator_note;
-						}
-						if(empty($item->dealer_calculator_note) && empty($item->gm_calculator_note) ) echo "-";?>
+						<?php $notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
+						foreach ($notes as $note){
+						    echo $note->description.": ".$note->value."<br>";
+                        }?>
 					</td>
 					<td class="center one-touch">
 						<?php echo $item->client_contacts; ?>
