@@ -5425,4 +5425,30 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
+    public static function forceLogin($userId) {
+        $app = JFactory::getApplication();
+        $logoutStatus = $app->logout();
+        if ($logoutStatus) {
+            $user = JFactory::getUser($userId);
+            if ($user->guest) {
+                return 'guest';
+            } else {
+                //Will authorize you as this user.
+                JPluginHelper::importPlugin('user');
+                $options = array();
+                $options['action'] = 'core.login.site';
+                $response = new stdClass();
+                $response->username = $user->username;
+                $response->language = '';
+                $response->email = $user->email;
+                $response->password_clear = '';
+                $response->fullname = '';
+                $result = $app->triggerEvent('onUserLogin', array((array)$response, $options));
+                return $result;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }
