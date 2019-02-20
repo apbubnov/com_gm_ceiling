@@ -145,7 +145,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 // в нижний регистр
                 $str = strtolower($str);
                 // заменям все ненужное нам на "-"
-                $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
+                $str = preg_replace('~[^a-z0-9\_\-\.]+~u', '-', $str);
                 // удаляем начальные и конечные '-'
                 $username = trim($str, '-');
 
