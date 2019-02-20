@@ -154,8 +154,9 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 				</table>
 				
 			</form>
+            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
 		</div>
-	</div>
+      </div>
 	
 <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 	

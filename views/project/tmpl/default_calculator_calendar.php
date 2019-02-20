@@ -355,6 +355,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                         </td>
                 </table>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
             </div>
 
             <div class="col-xs-12 col-md-6 comment">

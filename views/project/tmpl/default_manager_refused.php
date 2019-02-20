@@ -18,41 +18,42 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 ?>
 <?=parent::getButtonBack();?>
-<h2 class="center">Просмотр проекта</h2>
+
 <?php if($this->item):?>
 	<?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');?>
 	<?php $calculations = $model->getProjectItems($this->item->id);?>
 
 	<div class="container">
 	  <div class="row">
-		<div class="col-xl-6 item_fields">
+          <h1>Если Вы сюда попали, срочно сообщите программистам как Вы это сделали! </h1>
+		<!--<div class="col-xl-6 item_fields">
 			<h4>Информация по проекту</h4>
 			<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 				<table class="table">
 					<tr>
-						<th><?=JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID');?></th>
-						<td><?=$this->item->client_id;?></td>
+						<th><?/*=JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID');*/?></th>
+						<td><?/*=$this->item->client_id;*/?></td>
 					</tr>
 					<tr>
-						<th><?=JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS');?></th>
-						<td><?=$this->item->client_contacts;?></td>
-					</tr>	
-					<tr>
-						<th><?=JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO');?></th>
-						<td><?=$this->item->project_info;?></td>
+						<th><?/*=JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS');*/?></th>
+						<td><?/*=$this->item->client_contacts;*/?></td>
 					</tr>
 					<tr>
-						<th><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE');?></th>
+						<th><?/*=JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO');*/?></th>
+						<td><?/*=$this->item->project_info;*/?></td>
+					</tr>
+					<tr>
+						<th><?/*=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE');*/?></th>
 						<td>
-							<?$jdate = new JDate($this->item->project_calculation_date);?>
-							<?=$jdate->format('d.m.Y');?>
+							<?/*$jdate = new JDate($this->item->project_calculation_date);*/?>
+							<?/*=$jdate->format('d.m.Y');*/?>
 						</td>
 					</tr>
 					<tr>
-						<th><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART');?></th>
-						<td><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_'.$this->item->project_calculation_daypart);?></td>
+						<th><?/*=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART');*/?></th>
+						<td><?/*=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_'.$this->item->project_calculation_daypart);*/?></td>
 					</tr>
-					<?php if($this->type === "calculator" && $this->subtype === "calendar"){?>
+					<?php /*if($this->type === "calculator" && $this->subtype === "calendar"){*/?>
 						<a id="accept_project" class="btn btn btn-success">
 							Договор
 						</a>
@@ -60,7 +61,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 							Отказ
 						</a>
 						<div class="project_activation" style="display: none;">
-							<input name="project_id" value="<?=$this->item->id;?>" type="hidden">
+							<input name="project_id" value="<?/*=$this->item->id;*/?>" type="hidden">
 							<input name="type" value="calculator" type="hidden">
 							<input name="subtype" value="calendar" type="hidden">
 							<input name="project_verdict" value="0" type="hidden">
@@ -84,7 +85,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 								ОК
 							</button>
 						</div>
-					<?}?>
+					<?/*}*/?>
 				</table>
 				<table class="table calculation_sum">
 					<tr>
@@ -93,99 +94,84 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 						<th class="center">Без скидки</th>
 						<th class="center">Со скидкой</th>
 					</tr>
-					<?$project_total = 0;?>
-					<?$project_total_discount = 0;?>
-					<?foreach($calculations as $calculation) {?>
-						<?$dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);?>
-						<?$dealer_components_sum = double_margin($calculation->components_sum, $this->item->gm_components_margin, $this->item->dealer_components_margin);?>
-						<?$dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);?>
-						
-						<?$calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum;?>
-						<?$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100) ;?>
-						<?$project_total += $calculation_total;?>
-						<?$project_total_discount += $calculation_total_discount;?>
+					<?/*$project_total = 0;*/?>
+					<?/*$project_total_discount = 0;*/?>
+					<?/*foreach($calculations as $calculation) {*/?>
+						<?/*$dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);*/?>
+						<?/*$dealer_components_sum = double_margin($calculation->components_sum, $this->item->gm_components_margin, $this->item->dealer_components_margin);*/?>
+						<?/*$dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);*/?>
+
+						<?/*$calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum;*/?>
+						<?/*$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100) ;*/?>
+						<?/*$project_total += $calculation_total;*/?>
+						<?/*$project_total_discount += $calculation_total_discount;*/?>
 						<tr>
 							<td class="include_calculation">
-								<input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
-								<input name='calculation_total[<?=$calculation->id;?>]' value='<?=$calculation_total;?>' type='hidden'>
-								<input name='calculation_total_discount[<?=$calculation->id;?>]' value='<?=$calculation_total_discount;?>' type='hidden'>
+								<input name='include_calculation[]' value='<?/*=$calculation->id;*/?>' type='checkbox' checked="checked">
+								<input name='calculation_total[<?/*=$calculation->id;*/?>]' value='<?/*=$calculation_total;*/?>' type='hidden'>
+								<input name='calculation_total_discount[<?/*=$calculation->id;*/?>]' value='<?/*=$calculation_total_discount;*/?>' type='hidden'>
 							</td>
-							<td><?=$calculation->calculation_title;?></td>
-							<td class="center"><?=$calculation_total;?></td>
-							<td class="center"><?=$calculation_total_discount;?></td>
+							<td><?/*=$calculation->calculation_title;*/?></td>
+							<td class="center"><?/*=$calculation_total;*/?></td>
+							<td class="center"><?/*=$calculation_total_discount;*/?></td>
 						</tr>
-					<?}	?>
+					<?/*}	*/?>
 					<tr>
 						<th class="right" colspan="2">Итого:</th>
-						<th class="center" id="project_total"><?=$project_total;?></th>
-						<th class="center" id="project_total_discount"><?=$project_total_discount;?></th>
-					</tr>				
+						<th class="center" id="project_total"><?/*=$project_total;*/?></th>
+						<th class="center" id="project_total_discount"><?/*=$project_total_discount;*/?></th>
+					</tr>
 				</table>
 			</form>
 		</div>
 		<div class="col-xl-6">
 			<h4>Сметы для клиента</h4>
 			<table class="table">
-				<?foreach($calculations as $calculation) {?>
+				<?/*foreach($calculations as $calculation) {*/?>
 					<tr>
-						<th><?=$calculation->calculation_title;?></th>
+						<th><?/*=$calculation->calculation_title;*/?></th>
 						<td>
-							<?=$calculation->components_sum;?> руб.
+							<?/*=$calculation->components_sum;*/?> руб.
 						</td>
 						<td>
-							<?$path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";?>
-							<?if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {?>
-								<a href="<?=$path;?>" class="btn btn-mini" target="_blank">Посмотреть</a>
-							<?} else {?>
+							<?/*$path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";*/?>
+							<?/*if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {*/?>
+								<a href="<?/*=$path;*/?>" class="btn btn-mini" target="_blank">Посмотреть</a>
+							<?/*} else {*/?>
 								-
-							<?}?>
+							<?/*}*/?>
 						</td>
 					</tr>
-				<?}?>
+				<?/*}*/?>
 			</table>
 			<h4>Наряды на монтаж</h4>
 			<table class="table">
-				<?foreach($calculations as $calculation) {?>
+				<?/*foreach($calculations as $calculation) {*/?>
 					<tr>
-						<th><?=$calculation->calculation_title;?></th>
+						<th><?/*=$calculation->calculation_title;*/?></th>
 						<td>
-							<?=$calculation->gm_mounting_sum;?> руб.
+							<?/*=$calculation->gm_mounting_sum;*/?> руб.
 						</td>
 						<td>
-							<?$path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";?>
-							<?if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {?>
-								<a href="<?=$path;?>" class="btn btn-mini" target="_blank">Посмотреть</a>
-							<?} else {?>
+							<?/*$path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";*/?>
+							<?/*if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {*/?>
+								<a href="<?/*=$path;*/?>" class="btn btn-mini" target="_blank">Посмотреть</a>
+							<?/*} else {*/?>
 								-
-							<?}?>
+							<?/*}*/?>
 						</td>
 					</tr>
-				<?}?>
+				<?/*}*/?>
 			</table>
 			<h4>Прочее</h4>
 			<table class="table">
-				<?/*foreach($calculations as $calculation) {?>
-					<tr>
-						<th><?=$calculation->calculation_title;?></th>
-						<td>
-							<?=$calculation->dealer_mounting_sum;?> руб.
-						</td>
-						<td>
-							<?$path = "/costsheets/" . md5($calculation->id . "-1-2") . ".pdf";?>
-							<?if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {?>
-								<a href="<?=$path;?>" class="btn btn-mini" target="_blank">Посмотреть</a>
-							<?} else {?>
-								-
-							<?}?>
-						</td>
-					</tr>
-				<?}*/?>
+
 			</table>
-		</div>
+		</div>-->
 	  </div>
 	</div>
 	
-<?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
+<?php //include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 	
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 

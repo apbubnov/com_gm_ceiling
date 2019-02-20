@@ -275,6 +275,7 @@
                             </td>
                         </tr>
                     </table>
+                    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php')?>
                 </div>
             </div>
             <div class="col-xs-12 col-md-6 comment">

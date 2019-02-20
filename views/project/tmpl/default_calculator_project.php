@@ -165,6 +165,8 @@ $all_advt = $model_api_phones->getAdvt();
                 <?php endif;?>
             </table>
         </form>
+        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
     </div>
 </div>
 <div class="modal_window_container" id="mw_container">

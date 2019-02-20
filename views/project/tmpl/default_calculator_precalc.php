@@ -281,6 +281,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 </td>
                             </tr>
                         </table>
+                        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
                     </div>
                 </div>
 

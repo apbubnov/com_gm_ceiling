@@ -91,8 +91,9 @@ $server_name = $_SERVER['SERVER_NAME'];
 					<?php } ?>
 				</table>
 			</form>
-			
-		</div>
+            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
+        </div>
 	  </div>
 	</div>
 

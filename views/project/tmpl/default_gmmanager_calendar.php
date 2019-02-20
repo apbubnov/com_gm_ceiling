@@ -403,6 +403,13 @@
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
+                    <div class="col-xs-6 col-md-6"><b>Примечание к замеру</b></div>
+                    <div class="col-xs-6 col-md-6">
+                        <input name="measure_note" id="measure_note" class="inputactive"
+                               value="">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:15px;">
                     <div class="col-xs-4 col-md-4"><b>Менеджер</b></div>
                     <div class="col-xs-8 col-md-8">
                         <input name="Manager_name" id="manager_name" class="inputhidden"
@@ -435,24 +442,20 @@
                         $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100;
                     }
                 ?>
-                    <div class="row center" style="margin-bottom:15px;">
-                       <div class="col-xs-12 col-md-12">
-                            <b>Изменить скидку</b>
-                        </div>
+                <div class="row" style="margin-bottom:15px;">
+                    <div class="col-xs-4 col-md-4">
+                        <label id="jform_discoint-lbl" for="jform_new_discount"><b>Процент скидки:</b></label>
                     </div>
-                    <div class="row" style="margin-bottom:15px;">
-                        <div class="col-xs-4 col-md-4">
-                            <label id="jform_discoint-lbl" for="jform_new_discount"><b>Новый процент:</b></label>
-                        </div>
-                        <div class="col-xs-6 col-md-6">
-                             <input name="new_discount" id="jform_new_discount" value="" placeholder="Новый % скидки"
-                                       min="0" max="<?= round($skidka, 0); ?>" class="inputactive" type="number">
-                        </div>
-                        <div class="col-xs-2 col-md-2">
-                             <button type="button" id="update_discount" class="btn btn-primary">Ок</button>
-                        </div>   
+                    <div class="col-xs-6 col-md-6">
+                         <input name="new_discount" id="jform_new_discount" value="" placeholder="Новый % скидки"
+                                   min="0" max="<?= round($skidka, 0); ?>" class="inputactive" type="number">
                     </div>
+                    <div class="col-xs-2 col-md-2">
+                         <button type="button" id="update_discount" class="btn btn-primary">Ок</button>
+                    </div>
+                </div>
                 <?php } ?>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
             </div>
             <div class="col-xs-12 col-md-6">
                 <div class="comment">

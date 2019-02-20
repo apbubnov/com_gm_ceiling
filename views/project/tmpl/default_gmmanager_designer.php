@@ -419,6 +419,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                 </tr>
                         </div>
                         </table>
+                        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="comment">

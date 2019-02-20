@@ -279,16 +279,8 @@ echo parent::getPreloader();
                         </td>
                     </tr>
                     <tr>
-                        <th>Примечание менеджера</th>
-                        <td><?php echo $this->item->dealer_manager_note; ?></td>
-                    </tr>
-                    <tr>
-                        <th>Примечание замерщика</th>
-                        <td><?php echo $this->item->dealer_calculator_note; ?></td>
-                    </tr>
-                    <tr>
-                        <th>Примечание начальника МС</th>
-                        <td><textarea name="jform[dealer_chief_note]" id="jform_dealer_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea></td>
+                        <th>Примечание к монтажу</th>
+                        <td><textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php //вывести по-другому ?></textarea></td>
                     </tr>
                     <tr>
                         <th>Замерщик</th>
@@ -316,6 +308,10 @@ echo parent::getPreloader();
                 <?php } else { ?>
                     <input name="type" value="gmchief" type="hidden">
                 <?php } ?>
+            </div>
+            <div class="col-md-6">
+                <h4 class="center"> Примечания</h4>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
             </div>
             <!-- стиль не правила,  у нас нет расширенного дилера -->
             <?php if($user->dealer_type == 0) { ?>

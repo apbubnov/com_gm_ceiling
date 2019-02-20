@@ -66,22 +66,9 @@ $groups = $user->get('groups');
                 </td>
                 <td>
                     <?php
-                        $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
-                        if (!empty($project_notes->gm_manager_note)) {
-                            echo '<b>'.$project_notes->gm_manager_note->description.':</b> ';
-                            echo $project_notes->gm_manager_note->value.'<br>';
-                        }
-                        if (!empty($project_notes->gm_chief_note)) {
-                            echo '<b>'.$project_notes->gm_chief_note->description.':</b> ';
-                            echo $project_notes->gm_chief_note->value.'<br>';
-                        }
-                        if (!empty($project_notes->gm_calculator_note)) {
-                            echo '<b>'.$project_notes->gm_calculator_note->description.':</b> ';
-                            echo $project_notes->gm_calculator_note->value.'<br>';
-                        }
-                        if (!empty($project_notes->common_note)) {
-                            echo '<b>'.$project_notes->common_note->description.':</b> ';
-                            echo $project_notes->common_note->value.'<br>';
+                        $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,2);
+                        foreach ($project_notes as $note){
+                            echo $note->description.$note->value."<br>";
                         }
                     ?>
                 </td>

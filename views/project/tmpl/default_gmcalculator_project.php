@@ -123,6 +123,8 @@ $server_name = $_SERVER['SERVER_NAME'];
                     </table>
                 </div>
             </div>
+            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
         </div>
 
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>

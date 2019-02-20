@@ -118,7 +118,7 @@ $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
 
     <div class="container">
         <div class="row">
-            <h1>Отключено из-за переизбытка плохого кода</h1>
+            <h1>Если Вы сюда как-то попали, срочно расскажите программистам как Вы это сделали!</h1>
             <!--<div class="col-xl item_fields">
                 <h4>Информация по проекту № <?php /*echo $this->item->id */?></h4>
                 <form id="form-client"

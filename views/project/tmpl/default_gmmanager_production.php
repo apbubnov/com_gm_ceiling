@@ -433,6 +433,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
             </table>
         </div>
     </div>
+    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
     </div>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>

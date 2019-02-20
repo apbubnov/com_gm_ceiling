@@ -9,8 +9,11 @@
     if(in_array('16',$user_groups)){
         $is_gmmanager = true;
     }
+    if(in_array('17',$user_groups)){
+        $isNMS = true;
+    }
     $isBuilder = (JFactory::getUser($this->item->dealer_id)->dealer_type == 7);//проект застройщика или нет
-    $needShow = !(in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder);
+    $needShow = !in_array($this->item->project_status,VERDICT_STATUSES) || $isBuilder;
     $displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder)?  "style=\"display:none;\"" : "";//скрыть элемент
     if(!empty($this->item->calcs_mounting_sum)){
         $service_mount = true ;
@@ -112,16 +115,7 @@
         }
     }
 </style>
-<hr>
-    <?php
-    $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
-    foreach ($project_notes as $key => $value) { ?>
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-md-4 no_padding"><b><?= $value->description; ?>:</b></div>
-            <div class="col-md-6 no_padding"><?= $value->value; ?></div>
-        </div>
-    <?php } ?>
-<hr>
+
 <div class="row">
     <div class="col-md-3 no_padding"><b>Ввести примечание:</b></div>
     <div class="col-md-6 col-xs-9 no_padding">
@@ -393,7 +387,7 @@
                             <?php foreach ($calculations as $calculation) { ?>
                                 <tr class="section_estimate" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                                     <?php
-                                        $filename = "mount_single_dealer";
+                                        $filename = ($isNMS) ? "mount_single_gm" : "mount_single_dealer";
                                         $path = "/costsheets/" . md5($calculation->id . $filename) . ".pdf";
                                         $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single_dealer") . ".pdf", "id" => $calculation->id);
                                     ?>
@@ -414,7 +408,7 @@
                                     }
                                     else {
                                         foreach ($mount_data as $value) {
-                                            $filename = 'mount_stage_dealer';
+                                            $filename = ($isNMS) ?'mount_stage_gm':'mount_stage_dealer';
                                             $path = "/costsheets/" . md5($calculation->id.$filename.$value->stage).'.pdf';
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                                 switch ($value->stage) {
@@ -462,7 +456,7 @@
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr class="section_estimate" style="display: none;">
                                 <?php
-                                    $filename = "mount_common_dealer";
+                                    $filename = ($isNMS)?"mount_common_gm": "mount_common_dealer";
                                     $path = "/costsheets/" . md5($this->item->id . $filename) . ".pdf";
                                  ?>
                                 <td>

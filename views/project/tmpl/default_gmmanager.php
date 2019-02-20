@@ -106,72 +106,80 @@ $total_mount = 0;
 <?php if ($this->item) : ?>
     <div class="container">
         <div class="row">
-            <div class="item_fields">
-                <h4>Информация по проекту № <?= $this->item->id; ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
-                      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <table class="table">
-                        <tr>
-                            <th>Дилер</th>
-                            <td><?php echo $dealer_cl->client_name; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td>
-                                <?php
-                                if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
-                                <?php } else { ?>
-                                    <?php $jdate = new JDate($this->item->project_calculation_date); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i');
-                                } ?>
-                            </td>
-                        </tr>
-                        <?php if(!empty($this->item->mount_data)):?>
+            <div class="col-md-6">
+                <div class="item_fields">
+                    <h4>Информация по проекту № <?= $this->item->id; ?></h4>
+                    <form id="form-client"
+                          action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
+                          method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+                        <table class="table">
                             <tr>
-                                <th colspan="3" style="text-align: center;">Монтаж</th>
+                                <th>Дилер</th>
+                                <td><?php echo $dealer_cl->client_name; ?></td>
                             </tr>
-                            <?php foreach ($this->item->mount_data as $value) { ?>                          
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                                <td>
+                                    <?php
+                                    if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
+                                    <?php } else { ?>
+                                        <?php $jdate = new JDate($this->item->project_calculation_date); ?>
+                                        <?php echo $jdate->format('d.m.Y H:i');
+                                    } ?>
+                                </td>
+                            </tr>
+                            <?php if(!empty($this->item->mount_data)):?>
                                 <tr>
-                                    <th><?php echo $value->time;?></th>
-                                    <td><?php echo $value->stage_name;?></td>
-                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                    <th colspan="3" style="text-align: center;">Монтаж</th>
                                 </tr>
-                            <?php }?>
-                        <?php endif;?>
-                        <tr>
-                            <th><?php echo "Дата готовности полотен"; ?></th>
-                            <td>
-                                <?php
-                                if (empty($this->item->ready_time)) { ?> -
-                                <?php } else { 
-                                    echo $this->item->ready_time;
-                                } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <?php $contacts = $model->getClientPhones($this->item->id_client); ?>
-                            <td><?php foreach ($contacts as $phone) {
-                                    echo $phone->client_contacts;
-                                    echo "<br>";
-                                } ?></td>
-                        </tr>
-                    </table>
-                </form>
+                                <?php foreach ($this->item->mount_data as $value) { ?>
+                                    <tr>
+                                        <th><?php echo $value->time;?></th>
+                                        <td><?php echo $value->stage_name;?></td>
+                                        <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                    </tr>
+                                <?php }?>
+                            <?php endif;?>
+                            <tr>
+                                <th><?php echo "Дата готовности полотен"; ?></th>
+                                <td>
+                                    <?php
+                                    if (empty($this->item->ready_time)) { ?> -
+                                    <?php } else {
+                                        echo $this->item->ready_time;
+                                    } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                                <td><?php echo $this->item->project_info; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                                <td><?php echo $this->item->client_id; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                <?php $contacts = $model->getClientPhones($this->item->id_client); ?>
+                                <td><?php foreach ($contacts as $phone) {
+                                        echo $phone->client_contacts;
+                                        echo "<br>";
+                                    } ?></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
+                <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
+                <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
             </div>
-            <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-            <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
-            <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
-            <div class="">
+            <div class="col-md-6">
+                <h4 class="center">Примечания</h4>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
+            </div>
+        </div>
+            <div class="row">
                 <h4>Информация для менеджера</h4>
                 <table class="table table_cashbox">
                     <?php

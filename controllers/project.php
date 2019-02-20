@@ -198,6 +198,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $call_comment = $jinput->get('call_comment', '', 'STRING');
             $call_date = $jinput->get('call_date', "0", 'STRING');
             $isDataDelete = $jinput->get('data_delete', '0', 'INT');
+            $measure_note = $jinput->get('measure_note','','STRING');
+            if(!empty($measure_note)){
+                $this->addNote($project_id, $measure_note,2);
+            }
             if ($isDataDelete) {
                 $idCalc = $jinput->get('idCalcDelete', '0', 'INT');
                 //print_r($idCalc); exit;
@@ -568,7 +572,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_id = $data->id_client;
 						$project_data = $model->getData($project_id);
 						$project_data->project_status = 3;
-						$this->addNote($project_id, "Не вошедшие в договор №".$data->id);
+						$this->addNote($project_id, "Не вошедшие в договор №".$data->id,3);
 						//$project_data->project_verdict = 0;
 						$project_data->client_id = 	$client_id;
 						$project_data->api_phone_id = 10;
@@ -807,9 +811,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 									$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
 									$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
 								}
-								
-								//$return = $model->activate($data,4/*3*/);
-								
 							}
 							else{
 								if($project_status == 4){
@@ -925,7 +926,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 							$client_id = $data->id_client_num;
 							$project_data->project_status = 3;
-                            $this->addNote($project_id, "Не вошедшие в договор №".$data->id);
+                            $this->addNote($project_id, "Не вошедшие в договор №".$data->id,3);
 							//$project_data->project_verdict = 0;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
@@ -1100,11 +1101,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $project_id = $data->id;
             }
 
-			if (!empty($get_data['gm_chief_note'])) {
-                $this->addNote($project_id, $get_data['gm_chief_note']);
-            }
-            if (!empty($get_data['dealer_chief_note'])) {
-                $this->addNote($project_id, $get_data['dealer_chief_note']);
+            if (!empty($get_data['mount_note'])) {
+                $this->addNote($project_id, $get_data['mount_note'],5);
             }
             //$mount_data = json_decode($get_data['mount']);
 
@@ -2047,7 +2045,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
-    function addNote($project_id, $note) {
+    function addNote($project_id, $note,$type = 1) {
         try {
             $die = false;
             if (empty($project_id) && empty($note)) {
@@ -2057,7 +2055,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $die = true;
             }
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-            $result = $project_model->saveNote($project_id, $note);
+            $result = $project_model->saveNote($project_id, $note,$type);
             if ($die) {
                 die(json_encode($result));
             } else {

@@ -57,7 +57,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$query3 = $db->getQuery(true);
 			
 			$query
-				->select('p.id,pm.date_time as project_mounting_date,p.read_by_mounter, p.project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.transport, p.distance, p.distance_col')
+				->select('p.id,pm.date_time as project_mounting_date,p.read_by_mounter, p.project_status, p.project_info,p.transport, p.distance, p.distance_col')
 				->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
 				->where("pm.mounter_id = '$id' and pm.date_time between '$date1 00:00:00' and '$date2 23:59:59'")
@@ -242,7 +242,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $items2 = $db->loadObjectList();
             $query->clear();*/
             $query
-                ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.calcs_mounting_sum')
+                ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, pm.type,p.calcs_mounting_sum')
                 ->select('SUM(DISTINCT c.n5) as n5,sum(DISTINCT c.mounting_sum) as mounting_sum')
                 ->select('GROUP_CONCAT(DISTINCT cc.phone separator \';\n\') as client_phones')
                 ->select('GROUP_CONCAT(DISTINCT c.id separator \';\') as calcs_id')

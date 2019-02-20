@@ -281,27 +281,9 @@
                             getProjectNotes(project);
                             // комменты
                             jQuery.each(notes,function (index,elem) {
-                                if (<?php echo $dealerId; ?> == 1) {
-                                   if(index == "gm_chief_note"){
-                                       note = elem.description + ":" + elem.value;
+                                   if(index.indexOf("mount") >=0){
+                                       note += elem.description + elem.value;
                                    }
-                                    if(index == "gm_calculator_note"){
-                                        note += elem.description + ":" + elem.value;
-                                    }
-                                    console.log(note);
-
-                                } else{
-                                    if (index == "dealer_chief_note") {
-                                        note += elem.description + ":" + elem.value;
-                                    }
-                                    if (index == "dealer_calculator_note") {
-                                        note += elem.description + ":" + elem.value;
-                                    }
-
-                                }
-                                if (index == "dealer_note") {
-                                    note += elem.description + ":" + elem.value;
-                                }
                             });
 
 

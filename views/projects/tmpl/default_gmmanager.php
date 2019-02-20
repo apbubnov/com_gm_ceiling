@@ -92,10 +92,12 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $this->escape($item->project_info); ?>
 					</td>
 					<td class="center one-touch">
-						<?php $notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
-						foreach ($notes as $note){
-						    echo $note->description.": ".$note->value."<br>";
-                        }?>
+                        <?php
+                        $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,4);
+                            foreach ($project_notes as $note){
+                                echo $note->description.$note->value."<br>";
+                            }
+                        ?>
 					</td>
 					<td class="center one-touch">
 						<?php echo $item->client_contacts; ?>
