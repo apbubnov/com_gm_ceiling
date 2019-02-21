@@ -51,7 +51,7 @@ JHtml::_('formbehavior.chosen', 'select');
     }*/
 </style>
 
-С <input type="date" class="" id="calendarFrom" value="<?php echo '0000-00-00';?>">
+С <input type="date" class="" id="calendarFrom" value="<?php echo date('Y-m').'-01';?>">
 По <input type="date" class="" id="calendarTo" value="<?php echo date('Y-m-d');?>">
 <button type="button" class="btn btn-primary" id="btn_show">Показать</button>
 <hr>
@@ -78,6 +78,13 @@ JHtml::_('formbehavior.chosen', 'select');
 <script type="text/javascript">
     jQuery(document).ready(function() {
         getData();
+        jQuery('#projectList').DataTable({
+            "scrollY": "50vh",
+            "scrollCollapse": true,
+            "paging": false,
+            "ordering": false
+        });
+        jQuery('.dataTables_length').addClass('bs-select');
     });
 
     document.getElementById('btn_show').onclick = function() {
@@ -138,12 +145,6 @@ JHtml::_('formbehavior.chosen', 'select');
         }
         document.getElementById('h4_common_sum').innerHTML = 'Общая сумма: '+com_sum.toFixed(2);
 
-        jQuery('#projectList').DataTable({
-            "scrollY": "50vh",
-            "scrollCollapse": true,
-            "paging": false,
-            "ordering": false
-        });
-        jQuery('.dataTables_length').addClass('bs-select');
+        
     }
 </script>
