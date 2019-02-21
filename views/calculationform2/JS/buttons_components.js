@@ -687,10 +687,8 @@ function open_blocks(props){
             case 'n16':
                 jQuery('#btn_n16').trigger("click")
                 break;
-            case 'mounting_sum':
-                if(calculation['mounting_sum']>0){
-                    jQuery(`#btn_need_mount`).trigger("click");
-                }
+            case 'need_mount':
+                jQuery(`#btn_need_mount`).trigger("click");
                 break;
             case 'n8':
             case 'n7':
@@ -898,29 +896,37 @@ function fill_calc_data(){
                     }
                 break;
                 case 'extra_mounting':
-                let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
-                        jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
+                    let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                        for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
+                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                        }
+                        for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
+                            jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
+                            jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
 
-                    }
-                break;
+                        }
+                    break;
                 case 'components_stock':
-                let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                    let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
 
-                     for(let j = 1;j<Object.keys(stock_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                     for(let j = 0;j<Object.keys(stock_data).length;j++){
-                        jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
-                        jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
-                        jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
+                         for(let j = 1;j<Object.keys(stock_data).length;j++){
+                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                        }
+                         for(let j = 0;j<Object.keys(stock_data).length;j++){
+                            jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
+                            jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
+                            jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
 
-                    }
-                break;
+                        }
+                    break;
+               case 'need_mount':
+                   if(calculation.need_mount == 2){
+                       jQuery("#with_service").attr("checked",true);
+                   }
+                   if(calculation.need_mount == 1){
+                       jQuery("#with_mount").attr("checked",true);
+                   }
+                   break;
                 default:
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
            }
