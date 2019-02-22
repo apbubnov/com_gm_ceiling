@@ -3763,6 +3763,15 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= $html_image;
             $html .= '<pagebreak/>';
             $mpdf->WriteHTML($html, 2);
+            $header = '
+                <table width="100%" style="vertical-align: middle;">
+                    <tr>
+                        <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:'.$data['calculation_title'].'</h1></td>
+                        <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
+                    </tr>
+                </table>';
+            $mpdf->SetHTMLHeader($header,'O',true);
             $html_cut .= '<table >';
             $html_cut .= '<tbody>';
             $html_cut .= '<tr>';
