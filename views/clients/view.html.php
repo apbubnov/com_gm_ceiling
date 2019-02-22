@@ -53,6 +53,14 @@ class Gm_ceilingViewClients extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
+		$type = $app->input->getString('type', NULL);
+		$subtype = $app->input->getString('subtype', NULL);
+		if($subtype != NULL) {
+			$tpl = $type . "_" . $subtype;
+		} else  {
+			$tpl = $type;
+		}
+
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
