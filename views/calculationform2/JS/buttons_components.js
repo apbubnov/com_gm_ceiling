@@ -125,8 +125,8 @@ let arr_blocks = [
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
         ]
     },
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}/*,
-    {block_id:"block_need_metiz",btn_cont_id:"btn_cont_need_metiz",prev_id:"block_need_mount",btn_id:"btn_need_metiz",btn_text:"Отменить метизы",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},*/
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
+    {block_id:"block_need_metiz",btn_cont_id:"btn_cont_need_metiz",prev_id:"block_need_mount",btn_id:"btn_need_metiz",btn_text:"Отменить метизы",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}
 ];
 
 arr_blocks.forEach(function(item){
@@ -220,7 +220,7 @@ let need_mount_src = {
 let need_mount =  create_radios_group(need_mount_src);
 
 let need_metiz_src = {
-    name : 'need_mount',
+    name : 'need_metiz',
     values : [
         {id:'with_metiz',value:1,text:"Нужны", selected:true},
         {id:'without_metiz',value:0,text:"Не нужны"}
@@ -561,6 +561,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let parent = id_block.replace("block_", "");
+
     if (parent == 'need_mount' || parent == 'need_metiz') {
         let col_id = `jform_${parent}_inside`;
         let cont =  create_container("",col_id, parent);
@@ -572,12 +573,14 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
         else{
             jQuery(`#${col_id}`).toggle();
         }
-        jQuery("[name = 'need_mount']").click(function(){
-            jQuery("[name = 'need_mount']").removeAttr('fix');
-            jQuery(this).attr('fix',true);
-        });
-        if(jQuery("#without").attr("fix") != "true" ){
-            jQuery("#with_mount").attr("checked",true);
+        if(parent=='need_mount') {
+            jQuery("[name = 'need_mount']").click(function () {
+                jQuery("[name = 'need_mount']").removeAttr('fix');
+                jQuery(this).attr('fix', true);
+            });
+            if (jQuery("#without").attr("fix") != "true") {
+                jQuery("#with_mount").attr("checked", true);
+            }
         }
     } else {
         if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
@@ -646,9 +649,12 @@ function open_general_blocks() {
             }
         }
     }
-    if(calculation['mounting_sum'] > 0){
+    if(calculation['need_mount'] > 0){
         arr_parent.push("btn_need_mount");
     }
+    //if(calculation['need_metiz'] == 0){
+    arr_parent.push("btn_need_metiz");
+    //}
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");
     });
@@ -768,7 +774,7 @@ function fill_calc_data(){
     let count;
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
-       if(!empty(calculation[Object.keys(calculation)[i]])){
+       if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz"){
            switch(Object.keys(calculation)[i]){
                 case 'n28':
                 case 'height':
@@ -920,11 +926,19 @@ function fill_calc_data(){
                         }
                     break;
                case 'need_mount':
-                   if(calculation.need_mount == 2){
+                   if(calculation['need_mount'] == 2){
                        jQuery("#with_service").attr("checked",true);
                    }
                    if(calculation.need_mount == 1){
                        jQuery("#with_mount").attr("checked",true);
+                   }
+                   break;
+               case 'need_metiz':
+                   if(calculation['need_metiz'] == 0){
+                       jQuery("#without_metiz").attr("checked",true);
+                   }
+                   else{
+                       jQuery("#with_metiz").attr("checked",true);
                    }
                    break;
                 default:
