@@ -220,7 +220,7 @@ let need_mount_src = {
 let need_mount =  create_radios_group(need_mount_src);
 
 let need_metiz_src = {
-    name : 'need_metiz',
+    name : 'jform[need_metiz]',
     values : [
         {id:'with_metiz',value:1,text:"Нужны", selected:true},
         {id:'without_metiz',value:0,text:"Не нужны"}
