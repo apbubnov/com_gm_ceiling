@@ -292,7 +292,7 @@
         jQuery("#year2").mask("9999");
 
         getDataChart();
-
+        getData(jQuery('#date_from').val(),jQuery("#date_to").val());
         jQuery('input[name="interval_radio"]').click(function(){
             if(this.id == "dates"){
                 console.log("in dates");
@@ -441,6 +441,9 @@
 	            	jQuery("#close_mw").show();
 	                jQuery("#mw_container").show();
 	                jQuery("#mw_detailed").show('slow');
+                    jQuery("#detailed_analytic > tbody > tr").click(function(){
+                        document.location.href = "/index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id="+jQuery(this).data('id');
+                    });
 	            },
 	            error: function (data) {
 	                console.log(data.responseText);
@@ -457,11 +460,12 @@
 			console.log(projects);
 		});
 
+
+
 		function create_detailed_table(data){
 			jQuery('#detailed_analytic tbody').empty();
 			for(let i = 0;i<data.length;i++){
-				console.log(data[i]);
-				jQuery('#detailed_analytic').append('<tr></tr>');
+				jQuery('#detailed_analytic').append('<tr data-id = '+data[i].id+'></tr>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].id+'</td>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].project_info+'</td>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].quadr+'</td>');
