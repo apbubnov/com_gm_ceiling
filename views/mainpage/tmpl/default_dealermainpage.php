@@ -237,7 +237,7 @@ $rest = -($total_sum) - $contributed;
             </div>
         </div>
         <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
@@ -417,7 +417,7 @@ $rest = -($total_sum) - $contributed;
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype=buh', false); ?>";
         });
         jQuery("#clients_btn").click(function () {
-            location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>";
+            location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>";
         });
         jQuery("#refused_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=refused', false); ?>";

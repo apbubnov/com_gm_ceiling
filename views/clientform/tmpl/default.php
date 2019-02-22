@@ -21,7 +21,6 @@ $doc = JFactory::getDocument();
 $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 
 $jinput = JFactory::getApplication()->input;
-$type = $jinput->getString('type', NULL);
 
 ?>
 

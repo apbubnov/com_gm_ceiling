@@ -21,7 +21,6 @@ foreach ($clients as $key => $value) {
 }
 
 $jinput = JFactory::getApplication()->input;
-$type = $jinput->getString('type', NULL);
 $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 
@@ -30,9 +29,9 @@ echo parent::getPreloaderNotJS();
 
 <h2 class = "center">Клиенты</h2>
 
-<form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients&type='.$type); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients'); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid toolbar">
-		<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0&type='.$type, false, 2); ?>" class="btn btn-primary">
+		<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0', false, 2); ?>" class="btn btn-primary">
 			Добавить клиента
 		</a>
         <select id="select_status">
