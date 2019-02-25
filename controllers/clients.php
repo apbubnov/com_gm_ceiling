@@ -122,11 +122,25 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
     function saveClientLabel() {
         try {
             $jinput = JFactory::getApplication()->input;
+            $label_id = $jinput->get('label_id', null, 'int');
             $color_code = $jinput->get('color_code', null, 'string');
             $title = $jinput->get('title', null, 'string');
             $dealer_id = JFactory::getUser()->dealer_id;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-            $result = $model->saveClientLabel($title, $color_code, $dealer_id);
+            $result = $model->saveClientLabel($label_id, $title, $color_code, $dealer_id);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function deleteLabel() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $label_id = $jinput->get('label_id', null, 'int');
+            $dealer_id = JFactory::getUser()->dealer_id;
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->deleteLabel($label_id, $dealer_id);
             die(json_encode($result));
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

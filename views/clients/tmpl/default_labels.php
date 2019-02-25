@@ -5,8 +5,15 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $user = JFactory::getUser();
 
 $model_clients = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-$labels = $model_clients->getClientsLabels($user->id);
+$labels = $model_clients->getClientsLabels($user->dealer_id);
 ?>
+
+<style type="text/css">
+    .color-div {
+        width: 60px;
+        height: 30px;
+    }
+</style>
 
 <div class="container">
 	<!-- модальное окно -->
@@ -16,39 +23,61 @@ $labels = $model_clients->getClientsLabels($user->id);
 	        <p>Название ярлыка</p>
 	        <p><input type="text" id="new_label_title" placeholder="Введите название" required></p>
 	        <p>Цвет ярлыка</p>
-	        <p><input type="text" id="new_label_color" readonly required></p>
+	        <p><input type="text" id="new_label_color" placeholder="Нажмите для выбора цвета" readonly required></p>
 	        <p>
 	            <button type="button" id="btn_save_label" class="btn btn-primary">Сохранить</button>
 	            <button type="button" id="btn_cancel" class="btn btn-danger">Отмена</button>
 	        </p>
 	    </div>
 	</div>
-	<h2>
+	<div class="row">
 		<div class="col-md-5 col-xs-12">
 			<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clients" id="back">
 				<i class="fa fa-arrow-left" aria-hidden="true"></i> Назад
 			</a>
 		</div>
 		<div class="col-md-5 col-xs-6">
-			<label>Ярлыки</label>
+			<h2>Ярлыки</h2>
 		</div>
 		<div class="col-md-2 col-xs-6">
 			<button type="button" class="btn btn-primary" id="btn_add_label"><i class="fa fa-plus" aria-hidden="true"></i> Создать</button>
 		</div>
-	</h2>
-	<table class="table">
-		<thead>
-			<tr><th>Название</th><th>Цвет</th></tr>
-		</thead>
-		<tbody>
-			
-		</tbody>
-	</table>
+	</div>
+    <?php if (!empty($labels)) { ?>
+    	<table class="table">
+    		<thead>
+    			<tr><th>Название</th><th>Цвет</th><th></th><th></th></tr>
+    		</thead>
+    		<tbody id="tbody_labels">
+    			<?php foreach ($labels as $label) { ?>
+                    <tr>
+                        <td><?= $label->title; ?></td>
+                        <td><div class="color-div" style="background-color: #<?= $label->color_code; ?>;"></div></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn_edit_label" data-id="<?= $label->id; ?>" data-title="<?= $label->title; ?>" data-color="<?= $label->color_code; ?>">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger btn_delete_label" data-id="<?= $label->id; ?>">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                <?php } ?>
+    		</tbody>
+    	</table>
+    <?php } else {
+        echo '<p><h4>У вас еще нет ярлыков</h4></p>';
+    } ?>
 </div>
 
 <link rel="stylesheet" media="screen" type="text/css" href="/components/com_gm_ceiling/views/colors/colorPicker/css/colorpicker.css"/>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/colors/colorPicker/js/colorpicker.js"></script>
 <script type="text/javascript">
+
+var newLabelId = 0;
+
 jQuery(document).ready(function() {
 	jQuery(document).mouseup(function(e) { // событие клика по веб-документу
 	    var div1 = jQuery("#mw_add_label");
@@ -61,14 +90,73 @@ jQuery(document).ready(function() {
 				jQuery("#mw_add_label").hide();
 			}
 	});
-	jQuery("#btn_add_label").click(function () {
+	jQuery("#btn_add_label").click(function() {
+        newLabelId = 0;
+        jQuery('#new_label_title').val('');
+        jQuery('#new_label_color').val('');
         jQuery("#btn_close").show();
         jQuery("#mw_container").show();
         jQuery("#mw_add_label").show("slow");
     });
 
+    jQuery('.btn_edit_label').click(editClick);
+    jQuery('.btn_delete_label').click(deleteClick);
+
+    function editClick() {
+        newLabelId = jQuery(this).data('id')-0;
+        jQuery('#new_label_title').val(jQuery(this).data('title'));
+        jQuery('#new_label_color').val(jQuery(this).data('color'));
+        jQuery("#btn_close").show();
+        jQuery("#mw_container").show();
+        jQuery("#mw_add_label").show("slow");
+    }
+
+    function deleteClick() {
+        thisBtn = this;
+        labelId = jQuery(this).data('id')-0;
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: false,
+            type: "info",
+            text: "Удалить ярлык?",
+            buttons: [
+                {
+                    addClass: 'btn btn-primary', text: 'Да', onClick: function($noty) {
+                        jQuery.ajax({
+                            url: "index.php?option=com_gm_ceiling&task=clients.deleteLabel",
+                            data: {
+                                label_id: labelId
+                            },
+                            dataType: "json",
+                            async: false,
+                            success: function(data) {
+                                thisBtn.closest('tr').remove();
+                            },
+                            error: function(data) {
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка сервера"
+                                });
+                            }
+                        });
+                        $noty.close();
+                    }
+                },
+                {
+                    addClass: 'btn btn-danger', text: 'Отмена', onClick: function($noty) {
+                        $noty.close();
+                    }
+                }
+            ]
+        });
+    }
+
     jQuery('#new_label_color').ColorPicker({
-        color: '#000000',
         onShow: function (colpkr) {
             jQuery(colpkr).fadeIn(500);
             return false;
@@ -83,16 +171,49 @@ jQuery(document).ready(function() {
     });
 
     jQuery('#btn_save_label').click(function() {
-    	jQuery.ajax({
+        saveLabel(newLabelId);
+    });
+
+    function saveLabel(labelId) {
+        var label_title = jQuery('#new_label_title').val();
+        var label_color = jQuery('#new_label_color').val();
+        jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=clients.saveClientLabel",
             async: false,
             data: {
-                title: jQuery('#new_label_title').val(),
-                color_code: jQuery('#new_label_color').val()
+                label_id: labelId,
+                title: label_title,
+                color_code: label_color
             },
             success: function(data){
                 console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Ярлык сохранен"
+                });
+                if (empty(labelId)) {
+                    var tr = document.getElementById('tbody_labels').insertRow();
+                    var td = tr.insertCell();
+                    td.innerHTML = label_title;
+                    td = tr.insertCell();
+                    td.innerHTML = '<div class="color-div" style="background-color: #'+label_color+';"></div>';
+                    td = tr.insertCell();
+                    td.innerHTML = '<button class="btn btn-sm btn-primary btn_edit_label" data-id="'+data.insertId+'" data-label="'+label_title+'" data-color="'+label_color+'"><i class="fa fa-edit"></i></button>';
+                    td = tr.insertCell();
+                    td.innerHTML = '<button class="btn btn-sm btn-danger btn_delete_label" data-id="'+data.insertId+'"><i class="fa fa-trash"></i></button>';
+                    jQuery('.btn_edit_label').click(editClick);
+                    jQuery('.btn_delete_label').click(deleteClick);
+                    jQuery("#btn_close").hide();
+                    jQuery("#mw_container").hide();
+                    jQuery("#mw_add_label").hide();
+                } else {
+                    location.reload();
+                }
             },
             dataType: "json",
             timeout: 20000,
@@ -108,7 +229,7 @@ jQuery(document).ready(function() {
                 });
             }                   
         });
-    });
+    }
 
 });
 
