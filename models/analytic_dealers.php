@@ -72,8 +72,10 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                     $value->quadr = $quadr;
                     $value->sum = round($total_canv_sum + $total_comp_sum,2);
                     $value->total_self_sum = round($total_self_sum,2);
+                    $value->diff = $value->sum - $value->total_self_sum;
                     $value->comp_sum  = round($total_comp_sum,2);
                     $value->comp_self_sum =round($total_comp_self,2);
+                    $value->diff_comp = $value->comp_sum - $value->comp_self_sum;
                     foreach ($quadr_proizv as $key => $val) {
                         $value->$key = $val;
                     }
@@ -87,8 +89,10 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
            
             $headers['sum'] = "Стоимость";
             $headers['total_self_sum'] = "Себестоимость";
+            $headers['diff'] = "Разница";
             $headers['comp_sum'] = "Стоимость компл-х";
             $headers['comp_self_sum'] = "Себестоимость компл-х";
+            $headers['diff_comp'] = "Разница по компл.";
             $headers['rest'] = 'Сост.счета';
             array_unshift($dealers_and_projects , $headers);
             return $dealers_and_projects;

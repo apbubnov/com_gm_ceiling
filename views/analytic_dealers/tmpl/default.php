@@ -16,7 +16,14 @@
 	$month_begin_date = date('Y-m-01');
 	$today = date('Y-m-d');
 ?>
-<div class="container">
+<style>
+    .container{
+        width:auto !important;
+        margin-left:0px !important;
+        margin-right: 0px !important;
+    }
+</style>
+<div class="container center">
 	<div class="row" align="right">
 		<div>
 			<label for="date_from">Выбрать с: </label>
@@ -32,7 +39,7 @@
             <label style="color: #414099;font-size: 14pt">Общее количество дилеров: <b><span id="dealers_count">0</span></b></label>
         </div>
     </div>
-	<div class="row" style="margin-bottom: 15px;">
+	<div class="row center" style="margin-bottom: 15px;">
 		<table id = "analytic" class="analitic-table">
 			<thead id = "thead" class = "caption-style-tar">
 			</thead>
