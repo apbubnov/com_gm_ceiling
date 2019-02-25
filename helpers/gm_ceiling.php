@@ -1691,6 +1691,13 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+            if(in_array('16',JFactory::getUser()->groups)) {
+                $min_sum = 100;//минимальная сумма заказа
+                if ($canvases_data['self_dealer_total'] < $min_sum) {
+                    $canvases_data['self_dealer_total'] = $min_sum;
+                    $canvases_data['dealer_total'] = margin($min_sum, $dealer_canvases_margin);
+                }
+            }
             return $canvases_data;
         }
         catch(Exception $e)
