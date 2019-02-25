@@ -118,4 +118,19 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveClientLabel() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $color_code = $jinput->get('color_code', null, 'string');
+            $title = $jinput->get('title', null, 'string');
+            $dealer_id = JFactory::getUser()->dealer_id;
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->saveClientLabel($title, $color_code, $dealer_id);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

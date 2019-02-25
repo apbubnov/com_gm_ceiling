@@ -725,4 +725,41 @@ if (empty($list['direction']))
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function saveClientLabel($title, $color_code, $dealer_id) {
+    	try {
+	        $db    = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	            ->insert('`#__gm_ceiling_clients_labels`')
+	            ->columns('`title`, `color_code`, `dealer_id`')
+	            ->values("'$title', '$color_code', $dealer_id");
+	        $db->setQuery($query);
+	        $db->execute();
+	        $result = (object) array('isertId' => $db->insertid());
+	        return $result;
+	    } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getClientsLabels($dealer_id) {
+    	try {
+	        $db    = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	        	->select('`id`,
+	        			  `title`,
+	        			  `color_code`,
+	        			  `dealer_id`')
+	            ->from('`#__gm_ceiling_clients_labels`')
+	            ->where("`dealer_id` = $dealer_id");
+	        $db->setQuery($query);
+	        $result = $db->loadObjectList();
+	        return $result;
+	    } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
