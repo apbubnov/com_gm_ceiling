@@ -348,8 +348,6 @@
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
-
-
                 <div id="new_call" style="display:none;">
                     <label>Введите дату и время звонка</label>
                     <input type="date" class="" name ="calldate_without_mounter" id="calldate_without_mounter" >
@@ -1076,7 +1074,6 @@
             });
 
         jQuery("#refuse_submit").click(function(){
-            jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
             document.getElementById('form-client').submit();
         });    
         jQuery("#update_discount").click(function() {

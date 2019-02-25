@@ -1378,7 +1378,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 //document.getElementById('form-client').submit();
             });
             jQuery("#refuse_submit").click(function(){
-                jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
                 document.getElementById('form-client').submit();
             });
             jQuery("#save_advt").click(function() {

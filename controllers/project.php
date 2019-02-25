@@ -675,11 +675,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if(!empty($code)) $address .= ", код: ".$code;
 			$new_address = $address;
 			$isDataChange = $jinput->get('data_change', '0', 'INT');
-			$isDataDelete = $jinput->get('data_delete', '0', 'INT');
 
 			$smeta = $jinput->get('smeta', '0', 'INT');
-			//print_r($smeta); exit;
-
 			// перимерт и зп бригаде
 			$project_info_for_mail = $model_for_mail->InfoForMail($project_id);
 			$perimeter = 0;
@@ -691,73 +688,70 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$data->perimeter = $perimeter;
 			$data->salary = $salary;
 			if ($isDataChange) {
-				if($isDataChange){
-					$newFIO = $jinput->get('new_client_name','', 'STRING');
-					$newDate = $jinput->get('project_new_calc_date','','STRING');
-					$newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
-					$newGauger = $jinput->get('project_gauger','','STRING');
-					$phones = [];
-					$phones[] = $jinput->get('new_client_contacts',null, 'STRING');
-					if($data->id_client!=1){
-						if(!empty($newFIO)){
-							if($newFIO!=$data->client_id){
-								$client_model->updateClient($data->id_client,$newFIO);
-								$client_history_model->save($data->id_client,"Изменено ФИО пользователя");	
-							}				
-						}
-					}
-					else{
-						$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
-						$client_data['created'] = date("d.m.Y");
-						$client_data['client_name'] = $newFIO;
-						$client_data['client_contacts'] = $newContacts;
-						$client_data['dealer_id'] = $user->dealer_id;
-						$client_data['manager_id'] = $user->id;
-						$client_id = $client_model->save($client_data);
-						$model->update_client($data->id,$client_id);
-                        if (empty($newFIO))
-                        {
-                            $cl_model = $this->getModel('Client', 'Gm_ceilingModel');
-                            $newFIO = "$client_id";
-                            $cl_model->updateClient($client_id,$newFIO);
+                $newFIO = $jinput->get('new_client_name','', 'STRING');
+                $newDate = $jinput->get('project_new_calc_date','','STRING');
+                $newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
+                $newGauger = $jinput->get('project_gauger','','STRING');
+                $phones = [];
+                $phones[] = $jinput->get('new_client_contacts',null, 'STRING');
+                if($data->id_client!=1){
+                    if(!empty($newFIO)){
+                        if($newFIO!=$data->client_id){
+                            $client_model->updateClient($data->id_client,$newFIO);
+                            $client_history_model->save($data->id_client,"Изменено ФИО пользователя");
                         }
-						if(!empty($phones[0])){
-							$cl_phones_model->save($client_id,$phones);
-						}
-					}
-					if(!empty($new_address)){
-						if($new_address!=$data->project_info){
-							$model->update_address($data->id,$new_address);
-							$client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$new_address);
-						}							
-					}
-					$date_time = $data->project_calculation_date;
-					$date_arr = date_parse($date_time);
-					$date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-					$time = $date_arr['hour'].':00';
-					if(!empty($newDate) && !empty($newDayPart))
-					{
-						if($date!=$newDate && $time!=$newDayPart){
-							$model->update_date_time($data->id,$newDate." ".$newDayPart);
-							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$newDayPart);
-						}
-						elseif ($date!=$newDate) {
-							$model->update_date_time($data->id,$newDate." ".$time);
-							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$time);
-						}
-						elseif ($newDayPart!=$time) {
-							$model->update_date_time($data->id,$date." ".$newDayPart);
-							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
-						}
-						
-					}
-					if (!empty($newGauger)) {
-						$model->update_date_gauger($data->id,$newGauger);
-						$name_gauger = $model->GetNameGauger($newGauger);
-						$client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
-					}
-					
-				}	
+                    }
+                }
+                else{
+                    $client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+                    $client_data['created'] = date("d.m.Y");
+                    $client_data['client_name'] = $newFIO;
+                    $client_data['client_contacts'] = $newContacts;
+                    $client_data['dealer_id'] = $user->dealer_id;
+                    $client_data['manager_id'] = $user->id;
+                    $client_id = $client_model->save($client_data);
+                    $model->update_client($data->id,$client_id);
+                    if (empty($newFIO))
+                    {
+                        $cl_model = $this->getModel('Client', 'Gm_ceilingModel');
+                        $newFIO = "$client_id";
+                        $cl_model->updateClient($client_id,$newFIO);
+                    }
+                    if(!empty($phones[0])){
+                        $cl_phones_model->save($client_id,$phones);
+                    }
+                }
+                if(!empty($new_address)){
+                    if($new_address!=$data->project_info){
+                        $model->update_address($data->id,$new_address);
+                        $client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$new_address);
+                    }
+                }
+                $date_time = $data->project_calculation_date;
+                $date_arr = date_parse($date_time);
+                $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
+                $time = $date_arr['hour'].':00';
+                if(!empty($newDate) && !empty($newDayPart))
+                {
+                    if($date!=$newDate && $time!=$newDayPart){
+                        $model->update_date_time($data->id,$newDate." ".$newDayPart);
+                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$newDayPart);
+                    }
+                    elseif ($date!=$newDate) {
+                        $model->update_date_time($data->id,$newDate." ".$time);
+                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$time);
+                    }
+                    elseif ($newDayPart!=$time) {
+                        $model->update_date_time($data->id,$date." ".$newDayPart);
+                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
+                    }
+
+                }
+                if (!empty($newGauger)) {
+                    $model->update_date_gauger($data->id,$newGauger);
+                    $name_gauger = $model->GetNameGauger($newGauger);
+                    $client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
+                }
 
 				$this->setMessage("Данные успешно изменены");
 				if($type === "gmcalculator" && $subtype === "calendar") {
@@ -770,13 +764,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 				}
 			} else {
-                
 				if($subtype === "refused") {
 					$model->return_project($project_id);
-				// Clear the profile id from the session.
+				    // Clear the profile id from the session.
 					$app->setUserState('com_gm_ceiling.edit.project.id', null);
-
-				// Flush the data from the session.
+				    // Flush the data from the session.
 					$app->setUserState('com_gm_ceiling.edit.project.data', null);
 
 					$this->setMessage("Проект вернулся в Замеры");
@@ -784,9 +776,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				} else {
 					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
                     $project_status = $jinput->get('project_status', '0', 'INT');
-
-					//$data->project_verdict = $project_verdict;
-					
                     $data->project_status = $project_status;
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					$calculations = $calculationsModel->new_getProjectItems($data->id);
@@ -794,9 +783,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					foreach($calculations as $calculation){
 						$all_calculations[] = $calculation->id;
 					}
-					//$checked_calculations = array_intersect($data['include_calculation'], $all_calculations);
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
-                    $gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
 					// Attempt to save the data.
 					if($activate_by_email == 0){
 						if($user->dealer_type!=2 && $project_verdict == 1) 
@@ -805,11 +792,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 								//$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
-								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
-
+								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING');
+								$call_datetime = (!empty($call_mount_date) && !empty($call_mount_time)) ? $call_mount_date.' '.$call_mount_time : date('Y-m-d hh:ii:ss');
 								if(!empty($data->read_by_manager)){
-									$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
-									$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
+									$callback_model->save($call_datetime,"Заключен договор без даты монтажа",$data->id_client,$data->read_by_manager);
+									$client_history_model->save($data->id_client,"Добавлен новый звонок");
 								}
 							}
 							else{
@@ -821,7 +808,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 								} else {
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
-
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
 									//$return = $model->activate($data, 5/*3*/);
 								}
@@ -860,10 +846,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 						else if ($user->dealer_type!=2 && $project_verdict == 0 && $project_status == 3)
 						{
-							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
+						    $ref_note = $jinput->get("ref_note","Отсутсвует","STRING");
+							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание : ".$ref_note);
 							if(!empty($data->read_by_manager)){
 								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
+								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание  :".$ref_note);
 							}
                             
 						}
@@ -947,19 +934,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$calculations = $calculationsModel->new_getProjectItems($project_id);
-					$components_data = array();
 					$project_sum = 0;
 					foreach($include_calculation as $calculation){                        
 						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
 						$calculations = $calculationsModel->new_getProjectItems($calculation);
-						$from_db = 1;
-						$save = 0;
-						$ajax = 0;
-						$pdf = 0;
-						$print_components = 1;
-						$del_flag = 0;
-
 						foreach($calculations as $calc) {
 							if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
 							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);

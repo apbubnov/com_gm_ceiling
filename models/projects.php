@@ -249,7 +249,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->select('`p`.`project_mounting_date`,
                                         `p`.`dealer_name`
                                     ');
-                        $query->where('`p`.`project_status` IN (4, 5)');
+                        $query->where('`p`.`project_status` IN (5)');
                     }
                     break;
 
