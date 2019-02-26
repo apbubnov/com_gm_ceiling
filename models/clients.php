@@ -744,7 +744,7 @@ if (empty($list['direction']))
 	        $db->setQuery($query);
 	        $db->execute();
 	        
-	        $result = (object) array('isertId' => $db->insertid());
+	        $result = (object) array('insertId' => $db->insertid());
 	        return $result;
 	    } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

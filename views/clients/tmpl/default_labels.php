@@ -28,6 +28,7 @@ $labels = $model_clients->getClientsLabels($user->dealer_id);
 	            <button type="button" id="btn_save_label" class="btn btn-primary">Сохранить</button>
 	            <button type="button" id="btn_cancel" class="btn btn-danger">Отмена</button>
 	        </p>
+            <hr>
 	    </div>
 	</div>
 	<div class="row">
@@ -43,33 +44,29 @@ $labels = $model_clients->getClientsLabels($user->dealer_id);
 			<button type="button" class="btn btn-primary" id="btn_add_label"><i class="fa fa-plus" aria-hidden="true"></i> Создать</button>
 		</div>
 	</div>
-    <?php if (!empty($labels)) { ?>
-    	<table class="table">
-    		<thead>
-    			<tr><th>Название</th><th>Цвет</th><th></th><th></th></tr>
-    		</thead>
-    		<tbody id="tbody_labels">
-    			<?php foreach ($labels as $label) { ?>
-                    <tr>
-                        <td><?= $label->title; ?></td>
-                        <td><div class="color-div" style="background-color: #<?= $label->color_code; ?>;"></div></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary btn_edit_label" data-id="<?= $label->id; ?>" data-title="<?= $label->title; ?>" data-color="<?= $label->color_code; ?>">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-danger btn_delete_label" data-id="<?= $label->id; ?>">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                <?php } ?>
-    		</tbody>
-    	</table>
-    <?php } else {
-        echo '<p><h4>У вас еще нет ярлыков</h4></p>';
-    } ?>
+	<table class="table">
+		<thead>
+			<tr><th>Название</th><th>Цвет</th><th></th><th></th></tr>
+		</thead>
+		<tbody id="tbody_labels">
+			<?php foreach ($labels as $label) { ?>
+                <tr>
+                    <td><?= $label->title; ?></td>
+                    <td><div class="color-div" style="background-color: #<?= $label->color_code; ?>;"></div></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary btn_edit_label" data-id="<?= $label->id; ?>" data-title="<?= $label->title; ?>" data-color="<?= $label->color_code; ?>">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger btn_delete_label" data-id="<?= $label->id; ?>">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            <?php } ?>
+		</tbody>
+	</table>
 </div>
 
 <link rel="stylesheet" media="screen" type="text/css" href="/components/com_gm_ceiling/views/colors/colorPicker/css/colorpicker.css"/>
@@ -79,12 +76,9 @@ $labels = $model_clients->getClientsLabels($user->dealer_id);
 var newLabelId = 0;
 
 jQuery(document).ready(function() {
-	jQuery(document).mouseup(function(e) { // событие клика по веб-документу
-	    var div1 = jQuery("#mw_add_label");
-	    var div2 = jQuery(".colorpicker");
-	    if ( (!div1.is(e.target) && div1.has(e.target).length === 0 &&
-	    	  !div2.is(e.target) && div2.has(e.target).length === 0) ||
-	    	 (jQuery("#btn_cancel").is(e.target) || jQuery("#btn_cancel").has(e.target).length > 0) ) {
+	jQuery(document).mouseup(function(e) {
+	    if ( (jQuery("#btn_cancel").is(e.target) || jQuery("#btn_cancel").has(e.target).length > 0) ||
+	    	 (jQuery("#btn_close").is(e.target) || jQuery("#btn_close").has(e.target).length > 0) ) {
 	            jQuery("#btn_close").hide();
 				jQuery("#mw_container").hide();
 				jQuery("#mw_add_label").hide();
@@ -197,17 +191,39 @@ jQuery(document).ready(function() {
                     text: "Ярлык сохранен"
                 });
                 if (empty(labelId)) {
-                    var tr = document.getElementById('tbody_labels').insertRow();
-                    var td = tr.insertCell();
+                    var tr, td, btn;
+                    tr = document.getElementById('tbody_labels').insertRow();
+
+                    td = tr.insertCell();
                     td.innerHTML = label_title;
+
                     td = tr.insertCell();
                     td.innerHTML = '<div class="color-div" style="background-color: #'+label_color+';"></div>';
+
                     td = tr.insertCell();
-                    td.innerHTML = '<button class="btn btn-sm btn-primary btn_edit_label" data-id="'+data.insertId+'" data-label="'+label_title+'" data-color="'+label_color+'"><i class="fa fa-edit"></i></button>';
+                    btn = document.createElement('button');
+                    td.appendChild(btn);
+                    btn.classList.add('btn');
+                    btn.classList.add('btn-sm');
+                    btn.classList.add('btn-primary');
+                    btn.classList.add('btn_edit_label');
+                    btn.setAttribute('data-id', data.insertId);
+                    btn.setAttribute('data-title', label_title);
+                    btn.setAttribute('data-color', label_color);
+                    btn.innerHTML = '<i class="fa fa-edit"></i>';
+                    btn.onclick = editClick;
+                    
                     td = tr.insertCell();
-                    td.innerHTML = '<button class="btn btn-sm btn-danger btn_delete_label" data-id="'+data.insertId+'"><i class="fa fa-trash"></i></button>';
-                    jQuery('.btn_edit_label').click(editClick);
-                    jQuery('.btn_delete_label').click(deleteClick);
+                    btn = document.createElement('button');
+                    td.appendChild(btn);
+                    btn.classList.add('btn');
+                    btn.classList.add('btn-sm');
+                    btn.classList.add('btn-danger');
+                    btn.classList.add('btn_delete_label');
+                    btn.setAttribute('data-id', data.insertId);
+                    btn.innerHTML = '<i class="fa fa-trash"></i>';
+                    btn.onclick = deleteClick;
+
                     jQuery("#btn_close").hide();
                     jQuery("#mw_container").hide();
                     jQuery("#mw_add_label").hide();
