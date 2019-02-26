@@ -1,5 +1,5 @@
 <?php if (array_search('16', $user_group) || array_search('13', $user_group)) { ?>
-<div>
+<div class="row">
     <div class="col-md-2"></div>
 	<div class="col-md-5">
         <select id="select_call_status" class="form-control">

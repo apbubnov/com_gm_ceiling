@@ -14,6 +14,10 @@
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
     $dealer_type = JFactory::getUser($client->dealer_id)->dealer_type;
+
+    $model_clients = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+    $labels = $model_clients->getClientsLabels($user->dealer_id);
+
     if (!empty($client->manager_id)) {
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
@@ -81,7 +85,7 @@
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <br>
-    <label>Менеджер:<span id="manager_name"><?php echo $manager_name;?></span></label>
+    <label>Менеджер: <span id="manager_name"><?php echo $manager_name;?></span></label>
     <?php if(count($managers)){?>
         <button type="button" id="edit_manager" value="" class = "btn btn-primary"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
     <?php }?>
@@ -106,6 +110,22 @@
         </table>  
     </div>
 <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
+<hr>
+<div class="row">
+    <div class="col-md-2 col-xs-0"></div>
+    <div class="col-md-2 col-xs-4"><label style="font-size: 16pt;">Ярлык: </label></div>
+    <div class="col-md-5 col-xs-5">
+        <select id="select_client_label" class="form-control">
+            <option disabled selected>Выберите ярлык</option>
+            <?php foreach ($labels as $label) { ?>
+                <option value="<?= $label->id; ?>" style="background: linear-gradient(0deg, #FFFFFF, #<?= $label->color_code; ?>);"><?= $label->title; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div class="col-md-3 col-xs-3" style="padding: 0px;">
+        <button class="btn btn-primary" id="btn_save_client_label" type="button">Ок</button>
+    </div>
+</div>
 <!-- конец -->
 <!-- контакты -->
 <div class="row">
