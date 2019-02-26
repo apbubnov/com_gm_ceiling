@@ -52,6 +52,10 @@ const help_block_n34 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n35 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
 
+const help_block_n36 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
+
+const help_block_n37 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -123,6 +127,9 @@ let arr_blocks = [
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n36",btn_cont_id:"btn_cont_n36",prev_id:"block_oter_mount_cptn",btn_id:"btn_n36",btn_text:"Перегарпунка",need_ajax : 0,kind_btn:"0", img: "garpun.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n37",btn_cont_id:"btn_cont_n37",prev_id:"block_oter_mount_cptn",btn_id:"btn_n37",btn_text:"Фотопечать",need_ajax : 0,kind_btn:"0", img: "photoprint.png", parent: "oter_mount_cptn"}
+
         ]
     },
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
@@ -363,6 +370,18 @@ n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питани
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
 let n35 = create_single_input(1,"jform_n35","jform[n35]","Контурный профиль,м","Кол-во,м.","tel");
+
+let n36 = create_single_input(1,"jform_n36","jform[n36]","Перегарпунка,м","Кол-во,м","tel");
+
+let n37_src = {
+    id : 'jform_n37',
+    name : 'jform[n37]',
+    columns:[
+        {div_class:'advanced_col_half',text:'Площадь',input_name:"jform[n37_square]",input_id:"n37_square",input_type:1},
+        {div_class:'advanced_col_half',text:'Стоимость',input_name:"jform[n37_cost]",input_id:"n37_cost",input_type:1}
+    ]
+}
+let n37 = create_block_with_divs(n37_src,0);
 /* контейнер и колонки */
 function create_container(cnt_id,col_id, parent){
     return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">
@@ -468,13 +487,13 @@ function create_single_input(input_type,id,name,text,placeholder,type,min=null,m
 function create_add_button(id){
     return `<button id="${id}" class="btn btn-primary add" style="margin-bottom:15px" type="button">Добавить</button>`
 }
-function create_block_with_divs(object){
+function create_block_with_divs(object,need_addBtn = 1){
     let btn_id = `add_${object.id}`;
     let div_id = `${object.id}_block_html`;
     let div = ` <div id = "${div_id}">
                     ${create_body(object.columns)}
                 </div>
-                ${create_add_button(btn_id)}`;
+                ${(need_addBtn == 0) ? "" : create_add_button(btn_id)}`;
     result = `<div id = "${object.id}_block">
                 ${create_captions(object.columns)}
                 ${(!document.getElementById(div_id))? div : ""}
@@ -912,6 +931,12 @@ function fill_calc_data(){
 
                         }
                     break;
+               case 'n37':
+                   let n37 = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                   console.log(n37);
+                   jQuery("#n37_square").val(n37.square);
+                   jQuery("#n37_cost").val(n37.cost);
+                   break;
                 case 'components_stock':
                     let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
 
