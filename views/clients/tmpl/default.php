@@ -66,12 +66,21 @@ echo parent::getPreloaderNotJS();
             </select>
         </div>
         <div class="col-md-4 col-xs-6">
-            <select id="select_label" class="form-control">
-                <option value='' selected>Ярлыки</option>
+            <select class="wide cust-select" id="select_label">
+                <option value="" selected>Ярлыки</option>
                 <?php foreach($labels as $label): ?>
-                    <option value="<?= $label->id; ?>"><?= $label->title; ?>
+                    <option value="<?= $label->id; ?>"><?= $label->title; ?></option>
                 <?php endforeach;?>
             </select>
+            <div class="nice-select wide" tabindex="0">
+                <span class="current">Ярлыки</span>
+                <ul class="list">
+                    <li class="option" data-value="" data-color="#ffffff" style="--rcolor:#ffffff" data-display="Ярлыки">Ярлыки</li>
+                    <?php foreach($labels as $label): ?>
+                        <li class="option" data-value="<?= $label->id; ?>" data-color="#<?= $label->color_code; ?>" style="--rcolor:#<?= $label->color_code; ?>"><?= $label->title; ?></li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
         </div>
         <div class="col-md-3 col-xs-9">
             <input type="text" id="search_text" class="form-control">
@@ -120,6 +129,13 @@ jQuery(document).ready(function(){
     var elem_select_label = document.getElementById('select_label');
     var elem_search = document.getElementById('search_text');
 
+    jQuery('#select_label').niceSelect();
+    jQuery("#select_label").change(function() {
+        var color = (jQuery(".option.selected").data("color"));
+        jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+        show_clients();
+    });
+
     //console.log(clients_data);
     var wheel_count_clients = null, last_tr = null;
 
@@ -143,7 +159,6 @@ jQuery(document).ready(function(){
     };
     
     elem_select_status.onchange = show_clients;
-    elem_select_label.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
 
     //document.onwheel = check_bottom_tr;
@@ -228,7 +243,7 @@ jQuery(document).ready(function(){
 
                 tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
                 tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
-                if (!empty(cl_i.label_color_code)) {
+                if (cl_i.label_color_code !== null) {
                     tr.css('outline', '#'+cl_i.label_color_code+' solid 2px');
                 }
                 tr.css('margin-top', '10px');

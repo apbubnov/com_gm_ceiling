@@ -115,14 +115,32 @@
     <div class="col-md-2 col-xs-0"></div>
     <div class="col-md-2 col-xs-4"><label style="font-size: 16pt;">Ярлык: </label></div>
     <div class="col-md-5 col-xs-5">
-        <select id="select_client_label" class="form-control">
+        <select class="wide cust-select" id="select_client_label">
             <?php if (empty($this->item->label_id)) { ?>
-                <option value="" disabled selected>Выберите ярлык</option>
+                <option value="" selected disabled>Выберите ярлык</option>
             <?php } ?>
-            <?php foreach ($labels as $label) { ?>
+            <?php foreach($labels as $label):
+                if ($label->id == $this->item->label_id) {
+                    $current_label = $label;
+                }
+            ?>
                 <option value="<?= $label->id; ?>" <?= $label->id == $this->item->label_id ? 'selected' : ''; ?>><?= $label->title; ?></option>
-            <?php } ?>
+            <?php endforeach; ?>
         </select>
+        <div class="nice-select wide" tabindex="0" style="--rcolor: #<?= !empty($current_label->id) ? $current_label->color_code : 'ffffff'; ?>;">
+            <span class="current">
+                <?php if (empty($this->item->label_id)) { ?>
+                    Выберите ярлык
+                <?php } else {
+                    echo $current_label->title;
+                } ?>
+            </span>
+            <ul class="list">
+                <?php foreach($labels as $label): ?>
+                    <li class="option" data-value="<?= $label->id; ?>" data-color="#<?= $label->color_code; ?>" style="--rcolor:#<?= $label->color_code; ?>"><?= $label->title; ?></li>
+                <?php endforeach;?>
+            </ul>
+        </div>
     </div>
     <div class="col-md-3 col-xs-3" style="padding: 0px;">
         <button class="btn btn-primary" id="btn_save_client_label" type="button">Ок</button>
@@ -570,6 +588,13 @@
 
     jQuery(document).ready(function ()
     {
+        jQuery('#select_client_label').niceSelect();
+        jQuery("#select_client_label").change(function() {
+            var color = (jQuery(".option.selected").data("color"));
+            jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+        });
+
+
         jQuery('#new_phone').mask('+7(999) 999-9999');
         document.getElementById('calls-tar').scrollTop = 9999;
         var client_id = <?php echo $client->id; ?>;
