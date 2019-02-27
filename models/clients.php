@@ -163,18 +163,28 @@ if (empty($list['direction']))
             }
 
             $db = $this->getDbo();
+
             $query = $db->getQuery(true);
-            $query->from("`#__gm_ceiling_clients` as `client`")
-                ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
-                ->join("LEFT", "(SELECT * FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) as `p` ON `p`.`client_id` = `client`.`id`")
-                ->join("LEFT outer", "`#__users` as `u` ON `client`.`id` = `u`.`associated_client`")
-                ->join("LEFT", "`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`")
-                ->select("`p`.`id`, if(p.deleted_by_user <> 1,`p`.`project_info` ,'-') as `address`, if(p.deleted_by_user <> 1,`s`.`title` ,'-') as `status`, `s`.`id` as `status_id`")
-                ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
-                ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
+            $query->select('`client`.`client_name` as `client_name`,
+                		    `client`.`created`,
+                		    `client`.`id` as `client_id`,
+                		    `client`.`label_id`,
+                		    `p`.`id` AS `project_id`,
+                		    if(`p`.`deleted_by_user` <> 1, `p`.`project_info` , \'-\') as `address`,
+                		    if(`p`.`deleted_by_user` <> 1, `s`.`title`, \'-\') as `status`,
+                		    `s`.`id` as `status_id`,
+                		    GROUP_CONCAT(DISTINCT `phone`.`phone` SEPARATOR \', \') as `client_contacts`,
+                		    `lbs`.`color_code` as `label_color_code`
+                		    ')
+            	->from("`#__gm_ceiling_clients` as `client`")
+                ->leftJoin('`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`')
+                ->leftJoin("`#__gm_ceiling_projects` as `p` ON `p`.`id` = (SELECT MAX(`id`) FROM `rgzbn_gm_ceiling_projects` WHERE `client_id` = `client`.`id`)")
+                ->leftJoin('`#__users` as `u` ON `client`.`id` = `u`.`associated_client`')
+                ->leftJoin('`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`')
+                ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` ON `client`.`label_id` = `lbs`.`id`')
                 ->where('`client`.`deleted_by_user` <> 1')
-                ->order("`client`.`id` DESC")
-                ->group("`client`.`id`");
+                ->order('`client`.`id` DESC')
+                ->group('`client`.`id`');
 
             $query->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
             $db->setQuery($query);

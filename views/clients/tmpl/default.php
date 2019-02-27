@@ -24,8 +24,20 @@ $jinput = JFactory::getApplication()->input;
 $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 
+$labels = $clients_model->getClientsLabels($user->dealer_id);
+
 echo parent::getPreloaderNotJS();
 ?>
+
+<style type="text/css">
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 0.5em;
+    }
+    th {
+        text-align: center;
+    }
+</style>
 
 <div class="row">
     <div class="col-md-2 col-xs-6">
@@ -45,7 +57,7 @@ echo parent::getPreloaderNotJS();
 	<div class="row" style="margin-bottom: 10px;">
         <div class="col-md-4 col-xs-6">
             <select id="select_status" class="form-control">
-                <option value='' selected>Выберите статус</option>
+                <option value='' selected>Статусы</option>
                 <?php foreach($status as $item): ?>
                     <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12) { ?>
                         <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
@@ -55,7 +67,10 @@ echo parent::getPreloaderNotJS();
         </div>
         <div class="col-md-4 col-xs-6">
             <select id="select_label" class="form-control">
-                <option value='' selected>Выберите ярлык</option>
+                <option value='' selected>Ярлыки</option>
+                <?php foreach($labels as $label): ?>
+                    <option value="<?= $label->id; ?>"><?= $label->title; ?>
+                <?php endforeach;?>
             </select>
         </div>
         <div class="col-md-3 col-xs-9">
@@ -65,7 +80,7 @@ echo parent::getPreloaderNotJS();
             <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
         </div>
 	</div>
-	<table class="small_table table-striped table_cashbox one-touch-view g_table" id="clientList">
+	<table class="table one-touch-view g_table" id="clientList">
 		<thead>
 			<tr>
 				<th>
@@ -102,6 +117,7 @@ echo parent::getPreloaderNotJS();
 jQuery(document).ready(function(){
     var clients_data = JSON.parse('<?php echo json_encode($clients); ?>');
     var elem_select_status = document.getElementById('select_status');
+    var elem_select_label = document.getElementById('select_label');
     var elem_search = document.getElementById('search_text');
 
     //console.log(clients_data);
@@ -127,6 +143,7 @@ jQuery(document).ready(function(){
     };
     
     elem_select_status.onchange = show_clients;
+    elem_select_label.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
 
     //document.onwheel = check_bottom_tr;
@@ -176,45 +193,45 @@ jQuery(document).ready(function(){
     function print_clients(begin)
     {
         var status = elem_select_status.value;
+        var label = elem_select_label.value;
         var search = elem_search.value;
         var search_reg = new RegExp(search, "ig");
-        for(var i = begin, cl_i, iter = 0; i < clients_data.length; i++)
+        for (var i = begin, cl_i, iter = 0; i < clients_data.length; i++)
         {
             cl_i = clients_data[i];
             if ((search_reg.test(cl_i.client_name) || search_reg.test(cl_i.address) ||
                 search_reg.test(cl_i.client_contacts) || search_reg.test(cl_i.id)) && 
-                (status === "" || status === cl_i.status_id))
+                (status === '' || status === cl_i.status_id) &&
+                (label === '' || label === cl_i.label_id))
             {
                 var tr = $("#TrClone").clone();
 
                 tr.show();
                 tr.find(".created").text(cl_i.created);
-                if (cl_i.client_contacts != null)
-                {
+                if (cl_i.client_contacts != null) {
                     tr.find(".name").text(cl_i.client_contacts + ' ' + cl_i.client_name);
-                }
-                else
-                {
+                } else {
                     tr.find(".name").text(cl_i.client_name);
                 }
-                if (clients_data[i].address != null)
-                {
+
+                if (clients_data[i].address != null) {
                     tr.find(".address").text(cl_i.address);
-                }
-                else
-                {
+                } else {
                     tr.find(".address").text('-');
                 }
-                if (cl_i.status != null)
-                {
+
+                if (cl_i.status != null) {
                     tr.find(".status").text(cl_i.status);
-                }
-                else
-                {
+                } else {
                     tr.find(".status").text('-');
                 }
+
                 tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
                 tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
+                if (!empty(cl_i.label_color_code)) {
+                    tr.css('outline', '#'+cl_i.label_color_code+' solid 2px');
+                }
+                tr.css('margin-top', '10px');
                 list.append(tr);
                 wheel_count_clients = i;
                 iter++;
