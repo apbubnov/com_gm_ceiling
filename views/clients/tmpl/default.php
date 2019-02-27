@@ -27,23 +27,43 @@ $status = $status_model->getData();
 echo parent::getPreloaderNotJS();
 ?>
 
-<h2 class = "center">Клиенты</h2>
+<div class="row">
+    <div class="col-md-2 col-xs-6">
+        <a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0', false, 2); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Клиент</a>
+    </div>
+    <div class="col-md-3 col-xs-6">
+        <a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients&type=labels', false, 2); ?>" class="btn btn-primary"><i class="fa fa-tags"></i> Ярлыки</a>
+    </div>
+    <div class="col-md-0 col-xs-3"></div>
+    <div class="col-md-7 col-xs-9">
+        <h2>Клиенты</h2>
+    </div>
+</div>
+
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients'); ?>" method="post" name="adminForm" id="adminForm">
-	<div class="row-fluid toolbar">
-		<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0', false, 2); ?>" class="btn btn-primary">
-			Добавить клиента
-		</a>
-        <select id="select_status">
-            <option value='' selected>Выберите статус</option>
-            <?php foreach($status as $item): ?>
-                <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12) { ?>
-                    <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
-                <?php } ?>
-            <?php endforeach;?>
-        </select>
-        <input type="text" id="search_text">
-        <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
+	<div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-4 col-xs-6">
+            <select id="select_status" class="form-control">
+                <option value='' selected>Выберите статус</option>
+                <?php foreach($status as $item): ?>
+                    <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12) { ?>
+                        <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+                    <?php } ?>
+                <?php endforeach;?>
+            </select>
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <select id="select_label" class="form-control">
+                <option value='' selected>Выберите ярлык</option>
+            </select>
+        </div>
+        <div class="col-md-3 col-xs-9">
+            <input type="text" id="search_text" class="form-control">
+        </div>
+        <div class="col-md-1 col-xs-3" style="padding: 0px;">
+            <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
+        </div>
 	</div>
 	<table class="small_table table-striped table_cashbox one-touch-view g_table" id="clientList">
 		<thead>
