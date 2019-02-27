@@ -1832,7 +1832,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if(!empty($data['n37'])){
                 $n37 = json_decode($data['n37']);
-                if(!empty($n37)){
+                if(!empty($n37->square) && !empty($n37->cost)){
                     $gm_price = round($n37->cost/$n37->square,2);
                     $dealer_price = margin($gm_price, $margin['dealer_canvases_margin']);
                     $guild_data[] = array(
