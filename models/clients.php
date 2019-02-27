@@ -726,7 +726,7 @@ if (empty($list['direction']))
         }
     }
 
-    public function saveClientLabel($id, $title, $color_code, $dealer_id) {
+    public function saveNewLabel($id, $title, $color_code, $dealer_id) {
     	try {
 	        $db    = JFactory::getDbo();
 	        $query = $db->getQuery(true);
@@ -741,6 +741,32 @@ if (empty($list['direction']))
 		            ->columns('`title`, `color_code`, `dealer_id`')
 		            ->values("'$title', '$color_code', $dealer_id");
 	        }
+	        $db->setQuery($query);
+	        $db->execute();
+	        
+	        $result = (object) array('insertId' => $db->insertid());
+	        return $result;
+	    } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function saveClientLabel($client_id, $label_id, $dealer_id) {
+    	try {
+	        $db    = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	            ->update('`#__gm_ceiling_clients`')
+	            ->set("`label_id` = $label_id")
+	            ->where("`dealer_id` = $dealer_id AND `id` = $client_id");
+	        $db->setQuery($query);
+	        $db->execute();
+
+	        $query = $db->getQuery(true);
+        	$query
+	            ->insert('`#__gm_ceiling_clients_labels_history`')
+	            ->columns('`client_id`, `label_id`')
+	            ->values("$client_id, $label_id");
 	        $db->setQuery($query);
 	        $db->execute();
 	        

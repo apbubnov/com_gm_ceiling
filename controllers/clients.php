@@ -119,7 +119,7 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
         }
     }
 
-    function saveClientLabel() {
+    function saveNewLabel() {
         try {
             $jinput = JFactory::getApplication()->input;
             $label_id = $jinput->get('label_id', null, 'int');
@@ -127,7 +127,24 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             $title = $jinput->get('title', null, 'string');
             $dealer_id = JFactory::getUser()->dealer_id;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-            $result = $model->saveClientLabel($label_id, $title, $color_code, $dealer_id);
+            $result = $model->saveNewLabel($label_id, $title, $color_code, $dealer_id);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function saveClientLabel() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $label_id = $jinput->get('label_id', null, 'int');
+            $client_id = $jinput->get('client_id', null, 'int');
+            $dealer_id = JFactory::getUser()->dealer_id;
+            if (empty($label_id) || empty($client_id) || empty($dealer_id)) {
+                throw new Exception('Empty input data');
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->saveClientLabel($client_id, $label_id, $dealer_id);
             die(json_encode($result));
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
