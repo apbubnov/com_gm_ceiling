@@ -173,7 +173,7 @@ jQuery(document).ready(function() {
         var label_color = jQuery('#new_label_color').val();
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=clients.saveClientLabel",
+            url: "index.php?option=com_gm_ceiling&task=clients.saveNewLabel",
             async: false,
             data: {
                 label_id: labelId,

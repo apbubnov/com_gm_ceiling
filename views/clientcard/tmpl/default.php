@@ -116,9 +116,11 @@
     <div class="col-md-2 col-xs-4"><label style="font-size: 16pt;">Ярлык: </label></div>
     <div class="col-md-5 col-xs-5">
         <select id="select_client_label" class="form-control">
-            <option disabled selected>Выберите ярлык</option>
+            <?php if (empty($this->item->label_id)) { ?>
+                <option value="" disabled selected>Выберите ярлык</option>
+            <?php } ?>
             <?php foreach ($labels as $label) { ?>
-                <option value="<?= $label->id; ?>" style="background: linear-gradient(0deg, #FFFFFF, #<?= $label->color_code; ?>);"><?= $label->title; ?></option>
+                <option value="<?= $label->id; ?>" <?= $label->id == $this->item->label_id ? 'selected' : ''; ?>><?= $label->title; ?></option>
             <?php } ?>
         </select>
     </div>
@@ -694,6 +696,52 @@
             return false;
         });
     });
+
+    document.getElementById('btn_save_client_label').onclick = function() {
+        var label_id = document.getElementById('select_client_label').value;
+        if (empty(label_id)) {
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'topCenter',
+                maxVisible: 5,
+                type: "warning",
+                text: "Выберите ярлык"
+            });
+            return;
+        }
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=clients.saveClientLabel",
+            data: {
+                client_id: client_id,
+                label_id: label_id
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "На клиента назначен ярлык"
+                });
+            },
+            error: function(data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    };
 
     jQuery("#back_btn").click(function (){
         history.go(-1);
