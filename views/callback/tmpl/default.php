@@ -12,12 +12,49 @@ defined('_JEXEC') or die;
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $user_group = $user->groups;
+
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+$labels = $clients_model->getClientsLabels($user->dealer_id);
 ?>
 
+<style type="text/css">
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 0.5em;
+    }
+    th {
+        text-align: center;
+    }
+</style>
+
 <form>
-    <?=parent::getButtonBack();?>
-    <input type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
-    <table class="small_table table_cashbox table-striped" id="callbacksList">
+    <div class="row">
+        <div class="col-md-2 col-xs-12" style="margin-bottom: 10px;">
+            <?=parent::getButtonBack();?>
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <input class="form-control" type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <select class="wide cust-select" id="select_label">
+                <option value="" selected>Ярлыки</option>
+                <?php foreach($labels as $label): ?>
+                    <option value="<?= $label->id; ?>"><?= $label->title; ?></option>
+                <?php endforeach;?>
+            </select>
+            <div class="nice-select wide" tabindex="0">
+                <span class="current">Ярлыки</span>
+                <ul class="list">
+                    <li class="option" data-value="" data-color="#ffffff" style="--rcolor:#ffffff" data-display="Ярлыки">Ярлыки</li>
+                    <?php foreach($labels as $label): ?>
+                        <li class="option" data-value="<?= $label->id; ?>" data-color="#<?= $label->color_code; ?>" style="--rcolor:#<?= $label->color_code; ?>"><?= $label->title; ?></li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <table class="table one-touch-view g_table" id="callbacksList">
         <thead>
         <tr>
             <th>ФИО клиента</th>
@@ -38,17 +75,32 @@ $user_group = $user->groups;
     var arr_calls = [];
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
+    var timeouts = [];
+
     function show_calls() {
+        timeouts = [];
         var calendar_elem_value = document.getElementById('calendar').value;
         table_body_elem.innerHTML = '';
         var scrollTrIndex = localStorage.getItem('viewCallbackTrIndex');
         if (!scrollTrIndex) {
             scrollTrIndex = 0;
         }
-        for (var i = 0; i < arr_calls.length; i++) {
-            setTimeout(printTr, 0, arr_calls[i], i, scrollTrIndex);
+        for (var i = 0, j; i < arr_calls.length; i += 50) {
+            if (i + 50 > arr_calls.length) {
+                j = arr_calls.length;
+            } else {
+                j = i + 50;
+            }
+            timeouts.push(setTimeout(printGroupTr, 0, i, j));
         }
         reduceGTable();
+
+        function printGroupTr(i, j) {
+            console.log(i, j);
+            for (var k = i; k < j; k++) {
+                printTr(arr_calls[k], k, scrollTrIndex);
+            }
+        }
 
         function printTr(arr_calls_i, i, scrollTrIndex) {
             var str, tr, td;
@@ -71,6 +123,10 @@ $user_group = $user->groups;
             td = tr.insertCell();
             td.innerHTML = '<button class="btn btn-danger btn-sm" type="button" data-id="'+arr_calls_i.id+'"><i class="fa fa-trash" aria-hidden="true"></i></button>';
             td.getElementsByTagName('button')[0].onclick = del_call;
+            if (arr_calls_i.label_color !== null) {
+                jQuery(tr).css('outline', '#'+arr_calls_i.label_color+' solid 2px');
+            }
+            jQuery(tr).css('margin-top', '10px');
             tr.onclick = clickTr;
             if (scrollTrIndex !== 0 && scrollTrIndex < i) {
                 setTimeout(scrollToSavedTrIndex, 100);
@@ -84,7 +140,8 @@ $user_group = $user->groups;
             url: "index.php?option=com_gm_ceiling&task=callback.getData",
             data: {
                 userId: user_id,
-                date: jQuery('#calendar').val()
+                date: jQuery('#calendar').val(),
+                label_id: jQuery('#select_label').val()
             },
             success: function(data){
                 arr_calls = data;
@@ -146,6 +203,13 @@ $user_group = $user->groups;
         document.getElementById('calendar').onchange = function(){
             getData();
         };
+
+        jQuery('#select_label').niceSelect();
+        jQuery("#select_label").change(function() {
+            var color = (jQuery(".option.selected").data("color"));
+            jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+            getData();
+        });
     });
 
     function del_call() {
