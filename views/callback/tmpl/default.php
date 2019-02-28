@@ -96,7 +96,6 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         reduceGTable();
 
         function printGroupTr(i, j) {
-            console.log(i, j);
             for (var k = i; k < j; k++) {
                 printTr(arr_calls[k], k, scrollTrIndex);
             }
