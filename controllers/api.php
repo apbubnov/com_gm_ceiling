@@ -28,15 +28,63 @@ class Gm_ceilingControllerApi extends JControllerLegacy
      *
      * @since    1.6
      */
-    public function getModel($name = 'Api', $prefix = 'Gm_ceilingModel', $config = array())
-    {
+
+    const STATIC_KEY = 'crutch';
+
+    public function getModel($name = 'Api', $prefix = 'Gm_ceilingModel', $config = array()) {
         return parent::getModel($name, $prefix, array('ignore_request' => true));
     }
 
-    public function Authorization_FromAndroid()
-    {
-        try
-        {
+    public function getPublicKey() {
+        try {
+            if (empty($_POST['data']) || $_POST['data'] !== 'give me a public key') {
+                die(json_encode(null));
+            }
+            $model = $this->getModel();
+            $result = $model->generateKeypair();
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    public function getSecret($user_id) {
+        try {
+            $user = JFactory::getUser($user_id);
+            $secret = md5($this->STATIC_KEY.$user->username.$user->name);
+            return $secret;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function xor_string($string, $key) {
+        try {
+            for($i = 0; $i < strlen($string); $i++) 
+                $string[$i] = ($string[$i] ^ $key[$i % strlen($key)]);
+            return $string;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function crypt($key_number, $data) {
+        try {
+            $secret = $this->getSecret($key_number);
+            $crypt = $this->xor_string($data, $secret);
+            $hash = hash('sha512', $data.$secret);
+            $result = (object)array('key_number' => $user->id, 'data' => $crypt, '');
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function Authorization_FromAndroid() {
+        try {
             $authorization = json_decode($_POST['authorizations']);
             $model = $this->getModel();
 
@@ -59,170 +107,117 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             } else {
                 die('Неверный логин или пароль.');
             }
-        }
-        catch(Exception $e) {
-            die($e->getMessage());
-        }
-    }
-    public function register_from_android(){
-        try
-        {
-            if(!empty($_POST['r_data'])){
-                $register_data = json_decode($_POST['r_data']);
-                if(!empty($register_data)){
-                    $callback_msg = "Регистрация в android-приложении";
-                    if(!empty($register_data->type)){
-                        $callback_msg = "Регистрация в web-приложении";
-                    }
-                    $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                    $result = $model->register_from_android($register_data);
-                    $dealer_id = $result->new_id;
-                    if(!empty($dealer_id)){
-                        $dealer = JFactory::getUser($dealer_id);
-                        $email = $dealer->email;
-                        $server_name = $_SERVER['SERVER_NAME'];
-                        $site = "http://$server_name/index.php?option=com_users&view=login";
-                        $code = md5($dealer_id.'dealer_instruction');
-                        $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=0&code=$code";
-                        // письмо
-                        $mailer = JFactory::getMailer();
-                        $config = JFactory::getConfig();
-                        $sender = array(
-                            $config->get('mailfrom'),
-                            $config->get('fromname')
-                        );
-                        $mailer->setSender($sender);
-                        $mailer->addRecipient($email);
-                        $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
-                        $body .= '<body style="margin: 10px;">';
-                        $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-                        $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
-                        $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
-                        $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
-
-                        $body .= '<p>Тел.: +7(473)212-34-01</p>';
-
-                        $body .= '<p>Почта: gm-partner@mail.ru</p>';
-                        $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
-                        $body .= '</div></td></tr></table>';
-                        $body .= "<div style=\"width: 100%\">Инструкция по использованию: <a href=\"$site2\">Посмотреть видео</a><br>Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br>
-                                Логин: $dealer->username<br>Врменный пароль для входа: $dealer->username<br></div></body>";
-                        $mailer->setSubject('Доступ в кабинет');
-                        $mailer->isHtml(true);
-                        $mailer->Encoding = 'base64';
-                        $mailer->setBody($body);
-                        $send = $mailer->Send();
-                        $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                        $users_model->addDealerInstructionCode($dealer_id, $code, 1);    
-                        $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-                        $callback_model->save(date('Y-m-d H:i:s'),$callback_msg,$dealer->associated_client,1);
-                    }
-                    die(json_encode($result));
-                }
-            }
-            else{
-                die(json_encode(null));
-            }
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             die($e->getMessage());
         }
     }
 
-    public function register($register_data, $from_browser){
+    public function register($register_data, $from_browser) {
         try {
             $result = json_encode(null);
-            if (!empty($_POST['r_data'])) {
-                $register_data = json_decode($_POST['r_data']);
+            if (!empty($_POST['data'])) {
+                $data = json_decode($_POST['data']);
+                if (empty($data->key_number) || empty($data->data)) {
+                    die(null);
+                }
+                $model = $this->getModel();
+                $key_number = (int)$data->key_number;
+                $privatekey = $model->getKeypair($key_number)->private_key;
+                openssl_private_decrypt(base64_decode($data->data), $register_data, $privatekey);
+                $register_data = json_decode($register_data);
             } elseif (empty($register_data) || empty($from_browser)) {
                 return false;
             }
             
-            if(!empty($register_data)) {
-               // $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
-                $str = explode('@', $register_data->email)[0];
-                // в нижний регистр
-                $str = strtolower($str);
-                // заменям все ненужное нам на "-"
-                $str = preg_replace('~[^a-z0-9\_\-\.]+~u', '-', $str);
-                // удаляем начальные и конечные '-'
-                $username = trim($str, '-');
-
-                $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
-                if (!empty($id)) {
-                    $result = json_encode(JFactory::getUser($id->id));
-                } else {
-                    $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
-                    if (!empty($from_browser) && $from_browser == 1) {
-                        $data = array(
-                            "name" => $register_data->fio,
-                            "username" => $username,
-                            "password" => $pass,
-                            "password2" => $pass,
-                            "email" => $register_data->email,
-                            "groups" => array(2, 14),
-                            "dealer_type" => 1,
-                            "requireReset" => 0
-                        );
-                    } else {
-                        $data = array(
-                            "name" => $register_data->fio,
-                            "username" => $username,
-                            "password" => $pass,
-                            "password2" => $pass,
-                            "email" => $register_data->email,
-                            "groups" => array(2),
-                            "dealer_type" => 1,
-                            "settings" => "{\"CheckTimeCallback\":10,\"CheckTimeCall\":5}"
-                        );
-                    }
-                    
-                    $user = new JUser;
-                    if (!$user->bind($data)) {
-                        throw new Exception($user->getError());
-                    }
-                    if (!$user->save()) {
-                        throw new Exception($user->getError());
-                    }
-                    $userID = $user->id;
-                    $user =& JUser::getInstance((int)$userID);
-                    //cсздание associated_client
-                    $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-                    $client_data['client_name'] = $register_data->fio;
-                    $client_id = $clientform_model->save($client_data);
-                    $update['dealer_id'] = $userID;
-                    $update['associated_client'] = $client_id;
-                    if (empty($from_browser)) {
-                        $update['android_id'] = $userID;
-                    }
-                    if (!$user->bind($update)) return false;
-                    if (!$user->save()) return false;
-                    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
-                    $client_model->updateClient($client_id, null, $userID);
-
-                    $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
-                    $dop_contacts_model->save($client_id, 1, $email);
-
-                    $result = json_encode(JFactory::getUser($userID));
-
-                    $mailer = JFactory::getMailer();
-                    $config = JFactory::getConfig();
-                    $sender = array(
-                        $config->get('mailfrom'),
-                        $config->get('fromname')
-                    );
-                    $mailer->setSender($sender);
-                    $mailer->addRecipient($register_data->email);
-                    $body .= "Здавствуйте! Благодарим вас за регистрацию в приложении!\n";
-                    $body .= "Логин: $username\n";
-                    $body .= "Пароль: $pass\n";
-                    $mailer->setSubject('Регистрация в приложении');
-                    $mailer->setBody($body);
-                    $mailer->send();
-                }
+            if (empty($register_data)) {
+                die(json_encode(null));
             }
+           // $str = Gm_ceilingHelpersGm_ceiling::rus2translit($register_data->fio);
+            $str = explode('@', $register_data->email)[0];
+            // в нижний регистр
+            $str = strtolower($str);
+            // заменям все ненужное нам на "-"
+            $str = preg_replace('~[^a-z0-9\_\-\.]+~u', '-', $str);
+            // удаляем начальные и конечные '-'
+            $username = trim($str, '-');
+
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
+            if (!empty($id)) {
+                $user = JFactory::getUser($id->id);
+                $result = json_encode($this->crypt($user->id, $user));
+            } else {
+                $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
+                if (!empty($from_browser) && $from_browser == 1) {
+                    $data = array(
+                        "name" => $register_data->fio,
+                        "username" => $username,
+                        "password" => $pass,
+                        "password2" => $pass,
+                        "email" => $register_data->email,
+                        "groups" => array(2, 14),
+                        "dealer_type" => 1,
+                        "requireReset" => 0
+                    );
+                } else {
+                    $data = array(
+                        "name" => $register_data->fio,
+                        "username" => $username,
+                        "password" => $pass,
+                        "password2" => $pass,
+                        "email" => $register_data->email,
+                        "groups" => array(2),
+                        "dealer_type" => 1,
+                        "settings" => "{\"CheckTimeCallback\":10,\"CheckTimeCall\":5}"
+                    );
+                }
+                
+                $user = new JUser;
+                if (!$user->bind($data)) {
+                    throw new Exception($user->getError());
+                }
+                if (!$user->save()) {
+                    throw new Exception($user->getError());
+                }
+                $userID = $user->id;
+                $user =& JUser::getInstance((int)$userID);
+                //cсздание associated_client
+                $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+                $client_data['client_name'] = $register_data->fio;
+                $client_id = $clientform_model->save($client_data);
+                $update['dealer_id'] = $userID;
+                $update['associated_client'] = $client_id;
+                if (empty($from_browser)) {
+                    $update['android_id'] = $userID;
+                }
+                if (!$user->bind($update)) return false;
+                if (!$user->save()) return false;
+                $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+                $client_model->updateClient($client_id, null, $userID);
+
+                $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
+                $dop_contacts_model->save($client_id, 1, $email);
+
+                $user = JFactory::getUser($userID);
+
+                $result = json_encode($this->crypt($user->id, $user));
+
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($register_data->email);
+                $body .= "Здавствуйте! Благодарим вас за регистрацию в приложении!\n";
+                $body .= "Логин: $username\n";
+                $body .= "Пароль: $pass\n";
+                $mailer->setSubject('Регистрация в приложении');
+                $mailer->setBody($body);
+                $mailer->send();
+            }
+
             if (empty($from_browser)) {
                 die($result);
             } else {
