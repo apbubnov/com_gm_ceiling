@@ -34,12 +34,15 @@ class Gm_ceilingModelCallback extends JModelList
 							`a`.`comment`,
 							`c`.`client_name`,
 							`u`.`dealer_type`,
-							`us`.`name` as `manager_name`')
+							`us`.`name` AS `manager_name`,
+							`c`.`label_id`,
+							`l`.`color_code` AS `label_color`')
 				->from('`#__gm_ceiling_callback` as `a`')
 				->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
 				->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
 				->innerJoin('`#__users` as `us` ON `a`.`manager_id` = `us`.`id`')
-				->order('`date_time` DESC');
+				->leftJoin('`#__gm_ceiling_clients_labels` as `l` ON `c`.`label_id` = `l`.`id`')
+				->order('`date_time`');
 			if(!empty($filter)){
 			    $query->where($filter);
             }

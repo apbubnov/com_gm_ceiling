@@ -23,6 +23,55 @@ class Gm_ceilingModelApi extends JModelList
         parent::__construct($config);
     }
 
+    public function generateKeypair() {
+        try {
+            $db = $this->getDbo();
+
+            // Create the keypair
+            $res = openssl_pkey_new();
+            // Get private key
+            openssl_pkey_export($res, $privatekey);
+            // Get public key
+            $publickey = openssl_pkey_get_details($res);
+            $publickey = $publickey['key'];
+
+            $delTime = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').' -10 minutes'));
+
+            $query = $db->getQuery(true);
+            $query->delete('`#__keypairs`');
+            $query->where("`change_time` < '$delTime'");
+            $db->setQuery($query);
+            $db->execute();
+
+            $query = $db->getQuery(true);
+            $query->insert("`#__keypairs`");
+            $query->columns('`public_key`, `private_key`');
+            $query->values("'$publickey', '$privatekey'");
+            $db->setQuery($query);
+            $db->execute();
+
+            $result = (object) array('key_number' => $db->insertid(), 'public_key' => $publickey);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getKeypair($key_number) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`public_key`, `private_key`');
+            $query->from('`#__keypairs`');
+            $query->where("`id` = $key_number");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     function getProjectByStatus($statuses){
         $db = $this->getDbo();
         $query = $db->getQuery(true);
