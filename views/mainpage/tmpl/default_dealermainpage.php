@@ -194,7 +194,7 @@ $rest = -($total_sum) - $contributed;
         </div>
         <p class="center">
             <a class="btn btn-large btn-danger"
-               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype=buh', false); ?>"><i
+               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&&view=projects&type=buh', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Бухгалтерия</a>
         </p>
         <p class="center">

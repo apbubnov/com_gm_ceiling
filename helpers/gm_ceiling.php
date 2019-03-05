@@ -1028,7 +1028,7 @@ class Gm_ceilingHelpersGm_ceiling
             $items_10 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%круглая%') AND `c`.`title` LIKE('%Платформа под люстру%') ";
             $items_16 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('%6*40%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
+            $filter = "`co`.`title`  LIKE('%6*50%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
             $items_556 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%ПВС 2 х 0,75%') AND `c`.`title` LIKE('%Провод%') ";
             $items_4 = $components_model->getFilteredItems($filter);

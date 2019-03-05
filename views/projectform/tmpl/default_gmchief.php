@@ -457,7 +457,7 @@
 
     // показать историю
     function show_comments() {
-        var id_client = <?php echo $this->item->client_id;?>;
+        var id_client = <?php echo $this->item->id_client;?>;
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=selectComments",
             data: {
@@ -540,7 +540,7 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->client_id;?>;
+            var id_client = <?php echo $this->item->id_client;?>;
             if (reg_comment.test(comment) || comment === "") {
                 alert('Неверный формат примечания!');
                 return;

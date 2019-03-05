@@ -337,4 +337,23 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function set_ready_time(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $data = json_decode($jinput->get("data","","STRING"));
+	        if(!empty($data)){
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+	            foreach ($data as $value){
+                    $model->save_ready_time($value->calc_id,$value->ready_time);
+                }
+            }
+            die(json_encode(true));
+        }
+
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

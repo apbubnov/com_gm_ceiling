@@ -44,13 +44,13 @@ JHtml::_('formbehavior.chosen', 'select');
 
 
     /*Dealer history*/
-$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-$dealer_history = $recoil_map_project_model->getData($client->dealer_id);
-$dealer_history_sum = 0;
-foreach ($dealer_history as $key => $item) {
-    $dealer_history[$key]->data = date("d.m.Y H:i", strtotime($item->date_time));
-    $dealer_history_sum += $item->sum;
-}
+    $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+    $dealer_history = $recoil_map_project_model->getData($client->dealer_id);
+    $dealer_history_sum = 0;
+    foreach ($dealer_history as $key => $item) {
+        $dealer_history[$key]->data = date("d.m.Y H:i", strtotime($item->date_time));
+        $dealer_history_sum += $item->sum;
+    }
 ?>
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
@@ -186,13 +186,21 @@ foreach ($dealer_history as $key => $item) {
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button></p>
         <p>
-            <select id="select_status" ><option value='' selected>Выберите статус</option>
-                <?php foreach($status as $item): ?>
-                    <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
-                        <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
-                    <?php } ?>
-                <?php endforeach;?>
-            </select>
+        <div class="row right">
+            <div class="col-md-6">Фильтры</div>
+            <div class="col-md-3">
+                <select id="select_status" ><option value='' selected>Выберите статус</option>
+                    <?php foreach($status as $item): ?>
+                        <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                            <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+                        <?php } ?>
+                    <?php endforeach;?>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input class="input-gm" id="search_string"><button class="btn btn-primary" id="start_search"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </div>
+        </div>
         </p>
         <div id="cliens_of_dealer_2">
             <table class="table table-striped table_cashbox one-touch-view g_table" id="clientList">
@@ -552,43 +560,7 @@ foreach ($dealer_history as $key => $item) {
                 cache: false,
                 success: function (data) {
                     console.log(data);
-                    var list = $("#clientList tbody");
-                    list.empty();
-                    var text='';
-                    for(i=0;i<data.length;i++){
-                        var tr = $("#TrClone").clone();
-
-                        tr.show();
-                        tr.find(".created").text(data[i].created);
-                        if (data[i].client_contacts != null)
-                        {
-                            tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
-                        }
-                        else
-                        {
-                            tr.find(".name").text(data[i].client_name);
-                        }
-                        if (data[i].address != null)
-                        {
-                            tr.find(".address").text(data[i].address);
-                        }
-                        else
-                        {
-                            tr.find(".address").text('-');
-                        }
-                        if (data[i].status != null)
-                        {
-                            tr.find(".status").text(data[i].status);
-                        }
-                        else
-                        {
-                            tr.find(".status").text('-');
-                        }
-
-                        tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
-                        list.append(tr);
-                    }
-                    OpenPage();
+                    fill_dealer_clients(data);
                 },
                 timeout: 50000,
                 error: function (data) {
@@ -604,7 +576,55 @@ foreach ($dealer_history as $key => $item) {
                 }
             });
         });
-
+        function fill_dealer_clients(data){
+            var list = $("#clientList tbody");
+            list.empty();
+            var text='';
+            for(i=0;i<data.length;i++){
+                var tr = $("#TrClone").clone();
+                tr.show();
+                tr.find(".created").text(data[i].created);
+                if (data[i].client_contacts != null)
+                {
+                    tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
+                }
+                else
+                {
+                    tr.find(".name").text(data[i].client_name);
+                }
+                if (data[i].address != null)
+                {
+                    tr.find(".address").text(data[i].address);
+                }
+                else
+                {
+                    if(!empty(data[i].project_info)){
+                        tr.find(".address").text(data[i].project_info);
+                    }
+                    else{
+                        tr.find(".address").text('-');
+                    }
+                }
+                if (data[i].status != null)
+                {
+                    tr.find(".status").text(data[i].status);
+                }
+                else
+                {
+                    tr.find(".status").text('-');
+                }
+                var redirectUrl = "";
+                if(!empty(data[i].client_id)){
+                    redirectUrl = "/index.php?option=com_gm_ceiling&view=clientcard&id="+ data[i].client_id;
+                }
+                else{
+                    redirectUrl = "/index.php?option=com_gm_ceiling&view=clientcard&id="+ data[i].id;
+                }
+                tr.attr("data-href", redirectUrl );
+                list.append(tr);
+            }
+            OpenPage();
+        }
         jQuery("#but_comm").click(function (){
             jQuery("#mv_container").show();
             jQuery("#modal_window_comm").show("slow");
@@ -615,6 +635,34 @@ foreach ($dealer_history as $key => $item) {
             jQuery("#mv_container").show();
             jQuery("#modal_window_login").show("slow");
             jQuery("#close").show();
+        });
+
+        jQuery("#start_search").click(function(){
+            var search_string = jQuery("#search_string").val();
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=clients.searchClients",
+                data: {
+                    search_text: search_string,
+                    dealer_id:<?php echo $client->dealer_id; ?>
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    console.log(data);
+                    fill_dealer_clients(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
         });
 
         jQuery("#add_call").click(function(){

@@ -910,4 +910,28 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function save_ready_time($calc_id,$ready_time){
+	    try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->update('`#__gm_ceiling_calculations`');
+            if($ready_time != "by_call"){
+                $query->set("`run_by_call` = (NULL)");
+                $query->set("`run_date` = '$ready_time'");
+            }
+            else{
+                $query->set("`run_by_call` = 1");
+                $query->set("`run_date` = (NULL)");
+            }
+            $query->where("id = $calc_id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

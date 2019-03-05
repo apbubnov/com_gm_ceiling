@@ -937,7 +937,7 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-    public function approvemanager($id,$ready_date = null,$quickly=null)
+    public function approvemanager($id)
     {
     	try
     	{
@@ -951,11 +951,6 @@ class Gm_ceilingModelProject extends JModelItem
                 $query->set('projects.project_status = 19');
             else
                 $query->set('projects.project_status = 10');
-           
-            if(!empty($ready_date)&&!empty($quickly)){
-                $query->set("projects.ready_time = '$ready_date'");
-                $query->set("projects.quickly = $quickly");
-            }
 
             $query->where('projects.id = ' . $id);
             

@@ -1210,19 +1210,18 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         {
 			$jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', '0', 'INT');
-            $ready_date = $jinput->get('ready_date','','STRING');
-            $time = $jinput->get('time','','STRING');
-            $ready_date_time = $ready_date.' '.$time;
-            $quickly = $jinput->get('quick',0,'INT');
+            $ready_date = json_decode($jinput->get('ready_dates','','STRING'));
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            if(!empty($ready_date)){
+                foreach($ready_date as $value){
+                    $calculationModel->save_ready_time($value->calc_id,$value->ready_time);
+                }
+            }
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
-            $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel'); 
+            $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
 			$data = $model->approvemanager($id,$ready_date_time,$quickly);
-
 			$res = $model->getNewData($id);
-
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
-
-
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calc_model->new_getProjectItems($id);
 			$material_sum = 0;
@@ -1688,23 +1687,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
-    public function update_ready_time()
-    {
-        try
-        {   
-            $jinput = JFactory::getApplication()->input;
-            $data['id'] = $jinput->get('project_id', null, 'int');
-            $data['ready_time'] = $jinput->get('ready_time', null, 'string');
 
-            $model = $this->getModel('Project', 'Gm_ceilingModel');
-            $result = $model->save($data);
-            die($result);
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
 
     public function delete_by_user(){
         try{

@@ -404,10 +404,10 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             
         </div>
     <?php } ?>
-    <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
+    <div class="project_activation" <?php if($user->dealer_type != 1 && $this->item->project_status != 4) echo "style=\"display: none;\""?> id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
-            <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
-            </div>
+           <!-- <div id="mounter_wraper" <?php /*if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""*/?>>
+            </div>-->
             <div class="row center">
                 <div class="col-md-6">
                     <h4>Назначить дату монтажа</h4>
@@ -416,8 +416,31 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 <div class="col-md-6">
                     <div class="row">
                         <h4>Назначить дату готовности полотен</h4>
-                        <input type="datetime-local" id="date_canvas_ready">
-                        <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                        <?php foreach($calculations as $calculation){?>
+                            <div class="row center"  style="padding-bottom: 5px;">
+                                <div class="col-md-4 ">
+                                    <?php echo $calculation->calculation_title; ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="checkbox" data-calc_id = "<?php echo $calculation->id?>" id="<?php echo $calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
+                                    <label for="<?php echo $calculation->id?>" class="cbx">
+                                        <span>
+                                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span>По звонку</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 left">
+                                    <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
+                                </div>
+
+                            </div>
+                        <?php }?>
+                        <div class="row">
+                            <button class="btn btn-primary" id="btn_ready_date_вave" type="button">Сохранить</button>
+                        </div>
                     </div>
                     <div class="row" >
                         <div id ="comments_divs">
@@ -466,7 +489,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     </div>
  
     <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-
+    </div>
     <div class="modal_window_container" id="mw_container">
         <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div class="modal_window" id="modal_window_measures_calendar" style="border: 2px solid black; border-radius: 4px;"></div>
@@ -647,7 +670,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
         </div>
     </div>
-    </div>
+
 </form>
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
@@ -667,7 +690,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         var deleted_phones = [], deleted_emails = [];
 
         // закрытие окон модальных
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        jQuery(document).mouseup(function (e){// событие клика по веб-документу
             var div1 = jQuery("#modal_window_by_email");
             var div2 = jQuery("#mw_rec_to_msr");
             var div3 = jQuery("#mw_discount");
@@ -725,12 +748,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             {
                 show_comments();
             }
-
-            jQuery("#change_data").click(function(){
-                jQuery("#close_mw").show();
-                jQuery("#mw_container").show();
-                jQuery("#mw_cl_info").show();
-            });
 
             jQuery("#edit_discount").click(function(){
                 jQuery("#close_mw").show();
@@ -1145,7 +1162,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 console.log(1);
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
-                jQuery("#change_info_win").show();
+                jQuery("#mw_cl_info").show();
             });
 
             
@@ -1166,7 +1183,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 jQuery("input[name='data_change']").val(1);
                 jQuery("#close_mw").hide();
                 jQuery("#mw_container").hide();
-                jQuery("#change_info_win").hide();
+                jQuery("#mw_cl_info").hide();
             });
 
             var temp = 0;
@@ -1209,25 +1226,52 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 });
             });
 
-            jQuery("#btn_ready_date").click(function() {
-                if (jQuery("#date_canvas_ready").val() == '')
-                {
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "warning",
-                        text: "Укажите время готовности полотен"
+            jQuery('[name = "runByCall"]').change(function () {
+                var checkBox = this;
+                if(checkBox.checked){
+                    jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(jQuery(this).data("calc_id") == jQuery(checkBox).data("calc_id")){
+                            this.value =  "";
+                        };
                     });
-                    jQuery("#date_canvas_ready").focus();
-                    return;
                 }
+            });
+
+
+            jQuery('[name = "date_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
+               this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+            });
+            jQuery('[name = "date_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery('[name = "runByCall"]').filter(function () {
+                        if(jQuery(this).data("calc_id") == jQuery(date_time).data("calc_id")){
+                            jQuery(this).attr("checked",false);
+                        };
+                });
+            });
+
+            jQuery("#btn_ready_date_вave").click(function() {
+                var readyDates = jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(this.value){
+                            return this;
+                        };
+                    }),
+                    byCall = jQuery('[name = "runByCall"]:checked'),
+                    result = [];
+                jQuery.each(readyDates,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:jQuery(elem).val()});
+                });
+                jQuery.each(byCall,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:"by_call"});
+                });
                 jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=project.update_ready_time",
+                    /*index.php?option=com_gm_ceiling&task=project.update_ready_time*/
+                    url: "index.php?option=com_gm_ceiling&task=calculation.set_ready_time",
                     data: {
-                        project_id: project_id,
-                        ready_time: jQuery("#date_canvas_ready").val()
+                        data: JSON.stringify(result)
                     },
                     dataType: "json",
                     async: true,

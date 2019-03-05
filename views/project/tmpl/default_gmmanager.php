@@ -140,16 +140,15 @@ $total_mount = 0;
                                     </tr>
                                 <?php }?>
                             <?php endif;?>
-                            <tr>
-                                <th><?php echo "Дата готовности полотен"; ?></th>
-                                <td>
-                                    <?php
-                                    if (empty($this->item->ready_time)) { ?> -
-                                    <?php } else {
-                                        echo $this->item->ready_time;
-                                    } ?>
-                                </td>
+                            <tr >
+                                <th  style="text-align: center;"colspan = 3><?php echo "Дата готовности полотен"; ?></th>
                             </tr>
+                            <?php foreach ($calculations as $calculation){?>
+                                <tr >
+                                    <td><?php echo $calculation->calculation_title;?></td>
+                                    <td><?php echo (!empty($calculation->run_date) || !empty($calculation->run_by_call)) ? ($calculation->run_by_call) ? "По звонку" : $calculation->run_date : "Отсутствует"?></td>
+                                </tr>
+                            <?php }?>
                             <tr>
                                 <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                 <td><?php echo $this->item->project_info; ?></td>
@@ -493,7 +492,7 @@ $total_mount = 0;
             </div>
         </div>
     </div>
-        <form id="form-project"
+        <form id="form-project1"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
@@ -503,16 +502,38 @@ $total_mount = 0;
               action="/index.php?option=com_gm_ceiling&task=project.approvemanager&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <input type="hidden" name="mount" id = mount value= "<?php echo $json_mount;?>">
+            <input type="hidden" name="ready_dates" id = "ready_dates" value="">
             <button type="button" id = "run" class="btn btn-primary">
                 Запустить
             </button>
             <div id="mw_container" class = "modal_window_container">
                 <button type="button" id="close_mw" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
                 <div id="mw_date" class = "modal_window">
-                    <h6 style = "margin-top:10px">Введите к скольки должен быть готов</h6>
-                    <p><input type="date"  name = "ready_date" id="ready_date" value = <?php echo date('Y-m-d'); ?>> <input name ="time" type ="time" id = "time" required ></p>
-                    <p ><input type= "checkbox" name = 'quick' id = 'quick' value = 0>Срочный</p>
-                    <p><button type="submit" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+                    <h6 style = "margin-top:10px">Подтверждение/измение даты готовности полотен</h6>
+                    <?php foreach($calculations as $calculation){?>
+                        <div class="row center"  style="padding-bottom: 5px;margin-left: 15%;margin-right: 15%;">
+                            <div class="col-md-4 ">
+                                <?php echo $calculation->calculation_title; ?>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="checkbox" <?php echo ($calculation->run_by_call)?"checked":""?> data-calc_id = "<?php echo $calculation->id?>" id="<?php echo $calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
+                                <label for="<?php echo $calculation->id?>" class="cbx">
+                                        <span>
+                                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                    <span>По звонку</span>
+                                </label>
+                            </div>
+                            <div class="col-md-4 left">
+                                <input type="datetime-local" value="<?php echo str_replace(' ','T',$calculation->run_date);?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
+                            </div>
+                        </div>
+                    <?php }?>
+                    <div class="row">
+                        <button type="button" id="save" class="btn btn-primary">Сохранить</button>
+                    </div>
                 </div>
                 <div id = "mw_mounts_calendar" class = "modal_window"></div>
             </div>
@@ -649,7 +670,7 @@ $total_mount = 0;
                 jQuery("#modal_window_date").hide();
             });
             jQuery("#quick").change(function(){
-                this.value = this.checked ? 1 : 0;  
+                this.value = this.checked ? 1 : 0;
                 if(this.value == 1){
                     jQuery("#time").required = false;
                     var date = new Date();
@@ -663,14 +684,56 @@ $total_mount = 0;
                     jQuery("#time").val(time);
                 }
             })
-            
+
 
             jQuery("#run").click(function(){
                 jQuery("#mw_container").show();
                 jQuery("#mw_date").show("slow");
                 jQuery("#close_mw").show();
             });
-           
+            jQuery('[name = "runByCall"]').change(function () {
+                var checkBox = this;
+                if(checkBox.checked){
+                    jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(jQuery(this).data("calc_id") == jQuery(checkBox).data("calc_id")){
+                            this.value =  "";
+                        };
+                    });
+                }
+            });
+
+
+            jQuery('[name = "date_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
+                this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+            });
+            jQuery('[name = "date_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery('[name = "runByCall"]').filter(function () {
+                    if(jQuery(this).data("calc_id") == jQuery(date_time).data("calc_id")){
+                        jQuery(this).attr("checked",false);
+                    };
+                });
+            });
+            jQuery("#save").click(function(){
+                var readyDates = jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(this.value){
+                            return this;
+                        };
+                    }),
+                    byCall = jQuery('[name = "runByCall"]:checked'),
+                    result = [];
+                jQuery.each(readyDates,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:jQuery(elem).val()});
+                });
+                jQuery.each(byCall,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:"by_call"});
+                });
+                jQuery("#ready_dates").val(JSON.stringify(result));
+                jQuery("#form-project").submit();
+            });
 
             jQuery("input[name^='include_calculation']").click(function () {
                 if (jQuery(this).prop("checked")) {
