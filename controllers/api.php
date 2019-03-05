@@ -49,10 +49,10 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    public function getSecret($user_id) {
+    private function getSecret($user_id) {
         try {
             $user = JFactory::getUser($user_id);
-            $secret = md5($this->STATIC_KEY.$user->username.$user->name);
+            $secret = md5(self::STATIC_KEY.$user->username);
             return $secret;
         }
         catch(Exception $e) {
@@ -60,7 +60,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function xor_string($string, $key) {
+    private function xor_string($string, $key) {
         try {
             for($i = 0; $i < strlen($string); $i++) 
                 $string[$i] = ($string[$i] ^ $key[$i % strlen($key)]);
@@ -71,13 +71,33 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function crypt($key_number, $data) {
+    private function crypt($key_number, $data) {
         try {
             $secret = $this->getSecret($key_number);
-            $crypt = $this->xor_string($data, $secret);
+            $data = base64_encode($data);
+            $crypt = base64_encode($this->xor_string($data, $secret));
             $hash = hash('sha512', $data.$secret);
-            $result = (object)array('key_number' => $user->id, 'data' => $crypt, '');
+            $result = (object)array('key_number' => $key_number, 'data' => $crypt, 'hash' => $hash);
             return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    private function decrypt($data) {
+        try {
+            if (empty($data->key_number) || empty($data->data) || empty($data->hash)) {
+                return false;
+            }
+            $secret = $this->getSecret($data->key_number);
+            $decode_data = base64_decode($data->data);
+            $decrypt = $this->xor_string($decode_data, $secret);
+            $newHash = hash('sha512', $decrypt.$secret);
+            if ($newHash !== $data->hash) {
+                throw new Exception('bad hash');
+            }
+            $decrypt = base64_decode($decrypt);
+            return json_decode($decrypt);
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
@@ -85,25 +105,29 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function Authorization_FromAndroid() {
         try {
-            $authorization = json_decode($_POST['authorizations']);
+            if (empty($_POST['data'])) {
+                die(json_encode(null)); 
+            }
+            $data = json_decode($_POST['data']);
+            if (empty($data->key_number) || empty($data->data)) {
+                die(null);
+            }
             $model = $this->getModel();
+            $key_number = (int)$data->key_number;
+            $privatekey = $model->getKeypair($key_number)->private_key;
+            openssl_private_decrypt(base64_decode($data->data), $authorization, $privatekey);
+            $authorization = json_decode($authorization);
 
             $username = mb_ereg_replace('[^a-zA-Z\d\.\-\_]', '', $authorization->username);
-            /*if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10) {
-                $username = '7'.$username;
-            }
-            if (strlen($username) != 11) {
-                throw new Exception('Неверный формат номера телефона.');
-            }
-            if (mb_substr($username, 0, 1) != '7') {
-                $username = substr_replace($username, '7', 0, 1);
-            }*/
 
             $user = JFactory::getUser($model->getUserId($username));
-            $Password = $authorization->password;
-            $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
+            $password = $authorization->password;
+            $verifyPass = JUserHelper::verifyPassword($password, $user->password, $user->id);
             if ($verifyPass) {
-                die(json_encode($user));
+                $user = clone $user;
+                unset($user->username, $user->password);
+                $result = $this->crypt($user->id, json_encode($user));
+                die(json_encode($result));
             } else {
                 die('Неверный логин или пароль.');
             }
@@ -144,8 +168,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
             if (!empty($id)) {
-                $user = JFactory::getUser($id->id);
-                $result = json_encode($this->crypt($user->id, $user));
+                $user = clone JFactory::getUser($id->id);
+                unset($user->username, $user->password);
+                $result = json_encode($this->crypt($user->id, json_encode($user)));
             } else {
                 $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
                 if (!empty($from_browser) && $from_browser == 1) {
@@ -198,9 +223,10 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
                 $dop_contacts_model->save($client_id, 1, $email);
 
-                $user = JFactory::getUser($userID);
+                $user = clone JFactory::getUser($userID);
+                unset($user->username, $user->password);
 
-                $result = json_encode($this->crypt($user->id, $user));
+                $result = json_encode($this->crypt($userID, json_encode($user)));
 
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -230,56 +256,66 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function registerUser(){
-        try{
+    function registerUser() {
+        try {
             $result = json_encode(null);
-            if(!empty($_POST['r_data'])) {
-                $register_data = json_decode($_POST['r_data']);
-                if (!empty($register_data)) {
-                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                    $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
-                    if (!empty($id)) {
-                        $result = json_encode((object)array("id" => $id->id, "username" => $register_data->username));
-                    } else {
-                        $data = array(
-                            "name" => $register_data->fio,
-                            "username" => $register_data->username,
-                            "password" => $register_data->username,
-                            "password2" => $register_data->username,
-                            "email" => $register_data->email,
-                            "dealer_id" => $register_data->dealer_id,
-                            "groups" => array(2,$register_data->group)
-                        );
-                        $user = new JUser;
-                        if (!$user->bind($data)) {
-                            throw new Exception($user->getError());
-                        }
-                        if (!$user->save()) {
-                            throw new Exception($user->getError());
-                        }
-                        $userID = $user->id;
-                        $result = json_encode((object)array("id" => $userID, "username" => $register_data->username));
-
-                        $mailer = JFactory::getMailer();
-                        $config = JFactory::getConfig();
-                        $sender = array(
-                            $config->get('mailfrom'),
-                            $config->get('fromname')
-                        );
-                        $mailer->setSender($sender);
-                        $mailer->addRecipient($register_data->email);
-                        $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
-                        $body .= '<body style="margin: 10px;">';
-                        $body .= "Здравствуйте! Данные для доступа к приложению:<br>";
-                        $body .= "Логин:$register_data->username<br>Пароль:$register_data->username";
-                        $body .= "</body>";
-                        $mailer->setSubject('Регистрационные данные');
-                        $mailer->isHtml(true);
-                        $mailer->Encoding = 'base64';
-                        $mailer->setBody($body);
-                        $send = $mailer->Send();
-                    }
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if ($decrypt === false) {
+                die($result);
+            }
+            $register_data = $decrypt;
+            if (empty($register_data)) {
+                die($result);
+            }
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
+            if (!empty($id)) {
+                $result = json_encode((object)array("id" => $id->id, "username" => $register_data->username));
+                $result = json_encode($this->crypt($key_number, $result));
+            } else {
+                $data = array(
+                    "name" => $register_data->fio,
+                    "username" => $register_data->username,
+                    "password" => $register_data->username,
+                    "password2" => $register_data->username,
+                    "email" => $register_data->email,
+                    "dealer_id" => $register_data->dealer_id,
+                    "groups" => array(2,$register_data->group)
+                );
+                $user = new JUser;
+                if (!$user->bind($data)) {
+                    throw new Exception($user->getError());
                 }
+                if (!$user->save()) {
+                    throw new Exception($user->getError());
+                }
+                $userID = $user->id;
+                $result = json_encode((object)array("id" => $userID, "username" => $register_data->username));
+                $result = json_encode($this->crypt($key_number, $result));
+
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($register_data->email);
+                $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                $body .= '<body style="margin: 10px;">';
+                $body .= "Здравствуйте! Данные для доступа к приложению:<br>";
+                $body .= "Логин:$register_data->username<br>Пароль:$register_data->username";
+                $body .= "</body>";
+                $mailer->setSubject('Регистрационные данные');
+                $mailer->isHtml(true);
+                $mailer->Encoding = 'base64';
+                $mailer->setBody($body);
+                $send = $mailer->Send();
             }
             die($result);
         }
