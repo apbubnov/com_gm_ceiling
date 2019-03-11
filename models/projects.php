@@ -165,7 +165,18 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`distance`,
                             `p`.`distance_col`,
                             `p`.`quickly`,
-                            `p`.`api_phone_id`
+                            `p`.`api_phone_id`,
+                            CONCAT(\'[\',
+                                    GROUP_CONCAT(DISTINCT
+                                                 CONCAT(\'{\\\"status\\\": \\\"\',
+                                                        `ph`.`new_status`,
+                                                        \'\\\", \\\"date\\\":\\\"\',
+                                                        `ph`.`date_of_change`,
+                                                        \'\\\"}\'
+                                                 ) SEPARATOR \', \'
+                                    ),
+                                   \']\'
+                            ) AS `project_status_history`
                         ');
             $subquery->from('`#__gm_ceiling_projects` AS `p`');
             $subquery->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
@@ -175,6 +186,7 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
             $subquery->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
             $subquery->leftJoin("`#__gm_ceiling_calculations` AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
+            $subquery->leftJoin("`#__gm_ceiling_projects_history` AS `ph` ON `ph`.`project_id` = `p`.`id`");
             $subquery->where('`p`.`deleted_by_user` = 0');
             $subquery->group('`p`.`id`');
 
@@ -222,7 +234,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmmanager':
-
+                    $query->select('`p`.`project_status_history`');
                     if ($subtype == 'runprojects') {
                         $query->select('`p`.`transport`,
                                         `p`.`distance`,

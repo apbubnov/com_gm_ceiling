@@ -265,13 +265,11 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
             $decrypt = $this->decrypt($data);
-            if ($decrypt === false) {
+            if (empty($decrypt)) {
                 die($result);
             }
             $register_data = $decrypt;
-            if (empty($register_data)) {
-                die($result);
-            }
+
             $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
             if (!empty($id)) {
@@ -323,231 +321,252 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             die($e->getMessage());
         }
     }
-        public
-        function addDataFromAndroid()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[$key] = $model->save_or_update_data_from_android($table_name, $table_data);
-                }
-                if (!$result) {
-                    die(json_encode($_POST));
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                /*Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-*/
-                die($e->getMessage());
-            }
-        }
 
-        public
-        function checkDataFromAndroid()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[$key] = $model->update_android_ids_from_android($table_name, $table_data);
-                }
-                if (!$result) {
-                    die(json_encode($_POST));
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-            }
-        }
-
-        public
-        function deleteDataFromAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[] = $model->delete_from_android($table_name, $table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-        public
-        function sendDataToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['synchronization']))
-                {
-                    $table_data = json_decode($_POST['synchronization']);
-                    $result = $model->get_data_android($table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-		public 
-		function sendInfoToAndroidCallGlider()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['synchronization'])) {
-                    $table_data = json_decode($_POST['synchronization']);
-                    $result = $model->get_dealerInfo_androidCallGlider($table_data);
-                }
-                die(json_encode($result));
-            } catch(Exception $e) {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-        public
-        function sendImagesToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['calculation_images']))
-                {
-                    $data = json_decode($_POST['calculation_images']);
-
-                    $filename = md5("calculation_sketch".$data->id);
-                    $calc_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".png");
-
-                    $filename = md5("cut_sketch".$data->id);
-                    $cut_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png");                  
-
-                    $result = '{"id":';
-                    $result .= '"'.$data->id.'",';
-                    $result .= '"calc_image":';
-                    $result .= '"data:image/png;base64,'.base64_encode($calc_image).'",';
-                    $result .= '"cut_image":';
-                    $result .= '"data:image/png;base64,'.base64_encode($cut_image).'"}';
-                }
+    public function addDataFromAndroid() {
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
                 die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
             }
-        }
 
-        public function sendMaterialToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_material_android($table_data);
-                }
-                
-                
-                die(json_encode($result));
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[$table_name] = $model->save_or_update_data_from_android($table_name, $table_data);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            if (empty($result)) {
+                die('null');
             }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            die($e->getMessage());
         }
-        public function sendMountersToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_mounters_android($table_data);
-                }
-                
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-        public function sendDealerInfoToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_dealerInfo_android($table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
+    }
 
-        public function getManagersAnalytic(){
-            try{
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['data']))
-                {
-                    $data = json_decode($_POST['data']);
-                    $date1 = $data->date1;
-                    $date2 = $data->date2;
-                    $managers = implode(',',$data->managers);
-                    $result = $model->getProjectsAnalytic($date1,$date2,$managers);
-                }
-                die(json_encode($result));
+    public function checkDataFromAndroid() {
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
             }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[$table_name] = $model->update_android_ids_from_android($table_name, $table_data);
+            }
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-        public function check_update(){
-            try
-            { 
-                $result = false;
-                if(!empty($_POST['sync_data']))
-                {
-                    $version = json_decode($_POST['sync_data'])->version.'.apk';
-                    $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app/";
-                    $files = array_diff(scandir($path,1), array('..', '.'));
-                    if(!file_exists($path.$version)&&count($files)>0){
-                        $result = $files[0];
-                    }
-                }
-                die(json_encode($result));
+    }
+
+    public function deleteDataFromAndroid() {
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            } 
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[] = $model->delete_from_android($table_name, $table_data);
+            }
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    public function sendDataToAndroid() {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['synchronization']))
+            {
+                $table_data = json_decode($_POST['synchronization']);
+                $result = $model->get_data_android($table_data);
+            }
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+	public function sendInfoToAndroidCallGlider() {
+        try {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['synchronization'])) {
+                $table_data = json_decode($_POST['synchronization']);
+                $result = $model->get_dealerInfo_androidCallGlider($table_data);
+            }
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public
+    function sendImagesToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['calculation_images']))
+            {
+                $data = json_decode($_POST['calculation_images']);
+
+                $filename = md5("calculation_sketch".$data->id);
+                $calc_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".png");
+
+                $filename = md5("cut_sketch".$data->id);
+                $cut_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png");                  
+
+                $result = '{"id":';
+                $result .= '"'.$data->id.'",';
+                $result .= '"calc_image":';
+                $result .= '"data:image/png;base64,'.base64_encode($calc_image).'",';
+                $result .= '"cut_image":';
+                $result .= '"data:image/png;base64,'.base64_encode($cut_image).'"}';
+            }
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function sendMaterialToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_material_android($table_data);
+            }
+            
+            
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function sendMountersToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_mounters_android($table_data);
+            }
+            
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function sendDealerInfoToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_dealerInfo_android($table_data);
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getManagersAnalytic(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['data']))
+            {
+                $data = json_decode($_POST['data']);
+                $date1 = $data->date1;
+                $date2 = $data->date2;
+                $managers = implode(',',$data->managers);
+                $result = $model->getProjectsAnalytic($date1,$date2,$managers);
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function check_update(){
+        try
+        { 
+            $result = false;
+            if(!empty($_POST['sync_data']))
+            {
+                $version = json_decode($_POST['sync_data'])->version.'.apk';
+                $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app/";
+                $files = array_diff(scandir($path,1), array('..', '.'));
+                if(!file_exists($path.$version)&&count($files)>0){
+                    $result = $files[0];
+                }
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        } 
+    }
     /*
          * Розничная версия
      */

@@ -72,7 +72,7 @@ class Gm_ceilingModelApi extends JModelList
         }
     }
 
-    function getProjectByStatus($statuses){
+    function getProjectByStatus($statuses) {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         $query
@@ -81,8 +81,9 @@ class Gm_ceilingModelApi extends JModelList
             ->where("d.client_id = a.client_id AND d.new_status in $statuses");
         return $query;
     }
-    public function getProjectsAnalytic($date1,$date2,$managers){
-        try{
+    
+    public function getProjectsAnalytic($date1,$date2,$managers) {
+        try {
             /*SELECT a.client_id,c.manager_id,
             (SELECT COUNT(DISTINCT d.project_id) FROM `rgzbn_analytic_detailed` AS d WHERE d.client_id = a.client_id AND d.new_status = 1)  AS measures,
             (SELECT COUNT(DISTINCT d.project_id) FROM `rgzbn_analytic_detailed` AS d WHERE d.client_id = a.client_id AND d.new_status = 4) AS deals,
@@ -128,9 +129,7 @@ class Gm_ceilingModelApi extends JModelList
             }
 
             return $result;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             die($e->getMessage());
             /*$date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
@@ -138,10 +137,8 @@ class Gm_ceilingModelApi extends JModelList
             throw new Exception('Ошибка!', 500);*/
         }
     }
-    public function save_or_update_data_from_android($table, $data)
-    {
-        try
-        {
+    public function save_or_update_data_from_android($table, $data) {
+        try {
             $db = $this->getDbo();
             $arr_ids = [];
 
@@ -228,9 +225,7 @@ class Gm_ceilingModelApi extends JModelList
                 }
             }
             return $arr_ids;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             /*$date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
@@ -239,8 +234,8 @@ class Gm_ceilingModelApi extends JModelList
         }
     }
 
-    public function register_from_android($data){
-        try{
+    public function register_from_android($data) {
+        try {
             $data = $data;
             $android_id = $data->android_id;
             $name = delete_string_characters($data->name);
@@ -280,9 +275,7 @@ class Gm_ceilingModelApi extends JModelList
 
             return (object)array("old_id" => $android_id, "new_id" => $dealer_id);
 		    
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             die($e->getMessage());
             /*$date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
@@ -290,10 +283,9 @@ class Gm_ceilingModelApi extends JModelList
             throw new Exception('Ошибка!', 500);*/
         }
     }
-    public function update_android_ids_from_android($table, $data)
-    {
-        try
-        {
+
+    public function update_android_ids_from_android($table, $data) {
+        try {
             $db = $this->getDbo();
             $arr_ids = [];
             if (!empty($data)) foreach ($data as $key => $value)
@@ -313,9 +305,7 @@ class Gm_ceilingModelApi extends JModelList
                 $arr_ids[$key] = (object)array("new_android_id" => $id);
             }
             return $arr_ids;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
