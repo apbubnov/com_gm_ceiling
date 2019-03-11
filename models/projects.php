@@ -398,7 +398,6 @@ class Gm_ceilingModelProjects extends JModelList
             $query->order('`p`.`id` DESC');
 
             //$this->setState('list.limit', null);
-            throw new Exception($query);
             
             return $query;
         } catch(Exception $e) {
