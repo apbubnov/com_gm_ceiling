@@ -465,7 +465,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $result = json_encode($this->crypt($key_number, $result));
             die($result);
         } catch(Exception $e) {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            die($e->getMessage());
         }
     }
 
