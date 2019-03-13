@@ -37,6 +37,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function getPublicKey() {
         try {
+            header('Content-type:application/json');
             if (empty($_POST['data']) || $_POST['data'] !== 'give me a public key') {
                 die(json_encode(null));
             }
@@ -89,6 +90,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (empty($data->key_number) || empty($data->data) || empty($data->hash)) {
                 return false;
             }
+            $this->checkSubscription($data->key_number);
             $secret = $this->getSecret($data->key_number);
             $decode_data = base64_decode($data->data);
             $decrypt = $this->xor_string($decode_data, $secret);
@@ -103,8 +105,61 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
+    public function checkSubscription($key_number) {
+        try {
+            $user = JFactory::getUser((int)$key_number);
+            $currentDate = date('Y-m-d H:i:s');
+            if (empty($user->period_start_date || $user->period)) {
+                return true;
+            }
+            $periodEndDate = date('Y-m-d H:i:s', strtotime($user->period_start_date.' + '.$user->period));
+            if ($currentDate > $periodEndDate) {
+                header('Content-type:application/json');
+                $result = (object) array('b' => '0', 'l' => 't', 'period' => $user->period);
+                $result = $this->crypt($key_number, json_encode($result));
+                die(json_encode($result));
+            }
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateSubscription() {
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $result = [];
+            $table_data = [];
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $decrypt->android_id = $decrypt->id;
+            $decrypt->period_start_date = date('Y-m-d H-i-s');
+            $table_data[] = $decrypt;
+            $result[] = $model->save_or_update_data_from_android('#__users', $table_data);
+
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     public function Authorization_FromAndroid() {
         try {
+            header('Content-type:application/json');
             if (empty($_POST['data'])) {
                 die(json_encode(null)); 
             }
@@ -138,6 +193,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function register($register_data, $from_browser) {
         try {
+            header('Content-type:application/json');
             $result = json_encode(null);
             if (!empty($_POST['data'])) {
                 $data = json_decode($_POST['data']);
@@ -170,7 +226,11 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (!empty($id)) {
                 $user = clone JFactory::getUser($id->id);
                 unset($user->username, $user->password);
-                $result = json_encode($this->crypt($user->id, json_encode($user)));
+                if (empty($from_browser)) {
+                    $result = json_encode($this->crypt($user->id, json_encode($user)));
+                } else {
+                    $result = json_encode($user);
+                }
             } else {
                 $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
                 if (!empty($from_browser) && $from_browser == 1) {
@@ -226,7 +286,11 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $user = clone JFactory::getUser($userID);
                 unset($user->username, $user->password);
 
-                $result = json_encode($this->crypt($userID, json_encode($user)));
+                if (empty($from_browser)) {
+                    $result = json_encode($this->crypt($userID, json_encode($user)));
+                } else {
+                    $result = json_encode($user);
+                }
 
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -256,9 +320,10 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function registerUser() {
+    public function registerUser() {
         try {
-            $result = json_encode(null);
+            header('Content-type:application/json');
+            $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
             }
@@ -324,6 +389,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function addDataFromAndroid() {
         try {
+            header('Content-type:application/json');
             $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
@@ -355,6 +421,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function checkDataFromAndroid() {
         try {
+            header('Content-type:application/json');
             $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
@@ -386,6 +453,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function deleteDataFromAndroid() {
         try {
+            header('Content-type:application/json');
             $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
@@ -444,6 +512,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
 	public function sendInfoToAndroidCallGlider() {
         try {
+            header('Content-type:application/json');
             $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
@@ -559,6 +628,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function getManagersAnalytic() {
         try {
+            header('Content-type:application/json');
             $result = 'null';
             if (empty($_POST['data'])) {
                 die($result);
@@ -636,6 +706,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
     }*/
 
     public function changePwd() {
+        header('Content-type:application/json');
         try {
             $result = 'null';
             if (empty($_POST['data'])) {
