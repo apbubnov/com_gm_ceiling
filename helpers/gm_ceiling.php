@@ -362,6 +362,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n36' => 'string',//перегарпунка
                         'n37_square' => 'string', //плозадь фотопечати
                         'n37_cost' => 'string', // цена фотопечати
+                        'n38' => 'int', //ремонт потолка
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -2269,6 +2270,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n35'] * $gm_mount->mp61,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp61,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n35'] * $results->mp61,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
+                if($data['n38']>0){
+                    $mounting_data[] = array(
+                        "title" => "Ремонт потолка",                                                        //Название
+                        "quantity" => $data['n38'],                                                        //Кол-во
+                        "gm_salary" => $gm_mount->mp64,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n38'] * $gm_mount->mp64,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp64,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n38'] * $results->mp64,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>2
                     );
                 }

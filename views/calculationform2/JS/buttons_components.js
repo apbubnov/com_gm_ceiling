@@ -384,6 +384,8 @@ let n37_src = {
     ]
 }
 let n37 = create_block_with_divs(n37_src,0);
+
+let n38 = create_single_input(1,"jform_n38","jform[n38]","Отверстия,шт","Кол-во,шт","tel");
 /* контейнер и колонки */
 function create_container(cnt_id,col_id, parent){
     return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">

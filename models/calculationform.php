@@ -1006,7 +1006,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $date_created = date("Y-m-d H:i:s");
             $columns = [
                 "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n19","n20","n20_1","n21","n22_1","n24","n27","n28","remove_n28",
-                "n30","n32","n33","n33_2","n34","n34_2","n35","n36","n37","niche","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
+                "n30","n32","n33","n33_2","n34","n34_2","n35","n36","n37","n38","niche","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
                 "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount","need_metiz",
                 "color","details","discount","manager_note"
             ];
