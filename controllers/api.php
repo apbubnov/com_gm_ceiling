@@ -37,6 +37,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function getPublicKey() {
         try {
+            header('Content-type:application/json');
             if (empty($_POST['data']) || $_POST['data'] !== 'give me a public key') {
                 die(json_encode(null));
             }
@@ -49,10 +50,10 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    public function getSecret($user_id) {
+    private function getSecret($user_id) {
         try {
             $user = JFactory::getUser($user_id);
-            $secret = md5($this->STATIC_KEY.$user->username.$user->name);
+            $secret = md5(self::STATIC_KEY.$user->username);
             return $secret;
         }
         catch(Exception $e) {
@@ -60,7 +61,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function xor_string($string, $key) {
+    private function xor_string($string, $key) {
         try {
             for($i = 0; $i < strlen($string); $i++) 
                 $string[$i] = ($string[$i] ^ $key[$i % strlen($key)]);
@@ -71,13 +72,86 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function crypt($key_number, $data) {
+    private function crypt($key_number, $data) {
         try {
             $secret = $this->getSecret($key_number);
-            $crypt = $this->xor_string($data, $secret);
+            $data = base64_encode($data);
+            $crypt = base64_encode($this->xor_string($data, $secret));
             $hash = hash('sha512', $data.$secret);
-            $result = (object)array('key_number' => $user->id, 'data' => $crypt, '');
+            $result = (object)array('key_number' => $key_number, 'data' => $crypt, 'hash' => $hash);
             return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    private function decrypt($data) {
+        try {
+            if (empty($data->key_number) || empty($data->data) || empty($data->hash)) {
+                return false;
+            }
+            $this->checkSubscription($data->key_number);
+            $secret = $this->getSecret($data->key_number);
+            $decode_data = base64_decode($data->data);
+            $decrypt = $this->xor_string($decode_data, $secret);
+            $newHash = hash('sha512', $decrypt.$secret);
+            if ($newHash !== $data->hash) {
+                throw new Exception('bad hash');
+            }
+            $decrypt = base64_decode($decrypt);
+            return json_decode($decrypt);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function checkSubscription($key_number) {
+        try {
+            $user = JFactory::getUser((int)$key_number);
+            $currentDate = date('Y-m-d H:i:s');
+            if (empty($user->period_start_date || $user->period)) {
+                return true;
+            }
+            $periodEndDate = date('Y-m-d H:i:s', strtotime($user->period_start_date.' + '.$user->period));
+            if ($currentDate > $periodEndDate) {
+                header('Content-type:application/json');
+                $result = (object) array('b' => '0', 'l' => 't', 'period' => $user->period);
+                $result = $this->crypt($key_number, json_encode($result));
+                die(json_encode($result));
+            }
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateSubscription() {
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $result = [];
+            $table_data = [];
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $decrypt->android_id = $decrypt->id;
+            $decrypt->period_start_date = date('Y-m-d H-i-s');
+            $table_data[] = $decrypt;
+            $result[] = $model->save_or_update_data_from_android('#__users', $table_data);
+
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
@@ -85,25 +159,30 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function Authorization_FromAndroid() {
         try {
-            $authorization = json_decode($_POST['authorizations']);
+            header('Content-type:application/json');
+            if (empty($_POST['data'])) {
+                die(json_encode(null)); 
+            }
+            $data = json_decode($_POST['data']);
+            if (empty($data->key_number) || empty($data->data)) {
+                die(null);
+            }
             $model = $this->getModel();
+            $key_number = (int)$data->key_number;
+            $privatekey = $model->getKeypair($key_number)->private_key;
+            openssl_private_decrypt(base64_decode($data->data), $authorization, $privatekey);
+            $authorization = json_decode($authorization);
 
             $username = mb_ereg_replace('[^a-zA-Z\d\.\-\_]', '', $authorization->username);
-            /*if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10) {
-                $username = '7'.$username;
-            }
-            if (strlen($username) != 11) {
-                throw new Exception('Неверный формат номера телефона.');
-            }
-            if (mb_substr($username, 0, 1) != '7') {
-                $username = substr_replace($username, '7', 0, 1);
-            }*/
 
             $user = JFactory::getUser($model->getUserId($username));
-            $Password = $authorization->password;
-            $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
+            $password = $authorization->password;
+            $verifyPass = JUserHelper::verifyPassword($password, $user->password, $user->id);
             if ($verifyPass) {
-                die(json_encode($user));
+                $user = clone $user;
+                unset($user->username, $user->password);
+                $result = $this->crypt($user->id, json_encode($user));
+                die(json_encode($result));
             } else {
                 die('Неверный логин или пароль.');
             }
@@ -114,6 +193,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function register($register_data, $from_browser) {
         try {
+            header('Content-type:application/json');
             $result = json_encode(null);
             if (!empty($_POST['data'])) {
                 $data = json_decode($_POST['data']);
@@ -144,8 +224,13 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $id = $userModel->getUserByEmailAndUsername($register_data->email, $username);
             if (!empty($id)) {
-                $user = JFactory::getUser($id->id);
-                $result = json_encode($this->crypt($user->id, $user));
+                $user = clone JFactory::getUser($id->id);
+                unset($user->username, $user->password);
+                if (empty($from_browser)) {
+                    $result = json_encode($this->crypt($user->id, json_encode($user)));
+                } else {
+                    $result = json_encode($user);
+                }
             } else {
                 $pass = Gm_ceilingHelpersGm_ceiling::generatePassword(6);
                 if (!empty($from_browser) && $from_browser == 1) {
@@ -198,9 +283,14 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
                 $dop_contacts_model->save($client_id, 1, $email);
 
-                $user = JFactory::getUser($userID);
+                $user = clone JFactory::getUser($userID);
+                unset($user->username, $user->password);
 
-                $result = json_encode($this->crypt($user->id, $user));
+                if (empty($from_browser)) {
+                    $result = json_encode($this->crypt($userID, json_encode($user)));
+                } else {
+                    $result = json_encode($user);
+                }
 
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -230,56 +320,65 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    function registerUser(){
-        try{
-            $result = json_encode(null);
-            if(!empty($_POST['r_data'])) {
-                $register_data = json_decode($_POST['r_data']);
-                if (!empty($register_data)) {
-                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                    $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
-                    if (!empty($id)) {
-                        $result = json_encode((object)array("id" => $id->id, "username" => $register_data->username));
-                    } else {
-                        $data = array(
-                            "name" => $register_data->fio,
-                            "username" => $register_data->username,
-                            "password" => $register_data->username,
-                            "password2" => $register_data->username,
-                            "email" => $register_data->email,
-                            "dealer_id" => $register_data->dealer_id,
-                            "groups" => array(2,$register_data->group)
-                        );
-                        $user = new JUser;
-                        if (!$user->bind($data)) {
-                            throw new Exception($user->getError());
-                        }
-                        if (!$user->save()) {
-                            throw new Exception($user->getError());
-                        }
-                        $userID = $user->id;
-                        $result = json_encode((object)array("id" => $userID, "username" => $register_data->username));
+    public function registerUser() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+            $register_data = $decrypt;
 
-                        $mailer = JFactory::getMailer();
-                        $config = JFactory::getConfig();
-                        $sender = array(
-                            $config->get('mailfrom'),
-                            $config->get('fromname')
-                        );
-                        $mailer->setSender($sender);
-                        $mailer->addRecipient($register_data->email);
-                        $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
-                        $body .= '<body style="margin: 10px;">';
-                        $body .= "Здравствуйте! Данные для доступа к приложению:<br>";
-                        $body .= "Логин:$register_data->username<br>Пароль:$register_data->username";
-                        $body .= "</body>";
-                        $mailer->setSubject('Регистрационные данные');
-                        $mailer->isHtml(true);
-                        $mailer->Encoding = 'base64';
-                        $mailer->setBody($body);
-                        $send = $mailer->Send();
-                    }
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $id = $userModel->getUserByEmailAndUsername($register_data->email, $register_data->username);
+            if (!empty($id)) {
+                $result = json_encode((object)array("id" => $id->id, "username" => $register_data->username));
+                $result = json_encode($this->crypt($key_number, $result));
+            } else {
+                $data = array(
+                    "name" => $register_data->fio,
+                    "username" => $register_data->username,
+                    "password" => $register_data->username,
+                    "password2" => $register_data->username,
+                    "email" => $register_data->email,
+                    "dealer_id" => $register_data->dealer_id,
+                    "groups" => array(2,$register_data->group)
+                );
+                $user = new JUser;
+                if (!$user->bind($data)) {
+                    throw new Exception($user->getError());
                 }
+                if (!$user->save()) {
+                    throw new Exception($user->getError());
+                }
+                $userID = $user->id;
+                $result = json_encode((object)array("id" => $userID, "username" => $register_data->username));
+                $result = json_encode($this->crypt($key_number, $result));
+
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($register_data->email);
+                $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                $body .= '<body style="margin: 10px;">';
+                $body .= "Здравствуйте! Данные для доступа к приложению:<br>";
+                $body .= "Логин:$register_data->username<br>Пароль:$register_data->username";
+                $body .= "</body>";
+                $mailer->setSubject('Регистрационные данные');
+                $mailer->isHtml(true);
+                $mailer->Encoding = 'base64';
+                $mailer->setBody($body);
+                $send = $mailer->Send();
             }
             die($result);
         }
@@ -287,235 +386,282 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             die($e->getMessage());
         }
     }
-        public
-        function addDataFromAndroid()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[$key] = $model->save_or_update_data_from_android($table_name, $table_data);
-                }
-                if (!$result) {
-                    die(json_encode($_POST));
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                /*Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-*/
-                die($e->getMessage());
-            }
-        }
 
-        public
-        function checkDataFromAndroid()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[$key] = $model->update_android_ids_from_android($table_name, $table_data);
-                }
-                if (!$result) {
-                    die(json_encode($_POST));
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-            }
-        }
-
-        public
-        function deleteDataFromAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                $result = [];
-                foreach ($_POST as $key => $value) {
-                    $table_name = $key;
-                    $table_data = json_decode($_POST[$key]);
-                    $result[] = $model->delete_from_android($table_name, $table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-        public
-        function sendDataToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['synchronization']))
-                {
-                    $table_data = json_decode($_POST['synchronization']);
-                    $result = $model->get_data_android($table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-		public 
-		function sendInfoToAndroidCallGlider()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['synchronization'])) {
-                    $table_data = json_decode($_POST['synchronization']);
-                    $result = $model->get_dealerInfo_androidCallGlider($table_data);
-                }
-                die(json_encode($result));
-            } catch(Exception $e) {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-
-        public
-        function sendImagesToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['calculation_images']))
-                {
-                    $data = json_decode($_POST['calculation_images']);
-
-                    $filename = md5("calculation_sketch".$data->id);
-                    $calc_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".png");
-
-                    $filename = md5("cut_sketch".$data->id);
-                    $cut_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png");                  
-
-                    $result = '{"id":';
-                    $result .= '"'.$data->id.'",';
-                    $result .= '"calc_image":';
-                    $result .= '"data:image/png;base64,'.base64_encode($calc_image).'",';
-                    $result .= '"cut_image":';
-                    $result .= '"data:image/png;base64,'.base64_encode($cut_image).'"}';
-                }
+    public function addDataFromAndroid() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
                 die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
             }
-        }
 
-        public function sendMaterialToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_material_android($table_data);
-                }
-                
-                
-                die(json_encode($result));
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[$table_name] = $model->save_or_update_data_from_android($table_name, $table_data);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            if (empty($result)) {
+                die('null');
             }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            die($e->getMessage());
         }
-        public function sendMountersToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_mounters_android($table_data);
-                }
-                
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
-        public function sendDealerInfoToAndroid()
-        {
-            try
-            {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['sync_data']))
-                {
-                    $table_data = json_decode($_POST['sync_data']);
-                    $result = $model->get_dealerInfo_android($table_data);
-                }
-                die(json_encode($result));
-            }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            }
-        }
+    }
 
-        public function getManagersAnalytic(){
-            try{
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['data']))
-                {
-                    $data = json_decode($_POST['data']);
-                    $date1 = $data->date1;
-                    $date2 = $data->date2;
-                    $managers = implode(',',$data->managers);
-                    $result = $model->getProjectsAnalytic($date1,$date2,$managers);
-                }
-                die(json_encode($result));
+    public function checkDataFromAndroid() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
             }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[$table_name] = $model->update_android_ids_from_android($table_name, $table_data);
+            }
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-        public function check_update(){
-            try
-            { 
-                $result = false;
-                if(!empty($_POST['sync_data']))
-                {
-                    $version = json_decode($_POST['sync_data'])->version.'.apk';
-                    $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app/";
-                    $files = array_diff(scandir($path,1), array('..', '.'));
-                    if(!file_exists($path.$version)&&count($files)>0){
-                        $result = $files[0];
-                    }
-                }
-                die(json_encode($result));
+    }
+
+    public function deleteDataFromAndroid() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
             }
-            catch(Exception $e)
-            {
-                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-            } 
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = [];
+            foreach ($decrypt as $item) {
+                $table_name = $item->table_name;
+                $table_data = $item->rows;
+                $result[] = $model->delete_from_android($table_name, $table_data);
+            }
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    /*public function sendDataToAndroid() {
+        try
+        {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = $model->get_data_android($decrypt);
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+	public function sendInfoToAndroidCallGlider() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $result = $model->get_dealerInfo_androidCallGlider($decrypt);
+
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    /*public
+    function sendImagesToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['calculation_images']))
+            {
+                $data = json_decode($_POST['calculation_images']);
+
+                $filename = md5("calculation_sketch".$data->id);
+                $calc_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".png");
+
+                $filename = md5("cut_sketch".$data->id);
+                $cut_image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png");                  
+
+                $result = '{"id":';
+                $result .= '"'.$data->id.'",';
+                $result .= '"calc_image":';
+                $result .= '"data:image/png;base64,'.base64_encode($calc_image).'",';
+                $result .= '"cut_image":';
+                $result .= '"data:image/png;base64,'.base64_encode($cut_image).'"}';
+            }
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+    /*public function sendMaterialToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_material_android($table_data);
+            }
+            
+            
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+    /*public function sendMountersToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_mounters_android($table_data);
+            }
+            
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+    /*public function sendDealerInfoToAndroid()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['sync_data']))
+            {
+                $table_data = json_decode($_POST['sync_data']);
+                $result = $model->get_dealerInfo_android($table_data);
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }*/
+
+    public function getManagersAnalytic() {
+        try {
+            header('Content-type:application/json');
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
+            }
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+
+            $date1 = $decrypt->date1;
+            $date2 = $decrypt->date2;
+            $managers = implode(',', $decrypt->managers);
+            $result = $model->getProjectsAnalytic($date1, $date2, $managers);
+
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     /*
          * Розничная версия
      */
-    public function getMeasureTimes(){
+    /*public function getMeasureTimes(){
         try{
             header('Access-Control-Allow-Origin: http://гмпотолки.рф');
             header('Access-Control-Allow-Credentials: true');
@@ -538,9 +684,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
+    }*/
 
-    public function recToMeasure(){
+    /*public function recToMeasure() {
         try{
             $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
             if(!empty($_POST['rec_data'])) {
@@ -557,54 +703,68 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-    }
-    public function changePwd(){
-        try{
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-            if(!empty($_POST['u_data'])){
-                $data = json_decode($_POST['u_data']);
-                $result = $model->change_password($data);
-                //отправить письмо с новым паролем
-                $dealer = JFactory::getUser($data->user_id);
-                $email = $dealer->email;
-                $server_name = $_SERVER['SERVER_NAME'];
-                $site = "http://$server_name/index.php?option=com_users&view=login";
-                // письмо
-                $mailer = JFactory::getMailer();
-                $config = JFactory::getConfig();
-                $sender = array(
-                    $config->get('mailfrom'),
-                    $config->get('fromname')
-                );
-                $mailer->setSender($sender);
-                $mailer->addRecipient($email);
-                $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
-                $body .= '<body style="margin: 10px;">';
-                $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
-                $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
-                $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
-                $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+    }*/
 
-                $body .= '<p>Тел.: +7(473)212-34-01</p>';
-
-                $body .= '<p>Почта: gm-partner@mail.ru</p>';
-                $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
-                $body .= '</div></td></tr></table>';
-                $body .= "<div style=\"width: 100%\">Здравствуйте! Пароль от Вашего кабинет на сайте $site был изменен.<br> Обновленные данные регистрации:<br>
-                        Логин: $dealer->username<br>Пароль: $data->password<br>
-                        Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br></div></body>
-                        ";
-                $mailer->setSubject('Изменение пароля от личного кабинета');
-                $mailer->isHtml(true);
-                $mailer->Encoding = 'base64';
-                $mailer->setBody($body);
-                $send = $mailer->Send();
-                die(json_encode($result));
+    public function changePwd() {
+        header('Content-type:application/json');
+        try {
+            $result = 'null';
+            if (empty($_POST['data'])) {
+                die($result);
             }
-            else throw new Exception("Empty post data");
-        }
-        catch(Exception $e)
-        {
+            $data = json_decode($_POST['data']);
+            $key_number = $data->key_number;
+            $decrypt = $this->decrypt($data);
+            if (empty($decrypt)) {
+                die($result);
+            }
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+
+            $result = $model->change_password($decrypt);
+            //отправить письмо с новым паролем
+            $dealer = JFactory::getUser($decrypt->user_id);
+            $email = $dealer->email;
+            $server_name = $_SERVER['SERVER_NAME'];
+            $site = "http://$server_name/index.php?option=com_users&view=login";
+            // письмо
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+            $body .= '<body style="margin: 10px;">';
+            $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+            $body .= '<tr><td style="vertical-align:middle;"><a href="http://'. $server_name.'/">';
+            $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+            $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+
+            $body .= '<p>Тел.: +7(473)212-34-01</p>';
+
+            $body .= '<p>Почта: gm-partner@mail.ru</p>';
+            $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+            $body .= '</div></td></tr></table>';
+            $body .= "<div style=\"width: 100%\">Здравствуйте! Пароль от Вашего кабинет на сайте $site был изменен.<br> Обновленные данные регистрации:<br>
+                    Логин: $dealer->username<br>Пароль: $data->password<br>
+                    Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br></div></body>
+                    ";
+            $mailer->setSubject('Изменение пароля от личного кабинета');
+            $mailer->isHtml(true);
+            $mailer->Encoding = 'base64';
+            $mailer->setBody($body);
+            $send = $mailer->Send();
+
+            if (empty($result)) {
+                die('null');
+            }
+            $result = json_encode($result);
+            $result = json_encode($this->crypt($key_number, $result));
+            die($result);
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -616,7 +776,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
      * Address, ApartmentNumber, Date, Name, Phone, Type = Client;
      * Ответ: любой
      * */
-    public function getTimes() {
+    /*public function getTimes() {
         try{
             $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
             $f = fopen('php://input', 'r');
@@ -749,6 +909,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::add_error_in_log($e_message, __FILE__, __FUNCTION__, func_get_args());
             }
         }
-    }
+    }*/
 
 }
