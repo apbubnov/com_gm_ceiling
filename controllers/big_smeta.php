@@ -162,6 +162,38 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }*/
+
+   function writeComp(){
+       try {
+           $db = JFactory::getDbo();
+           $query = $db->getQuery(true);
+           $query
+               ->select('id')
+               ->from('`#__gm_ceiling_calculations`')
+               ->order('id');
+           $db->setQuery($query);
+           $ids = $db->loadObjectList();
+           foreach ($ids as $id){
+               $components = Gm_ceilingHelpersGm_ceiling::calculate_components($id->id,null,0);
+               if(!empty($components)){
+                   foreach ($components as $component){
+
+                       $query->clear();
+                       $query
+                           ->insert('`#__gm_ceiling_calcs_components`')
+                           ->columns('`calc_id`,`component_id`,`count`,`sum`')
+                           ->values("$id->id,".$component['id'].",".$component['quantity'].",".$component['self_dealer_total']);
+                       $db->setQuery($query);
+                       $db->execute();
+
+                   }
+               }
+           }
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+   }
    function costyl_mp(){
        try
        {

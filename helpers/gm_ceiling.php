@@ -396,7 +396,6 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $data['n1'] = null;
             }
-
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -553,7 +552,12 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             $data['extra_mounting'] = json_encode($extra_mounting, JSON_UNESCAPED_UNICODE);
-            $data['n37'] = json_encode($n37);
+            if(!empty($n37->square)&&!empty($n37->cost)) {
+                $data['n37'] = json_encode($n37);
+            }
+            else{
+                $data['n37'] = null;
+            }
             $data["need_mount"] = $need_mount;
             //Получаем объект дилера
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
@@ -576,7 +580,7 @@ class Gm_ceilingHelpersGm_ceiling
             $guild_data = self::calculate_guild_jobs(null,$data);
             $data["guild_data"] = $guild_data;
             if(!empty($data['n1'])){
-                if(empty($data['n36'])) {//если не перегарпунка, то счиатаем полотно
+                if(empty(floatval($data['n36']))) {//если не перегарпунка, то счиатаем полотно
                     //cчитаем полотно
                     $canvases_data = self::calculate_canvases(null, $data);
                     //считаем обрезки
@@ -585,18 +589,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
            //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
+            if(!empty($components_data)){
+                $calcsCompModel = self::getModel('Calcs_components');
+                $calcsCompModel->save($data['id'],$components_data);
+            }
             //считаем монтаж
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
-            //if ($need_mount || $data["need_mount_extra"]) {
-                $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
-            /*} else {
-                $mounting_data = [
-                    'total_with_gm_dealer_margin' => 0,
-                    'total_with_gm_dealer_margin_guild' => 0,
-                    'total_gm_mounting' => 0,
-                    'total_dealer_mounting' => 0
-                ];
-            }*/
+            $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             //Итоговая сумма компонентов
             $total_sum = 0;
             $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 100 : 0;
@@ -1641,6 +1640,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($data["id"]));
             }
+            $calc_id = $data["id"];
             $margins = self::get_margin($data['project_id']);
             $gm_canvases_margin = $margins['gm_canvases_margin'];
             $dealer_canvases_margin = $margins['dealer_canvases_margin'];
@@ -1697,7 +1697,8 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
             if(in_array('16',JFactory::getUser()->groups)) {
                 $min_sum = 100;//минимальная сумма заказа
-                if ($canvases_data['self_dealer_total'] < $min_sum) {
+                $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
+                if ($canvases_data['self_dealer_total'] + $guild_cost < $min_sum) {
                     $canvases_data['self_dealer_total'] = $min_sum;
                     $canvases_data['dealer_total'] = margin($min_sum, $dealer_canvases_margin);
                 }

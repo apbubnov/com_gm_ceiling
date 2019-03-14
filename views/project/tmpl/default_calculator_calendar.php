@@ -404,7 +404,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             
         </div>
     <?php } ?>
-    <div class="project_activation" <?php if($user->dealer_type != 1 && $this->item->project_status != 4) echo "style=\"display: none;\""?> id="project_activation">
+    <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo ""; else echo "style=\"display: none;\""?> id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
            <!-- <div id="mounter_wraper" <?php /*if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""*/?>>
             </div>-->
@@ -748,7 +748,15 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             {
                 show_comments();
             }
-
+            jQuery("[name = 'smeta']").change(function () {
+                if(this.checked){
+                    this.value = 1;
+                    //пересчитать сумму
+                }
+                else{
+                    this.value = 0;
+                }
+            });
             jQuery("#edit_discount").click(function(){
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();

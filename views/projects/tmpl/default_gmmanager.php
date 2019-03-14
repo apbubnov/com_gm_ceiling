@@ -30,37 +30,36 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager'); ?>" method="post"
       name="adminForm" id="adminForm">
     <? if (count($this->items) > 0): ?>
-	  <div class="toolbar">
-		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-	  </div>
-
+	 <div class="row">
+         <div class="col-md-4 col-xs-6"></div>
+         <div class="col-md-4 col-xs-6 right"><input type="date" class="input-gm" id = "run_date"> </div>
+         <div class="col-md-3 col-xs-9">
+             <input type="text" id="search_text" class="form-control">
+         </div>
+         <div class="col-md-1 col-xs-3" style="padding: 0px;">
+             <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
+         </div>
+     </div>
 	<table class="table table-striped one-touch-view g_table" id="projectList">
 		<thead>
 			<tr>
 				<th class='center'>
-					<?php //echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
 					Номер договора
 				</th>
-<!--				<th class='center'>-->
-<!--					--><?php //echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
-<!--				</th>-->
+
 				<th class='center'>
-					<?php //echo JHtml::_('grid.sort',  'Дата и время начала монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
 					Дата и время начала монтажа
 				</th>
 				<th class='center'>
-					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
 					Адрес
 				</th>
 				<th class='center'>
 					Примечание
 				</th>
 				<th class='center'>
-					<?php //echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
 					Телефоны
 				</th>
 				<th class='center'>
-					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
 					Клиент
 				</th>
 				<th class="center">
@@ -69,19 +68,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($this->items as $i => $item):
-				$canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-				if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')):
-					$canEdit = JFactory::getUser()->id == $item->created_by;
-				endif;
-				?>
-
+			<?php foreach ($this->items as $i => $item):?>
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id='.(int) $item->id); ?>">
 					<td class="center one-touch">
 						<?php echo $item->id; ?>
 					</td>
 					<td class="center one-touch">
-						<?php if(empty($item->project_mounting_date)) { ?>
+						<?php if(empty($item->project_mounting_date)) {
+                            $item->project_mounting_date = "-"?>
 							-
 						<?php } else { ?>
 							<?php echo str_replace(',', '<br>', $item->project_mounting_date)   ?>
@@ -93,13 +87,19 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					</td>
 					<td class="center one-touch">
                         <?php
-                        $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,4);
+                            $noteStr = "";
+                            $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,4);
                             foreach ($project_notes as $note){
+                                $noteStr .=  $note->description.$note->value.';';
                                 echo $note->description.$note->value."<br>";
                             }
+                            $item->note = $noteStr;
                         ?>
 					</td>
 					<td class="center one-touch">
+                        <?php if(empty($item->client_contacts)){
+                            $item->client_contacts = "-";
+                        }?>
 						<?php echo $item->client_contacts; ?>
 					</td>
 					<td class="center one-touch">
@@ -133,13 +133,70 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <?php if($canDelete) { ?>
 <script type="text/javascript">
-
+    var items_json = '<?php echo json_encode($this->items)?>'.replace(/null/i, "\"\"");
+    var items = JSON.parse(items_json);
+    console.log(items);
+    jQuery(document).keypress(
+        function(event){
+            if (event.which == '13') {
+                event.preventDefault();
+            }
+        });
 	jQuery(document).ready(function () {
 		jQuery('#btn_back').click(function(){
                 location.href = "/index.php?option=com_gm_ceiling&task=mainpage";
             });
 		jQuery('.delete-button').click(deleteItem);
+
+		jQuery("#search_btn").click(function () {
+            var search = jQuery("#search_text").val();
+            var date = jQuery('#run_date').val();
+            showFiltered(search,date);
+        });
+
+        function OpenPage() {
+            var e = jQuery("[data-href]");
+            jQuery.each(e, function (i, v) {
+                jQuery(v).click(function () {
+                    document.location.href = this.dataset.href;
+                });
+            });
+        }
+        function showFiltered(searchText,searchDate){
+            jQuery("#projectList > tbody").empty();
+            var search_reg = new RegExp(searchText, "ig");
+            jQuery.each(items,function (index,elem) {
+                var status_history = [];
+                if(!empty(elem.project_status_history)&&!empty(searchDate)) {
+                    status_history  = JSON.parse(elem.project_status_history);
+                }
+                var  exist = status_history.find(function (status) {
+                    return !empty(searchDate) ? status.status == 5 && status.date === searchDate : true;
+                });
+                if(search_reg.test(elem.client_name)||search_reg.test(elem.dealer_name)||search_reg.test(elem.id)||
+                    search_reg.test(elem.project_info) || exist){
+                    jQuery("#projectList > tbody").append('<tr></tr>');
+                    jQuery("#projectList > tbody > tr:last").attr("data-href", "/index.php?option=com_gm_ceiling&view=project&type=gmmanager&id="+elem.id);
+                    jQuery("#projectList > tbody > tr:last").append('<td>'+elem.id+'</td>' +
+                        '<td>'+elem.project_mounting_date+'</td><td>'+elem.project_info+'</td><td>'+elem.note+'</td>' +
+                        '<td>'+elem.client_contacts+'</td><td>'+elem.client_name+'</td><td>'+elem.dealer_name+'</td>');
+                }
+            });
+            OpenPage();
+        }
+        jQuery("#search_text").keyup(function (event) {
+            if(event.keyCode == 13){
+                jQuery("#search_btn").click();
+            }
+        });
+
+        jQuery("#run_date").change(function(){
+            var date = this.value;
+            var search = jQuery("#search_text").val();
+            showFiltered(search,date);
+        });
 	});
+
 
 	function deleteItem() {
 

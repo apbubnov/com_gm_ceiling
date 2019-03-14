@@ -56,6 +56,8 @@ const help_block_n36 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n37 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
 
+const help_block_n38 = '<span class="airhelp">В расчет входит монтажная работа "ремонт полотна". Считается по метрам.</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -128,8 +130,8 @@ let arr_blocks = [
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
             {block_id:"block_n36",btn_cont_id:"btn_cont_n36",prev_id:"block_oter_mount_cptn",btn_id:"btn_n36",btn_text:"Перегарпунка",need_ajax : 0,kind_btn:"0", img: "garpun.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n37",btn_cont_id:"btn_cont_n37",prev_id:"block_oter_mount_cptn",btn_id:"btn_n37",btn_text:"Фотопечать",need_ajax : 0,kind_btn:"0", img: "photoprint.png", parent: "oter_mount_cptn"}
-
+            {block_id:"block_n37",btn_cont_id:"btn_cont_n37",prev_id:"block_oter_mount_cptn",btn_id:"btn_n37",btn_text:"Фотопечать",need_ajax : 0,kind_btn:"0", img: "photoprint.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n38",btn_cont_id:"btn_cont_n38",prev_id:"block_oter_mount_cptn",btn_id:"btn_n38",btn_text:"Ремонт полотна",need_ajax : 0,kind_btn:"0", img: "repair.png", parent: "oter_mount_cptn"}
         ]
     },
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},

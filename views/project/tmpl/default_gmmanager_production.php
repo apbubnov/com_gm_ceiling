@@ -15,12 +15,6 @@ $user_group = $user->groups;
 
 $project_id = $this->item->id;
 
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
-
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
@@ -118,12 +112,17 @@ if (!empty($_SESSION["project_card_$project_id"]))
     $project_card = $_SESSION["project_card_$project_id"];
     $phones = json_decode($project_card)->phones;
 }
+$dealer = JFactory::getUser($this->item->dealer_id);
+$dealerType = $dealer->dealer_type;
 ?>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->id_client;?>">В карточку</a>
+<?php if($dealerType == 7){?>
+    <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=<?php echo $dealer->associated_client;?>">В застройщика</a>
+<?php }?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php

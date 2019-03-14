@@ -430,11 +430,10 @@
 			console.log(dealer_id);
 			data.forEach(function(elem){
 				if(elem.id == dealer_id){
-					projects = Object.keys(elem.projects);
+					projects = elem.projects;
 				}
 				
 			});
-			console.log(projects);
 			jQuery.ajax({
 	            url: "index.php?option=com_gm_ceiling&task=projects.getProjectsInfo",
 	            data: {

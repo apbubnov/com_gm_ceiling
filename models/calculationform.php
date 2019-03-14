@@ -1018,10 +1018,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 ->update('`#__gm_ceiling_calculations`')
                 ->set('checked_out_time = ' . $db->quote($date_created));
             foreach ($columns as $column){
-               // if(!empty($data[$column])){
-                    $value = (gettype($data[$column]) == "string") ? "'".$data[$column]."'" : $data[$column];
-                    $query->set("$column = $value");
-                //}
+                $value = "'".$data[$column]."'" ;
+                $query->set("$column = $value");
             }
             $query->where('id = ' . $data['id']);
             $db->setQuery($query);
