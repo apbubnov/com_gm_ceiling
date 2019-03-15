@@ -229,6 +229,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (!empty($id)) {
                 $user = clone JFactory::getUser($id->id);
                 unset($user->username, $user->password);
+                $user->datetime = date('Y-m-d H:i:s');
                 if (empty($from_browser)) {
                     $result = json_encode($this->crypt($user->id, json_encode($user)));
                 } else {
