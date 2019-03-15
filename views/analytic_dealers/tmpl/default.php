@@ -397,34 +397,63 @@
 
 	function fill_table(data){
         jQuery("#dealers_count").text(data.length);
-		var ths = jQuery("#analytic > thead  th"),key ="",total = [];
+		var ths = jQuery("#analytic > thead  th"),key ="",total = [],total_manf = {};
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){
 			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].id+'"></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-                console.log(key!='name' && key!='squares_manf');
-				let val = (key!='name' && key!='squares_manf') ? parseFloat(data[i][key]).toFixed(2) : data[i][key];
-				jQuery('#analytic > tbody > tr:last').append('<td>'+ val +'</td>');
-                if(key == 'rest'){
-                    total[key] = '-';
+				let val = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(data[i][key]).toFixed(2) : data[i][key];
+                
+                if (key == 'squares_manf' || key == 'name') {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="min-width: 200px; text-align: left;">'+ val +'</td>');
+                } else {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="text-align: right;">'+ val +'</td>');
                 }
-				else if (key == 'name') {
+				
+                if(key == 'rest') {
+                    total[key] = '-';
+                } else if (key == 'name') {
                     total[key] = '<b>Итого</b>';
+                } else if (key == 'squares_manf') {
+                    if (!empty(val)) {
+                        var temp = val.split('<br>'), k;
+                        for (var j = temp.length; j--;) {
+                            temp[j] = temp[j].split(': ');
+                            k = temp[j][0];
+                            if (total_manf[k] === undefined) {
+                                total_manf[k] = temp[j][1]-0;
+                            } else {
+                                total_manf[k] += temp[j][1]-0;
+                            }
+                        }
                     }
-                    else {
-                        total[key] = (total[key]) ? +total[key] + +val : val;
-                    }
+
+                } else {
+                    total[key] = (total[key]) ? +total[key] + +val : val;
+                }
 			});
 			
 		}
+        total['squares_manf'] = '';
+        for (var k in total_manf) {
+            total['squares_manf'] += k+': '+total_manf[k].toFixed(2)+'<br>';
+        }
+        
 		if(Object.keys(total).length){
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				var value = (key!='name' && key!='squares_manf') ? parseFloat(total[key]).toFixed(2) : total[key];
-				console.log(value);
-				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ value +'</b></td>');
+
+				var value = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(total[key]).toFixed(2) : total[key];
+				//console.log(value);
+				
+                if (key == 'squares_manf' || key == 'name') {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="min-width: 200px; text-align: left;"><b>'+ value +'</b></td>');
+                } else {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="text-align: right;"><b>'+ value +'</b></td>');
+                }
+
 			});
 		}
 
