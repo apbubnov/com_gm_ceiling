@@ -194,6 +194,33 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
        }
    }
+
+   function writeWire(){
+       try {
+           $db = JFactory::getDbo();
+           $query = $db->getQuery(true);
+           $query
+               ->select('id,n19')
+               ->from('`#__gm_ceiling_calculations`')
+               ->where('n19>0')
+               ->order('id');
+           $db->setQuery($query);
+           $ids = $db->loadObjectList();
+           foreach ($ids as $id){
+               $query->clear();
+               $query
+                   ->insert('`#__gm_ceiling_wires`')
+                   ->columns('`calc_id`,`wire_id`,`count`')
+                   ->values("$id->id,4,$id->n19");
+               $db->setQuery($query);
+               $db->execute();
+
+           }
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+   }
    function costyl_mp(){
        try
        {

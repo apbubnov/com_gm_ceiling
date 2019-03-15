@@ -90,7 +90,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (empty($data->key_number) || empty($data->data) || empty($data->hash)) {
                 return false;
             }
-            $this->checkSubscription($data->key_number);
             $secret = $this->getSecret($data->key_number);
             $decode_data = base64_decode($data->data);
             $decrypt = $this->xor_string($decode_data, $secret);
@@ -107,6 +106,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function checkSubscription($key_number) {
         try {
+            if (empty($key_number)) {
+                return false;
+            }
             $user = JFactory::getUser((int)$key_number);
             $currentDate = date('Y-m-d H:i:s');
             if (empty($user->period_start_date || $user->period)) {
@@ -181,6 +183,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if ($verifyPass) {
                 $user = clone $user;
                 unset($user->username, $user->password);
+                $user->datetime = date('Y-m-d H:i:s');
                 $result = $this->crypt($user->id, json_encode($user));
                 die(json_encode($result));
             } else {
@@ -285,7 +288,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
                 $user = clone JFactory::getUser($userID);
                 unset($user->username, $user->password);
-
+                $user->datetime = date('Y-m-d H:i:s');
                 if (empty($from_browser)) {
                     $result = json_encode($this->crypt($userID, json_encode($user)));
                 } else {
@@ -329,6 +332,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -396,6 +400,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -428,6 +433,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -460,6 +466,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -519,6 +526,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -635,6 +643,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -714,6 +723,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
+            $this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);

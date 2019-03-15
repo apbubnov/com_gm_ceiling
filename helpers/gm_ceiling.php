@@ -337,8 +337,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n15' => 'int', //Шторный карниз
                         'n16' => 'int', //Скрытый карниз
                         'n17' => 'string', //Закладная брусом
-                        'n18' => 'string', //Укрепление стены
-                        'n19' => 'string', //Провод
+                        'n18' => 'string', //Укрепление стен
                         'n20' => 'string', //Разделитель
                         'n20_1' => 'string', //отбойник
                         'n21' => 'string', //Пожарная сигнализация
@@ -441,6 +440,18 @@ class Gm_ceilingHelpersGm_ceiling
                     );
                 }
                 $data['n14'] = json_encode($n14);
+            }
+            //провода
+            $n19_count = $jinput->get('n19_count',array(),"ARRAY");
+            $n19_type = $jinput->get('n19_type', array(), 'ARRAY');
+            if (count($n19_count) >= 1 && !empty($n19_count[0])) {
+                foreach ($n19_count as $key => $each) {
+                    $n19[] = array(
+                        $n19_count[$key],
+                        $n19_type[$key]
+                    );
+                }
+                $data['n19'] = json_encode($n19);
             }
             //Получаем массив из переменной вентиляции
             $n22_count = $jinput->get('n22_count', array(), 'ARRAY');
@@ -1030,8 +1041,6 @@ class Gm_ceilingHelpersGm_ceiling
             $items_16 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%6*50%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
             $items_556 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('%ПВС 2 х 0,75%') AND `c`.`title` LIKE('%Провод%') ";
-            $items_4 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('35') AND `c`.`title` LIKE('%Круглое кольцо%') ";
             $items_58 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%П 60%') AND `c`.`title` LIKE('%Подвес прямой %') ";
@@ -1187,14 +1196,20 @@ class Gm_ceilingHelpersGm_ceiling
             if ($del_flag == 1) {
                 $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
                 $n13 = json_decode($data['n13']);
+                $n19 = json_decode($data['n19']);
                 $n26 = json_decode($data['n26']);
                 $n22 = json_decode($data['n22']);
                 $n14 = json_decode($data['n14']);
                 $n23 = json_decode($data['n23']);
                 $n15 = json_decode($data['n15']);
                 $n29 = json_decode($data['n29']);
+                if (!empty($n19) && count($n19) > 0) {
+                    foreach ($n19 as $wire) {
+                        $total_n19_count += $wire[0];
+                        $component_count[$wire[1]] += $wire[0];
+                    }
+                }
                 if (!empty($n29) && count($n29) > 0) {
-
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
                             switch($profil[1]){
@@ -1307,6 +1322,13 @@ class Gm_ceilingHelpersGm_ceiling
                     $component_count[$items_2[0]->id]++;
                     if($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
+                    }
+                }
+                $n19 = $data['n19'];
+                if(count($n19) > 0){
+                    foreach($n19 as $wire){
+                        $total_n19_count += $wire->count;
+                        $component_count[$wire->wire_id] += $wire->count;
                     }
                 }
                 //вентиляция
@@ -1473,11 +1495,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $component_count[$items_5[0]->id] += $data['n18'] * 3;
             }
             $component_count[$items_430[0]->id] += $data['n18'] * 2;
-            //провод
-            $component_count[$items_4[0]->id] += $data['n19'];
             if($data['need_metiz']) {
-                $component_count[$items_9[0]->id] += $data['n19'] * 2;
-                $component_count[$items_5[0]->id] += $data['n19'] * 2;
+                $component_count[$items_9[0]->id] += $total_n19_count * 2;
+                $component_count[$items_5[0]->id] += $total_n19_count * 2;
             }
             //разделитель ТОЛЬКО ДЛЯ ПВХ
             if (!empty($data['n1']) &&  $data['n1'] != 29) {

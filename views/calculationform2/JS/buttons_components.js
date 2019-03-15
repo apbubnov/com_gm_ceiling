@@ -99,7 +99,7 @@ let arr_blocks = [
         children: [
             {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
             {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_light_cptn",btn_id:"btn_n13",btn_text:"Светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
-            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_light_cptn",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png", parent: "light_cptn"},
+            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_light_cptn",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 1,kind_btn:"0", img: "wire.png", parent: "light_cptn"},
         ]
     },
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
@@ -159,13 +159,24 @@ let n6_src = {
         {id:'jform_n6_2',value:0,text:"Вставка не нужна",selected:true},
         {id:'jform_n6_1',value:"color",text:"Цветная вставка"},
         {id:'jform_n6',value:314,text:"Белая вставка"},
-
     ]
 };
 let remove_n28 = create_single_input(1,"jform_remove_n28","jform[remove_n28]","Введите кол-во старого профиля,м.:","Кол-во,м.","tel");
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
-let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
+//let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
+let n19_src = {
+    id : 'jform_n19',
+    name : 'jform[n19]',
+    columns:[
+        {div_class:'advanced_col1',text:'Кол-во',input_name:"n19_count[]",input_id:"n19_count",input_type:1},
+        {div_class:'advanced_col5',text:'Тип',input_name:"n19_type[]",input_id:"n19",input_type:2},
+        {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
+    ]
+};
+
+let n19 =  create_block_with_divs(n19_src);
+
 let n17 = create_single_input(1,"jform_n17","jform[n17]","","Кол-во,м.","tel");
 let n20 = '<h4>Разделитель</h4>'
 n20 += create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","tel");
@@ -882,6 +893,16 @@ function fill_calc_data(){
                         check_select_option('n15_size[]',j,n15_objs[j]['n15_size']);
                     }
                     break;
+               case 'n19':
+                   let n19_objs = calculation[Object.keys(calculation)[i]];
+                   for(let j = 1;j<n19_objs.length;j++){
+                       jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
+                   }
+                   for(let j = 0;j<n19_objs.length;j++){
+                       jQuery("[name = 'n19_count[]']")[j].value = n19_objs[j]['count'];
+                       check_select_option('n19_type[]',j,n19_objs[j]['wire_id']);
+                   }
+                   break;
                 case 'n22':
                     let n22_objs = calculation[Object.keys(calculation)[i]];
                     for(let j = 1;j<n22_objs.length;j++){

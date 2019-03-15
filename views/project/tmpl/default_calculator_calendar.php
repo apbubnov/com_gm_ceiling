@@ -78,6 +78,7 @@ foreach ($calculations as $calculation) {
     $calculation->n23 = $calculationform_model->n23_load($calculation->id);
     $calculation->n26 = $calculationform_model->n26_load($calculation->id);
     $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;

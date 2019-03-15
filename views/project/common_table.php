@@ -771,12 +771,22 @@
                                                         <td><?php echo $calculation->n17; ?></td>
                                                     </tr>
                                                 <?php } ?>
-                                                <?php if ($calculation->n19> 0) { ?>
+                                                <?php if ($calculation->n19) { ?>
+                                                    <h4 style="margin: 10px 0;">Провода</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                        foreach ($calculation->n19 as $key => $n19_item) {
+                                                            echo "<tr><td><b>Количество:</b> " . $n19_item->count . " м - <b>Тип:</b>   " . $n19_item->wire_title."</td></tr>";
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                <?php } ?>
+                                                <?php /*if ($calculation->n19> 0) { */?><!--
                                                     <tr>
                                                         <td> Провод, м:</td>
-                                                        <td><?php echo $calculation->n19; ?></td>
+                                                        <td><?php /*echo $calculation->n19; */?></td>
                                                     </tr>
-                                                <?php } ?>
+                                                --><?php /*} */?>
                                                 <?php if ($calculation->n20> 0) { ?>
                                                     <tr>
                                                         <td>Разделитель, м:</td>
