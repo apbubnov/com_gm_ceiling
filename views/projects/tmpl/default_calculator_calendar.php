@@ -87,18 +87,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <td data-th = "Адрес" class="center one-touch"><?= $item->project_info; ?></td>
                             <td data-th = "Примечание" class="center one-touch">
                             <?php
-                                $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id);
-                                if (!empty($project_notes->dealer_manager_note)) {
-                                    echo '<b>'.$project_notes->dealer_manager_note->description.':</b> ';
-                                    echo $project_notes->dealer_manager_note->value.'<br>';
-                                }
-                                if (!empty($project_notes->dealer_note)) {
-                                    echo '<b>'.$project_notes->dealer_note->description.':</b> ';
-                                    echo $project_notes->dealer_note->value.'<br>';
-                                }
-                                if (!empty($project_notes->dealer_calculator_note)) {
-                                    echo '<b>'.$project_notes->dealer_calculator_note->description.':</b> ';
-                                    echo $project_notes->dealer_calculator_note->value.'<br>';
+                                $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,2);
+                                foreach ($project_notes as $note){
+                                    echo $note->description.$note->value."<br>";
                                 }
                             ?>
                             </td>

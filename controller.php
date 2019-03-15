@@ -1119,6 +1119,14 @@ public function register_mnfctr(){
                                                 'title' => 'Трехрядный',
                                             );
                     break;
+                case 'n19':
+                    $filter = '(`component_id` = 4 and count > 0)';
+                    $wires = $model->getFilteredItems($filter);
+                    foreach($wires as $wire){
+                        $items->n19_type[] = $wire;
+                    }
+
+                    break;
                 case 'n22':
                     $filter = '(`component_id` = 12 OR `component_id` = 21)';
                     $arr = $model->getFilteredItems($filter);

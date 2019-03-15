@@ -21,35 +21,36 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 ?>
 <?=parent::getButtonBack();?>
 
-<h2 class = "center">Просмотр проекта</h2>
+
 <?php if ($this->item) : ?>
 	<?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 	<?php $calculations = $model->getProjectItems($this->item->id); ?>
 
 	<div class="container">
 	  <div class="row">
-		<div class="item_fields">
+          <h1>Если Вы сюда попали, срочно сообщите программистам как Вы это сделали! </h1>
+		<!--<div class="item_fields">
 			<h4>Информация по проекту</h4>
 			<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=manager" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 				<table class="table">
 					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+						<th><?php /*echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); */?></th>
 						<td>
-							<?php $jdate = new JDate($this->item->project_calculation_date); ?>
-							<?php echo $jdate->format('d.m.Y'); ?>
+							<?php /*$jdate = new JDate($this->item->project_calculation_date); */?>
+							<?php /*echo $jdate->format('d.m.Y'); */?>
 						</td>
 					</tr>
 					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-						<td><?php echo $this->item->project_info; ?></td>
+						<th><?php /*echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); */?></th>
+						<td><?php /*echo $this->item->project_info; */?></td>
 					</tr>
 					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-						<td><?php echo $this->item->client_id; ?></td>
+						<th><?php /*echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); */?></th>
+						<td><?php /*echo $this->item->client_id; */?></td>
 					</tr>
 					<tr>
-						<th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-						<td><?php echo $this->item->client_contacts; ?></td>
+						<th><?php /*echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); */?></th>
+						<td><?php /*echo $this->item->client_contacts; */?></td>
 					</tr>
 				</table>
 			</form>
@@ -57,74 +58,74 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 		<div class="">
 			<h4>Информация для менеджера</h4>
 			<table class="table">
-			<?php 
+			<?php /*
 					$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 					$components_list = $components_model->getFilteredItems();
 					foreach($components_list as $i => $component) {
 						$components[$component->id] = $component; 
-					}?>
-				<?php foreach($calculations as $calculation) { ?>
+					}*/?>
+				<?php /*foreach($calculations as $calculation) { */?>
 					<tr>
-						<th><?php echo $calculation->calculation_title; ?></th>
+						<th><?php /*echo $calculation->calculation_title; */?></th>
 						<td>
-							<?php if( $calculation->n9 >= 4) $sum = $calculation->canvases_sum + $components[57]->component_price * $calculation->n10 + $components[58]->component_price * $calculation->n11 + $components[56]->component_price * ($calculation->n9 - 4);
+							<?php /*if( $calculation->n9 >= 4) $sum = $calculation->canvases_sum + $components[57]->component_price * $calculation->n10 + $components[58]->component_price * $calculation->n11 + $components[56]->component_price * ($calculation->n9 - 4);
 							else $sum = $calculation->canvases_sum + $components[57]->component_price * $calculation->n10 + $components[58]->component_price * $calculation->n11;
-							?> 
-							 <?php echo $sum; ?> руб.
+							*/?>
+							 <?php /*echo $sum; */?> руб.
 						</td>
 						<td>
-							<?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
-							<?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
-								<a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-							<?php } else { ?>
+							<?php /*$path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; */?>
+							<?php /*if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { */?>
+								<a href="<?php /*echo $path; */?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+							<?php /*} else { */?>
 								-
-							<?php } ?>
+							<?php /*} */?>
 						</td>
 					</tr>
-				<?php } ?>
+				<?php /*} */?>
 			</table>
 			<h4>Расходные материалы</h4>
 			<table class="table">
-				<?php foreach($calculations as $calculation) { ?>
+				<?php /*foreach($calculations as $calculation) { */?>
 					<tr>
-						<th><?php echo $calculation->calculation_title; ?></th>
+						<th><?php /*echo $calculation->calculation_title; */?></th>
 						<td>
-							<?php echo $calculation->gm_mounting_sum; ?> руб.
+							<?php /*echo $calculation->gm_mounting_sum; */?> руб.
 						</td>
 						<td>
-							<?php $path = "/costsheets/" . md5($calculation->id . "consumables") . ".pdf"; ?>
-							<?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
-								<a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-							<?php } else { ?>
+							<?php /*$path = "/costsheets/" . md5($calculation->id . "consumables") . ".pdf"; */?>
+							<?php /*if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { */?>
+								<a href="<?php /*echo $path; */?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+							<?php /*} else { */?>
 								-
-							<?php } ?>
+							<?php /*} */?>
 						</td>
 					</tr>
-				<?php } ?>
+				<?php /*} */?>
 			</table>
 			<h4>Наряды на монтаж</h4>
 			<table class="table">
-				<?php foreach($calculations as $calculation) { ?>
+				<?php /*foreach($calculations as $calculation) { */?>
 					<tr>
-						<th><?php echo $calculation->calculation_title; ?></th>
+						<th><?php /*echo $calculation->calculation_title; */?></th>
 						<td>
-							<?php echo $calculation->gm_mounting_sum; ?> руб.
+							<?php /*echo $calculation->gm_mounting_sum; */?> руб.
 						</td>
 						<td>
-							<?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
-							<?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
-								<a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-							<?php } else { ?>
+							<?php /*$path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; */?>
+							<?php /*if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { */?>
+								<a href="<?php /*echo $path; */?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+							<?php /*} else { */?>
 								-
-							<?php } ?>
+							<?php /*} */?>
 						</td>
 					</tr>
-				<?php } ?>
+				<?php /*} */?>
 			</table>
 				<button  type="button"  id="run_project"  class="validate btn btn-primary">
 			Запустить в производство
 			</button>
-		</div>
+		</div>-->
 	  </div>
 	</div>
 	

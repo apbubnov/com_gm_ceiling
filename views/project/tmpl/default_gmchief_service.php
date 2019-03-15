@@ -92,6 +92,7 @@ foreach ($calculations as $calculation) {
     $calculation->n23 = $calculationform_model->n23_load($calculation->id);
     $calculation->n26 = $calculationform_model->n26_load($calculation->id);
     $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;
@@ -283,6 +284,8 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                             <?php }?>
                     <?php endif;?>
                 </table>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
             </div>
         </div>
         <!-- расчеты для проекта -->
@@ -451,8 +454,8 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                                                 <?php
                                                 /*Полный монтаж*/
                                                 if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
-                                                    $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
-                                                    $path_service = "/costsheets/" . md5($calculation->id . "mount_single_service") . ".pdf";
+                                                    $path = "/costsheets/" . md5($calculation->id . "mount_single_gm") . ".pdf";
+                                                    $path_service = "/costsheets/" . md5($calculation->id . "mount_single_dealer") . ".pdf";
                                                     if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                                         echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд бригаде</a>';
                                                     }
@@ -513,8 +516,8 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                                 <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                                     <tr class="section_estimate" style="display: none;">
                                         <?php
-                                            $path_service = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
-                                            $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
+                                            $path_service = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
+                                            $path = "/costsheets/" . md5($this->item->id . "mount_common_gm") . ".pdf";
                                         ?>
                                         <td>
                                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>

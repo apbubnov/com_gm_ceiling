@@ -156,6 +156,7 @@
             $manufacturer_title = $canvas->name." ".$canvas->width;
             $color_file = $canvas->color_file;
         }
+        $calculation->n37 = addslashes($calculation->n37);
         $calculation->extra_components = addslashes($calculation->extra_components);
         $calculation->extra_mounting = addslashes($calculation->extra_mounting);
         $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
@@ -667,6 +668,7 @@
     var user_id = "<?php echo $user_id;?>";
     var advt = "<?php echo $advt;?>"
     var texturesData = '<?php echo $texturesData?>';
+    var isGmManager  = '<?php echo $triangulator_pro;?>';
     Function.prototype.process= function(state){
         var process= function(){
             var args= arguments;
@@ -1265,7 +1267,7 @@
         }
 
         //если есть комплектующие раскрыть
-        if(calculation.components_sum > 0 || calculation.need_mount == 1){
+        if(calculation.components_sum > 0 || calculation.need_mount > 0){
                 jQuery("#btn_add_components").trigger("click");
             }
 

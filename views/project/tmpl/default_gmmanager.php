@@ -11,10 +11,7 @@ defined('_JEXEC') or die;
 $jinput = JFactory::getApplication()->input;
 $user = JFactory::getUser();
 $userId = $user->get('id');
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
+
 /*MODELS BLOCK*/
 $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('project');
@@ -58,30 +55,17 @@ if(!empty($this->item->mount_data)){
 $transport_service = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"mount")['mounter_sum'];
 $mounter_approve = true;
+
+/*ГЕНЕРАЦИЯ ПДФ*/
 foreach($calculations as $calc){
     if(!empty($calc->n3)){
         Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
         Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
     }
-
-    foreach ($this->item->mount_data as $key => $value) {
-        $groups = JFactory::getUser($value->mounter)->groups;
-        if(in_array("26", $groups)){
-            $mounter_approve = false;
-        }
-        $gm_mount_price[$calc->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id,null,"serviceSelf")['total_gm_mounting'];
-        if($need_service){
-            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"service",true);
-        }
-        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$value->mounter,$value->stage,$value->time,"serviceSelf",true);
-    }
-   
+    $mount = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id);
+    $calc->total_gm_mount_sum = $mount['total_gm_mounting'];
+    $calc->total_dealer_mount_sum = $mount['total_dealer_mounting'];
 }
-/*ГЕНЕРАЦИЯ ПДФ*/
-if($need_service){
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"service");
-}
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id,null,"serviceSelf");
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
@@ -90,11 +74,7 @@ Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
 $status = $model->WhatStatusProject($_GET['id']);
 if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status == 11) || ((int)$status[0]->project_status == 22) || $this->item->dealer_id != $user->dealer_id){
     $display = 'style="display:none;"';
-} 
-
-$total_service = 0;
-$total_gm_mount = 0;
-$total_mount = 0;
+}
 ?>
 
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
@@ -106,76 +86,82 @@ $total_mount = 0;
 <?php if ($this->item) : ?>
     <div class="container">
         <div class="row">
-            <div class="item_fields">
-                <h4>Информация по проекту № <?= $this->item->id; ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
-                      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <table class="table">
-                        <tr>
-                            <th>Дилер</th>
-                            <td><?php echo $dealer_cl->client_name; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td>
-                                <?php
-                                if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
-                                <?php } else { ?>
-                                    <?php $jdate = new JDate($this->item->project_calculation_date); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i');
-                                } ?>
-                            </td>
-                        </tr>
-                        <?php if(!empty($this->item->mount_data)):?>
+            <div class="col-md-6">
+                <div class="item_fields">
+                    <h4>Информация по проекту № <?= $this->item->id; ?></h4>
+                    <form id="form-client"
+                          action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
+                          method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+                        <table class="table">
                             <tr>
-                                <th colspan="3" style="text-align: center;">Монтаж</th>
+                                <th>Дилер</th>
+                                <td><?php echo $dealer_cl->client_name; ?></td>
                             </tr>
-                            <?php foreach ($this->item->mount_data as $value) { ?>                          
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                                <td>
+                                    <?php
+                                    if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
+                                    <?php } else { ?>
+                                        <?php $jdate = new JDate($this->item->project_calculation_date); ?>
+                                        <?php echo $jdate->format('d.m.Y H:i');
+                                    } ?>
+                                </td>
+                            </tr>
+                            <?php if(!empty($this->item->mount_data)):?>
                                 <tr>
-                                    <th><?php echo $value->time;?></th>
-                                    <td><?php echo $value->stage_name;?></td>
-                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                    <th colspan="3" style="text-align: center;">Монтаж</th>
+                                </tr>
+                                <?php foreach ($this->item->mount_data as $value) { ?>
+                                    <tr>
+                                        <th><?php echo $value->time;?></th>
+                                        <td><?php echo $value->stage_name;?></td>
+                                        <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
+                                    </tr>
+                                <?php }?>
+                            <?php endif;?>
+                            <tr >
+                                <th  style="text-align: center;"colspan = 3><?php echo "Дата готовности полотен"; ?></th>
+                            </tr>
+                            <?php foreach ($calculations as $calculation){?>
+                                <tr >
+                                    <td><?php echo $calculation->calculation_title;?></td>
+                                    <td><?php echo (!empty($calculation->run_date) || !empty($calculation->run_by_call)) ? ($calculation->run_by_call) ? "По звонку" : $calculation->run_date : "Отсутствует"?></td>
                                 </tr>
                             <?php }?>
-                        <?php endif;?>
-                        <tr>
-                            <th><?php echo "Дата готовности полотен"; ?></th>
-                            <td>
-                                <?php
-                                if (empty($this->item->ready_time)) { ?> -
-                                <?php } else { 
-                                    echo $this->item->ready_time;
-                                } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <?php $contacts = $model->getClientPhones($this->item->id_client); ?>
-                            <td><?php foreach ($contacts as $phone) {
-                                    echo $phone->client_contacts;
-                                    echo "<br>";
-                                } ?></td>
-                        </tr>
-                    </table>
-                </form>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                                <td><?php echo $this->item->project_info; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                                <td><?php echo $this->item->client_id; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                <?php $contacts = $model->getClientPhones($this->item->id_client); ?>
+                                <td><?php foreach ($contacts as $phone) {
+                                        echo $phone->client_contacts;
+                                        echo "<br>";
+                                    } ?></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
+                <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
+                <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
             </div>
-            <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-            <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
-            <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
-            <div class="">
+            <div class="col-md-6">
+                <h4 class="center">Примечания</h4>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
+            </div>
+        </div>
+            <div class="row">
                 <h4>Информация для менеджера</h4>
                 <table class="table table_cashbox">
                     <?php
-                    
                     $mount = $mount_model->getDataAll();
                     $common_canvases_sum = 0;
                     ?>
@@ -195,6 +181,9 @@ $total_mount = 0;
                             </th>
                             <th>
                                 Изменить раскрой
+                            </th>
+                            <th>
+                                Изменить расчет
                             </th>
                         </tr>
                     </thead>
@@ -233,6 +222,13 @@ $total_mount = 0;
                                     </button>
                                 <?php } ?>
                             </td>
+                            <td>
+                                <?php if ($this->item->project_status != 12) { ?>
+                                    <button  data-calc_id = "<?php echo $calculation->id; ?>" name = "change_calc"
+                                             class="btn btn-primary">Изменить
+                                    </button>
+                                <?php } ?>
+                            </td>
                         </tr>
                     <?php } ?>
                     <tr>
@@ -256,6 +252,7 @@ $total_mount = 0;
                                 -
                             <?php } ?>
                         </td>
+                        <td></td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -347,69 +344,81 @@ $total_mount = 0;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($calculations as $calculation) {
-                            if($mounter_approve){ 
-                                $path = "/costsheets/" . md5($calculation->id.'mount_single').'.pdf'; 
-                            }
-                            else{
-                                 $path = "N\A"; 
-                            }
-                        ?>
+                        <?php foreach ($calculations as $calculation) {?>
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                             <?php if($need_service) {?>
                                 <td>
                                     <?php
-                                        $total_service += $service_mount[$calculation->id];
-                                        echo  $service_mount[$calculation->id]; 
+                                        $total_service += $calculation->total_dealer_mount_sum;
+                                        echo  $calculation->total_dealer_mount_sum;
                                     ?> руб.
                                 </td>
                                 <td>
                                     <?php
-                                        $total_gm_mount += $gm_mount_price[$calculation->id];
-                                        echo $gm_mount_price[$calculation->id]; 
+                                        $total_gm_mount += $calculation->total_gm_mount_sum;
+                                        echo $calculation->total_gm_mount_sum;
                                     ?> руб.
                                 </td>
                                 <?php }else{ ?>
                                     <td>
                                         <?php
-                                            $total_mount += $calculation->mounting_sum; 
-                                            echo $calculation->mounting_sum; 
+                                            $total_mount += $calculation->total_dealer_mount_sum;
+                                            echo $calculation->total_dealer_mount_sum;
                                         ?> руб.
                                     </td>
                                <?php } ?>
                             <td>
                                 <?php
                                 if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
-                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Посмотреть</a>';
-                                    } else {
-                                        echo 'После утверждения бригады';
-                                    } 
+                                    $path = "/costsheets/" . md5($calculation->id.'mount_single_dealer').'.pdf';
+                                    if($need_service){
+                                        $path_gm = "/costsheets/" . md5($calculation->id.'mount_single_gm').'.pdf';
+                                    }
+
+                                    if($need_service) {
+                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд МС</a>';
+                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Наряд бригаде</a>';
+                                    }else{
+                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд</a>';
+                                    }
                                 }
                                 else {
-                                    if($mounter_approve){
-                                        foreach ($mount_data as $value) {
-                                            $path = "/costsheets/" . md5($calculation->id.'mount_stage'.$value->stage).'.pdf';
-                                            if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
-                                                switch ($value->stage) {
-                                                    case 2:
-                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Обагечивание</a>';
-                                                        break;
-                                                    case 3:
-                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Натяжка</a>';
-                                                        break;
-                                                    case 4:
-                                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Вставка</a>';
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
+                                    foreach ($mount_data as $value) {
+                                        if($need_service){
+                                            $path_gm = "/costsheets/" . md5($calculation->id.'mount_stage_gm'.$value->stage).'.pdf';
+                                        }
+                                        $path = "/costsheets/" . md5($calculation->id.'mount_stage_dealer'.$value->stage).'.pdf';
+                                        if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                                            switch ($value->stage) {
+                                                case 2:
+                                                    if($need_service) {
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Обагечивание МС</a>';
+                                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Обагечивание ГМ</a>';
+                                                    }else{
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Обагечивание</a>';
+                                                    }
+                                                    break;
+                                                case 3:
+                                                    if($need_service) {
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Натяжка МС</a>';
+                                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Натяжка ГМ</a>';
+                                                    }else{
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Натяжка</a>';
+                                                    }
+                                                    break;
+                                                case 4:
+                                                    if($need_service) {
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Вставка МС</a>';
+                                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Вставка ГМ</a>';
+                                                    }else{
+                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Вставка</a>';
+                                                    }
+                                                    break;
+                                                default:
+                                                    break;
                                             }
                                         }
-                                    }
-                                    else{
-                                        echo 'После утверждения бригады';
                                     }
                                 }
                                 ?>
@@ -435,16 +444,15 @@ $total_mount = 0;
                         <td>
                             <?php
                                 if($need_service){
-                                    $path = "/costsheets/" . md5($this->item->id . "mount_common_service") . ".pdf";
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть наряд службе</a>
-                            <?php   }
-                                }
-                                $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf";
-                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path) && $mounter_approve) { ?>
+                                    $path = "/costsheets/" . md5($this->item->id . "mount_common_gm") . ".pdf";
+                                    $path_gm = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
+                                    ?>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Наряд МС</a>
+                                        <a href="<?php echo $path_gm; ?>" class="btn btn-secondary" target="_blank">Наряд ГМ</a>
+                            <?php }else {
+                                $path = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
+                                ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть наряд бригаде</a>
-                            <?php } else { ?>
-                                После утверждения бригады
                             <?php } ?>
                         </td>
         </tbody>
@@ -485,7 +493,7 @@ $total_mount = 0;
             </div>
         </div>
     </div>
-        <form id="form-project"
+        <form id="form-project1"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
@@ -495,16 +503,59 @@ $total_mount = 0;
               action="/index.php?option=com_gm_ceiling&task=project.approvemanager&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <input type="hidden" name="mount" id = mount value= "<?php echo $json_mount;?>">
+            <input type="hidden" name="ready_dates" id = "ready_dates" value="">
             <button type="button" id = "run" class="btn btn-primary">
                 Запустить
             </button>
             <div id="mw_container" class = "modal_window_container">
                 <button type="button" id="close_mw" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
                 <div id="mw_date" class = "modal_window">
-                    <h6 style = "margin-top:10px">Введите к скольки должен быть готов</h6>
-                    <p><input type="date"  name = "ready_date" id="ready_date" value = <?php echo date('Y-m-d'); ?>> <input name ="time" type ="time" id = "time" required ></p>
-                    <p ><input type= "checkbox" name = 'quick' id = 'quick' value = 0>Срочный</p>
-                    <p><button type="submit" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+                    <h6 style = "margin-top:10px">Подтверждение/измение даты готовности полотен</h6>
+                    <?php if(count($calculations)>1){ ?>
+                    <div class="row center"  style="padding-bottom: 5px;margin-left: 15%;margin-right: 15%;">
+                        <div class="col-md-4 ">
+                            На все полотна
+                        </div>
+                        <div class="col-md-4">
+                            <input type="checkbox"  id="all_by_call"  class="inp-cbx" style="display: none">
+                            <label for="all_by_call" class="cbx">
+                                        <span>
+                                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                <span>По звонку</span>
+                            </label>
+                        </div>
+                        <div class="col-md-4 left">
+                            <input type="datetime-local" value="<?php echo str_replace(' ','T',date("Y-m-d H:i"));?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"  name="all_canvas_ready" class="input-gm">
+                        </div>
+                    </div>
+                    <?php }?>
+                    <?php foreach($calculations as $calculation){?>
+                        <div class="row center"  style="padding-bottom: 5px;margin-left: 15%;margin-right: 15%;">
+                            <div class="col-md-4 ">
+                                <?php echo $calculation->calculation_title; ?>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="checkbox" <?php echo ($calculation->run_by_call)?"checked":""?> data-calc_id = "<?php echo $calculation->id?>" id="<?php echo $calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
+                                <label for="<?php echo $calculation->id?>" class="cbx">
+                                        <span>
+                                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                    <span>По звонку</span>
+                                </label>
+                            </div>
+                            <div class="col-md-4 left">
+                                <input type="datetime-local" value="<?php echo str_replace(' ','T',$calculation->run_date);?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
+                            </div>
+                        </div>
+                    <?php }?>
+                    <div class="row">
+                        <button type="button" id="save" class="btn btn-primary">Сохранить</button>
+                    </div>
                 </div>
                 <div id = "mw_mounts_calendar" class = "modal_window"></div>
             </div>
@@ -613,6 +664,10 @@ $total_mount = 0;
                 jQuery("#width").val(JSON.stringify(data.widths));
                 jQuery("#form_url").submit();
             });
+            jQuery("[name = 'change_calc']").click(function(){
+                let id = jQuery(this).data('calc_id');
+                location.href = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&calc_id='+id;
+            });
 
             jQuery('#btn_back').click(function(){
                 var l = location.href.replace('project','projects');
@@ -635,35 +690,88 @@ $total_mount = 0;
                     }
                 });
             });
-            jQuery("#cancel").click(function(){
-                jQuery("#close").hide();
-                jQuery("#modal_window_container").hide();
-                jQuery("#modal_window_date").hide();
-            });
-            jQuery("#quick").change(function(){
-                this.value = this.checked ? 1 : 0;  
-                if(this.value == 1){
-                    jQuery("#time").required = false;
-                    var date = new Date();
-                    var h = date.getHours();
-                    var m = date.getMinutes();
-                    if(m.length == 1)
-                    {
-                        m = "0"+m;
-                    }
-                    var time = h+":"+m;
-                    jQuery("#time").val(time);
-                }
-            })
-            
 
             jQuery("#run").click(function(){
                 jQuery("#mw_container").show();
                 jQuery("#mw_date").show("slow");
                 jQuery("#close_mw").show();
             });
-           
+            jQuery('[name = "runByCall"]').change(function () {
+                var checkBox = this;
+                if(checkBox.checked){
+                    jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(jQuery(this).data("calc_id") == jQuery(checkBox).data("calc_id")){
+                            this.value =  "";
+                        };
+                    });
+                }
+            });
 
+            jQuery('[name = "date_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
+                this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+            });
+            jQuery('[name = "date_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery("#all_by_call").attr("checked",false);
+                jQuery('[name = "runByCall"]').filter(function () {
+                    if(jQuery(this).data("calc_id") == jQuery(date_time).data("calc_id")){
+                        jQuery(this).attr("checked",false);
+                    };
+                });
+            });
+            jQuery("#save").click(function(){
+                var readyDates = jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(this.value){
+                            return this;
+                        };
+                    }),
+                    byCall = jQuery('[name = "runByCall"]:checked'),
+                    result = [];
+                jQuery.each(readyDates,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:jQuery(elem).val()});
+                });
+                jQuery.each(byCall,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:"by_call"});
+                });
+                jQuery("#ready_dates").val(JSON.stringify(result));
+                jQuery("#form-project").submit();
+            });
+            //готовность на все потолки
+            jQuery("#all_by_call").change(function () {
+                var checkBox = this,attr;
+                if(checkBox.checked){
+                    jQuery('[name = "all_canvas_ready"]')[0].value = '';
+                    jQuery('[name = "date_canvas_ready"]').each(function(index,elem){
+                        elem.value = '';
+                    });
+                    attr = true;
+                }
+                else{
+                    attr = false;
+                }
+                jQuery('[name = "runByCall"]').each(function (index,elem) {
+                    jQuery(elem).attr("checked",attr);
+                });
+            });
+            jQuery('[name = "all_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
+                this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+                jQuery('[name = "runByCall"]').each(function (index,elem) {
+                    jQuery(elem).attr("checked",false);
+                });
+                jQuery("#all_by_call").attr("checked",false);
+            });
+            jQuery('[name = "all_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery('[name = "date_canvas_ready"]').each(function(index,elem){
+                    elem.value = date_time.value;
+                });
+            });
             jQuery("input[name^='include_calculation']").click(function () {
                 if (jQuery(this).prop("checked")) {
                     jQuery(this).closest("tr").removeClass("not-checked");

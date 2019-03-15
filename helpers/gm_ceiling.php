@@ -337,8 +337,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n15' => 'int', //Шторный карниз
                         'n16' => 'int', //Скрытый карниз
                         'n17' => 'string', //Закладная брусом
-                        'n18' => 'string', //Укрепление стены
-                        'n19' => 'string', //Провод
+                        'n18' => 'string', //Укрепление стен
                         'n20' => 'string', //Разделитель
                         'n20_1' => 'string', //отбойник
                         'n21' => 'string', //Пожарная сигнализация
@@ -362,6 +361,9 @@ class Gm_ceilingHelpersGm_ceiling
                         'n36' => 'string',//перегарпунка
                         'n37_square' => 'string', //плозадь фотопечати
                         'n37_cost' => 'string', // цена фотопечати
+                        'n38' => 'int', //ремонт потолка
+                        'n39' => 'string',
+                        'n40' => 'int',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -370,7 +372,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'details' => 'string', //цвет
                         'offcut_square' => 'string',
                         'discount' => 'int',
-                        'need_metiz' => 'int'
+                        'need_metiz' => 'int',
+                        'need_cuts' => 'int'
                         // 'rek' => 'int',
                         // 'proizv' => 'string'
                     )
@@ -440,6 +443,18 @@ class Gm_ceilingHelpersGm_ceiling
                     );
                 }
                 $data['n14'] = json_encode($n14);
+            }
+            //провода
+            $n19_count = $jinput->get('n19_count',array(),"ARRAY");
+            $n19_type = $jinput->get('n19_type', array(), 'ARRAY');
+            if (count($n19_count) >= 1 && !empty($n19_count[0])) {
+                foreach ($n19_count as $key => $each) {
+                    $n19[] = array(
+                        $n19_count[$key],
+                        $n19_type[$key]
+                    );
+                }
+                $data['n19'] = json_encode($n19);
             }
             //Получаем массив из переменной вентиляции
             $n22_count = $jinput->get('n22_count', array(), 'ARRAY');
@@ -806,7 +821,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
                 $html .= '</tr>';
             }
-            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
@@ -1029,8 +1044,6 @@ class Gm_ceilingHelpersGm_ceiling
             $items_16 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%6*50%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
             $items_556 = $components_model->getFilteredItems($filter);
-            $filter = "`co`.`title`  LIKE('%ПВС 2 х 0,75%') AND `c`.`title` LIKE('%Провод%') ";
-            $items_4 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('35') AND `c`.`title` LIKE('%Круглое кольцо%') ";
             $items_58 = $components_model->getFilteredItems($filter);
             $filter = "`co`.`title`  LIKE('%П 60%') AND `c`.`title` LIKE('%Подвес прямой %') ";
@@ -1098,6 +1111,12 @@ class Gm_ceilingHelpersGm_ceiling
 
             $filter = "`co`.`title` like ('%Контурный%') and `c`.`title` like ('%Профиль%')";
             $items_735 = $components_model->getFilteredItems($filter);
+
+            $filter = "`co`.`title` like ('%для шторного карниза%') and `c`.`title` like ('%Лента%')";
+            $items_cornice_lenta = $components_model->getFilteredItems($filter);
+
+            $filter = "`co`.`title` like ('%для шторного карниза(упак. 2шт)%') and `c`.`title` like ('%Закругления%')";
+            $items_cornice_round = $components_model->getFilteredItems($filter);
 
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
@@ -1186,14 +1205,20 @@ class Gm_ceilingHelpersGm_ceiling
             if ($del_flag == 1) {
                 $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
                 $n13 = json_decode($data['n13']);
+                $n19 = json_decode($data['n19']);
                 $n26 = json_decode($data['n26']);
                 $n22 = json_decode($data['n22']);
                 $n14 = json_decode($data['n14']);
                 $n23 = json_decode($data['n23']);
                 $n15 = json_decode($data['n15']);
                 $n29 = json_decode($data['n29']);
+                if (!empty($n19) && count($n19) > 0) {
+                    foreach ($n19 as $wire) {
+                        $total_n19_count += $wire[0];
+                        $component_count[$wire[1]] += $wire[0];
+                    }
+                }
                 if (!empty($n29) && count($n29) > 0) {
-
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
                             switch($profil[1]){
@@ -1306,6 +1331,13 @@ class Gm_ceilingHelpersGm_ceiling
                     $component_count[$items_2[0]->id]++;
                     if($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
+                    }
+                }
+                $n19 = $data['n19'];
+                if(count($n19) > 0){
+                    foreach($n19 as $wire){
+                        $total_n19_count += $wire->count;
+                        $component_count[$wire->wire_id] += $wire->count;
                     }
                 }
                 //вентиляция
@@ -1457,6 +1489,17 @@ class Gm_ceilingHelpersGm_ceiling
                    $component_count[$items_233[0]->id] += $data['n11'];
                 */
             }
+
+            //лента для карниза
+            //контурный профиль
+            if($data['n39'] > 0){
+                $component_count[$items_cornice_lenta[0]->id] += $data['n39'];
+
+            }
+            if($data['n40'] > 0){
+                $component_count[$items_cornice_round[0]->id] += $data['n40'];
+
+            }
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
             $component_count[$items_430[0]->id] += $data['n17'] * 2;
@@ -1472,11 +1515,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $component_count[$items_5[0]->id] += $data['n18'] * 3;
             }
             $component_count[$items_430[0]->id] += $data['n18'] * 2;
-            //провод
-            $component_count[$items_4[0]->id] += $data['n19'];
             if($data['need_metiz']) {
-                $component_count[$items_9[0]->id] += $data['n19'] * 2;
-                $component_count[$items_5[0]->id] += $data['n19'] * 2;
+                $component_count[$items_9[0]->id] += $total_n19_count * 2;
+                $component_count[$items_5[0]->id] += $total_n19_count * 2;
             }
             //разделитель ТОЛЬКО ДЛЯ ПВХ
             if (!empty($data['n1']) &&  $data['n1'] != 29) {
@@ -1738,7 +1779,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases[$canvas->id] = $canvas;
             }
             $offcut_square_data = array();
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts'] == 1) {
                 $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
                 $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
                 $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
@@ -2269,6 +2310,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n35'] * $gm_mount->mp61,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp61,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n35'] * $results->mp61,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
+                if($data['n38']>0){
+                    $mounting_data[] = array(
+                        "title" => "Ремонт потолка",                                                        //Название
+                        "quantity" => $data['n38'],                                                        //Кол-во
+                        "gm_salary" => $gm_mount->mp64,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n38'] * $gm_mount->mp64,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp64,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n38'] * $results->mp64,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>2
                     );
                 }
@@ -3969,7 +4021,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $html .= '</tr>';
             }
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';

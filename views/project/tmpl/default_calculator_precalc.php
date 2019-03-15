@@ -79,6 +79,7 @@ foreach ($calculations as $calculation) {
     $calculation->n23 = $calculationform_model->n23_load($calculation->id);
     $calculation->n26 = $calculationform_model->n26_load($calculation->id);
     $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;
@@ -281,6 +282,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 </td>
                             </tr>
                         </table>
+                        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
                     </div>
                 </div>
 
@@ -343,41 +345,66 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 </div>
             <?php } ?>
             <div class="project_activation" id="project_activation" style="display: none;">
-               <div class="row center">
-                    <h4>Назначить дату монтажа</h4>
-                    <div id="calendar_mount" align="center"></div>
-                </div>
-                <div class="row center" id = "ready_wrapper">
-                    <h4>Назначить дату готовности полотен</h4>
-                        <input type="datetime-local" id="date_canvas_ready">
-                        <button class="btn btn-primary" id="btn_ready_date" type="button">ок</button>
+                <div class="row center">
+                    <div class="col-md-6">
+                        <h4>Назначить дату монтажа</h4>
+                        <div id="calendar_mount" align="center"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <h4>Назначить дату готовности полотен</h4>
+                            <?php foreach($calculations as $calculation){?>
+                                <div class="row center"  style="padding-bottom: 5px;">
+                                    <div class="col-md-4 ">
+                                        <?php echo $calculation->calculation_title; ?>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="checkbox" data-calc_id = "<?php echo $calculation->id?>" id="<?php echo $calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
+                                        <label for="<?php echo $calculation->id?>" class="cbx">
+                                        <span>
+                                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                            <span>По звонку</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 left">
+                                        <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
+                                    </div>
+
+                                </div>
+                            <?php }?>
+                            <div class="row">
+                                <button class="btn btn-primary" id="btn_ready_date_вave" type="button">Сохранить</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4> Ввести примечания</h4>
+                                <div id ="comments_divs">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <b><label for = "jform_production_note">Примечание в производство</label></b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <textarea name="production_note" class="input-gm" id="jform_production_note" placeholder="Примечание в производство" aria-invalid="false"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <b><label for = "jform_mount_note">Примечание к монтажу</label></b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <hr>
-                <div class = "container" style="padding-left: 0px;">
-                    <div class="row">
-                        <div class="col-md-1">
-                            <button class="btn btn-primary" id = "show_comments_btn" type = "button">Ввести примечания</button>
-                        </div>
-                    </div>
-                    <div id ="comments_divs" style="display:none;">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label for = "jform_gm_calculator_note">Примечание к договору/в производство</label>
-                             </div>
-                            <div class="col-md-2">
-                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору/в производство" aria-invalid="false"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label for = "jform_chief_note">Примечание к монтажу</label>
-                            </div>
-                            <div class="col-md-2">
-                                <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </p>
@@ -990,7 +1017,78 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     }
                 });
             });
+            jQuery('[name = "runByCall"]').change(function () {
+                var checkBox = this;
+                if(checkBox.checked){
+                    jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(jQuery(this).data("calc_id") == jQuery(checkBox).data("calc_id")){
+                            this.value =  "";
+                        };
+                    });
+                }
+            });
 
+
+            jQuery('[name = "date_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
+                this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+            });
+            jQuery('[name = "date_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery('[name = "runByCall"]').filter(function () {
+                    if(jQuery(this).data("calc_id") == jQuery(date_time).data("calc_id")){
+                        jQuery(this).attr("checked",false);
+                    };
+                });
+            });
+
+            jQuery("#btn_ready_date_вave").click(function() {
+                var readyDates = jQuery('[name = "date_canvas_ready"]').filter(function () {
+                        if(this.value){
+                            return this;
+                        };
+                    }),
+                    byCall = jQuery('[name = "runByCall"]:checked'),
+                    result = [];
+                jQuery.each(readyDates,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:jQuery(elem).val()});
+                });
+                jQuery.each(byCall,function (index,elem) {
+                    result.push({calc_id:jQuery(elem).data("calc_id"),ready_time:"by_call"});
+                });
+                jQuery.ajax({
+                    /*index.php?option=com_gm_ceiling&task=project.update_ready_time*/
+                    url: "index.php?option=com_gm_ceiling&task=calculation.set_ready_time",
+                    data: {
+                        data: JSON.stringify(result)
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Время готовности полотен назначено"
+                        });
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка"
+                        });
+                    }
+                });
+            });
             jQuery("#add_call").click(function(){
                 if (jQuery("#call_date").val() == '')
                 {
@@ -1261,11 +1359,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         });
                     }
                 });
-            });
-
-            jQuery("#show_comments_btn").click(function(){
-                jQuery("#comments_divs").toggle();
-
             });
 
             jQuery("#update_address").click(function(){

@@ -428,6 +428,7 @@
                             }
                         }
                     }
+
                 } else {
                     total[key] = (total[key]) ? +total[key] + +val : val;
                 }
@@ -443,6 +444,7 @@
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
+
 				var value = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(total[key]).toFixed(2) : total[key];
 				//console.log(value);
 				
@@ -451,6 +453,7 @@
                 } else {
                     jQuery('#analytic > tbody > tr:last').append('<td style="text-align: right;"><b>'+ value +'</b></td>');
                 }
+
 			});
 		}
 

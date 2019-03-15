@@ -24,7 +24,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
     {
         try {
             $data = $this->getAllDataByperiod($date_from,$date_to);
-            $result = []; $proizvs = [];
+            /*$result = []; $proizvs = [];
             $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $harpoon = $component_model->getFilteredItems("co.component_id = 195");
@@ -55,21 +55,19 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 $result[$key]['project_count'] = count($result[$key]['projects']);
                 $result[$key]['diff'] = $result[$key]['sum'] - $result[$key]['total_self_sum'];
                 $result[$key]['diff_comp'] = $result[$key]['comp_sum'] -  $result[$key]['comp_self_sum'];
-            }
+            }*/
 
-            $headers = array("name"=>"Дилер","project_count"=>"Кол-во проектов","calcs_count"=>"Кол-во потолков","quadr"=>"Квадратура");
-            foreach ($proizvs as $key => $value) {
-                $headers[$value]=$value;
-            }
-            $headers['sum'] = "Стоимость";
-            $headers['total_self_sum'] = "Себестоимость";
-            $headers['diff'] = "Разница";
-            $headers['comp_sum'] = "Стоимость компл-х";
-            $headers['comp_self_sum'] = "Себестоимость компл-х";
-            $headers['diff_comp'] = "Разница по компл.";
+            $headers = array("name"=>"Дилер","project_count"=>"Кол-во проектов","calcs_count"=>"Кол-во потолков","quadr"=>"Квад-ра");
+            $headers['squares_manf'] = "Квадратура по произв-м";
+            $headers['price'] = "Стоимость";
+            $headers['cost_price'] = "Себестоимость";
+            $headers['delta_price'] = "Разница";
+            $headers['price_comp'] = "Стоимость компл-х";
+            $headers['cost_price_comp'] = "Себестоимость компл-х";
+            $headers['delta_price_comp'] = "Разница по компл.";
             $headers['rest'] = 'Сост.счета';
-            array_unshift($result , $headers);
-            return $result;
+            array_unshift($data , $headers);
+            return $data;
 
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -79,7 +77,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
     function getAllDataByperiod($date1,$date2){
         try{
             $db = $this->getDbo();
-            $query="SELECT c.id AS calc_id,p.id AS project_id,u.id AS user_id,u.name AS user_name,p.date_of_change,MAX(canv.self_price) AS self_price,canv.manuf_id AS manufacturer_id,canv.name,
+           /* $query="SELECT c.id AS calc_id,p.id AS project_id,u.id AS user_id,u.name AS user_name,p.date_of_change,MAX(canv.self_price) AS self_price,canv.manuf_id AS manufacturer_id,canv.name,
                     `c`.`n3` AS `n3`,`c`.`n4` AS `n4`,`c`.`n5` AS `n5`,`c`.`n31` AS `n31`,`c`.`n5_shrink` AS `n5_shrink`,`c`.`offcut_square` AS `offcut_square`,
                     `c`.`n9` AS `n9`,`cs`.`sum` AS `components_sum`, `c`.`canvases_sum` AS `canvases_sum`,`cut`.`canvas_area` AS `canvas_area`,cs.self_sum
                     FROM (
@@ -96,7 +94,131 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                     LEFT JOIN `rgzbn_gm_ceiling_cuttings` AS  `cut` ON `c`.`id` = `cut`.`id`
                     LEFT JOIN `rgzbn_comp_self` AS cs ON cs.calc_id = c.id
                     
-                    GROUP BY c.id";
+                    GROUP BY c.id";*/
+            $query = "SET @harp_price = (
+                            SELECT 	MAX(`price`) AS `price`
+                                FROM	`rgzbn_gm_ceiling_analytics_components`
+                                WHERE	`status` = 1 AND
+                                            `component_id` = 195
+                        );";
+            $db->setQuery($query);
+            $db->execute();
+
+            $query = "SELECT	`u`.`id` as `dealer_id`,
+                                        `u`.`name`,
+                                        COUNT(DISTINCT `p`.`id`) AS `project_count`,
+                                        COUNT(`calc`.`id`) AS `calcs_count`,
+                                        SUM(`calc`.`n4`) AS `quadr`,
+                                        `manf_sq_group`.`squares_manf`,
+                                        
+                                        SUM(`calc`.`canvases_sum` + `calc`.`components_sum`) AS `price`,
+                                        SUM(
+                                            IFNULL(`cut`.`canvas_area`, 0) * (IFNULL(`a_canv`.`price`, 0) + IFNULL(`a_canv`.`price`, 0) * 0.05) +
+                                            IFNULL(`calc`.`n4`, 0) * 11 +
+                                            IFNULL(`calc`.`n31`, 0) * IFNULL(`m`.`mp22`, 0) +
+                                            IFNULL(`calc`.`n5_shrink`, 0) * IFNULL(@harp_price, 0) +
+                                            IF(`calc`.`n9` > 4, (`calc`.`n9` - 4) * 5, 0) +
+                                            IFNULL(`comp_self`.`self_sum`, 0)
+                                        ) AS `cost_price`,
+                                        
+                                        (SUM(`calc`.`canvases_sum` + `calc`.`components_sum`) -
+                                            SUM(
+                                                IFNULL(`cut`.`canvas_area`, 0) * (IFNULL(`a_canv`.`price`, 0) + IFNULL(`a_canv`.`price`, 0) * 0.05) +
+                                                IFNULL(`calc`.`n4`, 0) * 11 +
+                                                IFNULL(`calc`.`n31`, 0) * IFNULL(`m`.`mp22`, 0) +
+                                                IFNULL(`calc`.`n5_shrink`, 0) * IFNULL(@harp_price, 0) +
+                                                IF(`calc`.`n9` > 4, (`calc`.`n9` - 4) * 5, 0) +
+                                                IFNULL(`comp_self`.`self_sum`, 0)
+                                            )
+                                        ) AS `delta_price`,
+                                        
+                                        SUM(IFNULL(`comp_self`.`sum`, 0)) AS `price_comp`,
+                                        SUM(IFNULL(`comp_self`.`self_sum`, 0)) AS `cost_price_comp`,
+                                        
+                                        (SUM(IFNULL(`comp_self`.`sum`, 0)) -
+                                            SUM(IFNULL(`comp_self`.`self_sum`, 0))
+                                        ) AS `delta_price_comp`,
+                                        `rec_sum`.`sum` as `rest`,
+                                        GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ',') AS `projects`
+                            FROM	`rgzbn_gm_ceiling_calculations` AS `calc`
+                                INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
+                                    `calc`.`project_id` = `p`.`id`
+                                INNER JOIN 
+                                    (SELECT `project_id`,
+                                                    `new_status`,
+                                                    `date_of_change`
+                                        FROM	`rgzbn_gm_ceiling_projects_history`
+                                        WHERE	`new_status` = 5 and `date_of_change` between '$date1' and '$date2'
+                                        GROUP BY	`project_id`
+                                    ) AS `ph` ON
+                                    `p`.`id` = `ph`.`project_id`
+                                INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON
+                                    `p`.`client_id` = `cl`.`id`
+                                INNER JOIN `rgzbn_users` AS `u` ON
+                                    `cl`.`dealer_id` = `u`.`id`
+                                LEFT JOIN	`rgzbn_gm_ceiling_cuttings` AS `cut` ON
+                                    `calc`.`id` = `cut`.`id`
+                                LEFT JOIN 
+                                    (SELECT `canvas_id`,
+                                                    MAX(`price`) AS `price`
+                                        FROM	`rgzbn_gm_ceiling_analytics_canvases`
+                                        WHERE	`status` = 1
+                                        GROUP BY	`canvas_id`
+                                    ) AS `a_canv` ON
+                                    `calc`.`n3` = `a_canv`.`canvas_id`
+                                LEFT JOIN 
+                                    (SELECT `id`,
+                                                    GROUP_CONCAT(
+                                                        CONCAT(`name`, ': ', `square`)
+                                                        ORDER BY `manf_id`
+                                                        SEPARATOR '<br>'
+                                                    ) AS `squares_manf`
+                                        FROM	(
+                                            SELECT `u`.`id`,
+                                                            `canv_manf`.`id` AS `manf_id`,
+                                                            `canv_manf`.`name`,
+                                                            SUM(`calc`.`n4`) AS `square`
+                                                FROM	`rgzbn_gm_ceiling_calculations` AS `calc`
+                                                    INNER JOIN `rgzbn_gm_ceiling_canvases` AS `canv` ON
+                                                        `calc`.`n3` = `canv`.`id`
+                                                    INNER JOIN `rgzbn_gm_ceiling_canvases_manufacturers` AS `canv_manf` ON
+                                                        `canv`.`manufacturer_id` = `canv_manf`.`id`
+                                                    INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
+                                                        `calc`.`project_id` = `p`.`id`
+                                                    INNER JOIN 
+                                                        (SELECT `project_id`,
+                                                                        `new_status`,
+                                                                        `date_of_change`
+                                                            FROM	`rgzbn_gm_ceiling_projects_history`
+                                                            WHERE	`new_status` = 5
+                                                            GROUP BY	`project_id`
+                                                        ) AS `ph` ON
+                                                        `p`.`id` = `ph`.`project_id`
+                                                    INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON
+                                                        `p`.`client_id` = `cl`.`id`
+                                                    INNER JOIN `rgzbn_users` AS `u` ON
+                                                        `cl`.`dealer_id` = `u`.`id`
+                                                GROUP BY	`u`.`id`,
+                                                                    `canv_manf`.`id`
+                                        ) AS `manf_sq`
+                                        GROUP BY	`id`
+                                    ) AS `manf_sq_group` ON
+                                    `u`.`id` = `manf_sq_group`.`id`
+                                INNER JOIN `rgzbn_gm_ceiling_mount` AS `m` ON
+                                    `m`.`user_id` = 1
+                                LEFT JOIN `rgzbn_comp_self` AS `comp_self` ON
+                                    `calc`.`id` = `comp_self`.`calc_id`
+                                LEFT JOIN 
+                                    (SELECT	`recoil_id`,
+                                                    SUM(`sum`) AS `sum`
+                                        FROM	`rgzbn_gm_ceiling_recoil_map_project`
+                                        GROUP BY	`recoil_id`
+                                    ) AS `rec_sum` ON
+                                    `u`.`id` = `rec_sum`.`recoil_id`
+                            GROUP BY	`u`.`id`
+                            ORDER BY	`u`.`id`
+                        ;
+            ";
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;

@@ -52,6 +52,12 @@ const help_block_n34 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n35 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
 
+const help_block_n36 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
+
+const help_block_n37 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
+
+const help_block_n38 = '<span class="airhelp">В расчет входит монтажная работа "ремонт полотна". Считается по метрам.</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -62,6 +68,7 @@ const help_block_extra_mounting = '<span class="airhelp">Это поле пре�
 
 const help_block_need_mount = null;
 const help_block_need_metiz  = null;
+const help_block_need_cuts = null;
 const help_block_attention = null;
 const help_block_light_cptn = null;
 const help_block_oter_mount_cptn = null;
@@ -93,7 +100,7 @@ let arr_blocks = [
         children: [
             {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
             {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_light_cptn",btn_id:"btn_n13",btn_text:"Светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
-            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_light_cptn",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png", parent: "light_cptn"},
+            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_light_cptn",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 1,kind_btn:"0", img: "wire.png", parent: "light_cptn"},
         ]
     },
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
@@ -123,12 +130,19 @@ let arr_blocks = [
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n36",btn_cont_id:"btn_cont_n36",prev_id:"block_oter_mount_cptn",btn_id:"btn_n36",btn_text:"Перегарпунка",need_ajax : 0,kind_btn:"0", img: "garpun.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n37",btn_cont_id:"btn_cont_n37",prev_id:"block_oter_mount_cptn",btn_id:"btn_n37",btn_text:"Фотопечать",need_ajax : 0,kind_btn:"0", img: "photoprint.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n38",btn_cont_id:"btn_cont_n38",prev_id:"block_oter_mount_cptn",btn_id:"btn_n38",btn_text:"Ремонт полотна",need_ajax : 0,kind_btn:"0", img: "repair.png", parent: "oter_mount_cptn"}
         ]
     },
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}/*,
-    {block_id:"block_need_metiz",btn_cont_id:"btn_cont_need_metiz",prev_id:"block_need_mount",btn_id:"btn_need_metiz",btn_text:"Отменить метизы",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},*/
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
+    {block_id:"block_need_metiz",btn_cont_id:"btn_cont_need_metiz",prev_id:"block_need_mount",btn_id:"btn_need_metiz",btn_text:"Отменить метизы",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}
 ];
-
+if(isGmManager == 1){
+    arr_blocks.push(
+        {block_id:"block_need_cuts",btn_cont_id:"btn_cont_need_cuts",prev_id:"block_need_metiz",btn_id:"btn_need_cuts",btn_text:"Отменить обрезки",need_ajax : 0,kind_btn:"1", img: "cuts.png", parent: "btn_add_components"}
+    );
+}
 arr_blocks.forEach(function(item){
     generate_block(item,0);
 });
@@ -150,13 +164,24 @@ let n6_src = {
         {id:'jform_n6_2',value:0,text:"Вставка не нужна",selected:true},
         {id:'jform_n6_1',value:"color",text:"Цветная вставка"},
         {id:'jform_n6',value:314,text:"Белая вставка"},
-
     ]
 };
 let remove_n28 = create_single_input(1,"jform_remove_n28","jform[remove_n28]","Введите кол-во старого профиля,м.:","Кол-во,м.","tel");
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
-let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
+//let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
+let n19_src = {
+    id : 'jform_n19',
+    name : 'jform[n19]',
+    columns:[
+        {div_class:'advanced_col1',text:'Кол-во',input_name:"n19_count[]",input_id:"n19_count",input_type:1},
+        {div_class:'advanced_col5',text:'Тип',input_name:"n19_type[]",input_id:"n19",input_type:2},
+        {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
+    ]
+};
+
+let n19 =  create_block_with_divs(n19_src);
+
 let n17 = create_single_input(1,"jform_n17","jform[n17]","","Кол-во,м.","tel");
 let n20 = '<h4>Разделитель</h4>'
 n20 += create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","tel");
@@ -202,6 +227,8 @@ let niche_src = {
     ]
 }
 let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
+n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
+n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
 n16 += create_radios_group(cornice_src);
 n16+='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
@@ -220,7 +247,7 @@ let need_mount_src = {
 let need_mount =  create_radios_group(need_mount_src);
 
 let need_metiz_src = {
-    name : 'need_mount',
+    name : 'jform[need_metiz]',
     values : [
         {id:'with_metiz',value:1,text:"Нужны", selected:true},
         {id:'without_metiz',value:0,text:"Не нужны"}
@@ -228,6 +255,16 @@ let need_metiz_src = {
 };
 
 let need_metiz = create_radios_group(need_metiz_src);
+
+let need_cuts_src = {
+    name : 'jform[need_cuts]',
+    values : [
+        {id:'with_cuts',value:1,text:"Нужны", selected:true},
+        {id:'without_cuts',value:0,text:"Не нужны"}
+    ]
+};
+
+let need_cuts = create_radios_group(need_cuts_src);
 
 let n13_src = {
     id : 'jform_n13',
@@ -363,6 +400,20 @@ n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питани
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
 let n35 = create_single_input(1,"jform_n35","jform[n35]","Контурный профиль,м","Кол-во,м.","tel");
+
+let n36 = create_single_input(1,"jform_n36","jform[n36]","Перегарпунка,м","Кол-во,м","tel");
+
+let n37_src = {
+    id : 'jform_n37',
+    name : 'jform[n37]',
+    columns:[
+        {div_class:'advanced_col_half',text:'Площадь',input_name:"jform[n37_square]",input_id:"n37_square",input_type:1},
+        {div_class:'advanced_col_half',text:'Стоимость',input_name:"jform[n37_cost]",input_id:"n37_cost",input_type:1}
+    ]
+}
+let n37 = create_block_with_divs(n37_src,0);
+
+let n38 = create_single_input(1,"jform_n38","jform[n38]","Отверстия,шт","Кол-во,шт","tel");
 /* контейнер и колонки */
 function create_container(cnt_id,col_id, parent){
     return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">
@@ -468,13 +519,13 @@ function create_single_input(input_type,id,name,text,placeholder,type,min=null,m
 function create_add_button(id){
     return `<button id="${id}" class="btn btn-primary add" style="margin-bottom:15px" type="button">Добавить</button>`
 }
-function create_block_with_divs(object){
+function create_block_with_divs(object,need_addBtn = 1){
     let btn_id = `add_${object.id}`;
     let div_id = `${object.id}_block_html`;
     let div = ` <div id = "${div_id}">
                     ${create_body(object.columns)}
                 </div>
-                ${create_add_button(btn_id)}`;
+                ${(need_addBtn == 0) ? "" : create_add_button(btn_id)}`;
     result = `<div id = "${object.id}_block">
                 ${create_captions(object.columns)}
                 ${(!document.getElementById(div_id))? div : ""}
@@ -561,7 +612,8 @@ jQuery(".component-content").on("click", ".add_fields", function () {
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let parent = id_block.replace("block_", "");
-    if (parent == 'need_mount' || parent == 'need_metiz') {
+
+    if (parent == 'need_mount' || parent == 'need_metiz' || parent == 'need_cuts') {
         let col_id = `jform_${parent}_inside`;
         let cont =  create_container("",col_id, parent);
         let element = eval(parent);
@@ -572,12 +624,14 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
         else{
             jQuery(`#${col_id}`).toggle();
         }
-        jQuery("[name = 'need_mount']").click(function(){
-            jQuery("[name = 'need_mount']").removeAttr('fix');
-            jQuery(this).attr('fix',true);
-        });
-        if(jQuery("#without").attr("fix") != "true" ){
-            jQuery("#with_mount").attr("checked",true);
+        if(parent=='need_mount') {
+            jQuery("[name = 'need_mount']").click(function () {
+                jQuery("[name = 'need_mount']").removeAttr('fix');
+                jQuery(this).attr('fix', true);
+            });
+            if (jQuery("#without").attr("fix") != "true") {
+                jQuery("#with_mount").attr("checked", true);
+            }
         }
     } else {
         if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
@@ -646,9 +700,13 @@ function open_general_blocks() {
             }
         }
     }
-    if(calculation['mounting_sum'] > 0){
+    if(calculation['need_mount'] > 0){
         arr_parent.push("btn_need_mount");
     }
+    //if(calculation['need_metiz'] == 0){
+    arr_parent.push("btn_need_metiz");
+    arr_parent.push("btn_need_cuts");
+    //}
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");
     });
@@ -658,6 +716,8 @@ function open_general_blocks() {
 function get_parent(n) {
     let result;
     switch(n){
+        case 'n39':
+        case 'n40':
         case 'n15':
         case 'n27':
             n = 'n16';
@@ -687,10 +747,8 @@ function open_blocks(props){
             case 'n16':
                 jQuery('#btn_n16').trigger("click")
                 break;
-            case 'mounting_sum':
-                if(calculation['mounting_sum']>0){
-                    jQuery(`#btn_need_mount`).trigger("click");
-                }
+            case 'need_mount':
+                jQuery(`#btn_need_mount`).trigger("click");
                 break;
             case 'n8':
             case 'n7':
@@ -770,7 +828,7 @@ function fill_calc_data(){
     let count;
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
-       if(!empty(calculation[Object.keys(calculation)[i]])){
+       if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
            switch(Object.keys(calculation)[i]){
                 case 'n28':
                 case 'height':
@@ -826,10 +884,14 @@ function fill_calc_data(){
                         check_select_option('n14_type[]',j,n14_objs[j]['n14_size']);
                     }
                     break;
+                case 'n39':
+                case 'n40':
                 case 'n15':
                 case 'n27':
                 case 'n16':
                     jQuery('#jform_n27').val(calculation['n27']);
+                    jQuery('#jform_n39').val(calculation['n39']);
+                    jQuery('#jform_n40').val(calculation['n40']);
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
                     check_radio(values,value);
@@ -855,6 +917,16 @@ function fill_calc_data(){
                         check_select_option('n15_size[]',j,n15_objs[j]['n15_size']);
                     }
                     break;
+               case 'n19':
+                   let n19_objs = calculation[Object.keys(calculation)[i]];
+                   for(let j = 1;j<n19_objs.length;j++){
+                       jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
+                   }
+                   for(let j = 0;j<n19_objs.length;j++){
+                       jQuery("[name = 'n19_count[]']")[j].value = n19_objs[j]['count'];
+                       check_select_option('n19_type[]',j,n19_objs[j]['wire_id']);
+                   }
+                   break;
                 case 'n22':
                     let n22_objs = calculation[Object.keys(calculation)[i]];
                     for(let j = 1;j<n22_objs.length;j++){
@@ -898,29 +970,59 @@ function fill_calc_data(){
                     }
                 break;
                 case 'extra_mounting':
-                let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
-                        jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
+                    let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                        for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
+                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                        }
+                        for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
+                            jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
+                            jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
 
-                    }
-                break;
+                        }
+                    break;
+               case 'n37':
+                   let n37 = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                   console.log(n37);
+                   jQuery("#n37_square").val(n37.square);
+                   jQuery("#n37_cost").val(n37.cost);
+                   break;
                 case 'components_stock':
-                let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                    let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
 
-                     for(let j = 1;j<Object.keys(stock_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                     for(let j = 0;j<Object.keys(stock_data).length;j++){
-                        jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
-                        jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
-                        jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
+                         for(let j = 1;j<Object.keys(stock_data).length;j++){
+                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                        }
+                         for(let j = 0;j<Object.keys(stock_data).length;j++){
+                            jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
+                            jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
+                            jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
 
-                    }
-                break;
+                        }
+                    break;
+               case 'need_mount':
+                   if(calculation['need_mount'] == 2){
+                       jQuery("#with_service").attr("checked",true);
+                   }
+                   if(calculation.need_mount == 1){
+                       jQuery("#with_mount").attr("checked",true);
+                   }
+                   break;
+               case 'need_metiz':
+                   if(calculation['need_metiz'] == 0){
+                       jQuery("#without_metiz").attr("checked",true);
+                   }
+                   else{
+                       jQuery("#with_metiz").attr("checked",true);
+                   }
+                   break;
+               case 'need_cuts':
+                   if(calculation['need_cuts'] == 0){
+                       jQuery("#without_cuts").attr("checked",true);
+                   }
+                   else{
+                       jQuery("#with_cuts").attr("checked",true);
+                   }
+                   break;
                 default:
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
            }

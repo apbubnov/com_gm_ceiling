@@ -69,6 +69,7 @@
         $calculation->n23 = $calculationform_model->n23_load($calculation->id);
         $calculation->n26 = $calculationform_model->n26_load($calculation->id);
         $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+        $calculation->n19 = $calculationform_model->n19_load($calculation->id);
         $total_square +=  $calculation->n4;
         $total_perimeter += $calculation->n5;
         $project_total += $calculation->calculation_total;
@@ -275,6 +276,7 @@
                             </td>
                         </tr>
                     </table>
+                    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php')?>
                 </div>
             </div>
             <div class="col-xs-12 col-md-6 comment">
@@ -332,11 +334,11 @@
                     <div id="calendar_mount" align="center"></div>
                 </div>
                 <div class = "col-xs-12 col-md-6">
-                    <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note">Примечание к договору</label><br>
-                    <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                    <b><label id="jform_production_note-lbl" for="jform_production_note">Примечание в производство</label></b><br>
+                    <textarea name="production_note" id="jform_production_note" class="input-gm" placeholder="Примечание в производство" aria-invalid="false"></textarea>
                     <br>
-                    <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label><br>
-                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                    <b><label id="jform_mount_note-lbl" for="jform_mount_note" class="">Примечание к монтажу</label></b><br>
+                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
                 </div>
             </div>
             <div class="row center">
@@ -347,8 +349,6 @@
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
-
-
                 <div id="new_call" style="display:none;">
                     <label>Введите дату и время звонка</label>
                     <input type="date" class="" name ="calldate_without_mounter" id="calldate_without_mounter" >
@@ -1075,7 +1075,6 @@
             });
 
         jQuery("#refuse_submit").click(function(){
-            jQuery("#jform_gm_calculator_note").val(jQuery("#ref_note").val());
             document.getElementById('form-client').submit();
         });    
         jQuery("#update_discount").click(function() {

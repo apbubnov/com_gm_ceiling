@@ -155,7 +155,7 @@ foreach ($brigade_id as $value) {
 </div>
 
 <script>
-
+    var notes=[];
 	// листание календаря
     month_old1 = 0;
     year_old1 = 0;
@@ -620,24 +620,10 @@ foreach ($brigade_id as $value) {
 								}
 								console.log(element);
 								var note = "";
-								if(element.gm_calculator_note){
-								    note+="ГМ Замерщик: " + element.gm_calculator_note + "; ";
-                                }
-                                if(element.gm_manager_note){
-                                    note+="ГМ Менеджер: " + element.gm_manager_note+ "; ";
-                                }
-                                if(element.gm_chief_note){
-                                    note+="ГМ НМС: " + element.gm_chief_note+ "; ";
-                                }
-                                if(element.dealer_calculator_note){
-                                    note+="Замерщик: " + element.dealer_calculator_note+ "; ";
-                                }
-                                if(element.dealer_manager_note){
-                                    note+="Менеджер: " + element.dealer_manager_note+ "; ";
-                                }
-                                if(element.dealer_chief_note){
-                                    note+="НМС: " + element.dealer_chief_note+ "; ";
-                                }
+                                getProjectNotes(element.id);
+                                jQuery.each(notes,function (index,elem) {
+                                    note +=elem.description+": "+elem.value;
+                                });
 								perimeter = +element.perimeter;
 								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {
@@ -650,7 +636,29 @@ foreach ($brigade_id as $value) {
 			}
 		}
 		// -----------------------------------------
-
+        function getProjectNotes(project_id){
+            jQuery.ajax({
+                type: "POST",
+                url: "index.php?option=com_gm_ceiling&task=project.getProjectNotes",
+                dataType: 'json',
+                data: {
+                    project_id: project_id
+                },
+                async:false,
+                success: function(msg) {
+                    notes = msg;
+                },
+                error: function(msg) {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения примечаний"
+                    });
+                }
+            });
+        }
 		// нажатие на "добавить выходной" или "изменить выходной"
 		jQuery("#add_free_day").click (function () {
 			jQuery("#window-with-table").hide();

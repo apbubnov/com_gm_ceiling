@@ -183,6 +183,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	            $this->_item->n23 = $this->n23_load($this->_item->id);
 	            $this->_item->n26 = $this->n26_load($this->_item->id);
 				$this->_item->n29 = $this->n29_load($this->_item->id);
+                $this->_item->n19 = $this->n19_load($this->_item->id);
 				//throw new Exception("Error Processing Request", 1);
 			return $this->_item;
 		}
@@ -213,6 +214,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	            $item->n23 = $this->n23_load($item->id);
 	            $item->n26 = $this->n26_load($item->id);
 				$item->n29 = $this->n29_load($item->id);
+                $item->n19 = $this->n19_load($item->id);
 				$query
 					->select('client.dealer_id')
 					->from('`#__gm_ceiling_clients` as client')
@@ -420,6 +422,30 @@ class Gm_ceilingModelCalculation extends JModelItem
                 ->select('type.title AS type_title')
                 ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = profil.n29_type')
                 ->where('profil.calculation_id' . ' = ' . $id);
+
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function n19_load($id)
+    {
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            $query
+                ->select('wires.*')
+                ->select('components_option.title AS wire_title')
+                ->from('`#__gm_ceiling_wires` AS wires')
+                ->leftJoin('`#__gm_ceiling_components_option` AS components_option ON components_option.id = wires.wire_id')
+                ->where('wires.calc_id = ' . $id);
 
             $db->setQuery($query);
             $result = $db->loadObjectList();
@@ -901,6 +927,30 @@ class Gm_ceilingModelCalculation extends JModelItem
                 ->set("canvases_sum = $sum")
                 ->set('components_sum = 0')
                 ->where("id = $calcId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function save_ready_time($calc_id,$ready_time){
+	    try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->update('`#__gm_ceiling_calculations`');
+            if($ready_time != "by_call"){
+                $query->set("`run_by_call` = (NULL)");
+                $query->set("`run_date` = '$ready_time'");
+            }
+            else{
+                $query->set("`run_by_call` = 1");
+                $query->set("`run_date` = (NULL)");
+            }
+            $query->where("id = $calc_id");
             $db->setQuery($query);
             $db->execute();
             return true;

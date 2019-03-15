@@ -15,12 +15,6 @@ $user_group = $user->groups;
 
 $project_id = $this->item->id;
 
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
-
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
@@ -71,6 +65,7 @@ foreach ($calculations as $calculation) {
     $calculation->n23 = $calculationform_model->n23_load($calculation->id);
     $calculation->n26 = $calculationform_model->n26_load($calculation->id);
     $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;
@@ -118,12 +113,17 @@ if (!empty($_SESSION["project_card_$project_id"]))
     $project_card = $_SESSION["project_card_$project_id"];
     $phones = json_decode($project_card)->phones;
 }
+$dealer = JFactory::getUser($this->item->dealer_id);
+$dealerType = $dealer->dealer_type;
 ?>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->id_client;?>">В карточку</a>
+<?php if($dealerType == 7){?>
+    <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=<?php echo $dealer->associated_client;?>">В застройщика</a>
+<?php }?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php
@@ -433,6 +433,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
             </table>
         </div>
     </div>
+    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
     </div>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>

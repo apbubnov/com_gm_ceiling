@@ -128,7 +128,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
     <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
         <div class="row">
-            <div class="col-xs-1 col-md-1 no_padding">
+            <div class="col-xs-12 col-md-6 no_padding">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                 <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
@@ -379,6 +379,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         Записать на замер
                     </a>
                 <?php } ?>
+            </div>
+            <div class="col-md-6">
+                <h4 class="center">Примечения</h4>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
             </div>
         </div>
     </form>

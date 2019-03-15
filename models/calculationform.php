@@ -131,6 +131,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $this->item->n26_lamp = $this->getListEcolaLamp();
                 $this->item->n29 = $this->n29_load($this->item->id);
                 $this->item->n29_all = $this->getListProfil();
+                $this->item->n19 = $this->n19_load($this->item->id);
             }
 
             return $this->item;
@@ -558,6 +559,29 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 ->select('components_option_lamp.title AS component_title')
                 ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_lamp ON components_option_lamp.id = ecola.n26_lamp')
                 ->where('ecola.calculation_id = ' . $id);
+
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function n19_load($id)
+    {
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            $query
+                ->select('wires.*')
+                ->select('components_option.title AS wire_title')
+                ->from('`#__gm_ceiling_wires` AS wires')
+                ->leftJoin('`#__gm_ceiling_components_option` AS components_option ON components_option.id = wires.wire_id')
+                ->where('wires.calc_id = ' . $id);
 
             $db->setQuery($query);
             $result = $db->loadObjectList();
@@ -1005,9 +1029,9 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             сохраняются на контроллере skecth (controllers/sketch.php)*/
             $date_created = date("Y-m-d H:i:s");
             $columns = [
-                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n19","n20","n20_1","n21","n22_1","n24","n27","n28","remove_n28",
-                "n30","n32","n33","n33_2","n34","n34_2","n35","niche","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
-                "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount",
+                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n20","n20_1","n21","n22_1","n24","n27","n28","remove_n28",
+                "n30","n32","n33","n33_2","n34","n34_2","n35","n36","n37","n38","n39","n40","niche","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
+                "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount","need_metiz","need_cuts",
                 "color","details","discount","manager_note"
             ];
             $calculationId = $data['id'];
@@ -1018,10 +1042,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 ->update('`#__gm_ceiling_calculations`')
                 ->set('checked_out_time = ' . $db->quote($date_created));
             foreach ($columns as $column){
-               // if(!empty($data[$column])){
-                    $value = (gettype($data[$column]) == "string") ? "'".$data[$column]."'" : $data[$column];
-                    $query->set("$column = $value");
-                //}
+                $value = "'".$data[$column]."'" ;
+                $query->set("$column = $value");
             }
             $query->where('id = ' . $data['id']);
             $db->setQuery($query);
@@ -1032,6 +1054,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $n13 = json_decode($data['n13']);
             $n14 = json_decode($data['n14']);
             $n15 = json_decode($data['n15']);
+            $n19 = json_decode($data['n19']);
             $n22 = json_decode($data['n22']);
             $n23 = json_decode($data['n23']);
             $n26 = json_decode($data['n26']);
@@ -1084,6 +1107,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query->where('calculation_id = ' . $data['id']);
                 $db->setQuery($query);
                 $db->execute();
+
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_wires'));
+                $query->where('calc_id = ' . $data['id']);
+                $db->setQuery($query);
+                $db->execute();
             }
 
             if (!empty($n13)) {
@@ -1118,6 +1147,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 foreach ($n15 as $value) {
                     if (!empty($value[0]))
                         $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            if(!empty($n19)){
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_wires`')
+                    ->columns('calc_id, wire_id, count');
+                foreach ($n19 as $value) {
+                    if (!empty($value[1]))
+                        $query->values($data['id'] . ', ' . $value[1] . ', ' . $value[0]);
                 }
                 $db->setQuery($query);
                 $db->execute();

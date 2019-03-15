@@ -65,7 +65,7 @@ class Gm_ceilingModelDealers extends JModelItem
 
 	function check_and_update_status($dealers){
 		try{
-			$groups_arr = [27,28,29,30];
+			$groups_arr = [27,28,29,30,31];
 			$today = DateTime::createFromFormat("Y-m-d", date("Y-m-d"));
 			foreach ($dealers as $key => $value) {
 				$dealer_groups = explode(',',$value->groups);

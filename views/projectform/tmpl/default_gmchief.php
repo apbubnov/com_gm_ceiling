@@ -22,6 +22,10 @@
     $user = JFactory::getUser();
     $userId = $user->get('id');
 
+    $user_groups = $user->groups;
+    if(in_array('17',$user_groups)){
+        $isNMS = true;
+    }
     /*_____________блок для всех моделей/models block________________*/ 
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -47,7 +51,24 @@
     $total_perimeter = 0;
     $calculation_total_discount = 0;
     $calculations = $calculationsModel->new_getProjectItems($this->item->id);
+    if (!empty($this->item->calcs_mounting_sum)) {
+        $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
+    }
+    $calculations = $calculationsModel->new_getProjectItems($this->item->id);
+    if(!empty($service_mount)){
+        $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
+}
     foreach ($calculations as $calculation) {
+        if (!empty($service_mount)) {
+            $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        }
+        else{
+            $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        }
+        if($isNMS){
+            $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"serviceSelf");
+            $calculation->dealer_self_gm_mounting_sum = $mount_data['total_gm_mounting'];
+        }
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
         $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
         $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
@@ -55,7 +76,6 @@
         $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
         $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
         $self_components_sum += $calculation->dealer_self_components_sum;
-        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
         $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
         $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
         $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
@@ -66,6 +86,7 @@
         $calculation->n23 = $calculationform_model->n23_load($calculation->id);
         $calculation->n26 = $calculationform_model->n26_load($calculation->id);
         $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+        $calculation->n19 = $calculationform_model->n19_load($calculation->id);
         $total_square +=  $calculation->n4;
         $total_perimeter += $calculation->n5;
         $project_total += $calculation->calculation_total;
@@ -315,31 +336,11 @@
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                             <td><?php echo $this->item->project_info; ?></td>
                         </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_MANAGER_NOTE'); ?></th>
-                            <td><?php echo $this->item->gm_manager_note; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE'); ?></th>
-                            <td><?php echo $this->item->gm_calculator_note; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE'); ?></th>
-                            <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС ГМ" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание менеджера дилера</th>
-                            <td><?php echo $this->item->dealer_manager_note;?></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание замерщика дилера</th>
-                            <td><?php echo $this->item->dealer_calculator_note;?></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание НМС дилера</th>
-                            <td><?php echo $this->item->dealer_chief_note;?></td>
-                        </tr>
 
+                        <tr>
+                            <th>Примечание к монтажу</th>
+                            <td><textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea></td>
+                        </tr>
                         <tr>
                             <th>Замерщик</th>
                             <?php 
@@ -397,6 +398,10 @@
                     </div>
                 </form>
             </div>
+            <div class="col-md-6">
+                <h4 class="center"> Примечания</h4>
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+            </div>
             <?php if($user->dealer_type == 0) { ?>
                 <div class="col-xl-6">
                     <div class="comment">
@@ -453,7 +458,7 @@
 
     // показать историю
     function show_comments() {
-        var id_client = <?php echo $this->item->client_id;?>;
+        var id_client = <?php echo $this->item->id_client;?>;
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=selectComments",
             data: {
@@ -536,7 +541,7 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->client_id;?>;
+            var id_client = <?php echo $this->item->id_client;?>;
             if (reg_comment.test(comment) || comment === "") {
                 alert('Неверный формат примечания!');
                 return;

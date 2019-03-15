@@ -937,7 +937,7 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-    public function approvemanager($id,$ready_date = null,$quickly=null)
+    public function approvemanager($id)
     {
     	try
     	{
@@ -951,11 +951,6 @@ class Gm_ceilingModelProject extends JModelItem
                 $query->set('projects.project_status = 19');
             else
                 $query->set('projects.project_status = 10');
-           
-            if(!empty($ready_date)&&!empty($quickly)){
-                $query->set("projects.ready_time = '$ready_date'");
-                $query->set("projects.quickly = $quickly");
-            }
 
             $query->where('projects.id = ' . $id);
             
@@ -1935,7 +1930,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
-    function saveNote($project_id, $note) {
+    function saveNote($project_id, $note,$type) {
     	try {
     		$user_id = JFactory::getUser()->id;
     		if (empty($project_id) && empty($user_id) && empty($note)) {
@@ -1945,25 +1940,34 @@ class Gm_ceilingModelProject extends JModelItem
 
     		$query = $db->getQuery(true);
 	        $query
-	            ->delete('`#__gm_ceiling_projects_notes`')
-	            ->where("`project_id` = $project_id AND `user_id` = $user_id");
+	            ->select('`id`,`note`')
+                ->from('`#__gm_ceiling_projects_notes`')
+	            ->where("`project_id` = $project_id AND `user_id` = $user_id and `type` = $type");
 	        $db->setQuery($query);
-	        $db->execute();
+	        $dbNote = $db->loadObject();
+            $query = $db->getQuery(true);
+            if(!empty($dbNote)){
+                $query
+                    ->update('`#__gm_ceiling_projects_notes`')
+                    ->set("`note` = '$note'")
+                    ->where("`id` = $dbNote->id");
+            }
+            else{
+                $query
+                    ->insert('`#__gm_ceiling_projects_notes`')
+                    ->columns('`project_id`, `user_id`, `note`,`type`')
+                    ->values("$project_id, $user_id, '$note',$type");
 
-	        $query = $db->getQuery(true);
-	        $query
-	            ->insert('`#__gm_ceiling_projects_notes`')
-	            ->columns('`project_id`, `user_id`, `note`')
-	            ->values("$project_id, $user_id, '$note'");
-	        $db->setQuery($query);
-	        $db->execute();
+            }
+            $db->setQuery($query);
+            $db->execute();
 	        return true;
     	} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function getProjectNotes($project_id) {
+    function getProjectNotes($project_id,$type) {
     	try {
     		if (empty($project_id)) {
     			return false;
@@ -1972,9 +1976,12 @@ class Gm_ceilingModelProject extends JModelItem
 
 	        $query = $db->getQuery(true);
 	        $query
-	        	->select('`project_id`, `user_id`, `note`')
+	        	->select('`project_id`, `user_id`, `note`,`type`')
 	            ->from('`#__gm_ceiling_projects_notes`')
 	            ->where("`project_id` = $project_id");
+	        if(!empty($type)){
+	            $query->where("`type`= $type");
+            }
 	        $db->setQuery($query);
 	        $result = $db->loadObjectList();
 	        return $result;
