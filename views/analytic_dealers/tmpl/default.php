@@ -16,7 +16,14 @@
 	$month_begin_date = date('Y-m-01');
 	$today = date('Y-m-d');
 ?>
-<div class="container">
+<style>
+    .container{
+        width:auto !important;
+        margin-left:0px !important;
+        margin-right: 0px !important;
+    }
+</style>
+<div class="container center">
 	<div class="row" align="right">
 		<div>
 			<label for="date_from">Выбрать с: </label>
@@ -32,7 +39,7 @@
             <label style="color: #414099;font-size: 14pt">Общее количество дилеров: <b><span id="dealers_count">0</span></b></label>
         </div>
     </div>
-	<div class="row" style="margin-bottom: 15px;">
+	<div class="row center" style="margin-bottom: 15px;">
 		<table id = "analytic" class="analitic-table">
 			<thead id = "thead" class = "caption-style-tar">
 			</thead>
@@ -292,7 +299,7 @@
         jQuery("#year2").mask("9999");
 
         getDataChart();
-
+        getData(jQuery('#date_from').val(),jQuery("#date_to").val());
         jQuery('input[name="interval_radio"]').click(function(){
             if(this.id == "dates"){
                 console.log("in dates");
@@ -390,31 +397,60 @@
 
 	function fill_table(data){
         jQuery("#dealers_count").text(data.length);
-		var ths = jQuery("#analytic > thead  th"),key ="",total = [];
+		var ths = jQuery("#analytic > thead  th"),key ="",total = [],total_manf = {};
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){
 			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].id+'"></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				let val = (data[i][key] ? data[i][key] : 0); 
-				jQuery('#analytic > tbody > tr:last').append('<td>'+ val +'</td>');
-                if(key == 'rest'){
-                    total[key] = '-';
+				let val = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(data[i][key]).toFixed(2) : data[i][key];
+                
+                if (key == 'squares_manf' || key == 'name') {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="min-width: 200px; text-align: left;">'+ val +'</td>');
+                } else {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="text-align: right;">'+ val +'</td>');
                 }
-				else if (key == 'name') {
+				
+                if(key == 'rest') {
+                    total[key] = '-';
+                } else if (key == 'name') {
                     total[key] = '<b>Итого</b>';
+                } else if (key == 'squares_manf') {
+                    if (!empty(val)) {
+                        var temp = val.split('<br>'), k;
+                        for (var j = temp.length; j--;) {
+                            temp[j] = temp[j].split(': ');
+                            k = temp[j][0];
+                            if (total_manf[k] === undefined) {
+                                total_manf[k] = temp[j][1]-0;
+                            } else {
+                                total_manf[k] += temp[j][1]-0;
+                            }
+                        }
                     }
-                    else {
-                        total[key] = (total[key]) ? total[key] + val : val;
-                    }
+                } else {
+                    total[key] = (total[key]) ? +total[key] + +val : val;
+                }
 			});
 			
 		}
+        total['squares_manf'] = '';
+        for (var k in total_manf) {
+            total['squares_manf'] += k+': '+total_manf[k].toFixed(2)+'<br>';
+        }
+        
 		if(Object.keys(total).length){
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name' && key !='rest') ? total[key].toFixed(2) : total[key]) +'</b></td>');
+				var value = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(total[key]).toFixed(2) : total[key];
+				//console.log(value);
+				
+                if (key == 'squares_manf' || key == 'name') {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="min-width: 200px; text-align: left;"><b>'+ value +'</b></td>');
+                } else {
+                    jQuery('#analytic > tbody > tr:last').append('<td style="text-align: right;"><b>'+ value +'</b></td>');
+                }
 			});
 		}
 
@@ -423,11 +459,10 @@
 			console.log(dealer_id);
 			data.forEach(function(elem){
 				if(elem.id == dealer_id){
-					projects = Object.keys(elem.projects);
+					projects = elem.projects;
 				}
 				
 			});
-			console.log(projects);
 			jQuery.ajax({
 	            url: "index.php?option=com_gm_ceiling&task=projects.getProjectsInfo",
 	            data: {
@@ -441,6 +476,9 @@
 	            	jQuery("#close_mw").show();
 	                jQuery("#mw_container").show();
 	                jQuery("#mw_detailed").show('slow');
+                    jQuery("#detailed_analytic > tbody > tr").click(function(){
+                        document.location.href = "/index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id="+jQuery(this).data('id');
+                    });
 	            },
 	            error: function (data) {
 	                console.log(data.responseText);
@@ -457,11 +495,12 @@
 			console.log(projects);
 		});
 
+
+
 		function create_detailed_table(data){
 			jQuery('#detailed_analytic tbody').empty();
 			for(let i = 0;i<data.length;i++){
-				console.log(data[i]);
-				jQuery('#detailed_analytic').append('<tr></tr>');
+				jQuery('#detailed_analytic').append('<tr data-id = '+data[i].id+'></tr>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].id+'</td>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].project_info+'</td>');
 				jQuery('#detailed_analytic > tbody > tr:last').append('<td>'+ data[i].quadr+'</td>');
