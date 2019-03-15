@@ -648,7 +648,7 @@ if (empty($list['direction']))
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("c.id AS client_id,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
+                ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
                 p.project_status,p.project_info,p.id,cm.mounter_id,SUM(DISTINCT calc.n7) as n7,SUM(DISTINCT calc.n4) AS quadr,SUM(DISTINCT calc.n5) AS per")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
@@ -683,7 +683,9 @@ if (empty($list['direction']))
                                                                          "sum"=>$value->total_sum,
                                                                          "status"=>$value->project_status,
                                                                          "n7"=>$value->n7,
-                                                                         "n7_cost"=>$value->n7 * $priceMount->mp13
+                                                                         "n7_cost"=>$value->n7 * $priceMount->mp13,
+                                                                         "calcs_count" => $value->calcs_count,
+                                                                         "mounters_count" => $value->mounters_count
                                                                         );
             }
             return $result;

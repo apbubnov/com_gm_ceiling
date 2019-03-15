@@ -855,6 +855,24 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     }
                     mountersStr += '</div>';
                     var value = (stage == 3) ? "S=" : "P=";
+                    var style;
+                    switch(true){
+                        case elem.projects[j].calcs_count > elem.projects[j].mounters_count && elem.projects[j].mounters_count != 0:
+                            style = 'style = "background:linear-gradient(135deg, white, yellow 100%);"';
+                            break;
+                        case elem.projects[j].calcs_count == elem.projects[j].mounters_count:
+                            if(+elem.projects[j].status >= stage+25){
+                                style = 'style = "background:linear-gradient(135deg, white, green 150%);"';
+                            }
+                            else{
+                                style = 'style = "background:linear-gradient(135deg, white, #7B68EE 150%);"';
+                            }
+                            break;
+                        default:
+                            style= "";
+                            break;
+                    }
+
                     var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
                         "</div>" : "";
@@ -868,7 +886,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         "</div>"
                         + mountersStr;
                     td+= acceptDoneBtn;
-                    jQuery("#report_table > tbody > tr:last").append('<td data-id="' + elem.projects[j].id + '">' + td + '</td>');
+                    jQuery("#report_table > tbody > tr:last").append('<td '+style+' data-id="' + elem.projects[j].id + '">' + td + '</td>');
                 }
 
             }
