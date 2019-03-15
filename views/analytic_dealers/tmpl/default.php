@@ -403,7 +403,8 @@
 			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].id+'"></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				let val = (data[i][key] ? data[i][key] : 0); 
+                console.log(key!='name' && key!='squares_manf');
+				let val = (key!='name' && key!='squares_manf') ? parseFloat(data[i][key]).toFixed(2) : data[i][key];
 				jQuery('#analytic > tbody > tr:last').append('<td>'+ val +'</td>');
                 if(key == 'rest'){
                     total[key] = '-';
@@ -412,7 +413,7 @@
                     total[key] = '<b>Итого</b>';
                     }
                     else {
-                        total[key] = (total[key]) ? total[key] + val : val;
+                        total[key] = (total[key]) ? +total[key] + +val : val;
                     }
 			});
 			
@@ -421,7 +422,9 @@
 			jQuery('#analytic').append('<tr></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
-				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ ((key!='name' && key !='rest') ? total[key].toFixed(2) : total[key]) +'</b></td>');
+				var value = (key!='name' && key!='squares_manf') ? parseFloat(total[key]).toFixed(2) : total[key];
+				console.log(value);
+				jQuery('#analytic > tbody > tr:last').append('<td><b>'+ value +'</b></td>');
 			});
 		}
 
