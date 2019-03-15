@@ -498,8 +498,6 @@
 			console.log(projects);
 		});
 
-
-
 		function create_detailed_table(data){
 			jQuery('#detailed_analytic tbody').empty();
 			for(let i = 0;i<data.length;i++){
