@@ -183,6 +183,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if ($verifyPass) {
                 $user = clone $user;
                 unset($user->username, $user->password);
+                $user->datetime = date('Y-m-d H:i:s');
                 $result = $this->crypt($user->id, json_encode($user));
                 die(json_encode($result));
             } else {
@@ -228,6 +229,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (!empty($id)) {
                 $user = clone JFactory::getUser($id->id);
                 unset($user->username, $user->password);
+                $user->datetime = date('Y-m-d H:i:s');
                 if (empty($from_browser)) {
                     $result = json_encode($this->crypt($user->id, json_encode($user)));
                 } else {
@@ -287,7 +289,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
                 $user = clone JFactory::getUser($userID);
                 unset($user->username, $user->password);
-
+                $user->datetime = date('Y-m-d H:i:s');
                 if (empty($from_browser)) {
                     $result = json_encode($this->crypt($userID, json_encode($user)));
                 } else {
