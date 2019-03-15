@@ -668,6 +668,7 @@
     var user_id = "<?php echo $user_id;?>";
     var advt = "<?php echo $advt;?>"
     var texturesData = '<?php echo $texturesData?>';
+    var isGmManager  = '<?php echo $triangulator_pro;?>';
     Function.prototype.process= function(state){
         var process= function(){
             var args= arguments;

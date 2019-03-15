@@ -68,6 +68,7 @@ const help_block_extra_mounting = '<span class="airhelp">Это поле пре�
 
 const help_block_need_mount = null;
 const help_block_need_metiz  = null;
+const help_block_need_cuts = null;
 const help_block_attention = null;
 const help_block_light_cptn = null;
 const help_block_oter_mount_cptn = null;
@@ -137,7 +138,11 @@ let arr_blocks = [
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
     {block_id:"block_need_metiz",btn_cont_id:"btn_cont_need_metiz",prev_id:"block_need_mount",btn_id:"btn_need_metiz",btn_text:"Отменить метизы",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"}
 ];
-
+if(isGmManager == 1){
+    arr_blocks.push(
+        {block_id:"block_need_cuts",btn_cont_id:"btn_cont_need_cuts",prev_id:"block_need_metiz",btn_id:"btn_need_cuts",btn_text:"Отменить обрезки",need_ajax : 0,kind_btn:"1", img: "cuts.png", parent: "btn_add_components"}
+    );
+}
 arr_blocks.forEach(function(item){
     generate_block(item,0);
 });
@@ -222,6 +227,8 @@ let niche_src = {
     ]
 }
 let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
+n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
+n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
 n16 += create_radios_group(cornice_src);
 n16+='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
@@ -248,6 +255,16 @@ let need_metiz_src = {
 };
 
 let need_metiz = create_radios_group(need_metiz_src);
+
+let need_cuts_src = {
+    name : 'jform[need_cuts]',
+    values : [
+        {id:'with_cuts',value:1,text:"Нужны", selected:true},
+        {id:'without_cuts',value:0,text:"Не нужны"}
+    ]
+};
+
+let need_cuts = create_radios_group(need_cuts_src);
 
 let n13_src = {
     id : 'jform_n13',
@@ -596,7 +613,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let parent = id_block.replace("block_", "");
 
-    if (parent == 'need_mount' || parent == 'need_metiz') {
+    if (parent == 'need_mount' || parent == 'need_metiz' || parent == 'need_cuts') {
         let col_id = `jform_${parent}_inside`;
         let cont =  create_container("",col_id, parent);
         let element = eval(parent);
@@ -688,6 +705,7 @@ function open_general_blocks() {
     }
     //if(calculation['need_metiz'] == 0){
     arr_parent.push("btn_need_metiz");
+    arr_parent.push("btn_need_cuts");
     //}
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");
@@ -698,6 +716,8 @@ function open_general_blocks() {
 function get_parent(n) {
     let result;
     switch(n){
+        case 'n39':
+        case 'n40':
         case 'n15':
         case 'n27':
             n = 'n16';
@@ -808,7 +828,7 @@ function fill_calc_data(){
     let count;
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
-       if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz"){
+       if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
            switch(Object.keys(calculation)[i]){
                 case 'n28':
                 case 'height':
@@ -864,10 +884,14 @@ function fill_calc_data(){
                         check_select_option('n14_type[]',j,n14_objs[j]['n14_size']);
                     }
                     break;
+                case 'n39':
+                case 'n40':
                 case 'n15':
                 case 'n27':
                 case 'n16':
                     jQuery('#jform_n27').val(calculation['n27']);
+                    jQuery('#jform_n39').val(calculation['n39']);
+                    jQuery('#jform_n40').val(calculation['n40']);
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
                     check_radio(values,value);
@@ -989,6 +1013,14 @@ function fill_calc_data(){
                    }
                    else{
                        jQuery("#with_metiz").attr("checked",true);
+                   }
+                   break;
+               case 'need_cuts':
+                   if(calculation['need_cuts'] == 0){
+                       jQuery("#without_cuts").attr("checked",true);
+                   }
+                   else{
+                       jQuery("#with_cuts").attr("checked",true);
                    }
                    break;
                 default:

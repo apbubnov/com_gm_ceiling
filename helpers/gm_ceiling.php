@@ -362,6 +362,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'n37_square' => 'string', //плозадь фотопечати
                         'n37_cost' => 'string', // цена фотопечати
                         'n38' => 'int', //ремонт потолка
+                        'n39' => 'string',
+                        'n40' => 'int',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -370,7 +372,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'details' => 'string', //цвет
                         'offcut_square' => 'string',
                         'discount' => 'int',
-                        'need_metiz' => 'int'
+                        'need_metiz' => 'int',
+                        'need_cuts' => 'int'
                         // 'rek' => 'int',
                         // 'proizv' => 'string'
                     )
@@ -818,7 +821,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
                 $html .= '</tr>';
             }
-            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
@@ -1108,6 +1111,12 @@ class Gm_ceilingHelpersGm_ceiling
 
             $filter = "`co`.`title` like ('%Контурный%') and `c`.`title` like ('%Профиль%')";
             $items_735 = $components_model->getFilteredItems($filter);
+
+            $filter = "`co`.`title` like ('%для шторного карниза%') and `c`.`title` like ('%Лента%')";
+            $items_cornice_lenta = $components_model->getFilteredItems($filter);
+
+            $filter = "`co`.`title` like ('%для шторного карниза(упак. 2шт)%') and `c`.`title` like ('%Закругления%')";
+            $items_cornice_round = $components_model->getFilteredItems($filter);
 
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
@@ -1480,6 +1489,17 @@ class Gm_ceilingHelpersGm_ceiling
                    $component_count[$items_233[0]->id] += $data['n11'];
                 */
             }
+
+            //лента для карниза
+            //контурный профиль
+            if($data['n39'] > 0){
+                $component_count[$items_cornice_lenta[0]->id] += $data['n39'];
+
+            }
+            if($data['n40'] > 0){
+                $component_count[$items_cornice_round[0]->id] += $data['n40'];
+
+            }
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
             $component_count[$items_430[0]->id] += $data['n17'] * 2;
@@ -1759,7 +1779,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases[$canvas->id] = $canvas;
             }
             $offcut_square_data = array();
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts'] == 1) {
                 $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
                 $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
                 $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
@@ -4001,7 +4021,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $html .= '</tr>';
             }
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
