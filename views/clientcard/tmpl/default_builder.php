@@ -263,6 +263,12 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     <input type="text" id="new_mounter_phone" class="input-gm">
     <button class="btn btn-primary" id="create_mounter">Cоздать</button>
 </div>
+<div class="row center">
+    <p class="caption-tar">Удалить бригаду</p>
+    <div class="col-md-12">
+        <button class="btn btn-primary" type="button" id="btn_delete_mounter">Удалить </button>
+    </div>
+</div>
 <hr>
 <div class="row center" style="margin-bottom: 5px;">
     <div class="col-md-6">
@@ -431,9 +437,24 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             </div>
         </div>
     </div>
+    <div id="delete_mounter_window" class="modal_window">
+        <table id="mountersTbl" class="table_project_analitic">
+            <thead>
+            <tr class="caption_table">
+                <td>Монтажники</td>
+                <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</div>
     <script>
         var progressData = [],
-            mountersOption = "<option>Выберите</option>";
+            mountersOption = "<option>Выберите</option>",
+            mountersForDelete = [];
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
@@ -457,7 +478,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     jQuery("#where_duplicate").append(checkbox);
                 }
             });
-
         }
 
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -470,14 +490,15 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 div7 = jQuery("#apartment_change"),
                 div8 = jQuery("#mounters_salary"),
                 div9 = jQuery("#one_mounter_salary"),
-                div10 = jQuery("#add_mounters");
+                div10 = jQuery("#add_mounters"),
+                div11 = jQuery("#delete_mounter_window");
             if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
                 && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
-                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)
+                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)&&!div11.is(e.target)
                 && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
                 && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
                 && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
-                && div10.has(e.target).length === 0) {
+                && div10.has(e.target).length === 0 && div11.has(e.target).length === 0) {
                 jQuery("#close").hide();
                 jQuery("#mv_container").hide();
                 jQuery("#modal_window_fio").hide();
@@ -490,6 +511,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 jQuery("#mounters_salary").hide();
                 jQuery("#one_mounter_salary").hide();
                 jQuery("#add_mounters").hide();
+                jQuery("#delete_mounter_window").hide();
             }
         });
 
@@ -598,6 +620,58 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery("#mv_container").show();
             jQuery("#modal_window_call").show("slow");
             jQuery("#close").show();
+        });
+
+        jQuery("#btn_delete_mounter").click(function (){
+            jQuery("#mv_container").show();
+            jQuery("#delete_mounter_window").show("slow");
+            jQuery("#close").show();
+            console.log(mountersForDelete);
+            jQuery("#mountersTbl > tbody").empty();
+            if(!empty(mountersForDelete)){
+                mountersForDelete.forEach(function(mounter){
+                    jQuery("#mountersTbl > tbody").append('<tr></tr>');
+                    jQuery("#mountersTbl > tbody > tr:last").append('<td>'+mounter.name+'</td>' +
+                                                                    '<td><button class="btn btn-danger btn-sm" name="btn_delete_mounter" data-id='+mounter.id+'><i class="fa fa-trash" aria-hidden="true"></i></button></td>');
+                });
+            }
+            jQuery("[name = 'btn_delete_mounter']").click(function () {
+                var button = jQuery(this);
+                var mounterId = button.data('id');
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=users.deleteUser",
+                    data: {
+                        user_id : mounterId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        button.closest('tr').hide();
+                        var index = 0;
+                        for(var i = 0;i<mountersForDelete.length;i++){
+                            if(mountersForDelete[i].id == mounterId){
+                                index = i;
+                                break;
+                            }
+                        }
+                        console.log(index);
+                        mountersForDelete.splice(index,1);
+                        mountersOption = "<option>Выберите</option>";
+                        generateMountersOption(mountersForDelete);
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+
+            });
         });
 
         jQuery("#show_salary").click(function (){
@@ -872,7 +946,6 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                             style= "";
                             break;
                     }
-
                     var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
                         "</div>" : "";
@@ -886,7 +959,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         "</div>"
                         + mountersStr;
                     td+= acceptDoneBtn;
-                    jQuery("#report_table > tbody > tr:last").append('<td '+style+' data-id="' + elem.projects[j].id + '">' + td + '</td>');
+                    jQuery("#report_table > tbody > tr:last").append('<td '+style+'mounter_select data-id="' + elem.projects[j].id + '">' + td + '</td>');
                 }
 
             }
@@ -1017,6 +1090,11 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 }
             });
         }
+        function generateMountersOption(data){
+            jQuery.each(data,function(index,element){
+                mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
+            });
+        }
         function getMounters(){
             var option;
             jQuery.ajax({
@@ -1027,9 +1105,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 dataType: "json",
                 async: false,
                 success: function(data) {
-                    jQuery.each(data,function(index,element){
-                        mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
-                    });
+                    mountersForDelete = data;
+                    generateMountersOption(data);
                 },
                 error: function(data) {
                     var n = noty({
