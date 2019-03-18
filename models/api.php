@@ -144,84 +144,88 @@ class Gm_ceilingModelApi extends JModelList
 
             if (!empty($data)) foreach ($data as $key => $value)
             {
-                if (empty($data[$key]->android_id))
-                {
-                    return false;
-                    throw new Exception('empty id!');
-                }
-                
-                $android_id = $data[$key]->android_id;
-                $query = $db->getQuery(true);
-                $query->from("`$table`")
-                    ->select("count(`id`) as `count`")
-                    ->where("`android_id` = $android_id OR `id` = $android_id");
-                $db->setQuery($query);
-                $count = $db->loadObject()->count;
-                $columns = '';
-                $columns_values = '';
-                if ($count == 0)
-                {
-                    foreach ($value as $column => $column_value)
+                try {
+                    if (empty($data[$key]->android_id))
                     {
-                        $column_value = mb_ereg_replace("[^a-zA-Zа-яёА-ЯЁ\s\d\,\.\_\/\(\)\-\:\@]", "", $column_value);
-                        if($column != "image" && $column != "cut_image"){
-                            $columns .= '`'.$column.'`,';
-                            $columns_values .= '\''.$column_value.'\',';
-                        }
+                        return false;
+                        throw new Exception('empty id!');
                     }
-                    $columns = substr($columns, 0, -1);
-                    $columns_values = substr($columns_values, 0, -1);
                     
+                    $android_id = $data[$key]->android_id;
                     $query = $db->getQuery(true);
-                    $query->insert("`$table`")
-                        ->columns($columns)
-                        ->values($columns_values);
+                    $query->from("`$table`")
+                        ->select("count(`id`) as `count`")
+                        ->where("`android_id` = $android_id OR `id` = $android_id");
                     $db->setQuery($query);
-                    $db->execute();
-                    $id = $db->insertid();
-                    $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
-                }
-                else
-                {
-                    $query = $db->getQuery(true);
-                    $query->update("`$table`");
-                    foreach ($value as $column => $column_value)
+                    $count = $db->loadObject()->count;
+                    $columns = '';
+                    $columns_values = '';
+                    if ($count == 0)
                     {
-                        if($column!="image"&&$column!="cut_image"){
-                            $query->set("`$column` = '$column_value'");
+                        foreach ($value as $column => $column_value)
+                        {
+                            $column_value = mb_ereg_replace("[^a-zA-Zа-яёА-ЯЁ\s\d\,\.\_\/\(\)\-\:\@]", "", $column_value);
+                            if($column != "image" && $column != "cut_image"){
+                                $columns .= '`'.$column.'`,';
+                                $columns_values .= '\''.$column_value.'\',';
+                            }
                         }
-                    }
-                    $query->where("`android_id` = $android_id OR `id` = $android_id");
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    $query = $db->getQuery(true);
-                    $query->select("`id`");
-                    $query->from("`$table`");
-                    $query->where("`android_id` = $android_id OR `id` = $android_id");
-                    $db->setQuery($query);
-                    $object_table = $db->loadObject();
-                    
-                    if (isset($object_table->id))
-                    {
-                        $id = $object_table->id;
+                        $columns = substr($columns, 0, -1);
+                        $columns_values = substr($columns_values, 0, -1);
+                        
+                        $query = $db->getQuery(true);
+                        $query->insert("`$table`")
+                            ->columns($columns)
+                            ->values($columns_values);
+                        $db->setQuery($query);
+                        $db->execute();
+                        $id = $db->insertid();
+                        $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                     }
                     else
                     {
-                        $id = null;
+                        $query = $db->getQuery(true);
+                        $query->update("`$table`");
+                        foreach ($value as $column => $column_value)
+                        {
+                            if($column!="image"&&$column!="cut_image"){
+                                $query->set("`$column` = '$column_value'");
+                            }
+                        }
+                        $query->where("`android_id` = $android_id OR `id` = $android_id");
+                        $db->setQuery($query);
+                        $db->execute();
+    
+                        $query = $db->getQuery(true);
+                        $query->select("`id`");
+                        $query->from("`$table`");
+                        $query->where("`android_id` = $android_id OR `id` = $android_id");
+                        $db->setQuery($query);
+                        $object_table = $db->loadObject();
+                        
+                        if (isset($object_table->id))
+                        {
+                            $id = $object_table->id;
+                        }
+                        else
+                        {
+                            $id = null;
+                        }
+    
+                        $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                     }
-
-                    $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
-                }
-                if($table == 'rgzbn_gm_ceiling_calculations'){
-                    if(!empty($data[$key]->image)){
-                        $filename = md5("calculation_sketch".$id);
-                        file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", $data[$key]->image);
+                    if($table == 'rgzbn_gm_ceiling_calculations'){
+                        if(!empty($data[$key]->image)){
+                            $filename = md5("calculation_sketch".$id);
+                            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", $data[$key]->image);
+                        }
+                        if(!empty($data[$key]->cut_image)){
+                            $filename = md5("cut_sketch".$id);
+                            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
+                        }
                     }
-                    if(!empty($data[$key]->cut_image)){
-                        $filename = md5("cut_sketch".$id);
-                        file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
-                    }
+                } catch(Exception $e) {
+                    continue;
                 }
             }
             return $arr_ids;
