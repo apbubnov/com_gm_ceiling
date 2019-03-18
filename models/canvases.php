@@ -819,11 +819,11 @@ class Gm_ceilingModelCanvases extends JModelList
                                 `t`.`texture_title`,
                                 '\"}, \"manufacturers\": [',
                                 GROUP_CONCAT(
-                                DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `m`.`name`, '\"}')
-                                SEPARATOR ', '
+                                    DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `m`.`name`, '\"}') ORDER BY `c`.`manufacturer_id`
+                                    SEPARATOR ', '
                                 ),
                                 ']}'
-                                ) AS `textures_data`")
+                        ) AS `textures_data`")
               ->from("`rgzbn_gm_ceiling_canvases` AS `c`")
               ->innerJoin("`rgzbn_gm_ceiling_textures` AS `t` ON `c`.`texture_id` = `t`.`id`")
               ->innerJoin("`rgzbn_gm_ceiling_canvases_manufacturers` AS `m` ON `c`.`manufacturer_id` = `m`.`id`")
