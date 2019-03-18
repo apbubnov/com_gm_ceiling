@@ -46,7 +46,7 @@ if ($user->dealer_id == 1) {
     // заявки с сайта
     $answer2 = $model->getDataByStatus("ZayavkiSSaita");
     // звонки
-    $date = date("Y")."-".date("n")."-".date("d");
+    $date = date('Y-m-d');
     $answer3 = $model->getDataByStatus("Zvonki", $date);
     // кол-во
     $sumManager = $answer1[0]->count + $answer2[0]->count + $answer3[0]->count;

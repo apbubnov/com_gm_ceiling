@@ -138,7 +138,6 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=callback.getData",
             data: {
-                userId: user_id,
                 date: jQuery('#calendar').val(),
                 label_id: jQuery('#select_label').val()
             },

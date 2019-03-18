@@ -17,12 +17,12 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
 {
     function getData(){
         try {
-            $user = JFactory::getUser($id);
+            $user = JFactory::getUser();
             $dealerId = $user->dealer_id;
             $groups = $user->get('groups');
+            $userId = $user->id;
 
             $jinput = JFactory::getApplication()->input;
-            $id = $jinput->getInt('userId');
             $date = $jinput->get('date', '', 'STRING');
             $label_id = $jinput->get('label_id', 0, 'INT');
 
@@ -31,7 +31,7 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
             if (in_array('35', $groups)) {
                 $filter .= "(`c`.`dealer_id` = $dealerId or `us`.`dealer_id` = $dealerId)";
             } else {
-                $filter .= "(`a`.`manager_id` = $id or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $id)";
+                $filter .= "(`a`.`manager_id` = $userId or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $userId)";
             }
             
             $model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
