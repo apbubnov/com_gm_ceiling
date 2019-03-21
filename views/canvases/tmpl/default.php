@@ -102,7 +102,7 @@ function update_price($objectDealerPrice, $Price)
             <form class="FormSimple UpdatePrice MarginLeft" data-type="ALL">
                 <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
                                                                           aria-hidden="true"></i></label>
-                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                        placeholder="0"
                        title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                        size="5" required>
@@ -170,7 +170,7 @@ function update_price($objectDealerPrice, $Price)
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                       aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                <input type="text" pattern="[+-]{0,1}\d+[,.]{0,1}\d*%{0,1}"
                                        name="Price" id="Price"
                                        placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
@@ -188,7 +188,7 @@ function update_price($objectDealerPrice, $Price)
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                       aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|\*" name="Price" id="Price"
+                                <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                        placeholder="0"
                                        title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                        size="5" required>
@@ -222,7 +222,7 @@ function update_price($objectDealerPrice, $Price)
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
-                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|\*" name="Price" id="Price"
+                                    <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                            placeholder="0"
                                            title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                            size="5" required>
@@ -239,7 +239,7 @@ function update_price($objectDealerPrice, $Price)
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
-                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|\*" name="Price" id="Price"
+                                    <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                            placeholder="0"
                                            title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                            size="5" required>
@@ -282,7 +282,7 @@ function update_price($objectDealerPrice, $Price)
                                         <label for="Price" title="Изменить дилерскую цену"><i
                                                     class="fa fa-pencil-square-o"
                                                     aria-hidden="true"></i></label>
-                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|\*" name="Price" id="Price"
+                                        <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                                placeholder="0"
                                                title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                                size="5" required>
@@ -305,7 +305,7 @@ function update_price($objectDealerPrice, $Price)
                                         <label for="Price" title="Изменить дилерскую цену"><i
                                                     class="fa fa-pencil-square-o"
                                                     aria-hidden="true"></i></label>
-                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+[%]{1}|[+-]{0,1}\d+[,.]{0,1}\d+|\*" name="Price" id="Price"
+                                        <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                                placeholder="0"
                                                title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                                size="5" required>
@@ -520,7 +520,6 @@ function update_price($objectDealerPrice, $Price)
             dataType: "json",
             timeout: 5000,
             success: function (data) {
-
                 $.each(data.elements, function (i, v) {
                     Data.Page.find(v.name).text(v.value);
                 });
