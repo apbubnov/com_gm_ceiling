@@ -103,4 +103,31 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         }
 
     }
+
+    function getClosedSumByMounter($mounter_id,$builder_id){
+        try{
+        /*
+         * SELECT SUM(ms.sum) AS `sum`
+            FROM `rgzbn_gm_ceiling_mounters_salary` AS ms
+            LEFT JOIN `rgzbn_gm_ceiling_projects` AS p ON ms.project_id = p.id
+            LEFT JOIN `rgzbn_gm_ceiling_clients` AS cl ON p.client_id = cl.id
+            WHERE mounter_id = 33 AND cl.dealer_id = 721*/
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("SUM(ms.sum) AS `sum`")
+                ->from("`rgzbn_gm_ceiling_mounters_salary` AS ms")
+                ->leftJoin("`rgzbn_gm_ceiling_projects` AS p ON ms.project_id = p.id")
+                ->leftJoin("`rgzbn_gm_ceiling_clients` AS cl ON p.client_id = cl.id")
+                ->where("mounter_id = $mounter_id AND cl.dealer_id = $builder_id");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        }
+
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

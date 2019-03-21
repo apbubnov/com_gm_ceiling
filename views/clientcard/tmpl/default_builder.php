@@ -23,7 +23,7 @@ $call_id = $jinput->get('call_id', 0, 'INT');
 $client = $client_model->getClientById($this->item->id);
 $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
 
-//$progressData = $clients_model->getClientsAndprojectsData($client->dealer_id);
+
 
 $dealer = JFactory::getUser($client->dealer_id);
 if ($dealer->associated_client != $this->item->id)
