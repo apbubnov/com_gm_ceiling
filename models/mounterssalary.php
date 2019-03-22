@@ -12,18 +12,42 @@ jimport('joomla.application.component.modelitem');
 jimport('joomla.event.dispatcher');
 
 class Gm_ceilingModelMountersSalary extends JModelItem {
-    function getData($filter){
+    function getData($builder_id){
         try{
+            /*
+             * SELECT ms.mounter_id,SUM(GREATEST(0.00,ms.sum)) AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed,t.sum AS taken
+                FROM `rgzbn_gm_ceiling_mounters_salary` AS ms
+                LEFT JOIN `rgzbn_gm_ceiling_projects` AS p ON p.id = ms.project_id
+                LEFT JOIN `rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id
+                LEFT JOIN
+                (SELECT cm.mounter_id AS mounter_id,SUM(cm.sum) AS `sum`
+                FROM `rgzbn_gm_ceiling_calcs_mount` AS cm
+                LEFT JOIN `rgzbn_gm_ceiling_calculations` AS cl ON cl.id = cm.calculation_id
+                LEFT JOIN `rgzbn_gm_ceiling_projects` AS pr ON cl.project_id = pr.id
+                LEFT JOIN `rgzbn_gm_ceiling_clients` AS cli ON pr.client_id = cli.id
+                WHERE cli.dealer_id = 721
+                 GROUP BY cm.mounter_id) AS t ON t.mounter_id = ms.mounter_id
+                WHERE c.dealer_id = 721 || ms.builder_id =721
+                GROUP BY ms.mounter_id*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-
-            $query->select("ms.mounter_id,u.name,SUM(ms.sum) AS total")
+            $subquery = $db->getQuery(true);
+            $subquery
+                ->select("cm.mounter_id AS mounter_id,SUM(cm.sum) AS `sum`")
+                ->from("`rgzbn_gm_ceiling_calcs_mount` AS cm")
+                ->leftJoin("`rgzbn_gm_ceiling_calculations` AS cl ON cl.id = cm.calculation_id")
+                ->leftJoin("`rgzbn_gm_ceiling_projects` AS pr ON cl.project_id = pr.id")
+                ->leftJoin("`rgzbn_gm_ceiling_clients` AS cli ON pr.client_id = cli.id")
+                ->where("cli.dealer_id = $builder_id")
+                ->group("cm.mounter_id");
+            $query->select("ms.mounter_id,u.name,SUM(GREATEST(0.00,ms.sum)) AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed,t.sum AS taken")
                 ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
+                ->leftJoin("`rgzbn_gm_ceiling_projects` AS p ON p.id = ms.project_id")
+                ->leftJoin("`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id")
+                ->leftJoin("($subquery) as t ON t.mounter_id = ms.mounter_id")
                 ->innerJoin('`rgzbn_users` AS u ON u.id = ms.mounter_id')
+                ->where(" c.dealer_id = $builder_id OR ms.builder_id = $builder_id")
                 ->group('ms.mounter_id');
-            if(!empty($filter)){
-                $query->where($filter);
-            }
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
@@ -81,6 +105,24 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         }
     }
 
+    function savePay($mounterId,$builderId,$sum){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            if(!empty($mounterId)&&!empty($builderId)&&!empty($sum)) {
+                $query->insert('`#__gm_ceiling_mounters_salary`')
+                    ->columns('`mounter_id`,`builder_id`,`sum`')
+                    ->values("$mounterId,$builderId,$sum");
+                $db->setQuery($query);
+                $db->execute();
+                return true;
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     function delete($mounterId,$projectId){
         try{
             $db = JFactory::getDbo();

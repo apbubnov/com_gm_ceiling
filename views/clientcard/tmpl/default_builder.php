@@ -404,7 +404,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <thead>
             <tr class="caption_table">
                 <td>ФИО</td>
-                <td>Сумма,руб</td>
+                <td>Сумма в работе,руб.</td>
+                <td>Сумма закрытых,руб.</td>
+                <td>Выплачено,руб.</td>
+                <td>Внести суммы выплаты,руб.</td>
             </tr>
             </thead>
             <tbody>
@@ -491,14 +494,15 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 div8 = jQuery("#mounters_salary"),
                 div9 = jQuery("#one_mounter_salary"),
                 div10 = jQuery("#add_mounters"),
-                div11 = jQuery("#delete_mounter_window");
+                div11 = jQuery("#delete_mounter_window"),
+                div12 = jQuery("#noty_center_layout_container");
             if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
                 && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
-                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)&&!div11.is(e.target)
+                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)&&!div11.is(e.target)&&!div12.is(e.target)
                 && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
                 && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
                 && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
-                && div10.has(e.target).length === 0 && div11.has(e.target).length === 0) {
+                && div10.has(e.target).length === 0 && div11.has(e.target).length === 0&& div12.has(e.target).length === 0) {
                 jQuery("#close").hide();
                 jQuery("#mv_container").hide();
                 jQuery("#modal_window_fio").hide();
@@ -687,7 +691,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=MountersSalary.getData",
                 data: {
-                    ids : projectsId
+                    builder_id: '<?php echo $dealer->id?>'
                 },
                 dataType: "json",
                 async: false,
@@ -696,7 +700,14 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     jQuery.each(data,function (index,el) {
                         jQuery("#salary > tbody").append('<tr/>');
                         jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
-                        jQuery("#salary > tbody > tr:last").append('<td>'+el.name+'</td><td>'+el.total+'</td>')
+                        jQuery("#salary > tbody > tr:last").append(
+                            '<td class="click_tr">'+el.name+'</td>' +
+                            '<td class="click_tr" name ="taken">'+el.taken+'</td>' +
+                            '<td class="click_tr">'+el.closed+'</td>' +
+                            '<td class="click_tr" name ="paid">'+el.payed+'</td>' +
+                            '<td><input class="input-gm" name ="pay_sum"><button name="save_pay" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
+
+                        );
                     });
 
                 },
@@ -711,8 +722,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     });
                 }
             });
-
-            jQuery("#salary > tbody > tr").click(function () {
+            jQuery("#salary .click_tr").click(function () {
                 var mounterId = jQuery(this).data('id');
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
@@ -752,6 +762,83 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 jQuery("#close").show();
 
 
+            });
+
+            jQuery('[name="pay_sum"]').click(function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            function savePay(mounter_id, paid_sum, paid, oldval) {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.savePay",
+                    data: {
+                        mounter_id: mounter_id,
+                        paid_sum: paid_sum,
+                        builder_id: '<?php echo $dealer->id ?>'
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+
+                        paid[0].textContent = "";
+                        paid[0].textContent = +oldval + paid_sum;
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+
+            jQuery('[name="save_pay"]').click(function(){
+               var button = jQuery(this),
+                   paid_sum = button.closest("td").find('[name="pay_sum"]').val(),
+                   mounter_id = button.data("mounter_id"),
+                   taken_sum = button.closest("tr").find('[name="taken"]')[0].textContent,
+                   paid = button.closest('tr').find("[name='paid']"),
+                   oldval = paid[0].textContent;
+               if(paid_sum>0){
+                   paid_sum = -paid_sum;
+               }
+               if(-(paid_sum+ +oldval)>taken_sum){
+                   noty({
+                       theme: 'relax',
+                       layout: 'center',
+                       timeout: false,
+                       type: "info",
+                       text: "Сумма выплаты больше суммы, взятой монтажником, продолжить?",
+                       buttons:[
+                           {
+                               addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
+                                   savePay(mounter_id, paid_sum, paid, oldval);
+                                   $noty.close();
+                                   /*jQuery("#mv_container").show();
+                                   jQuery("#mounters_salary").show("slow");
+                                   jQuery("#close").show();*/
+                               }
+                           },
+                           {
+                               addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                                   $noty.close();
+                                   /*jQuery("#mv_container").show();
+                                   jQuery("#mounters_salary").show("slow");
+                                   jQuery("#close").show();*/
+                               }
+                           }
+                       ]
+                   })
+               }
+               else{
+                   savePay(mounter_id, paid_sum, paid, oldval);
+               }
+            return false;
             });
         });
         jQuery("#cancel").click(function(){
