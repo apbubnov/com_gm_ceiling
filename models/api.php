@@ -314,40 +314,33 @@ class Gm_ceilingModelApi extends JModelList
         }
     }
 
-    public function delete_from_android($table, $data)
-    {
-        try
-        {
-            $db = $this->getDbo();
-            $arr_ids = (object)array("table" => $table, "ids" => '');
-            foreach ($data as $key => $value)
-            {
+    public function delete_from_android($table, $data) {
+        try {
+            $arr_ids = (object)array('table' => $table, 'ids' => '');
+            foreach ($data as $key => $value) {
                 $id = $data[$key]->id;
                 if (empty($id)) {
-                   return 'empty id!';
+                    $arr_ids->ids = 'empty id!';
+                    return $arr_ids;
                 }
                 if (mb_ereg('[^\d]', $id)) {
-                    return 'invalid id!';
+                    $arr_ids->ids = 'invalid id!';
+                    return $arr_ids;
                 }
-                $query = $db->getQuery(true);
-                $query->delete("`$table`");
-                $query->where("`id` = $id");
-                $db->setQuery($query);
-                $db->execute();
-                if ($db->getAffectedRows() > 0)
-                {
-                    if (empty($arr_ids->ids)) {
-                        $arr_ids->ids .= $id;
-                    }
-                    else {
-                        $arr_ids->ids .= ','.$id;
-                    }
+                if (empty($arr_ids->ids)) {
+                    $arr_ids->ids .= $id;
+                } else {
+                    $arr_ids->ids .= ','.$id;
                 }
             }
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->delete("`$table`");
+            $query->where("`id` IN ($arr_ids->ids)");
+            $db->setQuery($query);
+            $db->execute();
             return $arr_ids;
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
