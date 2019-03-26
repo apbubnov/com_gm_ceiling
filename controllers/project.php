@@ -2013,6 +2013,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $jinput = JFactory::getApplication()->input;
                 $project_id = $jinput->getInt('project_id');
                 $note = $jinput->get('note', '', 'STRING');
+                $type = $jinput->get('type','','STRING');
                 $die = true;
             }
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');

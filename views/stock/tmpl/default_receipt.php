@@ -48,9 +48,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 
 
 <style>
-    body {
-        background-color: #E6E6FA;
-    }
+
 
     .Modal {
         position: fixed;
@@ -834,10 +832,13 @@ $server_name = $_SERVER['SERVER_NAME'];
     <button type="button" class="btn btn-primary Add Component" onclick="ShowModal(this)">
         <i class="fa fa-plus" aria-hidden="true"></i> Компонент
     </button>
+    <select class="input-gm" id="choose_provider" style="height:38px;vertical-align: middle;">
+        <option>Выберите поставщика</option>
+    </select>
     <div class="Stock Provider">
-        <input type="text" name="stock" class="InputStock iStock" required>
+        <input type="hidden" name="stock" class="InputStock iStock" required>
         <button type="button" class="ButtonStock iStock" onclick="OpenModalProvider(this)">
-            <i class="fa fa-user" aria-hidden="true"></i> Поставщик
+            <i class="fa fa-user" aria-hidden="true"></i> Добавить поставщика
         </button>
     </div>
     <button type="submit" class="btn btn-primary Submit">
