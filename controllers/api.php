@@ -483,6 +483,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if (empty($result)) {
                 die('null');
             }
+            $result = (object)array('delete' => $result);
             $result = json_encode($result);
             $result = json_encode($this->crypt($key_number, $result));
             die($result);
