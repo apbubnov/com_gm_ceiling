@@ -37,6 +37,9 @@ $groups = $user->get('groups');
                 Дата замера
             </th>
             <th class='center'>
+                Время
+            </th>
+            <th class='center'>
                 Адрес
             </th>
             <th>
@@ -57,9 +60,12 @@ $groups = $user->get('groups');
                     <?php echo $item->id; ?>
                 </td>
                 <td class="center one-touch">
-                    <? if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00'): ?>-
-                    <? else: ?><?= $item->project_calculation_date; ?>
+                    <? if (empty($item->calculation_date) || $item->calculation_date == '0000-00-00'): ?>-
+                    <? else: ?><?= date('d.m.Y', strtotime($item->calculation_date));  ?>
                     <? endif; ?>
+                </td>
+                <td class="center one-touch">
+                    <?php echo $item->calculation_time; ?>
                 </td>
                 <td class="center one-touch">
                     <?php echo $this->escape($item->project_info); ?>

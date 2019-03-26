@@ -1029,6 +1029,12 @@ public function get_dealerInfo_androidCallGlider($data) {
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
+            $query = $db->getQuery(true);
+            $query->select("*");
+            $query->from("`rgzbn_gm_ceiling_messenger_types`");
+            $db->setQuery($query);
+            $list_mesengers = $db->loadObjectList();
+
 			$result = [];
     		if (empty($list_clients) && empty($list_contacts) && empty($list_contacts_dop) && 
     			empty($list_callback) && empty($list_client_history) && empty($list_calls_status_history) && 
@@ -1048,6 +1054,7 @@ public function get_dealerInfo_androidCallGlider($data) {
    				$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
    				$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
                 $result['rgzbn_users'] = $list_users;
+                $result['rgzbn_gm_ceiling_messenger_types'] = $list_mesengers;
     		}
             return $result;
         } catch(Exception $e) {

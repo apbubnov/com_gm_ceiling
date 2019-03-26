@@ -280,9 +280,11 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->select('`p`.`dealer_name`');
 
                     if ($subtype == 'calendar') {
+                        $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
+                                        DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
                         $query->where('`p`.`project_status` = 1');
                         $query->where("`p`.`project_calculator` = $user->id");
-                        $query->order('`p`.`project_calculation_date`');
+                        $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
                         $query->where('`p`.`project_status` BETWEEN 5 AND 15');
@@ -303,8 +305,10 @@ class Gm_ceilingModelProjects extends JModelList
                     }
 
                     if ($subtype == 'calendar') {
+                        $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
+                                        DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
                         $query->where('`p`.`project_status` = 1');
-                        $query->order('`p`.`project_calculation_date`');
+                        $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
                         $query->where('`p`.`project_status` BETWEEN 5 AND 15');
@@ -397,8 +401,6 @@ class Gm_ceilingModelProjects extends JModelList
 
             $query->order('`p`.`id` DESC');
 
-            //$this->setState('list.limit', null);
-            
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
