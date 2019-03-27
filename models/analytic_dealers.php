@@ -198,6 +198,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                                                         `p`.`client_id` = `cl`.`id`
                                                     INNER JOIN `rgzbn_users` AS `u` ON
                                                         `cl`.`dealer_id` = `u`.`id`
+                                                    WHERE `ph`.`new_status` = 5 and `ph`.`date_of_change` between '$date1' and '$date2'
                                                 GROUP BY	`u`.`id`,
                                                                     `canv_manf`.`id`
                                         ) AS `manf_sq`
