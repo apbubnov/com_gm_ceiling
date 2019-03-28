@@ -292,22 +292,28 @@ class Gm_ceilingModelApi extends JModelList
         try {
             $db = $this->getDbo();
             $arr_ids = [];
-            if (!empty($data)) foreach ($data as $key => $value)
-            {
-                if (empty($data[$key]->id))
-                {
-                    return false;
-                    throw new Exception('empty id!');
+            $ids = '';
+            if (empty($data)) {
+                return $arr_ids;
+            }
+            foreach ($data as $key => $value) {
+                if (empty($data[$key]->id)) {
+                    continue;
                 }
                 $id = $data[$key]->id;
-                $query = $db->getQuery(true);
-                $query->update("`$table`");
-                $query->set("`android_id` = '$id'");
-                $query->where("`id` = $id");
-                $db->setQuery($query);
-                $db->execute();
+                if (!empty($ids)) {
+                    $ids .= ','.$id;
+                } else {
+                    $ids = $id;
+                }
                 $arr_ids[$key] = (object)array("new_android_id" => $id);
             }
+            $query = $db->getQuery(true);
+            $query->update("`$table`");
+            $query->set("`android_id` = '$id'");
+            $query->where("`id` IN ($ids)");
+            $db->setQuery($query);
+            $db->execute();
             return $arr_ids;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
