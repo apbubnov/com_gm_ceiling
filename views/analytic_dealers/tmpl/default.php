@@ -458,15 +458,14 @@
 		}
 
 		jQuery("#analytic tr").click(function(){
-			var dealer_id = jQuery(this).data('dealer_id'),projects = [];
+			var dealer_id = jQuery(this).data('dealer_id'), projects = '';
 			
 			data.forEach(function(elem){
-				if(elem.id == dealer_id){
+				if(elem.dealer_id == dealer_id){
 					projects = elem.projects;
 				}
 				
 			});
-            console.log(projects);
 			jQuery.ajax({
 	            url: "index.php?option=com_gm_ceiling&task=projects.getProjectsInfo",
 	            data: {
