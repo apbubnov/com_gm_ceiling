@@ -93,7 +93,19 @@ class Gm_ceilingModelProjects extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-
+    function getProjectsData($type = null,$subtype = null,$dateFrom = null,$dateTo = null){
+        try {
+            $db = $this->getDbo();
+            $query = $this->getListQuery($type,$subtype,$dateFrom,$dateTo);
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     /**
      * Build an SQL query to load the list data.
      *
@@ -101,8 +113,14 @@ class Gm_ceilingModelProjects extends JModelList
      *
      * @since    1.6
      */
-    protected function getListQuery() {
+    protected function getListQuery($type = null,$subtype = null,$dateFrom,$dateTo) {
         try {
+            if(empty($dateFrom)){
+                $dateFrom = date('Y-m-d');
+            }
+            if(empty($dateTo)){
+                $dateTo = date('Y-m-d');
+            }
             $db = $this->getDbo();
             $subquery = $db->getQuery(true);
             $subquery->select('`p`.`id`,
@@ -211,12 +229,10 @@ class Gm_ceilingModelProjects extends JModelList
 
 
             $user = JFactory::getUser();
-            $groups = $user->get('groups');
-
             $app = JFactory::getApplication();
-            $type = $app->input->getString('type', NULL);
-            $subtype = $app->input->getString('subtype', NULL);
-
+            $groups = $user->groups;
+            $type = (empty($type)) ? $app->input->getString('type', NULL) : $type;
+            $subtype =  (empty($subtype)) ? $app->input->getString('subtype', NULL) : $subtype;
             switch ($type) {
                 // case "managerprojects":
                 //     $query->where('`p`.`project_status` = 3');
@@ -280,9 +296,12 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->select('`p`.`dealer_name`');
 
                     if ($subtype == 'calendar') {
+                        $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
+                                        DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
                         $query->where('`p`.`project_status` = 1');
                         $query->where("`p`.`project_calculator` = $user->id");
-                        $query->order('`p`.`project_calculation_date`');
+                        $query->where("`p`.`project_calculation_date` BETWEEN '$dateFrom 00:00:00' and '$dateTo 23:59:59'");
+                        $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
                         $query->where('`p`.`project_status` BETWEEN 5 AND 15');
@@ -303,8 +322,10 @@ class Gm_ceilingModelProjects extends JModelList
                     }
 
                     if ($subtype == 'calendar') {
+                        $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
+                                        DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
                         $query->where('`p`.`project_status` = 1');
-                        $query->order('`p`.`project_calculation_date`');
+                        $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
                         $query->where('`p`.`project_status` BETWEEN 5 AND 15');
@@ -396,9 +417,6 @@ class Gm_ceilingModelProjects extends JModelList
             //     $query->order('a.calculation_date DESC');
 
             $query->order('`p`.`id` DESC');
-
-            //$this->setState('list.limit', null);
-            
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

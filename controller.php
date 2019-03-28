@@ -91,10 +91,15 @@ class Gm_ceilingController extends JControllerLegacy
                         elseif (in_array("33", $groups)) {
                             $type = "mastermainpage";//производитель
                         }
+                        elseif (in_array('34', $groups)) {
+                            $type = "buildermountersmainpage";
+                            //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=analytics', false));//аналитик
+                        }
                         elseif (in_array('35', $groups)) {
                             $type = "analyst";
                             //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=analytics', false));//аналитик
                         }
+
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
                             $app->input->set('type', $type);
@@ -3370,6 +3375,41 @@ public function register_mnfctr(){
            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
        }
     }
+
+    function acceptFromCallGM() {
+        try
+        {
+            $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+            $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $postData = file_get_contents('php://input');
+            $data = json_decode($postData, true);
+            if (isset($data['call'])){
+                $call = $data['call'];
+                if(!empty($call['answer'])) {
+                    $data['client_name'] = 'Клиент с обзвона';
+                    $data['client_contacts'] = $call['phone'];
+                    $data['dealer_id'] = 1;
+                    $data['manager_id'] = 1;
+                    $result = $clientform_model->save($data);
+                    if (mb_ereg('[\d]', $result)) {
+                        $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 1);
+                    } else {
+                        $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 1);
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 1);
+                    }
+                }
+            }
+            die(true);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
 
 ?>

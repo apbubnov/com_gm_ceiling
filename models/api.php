@@ -922,25 +922,15 @@ public function get_dealerInfo_androidCallGlider($data) {
             $dealer_id = $db->escape($data->dealer_id, false);
 
             $query = $db->getQuery(true);
-            $query->select('count(`id`) AS `count`');
+            $query->select('count(`id`) AS `count`,
+                            GROUP_CONCAT(`id` SEPARATOR \',\') AS `ids`');
             $query->from('`#__gm_ceiling_clients`');
             $query->where("`dealer_id` = $dealer_id");
             $db->setQuery($query);
-            $count_clients = (int)$db->loadObject()->count;
+            $list_clients = $db->loadObject();
 
-            if ($count_clients > 0) {
-                $where = "`change_time` > '$change_time'";
-                $groupIds = '';
-                foreach ($list_clients as $key => $value) {
-                    if ($key == count($list_clients) - 1) {
-                        $groupIds .= $value->id;
-                    } else {
-                        $groupIds .= $value->id.',';
-                    }
-                }
-                if (!empty($groupIds)) {
-                    $where .= " AND `client_id` IN ($groupIds)";
-                }
+            if ($list_clients->count > 0) {
+                $where = "`change_time` > '$change_time' AND `client_id` IN ($list_clients->ids)";
 
                 $query = $db->getQuery(true);
                 $query->select('*');

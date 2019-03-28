@@ -62,9 +62,8 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
     function getProjectsInfo(){
     	try {
             $jinput = JFactory::getApplication()->input;
-            $projects_arr = $jinput->get('projects', array(), 'ARRAY');
+            $projects_str = $jinput->get('projects', '', 'STRING');
             $model = $this->getModel('Projects', 'Gm_ceilingModel');
-            $projects_str = implode(',',$projects_arr);
             $result = $model->getInfoDealersAnalytic($projects_str);
             die(json_encode($result));
         }
@@ -154,4 +153,22 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
         }
     }
 
+    function getMeasures(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $dateFrom = $jinput->get('dateFrom', date('Y-m-d'), 'STRING');
+            $dateTo = $jinput->get('dateTo', date('Y-m-d'), 'STRING');
+            $type = $jinput->get('type', '', 'STRING');
+            $subtype = $jinput->get('subtype','', 'STRING');
+            $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $result = $projectsModel->getProjectsData($type,$subtype,$dateFrom,$dateTo);
+            foreach ($result as $key=>$value){
+                $result[$key]->note = Gm_ceilingHelpersGm_ceiling::getProjectNotes($value->id,2);
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
