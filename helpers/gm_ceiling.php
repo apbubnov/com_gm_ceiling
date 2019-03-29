@@ -2350,8 +2350,9 @@ class Gm_ceilingHelpersGm_ceiling
                         $n5val = $data['n5'] - $data['n27'];
                     }
 
-                    //вычитаем из периметра потолка крепление в плитку и керамогранит
-                    $n5val = (($n5val-  $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
+                    //вычитаем из периметра потолка крепление в керамогранит
+                    $n5val = (($n5val - $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
+                    $n5val = (($n5val - $data['n20']) > 0) ? $n5val - $data['n20'] : 0;
                     if($n5val) {
                         //выбор типа профиля
                         if ($data['n28'] == 3) {
@@ -3213,8 +3214,8 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     elseif($transport_type == 2) {
                         if($distance<=50){
-                            $transport_sum = 500;
-                            $transport_sum_1 = 500;
+                            $transport_sum = 500 * $distance_col;
+                            $transport_sum_1 = 500  * $distance_col;
                         }
                         else {
                             $transport_sum = ($res->distance * $distance + $res->transport) * $distance_col;
