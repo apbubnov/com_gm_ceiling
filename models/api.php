@@ -1011,6 +1011,13 @@ public function get_dealerInfo_androidCallGlider($data) {
             $list_api_phones = $db->loadObjectList();
 
             $query = $db->getQuery(true);
+            $query->select('*');
+            $query->from('`#__gm_ceiling_messenger_types`');
+            $query->where("`change_time` > '$change_time'");
+            $db->setQuery($query);
+            $list_messenger_types = $db->loadObjectList();
+
+            $query = $db->getQuery(true);
             $query->select('`u`.`id`,
                             `u`.`name`,
                             `u`.`username`,
@@ -1021,7 +1028,7 @@ public function get_dealerInfo_androidCallGlider($data) {
             $query->from('`rgzbn_users` as `u`');
             $query->innerJoin('`rgzbn_user_usergroup_map` as `um` on
                 `u`.`id` = `um`.`user_id` and `um`.`group_id` = 13');
-            $query->where("`u`.`change_time` > '$change_time' and `u`.`dealer_id` = $dealer_id and `u`.`id` = $dealer_id");
+            $query->where("`u`.`change_time` > '$change_time' and (`u`.`dealer_id` = $dealer_id or `u`.`id` = $dealer_id)");
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
@@ -1029,7 +1036,7 @@ public function get_dealerInfo_androidCallGlider($data) {
     		if (empty($list_clients) && empty($list_contacts) && empty($list_contacts_dop) && 
     			empty($list_callback) && empty($list_client_history) && empty($list_calls_status_history) && 
     			empty($list_calls_status) && empty($list_clients_statuses) && empty($list_api_phones) && 
-                empty($list_clients_statuses_map) && empty($list_users)
+                empty($list_clients_statuses_map) && empty($list_users) && empty($list_messenger_types)
                 ) {
     			$result = null;
     		} else {
@@ -1043,6 +1050,7 @@ public function get_dealerInfo_androidCallGlider($data) {
    				$result['rgzbn_gm_ceiling_clients_statuses'] = $list_clients_statuses;
    				$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
    				$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
+                $result['rgzbn_gm_ceiling_messenger_types'] = $list_messenger_types;
                 $result['rgzbn_users'] = $list_users;
     		}
             return $result;
