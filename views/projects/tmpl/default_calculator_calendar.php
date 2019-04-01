@@ -110,8 +110,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <input type="hidden" name="boxchecked" value="0"/>
         </div>
     </div>
-    
-    
+
+
 </form>
 
 <? if ($canDelete) : ?>
@@ -158,7 +158,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             }
         });
         return false;
-        
+
     });
 
     jQuery("#projectList tr").click(function(){
