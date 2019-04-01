@@ -3377,17 +3377,23 @@ public function register_mnfctr(){
     }
 
     function acceptFromCallGM() {
-        try
-        {
+        try {
             $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
             $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
             $postData = file_get_contents('php://input');
+            $path = "components/com_gm_ceiling/";
+            file_put_contents(
+                $path.'acceptFromCallGM_log.txt',
+                date('Y-m-d H:i:s')."\n".print_r($postData, true)."\n----------\n",
+                FILE_APPEND
+            );
+
             $data = json_decode($postData, true);
-            if (isset($data['call'])){
+            if (isset($data['call'])) {
                 $call = $data['call'];
-                if(!empty($call['answer'])) {
+                if (!empty($call['answer'])) {
                     $data['client_name'] = 'Клиент с обзвона';
                     $data['client_contacts'] = $call['phone'];
                     $data['dealer_id'] = 1;
@@ -3403,13 +3409,10 @@ public function register_mnfctr(){
                 }
             }
             die(true);
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-
 }
 
 ?>

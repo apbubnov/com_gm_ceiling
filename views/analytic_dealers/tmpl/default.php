@@ -400,7 +400,7 @@
 		var ths = jQuery("#analytic > thead  th"),key ="",total = [],total_manf = {};
 		jQuery('#analytic tbody').empty();
 		for(let i = 0;i<data.length;i++){
-			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].id+'"></tr>');
+			jQuery('#analytic').append('<tr data-dealer_id = "'+data[i].dealer_id+'"></tr>');
 			jQuery.each(ths,function(index,item){
 				key = jQuery(item).data('value');
 				let val = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(data[i][key]).toFixed(2) : data[i][key];
@@ -458,10 +458,10 @@
 		}
 
 		jQuery("#analytic tr").click(function(){
-			var dealer_id = jQuery(this).data('dealer_id'),projects = [];
-			console.log(dealer_id);
+			var dealer_id = jQuery(this).data('dealer_id'), projects = '';
+			
 			data.forEach(function(elem){
-				if(elem.id == dealer_id){
+				if(elem.dealer_id == dealer_id){
 					projects = elem.projects;
 				}
 				

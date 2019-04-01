@@ -62,9 +62,8 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
     function getProjectsInfo(){
     	try {
             $jinput = JFactory::getApplication()->input;
-            $projects_arr = $jinput->get('projects', array(), 'ARRAY');
+            $projects_str = $jinput->get('projects', '', 'STRING');
             $model = $this->getModel('Projects', 'Gm_ceilingModel');
-            $projects_str = implode(',',$projects_arr);
             $result = $model->getInfoDealersAnalytic($projects_str);
             die(json_encode($result));
         }

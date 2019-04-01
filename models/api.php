@@ -292,22 +292,28 @@ class Gm_ceilingModelApi extends JModelList
         try {
             $db = $this->getDbo();
             $arr_ids = [];
-            if (!empty($data)) foreach ($data as $key => $value)
-            {
-                if (empty($data[$key]->id))
-                {
-                    return false;
-                    throw new Exception('empty id!');
+            $ids = '';
+            if (empty($data)) {
+                return $arr_ids;
+            }
+            foreach ($data as $key => $value) {
+                if (empty($data[$key]->id)) {
+                    continue;
                 }
                 $id = $data[$key]->id;
-                $query = $db->getQuery(true);
-                $query->update("`$table`");
-                $query->set("`android_id` = '$id'");
-                $query->where("`id` = $id");
-                $db->setQuery($query);
-                $db->execute();
+                if (!empty($ids)) {
+                    $ids .= ','.$id;
+                } else {
+                    $ids = $id;
+                }
                 $arr_ids[$key] = (object)array("new_android_id" => $id);
             }
+            $query = $db->getQuery(true);
+            $query->update("`$table`");
+            $query->set("`android_id` = '$id'");
+            $query->where("`id` IN ($ids)");
+            $db->setQuery($query);
+            $db->execute();
             return $arr_ids;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -916,71 +922,61 @@ public function get_dealerInfo_androidCallGlider($data) {
             $dealer_id = $db->escape($data->dealer_id, false);
 
             $query = $db->getQuery(true);
-            $query->select('id');
+            $query->select('count(`id`) AS `count`,
+                            GROUP_CONCAT(`id` SEPARATOR \',\') AS `ids`');
             $query->from('`#__gm_ceiling_clients`');
-            $query->where("dealer_id = $dealer_id");
+            $query->where("`dealer_id` = $dealer_id");
             $db->setQuery($query);
-            $list_clients = $db->loadObjectList();
+            $list_clients = $db->loadObject();
 
-            if (count($list_clients) > 0) {
-                $where = "change_time > '$change_time'";
-                $groupIds = '';
-                foreach ($list_clients as $key => $value) {
-                    if ($key == count($list_clients) - 1) {
-                        $groupIds .= $value->id;
-                    } else {
-                        $groupIds .= $value->id.',';
-                    }
-                }
-                if (!empty($groupIds)) {
-                    $where .= " AND `client_id` IN ($groupIds)";
-                }
+            if ($list_clients->count > 0) {
+                $where = "`change_time` > '$change_time' AND `client_id` IN ($list_clients->ids)";
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_clients_contacts`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_clients_contacts`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts = $db->loadObjectList();
                 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_client_history`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_client_history`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_client_history = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_callback`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_callback`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_calls = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_clients_dop_contacts`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_clients_dop_contacts`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_contacts_dop = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_calls_status_history`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_calls_status_history`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_calls_status_history = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_callback`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_callback`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_callback = $db->loadObjectList();
 
                 $query = $db->getQuery(true);
-                $query->select("*");
-                $query->from("`#__gm_ceiling_clients_statuses_map`");
+                $query->select('*');
+                $query->from('`#__gm_ceiling_clients_statuses_map`');
                 $query->where($where);
                 $db->setQuery($query);
                 $list_clients_statuses_map = $db->loadObjectList();
@@ -989,36 +985,50 @@ public function get_dealerInfo_androidCallGlider($data) {
             $query = $db->getQuery(true);
             $query->select('*');
             $query->from('`#__gm_ceiling_clients`');
-            $query->where("change_time > '$change_time' AND dealer_id = $dealer_id");
+            $query->where("`change_time` > '$change_time' AND `dealer_id` = $dealer_id");
             $db->setQuery($query);
             $list_clients = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`#__gm_ceiling_calls_status`");
-            $query->where("change_time > '$change_time'");
+            $query->select('*');
+            $query->from('`#__gm_ceiling_calls_status`');
+            $query->where("`change_time` > '$change_time'");
             $db->setQuery($query);
             $list_calls_status = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`#__gm_ceiling_clients_statuses`");
-            $query->where("change_time > '$change_time' and (dealer_id = $dealer_id or id = 1)");
+            $query->select('*');
+            $query->from('`#__gm_ceiling_clients_statuses`');
+            $query->where("`change_time` > '$change_time' and (`dealer_id` = $dealer_id or `id` = 1)");
             $db->setQuery($query);
             $list_clients_statuses = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`#__gm_ceiling_api_phones`");
-            $query->where("change_time > '$change_time' and dealer_id = $dealer_id");
+            $query->select('*');
+            $query->from('`#__gm_ceiling_api_phones`');
+            $query->where("`change_time` > '$change_time' and `dealer_id` = $dealer_id");
             $db->setQuery($query);
             $list_api_phones = $db->loadObjectList();
 
             $query = $db->getQuery(true);
-            $query->select("`u`.*, `um`.`group_id`");
-            $query->from("`rgzbn_users` as `u`");
-            $query->innerJoin('`rgzbn_user_usergroup_map` as `um` on `u`.`id` = `um`.`user_id`');
-            $query->where("`u`.`change_time` > '$change_time' and `u`.`dealer_id` = $dealer_id and (`u`.`id` = $dealer_id or `um`.`group_id` = 13)");
+            $query->select('*');
+            $query->from('`#__gm_ceiling_messenger_types`');
+            $query->where("`change_time` > '$change_time'");
+            $db->setQuery($query);
+            $list_messenger_types = $db->loadObjectList();
+
+            $query = $db->getQuery(true);
+            $query->select('`u`.`id`,
+                            `u`.`name`,
+                            `u`.`username`,
+                            `u`.`email`,
+                            `u`.`dealer_id`,
+                            `u`.`settings`,
+                            `u`.`change_time`');
+            $query->from('`rgzbn_users` as `u`');
+            $query->innerJoin('`rgzbn_user_usergroup_map` as `um` on
+                `u`.`id` = `um`.`user_id`');
+            $query->where("`u`.`change_time` > '$change_time' and `u`.`dealer_id` = $dealer_id and (`um`.`group_id` = 13 or `u`.`id` = $dealer_id)");
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
@@ -1032,7 +1042,7 @@ public function get_dealerInfo_androidCallGlider($data) {
     		if (empty($list_clients) && empty($list_contacts) && empty($list_contacts_dop) && 
     			empty($list_callback) && empty($list_client_history) && empty($list_calls_status_history) && 
     			empty($list_calls_status) && empty($list_clients_statuses) && empty($list_api_phones) && 
-                empty($list_clients_statuses_map) && empty($list_users)
+                empty($list_clients_statuses_map) && empty($list_users) && empty($list_messenger_types)
                 ) {
     			$result = null;
     		} else {
@@ -1046,6 +1056,7 @@ public function get_dealerInfo_androidCallGlider($data) {
    				$result['rgzbn_gm_ceiling_clients_statuses'] = $list_clients_statuses;
    				$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
    				$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
+                $result['rgzbn_gm_ceiling_messenger_types'] = $list_messenger_types;
                 $result['rgzbn_users'] = $list_users;
                 $result['rgzbn_gm_ceiling_messenger_types'] = $list_mesengers;
     		}
