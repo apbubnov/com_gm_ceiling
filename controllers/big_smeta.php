@@ -437,7 +437,6 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-2") . ".pdf";
                $array_html[] = $patch;
             }
-            //print_r($components_data); exit;
             $filename = md5($POST['project_id'] . "-10") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
 

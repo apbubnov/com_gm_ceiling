@@ -83,7 +83,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 
 			echo json_encode($model_request);
 
-			exit;
+			die(true);
 		}
 		catch(Exception $e)
         {
@@ -164,7 +164,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 
 			echo json_encode($model_request);
 
-			exit;
+			die(true);
 		}
 		catch(Exception $e)
         {
@@ -219,7 +219,7 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 
 			echo json_encode($model_request);
 
-			exit;
+			die(true);
 		}
 		catch(Exception $e)
         {

@@ -714,7 +714,6 @@ class Gm_ceilingHelpersGm_ceiling
             $return = json_encode($ajax_return);
 
             return $return;
-            exit();
         }
         catch(Exception $e)
         {

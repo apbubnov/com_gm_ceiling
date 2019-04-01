@@ -538,7 +538,6 @@ class Gm_ceilingModelCalculations extends JModelList {
             $query->update($db->quoteName('#__gm_ceiling_calculations'));
             $query->set("`components_sum` = 0")
                 ->where('id = '.$id);
-            //print_r((string)$query); exit;
             $db->setQuery($query);
             $db->execute();
             return true;

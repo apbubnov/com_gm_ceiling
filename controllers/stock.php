@@ -287,7 +287,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
     {
         $id = $_POST['id'];
         $data = $this->getModel('Project')->getProjectForStock($id);
-        print_r($data); exit();
+        print_r($data); die(true);
     }
 
     public function getHistoryComponent()
@@ -345,7 +345,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 $result = $model->getCounterparty($filter);
                 echo json_encode($result);
             }
-            exit;
+            die(true);
         } catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -606,7 +606,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     fclose($pdf);
                     header('Content-type: application/pdf');
                     print($content);
-                    exit;
+
             */
             $url = "index.php?option=com_gm_ceiling&view=stock&type=document&document=" . $head->type . "&number=" . $head->number;
             $this->setRedirect(JRoute::_($url, false));
@@ -641,7 +641,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             fclose($pdf);
             header('Content-type: application/pdf');
             print($content);
-            exit;
+            die(true);
         } catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

@@ -1145,7 +1145,6 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where("`client`.`dealer_id` = $dealer_id");
             elseif(!$status && $search)
                 $query->where("`client`.`dealer_id` = $dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
-            // print_r((string)$query); exit;
             $db->setQuery($query);
 
             $result = $db->loadObjectList();
