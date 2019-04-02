@@ -227,8 +227,7 @@ let niche_src = {
     ]
 }
 let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
-n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
-n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
+
 n16 += create_radios_group(cornice_src);
 n16+='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
@@ -316,7 +315,8 @@ let n15_src = {
 }
 n16 += '<h4>Вы можете приобрести карнизы у нас:</h4>';
 n16 += create_block_with_divs(n15_src);
-
+n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
+n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
 let n22_src = {
     id : 'jform_n22',
     name : 'jform[n22]',
