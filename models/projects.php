@@ -770,6 +770,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('p.id')
                 ->select('s.title as `status`')
                 ->select('p.project_info')
+                ->select('cl.title,cl.color_code')
                 ->select('COALESCE(p.project_sum,0) as project_sum')
                 ->select('COALESCE(p.new_project_sum,0) as new_project_sum')
                 ->select('COALESCE(p.new_mount_sum,0) as new_mount_sum')
@@ -781,6 +782,8 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("ifnull(($subquery),0) as cost")
                 ->from('`#__gm_ceiling_projects` as p')
                 ->leftJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
+                ->InnerJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
+                ->LeftJoin('`rgzbn_gm_ceiling_clients_labels` AS cl ON c.label_id = cl.id')
                 ->where("p.id in $projects");
             $db->setQuery($query);
             $items = $db->loadObjectList();
