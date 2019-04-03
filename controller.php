@@ -1700,15 +1700,15 @@ public function register_mnfctr(){
             $locate = "";
             switch ($type) {
                 case 1:
-                    $locate = "http://test.gm-vrn.ru/index.php?option=com_gm_ceiling&view=canvases";
+                    $locate = 'http://'.$_SERVER['SERVER_NAME'].'/index.php?option=com_gm_ceiling&view=canvases';
                     $margin = $DealerInfo->dealer_canvases_margin;
                     break;
                 case 2:
-                    $locate = "http://test.gm-vrn.ru/index.php?option=com_gm_ceiling&view=components";
+                    $locate = 'http://'.$_SERVER['SERVER_NAME'].'/index.php?option=com_gm_ceiling&view=components';
                     $margin = $DealerInfo->dealer_components_margin;
                     break;
                 case 3:
-                    $locate = "http://test.gm-vrn.ru/index.php?option=com_gm_ceiling&view=mount";
+                    $locate = 'http://'.$_SERVER['SERVER_NAME'].'/index.php?option=com_gm_ceiling&view=mount';
                     $margin = $DealerInfo->dealer_mounting_margin;
                     break;
             }
@@ -1731,12 +1731,12 @@ public function register_mnfctr(){
                 $result = $user->setDealerInfo($fields);
             }
 
-            if ($result != null) exit;
+            if ($result != null) die(true);
             else {
                 echo json_encode(array("answer_error" => "Ошибка ввода маржинальности!"));
             }
 
-            exit;
+            die(true);
         }
        catch(Exception $e)
         {
@@ -1902,22 +1902,6 @@ public function register_mnfctr(){
             $model->updateClientNew($id, $fio, $phone,$adress, $project_calculation_date );
             $this->setRedirect(JRoute::_("http://$server_name/components/com_gm_ceiling/views/saverclient/default_1.php?complite=1&id=".$id, false));
             return 1;
-        }
-       catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getClientInfoApi()
-    {
-        try{
-            $jinput = JFactory::getApplication()->input;
-            $id = $jinput->get('id', null, 'INT');
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $data = $model->getClientInfoApi($id);
-            echo json_encode($data);
-            exit;
         }
        catch(Exception $e)
         {
@@ -3383,7 +3367,6 @@ public function register_mnfctr(){
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
             $postData = file_get_contents('php://input');
-
             $path = "components/com_gm_ceiling/";
             file_put_contents(
                 $path.'acceptFromCallGM_log.txt',
@@ -3414,7 +3397,6 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-
 }
 
 ?>
