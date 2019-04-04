@@ -915,7 +915,7 @@ class Gm_ceilingModelApi extends JModelList
         }
     }
 
-public function get_dealerInfo_androidCallGlider($data) {
+    public function get_dealerInfo_androidCallGlider($data) {
         try {
             $db = $this->getDbo();
             $change_time = $db->escape($data->change_time, false);
@@ -980,6 +980,13 @@ public function get_dealerInfo_androidCallGlider($data) {
                 $query->where($where);
                 $db->setQuery($query);
                 $list_clients_statuses_map = $db->loadObjectList();
+
+                $query = $db->getQuery(true);
+                $query->select('*');
+                $query->from('`#__gm_ceiling_clients_labels_history`');
+                $query->where($where);
+                $db->setQuery($query);
+                $list_clients_labels_history = $db->loadObjectList();
             }
 
             $query = $db->getQuery(true);
@@ -1018,6 +1025,13 @@ public function get_dealerInfo_androidCallGlider($data) {
             $list_messenger_types = $db->loadObjectList();
 
             $query = $db->getQuery(true);
+            $query->select('*');
+            $query->from('`#__gm_ceiling_clients_labels`');
+            $query->where("`change_time` > '$change_time and `dealer_id` = $dealer_id'");
+            $db->setQuery($query);
+            $list_clients_labels = $db->loadObjectList();
+
+            $query = $db->getQuery(true);
             $query->select('`u`.`id`,
                             `u`.`name`,
                             `u`.`username`,
@@ -1039,27 +1053,31 @@ public function get_dealerInfo_androidCallGlider($data) {
             $list_mesengers = $db->loadObjectList();
 
 			$result = [];
-    		if (empty($list_clients) && empty($list_contacts) && empty($list_contacts_dop) && 
-    			empty($list_callback) && empty($list_client_history) && empty($list_calls_status_history) && 
-    			empty($list_calls_status) && empty($list_clients_statuses) && empty($list_api_phones) && 
-                empty($list_clients_statuses_map) && empty($list_users) && empty($list_messenger_types)
-                ) {
-    			$result = null;
-    		} else {
-   				$result['rgzbn_gm_ceiling_clients'] = $list_clients;
-   				$result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
-   				$result['rgzbn_gm_ceiling_clients_dop_contacts'] = $list_contacts_dop;
-   				$result['rgzbn_gm_ceiling_callback'] = $list_callback;
-   				$result['rgzbn_gm_ceiling_client_history'] = $list_client_history;
-   				$result['rgzbn_gm_ceiling_calls_status_history'] = $list_calls_status_history;
-   				$result['rgzbn_gm_ceiling_calls_status'] = $list_calls_status;
-   				$result['rgzbn_gm_ceiling_clients_statuses'] = $list_clients_statuses;
-   				$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
-   				$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
-                $result['rgzbn_gm_ceiling_messenger_types'] = $list_messenger_types;
-                $result['rgzbn_users'] = $list_users;
-                $result['rgzbn_gm_ceiling_messenger_types'] = $list_mesengers;
-    		}
+   			$result['rgzbn_gm_ceiling_clients'] = $list_clients;
+   			$result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
+   			$result['rgzbn_gm_ceiling_clients_dop_contacts'] = $list_contacts_dop;
+   			$result['rgzbn_gm_ceiling_callback'] = $list_callback;
+   			$result['rgzbn_gm_ceiling_client_history'] = $list_client_history;
+   			$result['rgzbn_gm_ceiling_calls_status_history'] = $list_calls_status_history;
+   			$result['rgzbn_gm_ceiling_calls_status'] = $list_calls_status;
+   			$result['rgzbn_gm_ceiling_clients_statuses'] = $list_clients_statuses;
+   			$result['rgzbn_gm_ceiling_api_phones'] = $list_api_phones;
+   			$result['rgzbn_gm_ceiling_clients_statuses_map'] = $list_clients_statuses_map;
+            $result['rgzbn_gm_ceiling_messenger_types'] = $list_messenger_types;
+            $result['rgzbn_users'] = $list_users;
+            $result['rgzbn_gm_ceiling_clients_labels'] = $list_clients_labels;
+            $result['rgzbn_gm_ceiling_clients_labels_history'] = $list_clients_labels_history;
+
+            $result_is_empty = true;
+            foreach ($result as $value) {
+                if (!empty($value)) {
+                    $result_is_empty = false;
+                    break;
+                }
+            }
+            if ($result_is_empty) {
+                return null;
+            }
             return $result;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
