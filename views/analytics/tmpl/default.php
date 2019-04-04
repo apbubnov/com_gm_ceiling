@@ -150,7 +150,7 @@ echo parent::getButtonBack();
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Ошибка сохранения!"
+                    text: "Ошибка получения данных!"
                 });
             }
         });

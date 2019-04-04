@@ -373,7 +373,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'offcut_square' => 'string',
                         'discount' => 'int',
                         'need_metiz' => 'int',
-                        'need_cuts' => 'int'
+                        'need_cuts' => 'int',
+                        'scaffolding'=>'int'
                         // 'rek' => 'int',
                         // 'proizv' => 'string'
                     )
@@ -1017,18 +1018,25 @@ class Gm_ceilingHelpersGm_ceiling
             //периметр ТОЛЬКО ДЛЯ ПВХ
             $filter = "`co`.`title` LIKE('%3,5 * 51%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_9 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title` LIKE('%6 * 51%') AND `c`.`title` LIKE('%Дюбель%') ";
             $items_5 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title` LIKE('%ПВХ (2,5 м)%') AND `c`.`title` LIKE('%Багет%') ";
             $items_11 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title` LIKE('%потолочный аллюм%') AND `c`.`title` LIKE('%Багет%') ";
             $items_236 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title` LIKE('%стеновой аллюм%') AND `c`.`title` LIKE('%Багет%') ";
             $items_239 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title` LIKE('%для парящих пот аллюм%') AND `c`.`title` LIKE('%Багет%') ";
             $items_559 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%303 белая%') AND `c`.`title` LIKE('%Вставка%') ";
             $items_vstavka_bel = $components_model->getFilteredItems($filter);
+
             if ($data['color'] > 0) {
                 $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
                 $color1 = $color_model1->getColorTitle($data['color']);
@@ -1039,36 +1047,52 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $filter = "`co`.`title`  LIKE('%п/сф 3,5*9,5%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_10 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%круглая%') AND `c`.`title` LIKE('%Платформа под люстру%') ";
             $items_16 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%6*50%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
             $items_556 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('35') AND `c`.`title` LIKE('%Круглое кольцо%') ";
             $items_58 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%П 60%') AND `c`.`title` LIKE('%Подвес прямой %') ";
             $items_3 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%2,5 мм%') AND `c`.`title` LIKE('%Клеммная колодка%') ";
             $items_2 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%40*50%') AND `c`.`title` LIKE('%Брус%') ";
             $items_1 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%3,5*35%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_8 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%4,2 * 102%') AND `c`.`title` LIKE('%Саморез%') ";
             $items_6 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%в разд 303 гриб%') AND `c`.`title` LIKE('%Вставка%') ";
             $items_14 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%для парящих потолков%') AND `c`.`title` LIKE('%Вставка%') ";
             $items_38 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%15 * 12,5 см.%') AND `c`.`title` LIKE('%Кронштейн%') ";
             $items_430 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%разделительный аллюм%') AND `c`.`title` LIKE('%Багет%') ";
             $items_35 = $components_model->getFilteredItems($filter);
+
             $filter = "`c`.`title` LIKE('%Гарпун%') ";
             $items_360 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%70*100 мм%') AND `c`.`title` LIKE('%Платформа для карнизов%') ";
             $items_495 = $components_model->getFilteredItems($filter);
+
             $filter = "`co`.`title`  LIKE('%Декскор 2,5%') AND `c`.`title` LIKE('%Багет%') ";
             $items_233 = $components_model->getFilteredItems($filter);
+
             $filter = "`c`.`title` LIKE('%Переход уровня%') ";
             $items_659 = $components_model->getFilteredItems($filter);
 
@@ -2323,9 +2347,42 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage"=>2
                     );
                 }
+                if($data['height'] == 1){
+                    $mounting_data[] = array(
+                        "title" => "Высота от 4 до 5 метров",                //Название
+                        "quantity" => 1,                                     //Кол-во
+                        "gm_salary" => $gm_mount->mp65,                             //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $gm_mount->mp65,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp65,                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $results->mp65,                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 2
+                    );
+                }
+                if($data['height'] == 2){
+                    $mounting_data[] = array(
+                        "title" => "Высота более 5 метров",                  //Название
+                        "quantity" => 1,                                     //Кол-во
+                        "gm_salary" => $gm_mount->mp66,                             //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $gm_mount->mp66,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp66,                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $results->mp66,                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 2
+                    );
+                }
+                if($data['scaffolding'] == 1){
+                    $mounting_data[] = array(
+                        "title" => "Сборка/разборка лесов",                  //Название
+                        "quantity" => 1,                                     //Кол-во
+                        "gm_salary" => $gm_mount->mp67,                             //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $gm_mount->mp67,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp67,                            //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $results->mp67,                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 2
+                    );
+                }
                 //только для ПВХ
                 if (!empty($data['n1']) &&  $data['n1'] != 29) {
-                    if($data['height'] == 1){
+                    if($data['height'] == 1 || $data['height'] == 2){
                         $name = "высота >3м";
                         $mp1 = $results->mp1 + 10;
                         $mp31 = $results->mp31 + 10;
@@ -2810,7 +2867,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($data['n1'] == 29) {
                     //периметр
                     if ($data['n5'] > 0) {
-                         if($data['height'] == 1){
+                         if($data['height'] == 1 || $data['height'] == 2){
                             $name = "Периметр (Ткань)(высота >3м)";
                             $mp33 = $results->mp33 + 10;
                             $gm_mp33 = $gm_mount->mp33 + 10;
