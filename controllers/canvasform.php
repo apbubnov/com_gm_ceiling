@@ -65,7 +65,6 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
 	{
 		try
 		{
-	        echo "SAVE"; exit;
 			// Check for request forgeries.
 			JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -243,7 +242,7 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
 	            }
 	            echo json_encode($result);
 	        }
-	        exit;
+	       die(true);
 	    }
 	    catch(Exception $e)
         {

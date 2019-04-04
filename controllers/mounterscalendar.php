@@ -81,7 +81,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
 			echo json_encode($model_request);
 
-			exit;
+			die(true);
 		}
 		catch(Exception $e)
 		{

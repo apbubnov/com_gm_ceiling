@@ -386,6 +386,17 @@
                         </tr>
                         <tr>
                             <td width=35%>
+                                <label id="jform_shrink_per-lbl" for="jform_shrink_per"> % усадки: </label>
+                            </td>
+                            <td width=55%>
+                                <input name="jform[shrink_per]" id="jform_shrink_per" data-next="#jform_n27" class="form-control-input" readonly>
+                            </td>
+                            <td width=10%>
+                                <label for="jform_n9" class="control-label">%</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width=35%>
                                 <label id="jform_n10-lbl" for="jform_n10"> Криволинейный участок: </label>
                             </td>
                             <td width=55%>
@@ -1292,6 +1303,7 @@
                 jQuery("#jform_n9").val(calculation.n9);
                 jQuery("#jform_n10").val(calculation.n10);
                 jQuery("#jform_n31").val(calculation.n31);
+                jQuery("#jform_shrink_per").val(((1-calculation.shrink_percent).toFixed(2)*100).toFixed(2));
                 jQuery("#data-wrapper").show();
             }
             let filename = '<?php echo $calc_img;?>';

@@ -170,7 +170,6 @@ class Gm_ceilingModelComponents extends JModelList
 
             if($id) $return = $db->loadObject();
             else $return = $db->loadObjectList();
-            //print_r(empty($return[0]->image)); exit;
             return $return;
         }
         catch(Exception $e)

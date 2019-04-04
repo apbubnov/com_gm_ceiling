@@ -42,16 +42,28 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
         }
     }
 
+    function savePay(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $mounterId = $jinput->getInt('mounter_id');
+            $builderId = $jinput->getInt('builder_id');
+            $sum = $jinput->get('paid_sum','','STRING');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
+            $model->savePay($mounterId,$builderId,$sum);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     function getData(){
         try{
             $jinput = JFactory::getApplication()->input;
-            $projectsId = $jinput->get('ids',array(),"ARRAY");
-            $filter = "";
-            if(!empty($projectsId)){
-                $filter = "ms.project_id IN (".implode(',',$projectsId).")";
-            }
+            $builder_id = $jinput->get('builder_id',null,"INT");
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $result = $model->getData($filter);
+            $result = $model->getData($builder_id);
             die(json_encode($result));
         }
         catch(Exception $e)

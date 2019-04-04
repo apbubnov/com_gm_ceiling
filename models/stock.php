@@ -594,6 +594,22 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    public function getAllProviders(){
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_counterparty` AS CP")
+                ->select("*")
+                ->where("CP.close_contract > ".$db->quote(date("Y.m.d")));
+            $db->setQuery($query);
+            return $db->loadObjectList();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public function NextStatusProject($id)
     {
         try

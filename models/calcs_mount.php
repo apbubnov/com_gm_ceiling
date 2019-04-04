@@ -130,4 +130,36 @@ class Gm_ceilingModelCalcs_mount extends JModelItem{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getMounterSum($mounter_id,$builder_id){
+        try{
+            /*SELECT mt.title,SUM(cm.sum) AS stage_sum
+                FROM `rgzbn_gm_ceiling_calcs_mount` AS cm
+                LEFT JOIN `rgzbn_gm_ceiling_calculations` AS c ON c.id = cm.calculation_id
+                LEFT JOIN `rgzbn_gm_ceiling_projects` AS p ON c.project_id = p.id
+                LEFT JOIN `rgzbn_gm_ceiling_clients` AS cl ON p.client_id = cl.id
+                LEFT JOIN `rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = cm.stage_id
+                WHERE mounter_id = 39 AND cl.dealer_id = 721
+                GROUP BY cm.stage_id*/
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("mt.title,SUM(cm.sum) AS stage_sum")
+                ->from("`rgzbn_gm_ceiling_calcs_mount` AS cm")
+                ->leftJoin("`rgzbn_gm_ceiling_calculations` AS c ON c.id = cm.calculation_id")
+                ->leftJoin("`rgzbn_gm_ceiling_projects` AS p ON c.project_id = p.id")
+                ->leftJoin("`rgzbn_gm_ceiling_clients` AS cl ON p.client_id = cl.id")
+                ->leftJoin("`rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = cm.stage_id")
+                ->where("mounter_id = $mounter_id and cl.dealer_id = $builder_id")
+                ->group("cm.stage_id");
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

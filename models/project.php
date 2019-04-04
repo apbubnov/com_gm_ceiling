@@ -313,7 +313,6 @@ class Gm_ceilingModelProject extends JModelItem
 				->from('#__gm_ceiling_mounters as mounters')
 				->innerJoin('#__gm_ceiling_mounters_map as map ON map.id_mounter = mounters.id')
 				->where("map.id_brigade = ". $brigade_id);
-				//print_r($brigade_id); exit;
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -969,7 +968,6 @@ class Gm_ceilingModelProject extends JModelItem
             $model_projectshistory->save($id,10);
 			return $item;
 
-	      //  print_r($return); exit;
 		//        $table = $this->getTable();
 		//        if($data->id > 0) {
 		//            $table->load($data->id);

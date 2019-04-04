@@ -109,7 +109,7 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
 	
 	public function SetEmail($client_id,$contact){
 		try{
-			//print_r($contact); exit;
+
 	        $db    = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
@@ -118,7 +118,7 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
 	            ->where("client_id = $client_id AND contact = ".$db->quote($contact));
 	        $db->setQuery($query);
 	        $items = $db->loadObject();
-			//print_r($contact); exit;
+
 			if(empty($items->id))
 			{
 			$columns = array('client_id', 'type_id', 'contact');

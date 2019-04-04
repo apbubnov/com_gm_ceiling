@@ -613,9 +613,9 @@ class Gm_ceilingModelUsers extends JModelList
 				->select('`u`.`id`, `u`.`name`, `u`.`email`')
 				->from('`#__users` AS `u`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-				->where("`g`.`group_id` = $group_id");
+				->where("`g`.`group_id` = $group_id")
+                ->order("`u`.`name`");
 			$db->setQuery($query);
-			//throw new Exception($query);
 
 			$items = $db->loadObjectList();
 			return $items;

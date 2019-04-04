@@ -201,13 +201,14 @@ let n24 = create_single_input(1,"jform_n24","jform[n24]","","Кол-во,м.","t
 let height_src = {
     name : 'jform[height]',
     values : [
-        {id:'max_height',value:1,text:"больше 3х метров"},
+        {id:'max_height',value:2,text:"больше 5 метров"},
+        {id:'middle_height',value:1,text:"от 4 до 5 метров"},
         {id:'min_height',value:0,text:"меньше 3х метров",selected:true}
     ]
-
 }
-let height = create_radios_group(height_src);
 
+let height = create_radios_group(height_src);
+height += createCheckBox('jform[scaffolding]','jform_scaffolding','Сборка лесов');
 let cornice_src = {
     name : 'jform[n16]',
     values : [
@@ -227,8 +228,7 @@ let niche_src = {
     ]
 }
 let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
-n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
-n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
+
 n16 += create_radios_group(cornice_src);
 n16+='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
@@ -316,7 +316,8 @@ let n15_src = {
 }
 n16 += '<h4>Вы можете приобрести карнизы у нас:</h4>';
 n16 += create_block_with_divs(n15_src);
-
+n16 += create_single_input(1,"jform_n39","jform[n39]","Введите длину ленты для карниза,м","м.","tel");
+n16 += create_single_input(1,"jform_n40","jform[n40]","Введите кол-во комплектов закруглений,шт","шт.","tel");
 let n22_src = {
     id : 'jform_n22',
     name : 'jform[n22]',
@@ -478,6 +479,17 @@ function create_single_radio(name,id,value,text,selected){
             </div>`;
 }
 
+function createCheckBox(name,id,text) {
+    return `<input type="checkbox" name="${name}" id="${id}" class="inp-cbx" style="display: none">
+            <label for="${id}" class="cbx">
+                <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span>${text}</span>
+             </label>`
+}
 function create_radios_group(object){
     result = '<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">';
 
@@ -607,6 +619,14 @@ jQuery(".component-content").on("click", ".add_fields", function () {
             jQuery("#niches").hide();
         }
     });
+    jQuery("#jform_scaffolding").click(function () {
+       if(jQuery(this).attr("checked") == "checked"){
+           this.value = 1;
+       }
+       else{
+           this.value = 0;
+       }
+    });
 });
 
 jQuery(".component-content").on("click", ".btn_calc", function () {
@@ -722,6 +742,9 @@ function get_parent(n) {
         case 'n27':
             n = 'n16';
             break;
+        case 'scaffolding':
+            n = 'height';
+            break;
         case 'n26':
             n = 'n13';
             break;
@@ -746,6 +769,10 @@ function open_blocks(props){
         switch(props[i]){
             case 'n16':
                 jQuery('#btn_n16').trigger("click")
+                break;
+            case 'scaffolding':
+                alert("123");
+                jQuery('#btn_height').trigger("click")
                 break;
             case 'need_mount':
                 jQuery(`#btn_need_mount`).trigger("click");
@@ -831,6 +858,11 @@ function fill_calc_data(){
        if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
            switch(Object.keys(calculation)[i]){
                 case 'n28':
+                case 'scaffolding':
+                    if(calculation[Object.keys(calculation)[i]])
+                        jQuery("#jform_scaffolding").attr("checked","checked");
+                        jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
+                    break;
                 case 'height':
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];

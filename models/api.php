@@ -1046,8 +1046,13 @@ class Gm_ceilingModelApi extends JModelList
             $db->setQuery($query);
             $list_users = $db->loadObjectList();
 
+            $query = $db->getQuery(true);
+            $query->select("*");
+            $query->from("`rgzbn_gm_ceiling_messenger_types`");
+            $db->setQuery($query);
+            $list_mesengers = $db->loadObjectList();
+
 			$result = [];
-    		
    			$result['rgzbn_gm_ceiling_clients'] = $list_clients;
    			$result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;
    			$result['rgzbn_gm_ceiling_clients_dop_contacts'] = $list_contacts_dop;

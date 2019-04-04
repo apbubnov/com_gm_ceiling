@@ -591,59 +591,67 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             </div>
             <div id="mw_rec_to_msr" class="modal_window">
                 <div class="row">
-                <div class="col-md-6">
-                    <label><strong>Адрес замера</strong></label>
-                    <table align="center">
-                        <tr>
-                            <td>Улица:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">                            
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Дом:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Корпус:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Квартира:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_apartment" id="rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Подъезд:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Этаж:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Код:</td>
-                            <td style="padding-bottom: 10px;">                
-                                <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="col-md-4">
+                        <label><strong>Адрес замера</strong></label>
+                        <table align="center">
+                            <tr>
+                                <td>Улица:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Дом:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Корпус:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Квартира:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_apartment" id="jform_rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Подъезд:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Этаж:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Код:</td>
+                                <td style="padding-bottom: 10px;">
+                                    <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <label><strong>Время замера</strong></label>
+                        <div id = "measures_calendar" align="center"></div>
+                        <input  id="measure_info" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-4"><b>Примечание к замеру:</b></div>
+                            <div class="col-md-8"><input type="text" id="measure_note" class="input-gm"></div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="col-md-6">
-                    <label><strong>Время замера</strong></label>
-                    <div id = "measures_calendar" align="center"></div>
-                    <input  id="measure_info" readonly>
-                </div>
-            </div>
+
             <button  id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
             </div>
         </div>
@@ -984,7 +992,33 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
                 var data = {id:project_id,project_status:1,project_calculator:jQuery("#jform_project_gauger").val(), project_calculation_date:jQuery("#jform_project_new_calc_date").val(),project_info:address};
 
-                data = JSON.stringify(data)
+                data = JSON.stringify(data);
+
+                if(!empty(jQuery("#measure_note").val())){
+                    jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=project.addNote",
+                        data: {
+                            project_id: project_id,
+                            note: jQuery("#measure_note").val(),
+                            type: 2
+                        },
+                        dataType: "json",
+                        async: true,
+                        success: function (data) {
+                        },
+                        error: function (data) {
+
+                            var n = noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка сохранения примечания!"
+                            });
+                        }
+                    });
+                }
 
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=project.change_project_data",

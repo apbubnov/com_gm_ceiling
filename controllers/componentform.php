@@ -176,7 +176,7 @@ class Gm_ceilingControllerComponentForm extends JControllerForm
                 }
 	            echo json_encode($result);
 	        }
-	        exit;
+	        die(true);
 	    }
 	    catch(Exception $e)
         {

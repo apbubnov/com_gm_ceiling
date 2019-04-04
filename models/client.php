@@ -511,27 +511,6 @@ class Gm_ceilingModelClient extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-
-    public function getClientInfoApi($id)
-    {
-    	try
-    	{
-	        $db = $this->getDbo();
-	        $query = $db->getQuery(true);
-	        $query ->select('client_timer_spec.date as date, phones.number as number')
-	            ->from('#__gm_ceiling_client_timer_spec AS client_timer_spec')
-	            ->join('LEFT', '#__gm_ceiling_api_phones AS phones ON client_timer_spec.rek = phones.id')
-	            ->where('client_timer_spec.id = '. $id);
-	        $db->setQuery($query);
-	        $data = $db->loadObject();
-	        $data->date = strtotime($data->date);
-	        return $data;
-	    }
-	    catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
     public function updateClientNew($id, $fio, $phone,$adress,  $project_calculation_date)
     {
     	try

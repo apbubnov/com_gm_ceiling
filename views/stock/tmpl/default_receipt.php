@@ -43,14 +43,16 @@ if (isset($_COOKIE['receipt']) && !empty($_COOKIE['receipt'])) {
     $errors = $data->errors;
 }
 $server_name = $_SERVER['SERVER_NAME'];
+
+$stock_model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+$providers = $stock_model->getAllProviders();
+
 ?>
 <?= parent::getPreloader(); ?>
 
 
 <style>
-    body {
-        background-color: #E6E6FA;
-    }
+
 
     .Modal {
         position: fixed;
@@ -834,10 +836,16 @@ $server_name = $_SERVER['SERVER_NAME'];
     <button type="button" class="btn btn-primary Add Component" onclick="ShowModal(this)">
         <i class="fa fa-plus" aria-hidden="true"></i> Компонент
     </button>
+    <select class="input-gm" id="choose_provider" style="height:38px;vertical-align: middle;">
+        <option>Выберите поставщика</option>
+        <?php foreach ($providers as $provider){?>
+            <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
+        <?php }?>
+    </select>
     <div class="Stock Provider">
-        <input type="text" name="stock" class="InputStock iStock" required>
+        <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
         <button type="button" class="ButtonStock iStock" onclick="OpenModalProvider(this)">
-            <i class="fa fa-user" aria-hidden="true"></i> Поставщик
+            <i class="fa fa-user" aria-hidden="true"></i> Добавить поставщика
         </button>
     </div>
     <button type="submit" class="btn btn-primary Submit">
@@ -933,6 +941,8 @@ $server_name = $_SERVER['SERVER_NAME'];
 <script type="text/javascript">
     var $ = jQuery;
     var server_name = '<?php echo $server_name;?>';
+    var providers = JSON.parse('<?php echo json_encode($providers)?>');
+
     $(document).ready(Init);
     $(document).scroll(Scroll);
     $(window).resize(Resize);
@@ -943,6 +953,15 @@ $server_name = $_SERVER['SERVER_NAME'];
         Errors = <?=json_encode($errors);?>,
         Calc = false;
 
+    $("#choose_provider").change(function(){
+        var providerId = this.value;
+        var provider  = providers.find(function (object) {
+            if(object.id == providerId) {
+                return object;
+            }
+        });
+        $("#provider").val(JSON.stringify(provider));
+    });
     function Init() {
         ShowErrors();
         $('.chosen-container').remove();

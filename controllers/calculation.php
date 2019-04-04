@@ -17,29 +17,6 @@ defined('_JEXEC') or die;
  */
 class Gm_ceilingControllerCalculation extends JControllerLegacy
 {
-    public function getImagePNG()
-    {
-    	try
-    	{
-	        $app = JFactory::getApplication();
-	        $id = $app->input->getInt('id', 0);
-	        $svg = file_get_contents("http://" . $_SERVER["SERVER_NAME"] . "/calculation_images/man.svg");
-	        $image = new Imagick();
-	        $image->setResolution(800, 800);
-	        $image->readImageBlob($svg);
-	        $image->setImageFormat("png32");
-	        $image->scaleImage(400, 400);
-	        $image = $image->flattenImages();
-	        header("Content-type: image/png");
-	        echo($image);
-	        exit();
-	    }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
 	/**
 	 * Method to check out an item for editing and redirect to the edit form.
 	 *

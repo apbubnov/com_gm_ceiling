@@ -400,6 +400,13 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                         <div id="measures_calendar"></div>
                                     </td>
                                 </tr>
+                                <tr class="row" style="margin-bottom:15px;">
+                                    <th>Примечание к замеру</th>
+                                    <td class="col-xs-6 col-md-6">
+                                        <input name="measure_note" id="measure_note" class="inputactive"
+                                               value="">
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>Менеджер</th>
                                     <td>

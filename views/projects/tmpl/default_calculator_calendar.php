@@ -24,9 +24,7 @@ $canEdit = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_
 $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
-
 ?>
-
 
 <?=parent::getButtonBack();?>
 <h2 class="center">График замеров</h2>
@@ -53,7 +51,10 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             №
                         </th>
                         <th class='center'>
-                            Дата и время замера
+                            Дата замера
+                        </th>
+                        <th class='center'>
+                            Время
                         </th>
                         <th class='center'>
                             Адрес
@@ -61,11 +62,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         <th class='center'>
                             Примечание
                         </th>
-                        <?php if (in_array("16", $groups)):?>
-                            <th class="center">
-                                Клиент
-                            </th>
-                        <?php endif;?>
+                        <th class="center">
+                            Клиент
+                        </th>
                         <?php if (in_array("14", $groups)):?>
                             <th class="center">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -75,15 +74,21 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 </thead>
                 <tbody>
                     <?php
-                        foreach ($this->items as $i => $item): 
+                        foreach ($this->items as $i => $item):
                     ?>
                         <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
                             <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
-                            <td data-th = "Дата/время замера" class="center one-touch">
-                                <? if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00'): ?>-
-                                <? else: ?><?= date('d.m.Y H:i', strtotime($item->project_calculation_date)); ?>
+                            <td data-th = "Дата замера" class="center one-touch">
+                                <? if (empty($item->calculation_date) || $item->calculation_date == '0000-00-00'): ?>-
+                                <? else: ?><?= date('d.m.Y', strtotime($item->calculation_date)); ?>
                                 <? endif; ?>
                             </td>
+                            <td data-th = "Время замера" class="center one-touch">
+                                <? if (empty($item->calculation_time) || $item->calculation_time == '00:00'): ?>-
+                                <? else: ?><?= $item->calculation_time; ?>
+                                <? endif; ?>
+                            </td>
+
                             <td data-th = "Адрес" class="center one-touch"><?= $item->project_info; ?></td>
                             <td data-th = "Примечание" class="center one-touch">
                             <?php
@@ -105,8 +110,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <input type="hidden" name="boxchecked" value="0"/>
         </div>
     </div>
-    
-    
+
+
 </form>
 
 <? if ($canDelete) : ?>
@@ -153,7 +158,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             }
         });
         return false;
-        
+
     });
 
     jQuery("#projectList tr").click(function(){
