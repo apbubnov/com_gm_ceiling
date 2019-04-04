@@ -2424,7 +2424,7 @@ public function register_mnfctr(){
                     }
                     else {
                         $body .= "<div style=\"width: 100%\">
-                        <a href=\"$site_dev\"><img style=\"width: 20%\" src=\"http://".$server_name."/images/KP_DEV.jpg\"></a><br>
+                        <center><a href=\"$site_dev\"><img style=\"width: 20%\" src=\"http://".$server_name."/images/KP_DEV.jpg\"></a></center><br>
                         <a href=\"$site_dev\">Коммерческое предложение</a><br>";
                     }
                     $body .= "По всем вопросам писать на почту gm-vrn84@bk.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
