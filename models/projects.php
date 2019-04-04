@@ -1165,6 +1165,11 @@ class Gm_ceilingModelProjects extends JModelList
             $currentDate = date("Y-m-d").' 00:00:00';
             $db = $this->getDbo();
             $query = $db->getQuery(true);
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
+
+            $query = $db->getQuery(true);
             $query->select('`u`.`id` AS `project_calculator`,
                     GROUP_CONCAT(DISTINCT CONCAT(`p`.`project_calculation_date`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(`p`.`project_info`, \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `calc_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
@@ -1174,8 +1179,8 @@ class Gm_ceilingModelProjects extends JModelList
             $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`p`.`project_calculation_date` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
             $query->group('`u`.`id`');
             $db->setQuery($query);
+            
             $result = $db->loadObjectList();
-
             return $result;
         }
         catch(Exception $e) {
