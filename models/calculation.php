@@ -796,6 +796,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             $n23 = $data['n23'];
             $n26 = $data['n26'];
             $n29 = $data['n29'];
+            $n19 = $data['n19'];
             $mountData = $data['mountData'];
 
             unset($data['n13']);
@@ -805,6 +806,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             unset($data['n23']);
             unset($data['n26']);
             unset($data['n29']);
+            unset($data['n19']);
             unset($data['dealer_id']);
             unset($data['mountData']);
 
@@ -889,6 +891,17 @@ class Gm_ceilingModelCalculation extends JModelItem
                 $db->setQuery($query);
                 $db->execute();
             }
+            if(!empty($n19)){
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_wires`')
+                    ->columns('calc_id, wire_id, count');
+                foreach ($n19 as $value) {
+                    if (!empty($value[1]))
+                        $query->values($data['id'] . ', ' . $value[1] . ', ' . $value[0]);
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
             if (!empty($n26)) {
                 $query = $db->getQuery(true);
                 $query->insert('`#__gm_ceiling_ecola`')
@@ -957,6 +970,28 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
         catch(Exception $e)
         {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getCalcIndex($project_id){
+	    try{
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query
+                ->select("`id`, `calculation_title`")
+                ->from('`#__gm_ceiling_calculations`')
+                ->where("`project_id` = $project_id AND `calculation_title` LIKE '%Потолок%'");
+            $db->setQuery($query);
+            $calculations = $db->loadObjectList();
+            $indexes = []; $index = 1;
+            foreach ($calculations as $calculation) {
+                $indexes[] = intval(str_replace("Потолок ", "", $calculation->calculation_title));
+                if (in_array($index, $indexes)) $index += 1;
+            }
+            return $index;
+        }
+        catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

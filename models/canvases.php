@@ -771,6 +771,23 @@ class Gm_ceilingModelCanvases extends JModelList
         }
     }
 
+    public function getCutArea($id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('canvas_area')
+                ->from("`#__gm_ceiling_cuttings`")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     function save($texture, $manufacturer, $price, $width, $color) {
         try {
             $db = $this->getDbo();
