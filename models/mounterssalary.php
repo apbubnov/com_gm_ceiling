@@ -63,10 +63,10 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($id)){
-                $query->select("u.id,u.name,ms.sum,concat(p.project_info,' ',ms.note) as note")
+                $query->select("u.id,u.name,ms.sum,concat(p.project_info,' ',ms.note) as note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
                     ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                     ->innerJoin('`rgzbn_users` as u on u.id = ms.mounter_id')
-                    ->innerJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
+                    ->leftJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
                     ->where("ms.mounter_id = $id $projects");
                 $db->setQuery($query);
                 $items = $db->loadObjectList();

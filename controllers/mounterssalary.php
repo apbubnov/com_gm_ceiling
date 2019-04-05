@@ -77,7 +77,8 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $jinput = JFactory::getApplication()->input;
             $mounterId = $jinput->getInt('mounterId');
             $projectsId = $jinput->get('ids',array(),"ARRAY");
-            $projectFilter = (!empty($projectsId)) ? "AND ms.project_id IN(".implode(",",$projectsId).")" : "";
+            $builderId = $jinput->getInt('builder_id');
+            $projectFilter = (!empty($projectsId)) ? "AND (ms.project_id IN(".implode(",",$projectsId).") or builder_id = $builderId)" : " and builder_id = $builder_id";
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
             $result = $model->getDataById($mounterId,$projectFilter);
             die(json_encode($result));
