@@ -36,11 +36,18 @@ class Gm_ceilingModelCallback extends JModelList
 							`u`.`dealer_type`,
 							`us`.`name` AS `manager_name`,
 							`c`.`label_id`,
-							`l`.`color_code` AS `label_color`')
+							`l`.`color_code` AS `label_color`,
+							`p`.`project_status`')
 				->from('`#__gm_ceiling_callback` as `a`')
 				->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
 				->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
 				->innerJoin('`#__users` as `us` ON `a`.`manager_id` = `us`.`id`')
+				->leftJoin('(SELECT	MAX(`id`) AS `id`,
+									`project_status`,
+									`client_id`
+							FROM	`rgzbn_gm_ceiling_projects`
+							WHERE	`project_status` = 3
+							GROUP BY	`client_id`) AS `p` ON `a`.`client_id` = `p`.`client_id`')
 				->leftJoin('`#__gm_ceiling_clients_labels` as `l` ON `c`.`label_id` = `l`.`id`')
 				->order('`date_time`');
 			if(!empty($filter)){

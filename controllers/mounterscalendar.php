@@ -19,8 +19,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
 	// смена статуса на прочитанный, отправка письма НМС
 	public function ChangeStatus() {
-		try
-		{
+		try {
 			$jinput = JFactory::getApplication()->input;
 			$id = $jinput->get("id_calculation",null,'INT');
 			
@@ -61,11 +60,8 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$send = $mailer->Send();
 
 			die(json_encode($model_request));
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
 		}
 	}
 
@@ -79,9 +75,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
 			$model_request = $model->GetDayMountingOfBrigade($id, $date);
 
-			echo json_encode($model_request);
-
-			die(true);
+			die(json_encode($model_request));
 		}
 		catch(Exception $e)
 		{
@@ -89,10 +83,6 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
 		}
 	}
-
-
-
-
 
 	/**
 	 * Method to check out an item for editing and redirect to the edit form.

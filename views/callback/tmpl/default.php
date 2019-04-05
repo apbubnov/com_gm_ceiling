@@ -32,10 +32,10 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         <div class="col-md-2 col-xs-12" style="margin-bottom: 10px;">
             <?=parent::getButtonBack();?>
         </div>
-        <div class="col-md-4 col-xs-6">
+        <div class="col-md-3 col-xs-6">
             <input class="form-control" type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
         </div>
-        <div class="col-md-6 col-xs-6">
+        <div class="col-md-4 col-xs-6">
             <select class="wide cust-select" id="select_label">
                 <option value="" selected>Ярлыки</option>
                 <?php foreach($labels as $label): ?>
@@ -51,6 +51,13 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
                     <?php endforeach;?>
                 </ul>
             </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+            <select class="form-control" id="select_type">
+                <option value="0">Все типы</option>
+                <option value="1">Новые</option>
+                <option value="2">Отказы от договора</option>
+            </select>
         </div>
     </div>
     
@@ -139,7 +146,8 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
             url: "index.php?option=com_gm_ceiling&task=callback.getData",
             data: {
                 date: jQuery('#calendar').val(),
-                label_id: jQuery('#select_label').val()
+                label_id: jQuery('#select_label').val(),
+                type: jQuery('#select_type').val()
             },
             success: function(data){
                 arr_calls = data;
@@ -206,6 +214,10 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         jQuery("#select_label").change(function() {
             var color = (jQuery(".option.selected").data("color"));
             jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+            getData();
+        });
+
+        jQuery("#select_type").change(function() {
             getData();
         });
     });
