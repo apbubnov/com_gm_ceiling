@@ -857,12 +857,12 @@ function fill_calc_data(){
     for(let i = Object.keys(calculation).length;i--;){
        if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
            switch(Object.keys(calculation)[i]){
-                case 'n28':
                 case 'scaffolding':
                     if(calculation[Object.keys(calculation)[i]])
                         jQuery("#jform_scaffolding").attr("checked","checked");
                         jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
                     break;
+                case 'n28':
                 case 'height':
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
