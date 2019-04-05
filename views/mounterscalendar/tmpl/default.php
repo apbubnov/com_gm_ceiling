@@ -198,6 +198,7 @@
 
     // открытие модального окна и узнаем какой день нажат
     jQuery("#calendar-container").on("click", ".current-month, .day-off2", function () {
+        console.log(1);
         kind = "empty";        
         var id = jQuery(this).attr("id");
         WhatDay(id);
@@ -207,6 +208,7 @@
         jQuery("#mw_container").show();
     });
     jQuery("#calendar-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite, .old-project", function () {
+        console.log(2);
         kind = "no-empty";
         id = jQuery(this).attr("id");
         WhatDay(id);
@@ -242,7 +244,7 @@
         jQuery("#selected_data").text(outputDate);
         if (kind == "empty") {
             jQuery("#caption-tr").hide();
-            TrOrders = '<tr><td colspan=8>В данный момент на этот день монтажей нет</td></tr>';
+            TrOrders = '<tr><td data-th="монтажей нет" colspan=8>В данный момент на этот день монтажей нет</td></tr>';
              jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
@@ -252,12 +254,23 @@
                     id: <?php echo $userId?>,
                 },
                 success: function(data) {
+                    console.log(data);
                     if (data.length > 0) { 
                         Array.from(data).forEach(function(element) {
-                            TrOrders += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+                            TrOrders += '<tr><td data-th="дата монтажа" style="width: 25%;">'+element.project_mounting_date+'</td><td data-th="адрес" style="width: 75%;">'+element.project_info+'</td></tr>';
                         }); 
                     }
                     jQuery("#table-mounting > tbody").append(TrOrders);
+                },
+                error: function(msg) {
+                    console.log(msg);
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
                 }
             });
         } else if (kind == "no-empty") {
@@ -294,7 +307,6 @@
                                 status += " <strong>/ Не прочитан</strong>";
                             }
                             salary = element.m_sum;
-                           
 
                             switch (element.type) {
                                 case '1': type = 'Полный монт.';
@@ -307,12 +319,22 @@
                                 break;
                             }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter}, ${element.type});"><td data-th="Дата мотажа">${outputDate+" "+element.project_mounting_date}</td><td data-th="Адрес">${adress}</td><td data-th="Телефоны">${element.client_phones}</td><td data-th="Периметр">${perimeter}</td><td data-th="Зарплата">${salary}</td><td data-th="Комментарий" id="comment_calc${element.id}">${note}</td><td data-th="Статус">${status}</td><td data-th="Этап">${type}</td></tr>`;
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+', '+element.type+');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны">'+element.client_phones+'</td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
                             jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
                             jQuery("#table-mounting > tbody").append(TrOrders2);
-                        }                  
+                        }
+                    });
+                },
+                error: function(msg) {
+                    console.log(msg);
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
                     });
                 }
             });
