@@ -921,6 +921,10 @@ class Gm_ceilingModelApi extends JModelList
             $change_time = $db->escape($data->change_time, false);
             $dealer_id = $db->escape($data->dealer_id, false);
 
+            $query = 'SET SESSION group_concat_max_len  = 32768';
+            $db->setQuery($query);
+            $db->execute();
+
             $query = $db->getQuery(true);
             $query->select('count(`id`) AS `count`,
                             GROUP_CONCAT(`id` SEPARATOR \',\') AS `ids`');
