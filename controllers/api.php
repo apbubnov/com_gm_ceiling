@@ -187,7 +187,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $result = $this->crypt($user->id, json_encode($user));
                 die(json_encode($result));
             } else {
-                die('Неверный логин или пароль.');
+                die('Invalid login or password!');
             }
         } catch(Exception $e) {
             die($e->getMessage());
