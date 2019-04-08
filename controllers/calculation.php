@@ -333,4 +333,34 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function upload_img() {
+	    try {
+	        $jinput = JFactory::getApplication()->input;
+	        $calc_id = $jinput->get('calc_id', 0, 'int');
+	        if (empty($calc_id)) {
+	        	throw new Exception('Empty calc_id!');
+	        }
+	        if (!is_dir('uploaded_calc_images/'.$calc_id)) {
+	        	mkdir('uploaded_calc_images/'.$calc_id);
+	        }
+
+	        $dir = 'uploaded_calc_images/'.$calc_id.'/';
+	        $urls = array();
+
+	        foreach ($_FILES as $file) {
+				$md5 = md5($calc_id.microtime().$file['name']);
+		        if (move_uploaded_file($file['tmp_name'], $dir.$md5)) {
+		            $urls[] = $dir.$md5;
+		        } else {
+		            throw new Exception('File not upload', 500);
+		        }
+		    }
+	        
+            die(json_encode($urls));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

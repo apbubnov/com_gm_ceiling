@@ -84,6 +84,32 @@
         padding: 3px 7px;
         border: 2px solid #414099;
     }
+
+    .div_imgs {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .uploaded_calc_img {
+        display: inline-block;
+        max-width: 200px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
+    .uploaded_calc_img:hover {
+        background: gray;
+    }
+    .big_uploaded_img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    #modal_window_img {
+        width: 360px !important;
+        height: 400px !important;
+        margin: auto !important;
+    }
+
+
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -115,6 +141,11 @@
         }
     }
 </style>
+
+<div class="modal_window_container" id="img_modal_container">
+    <button type="button" class="close_btn" id="btn_close_img"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_img" style="border: 2px solid black; border-radius: 4px;"></div>
+</div>
 
 <div class="row">
     <div class="col-md-3 no_padding"><b>Ввести общее примечание к проекту:</b></div>
@@ -332,7 +363,7 @@
                         <?php if ($user->dealer_type != 2) { ?>
                             <tr style="background-color: rgba(0,0,0,0.05);">
                                 <td id="calcs_self_canvases_total"><span>П </span> <span class = "sum"><?php echo round($self_canvases_sum, 0) ?></span></td>
-                                <td id="calcs_self_components_total"><span>К </span><span data-oldval = <?php echo round($self_components_sum, 0) ?> class = "sum"><?php echo round($self_components_sum, 0) ?></span></td>
+                                <td id="calcs_self_components_total"><span>К </span><span data-oldval="<?php echo round($self_components_sum, 0) ?>" class="sum"><?php echo round($self_components_sum, 0) ?></span></td>
                                 <td id="calcs_self_mount_total"><span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span></td>
                                 <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                             </tr>
@@ -584,6 +615,21 @@
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
                                 <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
+                                <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" style="display: none;" multiple accept="image/*">
+                                <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                                <div class="row div_imgs">
+                                    <?php
+                                        $dir = 'uploaded_calc_images/'.$calculation->id;
+                                        if (is_dir($dir)) {
+                                            $files = scandir($dir);
+                                            foreach ($files as $value) {
+                                                if (strlen($value) === 32) {
+                                                    echo '<img src="'.$dir.'/'.$value.'" class="uploaded_calc_img">';
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                </div>
                             <?php } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">

@@ -473,3 +473,72 @@ function addNote() {
 jQuery("#duplicate_calcs").click(function () {
     jQuery("#duplicate_tr").toggle();
 })
+
+
+jQuery('.btn_img_file').click(function() {
+    var elem_file = jQuery(this).siblings('.img_file')[0];
+    elem_file.click();
+});
+
+jQuery('.img_file').change(function() {
+    var this_elem = jQuery(this)[0];
+    var calc_id = jQuery(this).data('calc-id');
+    var elem_div = jQuery(this).siblings('.div_imgs')[0];
+    var formdata = new FormData();
+    if (this_elem.files.length < 1) {
+        return;
+    }
+
+    formdata.append('calc_id', calc_id);
+    jQuery.each(this_elem.files, function(key, value) {
+        formdata.append(key, value);
+    });
+    
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=calculation.upload_img",
+        cache: false,
+        processData: false, // Не обрабатываем файлы (Don't process the files)
+        contentType: false, // Так jQuery скажет серверу что это строковой запрос
+        data: formdata,
+        success: function(data) {
+            console.log(data);
+            for (var i = data.length, img; i--;) {
+                img = document.createElement("IMG");
+                img.setAttribute('src', data[i]);
+                img.setAttribute('class', 'uploaded_calc_img');
+                elem_div.appendChild(img);
+                img.onclick = clickUploadedCalcImg;
+                //elem_div.innerHTML += '<img src="'+data[i]+'" class="uploaded_calc_img">';
+            }
+        },
+        dataType: "json",
+        timeout: 20000,
+        error: function(data) {
+            console.log(data);
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка!"
+            });
+        }
+    });
+});
+
+function clickUploadedCalcImg() {
+    jQuery("#modal_window_img")[0].innerHTML = '<img src="'+this.src+'" class="big_uploaded_img">';
+    jQuery("#btn_close_img").show();
+    jQuery("#img_modal_container").show();
+    jQuery("#modal_window_img").show();
+}
+
+jQuery('.uploaded_calc_img').click(clickUploadedCalcImg);
+
+jQuery("#btn_close_img").click(function(){
+    jQuery("#btn_close_img").hide();
+    jQuery("#img_modal_container").hide();
+    jQuery("#modal_window_img").hide();
+});
