@@ -511,13 +511,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 				}
-				$client_model->updateClientSex($client_id,$sex);
+				/*$client_model->updateClientSex($client_id,$sex);
 				if(count($new_phones)>0){
 					$cl_phones_model->save($client_id,$new_phones);
 				}
                 if(count($change_phones)>0){
                     $cl_phones_model->update($client_id,$change_phones);
-                }
+                }*/
             }
             $data->project_sum = $sum;
 			//$data->project_verdict = 1;

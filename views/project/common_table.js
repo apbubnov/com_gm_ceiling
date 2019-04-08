@@ -469,3 +469,7 @@ function addNote() {
         }
     }); 
 }
+
+jQuery("#duplicate_calcs").click(function () {
+    jQuery("#duplicate_tr").toggle();
+})

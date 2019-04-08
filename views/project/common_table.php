@@ -156,7 +156,7 @@
                 <div class="tab-pane active" id="summary" role="tabpanel">
                     <table id="table1">
                         <tr style="background-color: rgba(0,0,0,0.15);">
-                            <th colspan="4" class="section_header" id="sh_ceilings">
+                            <th colspan="3"111 class="section_header" id="sh_ceilings">
                                 Потолки <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i>
                             </th>
                         </tr>
@@ -337,8 +337,38 @@
                                 <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                             </tr>
                         <?php } ?>
+                        <tr>
+                            <th colspan="2" id="duplicate_calcs">Дублировать потолки</th>
+                        </tr>
+                        <tr id="duplicate_tr" style="display:none">
+                            <td colspan="4">
+                                <?php foreach ($calculations as $calculation) { ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="checkbox" id="<?php echo $calculation->id?>" data-calc_id = "<?php echo $calculation->id?>" class="inp-cbx dup" checked style="display: none">
+                                                <label for="<?php echo $calculation->id?>" class="cbx">
+                                                    <span>
+                                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                        </svg>
+                                                    </span>
+                                                    <span><?php echo $calculation->calculation_title;?></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                <?php } ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary btn_duplicate">Дублировать в текущий проект</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary btn_duplicate">Дублировать в новый проект</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         <tr style="background-color: rgba(0,0,0,0.15);">
-                            <th colspan="2" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
+                            <th colspan="2" class="section_header" id="sh_estimate">Сметы, наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
                             <th colspan="2" class="section_header">
                                 <button class = "btn btn-primary" type="button" id = "create_pdfs">Перегенерировать</button>
                             </th>
@@ -888,4 +918,5 @@
             </div>
         <?php } ?>
     </div>
+
 </div>
