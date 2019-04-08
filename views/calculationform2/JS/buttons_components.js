@@ -745,6 +745,9 @@ function get_parent(n) {
         case 'scaffolding':
             n = 'height';
             break;
+        case 'n20_1':
+            n = 'n20';
+            break;
         case 'n26':
             n = 'n13';
             break;

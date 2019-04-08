@@ -1124,6 +1124,8 @@ class Gm_ceilingHelpersGm_ceiling
             $filter = "`co`.`title` like ('%Deskor потолочный%') and `c`.`title` like ('%Профиль%')";
             $ceiling_bag_tiss = $components_model->getFilteredItems($filter);
 
+            $filter = "`co`.`title` like ('%Отбойник АЛ Z-образный%') and `c`.`title` like ('%Профиль%')";
+            $otb = $components_model->getFilteredItems($filter);
             if (!is_array($data['n13'])) $n13_costyl = json_decode($data['n13']);
             else $n13_costyl = $data['n13'];
             //throw new Exception(gettype($n13_costyl[0]));
@@ -1545,6 +1547,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //Отбойник
             $component_count[$items_1[0]->id] += $data['n20_1'];
+            $component_count[$otb[0]->id] += $data['n20_1'];
             if($data['need_metiz']) {
                 $component_count[$items_6[0]->id] += $data['n20_1'] * 3;
                 $component_count[$items_9[0]->id] += $data['n20_1'] * 20;
