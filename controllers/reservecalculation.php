@@ -135,7 +135,8 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 				$project_data['dealer_mounting_margin']   = $dealer_mounting_margin;
 				
 				$project_id = $project_model->save($project_data);
-				
+				$data = $project_model->getData($project_id);
+                Gm_ceilingHelpersGm_ceiling::notify(get_object_vars($data),0);
 				// Redirect to the list screen.
 				$this->setMessage(JText::_('COM_GM_CEILING_CALCULATION_RESERVED_SUCCESSFULLY'));
 				$menu = JFactory::getApplication()->getMenu();

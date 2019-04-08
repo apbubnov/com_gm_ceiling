@@ -1809,6 +1809,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             }
             $model = $this->getModel('Project', 'Gm_ceilingModel');
             $result = $model->save($data);
+            $project_data = $model->getData($data['id']);
+            if($data['project_status'] == 1){
+                Gm_ceilingHelpersGm_ceiling::notify(get_object_vars($project_data),0);
+            }
             if($ajax){
                 die(json_encode($result));
             }
