@@ -387,10 +387,20 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             <thead>
             <tr class="caption_table">
                 <td>
-                    Сумма
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button id="to_common_salary" class="btn btn-primary">К общему списку</button>
+                        </div>
+                        <div class="col-md-9">
+                            Сумма
+                        </div>
+                    </div>
                 </td>
                 <td>
                     Объект
+                </td>
+                <td>
+                    Время
                 </td>
             </tr>
             </thead>
@@ -407,6 +417,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 <td>Сумма в работе,руб.</td>
                 <td>Сумма закрытых,руб.</td>
                 <td>Выплачено,руб.</td>
+                <td>Остаток,руб.</td>
                 <td>Внести суммы выплаты,руб.</td>
             </tr>
             </thead>
@@ -678,6 +689,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             });
         });
 
+        jQuery("#to_common_salary").click(function () {
+            jQuery("#one_mounter_salary").hide();
+            jQuery("#show_salary").click();
+        });
         jQuery("#show_salary").click(function (){
             jQuery("#mv_container").show();
             jQuery("#mounters_salary").show("slow");
@@ -705,11 +720,11 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                             '<td class="click_tr" name ="taken">'+el.taken+'</td>' +
                             '<td class="click_tr">'+el.closed+'</td>' +
                             '<td class="click_tr" name ="paid">'+el.payed+'</td>' +
+                            '<td class="click_tr" name ="rest" >'+ (+el.closed + +el.payed)+'</td>' +
                             '<td><input class="input-gm" name ="pay_sum"><button name="save_pay" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
 
                         );
                     });
-
                 },
                 error: function(data) {
                     var n = noty({
@@ -723,25 +738,29 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 }
             });
             jQuery("#salary .click_tr").click(function () {
-                var mounterId = jQuery(this).data('id');
+                var mounterId = jQuery(this).closest('tr').data('id');
+
+                console.log(mounterId);
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
                     data: {
                         mounterId:mounterId,
-                        ids:projectsId
+                        ids:projectsId,
+                        builder_id: '<?php echo $dealer->id?>'
                     },
                     dataType: "json",
                     async: false,
                     success: function(data) {
-                        var total = 0;
+                        var total = 0,note = "";
                         jQuery("#detailed_salary > tbody").empty();
                         jQuery.each(data,function (index,el){
                             total += +el.sum;
+                            note = (!empty(el.note)) ? el.note : "Выплата";
                             jQuery("#detailed_salary > tbody").append('<tr/>');
-                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+el.note+'</td>')
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td>')
                         });
                         jQuery("#detailed_salary > tbody").append('<tr/>');
-                        jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td>');
+                        jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td></td>');
                     },
                     error: function(data) {
                         var n = noty({
@@ -769,7 +788,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 return false;
             });
 
-            function savePay(mounter_id, paid_sum, paid, oldval) {
+            function savePay(mounter_id, paid_sum, paid, oldval,rest,restOld) {
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=MountersSalary.savePay",
                     data: {
@@ -780,9 +799,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     dataType: "json",
                     async: false,
                     success: function (data) {
-
                         paid[0].textContent = "";
                         paid[0].textContent = +oldval + paid_sum;
+                        rest[0].textContent = "";
+                        rest[0].textContent = +restOld + paid_sum;
                     },
                     error: function (data) {
                         var n = noty({
@@ -803,7 +823,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                    mounter_id = button.data("mounter_id"),
                    taken_sum = button.closest("tr").find('[name="taken"]')[0].textContent,
                    paid = button.closest('tr').find("[name='paid']"),
-                   oldval = paid[0].textContent;
+                   rest = button.closest('tr').find("[name='rest']"),
+                   oldval = paid[0].textContent,
+                   restOld = button.closest("tr").find('[name="rest"]')[0].textContent ;
                if(paid_sum>0){
                    paid_sum = -paid_sum;
                }
@@ -817,26 +839,23 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                        buttons:[
                            {
                                addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
-                                   savePay(mounter_id, paid_sum, paid, oldval);
+                                   savePay(mounter_id, paid_sum, paid, oldval,rest,restOld);
+                                   button.closest("td").find('[name="pay_sum"]').val("");
                                    $noty.close();
-                                   /*jQuery("#mv_container").show();
-                                   jQuery("#mounters_salary").show("slow");
-                                   jQuery("#close").show();*/
                                }
                            },
                            {
                                addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
                                    $noty.close();
-                                   /*jQuery("#mv_container").show();
-                                   jQuery("#mounters_salary").show("slow");
-                                   jQuery("#close").show();*/
+
                                }
                            }
                        ]
                    })
                }
                else{
-                   savePay(mounter_id, paid_sum, paid, oldval);
+                   savePay(mounter_id, paid_sum, paid, oldval,rest,restOld);
+                   button.closest("td").find('[name="pay_sum"]').val("");
                }
             return false;
             });
