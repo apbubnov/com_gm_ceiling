@@ -472,4 +472,75 @@ function addNote() {
 
 jQuery("#duplicate_calcs").click(function () {
     jQuery("#duplicate_tr").toggle();
-})
+});
+
+jQuery(".btn_duplicate").click(function(){
+    if(!jQuery(this).data("need_new")){
+        duplicate(0);
+    }
+    else{
+        duplicate(1);
+    }
+});
+
+function duplicate(need_new){
+    var checkboxes = jQuery(".inp-cbx.dup:checked"),
+        selected_calcs = [];
+    jQuery.each(checkboxes,function(index,elem){
+        selected_calcs.push(jQuery(elem).data("calc_id"));
+    });
+    if(selected_calcs.length){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=calculations.duplicate",
+            data: {
+                project_id: project_id,
+                calcs: selected_calcs,
+                need_new: need_new
+            },
+            success: function(data) {
+                if(!need_new){
+                    location.reload();
+                }
+                else{
+                    console.log(data);
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: false,
+                        type: "info",
+                        text: "Перейти в новый проект?",
+                        buttons:[
+                            {
+                                addClass: 'btn btn-primary', text: 'Перейти', onClick: function ($noty) {
+                                    var href = window.location.href.split('?')[1];
+                                    var params = new URLSearchParams(href);
+                                    params.set('id',data);
+                                    window.location = '/index.php?'+params;
+                                }
+                            },
+                            {
+                                addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                                    $noty.close();
+                                }
+                            }
+                        ]
+                    })
+                }
+            },
+            dataType: "json",
+            timeout: 10000,
+            error: function(data) {
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при дублтровании!"
+                });
+            }
+        });
+    }
+
+}

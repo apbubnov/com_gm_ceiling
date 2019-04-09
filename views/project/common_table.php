@@ -358,11 +358,11 @@
                                         </div>
                                 <?php } ?>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-primary btn_duplicate">Дублировать в текущий проект</button>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary btn_duplicate" type = "button" data-need_new = "false">Дублировать в<br> текущий проект</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-primary btn_duplicate">Дублировать в новый проект</button>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary btn_duplicate" type="button" data-need_new = "true">Дублировать в<br> новый проект</button>
                                     </div>
                                 </div>
                             </td>
