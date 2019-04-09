@@ -146,9 +146,16 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
 
             for (var j = 0, td, val, sum,mounter,n7_val,n7_cost; j < elem.projects.length; j++) {
                 var colIndex = (elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
-                console.log()
-                html +='<div class="col-md-'+colIndex+' center cell" data-proj_id = "'+elem.projects[j].id+'">';
-                var mountersArr = [];
+                var style;
+                jQuery.each(elem.projects[j].calcs,function(index,elem){
+                   if(elem.mounters && elem.mounters[0].id == user_id){
+                       style = 'style = "background:linear-gradient(135deg, white, #414099 125%);"';
+                   }
+                   else{
+                       style = "";
+                   }
+                });
+                html +='<div class="col-md-'+colIndex+' center cell" '+style+' data-proj_id = "'+elem.projects[j].id+'" >';
                 val = parseFloat(elem.projects[j].value);
                 sum = parseFloat(elem.projects[j].sum);
                 if(temp_sums[elem.name]) {
@@ -217,7 +224,6 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
 
             jQuery('.calc_tr').click(function () {
                 var checkbox = jQuery(this).find('.inp-cbx'),value;
-                alert(checkbox.attr("disabled"));
                 if(!checkbox.attr("disabled")) {
                     if (checkbox.attr("checked")) {
                         value = false;
@@ -227,6 +233,9 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
                     }
                     checkbox.attr("checked", value);
                     jQuery('#select_all').attr("checked", false);
+                }
+                else{
+                    alert("Выбрано другой бригадой!")
                 }
             });
 
