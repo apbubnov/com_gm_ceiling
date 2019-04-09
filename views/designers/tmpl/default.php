@@ -17,6 +17,12 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
 $labels = $clients_model->getClientsLabels($user->dealer_id);
 ?>
 
+<style type="text/css">
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 0.5em;
+    }
+</style>
     <div class="row">
         <div class="col-md-4 col-xs-6">
             <a class="btn btn-primary"
