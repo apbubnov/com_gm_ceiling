@@ -768,14 +768,14 @@ if (empty($list['direction']))
         }
     }
 
-    public function saveClientLabel($client_id, $label_id, $dealer_id) {
+    public function saveClientLabel($client_id, $label_id) {
     	try {
 	        $db    = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
 	            ->update('`#__gm_ceiling_clients`')
 	            ->set("`label_id` = $label_id")
-	            ->where("`dealer_id` = $dealer_id AND `id` = $client_id");
+	            ->where("`id` = $client_id");
 	        $db->setQuery($query);
 	        $db->execute();
 

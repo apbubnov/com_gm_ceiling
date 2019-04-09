@@ -155,7 +155,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             </tr>
 
         </table>
-        <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
+        <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_history.php'); ?>
     </div>
 
 </div>
@@ -1126,17 +1126,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 tr ='<td>'+elem.title+'</td><td>';
                 if(mounters) {
                     mounters.forEach(function (el) {
-                        if(projectStatus < stage+25) {
-                            tr += '<div class="row">' +
-                                '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
-                                '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
-                                '</div>';
-                        }
-                        else{
-                            tr += '<div class="row">' +
-                                '<div class="col-md-12" name = "mounter_div">' + el.name + '</div>' +
-                                '</div>';
-                        }
+                        tr += '<div class="row">' +
+                            '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
+                            '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
+                            '</div>';
                     });
                 }
                 else{
@@ -1263,8 +1256,11 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 td = jQuery("#all_calcs_mounter");
                 allCallcsMount = true;
             }
-            console.log(calcId,calcsId,stage,mounterId);
-            jQuery.ajax({
+            if(project.status <= stage + 25)
+            {
+                alert("123123");
+            }
+            /*jQuery.ajax({
 
                 url: "index.php?option=com_gm_ceiling&task=Calcs_mounts.updateMounter",
                 data: {
@@ -1314,7 +1310,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         text: "Ошибка сервера"
                     });
                 }
-            });
+            });*/
 
         }
 
