@@ -38,6 +38,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    var client_id = '<?php echo $this->item->id;?>';
 	document.getElementById('btn_save_client_label').onclick = function() {
         var label_id = document.getElementById('select_client_label').value;
         if (empty(label_id)) {

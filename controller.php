@@ -284,11 +284,11 @@ class Gm_ceilingController extends JControllerLegacy
 
     public function findOldClients()
     {
-        try
-        {
+        try {
             $jinput = JFactory::getApplication()->input;
             $FIO = $jinput->get('fio', '', 'STRING');
             $flag = $jinput->get('flag', 'clients', 'STRING');
+            $label_id = $jinput->get('label_id', null, 'INT');
             $manager_id = $jinput->get('manager_id', null, 'INT');
             $city = $jinput->get('city', null, 'STRING');
             $dealer_price_sort = $jinput->get('dealer_price_sort', null, 'STRING');
@@ -304,7 +304,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
             elseif ($flag == 'designers')
             {
-                $result = $clients_model->getDesignersByClientName($FIO, 3);
+                $result = $clients_model->getDesignersByClientName($FIO, 3, $label_id);
             }
             elseif ($flag == 'designers2')
             {
@@ -365,13 +365,9 @@ class Gm_ceilingController extends JControllerLegacy
 
                 foreach ($result_temp as $value)
                     $result[] = $value;
-
             }
-
             die(json_encode($result));
-        }
-       catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

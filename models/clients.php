@@ -464,30 +464,32 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDesignersByClientName($client_name,$designer_type)
+	public function getDesignersByClientName($client_name, $designer_type, $label_id = null)
 	{
-		try
-		{
+		try {
 			$user = JFactory::getUser();
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
+			$label_filter = '';
+			if (!empty($label_id)) {
+				$label_filter = ' AND `label_id` = '.$label_id;
+			}
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_status`, `calls`.`id` AS `call_id`, `u`.`refused_to_cooperate`")
+				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_status`, `calls`.`id` AS `call_id`, `cl`.`color_code` AS `label_color_code`")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('(SELECT `id`,`client_id`,`project_status` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')
 				->leftJoin('`#__gm_ceiling_callback` AS `calls` ON `c`.`id` = `calls`.`client_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = $designer_type")
+				->leftJoin('`#__gm_ceiling_clients_labels` AS `cl` ON `c`.`label_id` = `cl`.`id`')
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = $designer_type $label_filter")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
