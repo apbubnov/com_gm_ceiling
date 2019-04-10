@@ -184,26 +184,44 @@
                 <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
+        
         <div class="row center">
             <h4>Добавить звонок <button class="btn btn-sm btn-primary" type="button" id="btn_open_callback"><i class="fa fa-angle-down" aria-hidden="true"></i></button></h4>
-            <div class="row center" id="callback_cont" style="display: none;">
+            <div class="row" id="callback_cont" style="display: none; border: 1px solid #414099; border-radius: 4px; padding: 4px;">
                 <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
                 <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
-                <label><b>Дата: </b></label><br>
-                <div id="calendar-wrapper" style="margin: 0px auto; width: 274px;"></div>
-                <script>
-                    new niceDatePicker({
-                        dom:document.getElementById('calendar-wrapper'),
-                        mode:'en',
-                        onClickDate:function(date){
-                            document.getElementById('create_call_date').value = date;
-                        }
-                    });
-                </script>
-                <p><label><b>Время: </b></label><br><input type="time" id="create_call_time"></p>
-                <input id="create_call_date" type="hidden">
-                <input id="create_call_comment" placeholder="Введите примечание">
-                <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                <div class="col-md-2 col-xs-0"></div>
+                <div class="col-md-4 col-xs-12" style="padding-left: 0px; padding-right: 0px;">
+                    <label><b>Дата: </b></label><br>
+                    <div id="calendar-wrapper" style="margin: 0px auto; width: 274px;"></div>
+                    <script>
+                        new niceDatePicker({
+                            dom:document.getElementById('calendar-wrapper'),
+                            mode:'en',
+                            onClickDate:function(date){
+                                document.getElementById('create_call_date').value = date;
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <label><b>Время:</b></label>
+                    <input type="time" class="form-control" id="create_call_time">
+                    <input type="hidden" id="create_call_date">
+                    <label><b>Примечание:</b></label>
+                    <input type="text" class="form-control" id="create_call_comment" placeholder="Введите примечание">
+                    <?php if (in_array('17', $user_group) || in_array('21', $user_group) || in_array('22', $user_group)) { ?>
+                        <label><b>Менеджер:</b></label>
+                        <select class="form-control" id="select_manager_for_call">
+                            <option value="0">Выберите менеджера</option>
+                            <?php foreach ($managers as $manager) { ?>
+                                <option value="<?= $manager->id; ?>"><?= $manager->name; ?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+                    <br>
+                    <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
+                </div>
             </div>
         </div>
 <!-- конец -->
@@ -430,8 +448,7 @@
     }
 
     jQuery("#new_add_call").click(function(){
-        if (jQuery("#create_call_date").val() == '')
-        {
+        if (jQuery("#create_call_date").val() == '') {
             var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -445,8 +462,7 @@
         var date = jQuery("#create_call_date").val().replace(/(-)([\d]+)/g, function(str,p1,p2) {
             if (p2.length === 1) {
                 return '-0'+p2;
-            }
-            else {
+            } else {
                 return str;
             }
         });
@@ -460,7 +476,8 @@
                 id_client: client_id,
                 date: date+' '+time,
                 comment: jQuery("#create_call_comment").val(),
-                old_call: '<?php echo $call_id;?>'
+                old_call: '<?php echo $call_id;?>',
+                manager_id: jQuery("#select_manager_for_call").val()
             },
             dataType: "json",
             async: true,
