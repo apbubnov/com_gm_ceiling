@@ -172,4 +172,21 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function updateSumMounter($mounterId,$newMounterId,$projectId,$calcTitle,$sum){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update("`rgzbn_gm_ceiling_mounters_salary` AS ms")
+                ->set("mounter_id = $newMounterId")
+                ->where("mounter_id = $mounterId and project_id = $projectId and sum = $sum and note like '%$calcTitle%'");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
