@@ -363,4 +363,21 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
         }
     }
 
+    function delete_img() {
+	    try {
+	        $jinput = JFactory::getApplication()->input;
+	        $path = $jinput->get('path', '0', 'string');
+	  		if (preg_match("/^[^a-z0-9\/]+$/i", $path)) {
+	  			throw new Exception('Invalid path!');
+	  		}
+
+	        $file = 'uploaded_calc_images/'.$path;
+	        $result = unlink($file);
+	        
+            die($result);
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
