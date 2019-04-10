@@ -664,4 +664,21 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getUsersByGroupsAndDealer($groups, $dealer_id) {
+	    try {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`, `u`.`name`, `u`.`email`')
+                ->from('`#__users` AS `u`')
+                ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+                ->where("`g`.`group_id` IN ($groups) and u.dealer_id = $dealer_id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
