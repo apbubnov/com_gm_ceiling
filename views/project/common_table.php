@@ -104,13 +104,22 @@
         object-fit: contain;
     }
     #modal_window_img {
+        width: 800px !important;
+        height: 600px !important;
+        margin: auto !important;
+    }
+    #modal_window_img {
         width: 360px !important;
         height: 400px !important;
         margin: auto !important;
     }
 
-
     @media screen and (min-width: 768px) {
+        #modal_window_img {
+            width: 800px !important;
+            height: 600px !important;
+            margin: auto !important;
+        }
         .center-left {
             text-align: left;
         }

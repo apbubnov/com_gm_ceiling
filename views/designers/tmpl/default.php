@@ -14,18 +14,54 @@ $userId     = $user->get('id');
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $result_clients = $clients_model->getDesignersByClientName('', 3);
+$labels = $clients_model->getClientsLabels($user->dealer_id);
 ?>
-    <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-       id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <h2 class="center">Отделочники</h2>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="new_designer" class="btn btn-primary">Создать отделочника</button>
+
+<style type="text/css">
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 0.5em;
+    }
+</style>
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <a class="btn btn-primary"
+           href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
+           id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+        </div>
+        <div class="col-md-8 col-xs-6">
+            <h2>Отделочники</h2>
+        </div>
     </div>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <input type="text" id="name_find_designer">
-        <button type="button" id="find_designer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <button type="button" id="new_designer" class="btn btn-primary">Создать отделочника</button>
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <select class="wide cust-select" id="select_label">
+                <option value="" selected>Ярлыки</option>
+                <?php foreach($labels as $label): ?>
+                    <option value="<?= $label->id; ?>"><?= $label->title; ?></option>
+                <?php endforeach;?>
+            </select>
+            <div class="nice-select wide" tabindex="0">
+                <span class="current">Ярлыки</span>
+                <ul class="list">
+                    <li class="option" data-value="" data-color="#ffffff" style="--rcolor:#ffffff" data-display="Ярлыки">Ярлыки</li>
+                    <?php foreach($labels as $label): ?>
+                        <li class="option" data-value="<?= $label->id; ?>" data-color="#<?= $label->color_code; ?>" style="--rcolor:#<?= $label->color_code; ?>"><?= $label->title; ?></li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+            <input type="text" id="name_find_designer" class="form-control">
+        </div>
+        <div class="col-md-1 col-xs-6" style="padding: 0px;">
+            <button type="button" id="find_designer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
     </div>
+    
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
@@ -43,21 +79,9 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
         </thead>
         <tbody id="tbody_designers">
         	<?php
-        		foreach ($result_clients as $key => $value)
-        		{
-                    if ($value->refused_to_cooperate == 0)
-                    {
-                        $color = '';
-                        if (is_null($value->call_id) && (is_null($value->project_status) || $value->project_status == 0 || $value->project_status == 2))
-                        {
-                            $color = 'style="background-color: DarkSalmon;"';
-                        }
-                        else
-                        {
-                            $color = 'style="background-color: PaleGreen;"';
-                        }
+        		foreach ($result_clients as $key => $value) {
         	?>
-                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->id); ?>">
+                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->id); ?>" style="outline: #<?= $value->label_color_code; ?> solid 2px">
     		            <td>
     		               <?php echo $value->client_name; ?>
     		            </td>
@@ -77,7 +101,6 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
     		            </td>
     		        </tr>
         	<?php
-                    }
         		}
         	?>
         </tbody>
@@ -95,12 +118,17 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
     </div>
 
 <script>
-    jQuery(document).ready(function()
-    {
+    jQuery(document).ready(function() {
+        jQuery('#select_label').niceSelect();
+        jQuery("#select_label").change(function() {
+            var color = (jQuery(".option.selected").data("color"));
+            jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+            show_clients();
+        });
+
         jQuery('#designer_contacts').mask('+7(999) 999-9999');
-        jQuery('body').on('click', 'tr', function(e)
-        {
-            if(jQuery(this).data('href')!=""){
+        jQuery('body').on('click', 'tr', function(e) {
+            if (jQuery(this).data('href') != '' && jQuery(this).data('href') != undefined){
                 document.location.href = jQuery(this).data('href');
             } 
         });
@@ -163,13 +191,16 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
             });
         });
 
-        jQuery("#find_designer").click(function(){
+        jQuery("#find_designer").click(show_clients);
+
+        function show_clients(){
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
                     fio: document.getElementById('name_find_designer').value,
-                    flag: 'designers'
+                    flag: 'designers',
+                    label_id: jQuery("#select_label").val()
                 },
                 success: function(data){
                     console.log(data);
@@ -177,22 +208,8 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                     tbody.innerHTML = '';
                     var html = '';
                     var color;
-                    for(var i in data)
-                    {
-                        color = '';
-                        if (data[i].refused_to_cooperate == 1)
-                        {
-                            color = 'style="background-color: DarkGrey;"';
-                        }
-                        else if (data[i].call_id == null && (data[i].project_status == null || data[i].project_status == 0 || data[i].project_status == 2))
-                        {
-                            color = 'style="background-color: DarkSalmon;"';
-                        }
-                        else
-                        {
-                            color = 'style="background-color: PaleGreen;"';
-                        }
-                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                    for(var i in data) {
+                        html += '<tr style="outline: #'+data[i].label_color_code+' solid 2px" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';
@@ -214,13 +231,13 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                     });
                 }                   
             });
-        });
+        }
 
-        jQuery.ajax({
+        /*jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=RepeatSendCommercialOffer",
             success: function(data){
-                console.log(data);
+                //console.log(data);
             },
             dataType: "text",
             async: false,
@@ -235,6 +252,6 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                     text: "Ошибка. Сервер не отвечает"
                 });
             }                   
-        });
+        });*/
     });
 </script>

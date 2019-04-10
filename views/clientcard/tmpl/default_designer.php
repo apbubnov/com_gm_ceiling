@@ -60,7 +60,9 @@
     </tr>
     
 </table>
-<?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
+<?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_history.php'); ?>
+<?php include_once('components/com_gm_ceiling/views/clientcard/labels.php'); ?>
+<hr>
 <?php
         $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
