@@ -2843,8 +2843,8 @@ public function register_mnfctr(){
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             // звонки
-            $date = date("Y")."-".date("n")."-".date("d");
-            $answer4 = $model->getDataByStatus("Zvonki", $date);
+            $date = date('Y-m-d');
+            $answer4 = $model->getDataByStatus('Zvonki', $date);
             die(json_encode($answer4));
         }
         catch (Exception $e) {
@@ -2856,7 +2856,7 @@ public function register_mnfctr(){
         try
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $date = date("Y")."-".date("n")."-".date("d");
+            $date = date('Y-m-d');
             // пропущенные
             $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
             $answer6 = $model->getDataByStatus("MissedCalls");
