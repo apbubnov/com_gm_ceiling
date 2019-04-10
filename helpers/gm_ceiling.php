@@ -1217,7 +1217,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $component_count[$items_3[0]->id] += $data['n12'] * 2;
             }
             if ($data['n12'] > 0) {
-                $component_count[$items_2[0]->id] += 2;
+                $component_count[$items_2[0]->id] += $data['n12']*2;
             }
             if ($del_flag == 1) {
                 $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -1292,7 +1292,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         $svet_count += $lamp[0];
                     }
-                    $component_count[$items_2[0]->id]++;
+                    $component_count[$items_2[0]->id]+=$svet_count;
                     if($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
                     }
@@ -1345,7 +1345,7 @@ class Gm_ceilingHelpersGm_ceiling
                         if ($component_count[66] < 0) $component_count[66] = 0;
                     }
                      $svet_count += $lamp->n13_count;
-                    $component_count[$items_2[0]->id]++;
+                    $component_count[$items_2[0]->id] += $svet_count;
                     if($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
                     }
