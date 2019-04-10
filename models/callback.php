@@ -27,10 +27,14 @@ class Gm_ceilingModelCallback extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query = 'SET lc_time_names = \'ru_RU\'';
+			$db->setQuery($query);
+			$db->execute();
 
+			$query = $db->getQuery(true);
 			$query->select('`a`.`id`,
 							`a`.`client_id`,
-							`a`.`date_time`,
+							DATE_FORMAT(`a`.`date_time`,\'%e %M %Y %H:%i\') AS `date_time`,
 							`a`.`comment`,
 							`c`.`client_name`,
 							`u`.`dealer_type`,
@@ -49,7 +53,7 @@ class Gm_ceilingModelCallback extends JModelList
 							WHERE	`project_status` = 3
 							GROUP BY	`client_id`) AS `p` ON `a`.`client_id` = `p`.`client_id`')
 				->leftJoin('`#__gm_ceiling_clients_labels` as `l` ON `c`.`label_id` = `l`.`id`')
-				->order('`date_time`');
+				->order('`a`.`date_time`');
 			if(!empty($filter)){
 			    $query->where($filter);
             }

@@ -905,27 +905,26 @@ public function register_mnfctr(){
 
     public function addCall()
     {
-        try
-        {
+        try {
             $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
             $jdate = new JDate($jinput->get('date', date('Y-m-d H:i:s'), 'STRING'));
             $id_client = $jinput->get('id_client', null, 'INT');
-            $manager_id = $user->id;
-            $comment = $jinput->get('comment', '', 'STRING');
-            $old_call = $jinput->get('old_call',null,'INT');
-            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            if(empty($old_call)) {
-                $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
+            $manager_id = $jinput->get('manager_id', 0, 'INT');
+            if (empty($manager_id)) {
+                $manager_id = $user->id;
             }
-            else{
+            $comment = $jinput->get('comment', '', 'STRING');
+            $old_call = $jinput->get('old_call', null, 'INT');
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            if (empty($old_call)) {
+                $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
+            } else {
                 $result = $callback_model->moveTime($old_call, $jdate, $comment);
             }
 
             die($result);
-        }
-       catch(Exception $e)
-        {
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -2844,8 +2843,8 @@ public function register_mnfctr(){
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             // звонки
-            $date = date("Y")."-".date("n")."-".date("d");
-            $answer4 = $model->getDataByStatus("Zvonki", $date);
+            $date = date('Y-m-d');
+            $answer4 = $model->getDataByStatus('Zvonki', $date);
             die(json_encode($answer4));
         }
         catch (Exception $e) {
@@ -2857,7 +2856,7 @@ public function register_mnfctr(){
         try
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $date = date("Y")."-".date("n")."-".date("d");
+            $date = date('Y-m-d');
             // пропущенные
             $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
             $answer6 = $model->getDataByStatus("MissedCalls");

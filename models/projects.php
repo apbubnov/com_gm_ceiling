@@ -697,7 +697,7 @@ class Gm_ceilingModelProjects extends JModelList
                                             $query->select('count(c.id) as count')
                                                 ->from('#__gm_ceiling_callback as c')
                                                 ->innerJoin('`#__users` as `u` ON `c`.`manager_id` = `u`.`id`')
-                                                ->where("date_time <= '$data 23:59:59' and (manager_id IN ('$userId', '$dealer_id') or `u`.`dealer_id` = $userId)");
+                                                ->where("date_time <= '$data 23:59:59' and (manager_id IN ($userId, $dealer_id) or `u`.`dealer_id` = $userId)");
                                         } else
                                             // менеджер (запущенные)
                                             if ($status == "Zapushennie") {
