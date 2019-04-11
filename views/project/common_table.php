@@ -113,8 +113,21 @@
         height: 400px !important;
         margin: auto !important;
     }
+    #btn_del_img {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 30px;
+        cursor: pointer;
+    }
+    #btn_close_img {
+        right: 0px;
+    }
 
     @media screen and (min-width: 768px) {
+        #btn_close_img {
+            right: 30px;
+        }
         #modal_window_img {
             width: 800px !important;
             height: 600px !important;
@@ -153,6 +166,7 @@
 
 <div class="modal_window_container" id="img_modal_container">
     <button type="button" class="close_btn" id="btn_close_img"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <button type="button" class="close_btn" id="btn_del_img"><i class="fa fa-trash" aria-hidden="true"></i> Удалить изображение</button>
     <div class="modal_window" id="modal_window_img" style="border: 2px solid black; border-radius: 4px;"></div>
 </div>
 
@@ -639,6 +653,7 @@
                                 <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
                                 <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" style="display: none;" multiple accept="image/*">
                                 <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                                <input type="hidden" id="input_delete_uploaded_calc_img">
                                 <div class="row div_imgs">
                                     <?php
                                         $dir = 'uploaded_calc_images/'.$calculation->id;
@@ -646,7 +661,7 @@
                                             $files = scandir($dir);
                                             foreach ($files as $value) {
                                                 if (strlen($value) === 32) {
-                                                    echo '<img src="'.$dir.'/'.$value.'" class="uploaded_calc_img">';
+                                                    echo '<img src="'.$dir.'/'.$value.'" data-path="'.$calculation->id.'/'.$value.'" class="uploaded_calc_img">';
                                                 }
                                             }
                                         }

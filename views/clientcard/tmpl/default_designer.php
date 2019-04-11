@@ -18,6 +18,9 @@
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
     $dealer = JFactory::getUser($client->dealer_id);
 
+    $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+    $gaugers = $users_model->getUsersByGroupsAndDealer('12, 17, 21, 22', $user->dealer_id);
+
     if ($dealer->associated_client != $this->item->id)
     {
         throw new Exception("this is not dealer", 403);
@@ -43,11 +46,11 @@
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 <table class = "actions">
-    <tr>
+<!--     <tr>
         <td>
             <button class="btn btn-primary" type="button" id="btn_refuse">Отказ от сотрудничества</button>
         </td>
-    </tr>
+    </tr> -->
     <tr>
         <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
@@ -232,10 +235,23 @@
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
     <div id="modal_window_call" class="modal_window">
-            <label>Добавить звонок</label><br>
-            <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
-            <input id="call_comment_m" placeholder="Введите примечание"><br>
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <div class="row">
+            <div class="col-md-4 col-xs-0"></div>
+            <div class="col-md-4 col-xs-12">
+                <label>Добавить звонок</label><br>
+                <input id="call_date_m" class="form-control" type="datetime-local" placeholder="Дата звонка"><br>
+                <input id="call_comment_m" class="form-control" placeholder="Введите примечание"><br>
+                <select id="select_call_manager" class="form-control">
+                    <option value="0">Выберите замерщика</option>
+                    <?php foreach ($gaugers as $gauger) { ?>
+                        <option value="<?= $gauger->id; ?>"><?= $gauger->name; ?></option>
+                    <?php } ?>
+                </select>
+                <span style="font-size: 8pt;">(если не указать замерщика, перезвон назначится на текущего пользователя)</span><br>
+                <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
+            </div>
+            <div class="col-md-4 col-xs-0"></div>
+        </div>
     </div>
     <div id="modal_window_select_number" class="modal_window">
         <p>Выберите номер для звонка:</p>
@@ -495,9 +511,8 @@
             });
         }
 
-        document.getElementById('btn_refuse').onclick = function()
+        /*document.getElementById('btn_refuse').onclick = function()
         {
-            var user_id = <?php echo $dealer->id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
                 data: {
@@ -528,7 +543,7 @@
                     });
                 }
             });
-        }
+        }*/
     });
 
 
@@ -614,7 +629,8 @@
             data: {
                 id_client: client_id,
                 date: jQuery("#call_date_m").val(),
-                comment: jQuery("#call_comment_m").val()
+                comment: jQuery("#call_comment_m").val(),
+                manager_id: jQuery("#select_call_manager").val()
             },
             dataType: "json",
             async: true,

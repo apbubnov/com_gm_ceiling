@@ -44,4 +44,7 @@ $answer1 = $model->getDataByStatus("GaugingsGraphNMS");
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=canvases', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайс полотен</a>
 	</p>
+	<p class="center">
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone" aria-hidden="true"></i> Перезвоны</a>
+	</p>
 </div>

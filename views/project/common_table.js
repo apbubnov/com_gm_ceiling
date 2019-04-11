@@ -600,15 +600,73 @@ jQuery('.img_file').change(function() {
 
 function clickUploadedCalcImg() {
     jQuery("#modal_window_img")[0].innerHTML = '<img src="'+this.src+'" class="big_uploaded_img">';
+    jQuery("#input_delete_uploaded_calc_img").val(this.getAttribute('data-path'));
     jQuery("#btn_close_img").show();
+    jQuery("#btn_del_img").show();
     jQuery("#img_modal_container").show();
     jQuery("#modal_window_img").show();
 }
+
+jQuery("#btn_del_img").click(function() {
+    noty({
+        theme: 'relax',
+        layout: 'center',
+        timeout: false,
+        type: "info",
+        text: "Удалить изображение?",
+        buttons:[
+            {
+                addClass: 'btn btn-primary', text: 'Да', onClick: function ($noty) {
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "index.php?option=com_gm_ceiling&task=calculation.delete_img",
+                        data: {
+                            path: jQuery("#input_delete_uploaded_calc_img").val()
+                        },
+                        success: function(data) {
+                            if (data) {
+                                location.reload();
+                            } else {
+                                noty({
+                                    theme: 'relax',
+                                    timeout: 2000,
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "warning",
+                                    text: "Изображение не удалено!"
+                                });
+                            }
+                        },
+                        dataType: "json",
+                        timeout: 20000,
+                        error: function(data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                timeout: 2000,
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка!"
+                            });
+                        }
+                    });
+                }
+            },
+            {
+                addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                    $noty.close();
+                }
+            }
+        ]
+    });
+});
 
 jQuery('.uploaded_calc_img').click(clickUploadedCalcImg);
 
 jQuery("#btn_close_img").click(function(){
     jQuery("#btn_close_img").hide();
+    jQuery("#btn_del_img").hide();
     jQuery("#img_modal_container").hide();
     jQuery("#modal_window_img").hide();
 });
