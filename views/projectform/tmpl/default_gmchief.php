@@ -57,7 +57,13 @@
     $calculations = $calculationsModel->new_getProjectItems($this->item->id);
     if(!empty($service_mount)){
         $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-}
+    }
+    if(!empty($this->item->calcs_mounting_sum)){
+        $dealer_moung_sum = json_decode($this->item->calcs_mounting_sum);
+        foreach ($dealer_moung_sum as $key=>$sum){
+            $total_dealer_mount +=$sum;
+        }
+    }
     foreach ($calculations as $calculation) {
         if (!empty($service_mount)) {
             $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);

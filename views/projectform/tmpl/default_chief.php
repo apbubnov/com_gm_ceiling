@@ -41,6 +41,9 @@ $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+if(!empty($service_mount)){
+    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
+}
 $self_calc_data = [];
 $self_canvases_sum = 0;
 $self_components_sum = 0;
