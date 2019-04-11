@@ -235,17 +235,23 @@
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
     <div id="modal_window_call" class="modal_window">
-            <label>Добавить звонок</label><br>
-            <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
-            <input id="call_comment_m" placeholder="Введите примечание"><br>
-            <select id="select_call_manager">
-                <option value="0">Выберите замерщика</option>
-                <?php foreach ($gaugers as $gauger) { ?>
-                    <option value="<?= $gauger->id; ?>"><?= $gauger->name; ?></option>
-                <?php } ?>
-            </select><br>
-            <span>(если не указать замерщика, перезвон назначится на текущего пользователя)</span><br>
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <div class="row">
+            <div class="col-md-4 col-xs-0"></div>
+            <div class="col-md-4 col-xs-12">
+                <label>Добавить звонок</label><br>
+                <input id="call_date_m" class="form-control" type="datetime-local" placeholder="Дата звонка"><br>
+                <input id="call_comment_m" class="form-control" placeholder="Введите примечание"><br>
+                <select id="select_call_manager" class="form-control">
+                    <option value="0">Выберите замерщика</option>
+                    <?php foreach ($gaugers as $gauger) { ?>
+                        <option value="<?= $gauger->id; ?>"><?= $gauger->name; ?></option>
+                    <?php } ?>
+                </select>
+                <span style="font-size: 8pt;">(если не указать замерщика, перезвон назначится на текущего пользователя)</span><br>
+                <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
+            </div>
+            <div class="col-md-4 col-xs-0"></div>
+        </div>
     </div>
     <div id="modal_window_select_number" class="modal_window">
         <p>Выберите номер для звонка:</p>
