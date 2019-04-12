@@ -388,7 +388,7 @@
                                 <td id="calcs_self_canvases_total"><span>П </span> <span class = "sum"><?php echo round($self_canvases_sum, 0) ?></span></td>
                                 <td id="calcs_self_components_total"><span>К </span><span data-oldval="<?php echo round($self_components_sum, 0) ?>" class="sum"><?php echo round($self_components_sum, 0) ?></span></td>
                                 <td id="calcs_self_mount_total">
-                                    <?php if(!$isNMS){ echo $self_sum_transport;?>
+                                    <?php if(!$isNMS){?>
                                     <span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
                                     <?php } else{?>
                                         <div class="row">

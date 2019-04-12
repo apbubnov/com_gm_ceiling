@@ -2002,13 +2002,14 @@ class Gm_ceilingHelpersGm_ceiling
             if($data['need_mount'] == 2){
                 $results = $mount_model->getDataAll(1);
                 array_walk($results, function(&$mp,$key){
-                    /*обагечивание и натяжка наценка 20%*/
+                    /*обагечивание и натяжка наценка 20%
                     if($key == "mp1" || $key == "mp31" || $key == "mp32" || $key == "mp47" ){
                         $mp += $mp*0.2;
                     }
-                    /*все остальное 30%*/
-                    if(mb_ereg('mp[\d]+',$key) && $key!="mp1" && $key!="mp31" && $key!="mp32" && $key!="mp47"){
-                        $mp += $mp*0.3;
+                    */
+                    /*все по 20%*/
+                    if(mb_ereg('mp[\d]+',$key)){
+                        $mp += $mp*0.2;
                     }
                 });
             }
@@ -5175,6 +5176,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $data->percentValue += ($data->dealerPrice->price + $data->dealerPrice->value) * 100 / $data->dealerPrice->price - 100;
             else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
                 $data->percentValue += $data->dealerPrice->value;
+
+            //throw new Exception(print_r($data,true));
             if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
             {
                 $data->dealerPrice->type = 0;
@@ -5190,6 +5193,7 @@ class Gm_ceilingHelpersGm_ceiling
             else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
             {
                 $data->dealerPrice->price = $PriceDB;
+                $data->dealerPrice->value = 0;
             }
             else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty))
             {
@@ -5251,6 +5255,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value;
             }
+
             $data->updatePrice = self::update_price($data->dealerPrice, $PriceDB);
             return $data;
         }
