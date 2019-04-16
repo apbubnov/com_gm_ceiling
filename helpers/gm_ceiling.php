@@ -352,6 +352,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'n38' => 'int', //ремонт потолка
                         'n39' => 'string',
                         'n40' => 'int',
+                        'n41' => 'int',
+                        'n42' => 'int',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -2000,18 +2002,18 @@ class Gm_ceilingHelpersGm_ceiling
 
             }
             if($data['need_mount'] == 2){
-                $results = $mount_model->getDataAll(1);
-                array_walk($results, function(&$mp,$key){
+                $results = $mount_model->getDataAll(0);
+                /*array_walk($results, function(&$mp,$key){
                     /*обагечивание и натяжка наценка 20%
                     if($key == "mp1" || $key == "mp31" || $key == "mp32" || $key == "mp47" ){
                         $mp += $mp*0.2;
                     }
                     */
-                    /*все по 20%*/
+                    /*все по 20%
                     if(mb_ereg('mp[\d]+',$key)){
                         $mp += $mp*0.2;
                     }
-                });
+                });*/
             }
             if($service == "serviceSelf"){
                 $results = $mount_model->getDataAll(1);
@@ -2132,6 +2134,29 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n22_1'] * $gm_mount->mp62,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp62,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n22_1'] * $results->mp62,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
+
+                if($data['n41'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Демонтаж потолка",                                                       //Название
+                        "quantity" => $data['n41'],                                                   //Кол-во
+                        "gm_salary" => $gm_mount->mp70,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>$data['n41'] * $gm_mount->mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp70,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>$data['n41'] * $results->mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>1
+                    );
+                }
+                if($data['n42'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Вытяжка(наклейка кольца)",                                                       //Название
+                        "quantity" => $data['n42'],                                                   //Кол-во
+                        "gm_salary" => $gm_mount->mp71,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>$data['n42'] * $gm_mount->mp71,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp71,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>$data['n42'] * $results->mp71,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>2
                     );
                 }
