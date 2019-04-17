@@ -108,6 +108,7 @@ JHtml::_('formbehavior.chosen', 'select');
     </tr>
 </table>
 <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_history.php'); ?>
+<?php include_once('components/com_gm_ceiling/views/clientcard/labels.php'); ?>
 <div style="width: 98%;">
     <div style="display: inline-block; width: 48%;">
     <div>

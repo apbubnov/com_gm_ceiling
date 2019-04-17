@@ -14,6 +14,9 @@ $userId     = $user->get('id');
 
 $comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
 $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+
+$labels = $clients_model->getClientsLabels($user->dealer_id);
 
 $server_name = $_SERVER['SERVER_NAME'];
 $session_data = (isset($_SESSION["dealers_$userId"])) ? json_encode($_SESSION["dealers_$userId"]) : json_encode(array());
@@ -29,59 +32,73 @@ unset($_SESSION["dealers_$userId"]);
 </style>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
-    <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-       id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-<div class="container">
-    <div class="row">
-        <h2 class="center">Дилеры</h2>
+<div class="row">
+    <div class="col-md-4">
+        <a class="btn btn-large btn-primary"
+           href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
+           id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     </div>
-    <div class="row">
-        <div class="col-md-3" align="left">
-            <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
-        </div>
-        <div class="col-md-3" align="left">
-            <a href="/index.php?option=com_gm_ceiling&view=dealers&type=refused" class="btn btn-primary">Отказавшиеся от сотрудничества</a>
-        </div>
-        <div class="col-md-3" align = "center" style="margin-bottom: 15px;">
-            <div class="col-md-4">
-                <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
-            </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
-            </div>
-            <div class="col-md-4">
-                 <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
-            </div>
-        </div>
-        <div class="col-md-3" align="right">
-            <input type="text" id="name_find_dealer">
-            <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+    <div class="col-md-5">
+        <h2>Дилеры</h2>
+    </div>
+    <div class="col-md-3">
+        <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <a href="/index.php?option=com_gm_ceiling&view=dealers&type=refused" class="btn btn-primary HelpMessage" title="Отказавшиеся от сотрудничества"><i class="fa fa-user-times" aria-hidden="true"></i></a>
+        <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
+        <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
+        <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
+    </div>
+    <div class="col-md-4">
+        <select class="wide cust-select" id="select_label">
+            <option value="" selected>Ярлыки</option>
+            <?php foreach($labels as $label): ?>
+                <option value="<?= $label->id; ?>"><?= $label->title; ?></option>
+            <?php endforeach;?>
+        </select>
+        <div class="nice-select wide" tabindex="0">
+            <span class="current">Ярлыки</span>
+            <ul class="list">
+                <li class="option" data-value="" data-color="#ffffff" style="--rcolor:#ffffff" data-display="Ярлыки">Ярлыки</li>
+                <?php foreach($labels as $label): ?>
+                    <li class="option" data-value="<?= $label->id; ?>" data-color="#<?= $label->color_code; ?>" style="--rcolor:#<?= $label->color_code; ?>"><?= $label->title; ?></li>
+                <?php endforeach;?>
+            </ul>
         </div>
     </div>
-    <div class="row" align="right" style="margin-bottom: 15px">
-        <div class="col-md-2">
+    <div class="col-md-3" style="padding-left: 0px;">
+        <input type="text" class="form-control" id="name_find_dealer">
+    </div>
+    <div class="col-md-1" style="padding: 0px;">
+        <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+    </div>
+</div>
+    
+<div class="container" style="margin: 10px auto;">
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-md-3">
             <label style="color: #414099;font-size: 14pt">Всего дилеров: <b><span id="dealers_count">0</span></b></label>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <h6><i class="fa fa-filter" aria-hidden="true"></i> Фильтры: </h6>
+        </div> -->
+        <div class="col-md-3">
+            <select class="form-control" id="filter_manager">
+                <option value="">Выберите менеджера</option>
+            </select>
         </div>
-        <div class="col-md-7">
-            <div class="col-md-4">
-                <select class="input-gm" id="filter_manager">
-                    <option value="">Выберите менеджера</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <select class="input-gm" id="filter_city">
-                    <option value="">Выберите город</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <select class="input-gm" id="filter_status">
-                    <option value="">Выберите статус</option>
-                </select>
-            </div>
+        <div class="col-md-3">
+            <select class="form-control" id="filter_city">
+                <option value="">Выберите город</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" id="filter_status">
+                <option value="">Выберите статус</option>
+            </select>
         </div>
     </div>
     <div class="row">
@@ -111,7 +128,7 @@ unset($_SESSION["dealers_$userId"]);
         </div>
     </div>
     <div class="row">
-        <table class="table one-touch-view" id="callbacksList">
+        <table class="table one-touch-view g_table" id="callbacksList">
             <thead>
                 <tr>
                     <th>
@@ -221,7 +238,7 @@ unset($_SESSION["dealers_$userId"]);
     function print_dealers(dealers_data)
     {
         console.log(dealers_data);
-        var html = '', color;
+        var html = '', color = '';
         var name_find_dealer = document.getElementById('name_find_dealer').value;
         var reg_name_find_dealer = new RegExp(name_find_dealer, "ig");
         var filter_manager = document.getElementById('filter_manager').value;
@@ -238,21 +255,21 @@ unset($_SESSION["dealers_$userId"]);
                 }
                 var groups = data_i.groups.split(",");
                 if(jQuery.inArray('27',groups)!= -1){
-                    color = 'style="outline: green solid 1px; margin-top:15px;"';
+                    color = 'outline: green solid 1px; margin-top:15px;"';
                 }
                 if(jQuery.inArray('28',groups)!= -1){
-                    color = 'style="outline: yellow solid 1px;margin-top:15px;"';
+                    color = 'outline: yellow solid 1px;margin-top:15px;"';
                 }
                 if(jQuery.inArray('29',groups)!= -1){
-                    color = 'style="outline: orange solid 1px; margin-top:15px;"';
+                    color = 'outline: orange solid 1px; margin-top:15px;"';
                 }
                 if(jQuery.inArray('30',groups)!= -1){
-                    color = "style=\"outline: red solid 1px; margin-top:15px;\"";
+                    color = "outline: red solid 1px; margin-top:15px;";
                 }
                 if(jQuery.inArray('31',groups)!= -1){
-                    color = "style=\"outline: #414099 solid 1px; margin-top:15px;\"";
+                    color = "outline: #414099 solid 1px; margin-top:15px;";
                 }
-                html += '<tr ' + color + 'data-id = "'+data_i.id+'" data-dealer_id = "'+data_i.dealer_id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
+                html += '<tr style="'+color+' background: #'+data_i.color_code+'55;" data-id = "'+data_i.id+'" data-dealer_id = "'+data_i.dealer_id+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
                 html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
                 html += '<td>' + data_i.client_name + '</td>';
                 html += '<td>' + data_i.rest + ' руб.</td>';
@@ -325,7 +342,8 @@ unset($_SESSION["dealers_$userId"]);
                filter_status: status,
                limit : limit,
                select_size :select_size,
-               client: client
+               client: client,
+               label_id: jQuery("#select_label").val()
             },
             beforeSend: function() {
                 inProgress = true;
@@ -361,6 +379,15 @@ unset($_SESSION["dealers_$userId"]);
     }
     jQuery(document).ready(function()
     {
+        jQuery('#select_label').niceSelect();
+        jQuery("#select_label").change(function() {
+            var color = (jQuery(".option.selected").data("color"));
+            jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+            tbody_dealers.innerHTML = '';
+            limit = 0;
+            getDealers();
+        });
+
         var dealer_to_find;
         getDataForSelects('users.getUserByGroup',{group:16},managers);
         getDataForSelects('dealer.select_dealers_city',{},cities);

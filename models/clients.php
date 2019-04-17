@@ -400,12 +400,16 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop){
+	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop, $label_id){
 		try{
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
 			$manager_query = $db->getQuery(true);
+			$label_filter = '';
+			if (!empty($label_id)) {
+				$label_filter = " AND `c`.`label_id` = $label_id";
+			}
 
 			$manager_query
 				->select('`name`')
@@ -413,7 +417,7 @@ if (empty($list['direction']))
 				->where('id = c.manager_id');
 
             $query
-				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
+				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`, `lbs`.`color_code`")
                 ->select("IFNULL(ROUND(SUM( DISTINCT `rmp`.`sum`),2),0) AS `rest`")
 				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
@@ -424,7 +428,8 @@ if (empty($list['direction']))
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
                 ->leftJoin("`#__gm_ceiling_recoil_map_project` AS `rmp` ON `rmp`.`recoil_id` = `u`.`id`")
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop");
+                ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` on `c`.`label_id` = `lbs`.`id`')
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop  $label_filter");
             if((!empty($limit) || $limit == 0)&&!empty($select_size)){
                 $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
             }
