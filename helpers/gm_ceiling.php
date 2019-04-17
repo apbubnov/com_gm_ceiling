@@ -352,6 +352,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'n38' => 'int', //ремонт потолка
                         'n39' => 'string',
                         'n40' => 'int',
+                        'n41' => 'int',
+                        'n42' => 'int',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -2000,17 +2002,18 @@ class Gm_ceilingHelpersGm_ceiling
 
             }
             if($data['need_mount'] == 2){
-                $results = $mount_model->getDataAll(1);
-                array_walk($results, function(&$mp,$key){
-                    /*обагечивание и натяжка наценка 20%*/
+                $results = $mount_model->getDataAll(0);
+                /*array_walk($results, function(&$mp,$key){
+                    /*обагечивание и натяжка наценка 20%
                     if($key == "mp1" || $key == "mp31" || $key == "mp32" || $key == "mp47" ){
                         $mp += $mp*0.2;
                     }
-                    /*все остальное 30%*/
-                    if(mb_ereg('mp[\d]+',$key) && $key!="mp1" && $key!="mp31" && $key!="mp32" && $key!="mp47"){
-                        $mp += $mp*0.3;
+                    */
+                    /*все по 20%
+                    if(mb_ereg('mp[\d]+',$key)){
+                        $mp += $mp*0.2;
                     }
-                });
+                });*/
             }
             if($service == "serviceSelf"){
                 $results = $mount_model->getDataAll(1);
@@ -2131,6 +2134,29 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n22_1'] * $gm_mount->mp62,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp62,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n22_1'] * $results->mp62,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>2
+                    );
+                }
+
+                if($data['n41'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Демонтаж потолка",                                                       //Название
+                        "quantity" => $data['n41'],                                                   //Кол-во
+                        "gm_salary" => $gm_mount->mp70,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>$data['n41'] * $gm_mount->mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp70,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>$data['n41'] * $results->mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=>1
+                    );
+                }
+                if($data['n42'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Вытяжка(наклейка кольца)",                                                       //Название
+                        "quantity" => $data['n42'],                                                   //Кол-во
+                        "gm_salary" => $gm_mount->mp71,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>$data['n42'] * $gm_mount->mp71,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp71,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>$data['n42'] * $results->mp71,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>2
                     );
                 }
@@ -3915,10 +3941,52 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             if (!empty($project_id))
             {
+                $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
+                $calculations_model = self::getModel('calculations');
+                $calculations = $calculations_model->new_getProjectItems($project_id);
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Название</th>
+                                <th class="center">Площадь, м<sup>2</sup>.</th>
+                                <th class="center">Периметр, м </th>
+                                <th class="center">Углы,шт </th>
+                                <th class="center">Стоимость, руб.</th>';
+
+                foreach ($calculations as $calc) {
+                    if(!empty($calc->n3)) {
+                        $canvases_data = self::calculate_canvases($calc->id);
+                        $offcut_square_data = self::calculate_offcut($calc->id);
+                    }
+                    $guild_data = self::calculate_guild_jobs($calc->id);
+                    $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . $calc->n9 . '</td>';
+                    $html .= '<td class="center">' . $price_itog . '</td>';
+                    $html .= '</tr>';
+                    $n4_sum += $calc->n4;
+                    $n5_sum += $calc->n5;
+                    $n9_sum += $calc->n9;
+                    $sum += $price_itog;
+                }
+                $html .= '<tr><th class="right"><b>Итого, руб:</b></th>';
+                $html .= '<th class="center"><b>' . $n4_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $n5_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $n9_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $sum . '</b></th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p>';
+
+                $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($sum, 2) . ' руб.</div>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($project_id . "common_manager") . ".pdf";
                 $model = self::getModel("project");
                 $calculations_id = $model->getCalculationIdById($project_id);
                 $array_files = [];
+                array_push($array_files,$html);
                 foreach ($calculations_id as $item)
                     $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "manager") . ".pdf";
                 self::save_pdf($array_files, $filename, "A4");
@@ -5175,6 +5243,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $data->percentValue += ($data->dealerPrice->price + $data->dealerPrice->value) * 100 / $data->dealerPrice->price - 100;
             else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
                 $data->percentValue += $data->dealerPrice->value;
+
+            //throw new Exception(print_r($data,true));
             if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
             {
                 $data->dealerPrice->type = 0;
@@ -5190,6 +5260,7 @@ class Gm_ceilingHelpersGm_ceiling
             else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
             {
                 $data->dealerPrice->price = $PriceDB;
+                $data->dealerPrice->value = 0;
             }
             else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty))
             {
@@ -5251,6 +5322,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value;
             }
+
             $data->updatePrice = self::update_price($data->dealerPrice, $PriceDB);
             return $data;
         }

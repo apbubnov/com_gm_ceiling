@@ -58,6 +58,8 @@ const help_block_n37 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n38 = '<span class="airhelp">В расчет входит монтажная работа "ремонт полотна". Считается по метрам.</span>';
 
+const help_block_n41 = '<span class="airhelp">В расчет входит монтажная работа "демонтаж полотна".</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -90,6 +92,7 @@ let arr_blocks = [
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
+            {block_id:"block_n41",btn_cont_id:"btn_cont_n41",prev_id:"block_basic_work",btn_id:"btn_n41",btn_text:"Демонтаж потолка",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
             {block_id:"block_remove_n28",btn_cont_id:"btn_cont_remove_n28",prev_id:"block_basic_work",btn_id:"btn_remove_n28",btn_text:"Демонтаж профиля",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
             {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
             {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_basic_work",btn_id:"btn_n14",btn_text:"Трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
@@ -117,6 +120,7 @@ let arr_blocks = [
             {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
             {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_oter_mount_cptn",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
             {block_id:"block_n22_1",btn_cont_id:"btn_cont_n22",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
+            {block_id:"block_n42",btn_cont_id:"btn_cont_n22",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_oter_mount_cptn",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33",btn_cont_id:"btn_cont_n33",prev_id:"block_oter_mount_cptn",btn_id:"btn_n33",btn_text:"Люк",need_ajax : 0,kind_btn:"0", img: "luke.png", parent: "oter_mount_cptn"},
             {block_id:"block_n33_2",btn_cont_id:"btn_cont_n33",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
@@ -166,6 +170,14 @@ let n6_src = {
         {id:'jform_n6',value:314,text:"Белая вставка"},
     ]
 };
+let n41_src = {
+    name : 'jform[n41]',
+    values : [
+        {id:'jform_n41_0',value:0,text:"Не нужен",selected:true},
+        {id:'jform_n41_1',value:1,text:"Нужен"},
+    ]
+};
+let n41=  create_radios_group(n41_src);
 let remove_n28 = create_single_input(1,"jform_remove_n28","jform[remove_n28]","Введите кол-во старого профиля,м.:","Кол-во,м.","tel");
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
@@ -331,6 +343,8 @@ let n22_src = {
 let n22 =  create_block_with_divs(n22_src);
 n22 += '<h4>Пластиковый короб(монтаж)</h4>';
 n22+= create_single_input(1,"jform_n22_1","jform[n22_1]"," Пластиковый короб,м.","м.","tel");
+n22 += '<h4>Наклейка кольца</h4>';
+n22+= create_single_input(1,"jform_n42","jform[n42]"," Кол-во колец,шт.","шт.","tel");
 let n23_src = {
     id : 'jform_n23',
     name : 'jform[n23]',
@@ -790,6 +804,7 @@ function open_blocks(props){
                 break;
             case 'n22':
             case 'n22_1':
+            case 'n42':
                 jQuery('#btn_n22').trigger("click")
                 break;
             case 'n34_2':
@@ -865,6 +880,7 @@ function fill_calc_data(){
                         jQuery("#jform_scaffolding").attr("checked","checked");
                         jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
                     break;
+                case 'n41':
                 case 'n28':
                 case 'height':
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);

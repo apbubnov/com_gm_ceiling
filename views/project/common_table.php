@@ -387,7 +387,20 @@
                             <tr style="background-color: rgba(0,0,0,0.05);">
                                 <td id="calcs_self_canvases_total"><span>П </span> <span class = "sum"><?php echo round($self_canvases_sum, 0) ?></span></td>
                                 <td id="calcs_self_components_total"><span>К </span><span data-oldval="<?php echo round($self_components_sum, 0) ?>" class="sum"><?php echo round($self_components_sum, 0) ?></span></td>
-                                <td id="calcs_self_mount_total"><span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span></td>
+                                <td id="calcs_self_mount_total">
+                                    <?php if(!$isNMS){?>
+                                    <span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
+                                    <?php } else{?>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <span>МС </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span>МД </span><span class = "sum"><?php echo round($total_dealer_mount+$self_sum_transport, 0); ?></span>
+                                            </div>
+                                        </div>
+                                    <?php }?>
+                                </td>
                                 <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                             </tr>
                         <?php } ?>

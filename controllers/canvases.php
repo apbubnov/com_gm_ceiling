@@ -236,6 +236,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             else {
                 $oldPrice = $model->getPrice($get);
                 $flag = 0;
+
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
                     $OldDealerPrice = (empty($OldDealerPrice))
@@ -244,7 +245,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $NewDealerData = $this->parse_price($price, $OldDealerPrice, $v->price);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
                     $UpdateDealerPrice = $NewDealerData->updatePrice;
-
+                    //throw new Exception(print_r($NewDealerPrice,true));
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $NewDealerPrice);
                     $PPrice = $model->MinPriceCanvas($v->id);
 

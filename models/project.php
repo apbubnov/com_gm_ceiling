@@ -1928,7 +1928,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
-    function saveNote($project_id, $note,$type) {
+    function saveNote($project_id, $note,$type = 1) {
     	try {
     		$user_id = JFactory::getUser()->id;
     		if (empty($project_id) && empty($user_id) && empty($note)) {
@@ -1940,7 +1940,10 @@ class Gm_ceilingModelProject extends JModelItem
 	        $query
 	            ->select('`id`,`note`')
                 ->from('`#__gm_ceiling_projects_notes`')
-	            ->where("`project_id` = $project_id AND `user_id` = $user_id and `type` = $type");
+                ->where("`project_id` = $project_id AND `user_id` = $user_id");
+            if(!empty($type)){
+                $query->where("`type` = $type");
+            }
 	        $db->setQuery($query);
 	        $dbNote = $db->loadObject();
             $query = $db->getQuery(true);

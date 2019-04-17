@@ -728,7 +728,7 @@ class Gm_ceilingModelCanvases extends JModelList
             $query->from("`#__canvases` as canvas")
                 ->join('LEFT', '`#__gm_ceiling_textures` AS texture ON texture.id = canvas.texture_id')
                 ->join('LEFT', '`#__gm_ceiling_colors` AS color ON color.id = canvas.color_id')
-                ->select("canvas.id as id, canvas.price as price");
+                ->select("distinct canvas.id as id, canvas.price as price");
 
             if (gettype($data) == "array")
                 $query->where("canvas.id in (" . implode(", ", $data) . ")");

@@ -423,8 +423,8 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                     <?php echo $calculation->calculation_title; ?>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="checkbox" data-calc_id = "<?php echo $calculation->id?>" id="<?php echo $calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
-                                    <label for="<?php echo $calculation->id?>" class="cbx">
+                                    <input type="checkbox" data-calc_id = "<?php echo $calculation->id?>" id="<?php echo "cid".$calculation->id?>" name = "runByCall" class="inp-cbx" style="display: none">
+                                    <label for="<?php echo "cid".$calculation->id?>" class="cbx">
                                         <span>
                                             <svg width="12px" height="10px" viewBox="0 0 12 10">
                                                 <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
@@ -1236,6 +1236,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             });
 
             jQuery('[name = "runByCall"]').change(function () {
+
                 var checkBox = this;
                 if(checkBox.checked){
                     jQuery('[name = "date_canvas_ready"]').filter(function () {
