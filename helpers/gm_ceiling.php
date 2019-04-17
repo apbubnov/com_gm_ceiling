@@ -3941,10 +3941,52 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             if (!empty($project_id))
             {
+                $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
+                $calculations_model = self::getModel('calculations');
+                $calculations = $calculations_model->new_getProjectItems($project_id);
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Название</th>
+                                <th class="center">Площадь, м<sup>2</sup>.</th>
+                                <th class="center">Периметр, м </th>
+                                <th class="center">Углы,шт </th>
+                                <th class="center">Стоимость, руб.</th>';
+
+                foreach ($calculations as $calc) {
+                    if(!empty($calc->n3)) {
+                        $canvases_data = self::calculate_canvases($calc->id);
+                        $offcut_square_data = self::calculate_offcut($calc->id);
+                    }
+                    $guild_data = self::calculate_guild_jobs($calc->id);
+                    $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . $calc->n9 . '</td>';
+                    $html .= '<td class="center">' . $price_itog . '</td>';
+                    $html .= '</tr>';
+                    $n4_sum += $calc->n4;
+                    $n5_sum += $calc->n5;
+                    $n9_sum += $calc->n9;
+                    $sum += $price_itog;
+                }
+                $html .= '<tr><th class="right"><b>Итого, руб:</b></th>';
+                $html .= '<th class="center"><b>' . $n4_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $n5_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $n9_sum . '</b></th></tr>';
+                $html .= '<th class="center"><b>' . $sum . '</b></th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p>';
+
+                $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($sum, 2) . ' руб.</div>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($project_id . "common_manager") . ".pdf";
                 $model = self::getModel("project");
                 $calculations_id = $model->getCalculationIdById($project_id);
                 $array_files = [];
+                array_push($array_files,$html);
                 foreach ($calculations_id as $item)
                     $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "manager") . ".pdf";
                 self::save_pdf($array_files, $filename, "A4");
