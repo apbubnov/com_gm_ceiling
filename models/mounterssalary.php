@@ -123,14 +123,14 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    function delete($mounterId,$projectId){
+    function delete($mounterId,$projectId,$stage){
         try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($mounterId) && !empty($projectId)){
                 $query
                     ->delete('`#__gm_ceiling_mounters_salary`')
-                    ->where("mounter_id = $mounterId and project_id = $projectId");
+                    ->where("mounter_id = $mounterId and project_id = $projectId and note like '%$stage%'");
                 $db->setQuery($query);
                 $db->execute();
                 return true;

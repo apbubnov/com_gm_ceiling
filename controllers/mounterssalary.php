@@ -15,6 +15,16 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $calcsMounts = $jinput->get('calcs',"","STRING");
             $projectId = $jinput->getInt('projectId');
             $stage = $jinput->get("stage","","STRING");
+            if($stage == 2){
+                $stageName = "Обагечивание";
+            }
+            elseif($stage == 3){
+                $stageName = "Натяжка";
+
+            }
+            elseif ($stage == 4){
+                $stageName = "Вставка";
+            }
             $floorName =  $jinput->get("floorName","","STRING");
             //модели
             $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
@@ -23,7 +33,7 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $calcsMounts = json_decode($calcsMounts);
             $stagesNames = $projectsMountsModel->get_mount_types();
             foreach ($calcsMounts as $calc) {
-                $model->delete($calc->mounter, $projectId);
+                $model->delete($calc->mounter, $projectId,$stageName);
             }
             foreach ($calcsMounts as $calc){
                 $note = $floorName." ".$calc->title." ".$stagesNames[$stage];

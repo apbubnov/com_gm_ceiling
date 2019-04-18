@@ -105,6 +105,8 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
                 if($need_new){
                     $project_data = get_object_vars($projectModel->new_getProjectItems($projectId));
                     unset($project_data['id']);
+                    $project_data['project_status'] = 0;
+                    $project_data['created'] = date('Y-m-d');
                     $projectFormModel = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
                     $projectId = $projectFormModel->save($project_data);
                 }

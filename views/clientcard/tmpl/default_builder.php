@@ -441,6 +441,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         <tr class="caption_table">
                             <td>Комната</td>
                             <td>Монтажники</td>
+                            <td>Сумма</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -1136,6 +1137,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     tr+=trAdd;
                 }
                 tr+='</td>';
+                tr +='<td>'+elem.sum+'</td>';
                 jQuery("#calcsMounters > tbody > tr:last").append(tr);
             });
         }

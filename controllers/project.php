@@ -786,18 +786,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
 					// Attempt to save the data.
 					if($activate_by_email == 0){
-						if($user->dealer_type!=2 && $project_verdict == 1) 
+                        $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                        $client = $clientModel->getClientById($data->id_client);
+                        $manager_id = (!empty($client->manaer_id)) ? $client->manaer_id : (!empty($data->read_by_manager)) ? $data->read_by_manager : $cleint->dealer_id;
+                        if($user->dealer_type!=2 && $project_verdict == 1)
 						{
-							if(empty($mount_data)){
+						    if(empty($mount_data)){
 								//$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
 								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING');
 								$call_datetime = (!empty($call_mount_date) && !empty($call_mount_time)) ? $call_mount_date.' '.$call_mount_time : date('Y-m-d hh:ii:ss');
-								if(!empty($data->read_by_manager)){
-									$callback_model->save($call_datetime,"Заключен договор без даты монтажа",$data->id_client,$data->read_by_manager);
-									$client_history_model->save($data->id_client,"Добавлен новый звонок");
-								}
+                                $callback_model->save($call_datetime,"Заключен договор без даты монтажа",$data->id_client,$manager_id);
+                                $client_history_model->save($data->id_client,"Добавлен новый звонок");
+
 							}
 							else{
 								if($project_status == 4){
@@ -811,14 +813,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
 									//$return = $model->activate($data, 5/*3*/);
 								}
-                                if(!empty($data->read_by_manager)){
-                                    foreach ($mount_data as $value) {
-                                        $c_date = date_create($value->time);
-                                        date_sub($c_date, date_interval_create_from_date_string('1 day'));
-                                        $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$data->read_by_manager);
-                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
-                                    }
+
+                                foreach ($mount_data as $value) {
+                                    $c_date = date_create($value->time);
+                                    date_sub($c_date, date_interval_create_from_date_string('1 day'));
+                                    $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$manager_id);
+                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
                                 }
+
                                 $projects_mounts_model->save($project_id,$mount_data);
                                 $service_data = $this->check_mount_for_service($mount_data);
                                 $send_data['project_id'] = $project_id;
@@ -848,11 +850,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						{
 						    $ref_note = $jinput->get("ref_note","Отсутсвует","STRING");
 							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание : ".$ref_note);
-							if(!empty($data->read_by_manager)){
-								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание  :".$ref_note);
-							}
-                            
+                            $callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$manager_id);
+                            $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание  :".$ref_note);
 						}
                         $return = $model->activate($data, $project_status);
 					}
