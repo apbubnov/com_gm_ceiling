@@ -303,9 +303,10 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$limit = $jinput->get("limit",null,"INT");
 			$select_size = $jinput->get("select_size",null,"STRING");
 			$client_name = $jinput->get("client","","STRING");
+			$label_id = $jinput->get("label_id",null,"int");
 			$coop = $jinput->get('coop',0,'INT');
 			$model =  Gm_ceilingHelpersGm_ceiling::getModel('clients');
-			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop);
+			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop, $label_id);
 			die(json_encode($result));
 		}
 		catch(Exception $e)
