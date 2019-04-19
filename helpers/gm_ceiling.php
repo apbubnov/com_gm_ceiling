@@ -1189,7 +1189,7 @@ class Gm_ceilingHelpersGm_ceiling
                 } else $component_count[$items_vstavka_bel[0]->id] += $data['n11'];
             }
             //внутренний вырез в цеху
-            if ($data['n31'] > 0) {
+            if ($data['n31'] > 0 && $data['n28']) {
                 if($data['need_metiz']) {
                     $component_count[$items_9[0]->id] += $data['n31'] * 10;
                     $component_count[$items_5[0]->id] += $data['n31'] * 10;

@@ -307,7 +307,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`project_status` BETWEEN 5 AND 15');
 
                     } elseif ($subtype == 'refused') {
-                        $query->where('`p`.`project_status` IN (2, 3)');
+                        $query->where("`p`.`project_status` IN (2, 3) and p.dealer_id = $user->dealer_id");
                     }
                     break;
 

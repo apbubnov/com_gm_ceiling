@@ -92,9 +92,9 @@ let arr_blocks = [
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
+            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
             {block_id:"block_n41",btn_cont_id:"btn_cont_n41",prev_id:"block_basic_work",btn_id:"btn_n41",btn_text:"Демонтаж потолка",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
             {block_id:"block_remove_n28",btn_cont_id:"btn_cont_remove_n28",prev_id:"block_basic_work",btn_id:"btn_remove_n28",btn_text:"Демонтаж профиля",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
-            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
             {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_basic_work",btn_id:"btn_n14",btn_text:"Трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
             {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_basic_work",btn_id:"btn_n16",btn_text:"Шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
         ]
