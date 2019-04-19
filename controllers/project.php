@@ -788,7 +788,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					if($activate_by_email == 0){
                         $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
                         $client = $clientModel->getClientById($data->id_client);
-                        $manager_id = (!empty($client->manaer_id)) ? $client->manaer_id : (!empty($data->read_by_manager)) ? $data->read_by_manager : $cleint->dealer_id;
+                        $manager_id =   $client->dealer_id;
+                        if(!empty($client->manager_id)){
+                            $manager_id = $client->manager_id;
+                        }
+                        else{
+                            if(!empty($data->read_by_manager)){
+                                $manager_id = $data->read_by_manager;
+                            }
+                        }
+
                         if($user->dealer_type!=2 && $project_verdict == 1)
 						{
 						    if(empty($mount_data)){

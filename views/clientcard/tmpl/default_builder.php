@@ -327,6 +327,12 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     <div class="col-md-12">
         <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
     </div>
+    <!--<div class="col-md-6">
+        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="recalc_salary" class="btn btn-primary">Пересчитать з\п бригадам</button>
+    </div>-->
 </div>
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -718,10 +724,10 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
                         jQuery("#salary > tbody > tr:last").append(
                             '<td class="click_tr">'+el.name+'</td>' +
-                            '<td class="click_tr" name ="taken">'+el.taken+'</td>' +
-                            '<td class="click_tr">'+el.closed+'</td>' +
-                            '<td class="click_tr" name ="paid">'+el.payed+'</td>' +
-                            '<td class="click_tr" name ="rest" >'+ (+el.closed + +el.payed)+'</td>' +
+                            '<td class="click_tr" name ="taken">'+(+el.taken).toFixed(2)+'</td>' +
+                            '<td class="click_tr">'+(+el.closed).toFixed(2)+'</td>' +
+                            '<td class="click_tr" name ="paid">'+(+el.payed).toFixed(2)+'</td>' +
+                            '<td class="click_tr" name ="rest" >'+ (+el.closed + +el.payed).toFixed(2)+'</td>' +
                             '<td><input class="input-gm" name ="pay_sum"><button name="save_pay" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
 
                         );
@@ -861,6 +867,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             return false;
             });
         });
+        /*jQuery("#recalc_salary").click(function () {
+
+        });*/
         jQuery("#cancel").click(function(){
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
@@ -1003,15 +1012,24 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
             reportTable.empty();
             var temp_sums = [];
             for(var i=0,elem;i<Object.keys(progressData).length;i++) {
+                var floor_sum = 0,
+                    floor_sq = 0;
                 reportTable.append('<tr/>');
                 elem = progressData[Object.keys(progressData)[i]];
                 jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
-                jQuery("#report_table > tbody > tr:last").append('<td>' + elem.name + '</td>');
+                jQuery("#report_table > tbody > tr:last").append(
+                    '<td>' +
+                        '<span>' + elem.name + '</span><br>'+
+                        '<span name="total_fl_sq"></span><br>'+
+                        '<span name="total_fl_sum"></span>'+
+                    '</td>');
 
                 for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
-                    var mountersArr = [];
+                    var mountersArr = [],
                     val = parseFloat(elem.projects[j].value);
                     sum = parseFloat(elem.projects[j].sum);
+                    floor_sq +=val;
+                    floor_sum += sum;
                     if(temp_sums[elem.name]) {
                         temp_sums[elem.name] += val;
                     }
@@ -1078,8 +1096,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         + mountersStr;
                     td+= acceptDoneBtn;
                     jQuery("#report_table > tbody > tr:last").append('<td '+style+'mounter_select data-id="' + elem.projects[j].id + '">' + td + '</td>');
+                    jQuery("#report_table > tbody > tr:last").find('[name="total_fl_sq"]')[0].innerHTML = value+(+floor_sq).toFixed(2);
+                    jQuery("#report_table > tbody > tr:last").find('[name="total_fl_sum"]')[0].innerHTML = 'Сумма:'+(+floor_sum).toFixed(2);
                 }
-
             }
             jQuery("[name='btn_mounters']").click(function (){
                 jQuery("#mv_container").show();
@@ -1336,8 +1355,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
                 calcs = project.calcs,
                 data=[],
-                mounterExist = true;
-
+                mounterExist = true,
+                refresh = (jQuery(elem).attr('name') == "refresh_btn") ? 1 : 0;
                 jQuery.each(calcs, function (index, elem) {
                     if (elem.mounters) {
                         data.push({id: elem.id, title: elem.title, mounter: elem.mounters[0].id, sum: elem.sum});
@@ -1357,7 +1376,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                         calcs: JSON.stringify(data),
                         projectId: projectId,
                         stage: stage,
-                        floorName: progressData[floorId].name
+                        floorName: progressData[floorId].name,
+                        refresh:refresh
                     },
                     dataType: "json",
                     async: false,

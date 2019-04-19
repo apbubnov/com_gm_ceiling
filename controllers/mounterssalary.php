@@ -15,6 +15,7 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $calcsMounts = $jinput->get('calcs',"","STRING");
             $projectId = $jinput->getInt('projectId');
             $stage = $jinput->get("stage","","STRING");
+            $refreshFlag = $jinput->getInt('refresh');
             if($stage == 2){
                 $stageName = "Обагечивание";
             }
@@ -41,7 +42,9 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             }
 
             $data['id'] = $projectId;
-            $data['project_status'] =  $stage + 25;
+            if(!$refreshFlag) {
+                $data['project_status'] = $stage + 25;
+            }
             $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $projectModel->save($data);
             die(json_encode(true));
