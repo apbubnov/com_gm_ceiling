@@ -2,7 +2,7 @@ function phone(login, pass)
 {
     MightyCallWebPhone.ApplyConfig({login: login, password: pass});
     MightyCallWebPhone.Phone.Init();
-    MightyCallWebPhone.Phone.Focus();
+    //MightyCallWebPhone.Phone.Focus();
     var api_phone_id;
     var pt,pf;
     function getAdvtByPhone(phone){

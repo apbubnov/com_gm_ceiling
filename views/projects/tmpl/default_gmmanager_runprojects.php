@@ -93,7 +93,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <td>
                         <?php if(!($dealer->dealer_type == 1 || $dealer->dealer_type == 0) || $user->dealer_id == $dealer->dealer_id):?>
                         <button class="btn btn-sm btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check"></i></button>
-                        <?endif;?>
                         <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.5);">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
                             </button>
@@ -106,6 +105,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 </p>
                             </div>
                         </div>
+                        <?endif;?>
                     </td>
                     <td class="center one-touch">
                         <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>

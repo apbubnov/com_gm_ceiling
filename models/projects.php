@@ -171,6 +171,8 @@ class Gm_ceilingModelProjects extends JModelList
                             ((SUM(`calcs`.`mounting_sum`) * 100) /
                                 (100 - `p`.`dealer_mounting_margin`)
                             ) AS `mounting_margin_sum`,
+                            MAX(`calcs`.`run_date`) AS `last_run_date`,
+                            MAX(`calcs`.`run_by_call`) AS `run_by_call`,
                             `p`.`gm_canvases_margin`,
                             `p`.`gm_components_margin`,
                             `p`.`gm_mounting_margin`,
@@ -250,6 +252,7 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmmanager':
+                    $start_date = date('Y-m-d H:i:s', strtotime(' - 1 month'));
                     $query->select('`p`.`project_status_history`');
                     if ($subtype == 'runprojects') {
                         $query->select('`p`.`transport`,
@@ -259,9 +262,14 @@ class Gm_ceilingModelProjects extends JModelList
                                         `p`.`project_sum`,
                                         `p`.`new_project_sum`,
                                         `p`.`new_material_sum`,
-                                        `p`.`project_mounting_date`
+                                        `p`.`project_mounting_date`,
+                                        `p`.`last_run_date`,
+                                        `p`.`run_by_call`
                                 ');
-                        $query->where('`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29)');
+                        $query->where("
+                            `p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29) AND
+                            (`p`.`run_by_call` = 1 OR `p`.`last_run_date` > '$start_date')
+                        ");
 
                     } elseif ($subtype == 'archive') {
                         $query->select('`p`.`new_project_sum`,
@@ -417,6 +425,7 @@ class Gm_ceilingModelProjects extends JModelList
             //     $query->order('a.calculation_date DESC');
 
             $query->order('`p`.`id` DESC');
+            
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
