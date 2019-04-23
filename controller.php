@@ -782,13 +782,14 @@ public function register_mnfctr(){
     {
         try
         {
+            $user = JFactory::getUser();
             $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
             $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', 1);
             $gm_components_margin = $info_model->getMargin('gm_components_margin', 1);
             $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', 1);
-            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', 1);
-            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', 1);
-            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', 1);
+            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $user->dealer_id);
+            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $user->dealer_id);
+            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $user->dealer_id);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
             $project_data['state'] = 1;
             $project_data['client_id'] = $client_id;

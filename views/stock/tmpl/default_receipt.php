@@ -75,7 +75,9 @@ $providers = $stock_model->getAllProviders();
     .Modal .Form.Provider {
         width: 640px;
     }
-
+    .Provider{
+        margin-right: 0;
+    }
     .Modal .Form .Area {
         display: inline-block;
         float: left;
@@ -447,6 +449,10 @@ $providers = $stock_model->getAllProviders();
         height: 30px;
         line-height: 30px;
         text-align: center;
+    }
+    .high_input{
+        height:38px;
+        vertical-align: middle;
     }
 </style>
 
@@ -836,20 +842,19 @@ $providers = $stock_model->getAllProviders();
     <button type="button" class="btn btn-primary Add Component" onclick="ShowModal(this)">
         <i class="fa fa-plus" aria-hidden="true"></i> Компонент
     </button>
-    <select class="input-gm" id="choose_provider" style="height:38px;vertical-align: middle;">
+    <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
+    <select class="input-gm high_input" id="choose_provider">
         <option>Выберите поставщика</option>
         <?php foreach ($providers as $provider){?>
             <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
         <?php }?>
     </select>
-    <div class="Stock Provider">
-        <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
-        <button type="button" class="ButtonStock iStock" onclick="OpenModalProvider(this)">
-            <i class="fa fa-user" aria-hidden="true"></i> Добавить поставщика
-        </button>
-    </div>
+
     <button type="submit" class="btn btn-primary Submit">
         <i class="fa fa-paper-plane" aria-hidden="true"></i> Отправить
+    </button>
+    <button type="button" class="ButtonStock  btn btn-primary high_input" style="float:right;" onclick="OpenModalProvider(this)">
+        <i class="fa fa-plus-square" aria-hidden="true"></i> Добавить поставщика
     </button>
 
     <table class="Elements">
@@ -1274,8 +1279,9 @@ $providers = $stock_model->getAllProviders();
     }
 
     function OpenModalProvider(e) {
-        e = $(e).closest(".Stock");
-        var input = e.find(".InputStock"),
+        //e = $(".Modal");
+        console.log(e);
+        var input = e.find(".Provider"),
             data = (input.val() == "") ? null : input.val();
         ShowModal(e, data);
     }
