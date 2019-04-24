@@ -354,6 +354,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n40' => 'int',
                         'n41' => 'int',
                         'n42' => 'int',
+                        'n43' => 'int',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -1897,6 +1898,18 @@ class Gm_ceilingHelpersGm_ceiling
                     "gm_salary_total" => $data['n36'] * $gm_mp35,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                     "dealer_salary" => $dealer_mp35,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                     "dealer_salary_total" => $data['n36'] * $dealer_mp35                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            if($data['n43'] > 0){
+                $gm_mp72 = margin($results->mp72, $margin['gm_canvases_margin']);
+                $dealer_mp72 = margin($gm_mp72, $margin['dealer_canvases_margin']);
+                $guild_data[] = array(
+                    "title" => "Переделка углов",                                                    //Название
+                    "quantity" => $data['n43'],                                                      //Кол-во
+                    "gm_salary" => $gm_mp72,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n43'] * $gm_mp72,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $dealer_mp72,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n43'] * $dealer_mp72                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
             if(!empty($data['n37'])){
@@ -5437,28 +5450,37 @@ class Gm_ceilingHelpersGm_ceiling
         if (in_array("13", $groups)) { //Менеджер дилера
             $result->title = "d_manager";
             $result->description = "Менеджер ";
-        } elseif (in_array("21", $groups)) {//Замерщик дилера
+        }
+        if (in_array("21", $groups)) {//Замерщик дилера
             $result->title = "d_calculator";
             $result->description = "Замерщик ";
-        } elseif (in_array("12", $groups)) { //Начальник МС дилера
+        }
+        if (in_array("12", $groups)) { //Начальник МС дилера
             $result->title = "d_chief";
             $result->description = "Начальник МС ";
-        } elseif (in_array("14", $groups)) { //Дилер
+        }
+        if (in_array("14", $groups)) { //Дилер
             $result->title = "dealer";
             $result->description = "Дилер ";
-        } elseif (in_array("16", $groups)) { //Менеджер ГМ
+        }
+        if (in_array("16", $groups)) { //Менеджер ГМ
             $result->title = "gm_manager";
             $result->description = "Менеджер ГМ ";
-        } elseif (in_array("17", $groups)) { //Начальник МС ГМ
+        }
+        if (in_array("17", $groups)) { //Начальник МС ГМ
             $result->title = "gm_chief";
             $result->description = "Начальник МС ГМ ";
-        } elseif (in_array("22", $groups)) { //Замерщик ГМ
+
+        }
+        if (in_array("22", $groups)) { //Замерщик ГМ
             $result->title = "gm_calculator";
             $result->description = "Замерщик ГМ ";
-        } elseif (in_array("19", $groups)) { //Кладовщик ГМ
+        }
+        if (in_array("19", $groups)) { //Кладовщик ГМ
             $result->title = "gm_stockman";
             $result->description = "Кладовщик ГМ ";
-        } elseif (in_array("11", $groups)) { //монтажная бригада
+        }
+        if (in_array("11", $groups)) { //монтажная бригада
             $result->title = "mounter";
             $result->description = "Монтажная бригада ";
         }

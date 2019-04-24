@@ -1,5 +1,4 @@
 <?php
-<?php
 /**
  * @version    CVS: 1.0.0
  * @package    Com_Gm_ceiling
