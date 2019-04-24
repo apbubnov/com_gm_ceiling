@@ -608,7 +608,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             //Итоговая сумма компонентов
-            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 100 : 0;
+            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 200 : 0;
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
             $gm_components_sum = 0;
@@ -1769,7 +1769,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
             if(in_array('16',JFactory::getUser()->groups)) {
-                $min_sum = 100;//минимальная сумма заказа
+                $min_sum = 200;//минимальная сумма заказа
                 $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
                 if ($canvases_data['self_dealer_total'] + $guild_cost < $min_sum) {
                     $canvases_data['min_self_dealer_total'] = $min_sum;
