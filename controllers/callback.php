@@ -19,6 +19,10 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
         try {
             $user = JFactory::getUser();
             $dealerId = $user->dealer_id;
+            if($user->dealer_type == 8){
+                $dealerId = $user->id;
+            }
+
             $groups = $user->get('groups');
             $userId = $user->id;
             $filter = '';

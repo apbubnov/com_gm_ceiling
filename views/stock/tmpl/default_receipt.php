@@ -651,7 +651,7 @@ $providers = $stock_model->getAllProviders();
         </div>
         <div class="Line"></div>
     </form>
-    <form class="Form Provider" action="javascript:AddProvider();"
+    <form class="Form Provider"
           Page="index.php?option=com_gm_ceiling&task=stock.getCounterparty">
         <div class="Title">Введите данные поставщика:</div>
         <div class="Area Name">
@@ -808,7 +808,7 @@ $providers = $stock_model->getAllProviders();
             <div class="Message CloseContract">Дата окончания договора</div>
             <div class="Selects CloseContract"></div>
         </div>
-        <div class="Area Stock">
+        <!--<div class="Area Stock">
             <input type="text" class="Input Stock" name="Stock" id="Stock" placeholder="Введите склад:"
                    NameDB="stock.name"
                    onclick="GetList(this, ['Stock'], ['Stock']);"
@@ -817,7 +817,7 @@ $providers = $stock_model->getAllProviders();
                    autocomplete="off" required>
             <div class="Message Stock">Склад</div>
             <div class="Selects Stock"></div>
-        </div>
+        </div>-->
         <div class="Action">
             <button type="submit" class="Button Add Provider">
                 Добавить
@@ -849,11 +849,16 @@ $providers = $stock_model->getAllProviders();
             <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
         <?php }?>
     </select>
-
+    <select class="input-gm high_input" id="choose_stock">
+        <option>Выберите склад</option>
+        <?php foreach ($providers as $provider){?>
+            <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
+        <?php }?>
+    </select>
     <button type="submit" class="btn btn-primary Submit">
         <i class="fa fa-paper-plane" aria-hidden="true"></i> Отправить
     </button>
-    <button type="button" class="ButtonStock  btn btn-primary high_input" style="float:right;" onclick="OpenModalProvider(this)">
+    <button type="button" class="ButtonStock  btn btn-primary high_input Provider" style="float:right;" onclick="OpenModalProvider(this)">
         <i class="fa fa-plus-square" aria-hidden="true"></i> Добавить поставщика
     </button>
 
@@ -1116,7 +1121,10 @@ $providers = $stock_model->getAllProviders();
             var modal = null;
             if (e.hasClass("Canvas")) modal = Modal.canvas;
             else if (e.hasClass("Component")) modal = Modal.components;
-            else if (e.hasClass("Provider")) modal = Modal.provider;
+            else if (e.hasClass("Provider")){
+                modal = Modal.provider;
+                console.log(modal);
+            }
 
             if (modal !== null) {
                 modal.find(".Add").text("Добавить");
@@ -1199,7 +1207,7 @@ $providers = $stock_model->getAllProviders();
         filter.page = input.closest(".Form").attr("Page");
 
 
-        console.log(JSON.stringify(filter));
+        console.log(filter.page);
         if (input.is(":focus")) {
             jQuery.ajax({
                 type: 'POST',
@@ -1279,11 +1287,9 @@ $providers = $stock_model->getAllProviders();
     }
 
     function OpenModalProvider(e) {
-        //e = $(".Modal");
-        console.log(e);
-        var input = e.find(".Provider"),
-            data = (input.val() == "") ? null : input.val();
-        ShowModal(e, data);
+
+
+        ShowModal(e, null);
     }
 
     function ScrollInit() {

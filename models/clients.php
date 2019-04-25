@@ -158,6 +158,9 @@ if (empty($list['direction']))
 		try
 		{
 			$user = JFactory::getUser();
+			if($user->dealer_type == 8){
+			    $dealer_id = $user->id;
+            }
             if ($dealer_id == null) {
                 $dealer_id = $user->dealer_id;
             }

@@ -70,6 +70,10 @@ class Gm_ceilingController extends JControllerLegacy
                             $type = "chiefmainpage"; //Начальник МС дилера
                         } elseif (in_array("14", $groups)) {
                             $type = "dealermainpage"; //Дилер
+                            if($user->dealer_type == 8){
+                                $type = "partnermainpage"; //Дилер
+                            }
+
                         } elseif (in_array("16", $groups)) {
                             $type = "gmmanagermainpage"; //Менеджер ГМ
                         } elseif (in_array("17", $groups)) {
