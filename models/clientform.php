@@ -340,7 +340,9 @@ class Gm_ceilingModelClientForm extends JModelForm
 			$user  = JFactory::getUser();
 			
 			$groups = $user->get('groups');
-
+			if($user->dealer_type==8){
+			    $data['dealer_id'] = $user->id;
+            }
 			if(empty($data['dealer_id'])) {
 				if(isset($user->dealer_id)) {
 					$data['dealer_id'] = $user->dealer_id;

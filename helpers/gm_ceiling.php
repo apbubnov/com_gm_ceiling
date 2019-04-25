@@ -355,6 +355,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n41' => 'int',
                         'n42' => 'int',
                         'n43' => 'int',
+                        'n44' => 'string',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -2973,6 +2974,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary" => $results->mp17,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n24'] * $results->mp17,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                          "stage"=> 3
+                    );
+                }
+                if($data['n44'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Монтаж с пылесосом",                                                    //Название
+                        "quantity" => $data['n44'],                                                        //Кол-во
+                        "gm_salary" => $gm_mount->mp73,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n44'] * $gm_mount->mp73,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp73,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n44'] * $results->mp73,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=> 1
                     );
                 }
                 //Доп монтаж

@@ -62,6 +62,8 @@ const help_block_n41 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n43 = '<span class="airhelp">В расчет входит работа в цехе "Обработка угла".</span>';
 
+const help_block_n44 = '<span class="airhelp">В расчет входит работа  "Монтаж с пылесосом".</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -137,6 +139,7 @@ let arr_blocks = [
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n44",btn_cont_id:"btn_cont_n44",prev_id:"block_oter_mount_cptn",btn_id:"btn_n44",btn_text:"Монтаж с пылесосом",need_ajax : 0,kind_btn:"0", img: "cleaner.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
             reharp_block,
             angle_block,
@@ -424,6 +427,8 @@ let n35 = create_single_input(1,"jform_n35","jform[n35]","Контурный п�
 let n36 = create_single_input(1,"jform_n36","jform[n36]","Перегарпунка,м","Кол-во,м","tel");
 
 let n43 = create_single_input(1,"jform_n43","jform[n43]","Обработка углов,шт","Кол-во,шт","tel");
+
+let n44 = create_single_input(1,"jform_n44","jform[n44]","Пылесос,м","Кол-во,м","tel");
 
 let n37_src = {
     id : 'jform_n37',
