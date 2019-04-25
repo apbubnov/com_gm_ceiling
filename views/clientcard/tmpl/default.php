@@ -253,7 +253,12 @@
                             echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
                         }
                     } else {
-                        echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id);
+                        if($user->dealer_type == 8){
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
+                        }
+                        else{
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id);
+                        }
                     }
                 ?>
             ">
@@ -318,9 +323,7 @@
     </table>
     <div id="add-gauging-container-tar">
         <button type="button" id="add_new_project" class="btn btn-primary"><i class="fa fa-plus"></i> Заказ</button>
-        <button type="button" id="add_new_calc" class="btn btn-primary"><i class="fa fa-plus"></i> Просчет</button>
-
-
+        <button type="button" id="add_new_calc" class="btn btn-primary" <?php if($user->dealer_type == 8) echo "hidden";?>><i class="fa fa-plus"></i> Просчет</button>
     </div>
 </div>
 <!-- модальное окно -->
@@ -546,7 +549,7 @@
                 {
                     url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
-                <?php if($user->dealer_type == 1) {?>
+                <?php if($user->dealer_type == 1 || $user->dealer_type == 8) {?>
                 url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
                 <?php }?>
                 location.href =url;
