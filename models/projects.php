@@ -121,7 +121,12 @@ class Gm_ceilingModelProjects extends JModelList
             if(empty($dateTo)){
                 $dateTo = date('Y-m-d');
             }
-            $db = $this->getDbo();
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query = 'SET lc_time_names = \'ru_RU\'';
+            $db->setQuery($query);
+            $db->execute();
+
             $subquery = $db->getQuery(true);
             $subquery->select('`p`.`id`,
                             `p`.`created_by`,
@@ -150,7 +155,7 @@ class Gm_ceilingModelProjects extends JModelList
                             ) AS `mounting_time`,
                             `p`.`project_discount`,
                             `p`.`created`,
-                            `p`.`closed`,
+                            DATE_FORMAT(`p`.`closed`, \'%e %M %Y\') AS `closed`,
                             `p`.`paid`,
                             `p`.`project_sum`,
                             `p`.`new_project_sum`,
@@ -277,6 +282,7 @@ class Gm_ceilingModelProjects extends JModelList
                                         `p`.`closed`
                                 ');
                         $query->where('`p`.`project_status` = 12');
+                        $query->order('`p`.`closed` DESC');
 
                     } elseif ($subtype == 'refused') {
                         $query->where('`p`.`project_status` = 22');

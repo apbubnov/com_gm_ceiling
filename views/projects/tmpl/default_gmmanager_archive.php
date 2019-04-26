@@ -30,9 +30,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=archive'); ?>" method="post"
       name="adminForm" id="adminForm">
     <?php if (count($this->items) > 0): ?>
-        <div class="toolbar">
-            <?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-        </div>
 
         <table class="table table-striped one-touch-view" id="projectList">
             <thead>
@@ -41,22 +38,22 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                    
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                    Номер договора
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
+                    Статус
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Дата закрытия проекта', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+                    Дата закрытия проекта
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                    Адрес
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+                    Телефоны
                 </th>
                 <th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                    Клиент
                 </th>
                 <th class="center">
                     Дилер
@@ -74,7 +71,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
                     <?php if ($item->project_status == 12) { ?>
-                         <i class='fa fa-check' aria-hidden='true'></i> Выполнено
+                         <i class='fa fa-check' aria-hidden='true'></i>
                     <?php } ?>
                     </td>
                     <td class="center one-touch">
@@ -88,8 +85,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <?php if($item->closed == "0000-00-00" || empty($item->closed)) { ?>
                             -
                         <?php } else { ?>
-                            <?php $jdate = new JDate($item->closed); ?>
-                            <?php echo $jdate->format('d.m.Y'); ?>
+                            <?php echo $item->closed; ?>
                         <?php } ?>
                     </td>
                     <td class="center one-touch">
