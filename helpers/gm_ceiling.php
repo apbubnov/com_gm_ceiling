@@ -354,6 +354,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'n40' => 'int',
                         'n41' => 'int',
                         'n42' => 'int',
+                        'n43' => 'int',
+                        'n44' => 'string',
                         'niche' => 'int',
                         'height'=>'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
@@ -590,7 +592,12 @@ class Gm_ceilingHelpersGm_ceiling
                     //cчитаем полотно
                     $canvases_data = self::calculate_canvases(null, $data);
                     //считаем обрезки
-                    $offcut_square_data = self::calculate_offcut(null, $data);
+                    if($canvas->texture_id == 29){
+                        $data['need_cuts'] = 0;//если ткань не считаем образки
+                    }
+                    if($data['need_cuts']) {
+                        $offcut_square_data = self::calculate_offcut(null, $data);
+                    }
                 }
             }
            //считаем комплектующие
@@ -603,7 +610,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             //Итоговая сумма компонентов
-            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 100 : 0;
+            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 200 : 0;
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
             $gm_components_sum = 0;
@@ -622,10 +629,8 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return = array();
             $ajax_return['canv_arr'] = $canvases_data;
             $ajax_return['comp_arr'] = $components_data;
+            $ajax_return['offcut_arr'] = $data['need_cuts'];
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $data['guild_data']['total_dealer_guild'], 2);
-            if($ajax_return['total_sum'] < $min_sum){
-                $ajax_return['total_sum'] = $min_sum;
-            }
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
@@ -636,9 +641,14 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['mounting_arr'] = $mounting_data;
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
-            if($data['canvases_sum'] + $data['components_sum'] < $min_sum ){
+           /* if($data['canvases_sum'] + $data['components_sum'] < $min_sum ){
                 $data['canvases_sum'] = $min_sum;
                 $data['components_sum'] = 0;
+            }*/
+            if($canvases_data['min_self_dealer_total']){
+                $data['canvases_sum'] = $min_sum;
+                $data['components_sum'] = 0;
+                $ajax_return['total_sum'] = $min_sum;
             }
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
             $data['dealer_components_sum'] = $dealer_components_sum;
@@ -725,11 +735,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
             }
-            if(empty($offcut_square_data)){
-                 if(!empty($calc_id)){
-                    $offcut_square_data = self::calculate_offcut($calc_id);
-                }
-            }
+
             if(empty($components_data)){
                 $components_data = self::calculate_components($calc_id,null,0);
             }
@@ -744,10 +750,21 @@ class Gm_ceilingHelpersGm_ceiling
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
+            if(empty($offcut_square_data)){
+                if($data['need_cuts']) {
+                    if (!empty($calc_id)) {
+                        $offcut_square_data = self::calculate_offcut($calc_id);
+                    }
+                }
+            }
             $dealer = JFactory::getUser($data['dealer_id']);
             $dealer_components_sum = 0;
             foreach ($components_data as $component_item) {
                 $dealer_components_sum += $component_item['dealer_total'];
+            }
+            if($canvases_data['min_dealer_total']){
+                $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
+                $offcut_square_data['dealer_total'] = 0;
             }
             $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
             $total_with_gm_dealer_margin_guild = $mount_data['total_with_gm_dealer_margin_guild'];
@@ -1442,6 +1459,7 @@ class Gm_ceilingHelpersGm_ceiling
             //карниз
             if($data['n16'] == 0) {
                 $component_count[$items_1[0]->id] += $data['n27'];
+                $component_count[$items_14[0]->id] += $data['n27'];
                 if($data['need_metiz']){
                     $component_count[$items_3[0]->id] += $data['n27'] * 3;
                     $component_count[$items_5[0]->id] += $data['n27'] * 6;
@@ -1753,11 +1771,11 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
             if(in_array('16',JFactory::getUser()->groups)) {
-                $min_sum = 100;//минимальная сумма заказа
+                $min_sum = 200;//минимальная сумма заказа
                 $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
                 if ($canvases_data['self_dealer_total'] + $guild_cost < $min_sum) {
-                    $canvases_data['self_dealer_total'] = $min_sum;
-                    $canvases_data['dealer_total'] = margin($min_sum, $dealer_canvases_margin);
+                    $canvases_data['min_self_dealer_total'] = $min_sum;
+                    $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
                 }
             }
             return $canvases_data;
@@ -1790,11 +1808,8 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
             $canvas = $canvasData[0];
-            if($canvas->texture_id == 29){
-                $data['need_cuts'] = 0;//если ткань не считаем образки
-            }
             $offcut_square_data = array();
-            if ($canvas_id && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts'] == 1) {
+            if ($canvas_id && $data['offcut_square'] > $data['n4']*0.5) {
                 $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
                 $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
                 $offcut_square_data['self_price'] = round($canvas->price * 0.4, 2);                                    //Себестоимость
@@ -1884,6 +1899,18 @@ class Gm_ceilingHelpersGm_ceiling
                     "gm_salary_total" => $data['n36'] * $gm_mp35,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                     "dealer_salary" => $dealer_mp35,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                     "dealer_salary_total" => $data['n36'] * $dealer_mp35                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            if($data['n43'] > 0){
+                $gm_mp72 = margin($results->mp72, $margin['gm_canvases_margin']);
+                $dealer_mp72 = margin($gm_mp72, $margin['dealer_canvases_margin']);
+                $guild_data[] = array(
+                    "title" => "Переделка углов",                                                    //Название
+                    "quantity" => $data['n43'],                                                      //Кол-во
+                    "gm_salary" => $gm_mp72,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n43'] * $gm_mp72,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $dealer_mp72,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n43'] * $dealer_mp72                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
             if(!empty($data['n37'])){
@@ -2949,6 +2976,17 @@ class Gm_ceilingHelpersGm_ceiling
                          "stage"=> 3
                     );
                 }
+                if($data['n44'] > 0){
+                    $mounting_data[] = array(
+                        "title" => "Монтаж с пылесосом",                                                    //Название
+                        "quantity" => $data['n44'],                                                        //Кол-во
+                        "gm_salary" => $gm_mount->mp73,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n44'] * $gm_mount->mp73,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp73,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n44'] * $results->mp73,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage"=> 1
+                    );
+                }
                 //Доп монтаж
                 if ($data['dop_krepezh'] > 0) {
                     $mounting_data[] = array(
@@ -3097,8 +3135,8 @@ class Gm_ceilingHelpersGm_ceiling
                             $transport_sum_1 = 500  * $distance_col;
                         }
                         else {
-                            $transport_sum = ($res->distance * $distance + $res->transport) * $distance_col;
-                            $transport_sum_1 = ($res->distance * $distance + $res->transport) * $distance_col;
+                            $transport_sum = ($res->distance * $distance) * $distance_col;
+                            $transport_sum_1 = ($res->distance * $distance) * $distance_col;
                         }
                         $result = array(
                             'transport' => 'Выезд за город',
@@ -3818,7 +3856,9 @@ class Gm_ceilingHelpersGm_ceiling
                     $canvases_data = self::calculate_canvases($calc_id);
                 }
                 if (empty($offcut_square_data)) {
-                    $offcut_square_data = self::calculate_offcut($calc_id);
+                    if($data['need_cuts']) {
+                        $offcut_square_data = self::calculate_offcut($calc_id);
+                    }
                 }
             }
             if(empty($guild_data)){
@@ -3863,6 +3903,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .=' <th>Итого</th>';
             }
             $html .='</tr>';
+            if($canvases_data['min_self_dealer_total']){
+                $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
+            }
             if ($data['n3']) {
                 if ($data['color'] > 0) {
                     $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
@@ -3915,6 +3958,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td></td>';
                 $html .= '</tr>';
             }
+            if($canvases_data['min_self_dealer_total']) {
+                $offcut_square_data['self_dealer_total']  = 0;
+            }
             if($need_price == 1){
                 $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
                 $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
@@ -3957,7 +4003,13 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($calculations as $calc) {
                     if(!empty($calc->n3)) {
                         $canvases_data = self::calculate_canvases($calc->id);
-                        $offcut_square_data = self::calculate_offcut($calc->id);
+                        if($calc->need_cuts) {
+                            $offcut_square_data = self::calculate_offcut($calc->id);
+                        }
+                    }
+                    if($canvases_data['min_self_dealer_total']){
+                        $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
+                        $offcut_square_data['self_dealer_total'] = 0;
                     }
                     $guild_data = self::calculate_guild_jobs($calc->id);
                     $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
@@ -5410,28 +5462,37 @@ class Gm_ceilingHelpersGm_ceiling
         if (in_array("13", $groups)) { //Менеджер дилера
             $result->title = "d_manager";
             $result->description = "Менеджер ";
-        } elseif (in_array("21", $groups)) {//Замерщик дилера
+        }
+        if (in_array("21", $groups)) {//Замерщик дилера
             $result->title = "d_calculator";
             $result->description = "Замерщик ";
-        } elseif (in_array("12", $groups)) { //Начальник МС дилера
+        }
+        if (in_array("12", $groups)) { //Начальник МС дилера
             $result->title = "d_chief";
             $result->description = "Начальник МС ";
-        } elseif (in_array("14", $groups)) { //Дилер
+        }
+        if (in_array("14", $groups)) { //Дилер
             $result->title = "dealer";
             $result->description = "Дилер ";
-        } elseif (in_array("16", $groups)) { //Менеджер ГМ
+        }
+        if (in_array("16", $groups)) { //Менеджер ГМ
             $result->title = "gm_manager";
             $result->description = "Менеджер ГМ ";
-        } elseif (in_array("17", $groups)) { //Начальник МС ГМ
+        }
+        if (in_array("17", $groups)) { //Начальник МС ГМ
             $result->title = "gm_chief";
             $result->description = "Начальник МС ГМ ";
-        } elseif (in_array("22", $groups)) { //Замерщик ГМ
+
+        }
+        if (in_array("22", $groups)) { //Замерщик ГМ
             $result->title = "gm_calculator";
             $result->description = "Замерщик ГМ ";
-        } elseif (in_array("19", $groups)) { //Кладовщик ГМ
+        }
+        if (in_array("19", $groups)) { //Кладовщик ГМ
             $result->title = "gm_stockman";
             $result->description = "Кладовщик ГМ ";
-        } elseif (in_array("11", $groups)) { //монтажная бригада
+        }
+        if (in_array("11", $groups)) { //монтажная бригада
             $result->title = "mounter";
             $result->description = "Монтажная бригада ";
         }

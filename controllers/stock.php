@@ -343,9 +343,9 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             if ($filter != null) {
                 $model = $this->getModel('Counterparty', 'Gm_ceilingModel');
                 $result = $model->getCounterparty($filter);
-                echo json_encode($result);
+                die(json_encode($result));
             }
-            die(true);
+
         } catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

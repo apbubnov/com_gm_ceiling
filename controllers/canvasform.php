@@ -240,9 +240,9 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
                     $result[$key]->Price =
                         Gm_ceilingHelpersGm_ceiling::dealer_margin($result[$key]->Price, 0, $user->CanvasesPrice[$result[$key]->id]);
 	            }
-	            echo json_encode($result);
+	            die(json_encode($result));
 	        }
-	       die(true);
+
 	    }
 	    catch(Exception $e)
         {

@@ -574,6 +574,17 @@
                                 </td>
                             </tr>
                         <?php } ?>
+                        <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
+                        <tr class="section_estimate" style="display: none;">
+                            <td>
+                                <b>Смета по расходным материалам</b>
+                            </td>
+                            <td>
+                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                <?php }?>
+                            </td>
+                        </tr>
                         <tr class="section_estimate" style="display: none;">
                             <td>
                                 <div class="email-all" style="float: left;">
@@ -650,24 +661,25 @@
                                 }
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
+
+                            <?php } ?>
                                 <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
                                 <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" style="display: none;" multiple accept="image/*">
                                 <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
                                 <input type="hidden" id="input_delete_uploaded_calc_img">
                                 <div class="row div_imgs">
                                     <?php
-                                        $dir = 'uploaded_calc_images/'.$calculation->id;
-                                        if (is_dir($dir)) {
-                                            $files = scandir($dir);
-                                            foreach ($files as $value) {
-                                                if (strlen($value) === 32) {
-                                                    echo '<img src="'.$dir.'/'.$value.'" data-path="'.$calculation->id.'/'.$value.'" class="uploaded_calc_img">';
-                                                }
+                                    $dir = 'uploaded_calc_images/'.$calculation->id;
+                                    if (is_dir($dir)) {
+                                        $files = scandir($dir);
+                                        foreach ($files as $value) {
+                                            if (strlen($value) === 32) {
+                                                echo '<img src="'.$dir.'/'.$value.'" data-path="'.$calculation->id.'/'.$value.'" class="uploaded_calc_img">';
                                             }
                                         }
+                                    }
                                     ?>
                                 </div>
-                            <?php } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
                                         <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
@@ -732,16 +744,16 @@
                                                 <td><?php echo $profil;?></td>
                                             </tr>
                                         </table>
-                                        <?php if($calculation->remove_n28 || $calculation->n41){?>
+                                        <?php if(!empty(floatval($calculation->remove_n28)) || !empty(floatval($calculation->n41))){?>
                                             <h4 style="margin: 10px 0;">Демонтаж</h4>
                                             <table class="table_info2">
-                                                <?php if($calculation->remove_n28){?>
+                                                <?php if(!empty(floatval($calculation->remove_n28))){?>
                                                     <tr>
                                                         <th>Демонтаж профиля, м:</th>
                                                         <td><?php echo $calculation->remove_n28;?></td>
                                                     </tr>
                                                 <?php }?>
-                                                <?php if($calculation->n41){?>
+                                                <?php if(!empty(floatval($calculation->n41))){?>
                                                     <tr>
                                                         <th>Демонтаж потолка:</th>
                                                         <td>нужен</td>
@@ -1055,7 +1067,7 @@
                                                     <td><?php echo $calculation->n38; ?></td>
                                                 </tr>
                                             <?php } ?>
-                                            <?php if ($calculation->n39) { ?>
+                                            <?php if (!empty(floatval($calculation->n39))) { ?>
                                                 <tr>
                                                     <td>Лента на шторный карниз, м:</td>
                                                     <td><?php echo $calculation->n39; ?></td>

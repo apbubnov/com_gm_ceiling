@@ -75,7 +75,9 @@ $providers = $stock_model->getAllProviders();
     .Modal .Form.Provider {
         width: 640px;
     }
-
+    .Provider{
+        margin-right: 0;
+    }
     .Modal .Form .Area {
         display: inline-block;
         float: left;
@@ -448,6 +450,10 @@ $providers = $stock_model->getAllProviders();
         line-height: 30px;
         text-align: center;
     }
+    .high_input{
+        height:38px;
+        vertical-align: middle;
+    }
 </style>
 
 <div class="Modal" style="display: none;">
@@ -645,7 +651,7 @@ $providers = $stock_model->getAllProviders();
         </div>
         <div class="Line"></div>
     </form>
-    <form class="Form Provider" action="javascript:AddProvider();"
+    <form class="Form Provider"
           Page="index.php?option=com_gm_ceiling&task=stock.getCounterparty">
         <div class="Title">Введите данные поставщика:</div>
         <div class="Area Name">
@@ -802,7 +808,7 @@ $providers = $stock_model->getAllProviders();
             <div class="Message CloseContract">Дата окончания договора</div>
             <div class="Selects CloseContract"></div>
         </div>
-        <div class="Area Stock">
+        <!--<div class="Area Stock">
             <input type="text" class="Input Stock" name="Stock" id="Stock" placeholder="Введите склад:"
                    NameDB="stock.name"
                    onclick="GetList(this, ['Stock'], ['Stock']);"
@@ -811,7 +817,7 @@ $providers = $stock_model->getAllProviders();
                    autocomplete="off" required>
             <div class="Message Stock">Склад</div>
             <div class="Selects Stock"></div>
-        </div>
+        </div>-->
         <div class="Action">
             <button type="submit" class="Button Add Provider">
                 Добавить
@@ -836,20 +842,24 @@ $providers = $stock_model->getAllProviders();
     <button type="button" class="btn btn-primary Add Component" onclick="ShowModal(this)">
         <i class="fa fa-plus" aria-hidden="true"></i> Компонент
     </button>
-    <select class="input-gm" id="choose_provider" style="height:38px;vertical-align: middle;">
+    <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
+    <select class="input-gm high_input" id="choose_provider">
         <option>Выберите поставщика</option>
         <?php foreach ($providers as $provider){?>
             <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
         <?php }?>
     </select>
-    <div class="Stock Provider">
-        <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
-        <button type="button" class="ButtonStock iStock" onclick="OpenModalProvider(this)">
-            <i class="fa fa-user" aria-hidden="true"></i> Добавить поставщика
-        </button>
-    </div>
+    <select class="input-gm high_input" id="choose_stock">
+        <option>Выберите склад</option>
+        <?php foreach ($providers as $provider){?>
+            <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
+        <?php }?>
+    </select>
     <button type="submit" class="btn btn-primary Submit">
         <i class="fa fa-paper-plane" aria-hidden="true"></i> Отправить
+    </button>
+    <button type="button" class="ButtonStock  btn btn-primary high_input Provider" style="float:right;" onclick="OpenModalProvider(this)">
+        <i class="fa fa-plus-square" aria-hidden="true"></i> Добавить поставщика
     </button>
 
     <table class="Elements">
@@ -1111,7 +1121,10 @@ $providers = $stock_model->getAllProviders();
             var modal = null;
             if (e.hasClass("Canvas")) modal = Modal.canvas;
             else if (e.hasClass("Component")) modal = Modal.components;
-            else if (e.hasClass("Provider")) modal = Modal.provider;
+            else if (e.hasClass("Provider")){
+                modal = Modal.provider;
+                console.log(modal);
+            }
 
             if (modal !== null) {
                 modal.find(".Add").text("Добавить");
@@ -1194,7 +1207,7 @@ $providers = $stock_model->getAllProviders();
         filter.page = input.closest(".Form").attr("Page");
 
 
-        console.log(JSON.stringify(filter));
+        console.log(filter.page);
         if (input.is(":focus")) {
             jQuery.ajax({
                 type: 'POST',
@@ -1274,10 +1287,9 @@ $providers = $stock_model->getAllProviders();
     }
 
     function OpenModalProvider(e) {
-        e = $(e).closest(".Stock");
-        var input = e.find(".InputStock"),
-            data = (input.val() == "") ? null : input.val();
-        ShowModal(e, data);
+
+
+        ShowModal(e, null);
     }
 
     function ScrollInit() {

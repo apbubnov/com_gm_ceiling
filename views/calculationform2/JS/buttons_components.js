@@ -60,6 +60,10 @@ const help_block_n38 = '<span class="airhelp">В расчет входит мо�
 
 const help_block_n41 = '<span class="airhelp">В расчет входит монтажная работа "демонтаж полотна".</span>';
 
+const help_block_n43 = '<span class="airhelp">В расчет входит работа в цехе "Обработка угла".</span>';
+
+const help_block_n44 = '<span class="airhelp">В расчет входит работа  "Монтаж с пылесосом".</span>';
+
 const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
 
 const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
@@ -87,6 +91,8 @@ if(dealer_id != 1){
                     </p>`;
 
 }
+let angle_block =  (isGmManager == 1) ? {block_id:"block_n43",btn_cont_id:"btn_cont_n43",prev_id:"block_oter_mount_cptn",btn_id:"btn_n43",btn_text:"Обработка углов",need_ajax : 0,kind_btn:"0", img: "angle.png", parent: "oter_mount_cptn"} : '';
+let reharp_block = (isGmManager == 1) ? {block_id:"block_n36",btn_cont_id:"btn_cont_n36",prev_id:"block_oter_mount_cptn",btn_id:"btn_n36",btn_text:"Перегарпунка",need_ajax : 0,kind_btn:"0", img: "garpun.png", parent: "oter_mount_cptn"}  : '';
 let arr_blocks = [
     {block_id:"block_attention",btn_cont_id:"attention",prev_id:"add_mount_and_components",btn_id:"",btn_text:attention_el,kind_btn:"2", parent: "btn_add_components"},
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
@@ -133,8 +139,10 @@ let arr_blocks = [
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n44",btn_cont_id:"btn_cont_n44",prev_id:"block_oter_mount_cptn",btn_id:"btn_n44",btn_text:"Монтаж с пылесосом",need_ajax : 0,kind_btn:"0", img: "cleaner.png", parent: "oter_mount_cptn"},
             {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_oter_mount_cptn",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n36",btn_cont_id:"btn_cont_n36",prev_id:"block_oter_mount_cptn",btn_id:"btn_n36",btn_text:"Перегарпунка",need_ajax : 0,kind_btn:"0", img: "garpun.png", parent: "oter_mount_cptn"},
+            reharp_block,
+            angle_block,
             {block_id:"block_n37",btn_cont_id:"btn_cont_n37",prev_id:"block_oter_mount_cptn",btn_id:"btn_n37",btn_text:"Фотопечать",need_ajax : 0,kind_btn:"0", img: "photoprint.png", parent: "oter_mount_cptn"},
             {block_id:"block_n38",btn_cont_id:"btn_cont_n38",prev_id:"block_oter_mount_cptn",btn_id:"btn_n38",btn_text:"Ремонт полотна",need_ajax : 0,kind_btn:"0", img: "repair.png", parent: "oter_mount_cptn"}
         ]
@@ -147,6 +155,7 @@ if(isGmManager == 1){
         {block_id:"block_need_cuts",btn_cont_id:"btn_cont_need_cuts",prev_id:"block_need_metiz",btn_id:"btn_need_cuts",btn_text:"Отменить обрезки",need_ajax : 0,kind_btn:"1", img: "cuts.png", parent: "btn_add_components"}
     );
 }
+console.log(arr_blocks);
 arr_blocks.forEach(function(item){
     generate_block(item,0);
 });
@@ -417,6 +426,10 @@ n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питани
 let n35 = create_single_input(1,"jform_n35","jform[n35]","Контурный профиль,м","Кол-во,м.","tel");
 
 let n36 = create_single_input(1,"jform_n36","jform[n36]","Перегарпунка,м","Кол-во,м","tel");
+
+let n43 = create_single_input(1,"jform_n43","jform[n43]","Обработка углов,шт","Кол-во,шт","tel");
+
+let n44 = create_single_input(1,"jform_n44","jform[n44]","Пылесос,м","Кол-во,м","tel");
 
 let n37_src = {
     id : 'jform_n37',
@@ -1314,8 +1327,11 @@ function generate_block(object,type=0){
         } else if (object.kind_btn == 0) {
             style_btn = "btn add_fields";
         }
-        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,`help_${object.block_id}`,object.block_id,object.need_ajax, object.img, style_btn);
-        jQuery(`#${object.btn_cont_id}`).append(block);
+        console.log(object);
+        if(!empty(object)) {
+            let block = create_block_btn('table_calcform', "margin-bottom: 15px;", object.btn_id, object.btn_text, `help_${object.block_id}`, object.block_id, object.need_ajax, object.img, style_btn);
+            jQuery(`#${object.btn_cont_id}`).append(block);
+        }
     }
 }
 var $ = jQuery;
