@@ -155,7 +155,6 @@ if(isGmManager == 1){
         {block_id:"block_need_cuts",btn_cont_id:"btn_cont_need_cuts",prev_id:"block_need_metiz",btn_id:"btn_need_cuts",btn_text:"Отменить обрезки",need_ajax : 0,kind_btn:"1", img: "cuts.png", parent: "btn_add_components"}
     );
 }
-console.log(arr_blocks);
 arr_blocks.forEach(function(item){
     generate_block(item,0);
 });
@@ -757,7 +756,6 @@ function open_general_blocks() {
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");
     });
-    console.log(calc_props);
     open_blocks(calc_props);
 }
 function get_parent(n) {
@@ -1046,7 +1044,6 @@ function fill_calc_data(){
                     break;
                case 'n37':
                    let n37 = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                   console.log(n37);
                    jQuery("#n37_square").val(n37.square);
                    jQuery("#n37_cost").val(n37.cost);
                    break;
@@ -1327,7 +1324,6 @@ function generate_block(object,type=0){
         } else if (object.kind_btn == 0) {
             style_btn = "btn add_fields";
         }
-        console.log(object);
         if(!empty(object)) {
             let block = create_block_btn('table_calcform', "margin-bottom: 15px;", object.btn_id, object.btn_text, `help_${object.block_id}`, object.block_id, object.need_ajax, object.img, style_btn);
             jQuery(`#${object.btn_cont_id}`).append(block);

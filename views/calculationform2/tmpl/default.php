@@ -1091,6 +1091,7 @@
         //рассчитать
         jQuery("#calculate_button").click(function(){
             data = jQuery( "#form-calculation").serialize();
+            console.log(data);
             jQuery("#under_calculate").show();
             var calculate_button = jQuery( this );
             let id = jQuery('#jform_id').val();

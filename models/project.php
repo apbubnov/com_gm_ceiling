@@ -1182,6 +1182,7 @@ class Gm_ceilingModelProject extends JModelItem
 			if($project_id > 0) {
 				$table->load($project_id);
 				if($check == 1) $table->project_status = 12;
+				throw new Exception($table->project_status);
 				$table->new_project_sum = $new_value;
 	            $table->new_mount_sum = $mouting_sum;
 	            $table->new_material_sum = $material_sum;

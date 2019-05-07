@@ -23,8 +23,24 @@ $canEdit = (in_array('16',$userGroups)) ? true : false;
 
 $texturesModel = Gm_ceilingHelpersGm_ceiling::getModel('textures');
 $textures = $texturesModel->getFilteredData('a.texture_colored = 1');
+$all_textures = $texturesModel->getFilteredData();
+$short_names = [];
 foreach($textures as $key=>$texture){
-    $textures[$key]->short_name = strtolower(substr(Gm_ceilingHelpersGm_ceiling::rus2translit($texture->texture_title),0,3));
+    $short_name = strtolower(substr(Gm_ceilingHelpersGm_ceiling::rus2translit($texture->texture_title),0,3));
+    if(!in_array($short_name,$short_names)){
+        array_push($short_names,$short_name);
+        $textures[$key]->short_name = $short_name;
+    }
+    else{
+        $i=3;
+        while(in_array($short_name,$short_names)){
+            $short_name = strtolower(substr(Gm_ceilingHelpersGm_ceiling::rus2translit($texture->texture_title),0,$i++));
+        }
+        array_push($short_names,$short_name);
+        $textures[$key]->short_name = $short_name;
+    }
+
+
 }
 $jsonTextures = json_encode($textures);
 ?>
@@ -38,32 +54,37 @@ $jsonTextures = json_encode($textures);
     legend{
         width: auto;
     }
+    .field{
+        clear:both;
+        text-align:right;
+        line-height:25px;
+    }
+    .field-label{
+        float:left;
+        padding-right:10px;
+    }
+    .main {
+        float:left
+    }
+
+    .action-btn{
+        width:200px;
+    }
 </style>
 <?=parent::getButtonBack();?>
 <div class="container">
-    <div class="row" style="margin: 10px 0 10px 0">
-        <div class="col-md-3">
-            <button class="btn btn-primary" id="addColor" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить цвет</button>
+    <div class="row" style="margin: 10px -15px 10px -15px">
+        <div class="col-md-3" style="padding-left: 0;margin-left: 0;">
+            <button class="btn btn-primary action-btn" id="addColor" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить цвет</button>
+        </div>
+        <div class="col-md-3" style="padding-left: 0;margin-left: 0;">
+            <button class="btn btn-primary action-btn" id="addTexture" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить фактуру</button>
+        </div>
+        <div class="col-md-3" style="padding-left: 0;margin-left: 0;">
+            <button class="btn btn-primary action-btn" id="editTextureBtn" ><i class="fa fa-trash-o" aria-hidden="true"></i> Фактуры </button>
         </div>
         <div class="col-md-3">
-            <button class="btn btn-primary" id="addTexture" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить фактуру</button>
-        </div>
-        <div class="col-md-6">
-            <div class="col-md-3">
-                <label><b>Фильтр</b></label>
-            </div>
-            <div class="col-md-5">
-                <select id="textureSelect" class="input-gm">
-                    <option value = "0">Выберите текстуру</option>
-                    <option value = "mat">Мат</option>
-                    <option value = "sat">Сатин</option>
-                    <option value = "glan">Глянец</option>
-                    <option value = "desk">Ткань</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <button class="btn btn-primary" id = "resetFilter"><i class="fa fa-times" aria-hidden="true"></i> Сбросить</button>
-            </div>
+
         </div>
     </div>
     <div class="row">
@@ -115,8 +136,11 @@ $jsonTextures = json_encode($textures);
                             <legend align="left"><label style="padding-left: auto">Цвет</label></legend>
                             <div class="row">
                                 <div class="col-md-6 colorPicker" id="colorPicker">
-                                    <label for="hexColor">Выберите цвет</label>
-                                    <input id = "hexColor">
+                                    <label for = "hexColor">Выберите цвет</label>
+                                    <input id = "hexColor" class="input-gm">
+                                    <div id = "color_selector">
+
+                                    </div>
                                 </div>
                                 <div class="col-md-6" id="images">
 
@@ -140,28 +164,42 @@ $jsonTextures = json_encode($textures);
 
         </div>
         <div class="modal_window" id="mwEditColor">
-            <div class="row center">
-                <div class="col-md-12">
-                    <input id="colorId" value="" type="hidden">
-                    <input id="colorTexture" value="" type="hidden">
-                    <label for="colorTitleEdit">Название цвета:</label>
-                    <input id="colorTitleEdit" class="input-gm">
+            <input id="colorId" value="" type="hidden">
+            <input id="colorTexture" value="" type="hidden">
+            <input id="idTexture" value="" type="hidden">
+            <div class="row center" style="margin-bottom: 10px">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 main">
+                    <div class="field">
+                        <label class="field-label" for="textureTitleEdit">Название текстуры:</label>
+                        <input id="textureTitleEdit" class="input-gm">
+                    </div>
+                    <br>
+                    <div class="field">
+                        <label class="field-label" for="colorTitleEdit">Название цвета:</label>
+                        <input id="colorTitleEdit" class="input-gm">
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+
+            </div>
+            <div class="row center" style="margin-bottom: 10px">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 main">
+                    <div class="field">
+                        <label class="field-label" for="hexColorEdit">Цвет</label>
+                        <input id = "hexColorEdit" class="input-gm">
+                    </div>
+                    <div id = "colorpickerHolder"></div>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-12" id="imagesEdit">
+
                 </div>
             </div>
-            <div class="row center">
-                <div class="row center" style="margin-bottom: 10px">
-                    <div class="col-md-12">
-                        <label for="hexColorEdit">Цвет</label>
-                        <input id = "hexColorEdit">
-                    </div>
-                    <div class="col-md-12" id="imagesEdit">
-
-                    </div>
-                </div>
-                <div class="row center" >
-                    <div class="col-md-12">
-                        <button class="btn btn-primary" id="saveColorChangesBtn">Сохранить</button>
-                    </div>
+            <div class="row center" >
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="saveColorChangesBtn">Сохранить</button>
                 </div>
             </div>
         </div>
@@ -195,8 +233,9 @@ $jsonTextures = json_encode($textures);
                 <div class="col-md-12">
                     <table id="canvases" class="table table_cashbox">
                         <thead>
-                        <th class="center">Полотно</th>
-                        <th class="center"><i class="fa fa-trash" aria-hidden="true"></i></th>
+                            <th class="center">Полотно</th>
+                            <th class="center">Кол-во</th>
+                            <th class="center"><i class="fa fa-trash" aria-hidden="true"></i></th>
                         </thead>
                         <tbody>
 
@@ -225,6 +264,44 @@ $jsonTextures = json_encode($textures);
                     <button id="saveTexture" type="button" class="btn btn-primary">Сохранить</button>
                 </div>
             </div>
+        </div>
+        <div class="modal_window" id="mw_editTexture">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <table class="table table_cashbox">
+                    <thead>
+                        <th class="center">Фактура</th>
+                        <th class="center">Цветная</th>
+                        <th class="center">Удалить</th>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($all_textures as $texture){?>
+
+                            <tr data-id = <?php echo $texture->id;?>>
+                                <td>
+                                    <span><?php echo $texture->texture_title;?></span>
+
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="texture_edit" id="<?php echo "id".$texture->id;?>" <?php if($texture->texture_colored) echo "checked";?> class="inp-cbx" style="display: none">
+                                    <label for="<?php echo "id".$texture->id;?>" class="cbx">
+                                              <span>
+                                                <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                </svg>
+                                              </span>
+                                        <span></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger del_texture"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3"></div>
+
         </div>
     </div>
 </div>
@@ -263,7 +340,7 @@ $jsonTextures = json_encode($textures);
     function defineTexture(filename) {
         for(var i = 0; i <textures.length;i++){
             if(filename.indexOf(textures[i].short_name) >=0){
-                return {key:textures[i].short_name,value:textures[i].texture_title};
+                return {key:textures[i].short_name,value:textures[i].texture_title,id:textures[i].id};
             }
         }
     }
@@ -275,6 +352,7 @@ $jsonTextures = json_encode($textures);
             canvasesTitles="";
 
         jQuery.each(data,function (index,element) {
+            console.log(element);
             canvases = (element.canvases) ? JSON.parse(element.canvases) :[] ;
             canvasesTitles = "";
             element.canvases = canvases;
@@ -361,7 +439,8 @@ $jsonTextures = json_encode($textures);
             div1 = jQuery("#mwCreateColor"),
             div2 = jQuery(".colorpicker"),
             div3 = jQuery("#mwEditCanvases"),
-            div4 = jQuery("#mw_addTexture");
+            div4 = jQuery("#mw_addTexture"),
+            div5 = jQuery("#mw_editTexture");
         if (!div.is(e.target)
             && div.has(e.target).length === 0 &&
             !div1.is(e.target)
@@ -371,7 +450,9 @@ $jsonTextures = json_encode($textures);
             !div3.is(e.target)
             && div3.has(e.target).length === 0 &&
             !div4.is(e.target)
-            && div4.has(e.target).length === 0) {
+            && div4.has(e.target).length === 0 &&
+            !div5.is(e.target)
+            && div5.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
@@ -379,6 +460,7 @@ $jsonTextures = json_encode($textures);
             div2.hide();
             div3.hide();
             div4.hide();
+            div5.hide();
             jQuery("#imagesEdit").empty();
         }
     });
@@ -393,53 +475,140 @@ $jsonTextures = json_encode($textures);
 
         });
 
-        jQuery('#hexColor').ColorPicker({
 
-            color: "#ffffff",
-            onShow: function (colpkr) {
-                jQuery(colpkr).fadeIn(500);
-                return false;
-            },
-            onHide: function (colpkr) {
-                jQuery(colpkr).fadeOut(500);
-                return false;
-            },
-            onChange: function (hsb, hex, rgb) {
-                jQuery('#hexColor').val('#' + hex);
-            }
-        });
         jQuery("#resetFilter").click(function () {
             fillTable(colors);
             jQuery("#textureSelect").val(0);
+        });
+
+        jQuery("#editTextureBtn").click(function () {
+            jQuery("#mw_container").show();
+            jQuery("#mw_editTexture").show('slow');
+            jQuery("#close").show();
+            jQuery('[name = "texture_edit"]').click(function(){
+                var textureId = jQuery(this).closest('tr').data('id');
+                var isColored;
+                if(this.checked){
+                    isColored = 1;
+                }
+                else{
+                    isColored = 0;
+                }
+
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=textures.updateColored",
+                    data: {
+                        id: textureId,
+                        isColored: isColored
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Обновлено!"
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        },1000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка получения данных!"
+                        });
+                    }
+                });
+
+            })
+        });
+
+        jQuery('.del_texture').click(function () {
+            var textureId = jQuery(this).closest('tr').data('id');
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=textures.delete",
+                data: {
+                    id: textureId
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "message",
+                        text: "Удалено!"
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
+            });
         });
 
         jQuery("[name = editBtn]").click(function () {
             var color_id = jQuery(this.closest('tr')).data("color_id"),
                 color = colors[color_id];
 
+            var color_hex = color.hex.replace("#",'');
             jQuery("#mw_container").show();
             jQuery("#mwEditColor").show('slow');
             jQuery("#close").show();
+            while(color_hex.length<6){
+                color_hex+=0;
+            }
+            var colorpicker_id = jQuery("#colorpickerHolder").data('colorpickerId');
+            if(!empty(colorpicker_id)){
+                jQuery('#colorpickerHolder').ColorPickerSetColor(color_hex);
+                jQuery("#"+colorpicker_id).show();
+            }
+            else {
+                jQuery('#colorpickerHolder').ColorPicker({
+                    flat: true,
+                    color: color_hex,
+                    onChange: function (hsb, hex, rgb) {
+                        jQuery('#hexColorEdit').val(hex);
+                    },
+                    onBeforeShow: function () {
+                        jQuery(this).ColorPickerSetColor(color_hex);
+                    }
+                });
+            }
+
             jQuery("#hexColorEdit").val(color.hex);
             jQuery("#colorTitleEdit").val(color.title);
-            jQuery("#colorTexture").val(defineTexture(color.file).key);
+
+            var definedTexture = defineTexture(color.file);
+
+            jQuery("#textureTitleEdit").val(definedTexture.value);
+            jQuery("#colorTexture").val(definedTexture.key);
+            jQuery("#idTexture").val(definedTexture.id);
             jQuery("#colorId").val(color_id);
             jQuery("#imagesEdit").append('<img style="max-height: 50px" src="'+color.file+"<?= '?t='.time(); ?>"+'"><br>');
-            jQuery('#hexColorEdit').ColorPicker({
 
-                color: '#'+color.hex,
-                onShow: function (colpkr) {
-                    jQuery(colpkr).fadeIn(500);
-                    return false;
-                },
-                onHide: function (colpkr) {
-                    jQuery(colpkr).fadeOut(500);
-                    return false;
-                },
-                onChange: function (hsb, hex, rgb) {
-                    jQuery('#hexColorEdit').val('#' + hex);
-                }
-            });
+
         });
 
         jQuery("[name='addCanvasBtn']").click(function () {
@@ -455,11 +624,51 @@ $jsonTextures = json_encode($textures);
             jQuery.each(canvases,function (index,element) {
                 jQuery("#canvases > tbody").append('<tr/>');
                 jQuery("#canvases >tbody > tr:last").attr("data-canvas_id",element.id);
-                jQuery("#canvases >tbody > tr:last").append('<td>'+element.name+'</td><td>'+DELETE_BUTTON+'</td>');
+                jQuery("#canvases >tbody > tr:last").append('<td>'+element.name+'</td>' +
+                    '<td><input class="input-gm" name="count" value="'+element.count+'" style="vertical-align: middle;">' +
+                    '<button class="btn btn-primary btn-sm" name="update_count" style="vertical-align: middle;"><i class="fa fa-check" aria-hidden="true"></i></button></td>' +
+                    '<td>'+DELETE_BUTTON+'</td>');
             });
             jQuery("#width").mask("9.9");
             fillTexturesSelect();
             fillManufacturersSelect();
+            jQuery("[name = 'update_count']").click(function () {
+                var canvas_id = jQuery(this.closest('tr')).data('canvas_id'),
+                    new_count = jQuery(this.closest('tr')).find('input[name="count"]').val();
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=canvasForm.updateCount",
+                    data: {
+                        id: canvas_id,
+                        count:new_count
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Обновлено!"
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        },1000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка получения данных!"
+                        });
+                    }
+                });
+            });
             jQuery(".delete_canvas").click(function () {
                 var canvas_id = jQuery(this.closest('tr')).data('canvas_id');
                 jQuery.ajax({
@@ -501,6 +710,21 @@ $jsonTextures = json_encode($textures);
             jQuery("#mw_container").show();
             jQuery("#mwCreateColor").show('slow');
             jQuery("#close").show();
+            jQuery('#color_selector').ColorPicker({
+                flat: true,
+                color: "ffffff",
+                onShow: function (colpkr) {
+                    jQuery(colpkr).fadeIn(500);
+                    return false;
+                },
+                onHide: function (colpkr) {
+                    jQuery(colpkr).fadeOut(500);
+                    return false;
+                },
+                onChange: function (hsb, hex, rgb) {
+                    jQuery('#hexColor').val(hex);
+                }
+            });
         });
 
         jQuery("#addTexture").click(function(){
@@ -688,7 +912,10 @@ $jsonTextures = json_encode($textures);
                     hexCode: jQuery("#hexColorEdit").val(),
                     name: jQuery("#colorTitleEdit").val(),
                     textures:[jQuery("#colorTexture").val()],
-                    idColor:jQuery("#colorId").val()
+                    idColor:jQuery("#colorId").val(),
+                    textureId: jQuery("#idTexture").val(),
+                    textureNewName:jQuery("#textureTitleEdit").val()
+
                 },
                 dataType: "json",
                 async: false,

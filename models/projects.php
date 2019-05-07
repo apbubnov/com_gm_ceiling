@@ -630,7 +630,13 @@ class Gm_ceilingModelProjects extends JModelList
         {
             $user       = JFactory::getUser();
             $userId     = $user->get('id');
-            $dealer_id = $user->dealer_id;
+            if($user->dealer_type == 0 || $user->dealer_type == 1){
+                $dealer_id = $user->dealer_id;
+            }
+            else{
+                $dealer_id = $user->id;
+
+            }
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 

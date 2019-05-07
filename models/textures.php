@@ -270,9 +270,11 @@ if (empty($list['direction']))
             $query = $db->getQuery(true);
             $query->select('distinct a.id');
             $query->select('a.texture_title');
+            $query->select('a.texture_colored');
             $query->from('#__gm_ceiling_textures AS a');
-            $query->where($filter);
-
+            if(!empty($filter)) {
+                $query->where($filter);
+            }
             $db->setQuery($query);
             return $db->loadObjectList();
         }
@@ -351,6 +353,60 @@ if (empty($list['direction']))
                 ->values("'$title',$is_colored");
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateTitle($id,$title){
+        try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $db->setQuery($query);
+            $query
+                ->update('`rgzbn_gm_ceiling_textures`')
+                ->set("`texture_title` = '$title'")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateColored($id,$isColored){
+        try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $db->setQuery($query);
+            $query
+                ->update('`rgzbn_gm_ceiling_textures`')
+                ->set("`texture_colored` = $isColored")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete($id){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $db->setQuery($query);
+            $query
+                ->delete('`rgzbn_gm_ceiling_textures`')
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
         }
         catch(Exception $e)
         {

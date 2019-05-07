@@ -250,4 +250,20 @@ class Gm_ceilingControllerCanvasForm extends JControllerForm
 
         }
     }
+
+    public function updateCount(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $id = $jinput->getInt('id');
+	        $count = $jinput->getInt('count');
+            $model = $this->getModel('Canvases', 'Gm_ceilingModel');
+            $model->updateCount($id,$count);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }

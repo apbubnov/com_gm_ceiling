@@ -365,10 +365,21 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 
+    public function saveProvider(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $provider = $jinput->get(data,'','STRING');
+            $counterpartyModel = Gm_ceilingHelpersGm_ceiling::getModel('counterparty');
+            $result = $counterpartyModel->setCounterParty(json_decode($provider));
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public static function margin($value, $margin) {
         try {
             if($margin == 100){

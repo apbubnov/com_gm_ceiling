@@ -130,6 +130,7 @@ class Gm_ceilingModelCounterparty extends JModelList
             $stock = $db->loadObject();
 
             if (empty($counterparty)) {
+                throw new Exception(print_r($data,true));
                 $colums = "`name`, `full_name`, `tin`, `cpr`, `ogrn`, `legal_address`, `mailing_address`, `ceo`, `bank_name`, `pay_account`, `cor_account`, `bic`, `contacts_phone`, `contacts_email`, `close_contract`";
                 $values = [];
                 foreach ($data as $v) $values[] = $db->quote($v);

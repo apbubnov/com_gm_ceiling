@@ -47,6 +47,7 @@ $server_name = $_SERVER['SERVER_NAME'];
 $stock_model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
 $providers = $stock_model->getAllProviders();
 
+$stocks = $stock_model->getStocks();
 ?>
 <?= parent::getPreloader(); ?>
 
@@ -655,159 +656,71 @@ $providers = $stock_model->getAllProviders();
           Page="index.php?option=com_gm_ceiling&task=stock.getCounterparty">
         <div class="Title">Введите данные поставщика:</div>
         <div class="Area Name">
-            <input type="text" class="Input Name" name="Name" id="Name" placeholder="Введите название:"
-                   NameDB="counterparty.name"
-                   onclick="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input Name" name="Name" id="Name" placeholder="Введите название:" autocomplete="off" required>
             <div class="Message Name">Название</div>
-            <div class="Selects Name"></div>
         </div>
         <div class="Area FullName">
-            <input type="text" class="Input FullName" name="FullName" id="FullName"
-                   placeholder="Введите полное название:"
-                   NameDB="counterparty.full_name"
-                   onclick="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input FullName" name="FullName" id="FullName" placeholder="Введите полное название:" autocomplete="off">
             <div class="Message FullName">Полное название</div>
-            <div class="Selects FullName"></div>
         </div>
         <div class="Area TIN">
-            <input type="text" class="Input TIN" name="TIN" id="TIN" placeholder="Введите ИНН:"
-                   NameDB="counterparty.tin"
-                   onclick="GetList(this, ['TIN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['TIN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off">
+            <input type="text" class="Input TIN" name="TIN" id="TIN" placeholder="Введите ИНН:" autocomplete="off">
             <div class="Message TIN">ИНН</div>
-            <div class="Selects TIN"></div>
         </div>
         <div class="Area CPR">
-            <input type="text" class="Input CPR" name="CPR" id="CPR" placeholder="Введите КПП:"
-                   NameDB="counterparty.cpr"
-                   onclick="GetList(this, ['CPR'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['CPR'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" >
+            <input type="text" class="Input CPR" name="CPR" id="CPR" placeholder="Введите КПП:" autocomplete="off" >
             <div class="Message CPR">КПП</div>
-            <div class="Selects CPR"></div>
         </div>
         <div class="Area OGRN">
-            <input type="text" class="Input OGRN" name="OGRN" id="OGRN" placeholder="Введите ОГРН:"
-                   NameDB="counterparty.ogrn"
-                   onclick="GetList(this, ['OGRN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['OGRN'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off">
+            <input type="text" class="Input OGRN" name="OGRN" id="OGRN" placeholder="Введите ОГРН:" autocomplete="off">
             <div class="Message OGRN">Основной государственный регистрационный номер</div>
-            <div class="Selects OGRN"></div>
         </div>
         <div class="Area LegalAddress">
-            <input type="text" class="Input LegalAddress" name="LegalAddress" id="LegalAddress"
-                   placeholder="Введите юр. адрес:"
-                   NameDB="counterparty.legal_address"
-                   onclick="GetList(this, ['LegalAddress'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['LegalAddress'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input LegalAddress" name="LegalAddress" id="LegalAddress" placeholder="Введите юр. адрес:" autocomplete="off">
             <div class="Message LegalAddress">Юридический адрес</div>
-            <div class="Selects LegalAddress"></div>
         </div>
         <div class="Area MailingAddress">
-            <input type="text" class="Input MailingAddress" name="MailingAddress" id="MailingAddress"
-                   placeholder="Введите поч. адрес:"
-                   NameDB="counterparty.mailing_address"
-                   onclick="GetList(this, ['MailingAddress'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['MailingAddress'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input MailingAddress" name="MailingAddress" id="MailingAddress" placeholder="Введите поч. адрес:"
+                   autocomplete="off" >
             <div class="Message MailingAddress">Почтовый адрес</div>
-            <div class="Selects MailingAddress"></div>
         </div>
         <div class="Area CEO">
-            <input type="text" class="Input CEO" name="CEO" id="CEO" placeholder="Введите ген. директор:"
-                   NameDB="counterparty.ceo"
-                   onclick="GetList(this, ['CEO'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['CEO'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input CEO" name="CEO" id="CEO" placeholder="Введите ген. директор:" autocomplete="off">
             <div class="Message CEO">Генеральный директор</div>
-            <div class="Selects CEO"></div>
         </div>
         <div class="Area BankName">
-            <input type="text" class="Input BankName" name="BankName" id="BankName" placeholder="Введите наим. банка:"
-                   NameDB="counterparty.bank_name"
-                   onclick="GetList(this, ['BankName'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['BankName'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+            <input type="text" class="Input BankName" name="BankName" id="BankName" placeholder="Введите наим. банка:" autocomplete="off">
             <div class="Message BankName">Наименование банка</div>
-            <div class="Selects BankName"></div>
         </div>
         <div class="Area PayAccount">
             <input type="text" class="Input PayAccount" name="PayAccount" id="PayAccount"
-                   placeholder="Введите расчетный счет:"
-                   NameDB="counterparty.pay_account"
-                   onclick="GetList(this, ['PayAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['PayAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+                   placeholder="Введите расчетный счет:" autocomplete="off">
             <div class="Message PayAccount">Расчетный счет</div>
-            <div class="Selects PayAccount"></div>
         </div>
         <div class="Area CorAccount">
             <input type="text" class="Input CorAccount" name="CorAccount" id="CorAccount"
-                   placeholder="Введите кор. счет:"
-                   NameDB="counterparty.cor_account"
-                   onclick="GetList(this, ['CorAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['CorAccount'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off">
+                   placeholder="Введите кор. счет:" autocomplete="off">
             <div class="Message CorAccount">Корреспондентский счёт</div>
-            <div class="Selects CorAccount"></div>
         </div>
         <div class="Area BIC">
-            <input type="text" class="Input BIC" name="BIC" id="BIC" placeholder="Введите БИК:"
-                   NameDB="counterparty.bic"
-                   onclick="GetList(this, ['BIC'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['BIC'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off"  required>
+            <input type="text" class="Input BIC" name="BIC" id="BIC" placeholder="Введите БИК:" autocomplete="off" >
             <div class="Message BIC">БИК</div>
-            <div class="Selects BIC"></div>
         </div>
         <div class="Area ContactsPhone">
             <input type="text" class="Input ContactsPhone" name="ContactsPhone" id="ContactsPhone"
-                   placeholder="Введите номер телефона:"
-                   NameDB="counterparty.contacts_phone"
-                   onclick="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+                   placeholder="Введите номер телефона:" autocomplete="off">
             <div class="Message ContactsPhone">Номера телефона</div>
-            <div class="Selects ContactsPhone"></div>
         </div>
         <div class="Area ContactsEmail">
             <input type="email" class="Input ContactsEmail" name="ContactsEmail" id="ContactsEmail"
-                   placeholder="Введите эл. почту:"
-                   NameDB="counterparty.contacts_email"
-                   onclick="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onkeyup="GetList(this, ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'ContactsPhone', 'ContactsEmail', 'CloseContract'], ['Name', 'FullName', 'TIN', 'CPR', 'OGRN', 'LegalAddress', 'MailingAddress', 'CEO', 'BankName', 'PayAccount', 'CorAccount', 'BIC', 'Stock', 'CloseContract']);"
-                   onblur="ClearSelect(this)"
-                   autocomplete="off" required>
+                   placeholder="Введите эл. почту:" autocomplete="off">
             <div class="Message ContactsEmail">Электронная почта</div>
-            <div class="Selects ContactsEmail"></div>
         </div>
-        <div class="Area CloseContract">
+       <!-- <div class="Area CloseContract">
             <input type="date" class="Input CloseContract" name="CloseContract" id="CloseContract"
-                   placeholder="Введите дату:"
-                   NameDB="counterparty.close_contract" autocomplete="off" required>
+                   placeholder="Введите дату:" autocomplete="off" required>
             <div class="Message CloseContract">Дата окончания договора</div>
-            <div class="Selects CloseContract"></div>
-        </div>
+        </div>-->
         <!--<div class="Area Stock">
             <input type="text" class="Input Stock" name="Stock" id="Stock" placeholder="Введите склад:"
                    NameDB="stock.name"
@@ -819,7 +732,7 @@ $providers = $stock_model->getAllProviders();
             <div class="Selects Stock"></div>
         </div>-->
         <div class="Action">
-            <button type="submit" class="Button Add Provider">
+            <button type="button" class="Button Add Provider">
                 Добавить
             </button>
             <button type="button" class="Button Cancel" onclick="CancelElement(this)">
@@ -842,17 +755,17 @@ $providers = $stock_model->getAllProviders();
     <button type="button" class="btn btn-primary Add Component" onclick="ShowModal(this)">
         <i class="fa fa-plus" aria-hidden="true"></i> Компонент
     </button>
-    <input type="hidden" name="stock" id="provider" class="InputStock iStock" required>
+    <input type="hidden" name="provider" id="provider" required>
     <select class="input-gm high_input" id="choose_provider">
         <option>Выберите поставщика</option>
         <?php foreach ($providers as $provider){?>
             <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
         <?php }?>
     </select>
-    <select class="input-gm high_input" id="choose_stock">
+    <select class="input-gm high_input" id="Stock">
         <option>Выберите склад</option>
-        <?php foreach ($providers as $provider){?>
-            <option value = <?php echo $provider->id?>><?php echo $provider->name?></option>
+        <?php foreach ($stocks as $stock_item){?>
+            <option value = <?php echo $stock_item->id?>><?php echo $stock_item->name?></option>
         <?php }?>
     </select>
     <button type="submit" class="btn btn-primary Submit">
@@ -1056,8 +969,39 @@ $providers = $stock_model->getAllProviders();
         Resize();
         Calc = true;
     }
+    jQuery("body").on('click','.Add.Provider',function(){
+        var name = 'Provider',
+            form = $(".Modal ." + name),
+            elements = form.find(".Input"),
+            s = {};
 
+        $.each(elements, function (i, v) {
+            v = $(v);
+            s[v.attr('name')] = v.val();
+        });
+        console.log(s);
+        jQuery.ajax({
+            type: 'POST',
+            url: '/index.php?option=com_gm_ceiling&task=stock.saveProvider',
+            data: JSON.stringify(s),
+            success: function (data) {
+                console.log(data);
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    });
     function AddProvider() {
+
         var name = 'Provider',
             form = $(".Modal ." + name),
             elements = form.find(".Input"),

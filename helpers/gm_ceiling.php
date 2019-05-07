@@ -372,7 +372,9 @@ class Gm_ceilingHelpersGm_ceiling
                     )
                 ));
 
+
                 $data_form = $data_form['jform'];
+                //throw new Exception(print_r($data_form,true));
                 foreach ($data_form as $key => $value)
                 {
                     if (mb_ereg('^[\d]+[\,]{1}[\d]+$', $value)) {
@@ -381,9 +383,17 @@ class Gm_ceilingHelpersGm_ceiling
                     if (mb_ereg('^[\d]+[\.]{1}[\d]+$', $value) || mb_ereg('^[\d]+$', $value) || $value == '') {
                         $value = floatval($value);
                     }
+                    //если не гмменеджер и не нужны обрезки ставим что нужны(костыль из-за того что нет на странице и он принимает как ноль)
+                    if($key == "need_cuts"){
+                        if(empty($value) && !in_array('16',JFactory::getUser()->groups)){
+                            $value = 1;
+                        }
+                    }
                     $data[$key] = $value;
+
                 }
             }
+
             if(!empty($data['n3_id'])){
                 $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
                 $data['n1'] = $canvasData[0]->texture_id;
@@ -391,6 +401,7 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $data['n1'] = null;
             }
+
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -627,9 +638,19 @@ class Gm_ceilingHelpersGm_ceiling
             $new_discount = $data['discount'];
             //Сюда забиваем ответ в JSON
             $ajax_return = array();
+            /*если минимальный заказ,то полотно 200 рублей, обрезки и работу цеха не считаем*/
+            if($canvases_data['min_self_dealer_total']){
+                $data['canvases_sum'] = $min_sum;
+                $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
+                $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
+                $offcut_square_data['dealer_total'] = 0;
+                $offcut_square_data['self_dealer_total'] = 0;
+                $total_with_gm_dealer_margin_guild = 0;
+                $data['guild_data']['total_dealer_guild'] = 0;
+                $data["guild_data"]["total_gm_guild"] = 0;
+            }
             $ajax_return['canv_arr'] = $canvases_data;
             $ajax_return['comp_arr'] = $components_data;
-            $ajax_return['offcut_arr'] = $data['need_cuts'];
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $data['guild_data']['total_dealer_guild'], 2);
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
@@ -641,15 +662,6 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['mounting_arr'] = $mounting_data;
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
-           /* if($data['canvases_sum'] + $data['components_sum'] < $min_sum ){
-                $data['canvases_sum'] = $min_sum;
-                $data['components_sum'] = 0;
-            }*/
-            if($canvases_data['min_self_dealer_total']){
-                $data['canvases_sum'] = $min_sum;
-                $data['components_sum'] = 0;
-                $ajax_return['total_sum'] = $min_sum;
-            }
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
             $data['dealer_components_sum'] = $dealer_components_sum;
             $data['mounting_sum'] = $total_dealer_mounting;
@@ -1459,7 +1471,6 @@ class Gm_ceilingHelpersGm_ceiling
             //карниз
             if($data['n16'] == 0) {
                 $component_count[$items_1[0]->id] += $data['n27'];
-                $component_count[$items_14[0]->id] += $data['n27'];
                 if($data['need_metiz']){
                     $component_count[$items_3[0]->id] += $data['n27'] * 3;
                     $component_count[$items_5[0]->id] += $data['n27'] * 6;
@@ -1474,6 +1485,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_11[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_14[0]->id] += $data['n27'];
                         break;
                     case 2 :
                         $component_count[$items_1[0]->id] += $data['n27'];
@@ -1770,10 +1782,11 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+            $offcut_data = self::calculate_offcut($calc_id);
             if(in_array('16',JFactory::getUser()->groups)) {
                 $min_sum = 200;//минимальная сумма заказа
                 $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
-                if ($canvases_data['self_dealer_total'] + $guild_cost < $min_sum) {
+                if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < $min_sum) {
                     $canvases_data['min_self_dealer_total'] = $min_sum;
                     $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
                 }
@@ -3960,6 +3973,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if($canvases_data['min_self_dealer_total']) {
                 $offcut_square_data['self_dealer_total']  = 0;
+                $guild_data["total_gm_guild"] = 0;
             }
             if($need_price == 1){
                 $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];

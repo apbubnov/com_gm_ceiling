@@ -31,10 +31,12 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
 		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"profit"=>[12],"sum_deals"=>[4,5]);
-		$advt['otd']['id'] = "otd";
-		$advt['otd']['advt_title'] = 'Отделочники';
-		$advt['win']['id'] = "win";
-		$advt['win']['advt_title'] = 'Оконщики';
+        if(!$dealer_type) {
+            $advt['otd']['id'] = "otd";
+            $advt['otd']['advt_title'] = 'Отделочники';
+            $advt['win']['id'] = "win";
+            $advt['win']['advt_title'] = 'Оконщики';
+        }
 		$advt[0]['id'] = "0";
 		$advt[0]['advt_title'] = 'Отсутствует';
 		foreach ($advt as $id => $advt_obj) {
