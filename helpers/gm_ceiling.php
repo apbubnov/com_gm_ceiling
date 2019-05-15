@@ -1482,34 +1482,34 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n16']) {
                 switch ($data['niche']){
                     case 1 :
-                        $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_11[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
-                        $component_count[$items_14[0]->id] += $data['n27'];
+                        $component_count[$items_1[0]->id] += $data['n27'];      //брус
+                        $component_count[$items_11[0]->id] += $data['n27'];     //Багет
+                        $component_count[$items_726[0]->id] += $data['n27']*2;  //меб.уголок 100*125
+                        $component_count[$items_14[0]->id] += $data['n27'];     //вставка в разд
                         break;
                     case 2 :
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_11[0]->id] += $data['n27'];
-                        $component_count[$items_64[0]->id] += $data['n27'];
+                        $component_count[$items_64[0]->id] += $data['n27'];     //отбойник
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         break;
                     case 3:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
-                        $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_727[0]->id] += $data['n27'];
+                        $component_count[$items_236[0]->id] += $data['n27'];    //потлочн аллюм багет
+                        $component_count[$items_727[0]->id] += $data['n27'];    //пластик
                         break;
                     case 4:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_728[0]->id] += $data['n27'];
+                        $component_count[$items_728[0]->id] += $data['n27'];    //пластик
                         break;
                     case 5:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_729[0]->id] += $data['n27'];
+                        $component_count[$items_729[0]->id] += $data['n27'];    //пластик
                         break;
                 }
                /* $component_count[$items_430[0]->id] += $data['n27'] * 2;
@@ -1532,7 +1532,16 @@ class Gm_ceilingHelpersGm_ceiling
             if($data['n35'] > 0){
                 $component_count[$items_735[0]->id] += $data['n35'];
             }
-
+            //керамогранит
+            if($data['n8'] > 0){
+                $component_count[$items_236] += $data['n8'];
+                $component_count[$items_1] += $data['n8'];
+                if($data['need_metiz']) {
+                    $component_count[$items_5[0]->id] += $data['n8'] * 4;
+                    $component_count[$items_9[0]->id] += $data['n8'] * 4;
+                    $component_count[$items_8[0]->id] += $data['n8'] * 4;
+                }
+            }
             //лента для карниза
             //контурный профиль
             if($data['n39'] > 0){

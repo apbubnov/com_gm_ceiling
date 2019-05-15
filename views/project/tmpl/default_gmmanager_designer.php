@@ -1041,6 +1041,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
                 data: {
                     project_id: project_id,
+                    project_total: jQuery("#project_total span.sum")[0].innerText,
                     new_discount: jQuery("#jform_new_discount").val()
                 },
                 dataType: "json",
