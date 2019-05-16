@@ -91,7 +91,7 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $mounterId = $jinput->getInt('mounterId');
             $projectsId = $jinput->get('ids',array(),"ARRAY");
             $builderId = $jinput->getInt('builder_id');
-            $projectFilter = (!empty($projectsId)) ? "AND (ms.project_id IN(".implode(",",$projectsId).") or builder_id = $builderId)" : " and builder_id = $builder_id";
+            $projectFilter = (!empty($projectsId)) ? "AND (ms.project_id IN(".implode(",",$projectsId).") or builder_id = $builderId)" : " and builder_id = $builderId";
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
             $result = $model->getDataById($mounterId,$projectFilter);
             die(json_encode($result));
@@ -113,6 +113,21 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
             $result = $model->updateSumMounter($mounterId,$newMounterId,$projectId,$calcTitle,$sum);
             die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getMounterSalaryByBuilder(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $mounterId = $jinput->getInt('mounterId');
+            $builderId = $jinput->getInt('builder_id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
+            $result = $model->getMounterSalaryByBuilder($mounterId,$builderId);
+
+            die(json_encode($result));
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

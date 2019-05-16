@@ -27,6 +27,12 @@ $stageSums = $calcMountModel->getMounterSum($userId,$dealer->id);
 
 $mountersSalaryModel = Gm_ceilingHelpersGm_ceiling::getModel('MountersSalary');
 $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
+$payed_sums = $mountersSalaryModel->getDataById($userId,"and builder_id = $dealer->id");
+$total_pay =0;
+foreach ($payed_sums as $pay){
+    $total_pay-=$pay->sum;
+}
+$rest_sum = $closedSums->sum - $total_pay;
 ?>
 <style>
     .cell{
@@ -47,14 +53,34 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 
 <div class="row">
-    <div class="right"><b>Сумма взятого объема</b></div>
-    <?php foreach($stageSums as $value) {?>
-        <div class="right"><?= $value->title.": ".$value->stage_sum;?></div>
-    <?php }?>
+    <div class="col-md-7"></div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="right"><b>Сумма взятого объема</b></div>
+            <?php foreach($stageSums as $value) {?>
+                <div class="right"><?= $value->title.": ".$value->stage_sum;?></div>
+            <?php }?>
+        </div>
+        <div class="row">
+            <div class="right"><b>Сумма закрытого объема</b></div>
+            <div class="right"><?= $closedSums->sum;?></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="row">
+            <div class="right"><b>Выплачено</b></div>
+            <div class="right"><?= $total_pay;?></div>
+        </div>
+        <div class="row">
+            <div class="right"><b>Остаток</b></div>
+            <div class="right"><?=$rest_sum;?></div>
+        </div>
+    </div>
 </div>
 <div class="row">
-    <div class="right"><b>Сумма закрытого объема</b></div>
-    <div class="right"><?= $closedSums->sum;?></div>
+    <div class="right">
+        <button class="btn btn-primary" id="show_detailed">Детализация</button>
+    </div>
 </div>
 <div class="row">
     <ul class="nav nav-tabs" role="tablist">
@@ -112,6 +138,26 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
             </div>
         </div>
     </div>
+    <div id="detailed_salary" class="modal_window">
+        <table id="detailed_salary" class="table_project_analitic">
+            <thead>
+            <tr class="caption_table">
+                <td>
+                    Сумма
+                </td>
+                <td>
+                    Объект
+                </td>
+                <td>
+                    Время
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     var progressData = [];
@@ -123,12 +169,15 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
 
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#take_mount"); // тут указываем ID элемента
+        var div = jQuery("#take_mount"),
+            div1 = jQuery("#detailed_salary"); // тут указываем ID элемента
 
-        if (!div.is(e.target) && div.has(e.target).length === 0) {
+        if (!div.is(e.target) && div.has(e.target).length === 0&&
+            !div1.is(e.target) && div1.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#take_mount").hide();
+            jQuery("#detailed_salary").hide();
         }
     });
 
@@ -149,10 +198,15 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
                 var style;
                 jQuery.each(elem.projects[j].calcs,function(index,elem){
                    if(elem.mounters && elem.mounters[0].id == user_id){
-                       style = 'style = "background:linear-gradient(135deg, white, #414099 125%);"';
+                       style = 'style = "background:linear-gradient(135deg, white, #414099 150%);"';
                    }
                    else{
-                       style = "";
+                       if(elem.mounters && elem.mounters[0].id != user_id) {
+                           style = 'style = "background:linear-gradient(135deg, white, yellow 150%);"';
+                       }
+                       else{
+                           style = '';
+                       }
                    }
                 });
                 html +='<div class="col-md-'+colIndex+' center cell" '+style+' data-proj_id = "'+elem.projects[j].id+'" >';
@@ -356,6 +410,52 @@ $closedSums = $mountersSalaryModel->getClosedSumByMounter($userId,$dealer->id);
 
         jQuery("#back_btn").click(function () {
             history.go(-1);
+        });
+
+        jQuery("#show_detailed").click(function () {
+            jQuery("#mv_container").show();
+            jQuery("#detailed_salary").show();
+            jQuery("#close").show();
+
+            var mounterId = '<?php echo $userId;?>';
+
+            console.log(mounterId);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=MountersSalary.getMounterSalaryByBuilder",
+                data: {
+                    mounterId:mounterId,
+                    builder_id: '<?php echo $dealer->id;?>'
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var total = 0,note = "";
+                    jQuery("#detailed_salary > tbody").empty();
+                    jQuery.each(data,function (index,el){
+                        total += +el.sum;
+                        note = (!empty(el.note)) ? el.note : "Выплата";
+                        jQuery("#detailed_salary > tbody").append('<tr/>');
+                        jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td>')
+                    });
+                    jQuery("#detailed_salary > tbody").append('<tr/>');
+                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td></td>');
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+
+
+
+
+
         });
     });
 

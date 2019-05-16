@@ -189,4 +189,35 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getMounterSalaryByBuilder($mounterId,$builder_id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $subquery = $db->getQuery(true);
+            $subquery
+                ->select('id')
+                ->from('`rgzbn_gm_ceiling_clients`')
+                ->where("dealer_id = $builder_id");
+            $query
+                ->select('id')
+                ->from('`rgzbn_gm_ceiling_projects`')
+                ->where("client_id in ($subquery)");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            $projectsId = [];
+            if(!empty($items)){
+                foreach ($items as $item){
+                    array_push($projectsId,$item->id);
+                }
+            }
+            $projectFilter = (!empty($projectsId)) ? "AND (ms.project_id IN(".implode(",",$projectsId).") or builder_id = $builder_id)" : " and builder_id = $builder_id";
+
+            $result = $this->getDataById($mounterId,$projectFilter);
+            return $result;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
