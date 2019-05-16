@@ -670,3 +670,53 @@ jQuery("#btn_close_img").click(function(){
     jQuery("#img_modal_container").hide();
     jQuery("#modal_window_img").hide();
 });
+
+jQuery('[name="add_calc_comment"]').click(function(){
+    var button = jQuery(this),
+        calc_id = button.data('calc_id'),
+        textarea = button.closest('div').find('[name="calc_comment"]'),
+        comment = textarea.val();
+    if(!empty(comment)) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=calculation.saveComment",
+            data: {
+                calc_id: calc_id,
+                comment: comment
+            },
+            success: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Cохранено!"
+                });
+            },
+            dataType: "json",
+            timeout: 20000,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сохранения!"
+                });
+            }
+        });
+    }
+    else{
+        var n = noty({
+            theme: 'relax',
+            timeout: 2000,
+            layout: 'center',
+            maxVisible: 5,
+            type: "error",
+            text: "Пустой комментарий!"
+        });
+    }
+});

@@ -995,4 +995,20 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveComment($calcId,$comment){
+	    try{
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+                $query
+                    ->update('`#__gm_ceiling_calculations`')
+                    ->set("`comment`='$comment'")
+                    ->where("`id` = $calcId");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

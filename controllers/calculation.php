@@ -380,4 +380,19 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
         }
     }
 
+    function saveComment(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $comment = $jinput->get('comment', '', 'string');
+            $calcId = $jinput->get('calc_id', null, 'INT');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            if(!empty($comment)&&!empty($calcId)){
+                $model->saveComment($calcId,$comment);
+            }
+            die(json_encode(true));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
