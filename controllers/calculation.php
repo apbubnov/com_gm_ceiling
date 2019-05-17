@@ -338,14 +338,18 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 	    try {
 	        $jinput = JFactory::getApplication()->input;
 	        $calc_id = $jinput->get('calc_id', 0, 'int');
+	        $type = $jinput->get('type', '', 'string');
 	        if (empty($calc_id)) {
 	        	throw new Exception('Empty calc_id!');
 	        }
-	        if (!is_dir('uploaded_calc_images/'.$calc_id)) {
-	        	mkdir('uploaded_calc_images/'.$calc_id);
+	        if ($type !== 'before' && $type !== 'after' && $type !== 'defect') {
+	        	throw new Exception('Invalid img type!');
+	        }
+	        if (!is_dir('uploaded_calc_images/'.$calc_id.'/'.$type)) {
+	        	mkdir('uploaded_calc_images/'.$calc_id.'/'.$type);
 	        }
 
-	        $dir = 'uploaded_calc_images/'.$calc_id.'/';
+	        $dir = 'uploaded_calc_images/'.$calc_id.'/'.$type.'/';
 	        $urls = array();
 
 	        foreach ($_FILES as $file) {

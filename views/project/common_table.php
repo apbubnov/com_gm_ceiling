@@ -670,24 +670,55 @@
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
-                                        <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" style="display: none;" multiple accept="image/*">
+                                        <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" data-img-type="before" style="display: none;" multiple accept="image/*">
                                         <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
                                         <input type="hidden" id="input_delete_uploaded_calc_img">
                                     </div>
                                 </div>
                                 <?php
-                                    $dir = 'uploaded_calc_images/'.$calculation->id;
-                                    if (is_dir($dir)) {
-                                        $files = scandir($dir);
+                                    $dir_before = 'uploaded_calc_images/'.$calculation->id.'/before';
+                                    $dir_after = 'uploaded_calc_images/'.$calculation->id.'/after';
+                                    $dir_defect = 'uploaded_calc_images/'.$calculation->id.'/defect';
+                                    $files = [];
+                                    $temp = [];
+                                    if (is_dir($dir_before)) {
+                                        $temp = scandir($dir_before);
+                                        foreach ($temp as $key => $value) {
+                                            if (strlen($value) === 32) {
+                                                $temp[$key] = $dir_before.'/'.$value;
+                                            } else {
+                                                unset($temp[$key]);
+                                            }
+                                        }
+                                        $files = array_merge($files, $temp);
                                     }
-                                    else{
-                                        $files = [];
+                                    if (is_dir($dir_after)) {
+                                        $temp = scandir($dir_after);
+                                        foreach ($temp as $key => $value) {
+                                            if (strlen($value) === 32) {
+                                                $temp[$key] = $dir_after.'/'.$value;
+                                            } else {
+                                                unset($temp[$key]);
+                                            }
+                                        }
+                                        $files = array_merge($files, $temp);
                                     }
-                                    if(empty($files)) {
+                                    if (is_dir($dir_defect)) {
+                                        $temp = scandir($dir_defect);
+                                        foreach ($temp as $key => $value) {
+                                            if (strlen($value) === 32) {
+                                                $temp[$key] = $dir_defect.'/'.$value;
+                                            } else {
+                                                unset($temp[$key]);
+                                            }
+                                        }
+                                        $files = array_merge($files, $temp);
+                                    }
+
+                                    if (empty($files)) {
                                         $col1 = 0;
                                         $col2 = 5;
-                                    }
-                                    else {
+                                    } else {
                                         $col1 = 8;
                                         $col2 = 4;
                                     }
@@ -697,11 +728,8 @@
                                         <div class="row div_imgs">
                                             <?php
                                                 foreach ($files as $value) {
-                                                    if (strlen($value) === 32) {
-                                                        echo '<img src="'.$dir.'/'.$value.'" data-path="'.$calculation->id.'/'.$value.'" class="uploaded_calc_img">';
-                                                    }
+                                                    echo '<img src="'.$value.'" data-path="'.str_replace('uploaded_calc_images/', '', $value).'" class="uploaded_calc_img">';
                                                 }
-
                                             ?>
                                         </div>
                                     </div>

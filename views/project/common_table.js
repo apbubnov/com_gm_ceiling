@@ -547,13 +547,40 @@ function duplicate(need_new){
 
 jQuery('.btn_img_file').click(function() {
     var elem_file = jQuery(this).siblings('.img_file')[0];
-    elem_file.click();
+    var n = noty({
+        theme: 'relax',
+        type: 'alert',
+        layout: 'topCenter',
+        text: '<input type="radio" value="before" name="img_type" style="cursor: pointer;" checked> До<br>'+
+            '<input type="radio" value="after" name="img_type" style="margin-top: 10px; cursor: pointer;"> После<br>'+
+            '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
+        modal: true,
+        buttons:[
+            {
+                addClass: 'btn btn-primary', text: 'Ок', onClick: function($noty) {
+                    elem_file.setAttribute('data-img-type', jQuery('[name="img_type"]:checked').val());
+                    elem_file.click();
+                    $noty.close();
+                }
+            },
+            {
+                addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                    $noty.close();
+                }
+            }
+        ]
+    }).show();
+    document.getElementsByClassName('noty_message')[0].style.textAlign = 'left';
+    document.getElementsByClassName('noty_message')[0].style.paddingLeft = '30%';
+    document.getElementsByClassName('noty_message')[0].style.fontSize = '14pt';
+    document.getElementsByClassName('noty_buttons')[0].style.textAlign = 'center';
 });
 
 jQuery('.img_file').change(function() {
     var this_elem = jQuery(this)[0];
     var calc_id = jQuery(this).data('calc-id');
-    var elem_div = jQuery(this).siblings('.div_imgs')[0];
+    console.log(jQuery(this).closest('.other_tabs').find('.div_imgs')[0]);
+    var elem_div = jQuery(this).closest('.other_tabs').find('.div_imgs')[0];
     var formdata = new FormData();
     if (this_elem.files.length < 1) {
         return;
@@ -563,6 +590,7 @@ jQuery('.img_file').change(function() {
     jQuery.each(this_elem.files, function(key, value) {
         formdata.append(key, value);
     });
+    formdata.append('type', jQuery(this).data('img-type'));
     
     jQuery.ajax({
         type: 'POST',
@@ -580,6 +608,14 @@ jQuery('.img_file').change(function() {
                 elem_div.appendChild(img);
                 img.onclick = clickUploadedCalcImg;
                 //elem_div.innerHTML += '<img src="'+data[i]+'" class="uploaded_calc_img">';
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Изображение загружено"
+                });
             }
         },
         dataType: "json",
