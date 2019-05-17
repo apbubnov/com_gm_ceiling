@@ -63,7 +63,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($id)){
-                $query->select("u.id,u.name,ms.sum,concat(p.project_info,' ',ms.note) as note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
+                $query->select("u.id,u.name,ms.sum,IFNULL(CONCAT(p.project_info,' ',ms.note),ms.note) AS note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
                     ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                     ->innerJoin('`rgzbn_users` as u on u.id = ms.mounter_id')
                     ->leftJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
@@ -215,6 +215,29 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
 
             $result = $this->getDataById($mounterId,$projectFilter);
             return $result;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function transferRest($mounterId,$oldBuilderId,$newBuilderId,$rest){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $oldBuilder = JFactory::getUser($oldBuilderId);
+            $newBuilder = Jfactory::getUser($newBuilderId);
+            $values = [];
+            $values[] = "$mounterId,$oldBuilderId,0-$rest,'Перенос остатка в $newBuilder->name'";
+            $values[] = "$mounterId,$newBuilderId,$rest,'Перенос остатка из $oldBuilder->name'";
+            if(!empty($mounterId)&&!empty($oldBuilderId)&&!empty($newBuilderId)&&!empty($rest)) {
+                $query->insert('`#__gm_ceiling_mounters_salary`')
+                    ->columns('`mounter_id`,`builder_id`,`sum`,`note`')
+                    ->values($values);
+                $db->setQuery($query);
+                $db->execute();
+                return true;
+            }
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

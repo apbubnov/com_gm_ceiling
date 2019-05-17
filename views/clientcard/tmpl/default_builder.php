@@ -42,6 +42,13 @@ $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
 $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
+$all_builders = $clients_model->getDesignersByClientName('', 7);
+$options = '';
+foreach($all_builders as $builder){
+    if($builder->dealer_id != $client->dealer_id){
+        $options .= "<option value = $builder->dealer_id>$builder->client_name</option>";
+    }
+}
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div class="container">
@@ -479,7 +486,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
-            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button></div></div>";
+            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button></div></div>",
+            BUILDERS_SELECT = '<select class="input-gm builders_select" style ="vertical-align: middle;"><?php echo $options ?></select>',
+            MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fa fa-floppy-o" aria-hidden="true"></i></buttton>';
 
         function fillDuplicateInFields(value){
             jQuery("#where_duplicate").empty();
@@ -720,6 +729,8 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                 success: function(data) {
                     jQuery("#salary > tbody").empty();
                     jQuery.each(data,function (index,el) {
+                        var rest = (+el.closed + +el.payed).toFixed(2),
+                            rest_td = (rest < 0)? '<td name ="rest"><div class="row click_tr">'+rest +'</div><div class="row">'+ BUILDERS_SELECT + MOVE_SUM_BTN + '</div></td>' : '<td class="click_tr" name ="rest" >'+rest+'</td>';
                         jQuery("#salary > tbody").append('<tr/>');
                         jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
                         jQuery("#salary > tbody > tr:last").append(
@@ -727,8 +738,9 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                             '<td class="click_tr" name ="taken">'+(+el.taken).toFixed(2)+'</td>' +
                             '<td class="click_tr">'+(+el.closed).toFixed(2)+'</td>' +
                             '<td class="click_tr" name ="paid">'+(+el.payed).toFixed(2)+'</td>' +
-                            '<td class="click_tr" name ="rest" >'+ (+el.closed + +el.payed).toFixed(2)+'</td>' +
-                            '<td><input class="input-gm" name ="pay_sum"><button name="save_pay" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
+                            rest_td +
+                            '<td><input class="input-gm" name ="pay_sum" style="vertical-align: middle">' +
+                            '<button name="save_pay" style="vertical-align: middle" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
 
                         );
                     });
@@ -759,6 +771,7 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
                     async: false,
                     success: function(data) {
                         var total = 0,note = "";
+                        console.log(data);
                         jQuery("#detailed_salary > tbody").empty();
                         jQuery.each(data,function (index,el){
                             total += +el.sum;
@@ -965,7 +978,46 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
         {
             saveMounter(this);
         });
-
+        jQuery('body').on('click', '.transfer', function()
+        {
+            var button = jQuery(this),
+                rest = button.closest('td').find('.click_tr')[0].innerText,
+                old_builder = '<?php echo $client->dealer_id;?>',
+                new_builder = button.closest('div').find('.builders_select').val(),
+                mounter = button.closest('tr').data('id');
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=mountersSalary.transferRest",
+                data: {
+                    rest:rest,
+                    old_builder:old_builder,
+                    new_builder:new_builder,
+                    mounter_id : mounter
+                },
+                success: function(data){
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Успешно!"
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при создании заказа. Сервер не отвечает"
+                    });
+                }
+            });
+        });
         jQuery('body').on('click', '.edit_mounter', function(e)
         {
             jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";

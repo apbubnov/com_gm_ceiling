@@ -133,4 +133,19 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function transferRest(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $mounterId = $jinput->getInt('mounter_id');
+            $oldBuilderId = $jinput->getInt('old_builder');
+            $newBuilderId = $jinput->getInt('new_builder');
+            $rest = $jinput->get('rest','','STRING');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
+            $model->transferRest($mounterId,$oldBuilderId,$newBuilderId,$rest);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
