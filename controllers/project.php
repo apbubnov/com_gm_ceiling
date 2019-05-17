@@ -2060,5 +2060,28 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
+    function savePrepayment(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $prepaymentSum = $jinput->get('sum','','STRING');
+            $prepaymentModel = Gm_ceilingHelpersGm_ceiling::getModel('project_prepayment');
+            $prepaymentModel->save($projectId,$prepaymentSum);
+            die(json_encode(true));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getPrepayment(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $prepaymentModel = Gm_ceilingHelpersGm_ceiling::getModel('project_prepayment');
+            $result = $prepaymentModel->getData($projectId);
+            die(json_encode($result));
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>
