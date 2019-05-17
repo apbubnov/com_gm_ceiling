@@ -73,4 +73,33 @@ class Gm_ceilingControllerTextures extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function updateColored(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $isColored = $jinput->getInt('isColored');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('textures');
+            $model->updateColored($id,$isColored);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('textures');
+            $model->delete($id);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

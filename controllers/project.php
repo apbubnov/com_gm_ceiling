@@ -156,7 +156,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $project_id = $jinput->get('project_id', '0', 'INT');
             $data = $model->getData($project_id);
             $new_discount = $jinput->get('new_discount', $data->project_discount, 'INT');
+            $project_total = $jinput->get('project_total',$data->project_sum,'string');
+            $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($data->id);
+            $project_total-=$transport['client_sum'];
+            $new_sum = $project_total-($project_total*$new_discount/100)+$transport['client_sum'];
+            $save_data = array("id"=>$data->id,"project_sum"=>$new_sum);
+            $model->save($save_data);
             $result = $model->change_discount($project_id, $new_discount);
+
             die(json_encode($result));
         }
         catch(Exception $e)
@@ -1728,7 +1735,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $user = JFactory::getUser();
             $reklama = $model_api_phones->getDataById($api_phone_id);
 
-            if ($user->dealer_id != $reklama->dealer_id) {
+            if ($user->dealer_id != $reklama->dealer_id && $user->id != $reklama->dealer_id) {
                 throw new Exception('403 forbidden');
             }
             $project = $model_project->getData($data['id']);

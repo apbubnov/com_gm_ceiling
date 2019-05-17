@@ -372,7 +372,9 @@ class Gm_ceilingHelpersGm_ceiling
                     )
                 ));
 
+
                 $data_form = $data_form['jform'];
+                //throw new Exception(print_r($data_form,true));
                 foreach ($data_form as $key => $value)
                 {
                     if (mb_ereg('^[\d]+[\,]{1}[\d]+$', $value)) {
@@ -381,9 +383,17 @@ class Gm_ceilingHelpersGm_ceiling
                     if (mb_ereg('^[\d]+[\.]{1}[\d]+$', $value) || mb_ereg('^[\d]+$', $value) || $value == '') {
                         $value = floatval($value);
                     }
+                    //если не гмменеджер и не нужны обрезки ставим что нужны(костыль из-за того что нет на странице и он принимает как ноль)
+                    if($key == "need_cuts"){
+                        if(empty($value) && !in_array('16',JFactory::getUser()->groups)){
+                            $value = 1;
+                        }
+                    }
                     $data[$key] = $value;
+
                 }
             }
+
             if(!empty($data['n3_id'])){
                 $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
                 $data['n1'] = $canvasData[0]->texture_id;
@@ -391,6 +401,7 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $data['n1'] = null;
             }
+
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -627,9 +638,19 @@ class Gm_ceilingHelpersGm_ceiling
             $new_discount = $data['discount'];
             //Сюда забиваем ответ в JSON
             $ajax_return = array();
+            /*если минимальный заказ,то полотно 200 рублей, обрезки и работу цеха не считаем*/
+            if($canvases_data['min_self_dealer_total']){
+                $data['canvases_sum'] = $min_sum;
+                $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
+                $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
+                $offcut_square_data['dealer_total'] = 0;
+                $offcut_square_data['self_dealer_total'] = 0;
+                $total_with_gm_dealer_margin_guild = 0;
+                $data['guild_data']['total_dealer_guild'] = 0;
+                $data["guild_data"]["total_gm_guild"] = 0;
+            }
             $ajax_return['canv_arr'] = $canvases_data;
             $ajax_return['comp_arr'] = $components_data;
-            $ajax_return['offcut_arr'] = $data['need_cuts'];
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $data['guild_data']['total_dealer_guild'], 2);
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
@@ -641,15 +662,6 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['mounting_arr'] = $mounting_data;
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
-           /* if($data['canvases_sum'] + $data['components_sum'] < $min_sum ){
-                $data['canvases_sum'] = $min_sum;
-                $data['components_sum'] = 0;
-            }*/
-            if($canvases_data['min_self_dealer_total']){
-                $data['canvases_sum'] = $min_sum;
-                $data['components_sum'] = 0;
-                $ajax_return['total_sum'] = $min_sum;
-            }
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
             $data['dealer_components_sum'] = $dealer_components_sum;
             $data['mounting_sum'] = $total_dealer_mounting;
@@ -976,7 +988,7 @@ class Gm_ceilingHelpersGm_ceiling
     }
     public static function calculate_components($calc_id=null,$data=null,$del_flag=0){
         try {
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
                 $calculation_data = $calculation_model->getData($calc_id);
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
@@ -984,18 +996,17 @@ class Gm_ceilingHelpersGm_ceiling
                     $data[$key] = $item;
                 }
                 $data['n3'] = $calculation_data->n3_id;
-                if(!empty($data['n3'])){
-                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3']);
+                if (!empty($data['n3'])) {
+                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3']);
                     $data['n1'] = $canvasData[0]->texture_id;
                 }
 
             }
 
             $dealer_info = JFactory::getUser($data['dealer_id']);
-            if($dealer_info->dealer_id == 1){
+            if ($dealer_info->dealer_id == 1) {
                 $dealer_info_components = $dealer_info->getComponentsPrice($dealer_info->dealer_id);
-            }
-            else{
+            } else {
                 $dealer_info_components = $dealer_info->getComponentsPrice();
             }
             $margins = self::get_margin($data['project_id']);
@@ -1007,7 +1018,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $components[$component->id] = $component;
             }
             $component_count = array();
-            foreach ($components as $key => $value){
+            foreach ($components as $key => $value) {
                 $component_count[$key] = 0;
             }
 
@@ -1150,7 +1161,7 @@ class Gm_ceilingHelpersGm_ceiling
             //throw new Exception(gettype($n13_costyl[0]));
             $cnt_costyl = 0;
             if (!empty($n13_costyl)) {
-                foreach($n13_costyl as $item) {
+                foreach ($n13_costyl as $item) {
                     $cnt_costyl += (gettype($item) == "array") ? $item[0] : $item->n13_count;
 
                 }
@@ -1158,45 +1169,41 @@ class Gm_ceilingHelpersGm_ceiling
             //$component_count[$items_4[0]->id] += $cnt_costyl/2;
             //багет для ПВХ
             if (!empty($data['n1']) && $data['n1'] != 29) {
-                if ($data['n28'] !=0 && $data['need_metiz']){
+                if ($data['n28'] != 0 && $data['need_metiz']) {
                     $component_count[$items_9[0]->id] += $data['n5'] * 10;
                     $component_count[$items_5[0]->id] += $data['n5'] * 10;
                 }
-                if ($data['n28'] == 3)
-                {
+                if ($data['n28'] == 3) {
                     $component_count[$items_11[0]->id] += $data['n5'];
-                }
-                elseif ($data['n28'] == 1){
+                } elseif ($data['n28'] == 1) {
                     $component_count[$items_236[0]->id] += $data['n5'];
-                }
-                elseif ($data['n28'] == 2) {
+                } elseif ($data['n28'] == 2) {
                     $component_count[$items_239[0]->id] += $data['n5'];
                 }
             }
             //багет для ткани
             if (!empty($data['n1']) && $data['n1'] == 29) {
-                if ($data['n28'] !=0 && $data['need_metiz']){
+                if ($data['n28'] != 0 && $data['need_metiz']) {
                     $component_count[$items_9[0]->id] += $data['n5'] * 10;
                     $component_count[$items_5[0]->id] += $data['n5'] * 10;
                 }
-                if($data['n28'] == 2 || $data['n28'] == 3){
+                if ($data['n28'] == 2 || $data['n28'] == 3) {
                     $component_count[$ceiling_bag_tiss[0]->id] += $data['n5'];
                 }
-                if($data['n28'] == 1){
+                if ($data['n28'] == 1) {
                     $component_count[$wall_bag_tiss[0]->id] += $data['n5'];
                 }
             }
             // внутренний вырез на месте
             if ($data['n11'] > 0) {
                 $component_count[$items_1[0]->id] += $data['n11']; //брус
-                if ($data['n1'] == 29){
+                if ($data['n1'] == 29) {
                     $component_count[$ceiling_bag_tiss[0]->id] += $data['n11']; //потолочный багет дескор
-                }
-                else {
+                } else {
                     $component_count[$items_236[0]->id] += $data['n11']; //потолочный аллюм багет
                 }
                 $component_count[$items_430[0]->id] += $data['n11'] * 2;
-                if($data['need_metiz']) {
+                if ($data['need_metiz']) {
                     $component_count[$items_8[0]->id] += $data['n11'] * 22;
                     $component_count[$items_5[0]->id] += $data['n11'] * 16;
                 }
@@ -1207,7 +1214,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //внутренний вырез в цеху
             if ($data['n31'] > 0 && $data['n28']) {
-                if($data['need_metiz']) {
+                if ($data['need_metiz']) {
                     $component_count[$items_9[0]->id] += $data['n31'] * 10;
                     $component_count[$items_5[0]->id] += $data['n31'] * 10;
                 }
@@ -1221,10 +1228,10 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (!empty($data['n1']) && $data['n1'] != 29 && $data['n6']) {
 
-                $component_count[$data['n6']] += $data['n5']+0.5; //запас 0.5м
+                $component_count[$data['n6']] += $data['n5'] + 0.5; //запас 0.5м
             }
             //люстры
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_5[0]->id] += $data['n12'] * 3;
                 $component_count[$items_9[0]->id] += $data['n12'] * 3;
                 $component_count[$items_10[0]->id] += $data['n12'] * 8;
@@ -1232,11 +1239,11 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_16[0]->id] += $data['n12'];
             $component_count[$items_58[0]->id] += $data['n12'];
 
-            if($data['need_metiz']){
+            if ($data['need_metiz']) {
                 $component_count[$items_3[0]->id] += $data['n12'] * 2;
             }
             if ($data['n12'] > 0) {
-                $component_count[$items_2[0]->id] += $data['n12']*2;
+                $component_count[$items_2[0]->id] += $data['n12'] * 2;
             }
             if ($del_flag == 1) {
                 $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -1257,7 +1264,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (!empty($n29) && count($n29) > 0) {
                     foreach ($n29 as $profil) {
                         if ($profil[0] > 0) {
-                            switch($profil[1]){
+                            switch ($profil[1]) {
                                 case 12 :
                                 case 13 :
                                     $component_count[$items_659[0]->id] += $profil[0];
@@ -1268,12 +1275,12 @@ class Gm_ceilingHelpersGm_ceiling
                                     break;
                                 case 17:
                                     $component_count[$items_731[0]->id] += $profil[0];
-                                    $component_count[$items_733[0]->id] += $profil[0]*3;
+                                    $component_count[$items_733[0]->id] += $profil[0] * 3;
                                     $component_count[$items_734[0]->id] += $profil[0];
                                     break;
                                 case 18:
                                     $component_count[$items_732[0]->id] += $profil[0];
-                                    $component_count[$items_733[0]->id] += $profil[0]*3;
+                                    $component_count[$items_733[0]->id] += $profil[0] * 3;
                                     $component_count[$items_734[0]->id] += $profil[0];
                                     break;
                             }
@@ -1296,10 +1303,9 @@ class Gm_ceilingHelpersGm_ceiling
                     $svet_count = 0;
                     foreach ($n13 as $lamp) {
                         $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
-                        foreach ($fix_components as $comp)
-                        {
+                        foreach ($fix_components as $comp) {
 
-                            if($comp['id']!=4){/* Костыль */
+                            if ($comp['id'] != 4) {/* Костыль */
                                 $component_count[$comp['id']] += ($comp['count'] * $lamp[0]);
                             }
 
@@ -1311,8 +1317,8 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         $svet_count += $lamp[0];
                     }
-                    $component_count[$items_2[0]->id]+=$svet_count;
-                    if($data['need_metiz']) {
+                    $component_count[$items_2[0]->id] += $svet_count;
+                    if ($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
                     }
                 }
@@ -1363,15 +1369,15 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         if ($component_count[66] < 0) $component_count[66] = 0;
                     }
-                     $svet_count += $lamp->n13_count;
+                    $svet_count += $lamp->n13_count;
                     $component_count[$items_2[0]->id] += $svet_count;
-                    if($data['need_metiz']) {
+                    if ($data['need_metiz']) {
                         $component_count[$items_3[0]->id] += $svet_count;
                     }
                 }
                 $n19 = $data['n19'];
-                if(count($n19) > 0){
-                    foreach($n19 as $wire){
+                if (count($n19) > 0) {
+                    foreach ($n19 as $wire) {
                         $total_n19_count += $wire->count;
                         $component_count[$wire->wire_id] += $wire->count;
                     }
@@ -1406,7 +1412,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (count($n29) > 0) {
                     foreach ($n29 as $profil) {
                         if ($profil->n29_count > 0) {
-                            switch($profil->n29_type) {
+                            switch ($profil->n29_type) {
                                 case 12:
                                 case 13:
                                     $component_count[$items_659[0]->id] += $profil->n29_count;
@@ -1429,37 +1435,34 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
+            if ($data['n30'] > 0) {
+                $component_count[$items_559[0]->id] += $data['n30'];
 
-            if ($data['n28'] == 0){
-                if($component_count[$items_11[0]->id] > $data['n30']){
-                    $component_count[$items_11[0]->id] -= $data['n30'];
-                }
-                else{
-                    $component_count[$items_11[0]->id] = 0;
-                }
-            }
-            elseif ($data['n28'] == 1){
-                if($component_count[$items_236[0]->id] > $data['n30']){
-                    $component_count[$items_236[0]->id] += $data['n30'];
-                }
-                else{
-                    $component_count[$items_236[0]->id] = 0;
-                }
+                if ($data['n28'] == 3) {
+                    if ($component_count[$items_11[0]->id] > $data['n30']) {
+                        $component_count[$items_11[0]->id] -= $data['n30'];
+                    } else {
+                        $component_count[$items_11[0]->id] = 0;
+                    }
+                } elseif ($data['n28'] == 1) {
+                    if ($component_count[$items_236[0]->id] > $data['n30']) {
+                        $component_count[$items_236[0]->id] += $data['n30'];
+                    } else {
+                        $component_count[$items_236[0]->id] = 0;
+                    }
 
-            }
-            elseif ($data['n28'] == 2) {
-                if($component_count[$items_239[0]->id] > $data['n30']){
-                    $component_count[$items_239[0]->id] -= $data['n30'];
-                }
-                else{
-                    $component_count[$items_239[0]->id] = 0;
-               }
+                } elseif ($data['n28'] == 2) {
+                    if ($component_count[$items_239[0]->id] > $data['n30']) {
+                        $component_count[$items_239[0]->id] -= $data['n30'];
+                    } else {
+                        $component_count[$items_239[0]->id] = 0;
+                    }
 
+                }
             }
             //карниз
             if($data['n16'] == 0) {
                 $component_count[$items_1[0]->id] += $data['n27'];
-                $component_count[$items_14[0]->id] += $data['n27'];
                 if($data['need_metiz']){
                     $component_count[$items_3[0]->id] += $data['n27'] * 3;
                     $component_count[$items_5[0]->id] += $data['n27'] * 6;
@@ -1471,33 +1474,34 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n16']) {
                 switch ($data['niche']){
                     case 1 :
-                        $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_11[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_1[0]->id] += $data['n27'];      //брус
+                        $component_count[$items_11[0]->id] += $data['n27'];     //Багет
+                        $component_count[$items_726[0]->id] += $data['n27']*2;  //меб.уголок 100*125
+                        $component_count[$items_14[0]->id] += $data['n27'];     //вставка в разд
                         break;
                     case 2 :
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_11[0]->id] += $data['n27'];
-                        $component_count[$items_64[0]->id] += $data['n27'];
+                        $component_count[$items_64[0]->id] += $data['n27'];     //отбойник
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         break;
                     case 3:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
-                        $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_727[0]->id] += $data['n27'];
+                        $component_count[$items_236[0]->id] += $data['n27'];    //потлочн аллюм багет
+                        $component_count[$items_727[0]->id] += $data['n27'];    //пластик
                         break;
                     case 4:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_728[0]->id] += $data['n27'];
+                        $component_count[$items_728[0]->id] += $data['n27'];    //пластик
                         break;
                     case 5:
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_726[0]->id] += $data['n27']*2;
                         $component_count[$items_236[0]->id] += $data['n27'];
-                        $component_count[$items_729[0]->id] += $data['n27'];
+                        $component_count[$items_729[0]->id] += $data['n27'];    //пластик
                         break;
                 }
                /* $component_count[$items_430[0]->id] += $data['n27'] * 2;
@@ -1519,8 +1523,43 @@ class Gm_ceilingHelpersGm_ceiling
             //контурный профиль
             if($data['n35'] > 0){
                 $component_count[$items_735[0]->id] += $data['n35'];
-            }
+                if ($data['n28'] == 3){
+                    if($component_count[$items_11[0]->id] > $data['n35']){
+                        $component_count[$items_11[0]->id] -= $data['n35'];
+                    }
+                    else{
+                        $component_count[$items_11[0]->id] = 0;
+                    }
+                }
+                elseif ($data['n28'] == 1){
+                    if($component_count[$items_236[0]->id] > $data['n35']){
+                        $component_count[$items_236[0]->id] += $data['n35'];
+                    }
+                    else{
+                        $component_count[$items_236[0]->id] = 0;
+                    }
 
+                }
+                elseif ($data['n28'] == 2) {
+                    if($component_count[$items_239[0]->id] > $data['n35']){
+                        $component_count[$items_239[0]->id] -= $data['n35'];
+                    }
+                    else{
+                        $component_count[$items_239[0]->id] = 0;
+                    }
+
+                }
+            }
+            //керамогранит
+            if($data['n8'] > 0){
+                $component_count[$items_236] += $data['n8'];
+                $component_count[$items_1] += $data['n8'];
+                if($data['need_metiz']) {
+                    $component_count[$items_5[0]->id] += $data['n8'] * 4;
+                    $component_count[$items_9[0]->id] += $data['n8'] * 4;
+                    $component_count[$items_8[0]->id] += $data['n8'] * 4;
+                }
+            }
             //лента для карниза
             //контурный профиль
             if($data['n39'] > 0){
@@ -1770,10 +1809,11 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+            $offcut_data = self::calculate_offcut($calc_id);
             if(in_array('16',JFactory::getUser()->groups)) {
                 $min_sum = 200;//минимальная сумма заказа
                 $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
-                if ($canvases_data['self_dealer_total'] + $guild_cost < $min_sum) {
+                if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < $min_sum) {
                     $canvases_data['min_self_dealer_total'] = $min_sum;
                     $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
                 }
@@ -2325,6 +2365,8 @@ class Gm_ceilingHelpersGm_ceiling
                     //вычитаем из периметра потолка крепление в керамогранит
                     $n5val = (($n5val - $data['n8']) > 0) ? $n5val - $data['n8'] : 0;
                     $n5val = (($n5val - $data['n20']) > 0) ? $n5val - $data['n20'] : 0;
+                    $n5val = (($n5val - $data['n30']) > 0) ? $n5val - $data['n30'] : 0;
+                    $n5val = (($n5val - $data['n35']) > 0) ? $n5val - $data['n35'] : 0;
                     if ($n5val) {
                         //выбор типа профиля
                         if ($data['n28'] == 3) {
@@ -3960,6 +4002,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if($canvases_data['min_self_dealer_total']) {
                 $offcut_square_data['self_dealer_total']  = 0;
+                $guild_data["total_gm_guild"] = 0;
             }
             if($need_price == 1){
                 $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];

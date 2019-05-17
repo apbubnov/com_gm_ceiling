@@ -560,6 +560,7 @@ jQuery('.btn_img_file').click(function() {
                 addClass: 'btn btn-primary', text: 'Ок', onClick: function($noty) {
                     elem_file.setAttribute('data-img-type', jQuery('[name="img_type"]:checked').val());
                     elem_file.click();
+                    $noty.close();
                 }
             },
             {
@@ -578,7 +579,8 @@ jQuery('.btn_img_file').click(function() {
 jQuery('.img_file').change(function() {
     var this_elem = jQuery(this)[0];
     var calc_id = jQuery(this).data('calc-id');
-    var elem_div = jQuery(this).siblings('.div_imgs')[0];
+    console.log(jQuery(this).closest('.other_tabs').find('.div_imgs')[0]);
+    var elem_div = jQuery(this).closest('.other_tabs').find('.div_imgs')[0];
     var formdata = new FormData();
     if (this_elem.files.length < 1) {
         return;
@@ -588,7 +590,6 @@ jQuery('.img_file').change(function() {
     jQuery.each(this_elem.files, function(key, value) {
         formdata.append(key, value);
     });
-    console.log(jQuery(this).data('img-type'));
     formdata.append('type', jQuery(this).data('img-type'));
     
     jQuery.ajax({
@@ -607,6 +608,14 @@ jQuery('.img_file').change(function() {
                 elem_div.appendChild(img);
                 img.onclick = clickUploadedCalcImg;
                 //elem_div.innerHTML += '<img src="'+data[i]+'" class="uploaded_calc_img">';
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Изображение загружено"
+                });
             }
         },
         dataType: "json",

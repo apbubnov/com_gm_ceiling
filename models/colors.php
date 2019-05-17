@@ -436,7 +436,7 @@ class Gm_ceilingModelColors extends JModelList
               GROUP BY color.id*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query->select('color.*,CONCAT("[", GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',c.id,\'","name":"\',c.name,\' \',c.country,\' \',c.width,\' \',t.texture_title,\'"}\') SEPARATOR \',\'),\']\') AS canvases');
+            $query->select('color.*,CONCAT("[", GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',c.id,\'","count":"\',c.count,\'","name":"\',c.name,\' \',c.country,\' \',c.width,\' \',t.texture_title,\'"}\') SEPARATOR \',\'),\']\') AS canvases');
             $query->from('`#__gm_ceiling_colors` as color');
             $query->leftJoin('`#__canvases` as c on c.color_id = color.id');
             $query->leftJoin('`rgzbn_gm_ceiling_textures` AS t ON c.texture_id = t.id');

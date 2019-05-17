@@ -122,11 +122,26 @@ class Gm_ceilingModelProjects extends JModelList
                 $dateTo = date('Y-m-d');
             }
             $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
+
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
+
             $query = 'SET lc_time_names = \'ru_RU\'';
             $db->setQuery($query);
             $db->execute();
 
+            $calc_subquery = $db->getQuery(true);
+            $calc_subquery
+                ->select("`project_id`,
+                           SUM(`components_sum`) + SUM(`canvases_sum`) AS `self_price`,
+                           SUM(`n4`) AS `quadrature`,COUNT(`id`) AS `count_ceilings`,
+                           SUM(`components_sum`) AS components_sum,SUM(`canvases_sum`) AS canvases_sum,
+                           SUM(`mounting_sum`) AS mounting_sum,
+                           MAX(`run_date`) AS `last_run_date`,
+                           MAX(`run_by_call`) AS `run_by_call`")
+                ->from("`rgzbn_gm_ceiling_calculations`")
+                ->group("`project_id`");
             $subquery = $db->getQuery(true);
             $subquery->select('`p`.`id`,
                             `p`.`created_by`,
@@ -162,22 +177,24 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`calcs_mounting_sum`,
                             `p`.`new_mount_sum`,
                             `p`.`new_material_sum`,
-                            (SUM(`calcs`.`components_sum`) + SUM(`calcs`.`canvases_sum`)) AS `self_price`,
-                            SUM(`calcs`.`n4`) AS `quadrature`,
-                            COUNT(`calcs`.`id`) AS `count_ceilings`,
-                            ((SUM(`calcs`.`components_sum`) * 100) /
+                            `calcs`.`components_sum`,
+                            `calcs`.`canvases_sum`,
+                            `calcs`.`mounting_sum`,
+                            `calcs`.`self_price`,
+                            `calcs`.`count_ceilings`,
+                            `calcs`.`last_run_date`,
+                            `calcs`.`run_by_call`,
+                            ((`calcs`.`components_sum` * 100) /
                                 (100 - `p`.`gm_components_margin` - `p`.`dealer_components_margin` +
                                     (`p`.`gm_components_margin` * `p`.`dealer_components_margin`))
                             ) AS `components_margin_sum`,
-                            ((SUM(`calcs`.`canvases_sum`) * 100) /
+                            ((`calcs`.`canvases_sum` * 100) /
                                 (100 - `p`.`gm_canvases_margin` - `p`.`dealer_canvases_margin` +
                                     (`p`.`gm_canvases_margin` * `p`.`dealer_canvases_margin`))
                             ) AS `canvases_margin_sum`,
-                            ((SUM(`calcs`.`mounting_sum`) * 100) /
+                            ((`calcs`.`mounting_sum` * 100) /
                                 (100 - `p`.`dealer_mounting_margin`)
                             ) AS `mounting_margin_sum`,
-                            MAX(`calcs`.`run_date`) AS `last_run_date`,
-                            MAX(`calcs`.`run_by_call`) AS `run_by_call`,
                             `p`.`gm_canvases_margin`,
                             `p`.`gm_components_margin`,
                             `p`.`gm_mounting_margin`,
@@ -203,6 +220,11 @@ class Gm_ceilingModelProjects extends JModelList
                                    \']\'
                             ) AS `project_status_history`
                         ');
+            $subquery->select('ROUND(CASE 
+                                        WHEN p.transport = 1 THEN ((p.distance_col*`um`.`transport`*100)/(100-30))
+                                        WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
+                                        ELSE 0
+                                    END,0) AS transport_cost');
             $subquery->from('`#__gm_ceiling_projects` AS `p`');
             $subquery->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
             $subquery->leftJoin('`#__gm_ceiling_clients` AS `cl` ON `cl`.`id` = `p`.`client_id`');
@@ -210,11 +232,11 @@ class Gm_ceilingModelProjects extends JModelList
             $subquery->leftJoin('`#__gm_ceiling_clients_contacts` AS `cl_con` ON `cl_con`.`client_id` = `p`.`client_id`');
             $subquery->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
             $subquery->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
-            $subquery->leftJoin("`#__gm_ceiling_calculations` AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
+            $subquery->leftJoin("($calc_subquery) AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
             $subquery->leftJoin("`#__gm_ceiling_projects_history` AS `ph` ON `ph`.`project_id` = `p`.`id`");
+            $subquery->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `cl`.`dealer_id`");
             $subquery->where('`p`.`deleted_by_user` = 0');
             $subquery->group('`p`.`id`');
-
             $query = $db->getQuery(true);
             $query->select('`p`.`id`,
                         `p`.`created_by`,
@@ -234,7 +256,7 @@ class Gm_ceilingModelProjects extends JModelList
                         ) AS `project_margin_sum`');
             $query->from('('.$subquery.') AS `p`');
 
-
+            //throw new Exception($subquery);
             $user = JFactory::getUser();
             $app = JFactory::getApplication();
             $groups = $user->groups;
@@ -410,6 +432,19 @@ class Gm_ceilingModelProjects extends JModelList
                 case 'dealer':
                     $query->where('(`p`.`dealer_id` = '.$user->id.' OR `p`.`dealer_id` = '.$user->dealer_id.')');
                     break;
+                case 'accountant':
+                    if($subtype == 'close'){
+                        $query->select('`p`.`project_mounting_date`');
+                        $query->select('`p`.`components_sum`');
+                        $query->select('`p`.`canvases_sum`');
+                        $query->select('`p`.`mounting_sum`');
+                        $query->select('`p`.`self_price`');
+                        $query->select('`p`.`project_sum`');
+                        $query->select('`p`.`transport_cost`');
+                        $query->where("`p`.`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29) AND `p`.`dealer_id` = $user->dealer_id");
+
+                    }
+                    break;
                 default:
                     break;
             }
@@ -431,7 +466,6 @@ class Gm_ceilingModelProjects extends JModelList
             //     $query->order('a.calculation_date DESC');
 
             $query->order('`p`.`id` DESC');
-            
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -634,9 +668,16 @@ class Gm_ceilingModelProjects extends JModelList
     public function getDataByStatus($status, $data=null) {
         try
         {
+
             $user       = JFactory::getUser();
             $userId     = $user->get('id');
-            $dealer_id = $user->dealer_id;
+            if($user->dealer_type == 0 || $user->dealer_type == 1){
+                $dealer_id = $user->dealer_id;
+            }
+            else{
+                $dealer_id = $user->id;
+
+            }
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 

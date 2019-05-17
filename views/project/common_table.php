@@ -728,9 +728,8 @@
                                         <div class="row div_imgs">
                                             <?php
                                                 foreach ($files as $value) {
-                                                    echo '<img src="'.$value.'" data-path="'.substr_replace($value, 'uploaded_calc_images/', 0).'" class="uploaded_calc_img">';
+                                                    echo '<img src="'.$value.'" data-path="'.str_replace('uploaded_calc_images/', '', $value).'" class="uploaded_calc_img">';
                                                 }
-
                                             ?>
                                         </div>
                                     </div>

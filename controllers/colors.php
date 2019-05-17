@@ -80,6 +80,9 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             imagefill($img, 0, 0, $color);
             foreach ($textures as $value) {
                 $filename = $name.$value.".png";
+                if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/images/canvases/' . $filename)){
+                    unlink($_SERVER['DOCUMENT_ROOT'] . '/images/canvases/' . $filename);
+                }
                 if ($value == "gly") {
                     $gl = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . '/images/glyanec.png');
                     imagecopy($img, $gl, 0, 0, 0, 0, $width, $height);
@@ -124,6 +127,15 @@ class Gm_ceilingControllerColors extends Gm_ceilingController
             $name = $jinput->get('name', '', 'STRING');
             $id = $jinput->get('idColor', '', 'STRING');
             $textures = $jinput->get('textures',[],'ARRAY');
+            $textureNewName = $jinput->get('textureNewName','','STRING');
+            $textureId = $jinput->get('textureId','','STRING');
+            if(!empty($textureId)&&!empty($textureNewName)){
+                $texturesModel = Gm_ceilingHelpersGm_ceiling::getModel('textures');
+                $texture = $texturesModel->getFilteredData("a.id = $textureId");
+                if($textureNewName != $texture[0]->texture_title){
+                    $texturesModel->updateTitle($textureId,$textureNewName);
+                }
+            }
             $this->createColorImage($name,$textures,$color_code);
             $model = $this->getModel();
             $result = $model->save($id,$name,$color_code);

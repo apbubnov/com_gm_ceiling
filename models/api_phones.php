@@ -82,13 +82,18 @@ class Gm_ceilingModelApi_phones extends JModelList
 		{
 			$app = JFactory::getApplication();
 			$user = JFactory::getUser();
-			$dealerId = $user->dealer_id;
+			if($user->dealer_type == 0 || $user->dealer_type == 1){
+                $dealerId = $user->dealer_id;
+            }
+			else{
+                $dealerId = $user->id;
+            }
 			// Create a new query object.
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from('#__gm_ceiling_api_phones');
-			$query->where("id <> 10 and dealer_id = $user->dealer_id");
+			$query->where("id <> 10 and dealer_id = $dealerId");
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
@@ -191,6 +196,12 @@ class Gm_ceilingModelApi_phones extends JModelList
         try
         {
         	$user = JFactory::getUser();
+        	if($user->dealer_type == 0 || $user->dealer_type == 1){
+        	    $dealer_id = $user->dealer_id;
+            }
+            else{
+                $dealer_id = $user->id;
+            }
         	if ($user->guest) {
         		throw new Exception('403 forbidden');
         	}
@@ -198,7 +209,7 @@ class Gm_ceilingModelApi_phones extends JModelList
 	        $query = $db->getQuery(true);
 	        $query->insert('#__gm_ceiling_api_phones');
 	        $query->columns('`name`, `dealer_id`');
-			$query->values("'$name', $user->dealer_id");
+			$query->values("'$name', $dealer_id");
 			$db->setQuery($query);
 	        $db->execute();
 	        $last_id = $db->insertid();

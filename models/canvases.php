@@ -861,4 +861,20 @@ class Gm_ceilingModelCanvases extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    public function updateCount($id,$count){
+        try{
+            $db= $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`rgzbn_gm_ceiling_canvases`')
+                ->set("count = $count")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

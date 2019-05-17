@@ -32,7 +32,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
     <? if (count($this->items) > 0): ?>
 	 <div class="row">
          <div class="col-md-4 col-xs-6"></div>
-         <div class="col-md-4 col-xs-6 right"><input type="date" class="input-gm" id = "run_date"> </div>
+         <div class="col-md-4 col-xs-6 right"><input class="input-gm" id = "run_date"> </div>
          <div class="col-md-3 col-xs-9">
              <input type="text" id="search_text" class="form-control">
          </div>
@@ -143,6 +143,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             }
         });
 	jQuery(document).ready(function () {
+	    jQuery("#run_date").mask("99.99.9999");
 		jQuery('#btn_back').click(function(){
                 location.href = "/index.php?option=com_gm_ceiling&task=mainpage";
             });
@@ -151,7 +152,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		jQuery("#search_btn").click(function () {
             var search = jQuery("#search_text").val();
             var date = jQuery('#run_date').val();
-            showFiltered(search,date);
+            showFiltered(search,formatDate(date));
         });
 
         function OpenPage() {
@@ -170,17 +171,34 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 if(!empty(elem.project_status_history)&&!empty(searchDate)) {
                     status_history  = JSON.parse(elem.project_status_history);
                 }
-                var  exist = status_history.find(function (status) {
-                    return !empty(searchDate) ? status.status == 5 && status.date === searchDate : true;
-                });
-                if(search_reg.test(elem.client_name)||search_reg.test(elem.dealer_name)||search_reg.test(elem.id)||
-                    search_reg.test(elem.project_info) || exist){
+                var  existDate = true,
+                     existText = true;
+                if(!empty(searchText)){
+                    console.log("text");
+                    existText = search_reg.test(elem.client_name)||search_reg.test(elem.dealer_name)||search_reg.test(elem.id)||
+                    search_reg.test(elem.project_info);
+                }
+                console.log(searchDate);
+                if(!empty(searchDate)){
+                    console.log("date");
+                    existDate = status_history.find(function (status) {
+                        return !empty(searchDate) && status.status == 5 && status.date === searchDate ? true : false;
+                    });
+
+                    if(existDate === undefined){
+                        existDate = false;
+                    }
+                }
+
+                if(existDate && existText){
+                   console.log("go")
                     jQuery("#projectList > tbody").append('<tr></tr>');
                     jQuery("#projectList > tbody > tr:last").attr("data-href", "/index.php?option=com_gm_ceiling&view=project&type=gmmanager&id="+elem.id);
                     jQuery("#projectList > tbody > tr:last").append('<td>'+elem.id+'</td>' +
                         '<td>'+elem.project_mounting_date+'</td><td>'+elem.project_info+'</td><td>'+elem.note+'</td>' +
                         '<td>'+elem.client_contacts+'</td><td>'+elem.client_name+'</td><td>'+elem.dealer_name+'</td>');
                 }
+
             });
             OpenPage();
         }
@@ -190,19 +208,33 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             }
         });
 
-        jQuery("#run_date").change(function(){
-            var date = this.value;
+        jQuery("#run_date").keyup(function(){
+            var date = jQuery("#run_date").val();
             var search = jQuery("#search_text").val();
-            showFiltered(search,date);
+            if(date.replaceAll('_',"").length > 9){
+                showFiltered(search,formatDate(date));
+            }
+            if(date.replaceAll('_',"").replaceAll('.',"").length == 0){
+                showFiltered(search,"");
+            }
         });
 	});
 
-
+    function formatDate(date) {
+       var date_arr = date.split('.'),
+           year = date_arr[2],
+           month = date_arr[1],
+           day = date_arr[0];
+        return (!empty(year)&&!empty(month)&&!empty(day)) ? [year, month, day].join('-'):"";
+    }
 	function deleteItem() {
 
 		if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
 			return false;
 		}
 	}
+    String.prototype.replaceAll = function(search, replace){
+        return this.split(search).join(replace);
+    }
 </script>
 <?php } ?>

@@ -150,7 +150,8 @@ foreach ($this->items as $i => $item){
 							jQuery.get(
 							  "/index.php?option=com_gm_ceiling&task=project.done",
 							  {
-								project_id: button.data("project_id")
+							      project_id: button.data("project_id"),
+                                  check:1
 							  },
 							  function(data){
 								  if(data == "1") {
