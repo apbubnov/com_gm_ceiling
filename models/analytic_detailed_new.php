@@ -156,7 +156,13 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
 						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
 							$advt[$advt_id]['projects'][$key][] = $project->project_id;
-							$advt[$advt_id][$key] += ($key != "profit") ? $project->sum : $project->profit;
+							if($key!="profit"){
+                                $advt[$advt_id][$key] += $project->sum;
+                            }
+                            if($key == "profit"){
+                                $advt[$advt_id][$key] += $project->profit;
+                            }
+
 						}
 					}
 				}

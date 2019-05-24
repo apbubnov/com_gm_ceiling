@@ -124,7 +124,7 @@ echo parent::getPreloaderNotJS();
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
-    var clients_data = JSON.parse('<?php echo json_encode($clients); ?>');
+    var clients_data = JSON.parse('<?php echo quotemeta(json_encode($clients)); ?>');
     var elem_select_status = document.getElementById('select_status');
     var elem_select_label = document.getElementById('select_label');
     var elem_search = document.getElementById('search_text');

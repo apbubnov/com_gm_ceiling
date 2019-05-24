@@ -819,7 +819,11 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
             $subquery
-                ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
+                ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0)) + ROUND(CASE 
+                                        WHEN p.transport = 1 THEN (p.distance_col*`um`.`transport`)
+                                        WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
+                                        ELSE 0
+                                    END,0)")
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
             $query
@@ -840,6 +844,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->leftJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
                 ->InnerJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
                 ->LeftJoin('`rgzbn_gm_ceiling_clients_labels` AS cl ON c.label_id = cl.id')
+                ->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `c`.`dealer_id`")
                 ->where("p.id in $projects");
             $db->setQuery($query);
             $items = $db->loadObjectList();

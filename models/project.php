@@ -160,6 +160,16 @@ class Gm_ceilingModelProject extends JModelItem
 				$mount_array = $db->loadObjectList();
 				$this->_item->mount_data = htmlspecialchars(json_encode((!empty($mount_array)) ? $mount_array : array()),ENT_QUOTES);
 
+                $query = $db->getQuery(true);
+                $query
+                    ->select("SUM(prepayment_sum) as total")
+                    ->from('`rgzbn_gm_ceiling_projects_prepayment`')
+                    ->where("project_id =". $this->_item->id);
+                $db->setQuery($query);
+                $prepayment_total = $db->loadObject();
+                if(!empty($prepayment_total)){
+                    $this->_item->prepayment_total = $prepayment_total->total;
+                }
 /*				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
 					if (is_object($this->_item->project_mounter)){
 						$this->_item->project_mounter = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->project_mounter);
