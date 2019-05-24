@@ -219,7 +219,7 @@ if (!empty($calculation_ids)) {
     </div>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-1-tar">
+        <div id="modal-window-1-tar" style="width: 86%; margin: auto;">
             <!--<div align=center>
                 <p class ="cbx_p">Выполнено:</p>
                 <p>
@@ -267,13 +267,25 @@ if (!empty($calculation_ids)) {
                     </label>
                 </p>
             </div>-->
+            <?php foreach ($calculation_ids as $value) { ?>
+                <div id="div-images-block">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-0"></div>
+                        <div class="col-md-5 col-sm-12">Изображение для "<?= $value->calculation_title; ?>"</div>
+                        <div class="col-md-5 col-sm-12"><input type="file" class="img_file" data-calc-id="<?= $value->id; ?>" data-img-type="after" multiple accept="image/*"></div>
+                        <div class="col-md-1 col-sm-0"></div>
+                    </div>
+                    <hr>
+                </div>
+            <?php } ?>
             <p>Введите примечание:</p>
             <p>
-                <textarea id="note"></textarea>
+                <textarea id="note" style="min-width: 50px; width: 90%"></textarea>
             </p>
             <div id="warning">
                 <p>Введите примечание</p>
             </div>
+            
             <p><button type="button" id="save" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
@@ -396,14 +408,10 @@ if (!empty($calculation_ids)) {
         });
 
         //скрыть модальное окно
-        jQuery(document).mouseup(function (e) {
-            var div = jQuery("#modal-window-1-tar");
-            if (!div.is(e.target)
-                && div.has(e.target).length === 0) {
-                jQuery("#close-tar").hide();
-                jQuery("#modal-window-container-tar").hide();
-                jQuery("#modal-window-1-tar").hide();
-            }
+        jQuery("#close-tar").click(function(e) {
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-1-tar").hide();
         });
 
         //  кнопка "монтаж начат"
@@ -426,12 +434,46 @@ if (!empty($calculation_ids)) {
             });
         });
 
+        jQuery('.img_file').change(function() {
+            var elem_file = jQuery(this)[0];
+            var n = noty({
+                theme: 'relax',
+                type: 'alert',
+                layout: 'topCenter',
+                text: '<input type="radio" value="after" name="img_type" style="margin-top: 10px; cursor: pointer;" checked> После<br>'+
+                    '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
+                modal: true,
+                buttons:[
+                    {
+                        addClass: 'btn btn-primary', text: 'Ок', onClick: function($noty) {
+                            elem_file.setAttribute('data-img-type', jQuery('[name="img_type"]:checked').val());
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            }).show();
+            document.getElementsByClassName('noty_message')[0].style.textAlign = 'left';
+            document.getElementsByClassName('noty_message')[0].style.paddingLeft = '30%';
+            document.getElementsByClassName('noty_message')[0].style.fontSize = '14pt';
+            document.getElementsByClassName('noty_buttons')[0].style.textAlign = 'center';
+        });
+
         // узнаем какая кнопка, открываем модальное окно
         jQuery("#buttons-cantainer").on("click", ".modal", function() {
             whatBtn = this.id;
             jQuery("#close-tar").show();
             jQuery("#modal-window-container-tar").show();
             jQuery("#modal-window-1-tar").show("slow");
+            if (whatBtn === "complited") {
+                jQuery('div-images-block').show();
+            } else {
+                jQuery('div-images-block').hide();
+            }
         });
 
         // получение значений из селектов
@@ -442,23 +484,45 @@ if (!empty($calculation_ids)) {
                 // кнопка "монтаж выполнен"
                 CurrentDateTime();
 
+                var formData = new FormData();
+                var elemsFiles = document.getElementsByClassName('img_file');
+                var arrayCalcImages = [];
+                for (var i = elemsFiles.length; i--;) {
+                    if (elemsFiles[i].files.length < 1) {
+                        continue;
+                    }
+                    arrayCalcImages.push({
+                        calc_id: elemsFiles[i].getAttribute('data-calc-id'),
+                        type: elemsFiles[i].getAttribute('data-img-type'),
+                        images: []
+                    });
+                    jQuery.each(elemsFiles[i].files, function(key, value) {
+                        arrayCalcImages[i].images.push(value.name);
+                        formData.append(key, value);
+                    });
+                }
+                console.log(arrayCalcImages);
+                formData.append('date', date);
+                formData.append('url_proj', url_proj);
+                formData.append('note', note);
+                formData.append('stage', stage);
+                formData.append('arrayCalcImages', JSON.stringify(arrayCalcImages));
+
                 jQuery.ajax({
                     type: "POST",
                     url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
                     dataType: 'json',
-                    data: {
-                        date: date,
-                        url_proj: url_proj,
-                        note: note,
-                        stage: stage
-                    },
+                    cache: false,
+                    processData: false, // Не обрабатываем файлы (Don't process the files)
+                    contentType: false, // Так jQuery скажет серверу что это строковой запрос
+                    data: formData,
                     success: function(msg) {
                         console.log(msg);
                         if (msg[0].project_status == 11 || msg[0].project_status == 24 || msg[0].project_status == 25 || msg[0].project_status == 26) {
                             window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
                         }
                     },
-                    error: function(data){
+                    error: function(data) {
                         console.log(data);
                     }
                 });

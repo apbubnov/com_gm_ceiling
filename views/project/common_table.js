@@ -756,3 +756,94 @@ jQuery('[name="add_calc_comment"]').click(function(){
         });
     }
 });
+
+jQuery("#prepayment_save").click(function () {
+    var button = jQuery(this),
+        prepayment_sum = jQuery("#prepayment").val();
+    if(!empty(prepayment_sum)) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=project.savePrepayment",
+            data: {
+                project_id: project_id,
+                sum: prepayment_sum,
+                client_id: jQuery("#client_id").val()
+            },
+            success: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Cохранено!"
+                });
+                jQuery("#prepayment_total")[0].innerText = +jQuery("#prepayment_total")[0].innerText+ +prepayment_sum;
+                jQuery("#prepayment").val("");
+            },
+            dataType: "json",
+            timeout: 20000,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сохранения!"
+                });
+            }
+        });
+    }
+    else{
+        var n = noty({
+            theme: 'relax',
+            timeout: 2000,
+            layout: 'center',
+            maxVisible: 5,
+            type: "error",
+            text: "Пустая сумма предоплаты!"
+        });
+    }
+});
+
+jQuery("#show_detailed_prepayment").click(function(){
+    jQuery("#detailed_td").empty();
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=project.getPrepayment",
+        data: {
+            project_id: project_id
+        },
+        success: function (data) {
+           if(!empty(data)){
+               jQuery.each(data,function(index,elem){
+                   jQuery("#detailed_td").append('<div class="row"><div class="col-md-3 col-xs-2">Сумма</div><div class="col-md-3 col-xs-2">'+elem.prepayment_sum+'</div><div class="col-md-3 col-xs-2">внесена</div><div class="col-md-3 col-xs-6">'+elem.datetime+'</div></div>');
+               });
+               jQuery("#detailed_td").append('<div class="row right"><div class="col-md-12 col-xs-12"><button class="btn btn-primary btn-sm" type="button" id="close_detailed_prepayment">Скрыть</button></div></div>');
+           jQuery("#detailed_tr").show();
+           }
+        },
+        dataType: "json",
+        timeout: 20000,
+        error: function (data) {
+            console.log(data);
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка сохранения!"
+            });
+        }
+    });
+});
+
+jQuery(document).on('click','#close_detailed_prepayment',function(){
+    jQuery("#detailed_td").empty();
+    jQuery("#detailed_tr").hide();
+    this.remove();
+
+});

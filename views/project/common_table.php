@@ -218,7 +218,7 @@
                             foreach ($calculations as $calculation) {
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
-                                <td class="include_calculation" >
+                                <td colspan="3" class="include_calculation" >
                                     <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $displayNone;?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
@@ -383,12 +383,51 @@
                                 </th>
                             <?php } ?>
                         </tr>
+                        <tr style="background-color: rgba(0,0,0,0.15);">
+                            <th colspan="3">
+                                Предоплата
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                Всего внесено
+                            </td>
+                            <td colspan="2">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span id="prepayment_total" style="vertical-align: middle;"><?php echo $this->item->prepayment_total;?></span>руб.
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="detailed_tr" style="display: none;">
+                            <td id="detailed_td" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Внесение
+                            </td>
+                            <td colspan="2">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-9" style="padding-left: 0;padding-right: 0;">
+                                        <input class="input-gm" id="prepayment" style="vertical-align: middle;">
+                                    </div>
+                                    <div class="col-md-3 col-xs-3" style="padding-left: 0;padding-right: 0;">
+                                        <button id="prepayment_save" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
                         <?php if ($user->dealer_type != 2) { ?>
                             <tr style="background-color: rgba(0,0,0,0.05);">
                                 <td id="calcs_self_canvases_total"><span>П </span> <span class = "sum"><?php echo round($self_canvases_sum, 0) ?></span></td>
                                 <td id="calcs_self_components_total"><span>К </span><span data-oldval="<?php echo round($self_components_sum, 0) ?>" class="sum"><?php echo round($self_components_sum, 0) ?></span></td>
                                 <td id="calcs_self_mount_total">
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 col-xs-6">
                                         <?php if(!$isNMS){?>
                                         <span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
                                         <?php } else{?>
@@ -402,14 +441,14 @@
                                             </div>
                                         <?php }?>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 col-xs-6">
                                         <div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div>
                                     </div>
                                 </td>
                             </tr>
                         <?php } ?>
-                        <tr>
-                            <th colspan="2" id="duplicate_calcs">Дублировать потолки</th>
+                        <tr style="background-color: rgba(0,0,0,0.15);">
+                            <th colspan="3" id="duplicate_calcs">Дублировать потолки</th>
                         </tr>
                         <tr id="duplicate_tr" style="display:none">
                             <td colspan="3">
@@ -429,10 +468,10 @@
                                         </div>
                                 <?php } ?>
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-xs-6">
                                         <button class="btn btn-primary btn_duplicate" type = "button" data-need_new = "false">Дублировать в<br> текущий проект</button>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-xs-6">
                                         <button class="btn btn-primary btn_duplicate" type="button" data-need_new = "true">Дублировать в<br> новый проект</button>
                                     </div>
                                 </div>

@@ -93,13 +93,39 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 	}
 
 	public function MountingComplited() {
-		try
-		{
+		try {
 			$jinput = JFactory::getApplication()->input;
 			$id = $jinput->get("url_proj","","STRING");
 			$date = $jinput->get("date","","STRING");
 			$note = $jinput->get("note","","STRING");
 			$stage = $jinput->get('stage', null, 'INT');
+			$arrayCalcImages = json_decode($jinput->get('arrayCalcImages', null, 'string'));
+			
+			foreach ($arrayCalcImages as $value) {
+				if (empty($value->calc_id)) {
+	        		throw new Exception('Empty calc_id!');
+		        }
+		        if ($value->type !== 'after' && $value->type !== 'defect') {
+		        	throw new Exception('Invalid img type!');
+		        }
+		        if (!is_dir('uploaded_calc_images/'.$value->calc_id.'/'.$value->type)) {
+		        	mkdir('uploaded_calc_images/'.$value->calc_id.'/'.$value->type, 0777, true);
+		        }
+
+		        $dir = 'uploaded_calc_images/'.$value->calc_id.'/'.$value->type.'/';
+
+		        foreach ($_FILES as $file) {
+		        	foreach ($value->images as $img) {
+		        		if ($file['name'] === $img) {
+			        		$md5 = md5($value->calc_id.microtime().$file['name']);
+					        if (!move_uploaded_file($file['tmp_name'], $dir.$md5)) {
+					            throw new Exception('File not upload', 500);
+					        }
+					        break;
+			        	}
+		        	}
+			    }
+			}
 
 			if (!empty($note)) {
 				$note2 = "Монтаж по проекту №$id выполнен. Примечание от монтажной бригады: ".$note;			
@@ -155,21 +181,16 @@ class Gm_ceilingControllerMountersorder extends JControllerLegacy {
 			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
 			if (strlen($note) != 0) {
-				$body .= "Примечание монтажника: ".$note."\n";			
+				$body .= "Примечание монтажника: ".$note."\n";
 			}
 			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://$server_name/\">http://$server_name</a>";		
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();
 
-			echo json_encode($model_request);
-
-			die(true);
-		}
-		catch(Exception $e)
-        {
+			die(json_encode($model_request));
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
 
