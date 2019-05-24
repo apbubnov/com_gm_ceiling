@@ -766,7 +766,8 @@ jQuery("#prepayment_save").click(function () {
             url: "index.php?option=com_gm_ceiling&task=project.savePrepayment",
             data: {
                 project_id: project_id,
-                sum: prepayment_sum
+                sum: prepayment_sum,
+                client_id: jQuery("#client_id").val()
             },
             success: function (data) {
                 var n = noty({
@@ -777,6 +778,8 @@ jQuery("#prepayment_save").click(function () {
                     type: "success",
                     text: "Cохранено!"
                 });
+                jQuery("#prepayment_total")[0].innerText = +jQuery("#prepayment_total")[0].innerText+ +prepayment_sum;
+                jQuery("#prepayment").val("");
             },
             dataType: "json",
             timeout: 20000,
@@ -806,6 +809,7 @@ jQuery("#prepayment_save").click(function () {
 });
 
 jQuery("#show_detailed_prepayment").click(function(){
+    jQuery("#detailed_td").empty();
     jQuery.ajax({
         type: 'POST',
         url: "index.php?option=com_gm_ceiling&task=project.getPrepayment",
@@ -813,11 +817,11 @@ jQuery("#show_detailed_prepayment").click(function(){
             project_id: project_id
         },
         success: function (data) {
-           console.log(!empty(data));
            if(!empty(data)){
                jQuery.each(data,function(index,elem){
-                   jQuery("#detailed_td").append('<div class="row"><div class="col-md-3 col-xs-3">Сумма</div><div class="col-md-3 col-xs-3">'+elem.prepayment_sum+'</div><div class="col-md-3 col-xs-3">внесена</div><div class="col-md-3 col-xs-3">'+elem.datetime+'</div></div>');
+                   jQuery("#detailed_td").append('<div class="row"><div class="col-md-3 col-xs-2">Сумма</div><div class="col-md-3 col-xs-2">'+elem.prepayment_sum+'</div><div class="col-md-3 col-xs-2">внесена</div><div class="col-md-3 col-xs-6">'+elem.datetime+'</div></div>');
                });
+               jQuery("#detailed_td").append('<div class="row right"><div class="col-md-12 col-xs-12"><button class="btn btn-primary btn-sm" type="button" id="close_detailed_prepayment">Скрыть</button></div></div>');
            jQuery("#detailed_tr").show();
            }
         },
@@ -835,4 +839,11 @@ jQuery("#show_detailed_prepayment").click(function(){
             });
         }
     });
+});
+
+jQuery(document).on('click','#close_detailed_prepayment',function(){
+    jQuery("#detailed_td").empty();
+    jQuery("#detailed_tr").hide();
+    this.remove();
+
 });

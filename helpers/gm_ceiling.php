@@ -621,7 +621,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             //Итоговая сумма компонентов
-            $min_sum = (in_array('16',JFactory::getUser()->groups)) ? 200 : 0;
+            $min_sum = 200;
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
             $gm_components_sum = 0;
@@ -1552,8 +1552,35 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //керамогранит
             if($data['n8'] > 0){
-                $component_count[$items_236] += $data['n8'];
-                $component_count[$items_1] += $data['n8'];
+                if ($data['n28'] == 3){
+                    if($component_count[$items_11[0]->id] > $data['n8']){
+                        $component_count[$items_11[0]->id] -= $data['n8'];
+                    }
+                    else{
+                        $component_count[$items_11[0]->id] = 0;
+                    }
+                }
+                elseif ($data['n28'] == 1){
+                    if($component_count[$items_236[0]->id] > $data['n8']){
+                        $component_count[$items_236[0]->id] += $data['n8'];
+                    }
+                    else{
+                        $component_count[$items_236[0]->id] = 0;
+                    }
+
+                }
+                elseif ($data['n28'] == 2) {
+                    if($component_count[$items_239[0]->id] > $data['n8']){
+                        $component_count[$items_239[0]->id] -= $data['n8'];
+                    }
+                    else{
+                        $component_count[$items_239[0]->id] = 0;
+                    }
+
+                }
+                $component_count[$items_236[0]->id] += $data['n8'];
+                $component_count[$items_1[0]->id] += $data['n8'];
+                $component_count[$items_430[0]->id] += $data['n8']*2;
                 if($data['need_metiz']) {
                     $component_count[$items_5[0]->id] += $data['n8'] * 4;
                     $component_count[$items_9[0]->id] += $data['n8'] * 4;
@@ -1810,13 +1837,12 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
             $offcut_data = self::calculate_offcut($calc_id);
-            if(in_array('16',JFactory::getUser()->groups)) {
-                $min_sum = 200;//минимальная сумма заказа
-                $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
-                if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < $min_sum) {
-                    $canvases_data['min_self_dealer_total'] = $min_sum;
-                    $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
-                }
+
+            $min_sum = 200;//минимальная сумма заказа
+            $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
+            if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < $min_sum) {
+                $canvases_data['min_self_dealer_total'] = $min_sum;
+                $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
             }
             return $canvases_data;
         }
@@ -2932,7 +2958,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n30'] * $gm_mount->mp30,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp30,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n30'] * $results->mp30,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 3
+                        "stage"=> 2
                     );
                 }
                 //разделитель
@@ -3166,6 +3192,7 @@ class Gm_ceilingHelpersGm_ceiling
                             'transport' => 'Транспорт по городу',
                             'distance' => '-',
                             'distance_col'=> $distance_col,
+                            'one_transport_price' =>$res->transport,
                             'client_sum' => $transport_sum,
                             'mounter_sum' => $transport_sum_1
                         );
@@ -3175,15 +3202,18 @@ class Gm_ceilingHelpersGm_ceiling
                         if($distance<=50){
                             $transport_sum = 500 * $distance_col;
                             $transport_sum_1 = 500  * $distance_col;
+                            $one_transport_price = 500;
                         }
                         else {
                             $transport_sum = ($res->distance * $distance) * $distance_col;
                             $transport_sum_1 = ($res->distance * $distance) * $distance_col;
+                            $one_transport_price = ($res->distance * $distance);
                         }
                         $result = array(
                             'transport' => 'Выезд за город',
                             'distance' => $distance,
                             'distance_col'=> $distance_col,
+                            'one_transport_price' =>$one_transport_price,
                             'client_sum' => $transport_sum,
                             'mounter_sum' => $transport_sum_1
                         );
@@ -3272,8 +3302,8 @@ class Gm_ceilingHelpersGm_ceiling
                     $calc->gm_mount_sum = $gm_stage_sum;
                 }
                 else{
-                    $calc->mounting_sum = $calc_mount['total_dealer_mounting'];
-                    $calc->gm_mounting_sum = $calc_mount['total_gm_mounting'];
+                    $calc->mount_sum[1] = $calc_mount['total_dealer_mounting'];
+                    $calc->gm_mount_sum[1] = $calc_mount['total_gm_mounting'];
                 }
             }
             $gm_html = self::createCommonSheet($project,$calculations,$mount_data,$transport,$full,"gm");
@@ -3309,83 +3339,138 @@ class Gm_ceilingHelpersGm_ceiling
         try{
             $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-            $html .= '<h2>Монтажные бригады</h2>';
             $calculations_model = self::getModel('calculations');
+            $split_mount = [];$exist_calc_details = false;
+            $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
+            $html .= "<h2>Даты этапов и монтажные бригады </h2>";
+            $html .= '<table border="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <th class="center">Этап</th>
+                                    <th class="center">Дата</th>
+                                    <th class="center">Бригада</th>
+                                </tr>';
             foreach ($mount_data as $value) {
+                $split_mount[$value->time][] = $value;
                 $brigade_names = "";
                 $names = $calculations_model->FindAllMounters($value->mounter);
                 for($i=0;$i<count($names);$i++){
                     $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
                 }
-                $html .= "<b>Бригада</b>:".JFactory::getUser($value->mounter)->name."($brigade_names) - $value->stage_name;<br>";
+                if(!empty($brigade_names)){
+                    $mount_brigade = JFactory::getUser($value->mounter)->name."(".$brigade_names.")";
+                }
+                else{
+                    $mount_brigade = JFactory::getUser($value->mounter)->name;
+                }
+                $html .="<tr>
+                            <td>$value->stage_name</td>
+                            <td class=\"center\"> ";
+                                $html .= date('d.m.Y H:i',strtotime($value->time));
+                                $html .="</td>
+                            <td class=\"center\">$mount_brigade</td>
+                        </tr>";
             }
-            $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
-            $html .= "<h2>Даты монтажа </h2>";
-            foreach ($mount_data as $value) {
-                $html .= "<b>$value->stage_name</b>:$value->time<br>";
-            }
-            $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
+            $html .= "</tbody></table>";
+            $html .= '<h2>Краткая информация: </h2>';
+            $total_mount_sum = 0;
+            foreach ($split_mount as $key=>$splitted){
+                $sums = [];
+                $sum = 0;
+                $html.= '<b>'.date('d.m.Y H:i',strtotime($key)).'</b><br>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Название</th>
                                 <th class="center">Площадь, м<sup>2</sup>.</th>
                                 <th class="center">Периметр, м </th>';
-            if(!$full){
-                foreach ($mount_data as $value) {
-                    $html .= "<th class=\"center\">$value->stage_name, руб.</th>";
+                foreach ($splitted as $stage){
+                    $html .= "<th class=\"center\">$stage->stage_name, руб.</th>";
                 }
-            }
-            $html .='<th class="center">Стоимость, руб.</th>';
-            foreach ($calculations as $calc) {
-                $html .= '<tr>';
-                $html .= '<td>' . $calc->calculation_title . '</td>';
-                $html .= '<td class="center">' . $calc->n4 . '</td>';
-                $html .= '<td class="center">' . $calc->n5 . '</td>';
-                $calc_sum = 0;
-                if(!$full){
-                    foreach ($mount_data as $value) {
-                        $html .= '<td class="center">' . ($type == "gm") ?$calc->gm_mount_sum[$value->stage] :$calc->mount_sum[$value->stage] . '</td>';
-                        $sums[$value->stage] += ($type == "gm") ? $calc->gm_mount_sum[$value->stage] :$calc->mount_sum[$value->stage];
-                        $calc_sum += ($type == "gm") ?$calc->gm_mount_sum[$value->stage] :$calc->mount_sum[$value->stage] ;
-                    }
-                }
-                else{
-                    $calc_sum = ($type == "gm")?$calc->gm_mounting_sum:$calc->mounting_sum;
-                }
-                $html .= '<td class="center">' . $calc_sum . '</td>';
+                $html .='<th class="center">Стоимость, руб.</th>';
                 $html .= '</tr>';
-                $sum += $calc_sum;
-            }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th>';
-            if(!$full){
-                foreach ($mount_data as $value) {
-                    $html .= '<th class="center">' . $sums[$value->stage] . '</th></tr>';
+                foreach ($calculations as $calc) {
+                    //throw new Exception(print_r($calc,true));
+                    if(!empty($calc->details)){
+                        $exist_calc_details = true;
+                    }
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $calc_sum = 0;
+                    foreach ($splitted as $stage) {
+                        $sum_value = ($type == "gm") ? $calc->gm_mount_sum[$stage->stage] : $calc->mount_sum[$stage->stage];
+                        $html .= '<td class="center">' . $sum_value . '</td>';
+                        $sums[$stage->stage] += $sum_value;
+                        $calc_sum += $sum_value;
+                    }
+                    $html .= '<td class="center">' . $calc_sum . '</td>';
+                    $html .= '</tr>';
+                    $sum += $calc_sum;
                 }
-            }
-            $html .= '<th class="center">' . $sum . '</th></tr>';
-            $html .= '</tbody></table><p>&nbsp;</p>';
-            $html .= '<h2>Транспортные расходы: </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th>';
+                foreach ($sums as $item){
+                    $html .= '<th class="center">' . $item . '</th>';
+                }
+                $html .= '<th class="center">' . $sum . '</th></tr>';
+                $html .= '</tbody>';
+                $html .= '</table>';
+                $html .= '<h2>Транспортные расходы: </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Вид транспорта</th>
                                 <th class="center">Кол-во км<sup>2</sup>.</th>
                                 <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
                             </tr>';
-            $html .= '<tr>';
-            $html .= '<td>' . $transport['transport']. '</td>';
-            $html .= '<td class="center">' . $transport['distance'] . '</td>';
-            $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
-            $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody></table><p>&nbsp;</p>';
-            $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
-            $html .= '</tbody></table><p>&nbsp;</p><br>';
-            $html .= '<h2>Примечания: </h2>';
-            foreach ($calculations as $calc) {
-                if(!empty($calc->details)){
-                    $html .= "$calc->calculation_title: $calc->details;<br>";
+
+                if($transport['distance_col']>0) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $transport['transport'] . '</td>';
+                    $html .= '<td class="center">' . $transport['distance'] . '</td>';
+                    $html .= '<td class="center">' . 1 . '</td>';
+                    $html .= '<td class="center">' . $transport['one_transport_price'] . '</td>';
+                    $html .= '</tr>';
+
+                    $transport['distance_col'] -= 1;
+
+                }
+                else{
+                    $html .= '<tr>';
+                    $html .= '<td colspan="4">Просчитано меньшее кол-во выездов</td>';
+                    $html .= '</tr>';
+                }
+                $html .= '</tbody></table><p>&nbsp;</p>';
+                $total_mount_sum+=round($transport['one_transport_price'] + $sum);
+                $html .= '<div style="text-align: right; font-weight: bold;"> Сумма: ' . round($transport['one_transport_price'] + $sum, 2) . ' руб.</div>';
+            }
+            if($transport['distance_col']>0){
+                $html .= '<h2>Транспортные расходы: </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Вид транспорта</th>
+                                <th class="center">Кол-во км<sup>2</sup>.</th>
+                                <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
+                            </tr>';
+                $html .= '<tr>';
+                $html .= '<td>' . $transport['transport']. '</td>';
+                $html .= '<td class="center">' . $transport['distance'] . '</td>';
+                $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
+                $html .= '<td class="center">' . $transport['distance_col']*$transport['one_transport_price'] . '</td>';
+                $html .= '</tr>';
+                $html .= '</tbody></table><p>&nbsp;</p>';
+                $total_mount_sum += round( $transport['distance_col']*$transport['one_transport_price'],2);
+            }
+
+            $html .= '<br><div style="text-align: right; font-weight: bold;"> Итого: ' . $total_mount_sum . ' руб.</div>';
+            if($exist_calc_details) {
+                $html .= '<h2>Примечания: </h2>';
+                foreach ($calculations as $calc) {
+                    if (!empty($calc->details)) {
+                        $html .= "$calc->calculation_title: $calc->details;<br>";
+                    }
                 }
             }
             return $html;

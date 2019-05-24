@@ -395,7 +395,7 @@
                             <td colspan="2">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        0 руб.
+                                        <span id="prepayment_total" style="vertical-align: middle;"><?php echo $this->item->prepayment_total;?></span>руб.
                                     </div>
                                     <div class="col-md-3">
                                         <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>

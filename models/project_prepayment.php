@@ -31,7 +31,7 @@ class Gm_ceilingModelProject_Prepayment extends JModelItem
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('*')
+                ->select("prepayment_sum,DATE_FORMAT(datetime,'%d.%m.%Y %H:%i:%s') as datetime")
                 ->from('`rgzbn_gm_ceiling_projects_prepayment`')
                 ->where("`project_id` = $projectId");
             $db->setQuery($query);
