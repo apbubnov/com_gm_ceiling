@@ -177,6 +177,23 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public static function getController($name)
+    {
+        try {
+            $controller = null;
+            // If the file exists, let's
+            if (file_exists(JPATH_SITE . '/components/com_gm_ceiling/controllers/' . strtolower($name) . '.php')) {
+                require_once JPATH_SITE . '/components/com_gm_ceiling/controllers/' . strtolower($name) . '.php';
+                $controller = JModelLegacy::getInstance($name, 'Gm_ceilingController');
+            }
+            return $controller;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     /**
      * Gets the files attached to an item
      *

@@ -175,18 +175,8 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			$db->execute();
 
 			// запись в note
-			$user = JFactory::getUser();
-			if ($user->dealer_id == 1) {
-				$ForWho = "gm_mounter_note";
-			} else {
-				$ForWho = "mounter_note";
-			}
-			$query = $db->getQuery(true);
-			$query->update('#__gm_ceiling_projects')
-			->set("$ForWho = '$note'")
-			->where("id = '$id'");
-			$db->setQuery($query);
-			$db->execute();
+			$contrProject = Gm_ceilingHelpersGm_ceiling::getController('project');
+			$contrProject->addNote($id, $note, 6);
 
 			$query = $db->getQuery(true);
 			$query->select('project_status')
