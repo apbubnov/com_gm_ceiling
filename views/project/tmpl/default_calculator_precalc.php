@@ -370,7 +370,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                         </label>
                                     </div>
                                     <div class="col-md-4 left">
-                                        <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
+                                        <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"  data-calc_id = "<?php echo $calculation->id?>" name="date_canvas_ready" class="input-gm">
                                     </div>
 
                                 </div>
