@@ -44,7 +44,7 @@ $user_group = $user->groups;
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=dealers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Дилеры</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=recoil', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Откатники</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=partners', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты партнеров</a>
 		</p>
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fa fa-paint-brush" aria-hidden="true"></i> Отделочники</a>

@@ -218,7 +218,7 @@
                             foreach ($calculations as $calculation) {
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
-                                <td colspan="3" class="include_calculation" >
+                                <td  class="include_calculation" >
                                     <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $displayNone;?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
@@ -227,7 +227,7 @@
                                     <span><i><b><?php echo $calculation->calculation_title; ?></b></i></span>
                                 </td>
                                 <?php if($is_gmmanager){ ?>
-                                    <td colspan="2">
+                                    <td>
                                         <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>
                                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                             <a href="<?php echo $path; ?>" class="btn btn-secondary"

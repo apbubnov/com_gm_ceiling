@@ -153,7 +153,7 @@ if (empty($list['direction']))
         }
 	}
 
-	function getClientsAndProjects($dealer_id = null)
+	function getClientsAndProjects($dealer_id = null,$type = null)
 	{
 		try
 		{
@@ -182,16 +182,27 @@ if (empty($list['direction']))
             	->from("`#__gm_ceiling_clients` as `client`")
                 ->leftJoin('`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`')
                 ->leftJoin("`#__gm_ceiling_projects` as `p` ON `p`.`id` = (SELECT MAX(`id`) FROM `rgzbn_gm_ceiling_projects` WHERE `client_id` = `client`.`id`)")
-                ->leftJoin('`#__users` as `u` ON `client`.`id` = `u`.`associated_client`')
                 ->leftJoin('`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`')
-                ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` ON `client`.`label_id` = `lbs`.`id`')
+                ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` ON `client`.`label_id` = `lbs`.`id`');
+            if(!empty($type)){
+                $query
+                    ->select("`u`.`name`")
+                    ->leftJoin('`#__users` as `u`  ON `client`.`dealer_id` = `u`.`id`')
+                    ->where("`u`.`dealer_type` IN(8) AND `client`.`id` != `u`.`associated_client`");
+
+            }
+            else {
+                $query
+                    ->leftJoin('`#__users` as `u` ON `client`.`id` = `u`.`associated_client`')
+                    ->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
+                }
+            $query
                 ->where('`client`.`deleted_by_user` <> 1')
                 ->order('`client`.`id` DESC')
                 ->group('`client`.`id`');
 
-            $query->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
+
             $db->setQuery($query);
-            
             $result = $db->loadObjectList();
             return $result;
         }
