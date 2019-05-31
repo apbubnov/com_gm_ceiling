@@ -31,26 +31,45 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                 GROUP BY ms.mounter_id*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $subquery = $db->getQuery(true);
-            $subquery
-                ->select("cm.mounter_id AS mounter_id,SUM(cm.sum) AS `sum`")
+            $taken_query = $db->getQuery(true);
+            $taken_query
+                ->select("cm.mounter_id AS mounter_id,u.name,SUM(cm.sum) AS `taken`")
                 ->from("`rgzbn_gm_ceiling_calcs_mount` AS cm")
                 ->leftJoin("`rgzbn_gm_ceiling_calculations` AS cl ON cl.id = cm.calculation_id")
                 ->leftJoin("`rgzbn_gm_ceiling_projects` AS pr ON cl.project_id = pr.id")
                 ->leftJoin("`rgzbn_gm_ceiling_clients` AS cli ON pr.client_id = cli.id")
-                ->where("cli.dealer_id = $builder_id")
+                ->leftJoin("`rgzbn_users` AS u ON u.id = cm.mounter_id")
+                ->where("cli.dealer_id = $builder_id AND cm.mounter_id IS NOT NULL")
                 ->group("cm.mounter_id");
-            $query->select("ms.mounter_id,u.name,SUM(GREATEST(0.00,ms.sum)) AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed,t.sum AS taken")
+            $db->setQuery($taken_query);
+            $taken_items =$db->loadObjectList();
+
+            $query->select("ms.mounter_id,u.name,SUM(GREATEST(0.00,ms.sum)) AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed")
                 ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                 ->leftJoin("`rgzbn_gm_ceiling_projects` AS p ON p.id = ms.project_id")
                 ->leftJoin("`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id")
-                ->leftJoin("($subquery) as t ON t.mounter_id = ms.mounter_id")
                 ->innerJoin('`rgzbn_users` AS u ON u.id = ms.mounter_id')
                 ->where(" c.dealer_id = $builder_id OR ms.builder_id = $builder_id")
                 ->group('ms.mounter_id');
             $db->setQuery($query);
             $items = $db->loadObjectList();
-            return $items;
+            $result = [];
+            foreach ($taken_items as $taken_item){
+                $object = (object)array("mounter_id"=>$taken_item->mounter_id,"name"=>$taken_item->name,"taken"=>$taken_item->taken,"closed"=>0,"payed"=>0);
+                $result[$taken_item->mounter_id] = $object;
+            }
+            foreach ($items as $item){
+
+                if(isset($result[$item->mounter_id])){
+                    $result[$item->mounter_id]->closed = $item->closed;
+                    $result[$item->mounter_id]->payed = $item->payed;
+                }
+                else{
+                    $object = (object)array("mounter_id"=>$item->mounter_id,"name"=>$item->name,"taken"=>0,"closed"=> $item->closed,"payed"=> $item->payed);
+                    $result[$item->mounter_id] = $object;
+                }
+            }
+            return $result;
         }
         catch(Exception $e)
         {

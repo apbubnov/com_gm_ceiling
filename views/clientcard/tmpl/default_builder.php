@@ -761,7 +761,7 @@ foreach($all_builders as $builder){
 
                 console.log(mounterId);
                 jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
+                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.show_salary",
                     data: {
                         mounterId:mounterId,
                         ids:projectsId,
