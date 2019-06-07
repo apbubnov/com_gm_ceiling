@@ -1569,6 +1569,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //керамогранит
             if($data['n8'] > 0){
+                //вычитаем из обычного профидя количество которое будет обагечено алюминиевым
                 if ($data['n28'] == 3){
                     if($component_count[$items_11[0]->id] > $data['n8']){
                         $component_count[$items_11[0]->id] -= $data['n8'];
@@ -1595,13 +1596,22 @@ class Gm_ceilingHelpersGm_ceiling
                     }
 
                 }
-                $component_count[$items_236[0]->id] += $data['n8'];
-                $component_count[$items_1[0]->id] += $data['n8'];
-                $component_count[$items_430[0]->id] += $data['n8']*2;
+
+                if($data['n8'] == $data['n5'] && $data['n30'] > 0) // если керамогранит по всемy периметру и есть парящий потолок
+                {
+                    //вычитаем из кол-ва керамогранита количество парящего
+                    $n8_val = $data['n8'] - $data['n30'];
+                }
+                else{
+                    $n8_val = $data['n8'];
+                }
+                $component_count[$items_236[0]->id] += $n8_val;
+                $component_count[$items_1[0]->id] += $n8_val;
+                $component_count[$items_430[0]->id] += $n8_val*2;
                 if($data['need_metiz']) {
-                    $component_count[$items_5[0]->id] += $data['n8'] * 4;
-                    $component_count[$items_9[0]->id] += $data['n8'] * 4;
-                    $component_count[$items_8[0]->id] += $data['n8'] * 4;
+                    $component_count[$items_5[0]->id] += $n8_val * 4;
+                    $component_count[$items_9[0]->id] += $n8_val * 4;
+                    $component_count[$items_8[0]->id] += $n8_val * 4;
                 }
             }
             //лента для карниза
@@ -1895,17 +1905,17 @@ class Gm_ceilingHelpersGm_ceiling
             if ($canvas_id && $data['offcut_square'] > $data['n4']*0.5) {
                 $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
                 $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
-                $offcut_square_data['self_price'] = round($canvas->price * 0.4, 2);                                    //Себестоимость
+                $offcut_square_data['self_price'] = round($canvas->price * 0.5, 2);                                    //Себестоимость
                 $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);            //Кол-во * Себестоимость
                 //Стоимость с маржой ГМ (для дилера)
-                $offcut_square_data['gm_price'] = round(margin($canvas->price, $gm_canvases_margin) * 0.4, 2);
+                $offcut_square_data['gm_price'] = round(margin($canvas->price, $gm_canvases_margin) * 0.5, 2);
                 //Кол-во * Стоимость с маржой ГМ (для дилера)
                 $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
                 //Стоимость с маржой ГМ и дилера (для клиента)
-                $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvas->price, 0, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
+                $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvas->price, 0, $dealer_info_canvases[$canvas_id]) * 0.5, 2);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
                 $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-                $offcut_square_data['dealer_price'] = round(dealer_margin($canvas->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
+                $offcut_square_data['dealer_price'] = round(dealer_margin($canvas->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]) * 0.5, 2);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
                 $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
             }

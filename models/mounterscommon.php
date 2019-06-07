@@ -99,7 +99,16 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->group('cm.mounter_id,builder.id');
             $db->setQuery($query);
             $items = $db->loadObjectList();
-            return $items;
+            $result = [];
+            foreach ($items as $item){
+                $result[$item->mounter_id]['mounter_name'] = $item->mounter_name;
+                $object = clone $item;
+                $object->rest = $object->closed+$object->payed;
+                unset($object->mounter_name);
+                unset($object->mounter_id);
+                $result[$item->mounter_id]['builder_data'][] = $object;
+            }
+            return $result;
 
         }
 

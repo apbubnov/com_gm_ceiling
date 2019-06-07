@@ -177,7 +177,7 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`calcs_mounting_sum`,
                             `p`.`new_mount_sum`,
                             `p`.`new_material_sum`,
-                            `calcs`.`quadrature`
+                            `calcs`.`quadrature`,
                             `calcs`.`components_sum`,
                             `calcs`.`canvases_sum`,
                             `calcs`.`mounting_sum`,

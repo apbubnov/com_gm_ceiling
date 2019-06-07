@@ -44,8 +44,11 @@
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     //-----------------
     $group_id = ($user->dealer_id == 1) ? 16 : 13;
+    $gaugers_group = ($user->dealer_id == 1) ? 22 : 21;
     $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
     $managers = $usersModel->getUsersByGroupAndDealer($group_id,$user->dealer_id);
+    $gaugers =  $usersModel->getUsersByGroupAndDealer($gaugers_group,$user->dealer_id);
+    $managers = array_merge($managers,$gaugers);
 ?>
 
 <style>
