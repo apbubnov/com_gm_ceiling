@@ -1288,7 +1288,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $last_key = count($result) - 1;
             foreach ($result as $key => $main_group) {
                 if ($key !== $last_key) {
-                    $ids .= $main_group->id.', ';
+                    $ids .= $main_group->id.',';
                 } else {
                     $ids .= $main_group->id;
                 }
@@ -1307,7 +1307,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $last_key = count($groups) - 1;
             foreach ($groups as $key => $group) {
                 if ($key !== $last_key) {
-                    $ids .= $group->id.', ';
+                    $ids .= $group->id.',';
                 } else {
                     $ids .= $group->id;
                 }
@@ -1329,43 +1329,69 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $fields = $db->loadObjectList();
 
             $ids = '';
+            $categories = '';
             $last_key = count($fields) - 1;
             foreach ($fields as $key => $field) {
                 if ($key !== $last_key) {
-                    $ids .= $field->goods_category_id.', ';
+                    if (!empty($field->goods_category_id)) {
+                        $categories .=  $field->goods_category_id.',';
+                    }
+                    $ids .= $field->id.',';
                 } else {
-                    $ids .= $field->goods_category_id;
+                    $ids .= $field->id;
                 }
                 $field->goods = array();
+                $field->jobs = array();
                 foreach ($result as $key2 => $main_group) {
-                    foreach ($groups as $key3 => $group) {
+                    foreach ($result[$key2]->groups as $key3 => $group) {
                         if ($group->id === $field->group_id) {
                             $result[$key2]->groups[$key3]->fields[] = $field;
-                            break;
+                            break 2;
+                        }
+                    }
+                }
+            }
+            $categories = substr($categories, 0, -1);
+
+            $query = $db->getQuery(true);
+            $query->select('`id`, `name`, `category_id`');
+            $query->from('`#__gm_stock_goods`');
+            $query->where("`category_id` in ($categories)");
+            $query->order('`category_id`, `id`');
+            $db->setQuery($query);
+            
+            $goods = $db->loadObjectList();
+
+            foreach ($goods as $key => $item) {
+                foreach ($result as $key2 => $main_group) {
+                    foreach ($result[$key2]->groups as $key3 => $group) {
+                        foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
+                            if ($field->goods_category_id === $item->category_id) {
+                                $result[$key2]->groups[$key3]->fields[$key4]->goods[] = $item;
+                                break 3;
+                            }
                         }
                     }
                 }
             }
 
             $query = $db->getQuery(true);
-            $query->select('`id`, `name`, `category_id`');
-            $query->from('`#__gm_stock_goods`');
-            $query->where("`category_id` in ($ids)");
-            $query->order('`category_id`, `id`');
+            $query->select('`j`.`id`, `j`.`name`, `m`.`field_id`');
+            $query->from('`#__gm_ceiling_fields_jobs_map` as `m`');
+            $query->innerJoin('`#__gm_ceiling_jobs` as `j` on `m`.`job_id` = `j`.`id`');
+            $query->where("`field_id` in ($ids)");
+            $query->order('`job_id`');
             $db->setQuery($query);
             
-            $goods = $db->loadObjectList();
+            $jobs = $db->loadObjectList();
 
-            $last_key = count($goods) - 1;
-            foreach ($goods as $key => $item) {
+            foreach ($jobs as $key => $job) {
                 foreach ($result as $key2 => $main_group) {
-                    foreach ($groups as $key3 => $group) {
-                        foreach ($fields as $key4 => $field) {
-                            if ($field->goods_category_id === $item->category_id) {
-                                $result[$key2]->groups[$key3]->fields[$key4]->goods[] = $item;
-                                $key2 = count($result) - 1;
-                                $key3 = count($groups) - 1;
-                                break;
+                    foreach ($result[$key2]->groups as $key3 => $group) {
+                        foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
+                            if ($field->id === $job->field_id) {
+                                $result[$key2]->groups[$key3]->fields[$key4]->jobs[] = $job;
+                                break 3;
                             }
                         }
                     }
