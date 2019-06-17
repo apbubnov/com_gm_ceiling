@@ -591,6 +591,10 @@ jQuery('.img_file').change(function() {
         formdata.append(key, value);
     });
     formdata.append('type', jQuery(this).data('img-type'));
+
+    for (var pair of formdata.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
     
     jQuery.ajax({
         type: 'POST',
