@@ -590,7 +590,7 @@ jQuery('.img_file').change(function() {
     jQuery.each(this_elem.files, function(key, value) {
         formdata.append(key, value);
     });
-    formdata.append('type', jQuery(this).data('img-type'));
+    formdata.append('type', this_elem.getAttribute('data-img-type'));
 
     for (var pair of formdata.entries()) {
         console.log(pair[0]+ ', ' + pair[1]); 

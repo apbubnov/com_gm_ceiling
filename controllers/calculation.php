@@ -366,6 +366,13 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 					throw new Exception('File not uploaded', 500);
 				}
 		    }
+
+		    $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+		    if ($type === 'defect') {
+		    	$calc_model->update($calc_id, '`defect_status` = 1');
+		    } elseif ($type === 'after' && is_dir('uploaded_calc_images/'.$calc_id.'/defect')) {
+		    	$calc_model->update($calc_id, '`defect_status` = 2');
+		    }
 	        
             die(json_encode($urls));
         } catch(Exception $e) {

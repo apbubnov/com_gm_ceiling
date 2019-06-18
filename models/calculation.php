@@ -784,6 +784,17 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
     }
 
+    public function update($id, $filter) {
+    	$db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->update('`#__gm_ceiling_calculations`');
+        $query->set($filter);
+        $query->where("`id` = $id");
+        $db->setQuery($query);
+        $db->execute();
+        return true;
+    }
+
     function duplicate($data){
 	    try{
             $db = $this->getDbo();
