@@ -64,6 +64,11 @@
             $total_dealer_mount +=$sum;
         }
     }
+    else{
+        foreach ($calculations as $calc) {
+            $total_dealer_mount += $calc->mounting_sum;
+        }
+    }
     foreach ($calculations as $calculation) {
         if (!empty($service_mount)) {
             $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);

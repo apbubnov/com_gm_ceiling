@@ -107,7 +107,13 @@
         $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
         $details = "device: $device;$ll";
     }
-  
+
+    if($type=="gmchief"){
+        $view = "projectform";
+    }
+    else{
+        $view = "project";
+    }
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -181,7 +187,7 @@
             throw new Exception("Пустой id проекта", 1);
         }
         
-        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
+        $save_button_url = "index.php?option=com_gm_ceiling&view=$view$type_url$subtype_url&id=$project_id";
     } else {
         /* сгенерировать ошибку или создать калькуляцию? */
         throw new Exception("Пустой id калькуляции", 1);

@@ -295,7 +295,7 @@ class Gm_ceilingModelProjects extends JModelList
                                         `p`.`run_by_call`
                                 ');
                         $query->where("
-                            `p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29) AND
+                            `p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30) AND
                             (`p`.`run_by_call` = 1 OR `p`.`last_run_date` > '$start_date')
                         ");
 
@@ -394,10 +394,10 @@ class Gm_ceilingModelProjects extends JModelList
 
                     } elseif ($subtype == 'service') {
                         $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
-                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29)");
+                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
 
                     } else {
-                        $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29)');
+                        $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
                         $query->where("`p`.`mounter_dealer_id` = $user->dealer_id");
                     }
                     break;
@@ -426,7 +426,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`project_status` = 1');
 
                     } else {
-                        $query->where('`p`.`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29)');
+                        $query->where('`p`.`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29,30)');
                     }
                     break;
 
@@ -442,7 +442,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->select('`p`.`self_price`');
                         $query->select('`p`.`project_sum`');
                         $query->select('`p`.`transport_cost`');
-                        $query->where("`p`.`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29) AND `p`.`dealer_id` = $user->dealer_id");
+                        $query->where("`p`.`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) AND `p`.`dealer_id` = $user->dealer_id");
 
                     }
                     break;

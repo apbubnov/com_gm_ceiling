@@ -51,6 +51,11 @@ if(!empty($this->item->calcs_mounting_sum)){
         $total_dealer_mount +=$sum;
     }
 }
+else{
+    foreach ($calculations as $calc) {
+        $total_dealer_mount += $calc->mounting_sum;
+    }
+}
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж

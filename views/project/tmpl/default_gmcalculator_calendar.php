@@ -346,6 +346,9 @@
                     <button class="validate btn btn-primary save_bnt" id="save" type="button">Сохранить и запустить <br> в производство</button>
                 </div>
                 <div class="col-xs-12 col-md-6" style="margin-top: 15px">
+                    <button class="validate btn btn-primary save_bnt" id="save_by_call_btn" type="button">Сохранить и запустить <br> монтаж по звонку</button>
+                </div>
+                <div class="col-xs-12 col-md-6" style="margin-top: 15px">
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
@@ -884,6 +887,11 @@
                 jQuery('#project_status').val(5)
                 jQuery("#form-client").submit();
             }
+        });
+
+        jQuery("#save_by_call_btn").click(function(){
+            jQuery('#project_status').val(30)
+            jQuery("#form-client").submit();
         });
 
         jQuery("#ok_btn").click(function(){

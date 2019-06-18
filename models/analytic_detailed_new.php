@@ -198,7 +198,7 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("project_id,api_phone_id,dealer_type")
+				->select("Distinct project_id,api_phone_id,dealer_type")
 				->from('`#__analytic_detailed`')
 				->where("calculation_date BETWEEN '$date1' AND '$date2' and (client_dealer_id = $dealer_id OR (dealer_id = $dealer_id and dealer_type in $dealer_type)) and project_status = 1");
 			$db->setQuery($query);

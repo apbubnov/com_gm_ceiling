@@ -1941,6 +1941,9 @@ class Gm_ceilingModelProject extends JModelItem
 
     function saveNote($project_id, $note,$type = 1) {
     	try {
+    	    if(empty($type)){
+    	        $type = 1;
+            }
     		$user_id = JFactory::getUser()->id;
     		if (empty($project_id) && empty($user_id) && empty($note)) {
     			return false;
@@ -1958,6 +1961,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db->setQuery($query);
 	        $dbNote = $db->loadObject();
             $query = $db->getQuery(true);
+
             if(!empty($dbNote)){
                 $query
                     ->update('`#__gm_ceiling_projects_notes`')
