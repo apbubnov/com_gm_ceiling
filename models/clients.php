@@ -669,7 +669,7 @@ if (empty($list['direction']))
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
+                ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
                 p.project_status,p.project_info,p.id,cm.mounter_id,SUM(calc.n7) as n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
@@ -678,6 +678,7 @@ if (empty($list['direction']))
                 /*->leftJoin("`rgzbn_gm_ceiling_projects_mounts` as pm on pm.project_id = p.id and pm.type=$stage")*/
                 ->where("c.dealer_id = $dealer_id")
                 ->group("p.id");
+                //throw new Exception($query);
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];
@@ -691,6 +692,7 @@ if (empty($list['direction']))
                     $calcsData[$calc->calc_id]['id'] = $calc->calc_id;
                     $calcsData[$calc->calc_id]['title'] = $calc->title;
                     $calcsData[$calc->calc_id]['sum'] = $calc->sum;
+                    $calcsData[$calc->calc_id]['defect_status'] = $calc->defect_status;
                     if(!empty($calc->mounter)) {
                         $calcsData[$calc->calc_id]['mounters'][] =  JFactory::getUser($calc->mounter);
                     }

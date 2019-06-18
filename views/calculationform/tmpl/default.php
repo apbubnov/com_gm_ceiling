@@ -120,7 +120,7 @@
     $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
     $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
     $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
-    $data = json_encode($calculationformModel->getFields(1));
+    $data = quotemeta(json_encode($calculationformModel->getFields(1),JSON_HEX_QUOT));
 
     /*____________________end_______________________  */
     $color_data = json_encode($components_model->getColor());
