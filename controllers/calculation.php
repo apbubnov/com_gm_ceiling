@@ -346,7 +346,9 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 	        	throw new Exception('Invalid img type!');
 	        }
 	        if (!is_dir('uploaded_calc_images/'.$calc_id.'/'.$type)) {
-	        	mkdir('uploaded_calc_images/'.$calc_id.'/'.$type);
+	        	if (!mkdir('uploaded_calc_images/'.$calc_id.'/'.$type, 0777, true)) {
+	        		throw new Exception('Dir not maked', 500);
+	        	}
 	        }
 
 	        $dir = 'uploaded_calc_images/'.$calc_id.'/'.$type.'/';
@@ -354,11 +356,15 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 
 	        foreach ($_FILES as $file) {
 				$md5 = md5($calc_id.microtime().$file['name']);
-		        if (move_uploaded_file($file['tmp_name'], $dir.$md5)) {
-		            $urls[] = $dir.$md5;
-		        } else {
-		            throw new Exception('File not upload', 500);
-		        }
+				if (is_uploaded_file($file['tmp_name'])) {
+					if (move_uploaded_file($file['tmp_name'], $dir.$md5)) {
+			            $urls[] = $dir.$md5;
+			        } else {
+			            throw new Exception('Uploaded file not moved', 500);
+			        }
+				} else {
+					throw new Exception('File not uploaded', 500);
+				}
 		    }
 	        
             die(json_encode($urls));

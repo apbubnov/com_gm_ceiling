@@ -697,4 +697,105 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getPropCanvasWidths() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`#__gm_stock_prop_canvas_widths`')
+                ->order('`width`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $result[] = (object) array('id' => $value->width, 'value' => $value->width);
+            }
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getPropColors() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`#__gm_stock_prop_colors`')
+                ->order('`color`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $result[] = (object) array('id' => $value->color, 'value' => $value->hex);
+            }
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getPropManufacturers() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`#__gm_stock_prop_manufacturers`')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $result[] = (object) array('id' => $value->id, 'value' => $value->manufacturer);
+            }
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getPropTextures() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`#__gm_stock_prop_textures`')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $result[] = (object) array('id' => $value->id, 'value' => $value->texture);
+            }
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getGoodsCategories() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`#__gm_stock_goods_categories`')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                $result[] = (object) array('id' => $value->id, 'value' => $value->category);
+            }
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
