@@ -1332,10 +1332,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $categories = '';
             $last_key = count($fields) - 1;
             foreach ($fields as $key => $field) {
+                if (!empty($field->goods_category_id)) {
+                    $categories .=  $field->goods_category_id.',';
+                }
                 if ($key !== $last_key) {
-                    if (!empty($field->goods_category_id)) {
-                        $categories .=  $field->goods_category_id.',';
-                    }
                     $ids .= $field->id.',';
                 } else {
                     $ids .= $field->id;
@@ -1354,8 +1354,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $categories = substr($categories, 0, -1);
 
             $query = $db->getQuery(true);
-            $query->select('`id`, `name`, `category_id`');
-            $query->from('`#__gm_stock_goods`');
+            $query->select('`id`, `name`, `category_id`, `color`, `hex`');
+            $query->from('`#__goods_components`');
             $query->where("`category_id` in ($categories)");
             $query->order('`category_id`, `id`');
             $db->setQuery($query);
@@ -1368,7 +1368,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
                             if ($field->goods_category_id === $item->category_id) {
                                 $result[$key2]->groups[$key3]->fields[$key4]->goods[] = $item;
-                                break 3;
                             }
                         }
                     }
@@ -1391,7 +1390,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
                             if ($field->id === $job->field_id) {
                                 $result[$key2]->groups[$key3]->fields[$key4]->jobs[] = $job;
-                                break 3;
                             }
                         }
                     }
