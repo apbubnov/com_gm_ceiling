@@ -76,14 +76,27 @@ foreach ($this->items as $i => $item){
 				<th class='center'>
 					Бригада
 				</th>
+                <th class='center'>
+                    Статус
+                </th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php   foreach ($this->items as $i => $item) : ?>
+			<?php   foreach ($this->items as $i => $item) :?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-				<?php endif; ?>
+
+				<?php endif;
+				?>
+                <?php
+                    if($item->project_status == 30){
+                        $style = 'style = "background: linear-gradient( to right, white 50%, red 100%);"';
+                    }
+                    else{
+                        $style = "";
+                    }
+                ?>
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                     <td>
                         <?php if ($item->project_status == 10): ?>
@@ -118,6 +131,9 @@ foreach ($this->items as $i => $item){
                             }
                         } ?>
                     <td class="center one-touch"><?= $mounter; ?></td>
+                    <td class="center one-touch" <?php echo $style; ?>>
+                        <?= $item->status;?>
+                    </td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>
@@ -177,7 +193,7 @@ foreach ($this->items as $i => $item){
 <script>
     var $ = jQuery;
     $(window).resize(function(){
-        reduseGTable();
+        reduceGTable();
     });
 
     // вызовем событие resize

@@ -2853,10 +2853,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Второй уровень безщелевой с натяжкой LED",                         //Название
                             "quantity" => $count_profil_5,                                                 //Кол-во
-                            "gm_salary" => $gm_mount->mp57,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_profil_5 * $gm_mount->mp57,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp57,                                             //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_profil_5 * $results->mp57,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $gm_mount->mp58,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_5 * $gm_mount->mp58,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp58,                                             //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_5 * $results->mp58,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=> 2
                         );
                     }
@@ -2864,10 +2864,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Второй уровень безщелевой с натяжкой ",                            //Название
                             "quantity" => $count_profil_6,                                                 //Кол-во
-                            "gm_salary" => $gm_mount->mp58,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_profil_6 * $gm_mount->mp58,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp58,                                             //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_profil_6 * $results->mp58,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $gm_mount->mp59,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_6 * $gm_mount->mp59,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp59,                                             //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_6 * $results->mp59,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage"=> 2
                         );
                     }
@@ -3310,6 +3310,15 @@ class Gm_ceilingHelpersGm_ceiling
             if(empty($service) && !empty($project->calcs_mounting_sum)){
                 $service = "service";
             }
+
+            foreach($calculations as $calc){
+                if(!empty($calc->n6)){
+                    $stage_insert = (object)array(stage => 4,time => "","mounter" => "","stage_name" => "Вставка");
+                    array_push($mount_data,$stage_insert);
+                    break;
+                }
+            }
+
             foreach ($calculations as $calc) {
                 $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
                 $stage_sum = [];$gm_stage_sum = [];
@@ -3377,6 +3386,8 @@ class Gm_ceilingHelpersGm_ceiling
                                     <th class="center">Дата</th>
                                     <th class="center">Бригада</th>
                                 </tr>';
+
+            //throw new Exception(print_r($mount_data,true));
             foreach ($mount_data as $value) {
                 $split_mount[$value->time][] = $value;
                 $brigade_names = "";
@@ -3390,10 +3401,16 @@ class Gm_ceilingHelpersGm_ceiling
                 else{
                     $mount_brigade = JFactory::getUser($value->mounter)->name;
                 }
+                if(!empty($value->time)){
+                    $stage_date = date('d.m.Y H:i',strtotime($value->time));
+                }
+                else{
+                    $stage_date = "Дата отсутствует";
+                }
                 $html .="<tr>
                             <td>$value->stage_name</td>
                             <td class=\"center\"> ";
-                                $html .= date('d.m.Y H:i',strtotime($value->time));
+                                $html .= $stage_date;
                                 $html .="</td>
                             <td class=\"center\">$mount_brigade</td>
                         </tr>";
@@ -3404,7 +3421,13 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($split_mount as $key=>$splitted){
                 $sums = [];
                 $sum = 0;
-                $html.= '<b>'.date('d.m.Y H:i',strtotime($key)).'</b><br>';
+                if(!empty($key)){
+                    $date = date('d.m.Y H:i',strtotime($key));
+                }
+                else{
+                    $date = "Дата отсутствует";
+                }
+                $html.= '<b>'.$date.'</b><br>';
                 $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -3460,7 +3483,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<td class="center">' . $transport['one_transport_price'] . '</td>';
                     $html .= '</tr>';
 
-                    $transport['distance_col'] -= 1;
+
 
                 }
                 else{
@@ -3468,9 +3491,16 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<td colspan="4">Просчитано меньшее кол-во выездов</td>';
                     $html .= '</tr>';
                 }
+                if($transport['distance_col']>0) {
+                    $one_transport = $transport['one_transport_price'];
+                }
+                else{
+                    $one_transport = 0;
+                }
+                $transport['distance_col'] -= 1;
                 $html .= '</tbody></table><p>&nbsp;</p>';
-                $total_mount_sum+=round($transport['one_transport_price'] + $sum);
-                $html .= '<div style="text-align: right; font-weight: bold;"> Сумма: ' . round($transport['one_transport_price'] + $sum, 2) . ' руб.</div>';
+                $total_mount_sum+=round($one_transport + $sum);
+                $html .= '<div style="text-align: right; font-weight: bold;"> Сумма: ' . round($one_transport + $sum, 2) . ' руб.</div>';
             }
             if($transport['distance_col']>0){
                 $html .= '<h2>Транспортные расходы: </h2>';

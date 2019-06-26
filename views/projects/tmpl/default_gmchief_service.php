@@ -1,6 +1,7 @@
 <?php
 ?>
-<?=parent::getButtonBack();?>
+<?=parent::getButtonBack();
+?>
 
 <table class="table table-striped one-touch-view table_cashbox " id="projectList">
     <thead>
@@ -20,6 +21,9 @@
         <th class='center' width=14%>
             Дилер
         </th>
+        <th class='center' width=14%>
+            Статус
+        </th>
         <th>
             <i class="fa fa-trash-o" aria-hidden="true"></i>
         </th>
@@ -38,6 +42,12 @@
             }
         }
         if($flag){
+            if($item->project_status == 30){
+                $style = 'style = "background: linear-gradient( to right, white 50%, red 100%);"';
+            }
+            else{
+                $style = "";
+            }
             ?>
             <tr data-id = "<?php echo $item->id;?>" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmchief&subtype=service&id=' . $item->id); ?>">
                 <td class='center one-touch'>
@@ -55,6 +65,9 @@
                 </td>
                 <td class='center one-touch'>
                     <?php echo $dealer->name; ?>
+                </td>
+                <td class='center one-touch'  <?= $style; ?>>
+                    <?php echo $item->status; ?>
                 </td>
                 <td>
                     <button class="btn btn-danger delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>

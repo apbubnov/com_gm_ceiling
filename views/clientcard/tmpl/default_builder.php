@@ -488,7 +488,9 @@ foreach($all_builders as $builder){
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
             REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button></div></div>",
             BUILDERS_SELECT = '<select class="input-gm builders_select" style ="vertical-align: middle;"><?php echo $options ?></select>',
-            MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fa fa-floppy-o" aria-hidden="true"></i></buttton>';
+            MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fa fa-floppy-o" aria-hidden="true"></i></buttton>',
+            DEFECT_ICON = '<i class="fas fa-house-damage"></i>',
+            DEFECT_FIXED_ICON = '<i class="fas fa-check-double"></i>';
 
         function fillDuplicateInFields(value){
             jQuery("#where_duplicate").empty();
@@ -1134,10 +1136,23 @@ foreach($all_builders as $builder){
                             style= "";
                             break;
                     }
+                    var isDefect = checkDefect(elem.projects[j].calcs);
+
                     var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
                         "</div>" : "";
-                    td = "<div class='row center'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
+                    var defect_div;
+                    if(isDefect == 1){
+                        defect_div ="<div class='right'>"+DEFECT_ICON+"</div>";
+                    }
+                    else if(isDefect == 2){
+                        defect_div ="<div class='right'>"+DEFECT_FIXED_ICON+"</div>";
+                    }
+                    else{
+                        defect_div = "";
+                    }
+                    td =  defect_div +
+                        "<div class='row center project_href' data-project_id = '"+elem.projects[j].id+"'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
                         "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
                         "</div>" +
@@ -1211,6 +1226,17 @@ foreach($all_builders as $builder){
                 tr +='<td>'+elem.sum+'</td>';
                 jQuery("#calcsMounters > tbody > tr:last").append(tr);
             });
+        }
+
+        function checkDefect(calcs){
+            var result = 0;
+            jQuery.each(calcs,function(index,elem){
+                if(elem.defect_status == 1 || elem.defect_status == 2){
+                    result = elem.defect_status;
+                    return;
+                }
+            });
+            return result;
         }
         function getReportData(stage){
             jQuery.ajax({
@@ -1526,6 +1552,10 @@ foreach($all_builders as $builder){
                         });
                     }
                 });
+            });
+            jQuery('.project_href').click(function(){
+                var projectId = jQuery(this).data('project_id');
+                document.location.href = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=precalc&id='+projectId;
             });
 
             jQuery("#create_mounter").click(function () {
