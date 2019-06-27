@@ -1,10 +1,12 @@
 <?php
     $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
-    $categories = json_encode($stockModel->getGoodsCategories());
+    $categories = $stockModel->getGoodsCategories();
     $textures = json_encode($stockModel->getPropTextures());
     $widths = json_encode($stockModel->getPropCanvasWidths());
     $colors = json_encode($stockModel->getPropColors());
     $manufacturers = json_encode($stockModel->getPropManufacturers());
+
+    $goods_json = json_encode($stockModel->getGoods());
 ?>
 <div class="container">
 	<div class="row">
@@ -12,7 +14,13 @@
 	</div>
 	<div class="row" style="border: 1px solid #414099;border-radius: 5px;">
 		<div class="col-md-6" style="margin-bottom: 5px;margin-top: 5px;">
-			<select id = "goods_categories" class="input-gm">
+			<select id="goods_categories" class="input-gm">
+                <option value="0">Все категории</option>
+                <?php
+                    foreach ($categories as $item) {
+                        echo "<option value=\"$item->id\">$item->value</option>";
+                    }
+                ?>
 			</select>
             <div id="props"></div>
 		</div>
@@ -37,16 +45,7 @@
 			</tbody>
 		</table>
 	</div>
-	<table class="table table-striped table-bordered  table_cashbox" cellspacing="0" width="100%" id="projectList">
-	<thead>
-		<tr>
-			<th>Штрихкод</th>
-			<th>Наименование</th>
-			<th>Наличие</th>
-		</tr>
-	</thead>
-	<tbody></tbody>
-</table>
+
 <h4 id="h4_common_sum"></h4>
 
 <link href="/libraries/MDB-Free_4.7.1/css/addons/datatables.min.css" rel="stylesheet">
@@ -55,45 +54,50 @@
 </div>
 
 <script type="text/javascript">
-    var goodsCategories = JSON.parse('<?php echo $categories;?>'),
-        propCanvasWidths = JSON.parse('<?php echo $widths;?>'),
+    var propCanvasWidths = JSON.parse('<?php echo $widths;?>'),
         propTextures = JSON.parse('<?php echo $textures;?>'),
         propColors = JSON.parse('<?php echo $colors;?>'),
-        propManufacturers = JSON.parse('<?php echo $manufacturers;?>');
+        propManufacturers = JSON.parse('<?php echo $manufacturers;?>'),
+        goods = JSON.parse('<?php echo $goods_json;?>');
 
     jQuery(document).ready(function(){
-        console.log(goodsCategories);
+        console.log(goods);
         console.log(propCanvasWidths);
         console.log(propTextures);
         console.log(propColors);
         console.log(propManufacturers);
-        fillSelect("#goods_categories",goodsCategories);
-        jQuery("#goods_categories").change(function () {
+
+        jQuery('#goods_categories').change(function () {
             console.log(this.value);
-            switch(this.value){
-                case "1":
-                    jQuery("#props").empty();
-                    addPropSelect("canvases_textures",propTextures);
-                    addPropSelect("canvases_manufacturers",propManufacturers);
-                    addPropSelect("canvases_widths",propCanvasWidths);
-                    addPropSelect("color",propColors);
+            jQuery('#props').empty();
+            switch(this.value) {
+                case '1':
+                    addPropSelect('canvases_textures', propTextures, 'Текстура');
+                    addPropSelect('canvases_manufacturers', propManufacturers, 'Производитель');
+                    addPropSelect('canvases_widths', propCanvasWidths, 'Ширина');
+                    addPropSelect('color', propColors, 'Цвет');
+                    break;
+                case '4':
+                    addPropSelect('color', propColors, 'Цвет');
                     break;
             }
         });
     });
 
-    function addPropSelect(selectId,propValueArray) {
+    function addPropSelect(selectId, propValueArray, labelText) {
         var select = document.createElement('select');
-        select.setAttribute('id',selectId);
+        select.setAttribute('id', selectId);
         select.classList.add('input-gm');
-        jQuery("#props")[0].append(select);
-        for(var i = 0;i<propValueArray.length;i++){
-            jQuery("#"+selectId)
-                .append('<option value = "'+propValueArray[i].id+'">'+propValueArray[i].value+'</option>');
-        }
+        var label = document.createElement('label');
+        label.innerHTML = labelText;
+        jQuery('#props')[0].append(label);
+        jQuery('#props')[0].append(document.createElement('br'));
+        jQuery('#props')[0].append(select);
+        jQuery('#props')[0].append(document.createElement('br'));
+        fillSelect('#'+selectId, propValueArray);
     }
 
-    function fillSelect(selectId,data){
+    function fillSelect(selectId, data) {
         jQuery(selectId).empty();
         for(var i = 0; i < data.length; i++){
             jQuery(selectId).append('<option value = "'+data[i].id+'">'+data[i].value+'</option>');

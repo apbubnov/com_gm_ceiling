@@ -730,7 +730,7 @@ class Gm_ceilingModelStock extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
             foreach ($items as $value) {
-                $result[] = (object) array('id' => $value->color, 'value' => $value->hex);
+                $result[] = (object) array('id' => $value->color, 'value' => $value->color);
             }
             return $result;
         } catch(Exception $e) {
