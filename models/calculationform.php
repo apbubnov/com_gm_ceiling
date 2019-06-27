@@ -1402,4 +1402,39 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
+    public function getComponentsInCategories() {
+        try {
+            $temp_result = array();
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.*, `gc`.`category`')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
+                ->where('`category_id` <> 1')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                if (empty($temp_result[$value->category_id])) {
+                    $temp_result[$value->category_id] = (object) array(
+                        'category_id' => $value->category_id,
+                        'category_name' => $value->category,
+                        'goods' => array()
+                    );
+                }
+                $temp_result[$value->category_id]->goods[] = $value;
+            }
+
+            foreach ($temp_result as $value) {
+                $result[] = $value;
+            }
+
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

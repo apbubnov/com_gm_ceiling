@@ -798,4 +798,58 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    public function getGoods() {
+        try {
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`go`.`id`, 
+                    `go`.`category_id`, 
+                    `go`.`name`, 
+                    `go`.`unit_id`, 
+                    `go`.`price`, 
+                    `stoc`.`name` as `stock_name`, 
+                    `stoc`.`id` as `stock_id`, 
+                    `inv`.`count`')
+                ->from('`#__gm_stock_goods` as `go`')
+                ->leftJoin('`#__gm_stock_inventory` as `inv` on `go`.`id` = `inv`.`good_id`')
+                ->leftJoin('`#__gm_stock_stocks` as `stoc` on `inv`.`stock_id` = `stoc`.`id`')
+                ->order('`go`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            $stocks_count = array();                 
+            $items_stocks = 0;
+            $i = 0;
+            foreach ($items as $value) {
+                if ($value->id == $items_stocks) {
+                    $stocks_count[$i-1] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
+                } else {
+                    $stocks_count[] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
+                }   
+
+                    $i++; 
+                    $items_stocks = $value->id;
+            }
+
+            $items_stocks = 0;
+            $i = 0;
+            foreach ($items as $value) {
+
+                if ($value->id == $items_stocks) {
+                    //empty
+                } else {
+                $result[] = (object) array('id' => $value->id, 'name' => $value->name, 'category_id' => $value->category_id, 'unit_id' => $value->unit_id, 'price' => $value->price, 'stocks_count' => $stocks_count[$i]);
+                    $items_stocks = $value->id;
+                    $i++;
+                }
+
+            }
+
+            return $result;      
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
