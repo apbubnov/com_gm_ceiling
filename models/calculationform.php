@@ -1332,10 +1332,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $categories = '';
             $last_key = count($fields) - 1;
             foreach ($fields as $key => $field) {
+                if (!empty($field->goods_category_id)) {
+                    $categories .=  $field->goods_category_id.',';
+                }
                 if ($key !== $last_key) {
-                    if (!empty($field->goods_category_id)) {
-                        $categories .=  $field->goods_category_id.',';
-                    }
                     $ids .= $field->id.',';
                 } else {
                     $ids .= $field->id;
@@ -1354,8 +1354,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $categories = substr($categories, 0, -1);
 
             $query = $db->getQuery(true);
-            $query->select('`id`, `name`, `category_id`');
-            $query->from('`#__gm_stock_goods`');
+            $query->select('`id`, `name`, `category_id`, `color`, `hex`');
+            $query->from('`#__goods_components`');
             $query->where("`category_id` in ($categories)");
             $query->order('`category_id`, `id`');
             $db->setQuery($query);
@@ -1368,7 +1368,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
                             if ($field->goods_category_id === $item->category_id) {
                                 $result[$key2]->groups[$key3]->fields[$key4]->goods[] = $item;
-                                break 3;
                             }
                         }
                     }
@@ -1391,11 +1390,45 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
                             if ($field->id === $job->field_id) {
                                 $result[$key2]->groups[$key3]->fields[$key4]->jobs[] = $job;
-                                break 3;
                             }
                         }
                     }
                 }
+            }
+
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getComponentsInCategories() {
+        try {
+            $temp_result = array();
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.*, `gc`.`category`')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
+                ->where('`category_id` <> 1')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                if (empty($temp_result[$value->category_id])) {
+                    $temp_result[$value->category_id] = (object) array(
+                        'category_id' => $value->category_id,
+                        'category_name' => $value->category,
+                        'goods' => array()
+                    );
+                }
+                $temp_result[$value->category_id]->goods[] = $value;
+            }
+
+            foreach ($temp_result as $value) {
+                $result[] = $value;
             }
 
             return $result;

@@ -485,10 +485,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
         }
 	}
 
-	public function removeClientByProjectId($proj_id = null)
-	{
-		try
-		{
+	public function removeClientByProjectId($proj_id = null) {
+		try {
 			$app   = JFactory::getApplication();
 
 			if (empty($proj_id))
@@ -504,11 +502,36 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$result = $model_client->delete($project->id_client);
 
 			die(json_encode($result.' '.$project->id_client));
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 
+	public function calculate() {
+		try {
+			$app = JFactory::getApplication();
+			$jinput = $app->input;
+			$calc_id = $jinput->get('calc_id', null, 'INT');
+			$jobs = $jinput->get('jobs', null, 'ARRAY');
+			$components = $jinput->get('components', null, 'ARRAY');
+			$extra_components = $jinput->get('extra_components', null, 'STRING');
+			$extra_mounting = $jinput->get('extra_mounting', null, 'STRING');
+			$fields_data = $jinput->get('fields_data', null, 'STRING');
+
+			$data = array();
+			$data['id'] = $calc_id;
+			$data['extra_components'] = $extra_components;
+			$data['extra_mounting'] = $extra_mounting;
+			$data['fields_data'] = $fields_data;
+
+			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
+			$model_calculation->update_calculation($data);
+
+			
+
+			die(json_encode($result));
+		} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 }
