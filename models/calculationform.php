@@ -1437,4 +1437,33 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
+    public function addGoodsInCalculation($calc_id, $goods) {
+        try {
+            $values = '';
+            $last_goods_key = count($goods) - 1;
+            foreach ($goods as $key => $value) {
+                if ($key < $last_goods_key) {
+                    $values .= '('.$calc_id.', '.$value['good_id'].', '.$value['count'].'),';
+                } else {
+                    $values .= '('.$calc_id.', '.$value['good_id'].', '.$value['count'].')';
+                }
+            }
+
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_ceiling_calcs_goods_map`')
+                ->columns('`calc_id`, `goods_id`, `count`')
+                ->values($values);
+            $db->setQuery($query);
+            throw new Exception($query);
+            
+            $db->execute();
+            //$result = $db->getAffectedRows();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

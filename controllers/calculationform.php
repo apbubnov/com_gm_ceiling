@@ -513,7 +513,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$jinput = $app->input;
 			$calc_id = $jinput->get('calc_id', null, 'INT');
 			$jobs = $jinput->get('jobs', null, 'ARRAY');
-			$components = $jinput->get('components', null, 'ARRAY');
+			$goods = $jinput->get('goods', null, 'ARRAY');
 			$extra_components = $jinput->get('extra_components', null, 'STRING');
 			$extra_mounting = $jinput->get('extra_mounting', null, 'STRING');
 			$fields_data = $jinput->get('fields_data', null, 'STRING');
@@ -525,11 +525,14 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data['fields_data'] = $fields_data;
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
+			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+
 			$model_calculation->update_calculation($data);
+			$model_calcform->addGoodsInCalculation($calc_id, $goods);
 
-			
+			$result_sum = 0;
 
-			die(json_encode($result));
+			die($result_sum);
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
