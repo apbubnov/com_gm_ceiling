@@ -341,6 +341,11 @@ foreach($all_builders as $builder){
         <button type="button" id="recalc_salary" class="btn btn-primary">Пересчитать з\п бригадам</button>
     </div>-->
 </div>
+<div class="row center" style="margin-top:15px">
+    <div class="col-md-12">
+        <a href="/index.php?option=com_gm_ceiling&view=mounterscommon" class="btn btn-primary"> Посмотреть сводную таблицу</a>
+    </div>
+</div>
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_fio" class="modal_window">
@@ -763,7 +768,7 @@ foreach($all_builders as $builder){
 
                 console.log(mounterId);
                 jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.show_salary",
+                    url: "index.php?option=com_gm_ceiling&task=MountersSalary.getDataById",
                     data: {
                         mounterId:mounterId,
                         ids:projectsId,

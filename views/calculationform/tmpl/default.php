@@ -120,9 +120,11 @@
     $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
     $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
     $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
-    $data = quotemeta(json_encode($calculationformModel->getFields(1),JSON_HEX_QUOT));
 
     /*____________________end_______________________  */
+    $data = quotemeta(json_encode($calculationformModel->getFields(1),JSON_HEX_QUOT));
+    $componentsInCategories = quotemeta(json_encode($calculationformModel->getcomponentsInCategories(),JSON_HEX_QUOT));
+
     $color_data = json_encode($components_model->getColor());
 
     $texturesData = json_encode($canvases_model->getCanvasesTextures());
@@ -201,6 +203,9 @@
     .container
     {
         font-family: "Cuprum";
+    }
+    .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xs, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9{
+        padding: 2px !important;
     }
 
 </style>
@@ -492,7 +497,7 @@
                                         <label id="jform_calculation_title-lbl" for="jform_calculation_title" class="">Название расчета:</label>
                                     </td>
                                     <td class="td_calcform2">
-                                        <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+                                        <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px; margin-left: 5px;">
                                             <div class="help_question">?</div>
                                             <span class="airhelp">
 													Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня".
@@ -562,16 +567,296 @@
 </form>
 
 <script type="text/javascript">
+    var calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    var DEFAULT_MAINGROUPS = [
+        {
+            id: "guild_works",
+            title: "Работы в цеху",
+            groups: [
+                {
+                    title: "Фотопечать",
+                    description: "В расчет включается стоимость фотопечати",
+                    id: "photo_print",
+                    main_group_id: "guild_works",
+                    icon: "/images/photoprint.png",
+                    fields:[
+                        {
+                            id: "photoprint",
+                            group_id: "photo_print",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [],
+                            duplicate: "0",
+                            input_type : "4",
+                            title: "Фотопечать",
+                            subfields:[
+                                {
+                                    id: "print_square",
+                                    title: "Площадь"
+                                },
+                                {
+                                    id: "print_cost",
+                                    title: "Стоимость"
+                                }
+                            ],
+                        }
+                    ]
+                },
+                {
+                    title: "Обработка углов",
+                    description: "В расчет включается стоимость обработки углов",
+                    id: "angle_processing",
+                    main_group_id: "guild_works",
+                    icon: "/images/angle.png",
+                    fields:[
+                        {
+                            id: "angle_count",
+                            group_id: "angle_processing",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [],
+                            duplicate: "0",
+                            input_type : "0",
+                            title: "Обработка углов"
+                        }
+                    ]
+                },
+                {
+                    title: "Перегарпунка",
+                    description: "В расчет включается стоимость перегарпунки",
+                    id: "reharp",
+                    main_group_id: "guild_works",
+                    icon: "/images/garpun.png",
+                    fields:[
+                        {
+                            id: "reharp_count",
+                            group_id: "reharp",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [],
+                            duplicate: "0",
+                            input_type : "0",
+                            title: "Перегарпунка"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            id: "additional_works",
+            title: "Дополнительно",
+            groups: [
+                {
+                    title: "Другие работы по монтажу",
+                    description: "В расчет включается допалнительные работы",
+                    id: "dop_mount",
+                    main_group_id: "additional_works",
+                    icon: "/images/hammer.png",
+                    fields:[
+                        {
+                            id: "dop_works",
+                            group_id: "additional_works",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [],
+                            subfields:[
+                                {
+                                    id: "work_title",
+                                    title: "Название"
+                                },
+                                {
+                                    id: "work_cost",
+                                    title: "Стоимость"
+                                }
+                            ],
+                            duplicate: "1",
+                            input_type : "4",
+                            title: "Дополнительные монтажные работы"
+                        }
+                    ]
+                },
+                {
+                    title: "Другие комплектующие",
+                    description: "В расчет включается стоимость дополнительных компонентов",
+                    id: "dop_components",
+                    main_group_id: "additional_works",
+                    icon: "/images/drcomplect.png",
+                    fields:[
+                        {
+                            input_type: "4",
+                            title: "Дополнительные комплектующие",
+                            goods_category_id: null,
+                            parent: null,
+                            group_id: "dop_components",
+                            jobs: [],
+                            duplicate: "1",
+                            subfields:[
+                                {
+                                    id: "component_title",
+                                    title: "Название"
+                                },
+                                {
+                                    id: "component_cost",
+                                    title: "Стоимость"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    title: "Доп.комплектующие со склада",
+                    description: "В расчет включается стоимость дополнительных компонентов со склада",
+                    id: "dop_goods",
+                    main_group_id: "additional_works",
+                    icon: "/images/drcomplect.png",
+                    fields:[
+                        {
+                            id: "dopgoods",
+                            group_id: "dop_goods",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [],
+                            duplicate: "1",
+                            input_type : "3",
+                            title: "Дополнительные комплектующие со склада"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            id: "cancel",
+            title: "Отменить",
+            groups:[
+                {
+                    title: "Отменить метизы",
+                    description: "При выборе данной опции отменяются все метизы",
+                    id: "cancel_metiz",
+                    main_group_id: "cancel",
+                    icon: "/images/cancel_metiz.png",
+                    fields:[
+                        {
+                            id: "is_cancel_metiz",
+                            group_id: "cancel_metiz",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"cancel_metiz"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "1",
+                            title: "Отментить метизы"
+
+                        }
+                    ]
+                },
+                {
+                    title: "Отменить монтаж",
+                    description: 'При выборе опции "Свой прайс" монтажные работы считаются по Вашему прайсу монтажа, ' +
+                    'при выборе опции "Монтадная служба" работы считаются по прайсу монтажной службы ГМ, при выборе опции "Без монтажа" монтажные работы не будут посчитаны',
+                    id: "cancel_mount",
+                    main_group_id: "cancel",
+                    icon: "/images/cancel_mount.png",
+                    fields:[
+                        {
+                            id: "without_mount",
+                            group_id: "cancel_mount",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"witout_mount"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "2",
+                            title: "Без монтажа"
+                        },
+                        {
+                            id: "mount_service",
+                            group_id: "cancel_mount",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"with_mount_service"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "2",
+                            title: "Монтажная служба"
+                        },
+                        {
+                            id: "self_mount",
+                            group_id: "cancel_mount",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"with_self_mount"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "2",
+                            title: "Свой прайс"
+                        }
+
+                    ]
+                },
+                {
+                    title: "Отменить обрезки",
+                    description: "При выборе данной опции отменяются обрезки",
+                    id: "cancel_offcut",
+                    main_group_id: "cancel",
+                    icon: "/images/offcut.png",
+                    fields:[
+                        {
+                            id: "is_cancel_offcut",
+                            group_id: "cancel_offcut",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"cancel_offcuts"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "1",
+                            title: "Отментить обрезки"
+                        }
+                    ]
+                },
+            ]
+        },
+
+        ];
     jQuery(document).ready(function () {
 
-        var data = JSON.parse('<?php echo $data?>');
-        console.log(data);
+        var data = JSON.parse('<?php echo $data?>'),
+            componentsInCategories = JSON.parse('<?php echo $componentsInCategories?>');
+        data = data.concat(DEFAULT_MAINGROUPS);
+        console.log("data",data);
+        console.log('componentsInCategories',componentsInCategories);
+
         document.body.onload = function(){
             jQuery('.PRELOADER_GM').hide();
         };
 
-
         createBlocks(data);
+
+        fill_calc_data();
 
         jQuery('.col-sm-6').on('mouseenter', '.help', function () {
             jQuery(this.lastElementChild).show();
@@ -586,14 +871,65 @@
         });
 
         jQuery('body').on('click','.add',function () {
-           var rowFields = jQuery(jQuery(this).closest('.div-fields').find('.row-fields')[0]).clone();
-           jQuery(this).closest('.row').before(rowFields);
+            var parent = jQuery(this).parent(),
+                rowFields = parent.prev().clone(),
+                prev = parent.prev(),
+                count = 1;
+            while(true){
+                console.log(prev);
+                if(prev.hasClass('title')) {
+                    break;
+                }
+                else{
+                    prev = prev.prev();
+                    count++;
+                }
+            }
+            jQuery.each(rowFields,function (index,elem) {
+               var radios = jQuery(elem).find('input[type=radio]'),
+                   labels = jQuery(elem).find('label');
+               jQuery.each(radios,function(ind,radioBtn){
+                   var id = jQuery(radioBtn).prop('id')+count;
+                   jQuery(radioBtn).prop('id',id);
+               });
+                jQuery.each(labels,function(ind,label){
+                    var propFor = jQuery(label).prop('for')+count;
+                    jQuery(label).prop('for',propFor);
+                });
+            });
+           parent.before(rowFields);
         });
 
         jQuery('body').on('click','.delete_goods',function () {
-            jQuery(this).closest('.row-fields').remove();
+            var parent = jQuery(this).closest('.row-fields'),
+                prevRow = parent.prev(),
+                nextRow = parent.next();
+            console.log(prevRow.hasClass('row-fields'));
+            if(prevRow.hasClass('row-fields') || nextRow.hasClass('row-fields') ){
+                jQuery(this).closest('.row-fields').remove();
+            }
         });
 
+        jQuery('body').on('click','.add_fields',function(){
+            jQuery(this).closest('.row').find('.div-fields').toggle();
+        });
+
+        jQuery('body').on('click','input[type="radio"]',function(){
+            var selectDiv = jQuery(this).closest('.row-fields').find('.div-goods_select');
+            if(this.checked){
+                var goodsSelects = jQuery(this).closest('.div-fields').find('.div-goods_select');
+                jQuery.each(goodsSelects,function(index,elem){
+                    jQuery(elem).hide();
+                });
+                if(!empty(selectDiv)) {
+                    selectDiv.show();
+                }
+            }
+        });
+        
+        jQuery('#calculate_button').click(function () {
+            collectData();
+        });
     });
 
     function createBlocks(data){
@@ -615,8 +951,6 @@
             div.append('<div class="col-sm-3"></div>');
             containerDiv.append(div);
         });
-
-        console.log(div);
     }
 
     function createWorkButton(buttonsArray){
@@ -635,17 +969,18 @@
             helpDivCol.addClass('col-sm-1 col-xs-1');
             helpDivCol.css({"padding-left":"0px"});
             fieldsDiv.addClass('div-fields');
+            fieldsDiv.css({"display":"none"});
             /*кнопка подсказки*/
             buttonHelp.addClass('btn-primary help');
-            buttonHelp.css({'padding': '5px 10px', 'border-radius': '5px', 'height': '38px', 'width': '38px','margin-left': '5px;'});
-            buttonHelp.append('<div class="help_question center">?</div>');
+            buttonHelp.css({'padding': '5px 10px', 'border-radius': '5px', 'height': '42px', 'width': '42px','margin-left': '5px;'});
+            buttonHelp.append('<div class="help_question center" style="padding-top:2px;">?</div>');
             buttonHelp.append('<span class="airhelp" style="display: none;">'+elem.description+'</span>');
             helpDivCol.append(buttonHelp);
             /*кнопка раскрытия работы*/
             button.prop('type','button');
             button.addClass('btn add_fields');
             //button.css({'background-color': 'rgb(1, 0, 132)'});
-            button.html('<div class="col-xs-2 col-sm-2"><i class="fa fa-angle-down" style="color: #414099;"></i></div><div class="col-xs-10 col-sm-10">'+elem.title+'</div>');
+            button.html('<div class="col-xs-2 col-sm-2"><img src="'+elem.icon+' " class="img_calcform"></div><div class="col-xs-10 col-sm-10" style="text-align: left;">'+elem.title+'</div>');
             buttonDivCol.append(button);
             //поля под кнопкой
             fieldsDiv.append(createFields(elem.fields));
@@ -655,37 +990,126 @@
             rowDiv.addClass('row');
             rowDiv.css({'margin-bottom':'5px','margin-top':'5px'});
             resultDiv.append(rowDiv);
-            console.log();
         });
         return resultDiv;
     }
     
     function createFields(fieldsData) {
         var resultDiv = jQuery(document.createElement('div'));
-        resultDiv.addClass('row');
         jQuery.each(fieldsData,function (index,elem) {
             var divRow = jQuery(document.createElement('div')),
-                countDiv = jQuery(document.createElement('div'));
+                countDiv = jQuery(document.createElement('div')),
+                titleDiv = jQuery(document.createElement('div')),
+                label = jQuery(document.createElement('label')),
+                jobsIds = getJobsIds(elem.jobs);
+            countDiv.addClass('countDiv')
+            titleDiv.addClass('row title');
+            titleDiv.css({"margin-left":"15px","color":"#414099"})
+            label.css({"margin-left":"15px","margin-bottom":"2px","color":"#414099"})
             divRow.addClass('col-sm-12 row-fields');
-            divRow.css({"margin-top":"10px","margin-bottom":"5px"})
+            divRow.css({"margin-bottom":"5px"});
+            divRow.attr('data-id',elem.id);
+            label.html(elem.title);
+            titleDiv.append(label);
+            divRow.attr('data-jobs',jobsIds);
             if(empty(elem.goods_category_id)){
-                countDiv.append(createInput());
-                divRow.append(countDiv);
-            }else{
-                var selectDiv = jQuery(document.createElement('div')),
-                    deleteDiv = jQuery(document.createElement('div'));
-                countDiv.addClass('col-sm-2 col-xs-2');
-                selectDiv.addClass('col-sm-8 col-xs-8');
-                deleteDiv.addClass('col-sm-2 col-xs-2');
-                countDiv.append(createInput());
-                selectDiv.append(createSelect(elem.goods));
-                deleteDiv.append(createDeleteBtn());
-                divRow.append(countDiv);
-                divRow.append(selectDiv);
-                divRow.append(deleteDiv);
+                if(elem.input_type == 0){
+                    resultDiv.append(titleDiv);
+                    countDiv.append(createInput());
+                    divRow.append(countDiv);
+                }
+                if(elem.input_type == 1){
+                    var checkBox = createCheckBox(elem);
+                    countDiv.append(checkBox.input);
+                    countDiv.append(checkBox.label);
+                    divRow.append(countDiv);
+                    divRow.addClass('center');
+                }
+                if(elem.input_type == 2){
+                    var radioBtn = createRadioBtns(elem);
+                    countDiv.append(radioBtn.radioBtn);
+                    countDiv.append(radioBtn.label);
+                    divRow.append(countDiv);
+
+                }
+                if(elem.input_type == 3){
+
+                }
+                if(elem.input_type == 4){
+                    resultDiv.append(titleDiv);
+                    var titlesDiv = jQuery(document.createElement('div')),
+                        fieldsDiv = jQuery(document.createElement('div'));
+                    titlesDiv.addClass('row title');
+                    fieldsDiv.addClass('row field');
+                    for(var i=0;i<elem.subfields.length;i++){
+                        var div = jQuery(document.createElement('div')),
+                            title = jQuery(document.createElement('div'));
+                        div.addClass('sol-sm-6 col-xs-6');
+                        title.addClass('sol-sm-6 col-xs-6');
+                        title.append('<label>'+elem.subfields[i].title+'</label>');
+                        titlesDiv.append(title);
+                        var input = createInput();
+                        input.attr('name',elem.subfields[i].id);
+                        div.append(input);
+                        fieldsDiv.append(div);
+                    }
+                    divRow.append(titlesDiv);
+                    divRow.append(fieldsDiv);
+                }
             }
-            resultDiv.append(divRow);
-            if(elem.duplicate) {
+            else if(!empty(elem.goods_category_id)){
+                if(elem.input_type == 0) {
+                    resultDiv.append(titleDiv);
+                    var selectDiv = jQuery(document.createElement('div')),
+                        deleteDiv = jQuery(document.createElement('div'));
+                    countDiv.addClass('col-sm-2 col-xs-2');
+                    countDiv.css({"padding-right":"0"});
+                    if (elem.duplicate == 1) {
+                        selectDiv.addClass('col-sm-8 col-xs-8 selectDiv');
+                        deleteDiv.addClass('col-sm-2 col-xs-2');
+                    }
+                    else{
+                        selectDiv.addClass('col-sm-10 col-xs-10 selectDiv');
+
+                    }
+                    countDiv.append(createInput());
+                    selectDiv.append(createSelect(elem.goods));
+                    if (elem.duplicate == 1) {
+                        deleteDiv.append(createDeleteBtn());
+                    }
+                    divRow.append(countDiv);
+                    divRow.append(selectDiv);
+                    if (elem.duplicate == 1) {
+                        divRow.append(deleteDiv);
+                    }
+                }
+                if(elem.input_type == 1){
+
+                }
+                if(elem.input_type == 2){
+
+                    var radioDiv = jQuery(document.createElement('div')),
+                        selectDiv = jQuery(document.createElement('div')),
+                        radioBtn = createRadioBtns(elem),
+                        select = createSelect(elem.goods);
+                    radioDiv.addClass('col-sm-6 col-xs-6 div-radio');
+                    selectDiv.addClass('col-sm-6 col-xs-6 div-goods_select');
+                    selectDiv.css({"display":"none"});
+                    radioDiv.append(radioBtn.radioBtn);
+                    radioDiv.append(radioBtn.label);
+                    selectDiv.append(select);
+                    divRow.append(radioDiv);
+                    divRow.append(selectDiv);
+
+                }
+            }
+            if(!empty(elem.parent)){
+                addToParentDiv(resultDiv,elem.parent,divRow);
+            }
+            else {
+                resultDiv.append(divRow);
+            }
+            if(elem.duplicate == 1) {
                 resultDiv.append(createAddBtn());
             }
         });
@@ -694,7 +1118,7 @@
     
     function createSelect(selectData){
         var select = jQuery(document.createElement('select'));
-        select.addClass('form-control goods_select');
+        select.addClass('form-control goods_select ');
         jQuery.each(selectData,function (index,elem) {
             select.append(jQuery('<option>', {
                 value: elem.id,
@@ -710,8 +1134,34 @@
         return input;
     }
     
-    function createRadioBtns() {
-        
+    function createRadioBtns(field) {
+        var result ,
+            radioBtn = jQuery(document.createElement('input')),
+            label = jQuery(document.createElement('label'));
+        radioBtn.prop('type','radio');
+        radioBtn.attr('data-id',field.id);
+        radioBtn.attr('data-parent',field.parent);
+        radioBtn.prop('id',field.id);
+        radioBtn.prop('name',field.parent);
+        radioBtn.addClass('radio');
+        radioBtn.prop('value',getJobsIds(field.jobs));
+        label.prop('for',field.id);
+        label.html(field.title);
+        result = {radioBtn:radioBtn,label:label};
+        return result;
+    }
+
+    function createCheckBox(field) {
+        var input = jQuery(document.createElement('input')),
+            label = jQuery(document.createElement('label'));
+        input.prop("type","checkbox");
+        input.prop("id","field"+field.id);
+        input.addClass("inp-cbx");
+        input.css({"display":"none"});
+        label.prop("for","field"+field.id);
+        label.addClass("cbx");
+        label.html("<span><svg width=\"12px\" height=\"10px\" viewBox=\"0 0 12 10\"><polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline></svg></span><span> "+field.title+"</span>");
+        return {input:input,label:label};
     }
     function createDeleteBtn(){
         var deleteBtn = jQuery(document.createElement('button'));
@@ -732,5 +1182,116 @@
         addButton.html('<i class="fa fa-plus" aria-hidden="true"></i> Добавить');
         div.append(addButton);
         return div;
+    }
+
+    function getJobsIds(jobs){
+        var result = [];
+        for(var i=jobs.length;i--;){
+            result.push(jobs[i].id);
+        }
+        return JSON.stringify(result);
+    }
+
+    function addToParentDiv(div,parentId,newElement){
+        jQuery.each(div.children(),function(index,elem){
+            if(jQuery(elem).data('id') == parentId){
+                jQuery(elem).append(newElement);
+            }
+        });
+    }
+
+    function fill_calc_data(){
+        if(calculation.n4 && calculation.n5 && calculation.n9){
+            jQuery("#jform_n4").val(calculation.n4);
+            jQuery("#jform_n5").val(calculation.n5);
+            jQuery("#jform_n9").val(calculation.n9);
+            jQuery("#jform_n10").val(calculation.n10);
+            jQuery("#jform_n31").val(calculation.n31);
+            jQuery("#jform_shrink_per").val(((1-calculation.shrink_percent).toFixed(2)*100).toFixed(2));
+            jQuery("#data-wrapper").show();
+        }
+        let filename = '<?php echo $calc_img;?>';
+        if(filename){
+            jQuery("#sketch_image").attr('src',filename);
+            jQuery("#sketch_image_block").show();
+        }
+    }
+
+    function collectData(){
+        var jobs = [],
+            components = [];
+        var fieldsDiv = jQuery('.row-fields');
+        jQuery.each(fieldsDiv,function(index,div){
+            var currentJobs = jQuery(div).data('jobs'),
+                countDiv,input,goodSelect,radio;
+
+            countDiv = jQuery(div).find('.countDiv');
+            input = jQuery(countDiv).children();
+            console.log(input.prop('type'));
+            if(input.prop('type') == "checkbox"){
+                if(input.is(':checked')) {
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({job_id: currentJobs[i], count: 1});
+                    }
+                }
+            }
+            if(input.prop('type') == "text"){
+                //поиск связанных radio
+                var id = countDiv.parent().data('id'),
+                    radio = jQuery('input[type=radio][data-parent="'+id+'"]:checked'),
+                    radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                if(!empty(input.val())){
+                    currentJobs.concat(radio.val());
+                    if(radioGoodSelect.length != 0) {
+                        components.push({good_id: radioGoodSelect.val(), count: input.val()});
+                    }
+                }
+                //поиск связанных селектов
+                goodSelect = countDiv.parent().find('.selectDiv').children();
+                //если есть селект и введеное количество не пустое добавляем компоненты
+                if(goodSelect.length != 0 && !empty(input.val())){
+                    components.push({good_id:goodSelect.val(),count:input.val()});
+                }
+                //добавляем работы если количество не пустое
+                if(!empty(input.val())) {
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({job_id: currentJobs[i], count: input.val()});
+                    }
+                }
+            }
+            if(input.prop('type') == "radio" && empty(input.data('parent'))){
+                if(input.is(':checked')){
+                    currentJobs = JSON.parse(input.val());
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({job_id: currentJobs[i], count: 1});
+                    }
+                }
+            }
+        });
+        console.log(jobs);
+        console.log(components);
+
+        //получение площади истоимости фотопечати
+        var photoprint = {
+                            square:jQuery('[name = "print_square"]').val(),
+                            cost:jQuery('[name = "print_cost"]').val()
+                         },
+            additional_works = [],
+            additional_components = [];
+        jQuery.each(jQuery('[name = "work_title"]'),function(index,elem){
+            var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val();
+            additional_works.push({work_title:elem.value,work_cost: cost});
+        });
+        jQuery.each(jQuery('[name = "component_title"]'),function(index,elem){
+            var cost = jQuery(elem).closest('.field').find('[name="component_cost"]').val();
+            additional_components.push({component_title:elem.value,component_cost: cost});
+        });
+
+        console.log("phonotoprint",photoprint);
+        console.log("additional_work",additional_works);
+        console.log("additional_components",additional_components);
+
+
+
     }
 </script>

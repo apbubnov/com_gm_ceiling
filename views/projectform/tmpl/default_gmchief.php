@@ -360,6 +360,20 @@
                             ?>
                             <td><?php echo $gauger->name; ?></td>
                         </tr>
+                        <tr>
+                            <th>Дилер</th>
+                            <?php
+                                $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                                if(empty($this->item->id_client)){
+                                    $client_id = $this->item->client_id;
+                                }
+                                else{
+                                    $client_id = $this->item->id_client;
+                                }
+                                $dealer_name = $clientModel->getDealer($client_id);
+                            ?>
+                            <td><?php echo $dealer_name; ?></td>
+                        </tr>
                        <?php if(!empty($this->item->mount_data)):?>
                             <tr>
                                 <th colspan="3" style="text-align: center;">Монтаж</th>

@@ -112,7 +112,7 @@ echo parent::getButtonBack();
                 det_ths = jQuery("#analytic_detailed > thead  th").filter(":not([colspan]),[colspan='1']")
                 data.shift();
                 det_data.shift();
-                fill_table("#analytic_common",data,ths);
+                //fill_table("#analytic_common",data,ths);
                 fill_table("#analytic_detailed",det_data,det_ths);
                 hideEmptyTr("#analytic_common");
                 hideEmptyTr("#analytic_detailed");
@@ -523,7 +523,7 @@ echo parent::getButtonBack();
             jQuery("#table_projects").append("<tr><td colspan=3><b>Итого</b></td><td>" + totalSum + "</td><td>" + totalProfit + "</td><td></td></tr>")
         }
         jQuery(".link_row").click(function () {
-
+            localStorage.setItem('projectsData',JSON.stringify(data));
             window.location = jQuery(this).data("href");
         });
     }

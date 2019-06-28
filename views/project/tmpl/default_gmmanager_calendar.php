@@ -216,7 +216,7 @@
 </style>
 <?= parent::getButtonBack(); ?>
 
-<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
+<form id="form-client" action="index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
     <div>
         <input name="project_id" id = "project_id"  value="<?php echo $project_id; ?>" type="hidden">
         <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -510,17 +510,17 @@
         <divclass="container">
             <div class="row">
                 <div class="col-xs-12 col-xm-12 col-md-4 col-lg-4">
-                    <button class="btn  btn-primary act_btn" id="rec_to_measurement">
+                    <button class="btn  btn-primary act_btn" id="rec_to_measurement" type ="button">
                         Записать на замер
                     </button>
                 </div>
                 <div class="col-xs-12 col-xm-12 col-md-4 col-lg-4">
-                    <button class="btn  btn-danger act_btn" id="refuse_project">
+                    <button class="btn  btn-danger act_btn" id="refuse_project" type ="button">
                         Отказ от замера
                     </button>
                 </div>
                 <div class="col-xs-12 col-xm-12 col-md-4 col-lg-4">
-                    <button class="btn  btn-danger act_btn" id="refuse_partnership">
+                    <button class="btn  btn-danger act_btn" id="refuse_partnership" type ="button">
                         Отказ от сотрудничества
                     </button>
                 </div>
@@ -1046,6 +1046,7 @@
         jQuery("#refuse_partnership").click(function () {
             jQuery("#project_status").val(15);
             if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
+
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -1056,6 +1057,7 @@
                 });
             }
             else {
+                console.log(jQuery("#form-client"))
                 jQuery("#form-client").submit();
             }
         });
