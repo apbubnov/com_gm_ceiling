@@ -1439,27 +1439,58 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
     public function addGoodsInCalculation($calc_id, $goods) {
         try {
-            $values = '';
-            $last_goods_key = count($goods) - 1;
-            foreach ($goods as $key => $value) {
-                if ($key < $last_goods_key) {
-                    $values .= '('.$calc_id.', '.$value['good_id'].', '.$value['count'].'),';
-                } else {
-                    $values .= '('.$calc_id.', '.$value['good_id'].', '.$value['count'].')';
-                }
+            $values = array();
+            foreach ($goods as $value) {
+                $values[] = $calc_id.','.$value['id'].','.$value['count'];
             }
 
             $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`#__gm_ceiling_calcs_goods_map`')
+                ->where("`calc_id` = $calc_id");
+            $db->setQuery($query);
+            $db->execute();
+
             $query = $db->getQuery(true);
             $query
                 ->insert('`#__gm_ceiling_calcs_goods_map`')
                 ->columns('`calc_id`, `goods_id`, `count`')
                 ->values($values);
             $db->setQuery($query);
-            throw new Exception($query);
-            
             $db->execute();
-            //$result = $db->getAffectedRows();
+            $result = $db->getAffectedRows();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addJobsInCalculation($calc_id, $jobs) {
+        try {
+            $values = array();
+            foreach ($jobs as $value) {
+                $values[] = $calc_id.','.$value['id'].','.$value['count'];
+            }
+
+            $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`#__gm_ceiling_calcs_jobs_map`')
+                ->where("`calc_id` = $calc_id");
+            $db->setQuery($query);
+            $db->execute();
+
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_ceiling_calcs_jobs_map`')
+                ->columns('`calc_id`, `job_id`, `count`')
+                ->values($values);
+            $db->setQuery($query);
+            $db->execute();
+            $result = $db->getAffectedRows();
             return true;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
