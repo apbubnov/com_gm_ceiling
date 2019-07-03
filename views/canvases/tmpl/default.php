@@ -100,7 +100,7 @@ function update_price($objectDealerPrice, $Price)
         </button>
         <? if ($managerGM): ?>
             <form class="FormSimple UpdatePrice MarginLeft" data-type="ALL">
-                <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
+                <label for="Price" title="Изменить все дилерские цены"><i class="fas fa-edit"
                                                                           aria-hidden="true"></i></label>
                 <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                        placeholder="0"
@@ -168,7 +168,7 @@ function update_price($objectDealerPrice, $Price)
                         <td></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
-                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit"
                                                                                       aria-hidden="true"></i></label>
                                 <input type="text" pattern="[+-]{0,1}\d+[,.]{0,1}\d*%{0,1}"
                                        name="Price" id="Price"
@@ -186,7 +186,7 @@ function update_price($objectDealerPrice, $Price)
                         <td></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
-                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit"
                                                                                       aria-hidden="true"></i></label>
                                 <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                        placeholder="0"
@@ -220,7 +220,7 @@ function update_price($objectDealerPrice, $Price)
                             <td></td>
                             <td>
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
-                                    <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                    <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit"
                                                                                           aria-hidden="true"></i></label>
                                     <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                            placeholder="0"
@@ -237,7 +237,7 @@ function update_price($objectDealerPrice, $Price)
                             <td></td>
                             <td>
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
-                                    <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                    <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit"
                                                                                           aria-hidden="true"></i></label>
                                     <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                            placeholder="0"
@@ -280,7 +280,7 @@ function update_price($objectDealerPrice, $Price)
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
                                         <label for="Price" title="Изменить дилерскую цену"><i
-                                                    class="fa fa-pencil-square-o"
+                                                    class="fas fa-edit"
                                                     aria-hidden="true"></i></label>
                                         <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                                placeholder="0"
@@ -303,7 +303,7 @@ function update_price($objectDealerPrice, $Price)
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
                                         <label for="Price" title="Изменить дилерскую цену"><i
-                                                    class="fa fa-pencil-square-o"
+                                                    class="fas fa-edit"
                                                     aria-hidden="true"></i></label>
                                         <input type="text" pattern="([+-]{0,1}\d+[,.]{0,1}\d*%{0,1})|(\*)" name="Price" id="Price"
                                                placeholder="0"

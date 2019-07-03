@@ -340,7 +340,7 @@
                                     <input name="email[<?php echo $value->contact?>]" id="email" class="inputactive" value="<?php echo $value->contact;?>" placeholder="e-mail" type="text">
                                 </div>
                                 <div class="col-xs-2 col-md-2 col-lg-2" align="right">
-                                    <button class="btn btn-danger remove_email" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger remove_email" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         <?php } 
@@ -532,7 +532,7 @@
                     <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
                     <input name="call_comment" id="call_comment" placeholder="Введите примечание">
                     <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
-                                class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                class="fas fa-save" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -576,7 +576,7 @@
         <label for="call_comment_up">Комментарий</label><br>
         <input name="call_comment_up" id="call_comment_up" class = "act_btn" placeholder="Введите примечание"><br>
         <br>
-        <button class="btn btn-primary act_btn" id="add_call_and_submit_up" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
+        <button class="btn btn-primary act_btn" id="add_call_and_submit_up" type="button"><i class="fas fa-save" aria-hidden="true"></i> Сохранить</button>
     </div>
 </div>
 </form>

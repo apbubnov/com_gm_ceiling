@@ -108,7 +108,7 @@ echo parent::getPreloaderNotJS();
                 Статус
             </th>
             <th>
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </th>
         </tr>
         <tr class="row" id="TrClone" data-href="" style="display: none">
@@ -245,7 +245,7 @@ echo parent::getPreloaderNotJS();
                         tr.find(".status").text('-');
                     }
 
-                    tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>');
+                    tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>');
                     tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
                     if (cl_i.label_color_code !== null) {
                         tr.css('outline', '#'+cl_i.label_color_code+' solid 2px');

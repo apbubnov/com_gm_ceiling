@@ -56,13 +56,13 @@ $user_group = $user->groups;
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-building" aria-hidden="true"></i> Застройщики</a>
 		</p>
         <p>
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fa fa-windows" aria-hidden="true"></i> Оконщики</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fab fa-windows" aria-hidden="true"></i> Оконщики</a>
         </p>
 	</div>
 	<div class="columns-tar">
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fas fa-clock" aria-hidden="true"></i> В производстве </a>
 					<div class="circl-digits" id="InProductionDiv" style="display: none;"></div>
 			</div>
 		</div>
@@ -85,7 +85,13 @@ $user_group = $user->groups;
 			</div>
 		</div>
         <p>
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fas fa-dollar-sign"></i> Касса</a>
+        </p>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=gmchief', false); ?>"><i class="fas fa-hammer"></i> Монтажи</a>
+        </p>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=measures', false); ?>"><i class="fas fa-ruler"></i> Замеры</a>
         </p>
 	</div>
 	<div class="columns-tar">
@@ -96,13 +102,13 @@ $user_group = $user->groups;
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Запись на замер</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fas fa-pencil-ruler"></i> Запись на замер</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайсы</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fas fa-ruble-sign"></i> Прайсы</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fa fa-eyedropper" aria-hidden="true"></i> Цвета,фактуры</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fas fa-eye-dropper"></i> Цвета, фактуры</a>
 		</p>
         <p>
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>

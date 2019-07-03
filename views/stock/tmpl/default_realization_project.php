@@ -605,7 +605,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                     </td>
                     <td class="ButtonTD">
                         <button type="button" class="Remove" onclick="RemoveLine(this)">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         </button>
                     </td>
                 </tr>
@@ -803,7 +803,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                 </div>
                 <div class="Right">
                     <button type="button" onclick="print_frame();"><i class="fa fa-print" aria-hidden="true"></i></button>
-                    <button type="button" onclick="save_frame();"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                    <button type="button" onclick="save_frame();"><i class="fas fa-save" aria-hidden="true"></i></button>
                     <button type="button" onclick="close_frame();"><i class="fa fa-times" aria-hidden="true"></i></button>
                 </div>
             </div>
@@ -1924,7 +1924,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                         </div>
                     </div>
                     <button type="button" class="buttonCanvasDelete" onclick="remove('Canvases','List', this)"><i
-                                class="fa fa-trash-o" aria-hidden="true"></i>
+                                class="fas fa-trash-alt" aria-hidden="true"></i>
                 </div>
                 <div class="titleRollers titleAll">
                     <div class="title">Ролики данного полотна</div>
@@ -1955,7 +1955,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                                 <div class="Message">Количество</div>
                             </div>
                             <button type="button" class="buttonRollerDelete" onclick="remove('List','subList', this)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                        class="fas fa-trash-alt" aria-hidden="true"></i></button>
                         </div>
                     </div>
                 <? endforeach; ?>
@@ -2004,7 +2004,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                         </div>
                     </div>
                     <button type="button" class="buttonComponentDelete" onclick="remove('Components', 'List', this)"><i
-                                class="fa fa-trash-o" aria-hidden="true"></i>
+                                class="fas fa-trash-alt" aria-hidden="true"></i>
                 </div>
                 <div class="titleOptions titleAll">
                     <div class="title">Компонент:</div>
@@ -2040,7 +2040,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                             </div>
                             <button type="button" class="buttonOptionDelete" onclick="remove('List', 'subList', this)">
                                 <i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                        class="fas fa-trash-alt" aria-hidden="true"></i></button>
                         </div>
                     </div>
                 <? endforeach; ?>

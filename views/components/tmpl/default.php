@@ -99,7 +99,7 @@ function update_price($objectDealerPrice, $Price)
         </button>
         <?if ($managerGM):?>
             <form class="FormSimple UpdatePrice MarginLeft">
-                <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                <label for="Price" title="Изменить все дилерские цены"><i class="fas fa-edit" aria-hidden="true"></i></label>
                 <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
                        placeholder="0"
                        title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
@@ -202,7 +202,7 @@ function update_price($objectDealerPrice, $Price)
                         <td id="DealerPrice"><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
-                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit" aria-hidden="true"></i></label>
                                 <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
                                        placeholder="0"
                                        title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
@@ -224,7 +224,7 @@ function update_price($objectDealerPrice, $Price)
                         <td id="DealerPrice"><?= $DealerPrice; ?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
-                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fas fa-edit" aria-hidden="true"></i></label>
                                 <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
                                        placeholder="0"
                                        title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."

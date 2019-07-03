@@ -802,7 +802,7 @@ $stocks = $stock_model->getStocks();
                 </td>
                 <td class="ButtonTD">
                     <button type="button" class="Remove" onclick="RemoveLine(this)">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>
@@ -830,7 +830,7 @@ $stocks = $stock_model->getStocks();
                 </td>
                 <td class="ButtonTD">
                     <button type="button" class="Remove" onclick="RemoveLine(this)">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>
@@ -854,7 +854,7 @@ $stocks = $stock_model->getStocks();
             </div>
             <div class="Right">
                 <button type="button" onclick="print_frame();"><i class="fa fa-print" aria-hidden="true"></i></button>
-                <button type="button" onclick="save_frame();"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                <button type="button" onclick="save_frame();"><i class="fas fa-save" aria-hidden="true"></i></button>
                 <button type="button" onclick="close_frame();"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
         </div>

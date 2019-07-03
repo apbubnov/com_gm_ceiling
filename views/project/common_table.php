@@ -197,7 +197,7 @@
             <?php if($needShow){?>
                 <li class="nav-item"> 
                     <button type="button" class="nav-link" id="add_calc" style="color:white;">
-                        Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                        Добавить потолок <i class="fa fa-plus-square" aria-hidden="true"></i>
                     </button>
                 </li>
             <?php }?>
@@ -416,7 +416,7 @@
                                         <input class="input-gm" id="prepayment" style="vertical-align: middle;">
                                     </div>
                                     <div class="col-md-3 col-xs-3" style="padding-left: 0;padding-right: 0;">
-                                        <button id="prepayment_save" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                        <button id="prepayment_save" class="btn btn-primary btn-sm"><i class="fas fa-save" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </td>

@@ -25,6 +25,6 @@ $userId     = $user->get('id');
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mounterscalendar', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> Календарь</a>
 	</p>
 	<!--<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Что-то еще</a>
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="far fa-calendar-check" aria-hidden="true"></i> Что-то еще</a>
 	</p>-->
 </div>

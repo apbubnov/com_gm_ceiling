@@ -76,7 +76,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <th class="center">Бригада</th>
                     <?php if (in_array("14", $groups)):?>
                         <th class="center">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         </th>
                     <?php endif;?>
                 </tr>
@@ -162,7 +162,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <td class="center one-touch"><?php echo round($item->self_price,2);?></td>
                         <td class="center one-touch"><?php echo $mounter; ?></td>
                         <?php if(in_array(14, $groups)){ ?>
-                            <td class="center one-touch delete"><button class="btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            <td class="center one-touch delete"><button class="btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
                         <?php } ?>
                     </tr>
                 <? endif; ?>

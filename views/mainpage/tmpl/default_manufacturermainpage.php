@@ -25,7 +25,7 @@ $userId     = $user->get('id');
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=dealers&type=manufacturer', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Дилеры</a>
 	</p>	
 	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=manager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве</a>
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=manager', false); ?>"><i class="far fa-clock" aria-hidden="true"></i> В производстве</a>
 	</p>
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=manager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные</a>

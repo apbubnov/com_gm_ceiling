@@ -53,7 +53,7 @@ if (!empty($brigade_id)) {
                                     <span>В Монтажной службе</span>
                                 </label>';
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
-		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 		$calendars .= $checkboxIsService;
 		$calendars .= "</p>";
 		$names = null;

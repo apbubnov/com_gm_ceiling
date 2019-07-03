@@ -212,7 +212,7 @@ echo parent::getButtonBack();
                     td.append("<div class='row'><div class='col-md-5 left' style='padding:0 0 0 0'>" +
                                 "<input type='text' class='inputactive' value='"+oldExpenses+"' name='newExpenses'></div>" +
                                 "<div class='col-md-7 left' style='padding:0 0 0 0'>" +
-                                "<button class='btn btn-primary' name='saveExpenses'><i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i></button></div></div>");
+                                "<button class='btn btn-primary' name='saveExpenses'><i class=\"fas fa-save\" aria-hidden=\"true\"></i></button></div></div>");
                     jQuery("[name = 'saveExpenses']").click(function () {
                         var newExpense = jQuery(this.closest('td')).find("[name = newExpenses]").val();
                         jQuery.ajax({

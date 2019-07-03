@@ -108,7 +108,7 @@ $canDelete = $user->dealer_id == 1;
                             <div class="update_price">
                                 <input type="text" class="new_price" value="<?=$option['price'];?>">
                                 <button type="submit" onsubmit="saveSum(this);" formaction="javascript:false;" class="save" onclick="saveSum(this);">
-                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    <i class="fas fa-save" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </td>

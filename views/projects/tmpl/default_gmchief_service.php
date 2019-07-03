@@ -25,7 +25,7 @@
             Статус
         </th>
         <th>
-            <i class="fa fa-trash-o" aria-hidden="true"></i>
+            <i class="fas fa-trash-alt" aria-hidden="true"></i>
         </th>
     </tr>
     </thead>
@@ -70,7 +70,7 @@
                     <?php echo $item->status; ?>
                 </td>
                 <td>
-                    <button class="btn btn-danger delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    <button class="btn btn-danger delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 </td>
             </tr>
         <?php }
