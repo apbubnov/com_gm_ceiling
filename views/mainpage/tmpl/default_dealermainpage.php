@@ -199,7 +199,7 @@ $rest = -($total_sum) - $contributed;
         </p>
         <p class="center">
             <a class="btn btn-large btn-danger"
-               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype', false); ?>"><i
+               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=accountant&subtype=close', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Договоры</a>
         </p>
         <?php if($userId = 2 || $userId = 1 || $userId == 827 ){?>

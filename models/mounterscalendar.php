@@ -55,9 +55,13 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
 			$query3 = $db->getQuery(true);
-			
+			$n5subquery = $db->getQuery(true);
+            $n5subquery
+                ->select('SUM(c.n5)')
+                ->from('`rgzbn_gm_ceiling_calculations` AS c')
+                ->where('c.project_id = p.id');
 			$query
-				->select('p.id,pm.date_time as project_mounting_date,p.read_by_mounter, p.project_status, p.project_info,p.transport, p.distance, p.distance_col')
+				->select("p.id,pm.date_time AS project_mounting_date,p.read_by_mounter,($n5subquery) AS n5, p.project_status,pm.type, p.project_info,p.transport, p.distance, p.distance_col")
 				->from('`#__gm_ceiling_projects_mounts` as pm')
 				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
 				->where("pm.mounter_id = '$id' and pm.date_time between '$date1 00:00:00' and '$date2 23:59:59'")
@@ -69,7 +73,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 
-			$query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum')
+			$query2->select('calculations.project_id, calculations.mounting_sum')
 				->from('#__gm_ceiling_calculations as calculations')
 				->innerJoin('#__gm_ceiling_projects_mounts as pm ON calculations.project_id = pm.project_id')
 				->where("pm.mounter_id = '$id' and pm.date_time between '$date1 00:00:00' and '$date2 23:59:59'");
@@ -87,7 +91,6 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			foreach ($items as $value) {
 				foreach ($items2 as $val) {
 					if ($value->id == $val->project_id) {
-						$value->n5 += $val->n5;
 						$value->mounting_sum += $val->mounting_sum;
 					}
 				}
@@ -219,7 +222,9 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
         {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-
+            $contactsSubquery = $db->getQuery(true);
+            $mountSumSubquery = $db->getQuery(true);
+            $perimeterSubquery = $db->getQuery(true);
             /*
              * оставил на всякий если будет косячить новый код*/
             /*$query
@@ -241,28 +246,58 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $db->setQuery($query);
             $items2 = $db->loadObjectList();
             $query->clear();*/
+
+            $contactsSubquery
+                ->select('GROUP_CONCAT(cp.phone SEPARATOR \';\n\')')
+                ->from('`rgzbn_gm_ceiling_clients_contacts` AS cp')
+                ->where('cp.client_id = p.client_id');
+            $mountSumSubquery
+                ->select('SUM(`sum`)')
+                ->from('`rgzbn_gm_ceiling_calcs_mount` AS cm')
+                ->innerJoin('`rgzbn_gm_ceiling_calculations` AS c ON c.id = cm.calculation_id')
+                ->where('c.project_id = p.id AND cm.stage_id = pm.type');
+            $perimeterSubquery
+                ->select('SUM(n5)')
+                ->from('`rgzbn_gm_ceiling_calculations`')
+                ->where('project_id = p.id');
             $query
-                ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, pm.type,p.calcs_mounting_sum')
-                ->select('SUM(DISTINCT c.n5) as n5,sum(DISTINCT c.mounting_sum) as mounting_sum')
-                ->select('GROUP_CONCAT(DISTINCT cc.phone separator \';\n\') as client_phones')
-                ->select('GROUP_CONCAT(DISTINCT c.id separator \';\') as calcs_id')
-                ->from('`#__gm_ceiling_projects_mounts` as pm')
-                ->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
-                ->leftJoin('`#__gm_ceiling_clients_contacts` as cc on cc.client_id = p.client_id')
-                ->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
-                ->innerJoin('`#__gm_ceiling_calculations` as c on c.project_id = p.id')
-                ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
-                ->group('p.id')
-                ->order('pm.date_time');
+                ->select('p.id, pm.date_time AS project_mounting_date, p.read_by_mounter, s.title AS project_status, p.project_info, pm.type,p.calcs_mounting_sum')
+                ->select("($contactsSubquery) as client_phones")
+                ->select("($mountSumSubquery) as m_sum")
+                ->select("($perimeterSubquery) as n5")
+                ->from('`rgzbn_gm_ceiling_projects_mounts` AS pm')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = pm.project_id')
+                ->innerJoin('`rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id')
+                ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             if(count($items == 1) && empty($items[0]->id)){
                 $items = [];
             }
+            $summed = [];$result = [];
+            for($i=0;$i<count($items);$i++){
+                for($j=$i+1;$j<count($items);$j++){
+                    if($items[$i]->id == $items[$j]->id){
+                        $clone_object = clone $items[$i];
+                        $clone_object->m_sum += $items[$j]->m_sum;
+                        $clone_object->type = [$items[$i]->type,$items[$j]->type];
+                        $summed[$clone_object->id] = $clone_object;
+                    }
+                }
+            }
+            foreach ($items as $item) {
+                if(!in_array($item->id,array_keys($summed))){
+                    array_push($result,$item);
+                }
+            }
+            foreach ($summed as $sum_value) {
+                array_push($result,$sum_value);
+            }
+            $items = $result;
             //throw new Exception(print_r($items,true));
-            $user = JFactory::getUser();
-            $service = ($user->dealer_id == 1) ? "serviceSelf" : "";
-            foreach ($items as $value) {
+            //$user = JFactory::getUser();
+            //$service = ($user->dealer_id == 1) ? "serviceSelf" : "";
+            /*foreach ($items as $value) {
                 if(!empty($value->id)) {
                     $value->m_sum = 0;
                     $calcs = explode(';', $value->calcs_id);
@@ -278,7 +313,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                     }
                     $value->m_sum += $transport["mounter_sum"];
                 }
-            }
+            }*/
 
             $query->clear();
             $query->select('date_from, date_to')

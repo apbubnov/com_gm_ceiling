@@ -1,28 +1,28 @@
 <?php
- /**
-     * @version    CVS: 0.1.7
-     * @package    Com_Gm_ceiling
-     * @author     SpectralEye <Xander@spectraleye.ru>
-     * @copyright  2016 SpectralEye
-     * @license    GNU General Public License version 2 or later; see LICENSE.txt
+/**
+ * @version    CVS: 0.1.7
+ * @package    Com_Gm_ceiling
+ * @author     SpectralEye <Xander@spectraleye.ru>
+ * @copyright  2016 SpectralEye
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-    // No direct access
-    defined('_JEXEC') or die;
+// No direct access
+defined('_JEXEC') or die;
 
-    JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-    JHtml::_('bootstrap.tooltip');
-    JHtml::_('behavior.multiselect');
-    //JHtml::_('formbehavior.chosen', 'select');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+//JHtml::_('formbehavior.chosen', 'select');
 
-    $user       = JFactory::getUser();
-    $userId     = $user->get('id');
-    $dealerId   = $user->dealer_id;
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$dealerId   = $user->dealer_id;
 
-    // календарь
-    $month = date("n");
-    $year = date("Y");
-    $FlagCalendar = [5, $dealerId];
-    $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+// календарь
+$month = date("n");
+$year = date("Y");
+$FlagCalendar = [5, $dealerId];
+$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
 
 ?>
 
@@ -97,19 +97,19 @@
         <div class="modal_window" id="window-with-table">
             <table id="table-mounting" class="rwd-table">
                 <thead>
-                    <tr>
-                        <th id="selected_data" colspan="8"></th>
-                    </tr>
-                    <tr id="caption-tr" style="font-size: 9pt;">
-                        <th>Время</th>
-                        <th>Адрес</th>
-                        <th>Телефоны</th>
-                        <th>Периметр</th>
-                        <th>З/П</th>
-                        <th>Примечание</th>
-                        <th>Статус</th>
-                        <th>Этап</th>
-                    </tr>
+                <tr>
+                    <th id="selected_data" colspan="8"></th>
+                </tr>
+                <tr id="caption-tr" style="font-size: 9pt;">
+                    <th>Время</th>
+                    <th>Адрес</th>
+                    <th>Телефоны</th>
+                    <th>Периметр</th>
+                    <th>З/П</th>
+                    <th>Примечание</th>
+                    <th>Статус</th>
+                    <th>Этап</th>
+                </tr>
                 </thead>
                 <tbody>
 
@@ -199,7 +199,7 @@
     // открытие модального окна и узнаем какой день нажат
     jQuery("#calendar-container").on("click", ".current-month, .day-off2", function () {
         console.log(1);
-        kind = "empty";        
+        kind = "empty";
         var id = jQuery(this).attr("id");
         WhatDay(id);
         ListOfWork(kind, ChooseDay, ChooseMonth, ChooseYear);
@@ -245,7 +245,7 @@
         if (kind == "empty") {
             jQuery("#caption-tr").hide();
             TrOrders = '<tr><td data-th="монтажей нет" colspan=8>В данный момент на этот день монтажей нет</td></tr>';
-             jQuery.ajax({
+            jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
                 dataType: 'json',
@@ -255,10 +255,10 @@
                 },
                 success: function(data) {
                     console.log(data);
-                    if (data.length > 0) { 
+                    if (data.length > 0) {
                         Array.from(data).forEach(function(element) {
                             TrOrders += '<tr><td data-th="дата монтажа" style="width: 25%;">'+element.project_mounting_date+'</td><td data-th="адрес" style="width: 75%;">'+element.project_info+'</td></tr>';
-                        }); 
+                        });
                     }
                     jQuery("#table-mounting > tbody").append(TrOrders);
                 },
@@ -275,7 +275,7 @@
             });
         } else if (kind == "no-empty") {
             jQuery("#caption-tr").show();
-             jQuery.ajax( {
+            jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
                 dataType: 'json',
@@ -285,7 +285,7 @@
                 },
                 success: function(msg) {
                     console.log(msg);
-                    var status, type, note = "", comment_calc, project, adress, perimeter;
+                    var status, type = "", note = "", comment_calc, project, adress, perimeter;
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
@@ -294,9 +294,9 @@
                             getProjectNotes(project);
                             // комменты
                             jQuery.each(notes,function (index,elem) {
-                                   if(index.indexOf("mount") >=0){
-                                       note += elem.description + elem.value;
-                                   }
+                                if(index.indexOf("mount") >=0){
+                                    note += elem.description + elem.value;
+                                }
                             });
 
 
@@ -308,18 +308,28 @@
                             }
                             salary = element.m_sum;
 
-                            switch (element.type) {
-                                case '1': type = 'Полный монт.';
-                                break;
-                                case '2': type = 'Обагечивание';
-                                break;
-                                case '3': type = 'Натяжка';
-                                break;
-                                case '4': type = 'Вставка';
-                                break;
+                            for(var k=0;k<element.type.length;k++){
+                                switch (element.type[k]) {
+                                    case '1': type += 'Полный монт.\n';
+                                        break;
+                                    case '2': type += 'Обагечивание\n';
+                                        break;
+                                    case '3': type += 'Натяжка\n';
+                                        break;
+                                    case '4': type += 'Вставка\n';
+                                        break;
+                                }
                             }
+                            var typeParam;
+                            if(Array.isArray(element.type)){
+                                typeParam = element.type.join('_');
+                            }
+                            else{
+                                typeParam = element.type;
+                            }
+                            console.log(typeParam);
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+', '+element.type+');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны">'+element.client_phones+'</td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+',\''+typeParam+'\');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны">'+element.client_phones+'</td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
                             jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
@@ -366,6 +376,8 @@
     function ReplaceToOrder(project, month, ReadOrNot, stage) {
         month--;
         console.log(project);
+        console.log(stage);
+        stage = stage.split('_');
         if (ReadOrNot == 0) {
             jQuery.ajax({
                 type: "POST",
@@ -376,14 +388,14 @@
                 },
                 success: function(msg) {
                     if (msg[0].read_by_mounter == 1) {
-                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
+                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+JSON.stringify(stage);
                     }
                 },
                 error: function(msg) {
                 }
             });
         } else {
-            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+stage;
+            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project+"&stage="+JSON.stringify(stage);
         }
     }
     /*

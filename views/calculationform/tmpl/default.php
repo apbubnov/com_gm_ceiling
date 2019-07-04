@@ -721,9 +721,9 @@
                             parent:null,
                             goods: [],
                             jobs: [],
-                            duplicate: "1",
+                            duplicate: "0",
                             input_type : "3",
-                            title: "Дополнительные комплектующие со склада"
+                            title: "Выберите категорию"
                         }
                     ]
                 }
@@ -842,9 +842,10 @@
         },
 
         ];
+    var componentsInCategories;
     jQuery(document).ready(function () {
 
-        var data = JSON.parse('<?php echo $data?>'),
+        var data = JSON.parse('<?php echo $data?>');
             componentsInCategories = JSON.parse('<?php echo $componentsInCategories?>');
         data = data.concat(DEFAULT_MAINGROUPS);
         console.log("data",data);
@@ -876,7 +877,6 @@
                 prev = parent.prev(),
                 count = 1;
             while(true){
-                console.log(prev);
                 if(prev.hasClass('title')) {
                     break;
                 }
@@ -904,7 +904,6 @@
             var parent = jQuery(this).closest('.row-fields'),
                 prevRow = parent.prev(),
                 nextRow = parent.next();
-            console.log(prevRow.hasClass('row-fields'));
             if(prevRow.hasClass('row-fields') || nextRow.hasClass('row-fields') ){
                 jQuery(this).closest('.row-fields').remove();
             }
@@ -926,9 +925,75 @@
                 }
             }
         });
-        
+
+        jQuery('body').on('click','.duplicate_extra_goods',function () {
+            var rowToClone = jQuery(this).closest('.row-fields'),
+                clonedRow = rowToClone.clone();
+            rowToClone.after(clonedRow);
+        });
+
+        jQuery('body').on('change','[name="choose_category"]',function () {
+            var goods = getGoodsByCategory(this.value),
+                divRow = jQuery(document.createElement('div')),
+                countDiv = jQuery(document.createElement('div')),
+                selectDiv = jQuery(document.createElement('div')),
+                duplicateDiv = jQuery(document.createElement('div')),
+                deleteDiv = jQuery(document.createElement('div'));
+
+            divRow.addClass('col-sm-12');
+            divRow.css({"margin-bottom":"5px"});
+            countDiv.addClass('col-sm-2 col-xs-2');
+            countDiv.addClass('countDiv');
+            countDiv.css({"padding-right":"0"});
+            selectDiv.addClass('col-sm-6 col-xs-6 selectDiv');
+            duplicateDiv.addClass('col-sm-2 col-xs-2');
+            duplicateDiv.css({'text-align':'right'},{'padding':0});
+            deleteDiv.addClass('col-sm-2 col-xs-2');
+            duplicateDiv.css({'padding':0});
+            countDiv.append(createInput());
+            selectDiv.append(createSelect(goods));
+            duplicateDiv.append('<button class="btn btn-primary duplicate_extra_goods" type="button"><i class="far fa-clone"></i></button>')
+            deleteDiv.append(createDeleteBtn());
+            divRow.attr('data-jobs',"");
+            divRow.append(countDiv);
+            divRow.append(selectDiv);
+            divRow.append(duplicateDiv);
+            divRow.append(deleteDiv);
+
+            jQuery(this).parent().append(divRow);
+
+        });
         jQuery('#calculate_button').click(function () {
-            collectData();
+            var collected_data = collectData();
+            /*calc_id,jobs,goods,extra_components,extra_mounting,fields_data*/
+            console.log(collected_data);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
+                data: {
+                    calc_id: calculation.id,
+                    goods: collected_data.goods,
+                    jobs: collected_data.jobs,
+                    extra_components: JSON.stringify(collected_data.extra_components),
+                    extra_mounting: JSON.stringify(collected_data.extra_mounting),
+                    fields_data: "",
+                    photo_print: JSON.stringify(collected_data.photo_print)
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
         });
     });
 
@@ -944,6 +1009,7 @@
             button.addClass('btn btn_calc');
             button.prop('type','button');
             button.html(buttonTitle);
+            button.attr("data-maingroup_id",elem.id);
             btnDiv.addClass('col-sm-6');
             btnDiv.append(button);
             btnDiv.append(createWorkButton(elem.groups));
@@ -978,6 +1044,7 @@
             helpDivCol.append(buttonHelp);
             /*кнопка раскрытия работы*/
             button.prop('type','button');
+            button.attr('data-group_id',elem.id);
             button.addClass('btn add_fields');
             //button.css({'background-color': 'rgb(1, 0, 132)'});
             button.html('<div class="col-xs-2 col-sm-2"><img src="'+elem.icon+' " class="img_calcform"></div><div class="col-xs-10 col-sm-10" style="text-align: left;">'+elem.title+'</div>');
@@ -1002,7 +1069,7 @@
                 titleDiv = jQuery(document.createElement('div')),
                 label = jQuery(document.createElement('label')),
                 jobsIds = getJobsIds(elem.jobs);
-            countDiv.addClass('countDiv')
+            countDiv.addClass('countDiv');
             titleDiv.addClass('row title');
             titleDiv.css({"margin-left":"15px","color":"#414099"})
             label.css({"margin-left":"15px","margin-bottom":"2px","color":"#414099"})
@@ -1033,7 +1100,18 @@
 
                 }
                 if(elem.input_type == 3){
-
+                    var categoryDiv = jQuery(document.createElement('div')),
+                        deleteDiv = jQuery(document.createElement('div')),
+                        categories = getCategories(componentsInCategories)
+                        select = createSelect(categories);
+                    categoryDiv.addClass('category col-xs-12 col-sm-12');
+                    //deleteDiv.addClass('col-sm-2 col-xs-2');
+                    select.prop('name','choose_category');
+                    categoryDiv.append(select);
+                    //deleteDiv.append(createDeleteBtn());
+                    resultDiv.append(titleDiv);
+                    divRow.append(categoryDiv);
+                    //divRow.append(deleteDiv);
                 }
                 if(elem.input_type == 4){
                     resultDiv.append(titleDiv);
@@ -1216,22 +1294,39 @@
             jQuery("#sketch_image_block").show();
         }
     }
+    function getCategories(componentsArray){
+        var categories = [];
+        jQuery.each(componentsArray,function(index,elem){
+            categories.push({id:elem.category_id,name:elem.category_name});
+        })
+        return categories;
+    }
 
+    function getGoodsByCategory(categoryId){
+        var category = componentsInCategories.find(function (elem,index) {
+            if(elem.category_id == categoryId){
+                return elem;
+            }
+        })
+        return category.goods;
+    }
     function collectData(){
         var jobs = [],
             components = [];
         var fieldsDiv = jQuery('.row-fields');
+
         jQuery.each(fieldsDiv,function(index,div){
             var currentJobs = jQuery(div).data('jobs'),
                 countDiv,input,goodSelect,radio;
-
+            if(empty(currentJobs)){
+                currentJobs = [];
+            }
             countDiv = jQuery(div).find('.countDiv');
             input = jQuery(countDiv).children();
-            console.log(input.prop('type'));
             if(input.prop('type') == "checkbox"){
                 if(input.is(':checked')) {
                     for (var i = currentJobs.length; i--;) {
-                        jobs.push({job_id: currentJobs[i], count: 1});
+                        jobs.push({id: currentJobs[i], count: 1});
                     }
                 }
             }
@@ -1240,22 +1335,31 @@
                 var id = countDiv.parent().data('id'),
                     radio = jQuery('input[type=radio][data-parent="'+id+'"]:checked'),
                     radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
-                if(!empty(input.val())){
-                    currentJobs.concat(radio.val());
-                    if(radioGoodSelect.length != 0) {
-                        components.push({good_id: radioGoodSelect.val(), count: input.val()});
+                if(!empty(radio.val())) {
+                    console.log("123");
+                    if (!empty(input.val())) {
+                        if (currentJobs.length == 0) {
+                            currentJobs = JSON.parse(radio.val());
+                        }
+                        else {
+                            currentJobs.concat(JSON.parse(radio.val()));
+                        }
+                        if (radioGoodSelect.length != 0) {
+                            components.push({id: radioGoodSelect.val(), count: input.val()});
+                        }
                     }
                 }
                 //поиск связанных селектов
+                console.log(countDiv.parent());
                 goodSelect = countDiv.parent().find('.selectDiv').children();
                 //если есть селект и введеное количество не пустое добавляем компоненты
                 if(goodSelect.length != 0 && !empty(input.val())){
-                    components.push({good_id:goodSelect.val(),count:input.val()});
+                    components.push({id:goodSelect.val(),count:input.val()});
                 }
                 //добавляем работы если количество не пустое
                 if(!empty(input.val())) {
                     for (var i = currentJobs.length; i--;) {
-                        jobs.push({job_id: currentJobs[i], count: input.val()});
+                        jobs.push({id: currentJobs[i], count: input.val()});
                     }
                 }
             }
@@ -1263,35 +1367,55 @@
                 if(input.is(':checked')){
                     currentJobs = JSON.parse(input.val());
                     for (var i = currentJobs.length; i--;) {
-                        jobs.push({job_id: currentJobs[i], count: 1});
+                        jobs.push({id: currentJobs[i], count: 1});
                     }
                 }
             }
         });
-        console.log(jobs);
-        console.log(components);
+
 
         //получение площади истоимости фотопечати
-        var photoprint = {
-                            square:jQuery('[name = "print_square"]').val(),
-                            cost:jQuery('[name = "print_cost"]').val()
-                         },
+
+        var photoprint= "",
             additional_works = [],
             additional_components = [];
+        if(!empty(jQuery('[name = "print_square"]').val()) && !empty(jQuery('[name = "print_cost"]').val()) ){
+           photoprint =  {
+                            square:jQuery('[name = "print_square"]').val(),
+                            cost:jQuery('[name = "print_cost"]').val()
+                         }
+        }
+
         jQuery.each(jQuery('[name = "work_title"]'),function(index,elem){
             var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val();
-            additional_works.push({work_title:elem.value,work_cost: cost});
+            if(!empty(cost)){
+                additional_works.push({work_title:elem.value,work_cost: cost});
+            }
         });
         jQuery.each(jQuery('[name = "component_title"]'),function(index,elem){
             var cost = jQuery(elem).closest('.field').find('[name="component_cost"]').val();
-            additional_components.push({component_title:elem.value,component_cost: cost});
+            if(!empty(cost)) {
+                additional_components.push({component_title: elem.value, component_cost: cost});
+            }
         });
+        jobs = sumSameValues(jobs);
+        components = sumSameValues(components);
+        return {jobs:jobs,goods:components,extra_components:additional_components,extra_mounting:additional_works,photo_print:photoprint};
+    }
 
-        console.log("phonotoprint",photoprint);
-        console.log("additional_work",additional_works);
-        console.log("additional_components",additional_components);
-
-
-
+    function sumSameValues(arrData){
+        var result = [];
+        arrData.reduce(function (res, value) {
+            if (!res[value.id]) {
+                res[value.id] = {
+                    count: 0,
+                    id: value.id
+                };
+                result.push(res[value.id])
+            }
+            res[value.id].count += +value.count;
+            return res;
+        }, {});
+        return result;
     }
 </script>

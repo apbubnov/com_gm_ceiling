@@ -5284,7 +5284,11 @@ class Gm_ceilingHelpersGm_ceiling
                             if ($value->read_by_mounter == null) {
                                 $value->read_by_mounter = "0";
                             }
-                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status, $value->n5,$value->id];
+                            $arr = array("mount_date" =>substr($value->project_mounting_date, 0, 10),
+                                         "read_by_mounter" => $value->read_by_mounter,
+                                         "project_status" => $value->project_status,
+                                         "perimeter" => $value->n5,
+                                         "id"=>$value->id);
                             array_push($DateStatys, $arr);
 
 
@@ -5297,32 +5301,56 @@ class Gm_ceilingHelpersGm_ceiling
                                 $t = $r;
                             }
                             foreach ($DateStatys as $value) {
-                                if ($value[0] == $year . "-" . $monthfull . "-" . $t) {
-                                    if(!in_array($value[4],$need_calc_projects)){
-                                        $perimeter += $value[3];
-                                        array_push($need_calc_projects,$value[4]);
+                                if ($value["mount_date"] == $year . "-" . $monthfull . "-" . $t) {
+                                    if(!in_array($value["id"],$need_calc_projects[$value["mount_date"]])){
+                                        $perimeter += $value["perimeter"];
+                                        $need_calc_projects[$value["mount_date"]][] = $value["id"];
                                     }
-
-                                    if ($value[1] == 0) {
+                                    if ($value["read_by_mounter"] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
-                                    } else if ($value[1] == 1) {
-                                        if(empty($DayMounters[$r])){
-                                            if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                    } else if ($value['read_by_mounter'] == 1) {
+                                        switch ($value["project_status"]) {
+                                            case 5:
+                                            case 6:
+                                            case 7:
+                                            case 8:
+                                            case 10:
+                                            case 19:
+                                                $DayMounter[$r] = ["yellow", $perimeter];
+                                                break;
+                                            case 16:
+                                                $DayMounter[$r] = ["navy", $perimeter];
+                                                break;
+                                            case 17:
+                                                $DayMounter[$r] = ["brown", $perimeter];
+                                                break;
+                                            case 11:
+                                                $DayMounter[$r] = ["green", $perimeter];
+                                                break;
+                                            case 12:
+                                                $DayMounter[$r] = ["blue", $perimeter];
+                                                break;
+                                            default:
+                                                $DayMounter[$r] = ["yellow", $perimeter];
+                                                break;
+                                        }
+                                        /*if(empty($DayMounters[$r])){
+                                            if ($value["project_status"] == 5 || $value["project_status"] == 6 || $value["project_status"] == 7 || $value["project_status"] == 8 || $value["project_status"] == 10 || $value["project_status"] == 19) {
                                                 $DayMounter[$r] = ["yellow", $perimeter];
                                             }
-                                            if ($value[2] == 16) {
+                                            if ($value["project_status"] == 16) {
                                                 $DayMounter[$r] = ["navy", $perimeter];
                                             }
-                                            if ($value[2] == 17) {
+                                            if ($value["project_status"] == 17) {
                                                 $DayMounter[$r] = ["brown", $perimeter];
                                             }
-                                            if ($value[2] == 11) {
+                                            if ($value["project_status"] == 11) {
                                                 $DayMounter[$r] = ["green", $perimeter];
                                             }
-                                            if ($value[2] == 12) {
+                                            if ($value["project_status"] == 12) {
                                                 $DayMounter[$r] = ["blue", $perimeter];
                                             }
-                                        }
+                                        }*/
                                     }
                                 } else {
                                     $perimeter = 0;

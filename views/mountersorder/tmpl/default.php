@@ -19,7 +19,7 @@ $userId     = $user->get('id');
 
 $jinput = JFactory::getApplication()->input;
 $project = $jinput->get('project', null, 'INT');
-$stage = $jinput->get('stage', null, 'INT');
+$stages = json_decode($jinput->get('stage', null, 'STRING'));
 $calc_sum_stage = 0;
 $project_model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 $project_data = $project_model->getData($project);
@@ -37,25 +37,27 @@ if (!empty($calculation_ids)) {
     }
 }
 
- if (!empty($calculation_ids)) { 
+if (!empty($calculation_ids)) {
     $AllCalc = [];
     foreach ($calculation_ids as $value) {
-        if(!$service){ 
+        if(!$service){
             $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
         }
         else{
             $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null,null,"mount");
         }
-         foreach ($DataOfProject[$value->id]["mounting_data"] as $val) { 
-            if($val['stage']==$stage || $stage == 1){
-                if (!array_key_exists($val["title"], $AllCalc)) {
-                    $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
-                } else {
-                    $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
-                    $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
-                    $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+        foreach ($stages as $stage) {
+            foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
+                if($val['stage']==$stage || $stage == 1){
+                    if (!array_key_exists($val["title"], $AllCalc)) {
+                        $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                    } else {
+                        $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
+                        $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                        $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                    }
                 }
-            } 
+            }
         }
     }
 }
@@ -71,7 +73,7 @@ if (!empty($calculation_ids)) {
         <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
         </li>
-        <?php if (!empty($calculation_ids)) { 
+        <?php if (!empty($calculation_ids)) {
             ?>
             <?php foreach ($calculation_ids as $value) { ?>
                 <li class="nav-item">
@@ -158,48 +160,50 @@ if (!empty($calculation_ids)) {
                             <td>Количество</td>
                             <td>Стоимость, ₽</td>
                         </tr>
-                        <?php 
-                            $calc_sum_stage = 0;
-                                if (!empty($DataOfProject[$value->id])) { 
-                                    foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
-                                        if($val['stage'] == $stage || $stage == 1){ ?>
-                                            <tr>
-                                                <td class="left">
-                                                    <?php echo $val["title"]; ?>
-                                                </td>
-                                                <?php if ($user->dealer_id == 1) { ?>
-                                                    <td>
-                                                        <?php echo $val["gm_salary"]; ?>
-                                                    </td>
-                                                <?php } else { ?>
-                                                    <td>
-                                                        <?php echo $val["dealer_salary"]; ?>
-                                                    </td>
-                                                <?php } ?>
+                        <?php
+                        $calc_sum_stage = 0;
+                        if (!empty($DataOfProject[$value->id])) {
+                            foreach ($stages as $stage) {
+                                foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
+                                    if($val['stage'] == $stage || $stage == 1){ ?>
+                                        <tr>
+                                            <td class="left">
+                                                <?php echo $val["title"]; ?>
+                                            </td>
+                                            <?php if ($user->dealer_id == 1) { ?>
                                                 <td>
-                                                    <?php echo $val["quantity"]; ?>
+                                                    <?php echo $val["gm_salary"]; ?>
                                                 </td>
-                                                <?php if ($user->dealer_id == 1) { ?>
-                                                    <td>
+                                            <?php } else { ?>
+                                                <td>
+                                                    <?php echo $val["dealer_salary"]; ?>
+                                                </td>
+                                            <?php } ?>
+                                            <td>
+                                                <?php echo $val["quantity"]; ?>
+                                            </td>
+                                            <?php if ($user->dealer_id == 1) { ?>
+                                                <td>
 
-                                                        <?php
-                                                            $calc_sum_stage +=  $val["gm_salary_total"];
-                                                            echo $val["gm_salary_total"]; 
-                                                        ?>
-                                                    </td>
-                                                <?php } else { ?>
-                                                    <td>
-                                                        <?php 
-                                                             $calc_sum_stage +=  $val["dealer_salary_total"];
-                                                             echo $val["dealer_salary_total"]; 
-                                                        ?>
-                                                    </td>
-                                                <?php } ?>
-                                            </tr>
-                        <?php              
-                                        }
-                                     }
-                        ?> 
+                                                    <?php
+                                                    $calc_sum_stage +=  $val["gm_salary_total"];
+                                                    echo $val["gm_salary_total"];
+                                                    ?>
+                                                </td>
+                                            <?php } else { ?>
+                                                <td>
+                                                    <?php
+                                                    $calc_sum_stage +=  $val["dealer_salary_total"];
+                                                    echo $val["dealer_salary_total"];
+                                                    ?>
+                                                </td>
+                                            <?php } ?>
+                                        </tr>
+                                        <?php
+                                    }
+                                }
+                            }
+                            ?>
                             <tr class="caption">
                                 <td colspan=3 style="text-align: right;">Итого, ₽:</td>
                                 <td>
@@ -285,16 +289,15 @@ if (!empty($calculation_ids)) {
             <div id="warning">
                 <p>Введите примечание</p>
             </div>
-            
+
             <p><button type="button" id="save" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var stage = '<?php echo $stage; ?>';
-    var stage_map_status = JSON.parse('<?php echo json_encode($stage_map_status);?>');
-    console.log(stage_map_status);
+    var stages = JSON.parse('<?php echo json_encode($stages);?>'),
+        stage = Math.max.apply(Math,stages);
     var url_proj = '<?php echo $project; ?>';
     // функция получения текущего времени
     var date;
@@ -386,7 +389,7 @@ if (!empty($calculation_ids)) {
                         if(stage == 4){
                             jQuery("#begin").attr("disabled", "disabled");
                             jQuery("#complited").attr("disabled", false);
-                        }  
+                        }
                         break;
                 }
                 /*if (status_mount == 27 || status_mount == 28 || status_mount == 29 ) {
@@ -400,7 +403,7 @@ if (!empty($calculation_ids)) {
                 } else if (status_mount == 16 || status_mount == 24 || status_mount == 25 || status_mount == 26 ) {
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
-                }*/ 
+                }*/
             },
             error: function(data){
                 console.log(data);
@@ -441,7 +444,7 @@ if (!empty($calculation_ids)) {
                 type: 'alert',
                 layout: 'topCenter',
                 text: '<input type="radio" value="after" name="img_type" style="margin-top: 10px; cursor: pointer;" checked> После<br>'+
-                    '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
+                '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
                 modal: true,
                 buttons:[
                     {
@@ -479,7 +482,7 @@ if (!empty($calculation_ids)) {
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save", function() {
             var note = jQuery("#note").val();
-            
+
             if (whatBtn == "complited") {
                 // кнопка "монтаж выполнен"
                 CurrentDateTime();

@@ -1256,6 +1256,12 @@ class Gm_ceilingModelProjects extends JModelList
             $service = ($dealer_id == 1) ? " OR `g`.`group_id` = 32" : "";
             $currentDate = date("Y-m-d").' 00:00:00';
             $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
+
             $query = $db->getQuery(true);
             $query->select('`u`.`id` AS `project_mounter`,
 

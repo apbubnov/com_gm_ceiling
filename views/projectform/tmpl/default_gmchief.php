@@ -394,7 +394,7 @@
                                 <div id="measures_calendar"></div>
                                 <input id="measure_info" readonly>
                             </div>
-                    <?php } else if ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) { ?>
+                    <?php } else  { ?>
                         <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
                         <div id="calendar_mount" align="center"></div>
                     <?php } ?>
@@ -483,7 +483,7 @@
 
     // показать историю
     function show_comments() {
-        var id_client = <?php echo $this->item->id_client;?>;
+        var id_client = '<?php echo $this->item->id_client;?>';
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=selectComments",
             data: {
@@ -566,7 +566,7 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
+            var id_client = '<?php echo $this->item->id_client;?>';
             if (reg_comment.test(comment) || comment === "") {
                 alert('Неверный формат примечания!');
                 return;
