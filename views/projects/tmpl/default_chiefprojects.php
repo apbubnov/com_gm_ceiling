@@ -51,7 +51,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     </th>
                     <?php if (in_array("14", $groups)):?>
                         <th class="center">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         </th>
                     <?php endif;?>
                 </tr>
@@ -75,7 +75,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             <td class="center one-touch"><?= $item->project_info; ?><br><?= $item->client_contacts; ?></td>
                             <td class="center one-touch"><?= $item->client_name; ?></td>
                             <?php if(in_array(14, $groups)){ ?>
-                                <td class="center one-touch delete"><button class = "btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type = "button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                <td class="center one-touch delete"><button class = "btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type = "button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
                             <?php } ?>
                         </tr>
                     <? endif; ?>

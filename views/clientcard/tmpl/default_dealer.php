@@ -56,7 +56,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
-    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fas fa-pen" aria-hidden="true"></i></button>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
@@ -302,7 +302,7 @@ JHtml::_('formbehavior.chosen', 'select');
             <label>Добавить звонок</label><br>
             <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
             <input id="call_comment_m" placeholder="Введите примечание"><br>
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            <button class="btn btn-primary" id="add_call" type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
     </div>
     <div class="modal_window" id="modal_window_select_number">
         <p>Выберите номер для звонка:</p>
@@ -410,7 +410,7 @@ JHtml::_('formbehavior.chosen', 'select');
         <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
         <p>Примечание</p>
         <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
-        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fas fa-save" aria-hidden="true"></i></button></p>
     </div>
     <div class = "modal_window" id="modal_window_send_email">
         <p>Новое сообщение</p>

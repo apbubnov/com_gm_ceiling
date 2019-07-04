@@ -81,7 +81,7 @@ $jsonTextures = json_encode($textures);
             <button class="btn btn-primary action-btn" id="addTexture" ><i class="fa fa-plus-square" aria-hidden="true"></i> Добавить фактуру</button>
         </div>
         <div class="col-md-3" style="padding-left: 0;margin-left: 0;">
-            <button class="btn btn-primary action-btn" id="editTextureBtn" ><i class="fa fa-trash-o" aria-hidden="true"></i> Фактуры </button>
+            <button class="btn btn-primary action-btn" id="editTextureBtn" ><i class="fas fa-trash-alt" aria-hidden="true"></i> Фактуры </button>
         </div>
         <div class="col-md-3">
 
@@ -93,7 +93,7 @@ $jsonTextures = json_encode($textures);
                 <th class="center">Название</th>
                 <th class="center">Фактура</th>
                 <th class="center">Картинка</th>
-                <th class="center"><i class="fa fa-pencil-square" aria-hidden="true"></i></th>
+                <th class="center"><i class="fas fa-edit" aria-hidden="true"></i></th>
                 <th class="center">Полотна</th>
                 <th class="center">Добавить полотно</th>
             </thead>
@@ -346,7 +346,7 @@ $jsonTextures = json_encode($textures);
     }
 
     function fillTable(data){
-        var EDIT_BUTTON = '<button class="btn btn-primary" name ="editBtn"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>',
+        var EDIT_BUTTON = '<button class="btn btn-primary" name ="editBtn"><i class="fas fa-edit" aria-hidden="true"></i></button>',
             ADD_CANVAS_BUTTON = '<button class="btn btn-primary" name ="addCanvasBtn"><i class="fa fa-plus-square" aria-hidden="true"></i></button>',
             canvases = [],
             canvasesTitles="";

@@ -442,7 +442,7 @@
             <div class="row">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
-                    <button class="btn btn-primary to_redactor" type="button" style="width: 100%; margin-bottom: 25px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Изменить раскрой</button>
+                    <button class="btn btn-primary to_redactor" type="button" style="width: 100%; margin-bottom: 25px;"><i class="fas fa-edit" aria-hidden="true"></i>Изменить раскрой</button>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
@@ -499,7 +499,7 @@
             <div class="col-sm-4">
                 <button id="calculate_button" class="btn btn-success btn-big" type="button">
                     <span class="loading" style="display: none;">
-                        Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                        Считаю...<i class="fas fa-sync fa-spin fa-3x fa-fw"></i>
                     </span>
                     <span class="static">Рассчитать</span>
                 </button>
@@ -545,7 +545,7 @@
                                </label><br>
                                 <input type="tel" id = new_sum class="input-gm">
                                 <button class="btn btn-primary btn-sm" id ="save_new_sum" type="button">
-                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    <i class="fas fa-save" aria-hidden="true"></i>
                                 </button>
 
                             </div>

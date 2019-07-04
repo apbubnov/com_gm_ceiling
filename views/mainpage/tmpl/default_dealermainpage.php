@@ -147,9 +147,9 @@ $rest = -($total_sum) - $contributed;
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
                     <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
-                    <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
+                    <i class="far fa-clock" aria-hidden="true"></i> ГМ Менеджер</a>
                 <?php else: ?>
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>Менеджер</a>
+                    <i class="far fa-clock" aria-hidden="true"></i>Менеджер</a>
                 <?php endif; ?>
                 <?php if ($sumManager != 0) { ?>
                     <div class="circl-digits"><?php echo $sumManager; ?></div>
@@ -216,7 +216,7 @@ $rest = -($total_sum) - $contributed;
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
-            <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
+            <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-edit" aria-hidden="true"></i>Рассчитать</button>
         </p>
 
         <div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">

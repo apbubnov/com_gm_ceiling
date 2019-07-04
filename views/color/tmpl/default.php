@@ -24,7 +24,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 <!--		<tr>-->
 <!--			<th>В наличии или нет (отображать ли в списке при калькуляции)</th>-->
 <!--			<td>-->
-<!--			<i class="fa --><?php //echo ($this->item->state == 1) ? 'fa-check-circle-o' : 'fa-times-circle'; ?><!--" aria-hidden="true"></i></td>-->
+<!--			<i class="fa --><?php //echo ($this->item->state == 1) ? 'fas fa-check-circle' : 'fa-times-circle'; ?><!--" aria-hidden="true"></i></td>-->
 <!--		</tr>-->
 		<tr>
 			<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_COLOR_COLOR_TITLE'); ?></th>

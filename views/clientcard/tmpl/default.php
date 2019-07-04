@@ -77,7 +77,7 @@
 <h3 class="center">Карточка клиента</h3>
 <div id="FIO-container-tar">
     <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
-    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fas fa-pen" aria-hidden="true"></i></button>
     <?php if ($user->dealer_type != 1){ ?>
         <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php } ?>
@@ -87,7 +87,7 @@
     <br>
     <label>Менеджер: <span id="manager_name"><?php echo $manager_name;?></span></label>
     <?php if(count($managers)){?>
-        <button type="button" id="edit_manager" value="" class = "btn btn-primary"><i class="fa fa-pencil-square" aria-hidden="true"></i></button>
+        <button type="button" id="edit_manager" value="" class = "btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></button>
     <?php }?>
    
 </div>
@@ -105,7 +105,7 @@
             <tr>
                 <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
                 <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
+                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fas fa-save" aria-hidden="true"></i></button></td>
             </tr>
         </table>  
     </div>
@@ -223,7 +223,7 @@
                         </select>
                     <?php } ?>
                     <br>
-                    <button class="btn btn-primary" id="new_add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить</button>
+                    <button class="btn btn-primary" id="new_add_call" type="button"><i class="fas fa-save" aria-hidden="true"></i> Сохранить</button>
                 </div>
             </div>
         </div>
@@ -319,7 +319,7 @@
                     <?php echo $item->status; ?>
                 </td>
                 <td>
-                    <button class="btn btn-danger btn-sm btn_del_proj" type="button" data-id="<?php echo $item->id; ?>"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    <button class="btn btn-danger btn-sm btn_del_proj" type="button" data-id="<?php echo $item->id; ?>"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 </td>
             </tr>
         <?php endforeach;?>

@@ -115,7 +115,7 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
     <?= parent::getButtonBack(); ?>
     <a class="btn btn-large btn-primary" id="Create"
        href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=create', false, 2); ?>"
-       style="margin-left: 10px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Создать реализацию</a>
+       style="margin-left: 10px;"><i class="fas fa-edit" aria-hidden="true"></i> Создать реализацию</a>
 </div>
 <div class="Projects">
     <table class="Elements">

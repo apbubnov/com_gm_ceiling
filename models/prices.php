@@ -290,4 +290,26 @@ class Gm_ceilingModelPrices extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	private function getGoodsPriceForDealer($dealer_id) {
+		try {
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select('`*`');
+			$query->from('`#__goods_canvases`');
+			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
+			$db->setQuery($query);
+
+			$temp_result = $db->loadObjectList();
+			$result = array();
+
+			foreach ($temp_result as $key => $item) {
+				
+			}
+		} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
 }

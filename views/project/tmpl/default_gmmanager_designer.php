@@ -301,7 +301,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                                 <input name="call_date" id="call_date_up" type="datetime-local" placeholder="Дата звонка">
                                                 <input name="call_comment" id="call_comment_up" placeholder="Введите примечание">
                                                 <button class="btn btn-primary" id="add_call_and_submit_up" type="button"><i
-                                                            class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                                            class="fas fa-save" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -508,7 +508,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                             <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
                             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
                             <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
-                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                        class="fas fa-save" aria-hidden="true"></i></button>
                         </div>
                     <td>
                 </tr>

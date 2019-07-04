@@ -46,7 +46,7 @@ if (empty($gaugers_id)) {
 } else {
 	foreach ($gaugers_id as $value) {
 		$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
-		$calendars .= $value->name.' <button class="btn btn-danger btn-sm btn_del_calculator" type="button" data-id="'.$value->id.'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+		$calendars .= $value->name.' <button class="btn btn-danger btn-sm btn_del_calculator" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 		$calendars .= '</p>';
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);

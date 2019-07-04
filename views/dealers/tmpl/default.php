@@ -49,7 +49,7 @@ unset($_SESSION["dealers_$userId"]);
     <div class="col-md-4">
         <a href="/index.php?option=com_gm_ceiling&view=dealers&type=refused" class="btn btn-primary HelpMessage" title="Отказавшиеся от сотрудничества"><i class="fa fa-user-times" aria-hidden="true"></i></a>
         <button type="button" id="send_to_all" class="btn btn-primary HelpMessage" title="Отправить на email"><i class="fa fa-envelope"></i></button>
-        <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
+        <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fas fa-sync"></i></button>
         <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
     </div>
     <div class="col-md-4">

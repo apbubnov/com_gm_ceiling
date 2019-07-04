@@ -56,7 +56,7 @@ foreach($all_builders as $builder){
         <div class="col-md-8">
             <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
             <div class="col-md-2">
-                <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></button>
             </div>
             <div class="col-md-2">
                 <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -380,7 +380,7 @@ foreach($all_builders as $builder){
         <label>Добавить звонок</label><br>
         <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
         <input id="call_comment_m" placeholder="Введите примечание"><br>
-        <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <button class="btn btn-primary" id="add_call" type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
     </div>
     <div id="modal_window_select_number" class="modal_window">
         <p>Выберите номер для звонка:</p>
@@ -397,7 +397,7 @@ foreach($all_builders as $builder){
         <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
         <p>Примечание</p>
         <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
-        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fas fa-save" aria-hidden="true"></i></button></p>
 
     </div>
     <div id="one_mounter_salary" class="modal_window">
@@ -488,12 +488,12 @@ foreach($all_builders as $builder){
         var progressData = [],
             mountersOption = "<option>Выберите</option>",
             mountersForDelete = [];
-        var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>",
+        var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
-            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i></button></div></div>",
+            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fas fa-sync\" aria-hidden=\"true\"></i></button></div></div>",
             BUILDERS_SELECT = '<select class="input-gm builders_select" style ="vertical-align: middle;"><?php echo $options ?></select>',
-            MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fa fa-floppy-o" aria-hidden="true"></i></buttton>',
+            MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fas fa-save" aria-hidden="true"></i></buttton>',
             DEFECT_ICON = '<i class="fas fa-house-damage"></i>',
             DEFECT_FIXED_ICON = '<i class="fas fa-check-double"></i>';
 
@@ -747,7 +747,7 @@ foreach($all_builders as $builder){
                             '<td class="click_tr" name ="paid">'+(+el.payed).toFixed(2)+'</td>' +
                             rest_td +
                             '<td><input class="input-gm" name ="pay_sum" style="vertical-align: middle">' +
-                            '<button name="save_pay" style="vertical-align: middle" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>'
+                            '<button name="save_pay" style="vertical-align: middle" data-mounter_id = "'+el.mounter_id+'"class="btn btn-primary btn-sm"><i class="fas fa-save" aria-hidden="true"></i></button></td>'
 
                         );
                     });

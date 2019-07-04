@@ -53,7 +53,7 @@ $server_name = $_SERVER['SERVER_NAME'];
     <actions>
         <?= parent::getButtonBack(); ?>
         <!--<a class="btn btn-large btn-primary" id="Create" href="/index.php?option=com_gm_ceiling&view=guild&type=create">
-            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Создать раскрой
+            <i class="fas fa-edit" aria-hidden="true"></i> Создать раскрой
         </a>-->
     </actions>
     <cuts class="container">
@@ -94,7 +94,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             <b></b>
         </div>
         <div class="ModalUpdate" onclick="ModalUpdate();">
-            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <i class="fas fa-edit" aria-hidden="true"></i>
         </div>
         <div class="ModalClose" onclick="ModalClose();">
             <i class="fa fa-times" aria-hidden="true"></i>

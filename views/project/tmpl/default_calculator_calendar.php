@@ -241,7 +241,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                 <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
                     <tr>
                         <th>
                             <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
@@ -291,7 +291,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 </table>
                 <br>
                 <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
                     <tr>
                         <th>
                             <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
@@ -342,7 +342,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
                         </td>
                         <td style="text-align: right;">
-                             <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                             <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </td>
                     </tr>
                     <tr>
@@ -353,7 +353,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
                         </td>
                         <td style="text-align: right;">
-                             <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                             <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </td>
                 </table>
                 <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
@@ -523,7 +523,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                      <input name="new_client_contacts[]" id="jform_client_contacts[]" data-old = "<?php echo $value->client_contacts;?>" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger phone" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -545,7 +545,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                      <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger email"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -847,7 +847,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             });
 
             jQuery("#add_phone").click(function(){
-                jQuery('#client_phones tr:last').after('<tr><td><input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента"></td><td><button class="btn btn-danger phone" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');
+                jQuery('#client_phones tr:last').after('<tr><td><input name="new_client_contacts[]" id="jform_client_contacts[]" placeholder="Телефон клиента"></td><td><button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td></tr>');
                 jQuery(".phone").click(function(){
                      var tr = jQuery(this).closest('tr');
                      remove_tr(tr,deleted_phones);
@@ -862,7 +862,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
 
             jQuery("#add_email").click(function(){
-                jQuery('#client_emails tr:last').after('<tr><td><input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента"></td><td><button class="btn btn-danger phone" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');
+                jQuery('#client_emails tr:last').after('<tr><td><input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента"></td><td><button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td></tr>');
                 jQuery(".phone").click(function(){
                      var tr = jQuery(this).closest('tr');
                      remove_tr(tr,deleted_phones);

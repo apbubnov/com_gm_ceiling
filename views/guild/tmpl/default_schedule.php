@@ -70,7 +70,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             <div class="MainName">
                 Работы за <span class="Date"></span> г.
                 <button type="button" class="Update" onclick="selectDay();">
-                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                    <i class="fas fa-sync" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="MainBlock">
