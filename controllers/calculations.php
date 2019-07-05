@@ -101,6 +101,7 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
             if(!empty($calcs)){
                 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
                 $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
                 if($need_new){
                     $project_data = get_object_vars($projectModel->new_getProjectItems($projectId));
@@ -118,6 +119,8 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
                     $mountData = $calcsMountModel->getData($calcId);
                     $calcData['mountData'] = $mountData;
                     $calcData['project_id'] = $projectId;
+                    $calcData['canvas_area'] = $canvasesModel->getCutsData($calcId);
+                    //throw new Exception(print_r($calcData['canvas_area'],true));
                     $newCalcId = $calculationModel->duplicate($calcData);
                     $oldFileName = md5('calculation_sketch'.$calcId);
                     $oldImage = $_SERVER['DOCUMENT_ROOT']."/calculation_images/$oldFileName.svg";
