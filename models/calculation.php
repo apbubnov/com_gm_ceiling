@@ -767,6 +767,7 @@ class Gm_ceilingModelCalculation extends JModelItem
     {
         try
         {
+            //throw new Exception(print_r($data,true));
 			$table = $this->getTable();
 			//по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
 			if ($table->save($data) === true)
@@ -799,7 +800,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	    try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-
+            //throw new Exception(print_r($data,true));
             $n13 = $data['n13'];
             $n14 = $data['n14'];
             $n15 = $data['n15'];
@@ -809,7 +810,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             $n29 = $data['n29'];
             $n19 = $data['n19'];
             $mountData = $data['mountData'];
-
+            $canvasesArea = $data['canvas_area'];
             unset($data['n13']);
             unset($data['n14']);
             unset($data['n15']);
@@ -820,7 +821,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             unset($data['n19']);
             unset($data['dealer_id']);
             unset($data['mountData']);
-
+            unset($data['canvas_area']);
             $columns = array_keys($data);
             $values = array_values($data);
             foreach ($values as $key=>$value){
@@ -931,6 +932,17 @@ class Gm_ceilingModelCalculation extends JModelItem
                 foreach ($n29 as $value) {
                     $query->values($calculationId . ', ' . $value->n29_count . ', ' . $value->n29_type);
                 }
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            if(!empty($canvasesArea)){
+                $query = $db->getQuery(true);
+                $query->insert('`rgzbn_gm_ceiling_cuttings`')
+                    ->columns('id,ready,data,canvas_area');
+
+                $query->values($calculationId . ', ' . $canvasesArea->ready . ', \'' . $canvasesArea->data . '\','.$canvasesArea->canvas_area);
+
                 $db->setQuery($query);
                 $db->execute();
             }
