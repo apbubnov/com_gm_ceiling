@@ -25,6 +25,7 @@ $project_model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 $project_data = $project_model->getData($project);
 $service = !empty(json_decode($project_data->calcs_mounting_sum)) ? true : false;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
+$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
 
 $calculation_ids = $model->GetCalculation($project);
 
@@ -62,7 +63,59 @@ if (!empty($calculation_ids)) {
     }
 }
 ?>
+<style>
 
+    .div_imgs {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .uploaded_calc_img {
+        display: inline-block;
+        max-width: 200px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
+    .uploaded_calc_img:hover {
+        background: gray;
+    }
+    .big_uploaded_img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    #modal_window_img {
+        width: 800px !important;
+        height: 600px !important;
+        margin: auto !important;
+    }
+    #modal_window_img {
+        width: 360px !important;
+        height: 400px !important;
+        margin: auto !important;
+    }
+    #btn_del_img {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 30px;
+        cursor: pointer;
+    }
+    #btn_close_img {
+        right: 0px;
+    }
+
+    @media screen and (min-width: 768px) {
+        #btn_close_img {
+            right: 30px;
+        }
+        #modal_window_img {
+            width: 800px !important;
+            height: 600px !important;
+            margin: auto !important;
+        }
+
+    }
+</style>
 <?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/mountersorder/tmpl/CSS/style.css" type="text/css" />
@@ -144,6 +197,70 @@ if (!empty($calculation_ids)) {
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                <?php
+                $calculation = $calculationModel->getDataById($value->id);
+                $dir_before = 'uploaded_calc_images/'.$value->id.'/before';
+                $dir_after = 'uploaded_calc_images/'.$value->id.'/after';
+                $dir_defect = 'uploaded_calc_images/'.$value->id.'/defect';
+                $files = [];
+                $temp = [];
+                if (is_dir($dir_before)) {
+                    $temp = scandir($dir_before);
+                    foreach ($temp as $key => $value1) {
+                        if (strlen($value1) === 32) {
+                            $temp[$key] = $dir_before.'/'.$value1;
+                        } else {
+                            unset($temp[$key]);
+                        }
+                    }
+                    $files = array_merge($files, $temp);
+                }
+                if (is_dir($dir_after)) {
+                    $temp = scandir($dir_after);
+                    foreach ($temp as $key => $value1) {
+                        if (strlen($value1) === 32) {
+                            $temp[$key] = $dir_after.'/'.$value1;
+                        } else {
+                            unset($temp[$key]);
+                        }
+                    }
+                    $files = array_merge($files, $temp);
+                }
+                if (is_dir($dir_defect)) {
+                    $temp = scandir($dir_defect);
+                    foreach ($temp as $key => $value1) {
+                        if (strlen($value1) === 32) {
+                            $temp[$key] = $dir_defect.'/'.$value1;
+                        } else {
+                            unset($temp[$key]);
+                        }
+                    }
+                    $files = array_merge($files, $temp);
+                }
+
+                if (empty($files)) {
+                    $col1 = 0;
+                    $col2 = 5;
+                } else {
+                    $col1 = 8;
+                    $col2 = 4;
+                }
+                ?>
+
+                <div class="row">
+                    <div class="col-md-<?=$col1?>">
+                        <div class="row div_imgs">
+                            <?php
+                            foreach ($files as $value1) {
+                                echo '<img src="'.$value1.'" data-path="'.str_replace('uploaded_calc_images/', '', $value1).'" class="uploaded_calc_img">';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-md-<?=$col2;?>">
+                        <textarea class="inputactive" readonly name="calc_comment" rows="5" ><?=$calculation->comment?></textarea>
+                    </div>
+                </div>
                 <?php if (!empty($value->details)) { ?>
                     <div>
                         Примечание к потолку: <?php echo $value->details; ?>
@@ -224,53 +341,7 @@ if (!empty($calculation_ids)) {
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar" style="width: 86%; margin: auto;">
-            <!--<div align=center>
-                <p class ="cbx_p">Выполнено:</p>
-                <p>
-                    <input type="checkbox" id="obag" class="inp-cbx" data-status = "24" style="display: none">
-                    <label for="obag" class="cbx">
-                      <span>
-                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                      </span>
-                      <span>обагечивание;</span>
-                    </label>
-                </p>
-                <p class ="cbx_p">
-                    <input type="checkbox" id="natyazhka" class="inp-cbx" data-status = "25" style="display: none">
-                    <label for="natyazhka" class="cbx">
-                      <span>
-                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                      </span>
-                      <span>натяжка;</span>
-                    </label>
-                </p>
-                <p class ="cbx_p">
-                    <input type="checkbox" id="vstavka" class="inp-cbx" data-status = "26" style="display: none">
-                    <label for="vstavka" class="cbx">
-                      <span>
-                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                      </span>
-                      <span>установка вставки.</span>
-                    </label>
-                </p>
-                <p class ="cbx_p">
-                    <input type="checkbox" id="4444" class="inp-cbx" data-status = "26" style="display: none">
-                    <label for="4444" class="cbx">
-                      <span>
-                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                      </span>
-                      <span>установка вставки.</span>
-                    </label>
-                </p>
-            </div>-->
+
             <?php foreach ($calculation_ids as $value) { ?>
                 <div id="div-images-block">
                     <div class="row">
@@ -293,6 +364,12 @@ if (!empty($calculation_ids)) {
             <p><button type="button" id="save" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
+    <div class="modal_window_container" id="img_modal_container">
+        <button type="button" class="close_btn" id="btn_close_img"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <button type="button" class="close_btn" id="btn_del_img"><i class="fa fa-trash" aria-hidden="true"></i> Удалить изображение</button>
+        <div class="modal_window" id="modal_window_img" style="border: 2px solid black; border-radius: 4px;"></div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -559,6 +636,23 @@ if (!empty($calculation_ids)) {
             jQuery("#warning").hide();
         });
 
+        function clickUploadedCalcImg() {
+            jQuery("#modal_window_img")[0].innerHTML = '<img src="'+this.src+'" class="big_uploaded_img">';
+            jQuery("#input_delete_uploaded_calc_img").val(this.getAttribute('data-path'));
+            jQuery("#btn_close_img").show();
+            jQuery("#btn_del_img").show();
+            jQuery("#img_modal_container").show();
+            jQuery("#modal_window_img").show();
+        }
+
+        jQuery('.uploaded_calc_img').click(clickUploadedCalcImg);
+
+        jQuery("#btn_close_img").click(function(){
+            jQuery("#btn_close_img").hide();
+            jQuery("#btn_del_img").hide();
+            jQuery("#img_modal_container").hide();
+            jQuery("#modal_window_img").hide();
+        });
     });
 
 </script>
