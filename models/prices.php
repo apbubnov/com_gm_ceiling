@@ -291,22 +291,71 @@ class Gm_ceilingModelPrices extends JModelList
         }
 	}
 
-	private function getGoodsPriceForDealer($dealer_id) {
+	public function getGoodsPriceForDealer($dealer_id) {
 		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('`*`');
-			$query->from('`#__goods_canvases`');
+			$query->select('
+				`vc`.*,
+				`gc`.`category`,
+				CASE
+				    WHEN `gdp`.`operation_id` = 1 then `gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 2 then CONCAT(\'+\', `gdp`.`value`)
+				    WHEN `gdp`.`operation_id` = 3 then CONCAT(\'-\', `gdp`.`value`)
+				    WHEN `gdp`.`operation_id` = 4 then CONCAT(\'+\', `gdp`.`value`, \'%\')
+				    WHEN `gdp`.`operation_id` = 5 then CONCAT(\'-\', `gdp`.`value`, \'%\')
+				    ELSE \'\'
+				END as `operation`,
+				CASE
+				    WHEN `gdp`.`operation_id` = 1 then `gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 2 then `vc`.`price`+`gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 3 then `vc`.`price`-`gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 4 then `vc`.`price`+`gdp`.`value`/100*`vc`.`price`
+				    WHEN `gdp`.`operation_id` = 5 then `vc`.`price`-`gdp`.`value`/100*`vc`.`price`
+				    ELSE `vc`.`price`
+				END as `final_price`
+			');
+			$query->from('`#__goods_canvases` as `vc`');
+			$query->leftJoin('`#__gm_ceiling_goods_dealer_price` as `gdp`
+				on `vc`.`id` = `gdp`.`goods_id`
+			');
+			$query->innerJoin('`#__gm_ceiling_goods_categories` as `gc`
+				on `vc`.`category_id` = `gc`.`id`
+			');
 			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
 			$db->setQuery($query);
 
-			$temp_result = $db->loadObjectList();
+			$canvases = $db->loadObjectList();
+			$temp_result = array();
+			$temp_result[1] = array();
 			$result = array();
+			$result[] = (object) array('category_id' => 1, 'category' => 'Полотна', 'textures' => array());
 
-			foreach ($temp_result as $key => $item) {
-				
+			foreach ($canvases as $item) {
+				if (empty($temp_result[1][$item->texture_id])) {
+					$temp_result[1][$item->texture_id] = array();
+				}
+				if (empty($temp_result[1][$item->texture_id][$item->manufacturer_id])) {
+					$temp_result[1][$item->texture_id][$item->manufacturer_id] = array();
+				}
+				$temp_result[1][$item->texture_id][$item->manufacturer_id][] = $item;
 			}
+
+			foreach ($temp_result[1] as $key => $value) {
+				$result[1]->textures[] = (object) array(
+					'texture_id' => $value->texture_id,
+					'texture' => $value->texture,
+					'manufacturers' => array()
+				);
+				foreach ($temp_result[1][$key] as $key2 => $value2) {
+					foreach ($temp_result[1][$key][$key2] as $key3 => $value3) {
+						
+					}
+				}
+			}
+
+			return $temp_result;
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

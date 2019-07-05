@@ -1356,7 +1356,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query = $db->getQuery(true);
             $query->select('`id`, `name`, `category_id`, `color`, `hex`');
             $query->from('`#__goods_components`');
-            $query->where("`category_id` in ($categories)");
+            $query->where("`category_id` in ($categories) AND `visibility` = 1");
             $query->order('`category_id`, `id`');
             $db->setQuery($query);
             
@@ -1412,7 +1412,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 ->select('`g`.*, `gc`.`category`')
                 ->from('`#__gm_stock_goods` as `g`')
                 ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
-                ->where('`category_id` <> 1')
+                ->where('`category_id` <> 1 AND `visibility` <> 3')
                 ->order('`id`');
             $db->setQuery($query);
             $items = $db->loadObjectList();
