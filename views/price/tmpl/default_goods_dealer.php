@@ -14,7 +14,7 @@ $user->groups = $user->get('groups');
 $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
 
 $pricesModel = Gm_ceilingHelpersGm_ceiling::getModel('prices');
-$goodsPrices = json_encode([]);//json_encode($pricesModel->getGoodsPriceForDealer($dealer_id));
+$goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
 ?>
 <link rel="stylesheet" type="text/css"
       href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">

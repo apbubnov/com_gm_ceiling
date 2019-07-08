@@ -93,12 +93,6 @@ $user_group = $user->groups;
         <p>
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=measures', false); ?>"><i class="fas fa-ruler"></i> Замеры</a>
         </p>
-        <p>
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=gmchief', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
-        </p>
-        <p>
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=measures', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Замеры</a>
-        </p>
 	</div>
 	<div class="columns-tar">
 		<p>

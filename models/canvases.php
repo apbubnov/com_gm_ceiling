@@ -706,7 +706,7 @@ class Gm_ceilingModelCanvases extends JModelList
             //$querySTR = "";
             foreach ($data as $v) {
                 $query = $db->getQuery(true);
-                $query->update("`#__canvases`")
+                $query->update("`#__gm_ceiling_canvases`")
                     ->set("price = '$v->price'")
                     ->where("id = '$v->id'");
                 $db->setQuery($query);

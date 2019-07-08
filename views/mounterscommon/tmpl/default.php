@@ -43,19 +43,19 @@ $items = $model->getData();
             </td>
             <?php foreach ($item['builder_data'] as $key=>$value){?>
                 <?php if($rowspan) echo '<tr data-mounter_id="'.$mounter_id.'">'?>
-                <td  class = "builder" data-builder_id = "<?php echo $value->builder_id?>">
+                <td  class = "builder builder_name" data-builder_id = "<?php echo $value->builder_id?>" data-builder_client_id = "<?php echo JFactory::getUser($value->builder_id)->associated_client;?>">
                     <?php echo !empty($value->builder_name) ? $value->builder_name : "-";?>
                 </td>
-                <td>
+                <td class = "builder">
                     <?php echo !empty($value->taken) ? $value->taken : "0";;?>
                 </td>
-                <td>
+                <td class = "builder">
                     <?php echo !empty($value->closed) ? $value->closed : "0" ;?>
                 </td>
-                <td class="payed">
+                <td class="payed builder">
                     <?php echo !empty($value->payed) ? $value->payed : "0";?>
                 </td>
-                <td class="rest">
+                <td class="rest builder">
                     <?php echo $value->rest;?>
                 </td>
                 <td>
@@ -85,6 +85,11 @@ $items = $model->getData();
                 close_sum = -close_sum;
             }
             make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'));
+        });
+
+        jQuery('.builder').click(function () {
+            var assoc_client = jQuery(this).closest('tr').find('.builder_name').data('builder_client_id');
+            location.href = '/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='+assoc_client;
         });
     });
 
