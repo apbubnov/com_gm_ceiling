@@ -294,8 +294,8 @@ class Gm_ceilingModelPrices extends JModelList
 	public function getGoodsPriceForDealer($dealer_id) {
 		try {
 			$db = JFactory::getDbo();
+			
 			$query = $db->getQuery(true);
-
 			$query->select('
 				`vc`.*,
 				`gc`.`category`,
@@ -320,7 +320,7 @@ class Gm_ceilingModelPrices extends JModelList
 			$query->leftJoin('`#__gm_ceiling_goods_dealer_price` as `gdp`
 				on `vc`.`id` = `gdp`.`goods_id`
 			');
-			$query->innerJoin('`#__gm_ceiling_goods_categories` as `gc`
+			$query->innerJoin('`#__gm_stock_goods_categories` as `gc`
 				on `vc`.`category_id` = `gc`.`id`
 			');
 			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
@@ -343,19 +343,81 @@ class Gm_ceilingModelPrices extends JModelList
 			}
 
 			foreach ($temp_result[1] as $key => $value) {
-				$result[1]->textures[] = (object) array(
-					'texture_id' => $value->texture_id,
-					'texture' => $value->texture,
+				$result[0]->textures[] = (object) array(
+					'texture_id' => $key,
+					'texture' => null,
 					'manufacturers' => array()
 				);
+				$texture_index = count($result[0]->textures) - 1;
 				foreach ($temp_result[1][$key] as $key2 => $value2) {
+					$result[0]->textures[$texture_index]->manufacturers[] = (object) array(
+						'manufacturer_id' => $key2,
+						'manufacturer' => null,
+						'goods' => array()
+					);
+					$manufacturer_index = count($result[0]->textures[$texture_index]->manufacturers) - 1;
 					foreach ($temp_result[1][$key][$key2] as $key3 => $value3) {
-						
+						$result[0]->textures[$texture_index]->manufacturers[$manufacturer_index]->goods[] = $value3;
+						$result[0]->textures[$texture_index]->texture = $value3->texture;
+						$result[0]->textures[$texture_index]->manufacturers[$manufacturer_index]->manufacturer = $value3->manufacturer;
 					}
 				}
 			}
 
-			return $temp_result;
+			$query = $db->getQuery(true);
+			$query->select('
+				`vc`.*,
+				`gc`.`category`,
+				CASE
+				    WHEN `gdp`.`operation_id` = 1 then `gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 2 then CONCAT(\'+\', `gdp`.`value`)
+				    WHEN `gdp`.`operation_id` = 3 then CONCAT(\'-\', `gdp`.`value`)
+				    WHEN `gdp`.`operation_id` = 4 then CONCAT(\'+\', `gdp`.`value`, \'%\')
+				    WHEN `gdp`.`operation_id` = 5 then CONCAT(\'-\', `gdp`.`value`, \'%\')
+				    ELSE \'\'
+				END as `operation`,
+				CASE
+				    WHEN `gdp`.`operation_id` = 1 then `gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 2 then `vc`.`price`+`gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 3 then `vc`.`price`-`gdp`.`value`
+				    WHEN `gdp`.`operation_id` = 4 then `vc`.`price`+`gdp`.`value`/100*`vc`.`price`
+				    WHEN `gdp`.`operation_id` = 5 then `vc`.`price`-`gdp`.`value`/100*`vc`.`price`
+				    ELSE `vc`.`price`
+				END as `final_price`
+			');
+			$query->from('`#__goods_components` as `vc`');
+			$query->leftJoin('`#__gm_ceiling_goods_dealer_price` as `gdp`
+				on `vc`.`id` = `gdp`.`goods_id`
+			');
+			$query->innerJoin('`#__gm_stock_goods_categories` as `gc`
+				on `vc`.`category_id` = `gc`.`id`
+			');
+			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
+			$db->setQuery($query);
+
+			$components = $db->loadObjectList();
+
+			foreach ($components as $item) {
+				$bool_added = false;
+				foreach ($result as $value) {
+					if ($item->category_id === $value->category_id) {
+						$value->goods[] = $item;
+						$bool_added = true;
+						break;
+					}
+				}
+				if ($bool_added) {
+					continue;
+				} else {
+					$result[] = (object) array(
+						'category_id' => $item->category_id,
+						'category' => $item->category,
+						'goods' => array($item)
+					);
+				}
+			}
+
+			return $result;
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
