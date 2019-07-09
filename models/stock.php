@@ -850,4 +850,22 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getOperations() {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`op`.`id`,
+                          `op`.`title`')
+                ->from('`#__gm_ceiling_operations` as `op`')
+                ->order('`op`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            return $items;     
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
