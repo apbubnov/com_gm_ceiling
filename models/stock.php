@@ -819,28 +819,26 @@ class Gm_ceilingModelStock extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            $stocks_count = array();                 
-            $items_stocks = 0;
-            $i = 0;
+            $stocks_count = array();      
+            $stocks = array();                
+            $items_stocks = $items[0]->id;
             foreach ($items as $value) {
-                if ($value->id == $items_stocks) {
-                    $stocks_count[$i-1] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
-                } else {
-                    $stocks_count[] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
-                }   
-
-                    $i++; 
-                    $items_stocks = $value->id;
+                if ($value->id != $items_stocks) {
+                    $stocks_count[] = $stocks;
+                    $stocks = null;
+                }
+                if ($value->stock_id != null) {
+                    $stocks[] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
+                } 
+                $items_stocks = $value->id;
             }
 
             $items_stocks = 0;
             $i = 0;
             foreach ($items as $value) {
 
-                if ($value->id == $items_stocks) {
-                    //empty
-                } else {
-                $result[] = (object) array('id' => $value->id, 'name' => $value->name, 'category_id' => $value->category_id, 'unit_id' => $value->unit_id, 'price' => $value->price, 'stocks_count' => $stocks_count[$i]);
+                if ($value->id != $items_stocks) {
+                    $result[] = (object) array('id' => $value->id, 'name' => $value->name, 'category_id' => $value->category_id, 'unit_id' => $value->unit_id, 'price' => $value->price, 'stocks_count' => $stocks_count[$i]);
                     $items_stocks = $value->id;
                     $i++;
                 }
@@ -852,4 +850,23 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getOperations() {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`op`.`id`,
+                          `op`.`title`')
+                ->from('`#__gm_ceiling_operations` as `op`')
+                ->order('`op`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            return $items;     
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    
 }
