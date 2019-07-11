@@ -27,33 +27,26 @@
 	</div>
 	<div class="row">
 		<h1>Список существующих товаров</h1>
-		<table class="table table_cashbox">
+		<table class="table"  id="tgoods" cellspacing="0" width="100%">
 			<thead>
 				<th>Штрихкод</th>
 				<th>Наименование</th>
 				<th>Наличие</th>
 			</thead>
-			<tbody>
-				<tr>
-					<td>0000001</td>
-					<td>Компонент1</td>
-					<td>
-						Склад1: 2 шт<br>
-						Склад1: 999 шт<br>
-					</td>
-				</tr>
+			<tbody id="tbody_goods">
 			</tbody>
 		</table>
 	</div>
 
 <h4 id="h4_common_sum"></h4>
+</div>
 
 <link href="/libraries/MDB-Free_4.7.1/css/addons/datatables.min.css" rel="stylesheet">
 <script type="text/javascript" src="/libraries/MDB-Free_4.7.1/js/mdb.min.js"></script>
 <script type="text/javascript" src="/libraries/MDB-Free_4.7.1/js/addons/datatables.min.js"></script>
-</div>
 
 <script type="text/javascript">
+
     var propCanvasWidths = JSON.parse('<?php echo $widths;?>'),
         propTextures = JSON.parse('<?php echo $textures;?>'),
         propColors = JSON.parse('<?php echo $colors;?>'),
@@ -61,6 +54,12 @@
         goods = JSON.parse('<?php echo $goods_json;?>');
 
     jQuery(document).ready(function(){
+        allGoods(goods);
+        jQuery('#tgoods').DataTable({
+            "paging": true
+        });
+        jQuery('.dataTables_length').addClass('bs-select');
+
         console.log(goods);
         console.log(propCanvasWidths);
         console.log(propTextures);
@@ -101,6 +100,27 @@
         jQuery(selectId).empty();
         for(var i = 0; i < data.length; i++){
             jQuery(selectId).append('<option value = "'+data[i].id+'">'+data[i].value+'</option>');
+        }
+    }
+
+    function allGoods(goods){
+        var tr, td, tbody_goods = document.getElementById('tbody_goods');
+        tbody_goods.innerHTML = '';
+        for (var i = 0; i < goods.length; i++) {
+            tr = tbody_goods.insertRow();
+            td = tr.insertCell();
+            td.innerHTML = goods[i].id;
+            td = tr.insertCell();
+            td.innerHTML = goods[i].name;
+
+            var stocks = "";
+            if (goods[i].stocks_count != null) {
+                for (var j = 0; j < goods[i].stocks_count.length; j++) {
+                    stocks += goods[i].stocks_count[j].name + ': ' + goods[i].stocks_count[j].count + "<html> <br> </html>";
+                }
+            }
+            td = tr.insertCell();
+            td.innerHTML = stocks;
         }
     }
 
