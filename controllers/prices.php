@@ -42,4 +42,28 @@ class Gm_ceilingControllerPrices extends Gm_ceilingController
 
         }
 	}
+
+	public function dealerPriceGoods()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $dealer_id = $jinput->get('dealer_id', null, 'INT');
+            $dealer_prices = $jinput->get('dealer_prices', null, 'ARRAY');
+
+            $reset_flag = $jinput->get('reset_flag', 0, 'INT');
+
+            $model_prices = $this->getModel('Prices', 'Gm_ceilingModel');
+
+            $result = $model_prices->saveDealerPriceGoods($dealer_id, $dealer_prices, $reset_flag);
+
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+
 }

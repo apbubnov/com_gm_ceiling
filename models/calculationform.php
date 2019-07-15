@@ -1363,6 +1363,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $goods = $db->loadObjectList();
 
             foreach ($goods as $key => $item) {
+                $item->child_goods = array();
                 foreach ($result as $key2 => $main_group) {
                     foreach ($result[$key2]->groups as $key3 => $group) {
                         foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
@@ -1392,6 +1393,57 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                                 $result[$key2]->groups[$key3]->fields[$key4]->jobs[] = $job;
                             }
                         }
+                    }
+                }
+            }
+
+            $query = $db->getQuery(true);
+            $query = "
+                SELECT  DISTINCT
+                        `g`.`id`,
+                        `g`.`name`,
+                        `g`.`category_id`,
+                        `gg`.`parent_goods_id`,
+                        `gg`.`job_id`
+                  FROM  `#__gm_ceiling_goods_from_goods_map` AS `gg`
+                        LEFT JOIN   (
+                                        SELECT  *
+                                          FROM  `#__gm_ceiling_goods_from_goods_map`
+                                          WHERE `dealer_id` = $dealer_id
+                                    ) AS `ggd`
+                                ON  `gg`.`parent_goods_id` = `ggd`.`parent_goods_id`
+                        INNER JOIN  `#__gm_stock_goods` AS `g`
+                                ON  `gg`.`child_goods_id` = `g`.`id`
+                  WHERE (`gg`.`dealer_id` = 1 AND `ggd`.`dealer_id` IS NULL) OR
+                        (`gg`.`dealer_id` = $dealer_id AND `ggd`.`dealer_id` = $dealer_id)
+            ";
+            $db->setQuery($query);
+
+            $child_goods = $db->loadObjectList();
+
+            foreach ($result as $key => $main_group) {
+                foreach ($result[$key]->groups as $key2 => $group) {
+                    foreach ($result[$key]->groups[$key2]->fields as $key3 => $field) {
+                        foreach ($child_goods as $key4 => $map_item) {
+                            $bool_job = false;
+                            $bool_goods = false;
+                            foreach ($result[$key]->groups[$key2]->fields[$key3]->jobs as $key5 => $job) {
+                                if ($job->id === $map_item->job_id) {
+                                    $bool_job = true;
+                                    break;
+                                }
+                            }
+                            if (!$bool_job) {
+                                continue;
+                            }
+                            foreach ($result[$key]->groups[$key2]->fields[$key3]->goods as $key6 => $item) {
+                                if ($item->id === $map_item->parent_goods_id) {
+                                    $result[$key]->groups[$key2]->fields[$key3]->goods[$key6]->child_goods[] = $map_item;
+                                    break;
+                                }
+                            }
+                        }
+                        
                     }
                 }
             }
