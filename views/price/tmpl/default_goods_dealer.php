@@ -156,6 +156,7 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
 
        jQuery('.clear_price').click(function () {
            var goods = collectGoods(this);
+           console.log(goods);
            if(goods.length) {
                jQuery.ajax({
                    type: 'POST',
