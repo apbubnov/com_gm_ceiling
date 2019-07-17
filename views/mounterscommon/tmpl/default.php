@@ -72,8 +72,40 @@ $items = $model->getData();
     <?php } ?>
     </tbody>
 </table>
+<div id="mv_container" class="modal_window_container">
+    <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="one_mounter_salary" class="modal_window">
+        <table id="detailed_salary" class="table_project_analitic">
+            <thead>
+            <tr class="caption_table">
+                <td>
+                    Сумма
+                </td>
+                <td>
+                    Объект
+                </td>
+                <td>
+                    Время
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</div>
 <script>
     var data = JSON.parse('<?php echo json_encode($items)?>');
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#one_mounter_salary"); // тут указываем ID элемента
+        if (!div.is(e.target) && div.has(e.target).length === 0 ) {
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            div.hide();
+        }
+    });
+
     jQuery(document).ready(function () {
         jQuery(".save_sum").click(function () {
             var tr = jQuery(this).closest('tr'),
@@ -88,8 +120,46 @@ $items = $model->getData();
         });
 
         jQuery('.builder').click(function () {
-            var assoc_client = jQuery(this).closest('tr').find('.builder_name').data('builder_client_id');
-            location.href = '/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='+assoc_client;
+
+            var tr = jQuery(this).closest('tr'),
+                builder_id = tr.find('.builder_name').data('builder_id'),
+                mounter_id = tr.data('mounter_id');
+            console.log(builder_id,mounter_id);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=MountersSalary.getMounterSalaryByBuilder",
+                data: {
+                    mounterId: mounter_id,
+                    builder_id: builder_id
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var total = 0,note = "";
+                    console.log(data);
+                    jQuery("#detailed_salary > tbody").empty();
+                    jQuery.each(data,function (index,el){
+                        total += +el.sum;
+                        note = (!empty(el.note)) ? el.note : "Выплата";
+                        jQuery("#detailed_salary > tbody").append('<tr/>');
+                        jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td>')
+                    });
+                    jQuery("#detailed_salary > tbody").append('<tr/>');
+                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td></td>');
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+            jQuery("#mv_container").show();
+            jQuery("#one_mounter_salary").show();
+            jQuery("#close").show();
         });
     });
 
