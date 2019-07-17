@@ -1553,6 +1553,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query = $db->getQuery(true);
             $query = "
 SELECT  `gf`.`goods_id`,
+        `g`.`name`,
         `g`.`original_price`,
         `g`.`multiplicity`,
         `g`.`dealer_price`,
@@ -1633,6 +1634,7 @@ SELECT  `gf`.`goods_id`,
   ) AS `gf`
         INNER JOIN  (
           SELECT  `g`.`id`,
+                  `g`.`name`,
                   `g`.`multiplicity`,
                   `g`.`category_id`,
                   `g`.`price` AS `original_price`,
