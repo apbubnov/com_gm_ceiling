@@ -324,6 +324,7 @@ class Gm_ceilingModelPrices extends JModelList
 				on `vc`.`category_id` = `gc`.`id`
 			');
 			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
+			$query->order('`vc`.`id`'); 
 			$db->setQuery($query);
 
 			$canvases = $db->loadObjectList();
@@ -393,6 +394,7 @@ class Gm_ceilingModelPrices extends JModelList
 				on `vc`.`category_id` = `gc`.`id`
 			');
 			$query->where("`created_by` = 1 OR `created_by` = $dealer_id");
+			$query->order('`vc`.`category_id`, `vc`.`id`'); 
 			$db->setQuery($query);
 
 			$components = $db->loadObjectList();
@@ -423,4 +425,73 @@ class Gm_ceilingModelPrices extends JModelList
         }
 	}
 
+	public function saveDealerPriceGoods($dealer_id, $dealer_prices, $reset_flag) {
+		try {
+
+			$db = $this->getDbo();
+            $goods_ids = '';
+            $values = array();
+
+            if (empty($dealer_id)) {
+            	throw new Exception("Empty dealer_id", 1);	
+            }
+
+			foreach ($dealer_prices as $value) {
+				if ( empty((float)$value['goods_id']) || empty((float)$value['operation_id']) || empty((float)$value['value'])) {
+					continue;
+				}
+
+				$goods_ids .= $value['goods_id'].',';
+				$values[] = $value['goods_id'].','. $value['operation_id'] .','. $value['value'].','. $dealer_id;
+			}
+
+			if (empty($goods_ids)) {
+				return false;
+			}
+
+			$goods_ids = substr($goods_ids, 0, -1);
+
+            $query = $db->getQuery(true);
+            $query ->delete('`#__gm_ceiling_goods_dealer_price`')
+                ->where("`goods_id` in ($goods_ids) and `dealer_id` = $dealer_id");
+            $db->setQuery($query);
+            $db->execute();
+
+            if ($reset_flag == 0) {
+            	$query = $db->getQuery(true);
+            	$query->insert('`#__gm_ceiling_goods_dealer_price`')
+            	    ->columns('`goods_id`, `operation_id`, `value`, `dealer_id`')
+            	    ->values($values);
+            	$db->setQuery($query);
+            	$db->execute();
+            }
+
+			return true;
+		} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	public function getJobsDealer($dealer_id){
+		 try {
+
+			$db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query ->select('*')
+            	->from('`#__gm_ceiling_jobs` as `j`')
+            	->leftJoin('`#__gm_ceiling_jobs_dealer_price` as `dp`
+            		on `j`.`id` = `dp`.`job_id`')
+            	->where("`dp`.`dealer_id` = $dealer_id")
+            	->order('`j`.`id`');
+            $db->setQuery($query);
+            $db->execute();
+			$items = $db->loadObjectList();
+
+
+			return $items;
+		} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
 }
