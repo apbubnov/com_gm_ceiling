@@ -1546,6 +1546,9 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
     public function getGoodsPricesInCalculation($calc_id, $dealer_id) {
         try {
+            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            $canvases_margin = $dealer_info->dealer_canvases_margin;
+            $components_margin = $dealer_info->dealer_components_margin;
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query = "
@@ -1557,9 +1560,9 @@ SELECT  `gf`.`goods_id`,
         ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price`, 2) AS `price_sum`,
         CASE
           WHEN `g`.`category_id` = 1 THEN
-            ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price` * 100 / (100 - 50), 2)
+            ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price` * 100 / (100 - $canvases_margin), 2)
           ELSE
-            ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price` * 100 / (100 - 40), 2)
+            ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price` * 100 / (100 - $components_margin), 2)
         END AS `price_sum_with_margin`
   FROM  (
     (

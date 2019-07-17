@@ -154,6 +154,17 @@ class Gm_ceilingHelpersGm_ceiling
     public static function dealer_margin($price, $margin, $objectDealerPrice) {
         return dealer_margin($price, $margin, $objectDealerPrice);
     }
+
+    function getDealerInfo($dealer_id) {
+        try {
+            $model_dealer_info = $this->getModel('dealer_info');
+            $result = $model_dealer_info->getDataById($dealer_id);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     /**
      * Get an instance of the named modelt
      *
