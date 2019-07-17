@@ -512,6 +512,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$app = JFactory::getApplication();
 			$jinput = $app->input;
 			$calc_id = $jinput->get('calc_id', null, 'INT');
+			$dealer_id = $jinput->get('dealer_id', 1, 'INT');
 			$jobs = $jinput->get('jobs', null, 'ARRAY');
 			$goods = $jinput->get('goods', null, 'ARRAY');
 			$extra_components = $jinput->get('extra_components', null, 'STRING');
@@ -532,7 +533,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$model_calcform->addGoodsInCalculation($calc_id, $goods);
 			$model_calcform->addJobsInCalculation($calc_id, $jobs);
 
-			$result = (object)array('sum' => 0, 'all_goods' => $goods, 'all_jobs' => $jobs);
+			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
+
+			$result = (object)array('sum' => 0, 'all_goods' => $all_goods, 'all_jobs' => $jobs);
 
 			die(json_encode($result));
 		} catch(Exception $e) {
