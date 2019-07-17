@@ -1,0 +1,173 @@
+.Page, .Page form, .Page table {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    text-align: left;
+    overflow: visible;
+}
+
+
+.Page button:hover, .Page a:hover {
+
+}
+
+.Page .Actions .Current {
+    margin: 0 0 0 5px;
+}
+
+.FormSimple {
+    width: auto !important;
+    overflow: hidden !important;
+    border-radius: 5px;
+    float: left;
+    white-space: nowrap;
+}
+
+.Page .TBody .FormSimple {
+    width: 157px;
+    min-width: 157px;
+    max-width: 157px;
+}
+
+
+
+
+.Page .Title {
+    font-size: 25px;
+    text-align: center;
+}
+
+.Page .Actions {
+    margin-top: 15px;
+}
+
+.Page .Body {
+    display: table;
+    margin-top: 15px;
+    border-collapse: collapse;
+    border: 1px solid rgb(64, 65, 154);
+}
+
+
+
+.Page .Scroll {
+    position: relative;
+    overflow: auto;
+    overflow-y: hidden;
+}
+.Page .Body thead .THeadClone {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.Page .Body thead, .Page .Body tbody, .Page .Body tfoot {
+    width: 100%;
+}
+
+.Page .Body thead td, .Page .Body tfoot td {
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+}
+.Page .Body thead tr td {
+    padding: 5px 10px;
+}
+
+.Page .Body thead tr td a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    line-height: normal;
+    padding: 0;
+}
+
+.Page .Body tr td {
+    border-right: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body tr td.Color {
+    position: relative;
+    background: center no-repeat;
+    background-size: cover;
+    text-shadow: 1px 1px 2px white, -1px 1px 2px white, 1px -1px 2px white, -1px -1px 2px white;
+    font-weight: bold;
+}
+
+.Page .Body tbody tr td.Color:hover:before {
+    position: absolute;
+    right: calc(-400% - 5px);
+    top: -100%;
+    content: ' ';
+    width: 400%;
+    height: 300%;
+    background: center no-repeat;
+    background-size: cover;
+    background-color: inherit;
+    background-image: inherit;
+    border-radius: 5px;
+    border: 1px solid rgb(64, 65, 154);
+    z-index: 0;
+}
+
+.Page .Body tbody tr td.Color:hover:after {
+    content: '◀';
+    position: absolute;
+    right: -6px;
+    top: calc(50% - 5px);
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    vertical-align: bottom;
+    overflow: hidden;
+    font-size: 100%;
+    color: rgb(64, 65, 154);
+    text-shadow: none;
+}
+
+.Page .Body thead tr td:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, .5);
+}
+
+.Page .Body td {
+    padding: 5px;
+    text-align: center;
+}
+
+.Page .Body .TBody.tr {
+    color: rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body .Action {
+    cursor: pointer;
+}
+
+.Page .Body tr:hover {
+    box-shadow: inset 0 0 15px 0 rgba(0,0,0,.05);
+}
+
+.Page .Body .Level1 {
+    background-color: rgba(155, 155, 219, .8);
+}
+
+.Page .Body .Level2 {
+    background-color: rgba(198, 192, 236, .6);
+}
+
+.Page .Body .Level3 {
+    background-color: rgba(211, 212, 243, .4);
+}
+
+.Page .Body .Level4 {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.MarginLeft {
+    margin-left: 5px;
+}
+
+.Show {
+    display: inherit !important;
+}

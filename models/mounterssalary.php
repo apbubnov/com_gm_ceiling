@@ -231,7 +231,6 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                 }
             }
             $projectFilter = (!empty($projectsId)) ? "AND (ms.project_id IN(".implode(",",$projectsId).") or builder_id = $builder_id)" : " and builder_id = $builder_id";
-
             $result = $this->getDataById($mounterId,$projectFilter);
             return $result;
         }

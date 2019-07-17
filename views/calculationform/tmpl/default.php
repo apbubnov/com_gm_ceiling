@@ -857,7 +857,6 @@
 
         createBlocks(data);
 
-        fill_calc_data();
 
         jQuery('.col-sm-6').on('mouseenter', '.help', function () {
             jQuery(this.lastElementChild).show();
@@ -891,6 +890,7 @@
                jQuery.each(radios,function(ind,radioBtn){
                    var id = jQuery(radioBtn).prop('id')+count;
                    jQuery(radioBtn).prop('id',id);
+
                });
                 jQuery.each(labels,function(ind,label){
                     var propFor = jQuery(label).prop('for')+count;
@@ -940,7 +940,7 @@
                 duplicateDiv = jQuery(document.createElement('div')),
                 deleteDiv = jQuery(document.createElement('div'));
 
-            divRow.addClass('col-sm-12');
+            divRow.addClass('col-sm-12 row-fields');
             divRow.css({"margin-bottom":"5px"});
             countDiv.addClass('col-sm-2 col-xs-2');
             countDiv.addClass('countDiv');
@@ -963,11 +963,16 @@
             jQuery(this).parent().append(divRow);
 
         });
+
+        fill_calc_data();
+
         jQuery('#calculate_button').click(function () {
-            var collected_data = collectData();
-            /*calc_id,jobs,goods,extra_components,extra_mounting,fields_data*/
+            var collected_data = collectData(),
+                dataToSave = collectFieldsDataToSave();
             console.log(collected_data);
-            jQuery.ajax({
+            localStorage.setItem('dataToSave',dataToSave);
+
+            /*jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
                 data: {
                     calc_id: calculation.id,
@@ -993,8 +998,9 @@
                         text: "Ошибка сервера"
                     });
                 }
-            });
+            });*/
         });
+
     });
 
     function createBlocks(data){
@@ -1045,6 +1051,7 @@
             /*кнопка раскрытия работы*/
             button.prop('type','button');
             button.attr('data-group_id',elem.id);
+            button.attr('data-maingroup_id',elem.main_group_id);
             button.addClass('btn add_fields');
             //button.css({'background-color': 'rgb(1, 0, 132)'});
             button.html('<div class="col-xs-2 col-sm-2"><img src="'+elem.icon+' " class="img_calcform"></div><div class="col-xs-10 col-sm-10" style="text-align: left;">'+elem.title+'</div>');
@@ -1076,6 +1083,7 @@
             divRow.addClass('col-sm-12 row-fields');
             divRow.css({"margin-bottom":"5px"});
             divRow.attr('data-id',elem.id);
+            divRow.attr('data-group_id',elem.group_id);
             label.html(elem.title);
             titleDiv.append(label);
             divRow.attr('data-jobs',jobsIds);
@@ -1188,7 +1196,7 @@
                 resultDiv.append(divRow);
             }
             if(elem.duplicate == 1) {
-                resultDiv.append(createAddBtn());
+                resultDiv.append(createAddBtn(elem.id));
             }
         });
         return resultDiv;
@@ -1249,14 +1257,14 @@
         return deleteBtn;
     }
     
-    function createAddBtn() {
+    function createAddBtn(field_id) {
         var div = jQuery(document.createElement('div')),
             addButton = jQuery(document.createElement('button'));
         div.addClass('row center');
-        /*<button id="add_jform_n13" class="btn btn-primary add" style="margin-bottom:15px" type="button">Добавить</button>*/
         addButton.addClass('btn btn-primary add');
         addButton.css({'margin-bottom':'15px'});
         addButton.prop('type','button');
+        addButton.attr('data-field',field_id);
         addButton.html('<i class="fa fa-plus" aria-hidden="true"></i> Добавить');
         div.append(addButton);
         return div;
@@ -1292,6 +1300,60 @@
         if(filename){
             jQuery("#sketch_image").attr('src',filename);
             jQuery("#sketch_image_block").show();
+        }
+
+        var savedData = JSON.parse(localStorage.getItem('dataToSave'));
+        console.log('retrievedObject: ', savedData);
+        if(!empty(savedData)) {
+            jQuery.each(savedData, function (index, elem) {
+                jQuery('#params_block').find('.btn_calc[data-maingroup_id="' + elem.maingroup_id + '"]').trigger('click');
+                for(var i = elem.groups.length;i--;) {
+                    jQuery('#params_block').find('.add_fields[data-group_id="' + elem.groups[i].group_id + '"]').trigger('click');
+
+                    var countDiv,input;
+                    for(var j = 0;j<elem.groups[i].fields.length;j++){
+                        if(elem.groups[i].fields[j].field_data.length>1){
+                            var addBtn = jQuery('#params_block').find('.add[data-field="'+elem.groups[i].fields[j].field_id+'"]');
+                            for(var z = 1;z<elem.groups[i].fields[j].field_data.length;z++){
+                                addBtn.trigger('click');
+                            }
+                        }
+                        for(var f =0;f<elem.groups[i].fields[j].field_data.length;f++){
+                            var savedInput = elem.groups[i].fields[j].field_data[f],
+                                rowFields = jQuery('#params_block').find('.row-fields[data-group_id="' + elem.groups[i].group_id + '"][data-id="'+elem.groups[i].fields[j].field_id+'"]');
+                            if(savedInput.type == "checkbox"){
+                                countDiv = jQuery(rowFields[f]).find('.countDiv');
+                                input = jQuery(countDiv).children();
+                                input.attr('checked',true);
+                            }
+                            if(savedInput.type == "text"){
+                                countDiv = jQuery(rowFields[f]).find('.countDiv');
+                                input = jQuery(countDiv).children();
+                                input.val(savedInput.value);
+                                if(savedInput.related.length){
+                                    for(var k=0;k<savedInput.related.length;k++){
+                                        if(savedInput.related[k].type == 'select-one'){
+                                            var select = jQuery(rowFields[f]).find('.selectDiv').children();
+                                            select.val(savedInput.related[k].value);
+                                        }
+                                        if(savedInput.related[k].type == 'radio'){
+                                            var radioBtn = jQuery('.radio[data-parent = "'+elem.groups[i].group_id+'"][data-id="'+savedInput.related[k].id+'"]');
+                                            radioBtn.attr('checked',true);
+                                            radioBtn.trigger('click');
+                                            if(savedInput.related[k].assoc){
+                                                radioBtn.closest('.row-fields').find('.div-goods_select').children().val(savedInput.related[k].assoc.value);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(savedInput.type == "radio"){
+                                jQuery('.radio[data-id="'+savedInput.id+'"]').attr('checked',true);
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
     function getCategories(componentsArray){
@@ -1336,7 +1398,6 @@
                     radio = jQuery('input[type=radio][data-parent="'+id+'"]:checked'),
                     radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
                 if(!empty(radio.val())) {
-                    console.log("123");
                     if (!empty(input.val())) {
                         if (currentJobs.length == 0) {
                             currentJobs = JSON.parse(radio.val());
@@ -1350,7 +1411,6 @@
                     }
                 }
                 //поиск связанных селектов
-                console.log(countDiv.parent());
                 goodSelect = countDiv.parent().find('.selectDiv').children();
                 //если есть селект и введеное количество не пустое добавляем компоненты
                 if(goodSelect.length != 0 && !empty(input.val())){
@@ -1417,5 +1477,135 @@
             return res;
         }, {});
         return result;
+    }
+
+    function collectFieldsDataToSave(){
+        var dataToSave = [],
+            groups_data = jQuery('.add_fields'),
+            result = [];
+
+        jQuery.each(groups_data,function (index,elem) {
+            console.log(jQuery(elem).data('maingroup_id'));
+            var mainGroupId = jQuery(elem).data('maingroup_id'),
+                groupId = jQuery(elem).data('group_id'),
+                fieldsRow = jQuery('.row-fields[data-group_id="'+groupId+'"]'),
+                fields = [];
+
+            jQuery.each(fieldsRow,function(n,row) {
+                var countDiv = jQuery(row).find('.countDiv'),
+                    input = jQuery(countDiv).children(),
+                    fieldObj = {},
+                    related = [],
+                    goodSelect, radio;
+                if (input.prop('type') == "checkbox") {
+                    if (input.is(':checked')) {
+                        fieldObj = {id: input.prop('id'), type: input.prop('type'), value: 1, related: []};
+                    }
+                }
+                if (input.prop('type') == "text") {
+                    if (input.val() > 0) {
+                        var id = countDiv.parent().data('id'),
+                            radio = jQuery('input[type=radio][data-parent="' + id + '"]:checked'),
+                            radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                        if (!empty(radio.val())) {
+                            var assocSelect = "";
+                            if (radioGoodSelect.length != 0) {
+                                assocSelect = {
+                                    id: radioGoodSelect.prop('id'),
+                                    type: radioGoodSelect.prop('type'),
+                                    value: radioGoodSelect.val()
+                                };
+                            }
+                            related.push({
+                                id: radio.attr('data-id'),
+                                type: radio.prop('type'),
+                                value: 1,
+                                assoc: assocSelect
+                            });
+
+                        }
+                        //поиск связанных селектов
+                        goodSelect = countDiv.parent().find('.selectDiv').children();
+                        //если есть селект и введеное количество не пустое добавляем компоненты
+                        if (goodSelect.length != 0 && !empty(input.val())) {
+                            related.push({
+                                id: goodSelect.prop('id'),
+                                type: goodSelect.prop('type'),
+                                value: goodSelect.val()
+                            });
+                        }
+                        fieldObj = {
+                            id: input.prop('id'),
+                            type: input.prop('type'),
+                            value: input.val(),
+                            related: related
+                        };
+                    }
+                }
+                if (input.prop('type') == "radio" && empty(input.data('parent'))) {
+                    if (input.is(':checked')) {
+                        fieldObj = {id: input.prop('id'), type: input.prop('type'), value: 1, related: []};
+                    }
+                }
+                var fieldIndex = checkExistFieldId(fields, jQuery(row).data('id'));
+                if (fieldIndex == -1) {
+                    fields.push({field_id: jQuery(row).data('id'), field_data: []});
+                }
+
+                fieldIndex = checkExistFieldId(fields, jQuery(row).data('id'));
+                if (!jQuery.isEmptyObject(fieldObj)) {
+                    fields[fieldIndex].field_data.push(fieldObj);
+                }
+            });
+
+            var index = checkExistMaingroup(dataToSave,mainGroupId);
+            if(index == -1){
+                dataToSave.push({maingroup_id:mainGroupId,groups:[]});
+            }
+            index = checkExistMaingroup(dataToSave,mainGroupId);
+            if(!empty(fields)) {
+                dataToSave[index].groups.push({maingroup: mainGroupId, group_id: groupId, fields: fields});
+            }
+        });
+        jQuery.each(dataToSave,function(index,elem){
+           for(var i=elem.groups.length;i--;){
+               for (var j =0;j<elem.groups[i].fields.length;j++){
+                   if(elem.groups[i].fields[j].field_data.length == 0) {
+                       elem.groups[i].fields.splice(j, 1);
+                   }
+               }
+               if(empty(elem.groups[i].fields)){
+                   elem.groups.splice(i, 1);
+               }
+           }
+        });
+        for(var i=dataToSave.length;i--;){
+            if (dataToSave[i].groups.length == 0) {
+                dataToSave.splice(i, 1);
+            }
+        }
+        console.log(dataToSave);
+        return JSON.stringify(dataToSave);
+    }
+
+    function checkExistMaingroup(array,maingroup){
+        return array.findIndex(function(element,index){
+            if(element.maingroup_id == maingroup){
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+    }
+    function checkExistFieldId(array,field_id){
+        return array.findIndex(function(element,index){
+            if(element.field_id == field_id){
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
     }
 </script>

@@ -1285,7 +1285,7 @@
         }
 
         //если есть комплектующие раскрыть
-        if(calculation.components_sum > 0 || calculation.need_mount > 0){
+        if(calculation.components_sum > 0 || calculation.need_mount > 0 || calculation.need_cuts > 0 || calculation.need_metiz > 0){
                 jQuery("#btn_add_components").trigger("click");
             }
 
