@@ -155,9 +155,9 @@ class Gm_ceilingHelpersGm_ceiling
         return dealer_margin($price, $margin, $objectDealerPrice);
     }
 
-    function getDealerInfo($dealer_id) {
+    public static function getDealerInfo($dealer_id) {
         try {
-            $model_dealer_info = $this->getModel('dealer_info');
+            $model_dealer_info = self::getModel('dealer_info');
             $result = $model_dealer_info->getDataById($dealer_id);
             return $result;
         } catch(Exception $e) {
