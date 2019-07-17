@@ -1500,6 +1500,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db->setQuery($query);
             $db->execute();
 
+            if (empty($values)) {
+                return true;
+            }
+
             $query = $db->getQuery(true);
             $query
                 ->insert('`#__gm_ceiling_calcs_goods_map`')
@@ -1530,6 +1534,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db->setQuery($query);
             $db->execute();
 
+            if (empty($values)) {
+                return true;
+            }
+
             $query = $db->getQuery(true);
             $query
                 ->insert('`#__gm_ceiling_calcs_jobs_map`')
@@ -1547,8 +1555,14 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     public function getGoodsPricesInCalculation($calc_id, $dealer_id) {
         try {
             $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
-            $canvases_margin = $dealer_info->dealer_canvases_margin;
-            $components_margin = $dealer_info->dealer_components_margin;
+            if (empty($dealer_info)) {
+                $canvases_margin = 0;
+                $components_margin = 0;
+            } else {
+                $canvases_margin = $dealer_info->dealer_canvases_margin;
+                $components_margin = $dealer_info->dealer_components_margin;
+            }
+            
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query = "
