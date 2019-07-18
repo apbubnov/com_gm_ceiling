@@ -874,26 +874,25 @@
             var parent = jQuery(this).parent(),
                 rowFields = parent.prev().clone(),
                 prev = parent.prev(),
-                count = 1;
-            while(true){
-                if(prev.hasClass('title')) {
-                    break;
-                }
-                else{
-                    prev = prev.prev();
-                    count++;
-                }
-            }
+                count,radioName = '',
+                lastRadioName = jQuery(prev.find('input[type=radio]')[0]).prop('name');
+           if(!empty(lastRadioName)){
+               var splittedName = lastRadioName.split('_');
+               radioName = splittedName[0];
+               count = splittedName[1];
+               console.log(count);
+           }
             jQuery.each(rowFields,function (index,elem) {
                var radios = jQuery(elem).find('input[type=radio]'),
                    labels = jQuery(elem).find('label');
                jQuery.each(radios,function(ind,radioBtn){
-                   var id = jQuery(radioBtn).prop('id')+count;
+                   var id = jQuery(radioBtn).prop('id')+"_"+count;
                    jQuery(radioBtn).prop('id',id);
+                   jQuery(radioBtn).prop('name',radioName+"_"+(+count+1));
 
                });
                 jQuery.each(labels,function(ind,label){
-                    var propFor = jQuery(label).prop('for')+count;
+                    var propFor = jQuery(label).prop('for')+"_"+count;
                     jQuery(label).prop('for',propFor);
                 });
             });
@@ -918,7 +917,12 @@
             if(this.checked){
                 var goodsSelects = jQuery(this).closest('.div-fields').find('.div-goods_select');
                 jQuery.each(goodsSelects,function(index,elem){
-                    jQuery(elem).hide();
+                    var parent = jQuery(elem).parent(),
+                        relatedRadio = jQuery(parent).find('input[type=radio]');
+                    console.log(relatedRadio);
+                    if(!relatedRadio.prop('checked')){
+                        jQuery(elem).hide();
+                    }
                 });
                 if(!empty(selectDiv)) {
                     selectDiv.show();
@@ -972,7 +976,7 @@
             console.log(collected_data);
             localStorage.setItem('dataToSave',dataToSave);
 
-            /*jQuery.ajax({
+            jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
                 data: {
                     calc_id: calculation.id,
@@ -981,7 +985,8 @@
                     extra_components: JSON.stringify(collected_data.extra_components),
                     extra_mounting: JSON.stringify(collected_data.extra_mounting),
                     fields_data: "",
-                    photo_print: JSON.stringify(collected_data.photo_print)
+                    photo_print: JSON.stringify(collected_data.photo_print),
+                    dealer_id: 2
                 },
                 dataType: "json",
                 async: false,
@@ -998,7 +1003,7 @@
                         text: "Ошибка сервера"
                     });
                 }
-            });*/
+            });
         });
 
     });
@@ -1206,10 +1211,13 @@
         var select = jQuery(document.createElement('select'));
         select.addClass('form-control goods_select ');
         jQuery.each(selectData,function (index,elem) {
-            select.append(jQuery('<option>', {
-                value: elem.id,
-                text: elem.name
-            }));
+            var option = jQuery(document.createElement('option'));
+            option.prop('value',elem.id);
+            option.prop('text',elem.name);
+            if(!empty(elem.child_goods)) {
+                option.attr('data-child_goods', getJobsIds(elem.child_goods));
+            }
+            select.append(option);
         });
         return select;
     }
@@ -1228,7 +1236,7 @@
         radioBtn.attr('data-id',field.id);
         radioBtn.attr('data-parent',field.parent);
         radioBtn.prop('id',field.id);
-        radioBtn.prop('name',field.parent);
+        radioBtn.prop('name',field.parent+'_1');
         radioBtn.addClass('radio');
         radioBtn.prop('value',getJobsIds(field.jobs));
         label.prop('for',field.id);
@@ -1337,7 +1345,8 @@
                                             select.val(savedInput.related[k].value);
                                         }
                                         if(savedInput.related[k].type == 'radio'){
-                                            var radioBtn = jQuery('.radio[data-parent = "'+elem.groups[i].group_id+'"][data-id="'+savedInput.related[k].id+'"]');
+                                            var radioBtn = jQuery('#'+savedInput.related[k].id+'[data-parent = "'+elem.groups[i].fields[j].field_id+'"]');
+                                            console.log(radioBtn);
                                             radioBtn.attr('checked',true);
                                             radioBtn.trigger('click');
                                             if(savedInput.related[k].assoc){
@@ -1395,7 +1404,7 @@
             if(input.prop('type') == "text"){
                 //поиск связанных radio
                 var id = countDiv.parent().data('id'),
-                    radio = jQuery('input[type=radio][data-parent="'+id+'"]:checked'),
+                    radio =  countDiv.parent().find('input[type=radio][data-parent="'+id+'"]:checked'),
                     radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
                 if(!empty(radio.val())) {
                     if (!empty(input.val())) {
@@ -1406,6 +1415,14 @@
                             currentJobs.concat(JSON.parse(radio.val()));
                         }
                         if (radioGoodSelect.length != 0) {
+                            var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
+                            if(!empty(childGoods)) {
+                                if (childGoods.length) {
+                                    for (var i = 0; i < childGoods.length; i++) {
+                                        components.push({id: childGoods[i], count: input.val()});
+                                    }
+                                }
+                            }
                             components.push({id: radioGoodSelect.val(), count: input.val()});
                         }
                     }
@@ -1414,6 +1431,15 @@
                 goodSelect = countDiv.parent().find('.selectDiv').children();
                 //если есть селект и введеное количество не пустое добавляем компоненты
                 if(goodSelect.length != 0 && !empty(input.val())){
+                    var childGoods = goodSelect.children("option:selected").data('child_goods');
+                    console.log(childGoods);
+                    if(!empty(childGoods)) {
+                        if (childGoods.length) {
+                            for (var i = 0; i < childGoods.length; i++) {
+                                components.push({id: childGoods[i], count: input.val()});
+                            }
+                        }
+                    }
                     components.push({id:goodSelect.val(),count:input.val()});
                 }
                 //добавляем работы если количество не пустое
@@ -1505,19 +1531,19 @@
                 if (input.prop('type') == "text") {
                     if (input.val() > 0) {
                         var id = countDiv.parent().data('id'),
-                            radio = jQuery('input[type=radio][data-parent="' + id + '"]:checked'),
+                            radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
                             radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
                         if (!empty(radio.val())) {
                             var assocSelect = "";
                             if (radioGoodSelect.length != 0) {
                                 assocSelect = {
-                                    id: radioGoodSelect.prop('id'),
+                                    id: radioGoodSelect.attr('id'),
                                     type: radioGoodSelect.prop('type'),
                                     value: radioGoodSelect.val()
                                 };
                             }
                             related.push({
-                                id: radio.attr('data-id'),
+                                id: radio.attr('id'),
                                 type: radio.prop('type'),
                                 value: 1,
                                 assoc: assocSelect
