@@ -1522,7 +1522,9 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         try {
             $values = array();
             foreach ($jobs as $value) {
-                $values[] = $calc_id.','.$value['id'].','.$value['count'];
+                if (is_numeric($value['id']) && is_numeric($value['count'])) {
+                    $values[] = $calc_id.','.$value['id'].','.$value['count'];
+                }
             }
 
             $db = $this->getDbo();
@@ -1568,6 +1570,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query = "
 SELECT  `gf`.`goods_id`,
         `g`.`name`,
+        `g`.`category_id`,
         `g`.`original_price`,
         `g`.`multiplicity`,
         `g`.`dealer_price`,
@@ -1676,6 +1679,141 @@ SELECT  `gf`.`goods_id`,
               ON  `gf`.`goods_id` = `g`.`id`
 GROUP BY `goods_id`
 ORDER BY `goods_id`
+            ";
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getMountingServicePricesInCalculation($calc_id, $dealer_id) {
+        try {
+            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            if (empty($dealer_info)) {
+                $mounting_margin = 0;
+            } else {
+                $mounting_margin = $dealer_info->dealer_mounting_margin;
+            }
+            
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query = "
+            SELECT  `jf`.`job_id`,
+                `j`.`name`,
+                SUM(`jf`.`job_count_all`) AS `final_count`,
+                `j`.`price`,
+                ROUND(SUM(`jf`.`job_count_all`) * `j`.`price`, 2) AS `price_sum`,
+                ROUND(SUM(`jf`.`job_count_all`) * `j`.`price` * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
+    FROM    (
+                    (
+                        SELECT  `cgm`.`goods_id`,
+                                        `cgm`.`count` AS `goods_count`,
+                                        `jfgm`.`child_job_id` AS `job_id`,
+                                        `jfgm`.`count` AS `job_count_per_unit`,
+                                        `jfgm`.`count` * `cgm`.`count` AS `job_count_all`
+                            FROM    (
+                                            SELECT  DISTINCT
+                                                            `jg`.*,
+                                                            `jgd`.`dealer_id` AS `temp_dealer_id`
+                                                FROM    `rgzbn_gm_ceiling_jobs_from_goods_map` AS `jg`
+                                                            LEFT JOIN       (
+                                                                                        SELECT  *
+                                                                                            FROM    `rgzbn_gm_ceiling_jobs_from_goods_map`
+                                                                                            WHERE   `dealer_id` = $dealer_id
+                                                                                    ) AS `jgd`
+                                                                            ON  `jg`.`parent_goods_id` = `jgd`.`parent_goods_id`    
+                                                WHERE   (`jg`.`dealer_id` = 1 AND `jgd`.`dealer_id` IS NULL) OR
+                                                            (`jg`.`dealer_id` = $dealer_id AND `jgd`.`dealer_id` = $dealer_id)
+                                        ) AS `jfgm`
+                                        INNER JOIN  `rgzbn_gm_ceiling_calcs_goods_map` AS `cgm`
+                                                        ON  `jfgm`.`parent_goods_id` = `cgm`.`goods_id`
+                            WHERE   `cgm`.`calc_id` = $calc_id
+                    )
+                    UNION ALL
+                    (
+                        SELECT  NULL,
+                                        NULL,
+                                        `cjm`.`job_id`,
+                                        NULL,
+                                        `cjm`.`count`
+                            FROM    `rgzbn_gm_ceiling_calcs_jobs_map` AS `cjm`
+                            WHERE   `cjm`.`calc_id` = $calc_id
+                    )
+                ) AS `jf`
+                INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
+                                ON  `jf`.`job_id` = `j`.`id`
+    GROUP BY    `job_id`
+    ORDER BY    `job_id`
+            ";
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getJobsPricesInCalculation($calc_id, $dealer_id) {
+        try {
+            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            if (empty($dealer_info)) {
+                $mounting_margin = 0;
+            } else {
+                $mounting_margin = $dealer_info->dealer_mounting_margin;
+            }
+            
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query = "SELECT    `jf`.`job_id`,
+                `j`.`name`,
+                SUM(`jf`.`job_count_all`) AS `final_count`,
+                IFNULL(`jdp`.`price`, 0) AS `price`,
+                ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0), 2) AS `price_sum`,
+                ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0) * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
+    FROM    (
+                    (
+                        SELECT  `cgm`.`goods_id`,
+                                        `cgm`.`count` AS `goods_count`,
+                                        `jfgm`.`child_job_id` AS `job_id`,
+                                        `jfgm`.`count` AS `job_count_per_unit`,
+                                        `jfgm`.`count` * `cgm`.`count` AS `job_count_all`
+                            FROM    (
+                                            SELECT  DISTINCT
+                                                            `jg`.*,
+                                                            `jgd`.`dealer_id` AS `temp_dealer_id`
+                                                FROM    `rgzbn_gm_ceiling_jobs_from_goods_map` AS `jg`
+                                                            LEFT JOIN       (
+                                                                                        SELECT  *
+                                                                                            FROM    `rgzbn_gm_ceiling_jobs_from_goods_map`
+                                                                                            WHERE   `dealer_id` = $dealer_id
+                                                                                    ) AS `jgd`
+                                                                            ON  `jg`.`parent_goods_id` = `jgd`.`parent_goods_id`    
+                                                WHERE   (`jg`.`dealer_id` = 1 AND `jgd`.`dealer_id` IS NULL) OR
+                                                            (`jg`.`dealer_id` = $dealer_id AND `jgd`.`dealer_id` = $dealer_id)
+                                        ) AS `jfgm`
+                                        INNER JOIN  `rgzbn_gm_ceiling_calcs_goods_map` AS `cgm`
+                                                        ON  `jfgm`.`parent_goods_id` = `cgm`.`goods_id`
+                            WHERE   `cgm`.`calc_id` = $calc_id
+                    )
+                    UNION ALL
+                    (
+                        SELECT  NULL,
+                                        NULL,
+                                        `cjm`.`job_id`,
+                                        NULL,
+                                        `cjm`.`count`
+                            FROM    `rgzbn_gm_ceiling_calcs_jobs_map` AS `cjm`
+                            WHERE   `cjm`.`calc_id` = $calc_id
+                    )
+                ) AS `jf`
+                INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
+                                ON  `jf`.`job_id` = `j`.`id`
+                LEFT    JOIN    `rgzbn_gm_ceiling_jobs_dealer_price` AS `jdp`
+                                ON  `jf`.`job_id` = `jdp`.`job_id`
+    GROUP BY    `job_id`
+    ORDER BY    `job_id`
             ";
             $db->setQuery($query);
             $result = $db->loadObjectList();

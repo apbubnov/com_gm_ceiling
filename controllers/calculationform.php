@@ -519,6 +519,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$extra_mounting = $jinput->get('extra_mounting', null, 'STRING');
 			$photo_print = $jinput->get('photo_print', null, 'STRING');
 			$fields_data = $jinput->get('fields_data', null, 'STRING');
+			$need_mount = $jinput->get('need_mount', 0, 'INT');
+			$need_metiz = $jinput->get('need_metiz', 0, 'INT');
+			$need_offcuts = $jinput->get('need_offcuts', 0, 'INT');
 
 			$data = array();
 			$data['id'] = $calc_id;
@@ -534,8 +537,27 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$model_calcform->addJobsInCalculation($calc_id, $jobs);
 
 			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
+			$all_jobs = [];
 
-			$result = (object)array('sum' => 0, 'all_goods' => $all_goods, 'all_jobs' => $jobs);
+			if (!empty($need_mount)) {
+				if ($need_mount == 1) {
+					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id);
+				} elseif ($need_mount == 2) {
+					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id);
+				}
+			}
+
+			if (!empty($need_metiz)) {
+				$temp_goods = [];
+				foreach ($all_goods as $key => $value) {
+					if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
+						$temp_goods[] = $value;
+					}
+				}
+				$all_goods = $temp_goods;
+			}
+
+			$result = (object)array('sum' => 0, 'all_goods' => $all_goods, 'all_jobs' => $all_jobs);
 
 			die(json_encode($result));
 		} catch(Exception $e) {
