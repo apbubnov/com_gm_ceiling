@@ -1811,7 +1811,8 @@ ORDER BY `goods_id`
                 INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
                                 ON  `jf`.`job_id` = `j`.`id`
                 LEFT    JOIN    `rgzbn_gm_ceiling_jobs_dealer_price` AS `jdp`
-                                ON  `jf`.`job_id` = `jdp`.`job_id`
+                                ON  `jf`.`job_id` = `jdp`.`job_id` AND
+                                    `jdp`.`dealer_id` = $dealer_id
     GROUP BY    `job_id`
     ORDER BY    `job_id`
             ";
