@@ -527,7 +527,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data['id'] = $calc_id;
 			$data['extra_components'] = $extra_components;
 			$data['extra_mounting'] = $extra_mounting;
-			$data['fields_data'] = $fields_data;
+			$data['photo_print'] = $photo_print;
+			$data['fields_data'] = base64_encode(gzcompress($fields_data));
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
@@ -557,7 +558,71 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				$all_goods = $temp_goods;
 			}
 
-			$result = (object)array('sum' => 0, 'all_goods' => $all_goods, 'all_jobs' => $all_jobs);
+			$extra_components = json_decode($extra_components);
+			$extra_components_sum = 0;
+			if (!empty($extra_components)) {
+				foreach ($extra_components as $value) {
+					$extra_components_sum += $value->price;
+				}
+			}
+
+			$extra_mounting = json_decode($extra_mounting);
+			$extra_mounting_sum = 0;
+			if (!empty($extra_mounting)) {
+				foreach ($extra_mounting as $value) {
+					$extra_mounting_sum += $value->price;
+				}
+			}
+
+			$photo_print = json_decode($photo_print);
+			$photo_print_sum = 0;
+			if (!empty($photo_print)) {
+				$photo_print_sum = (float)$photo_print->price;
+			}
+
+			$common_sum = 0;
+			$common_sum_with_margin = 0;
+			$canvases_sum = 0;
+			$canvases_sum_with_margin = 0;
+			$components_sum = 0;
+			$components_sum_with_margin = 0;
+			$mounting_sum = 0;
+			$mounting_sum_with_margin = 0;
+
+			foreach ($all_goods as $value) {
+				$common_sum += $value->price_sum;
+				$common_sum_with_margin += $value->price_sum_with_margin;
+				if ($value->category_id == 1) {
+					$canvases_sum += $value->price_sum;
+					$canvases_sum_with_margin += $value->price_sum_with_margin;
+				} else {
+					$components_sum += $value->price_sum;
+					$components_sum_with_margin += $value->price_sum_with_margin;
+				}
+			}
+
+			foreach ($all_jobs as $value) {
+				$common_sum += $value->price_sum;
+				$common_sum_with_margin += $value->price_sum_with_margin;
+				$mounting_sum += $value->price_sum;
+				$mounting_sum_with_margin += $value->price_sum_with_margin;
+			}
+
+			$result = (object)array(
+				'all_goods' => $all_goods,
+				'all_jobs' => $all_jobs,
+				'common_sum' => $common_sum,
+				'common_sum_with_margin' => $common_sum_with_margin,
+				'canvases_sum' => $canvases_sum,
+				'canvases_sum_with_margin' => $canvases_sum_with_margin,
+				'components_sum' => $components_sum,
+				'components_sum_with_margin' => $components_sum_with_margin,
+				'mounting_sum' => $mounting_sum,
+				'mounting_sum_with_margin' => $mounting_sum_with_margin,
+				'extra_components_sum' => $extra_components_sum,
+				'extra_mounting_sum' => $extra_mounting_sum,
+				'photo_print_sum' => $photo_print_sum
+			);
 
 			die(json_encode($result));
 		} catch(Exception $e) {
