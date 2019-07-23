@@ -43,22 +43,32 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 	 * @throws Exception
 	 * @since  1.6
 	 */
-	public function updatedata($key = NULL, $urlVar = NULL)
+	public function updatedata($array = NULL, $dealer_id = NULL)
 	{
 		try
 		{
-	        $app = JFactory::getApplication();
-	        $jinput = $app->input;
-	        $data = $jinput->get('jform', array(), 'array');
-            $user = JFactory::getUser($data['dealer_id']);
-            unset($data['dealer_id']);
+	        //$app = JFactory::getApplication();
+	        //$jinput = $app->input;
+	        //$data = $jinput->get('jform', array(), 'array');
+            //$user = JFactory::getUser($data['dealer_id']);
+            //unset($data['dealer_id']);
+	        //$model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+	        //$result = $model_dealer_info->updateMarginAndMount($user->id, $data);
+	        //if($result == 1) $message = "Успешно сохранено!";
+	        //else $message = "Возникла ошибка сохранения!";
+	        //$this->setMessage($message);
+	        //$url  = ($user->dealer_type != 7) ? 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage' : 'index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.$user->associated_client ;
+		    //$this->setRedirect(JRoute::_($url, false));
+
+			$jinput = JFactory::getApplication()->input;
+            $array = $jinput->get('array', null, 'ARRAY');
+            $dealer_id = $jinput->get('dealer_id', null, 'INT');
+
 	        $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-	        $result = $model_dealer_info->updateMarginAndMount($user->id, $data);
-	        if($result == 1) $message = "Успешно сохранено!";
-	        else $message = "Возникла ошибка сохранения!";
-	        $this->setMessage($message);
-	        $url  = ($user->dealer_type != 7) ? 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage' : 'index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.$user->associated_client ;
-			$this->setRedirect(JRoute::_($url, false));
+	        $result = $model_dealer_info->updateMarginAndMount($dealer_id, $array);
+
+            die(json_encode($result));
+
 		}
 		catch(Exception $e)
         {

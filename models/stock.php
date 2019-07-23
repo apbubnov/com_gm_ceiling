@@ -575,25 +575,6 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function getCounterparty($id)
-    {
-        try
-        {
-            $db = $this->getDbo();
-            $query = $db->getQuery(true);
-            $query->from("`#__gm_ceiling_counterparty` AS CP")
-                ->select("*")
-                ->where("CP.id = ".$db->quote($id))
-                ->where("CP.close_contract > ".$db->quote(date("Y.m.d")));
-            $db->setQuery($query);
-            return $db->loadObject();
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
     public function getAllProviders(){
         try
         {
@@ -798,7 +779,7 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function getGoods() {
+    public function getGoods($goods_id = null) {
         try {
             $result = array();
             $db = $this->getDbo();
@@ -816,6 +797,11 @@ class Gm_ceilingModelStock extends JModelList
                 ->leftJoin('`#__gm_stock_inventory` as `inv` on `go`.`id` = `inv`.`good_id`')
                 ->leftJoin('`#__gm_stock_stocks` as `stoc` on `inv`.`stock_id` = `stoc`.`id`')
                 ->order('`go`.`id`');
+
+                if (!empty($goods_id)) {
+                    $query->where("`go`.`id`=$goods_id");
+                }
+
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
@@ -869,6 +855,7 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+
     public function getGoodsUnits(){
         try{
             $db = $this->getDbo();
@@ -883,6 +870,104 @@ class Gm_ceilingModelStock extends JModelList
 
             return $items;
         } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getCounterparty($id = null){
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_counterparty` AS CP")
+                ->select("*");
+
+            if (!empty($id)) {
+                $query->where("CP.id = ".$db->quote($id));
+                $db->setQuery($query);
+                $items = $db->loadObject();
+            } else {
+                $db->setQuery($query);
+                $items = $db->loadObjectList();
+            }
+    
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function saveDataInventory($array, $stock_id, $id_counterparty){
+        try
+        {
+            /*$ids = '';
+            $values = '';
+
+            foreach ($array as $value) {
+                $ids .= $value['id'].',';
+                $values[] = $value['id'].','. $value['count'] .','. $value['cost'];
+            }
+
+            $ids = substr($ids, 0, -1);
+
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_stock_inventory` AS si")
+                ->select("`si`.`good_id`,
+                          `si`.`id`")
+                ->where("`si`.`stock_id` = ".$stock_id." and `si`.`good_id` in ($ids)");
+            $db->setQuery($query);
+            $items = $db->loadAssocList('good_id','id');*/
+
+            //$ids = '';
+            //$values = '';
+            //$counts = '';
+            //foreach ($array as $value) {
+            //    $ids .= $value['id'].',';
+            //    $values .= '('.$value['id'].','. $value['count'] .','. $value['cost'].'),';
+            //    $counts .= '`count` = VALUES (`count` + ' . $value['cost'].'),';
+            //}
+
+            //$ids = substr($ids, 0, -1);
+            //$values = substr($values, 0, -1);
+            //$counts = substr($counts, 0, -1);
+
+            //$db = $this->getDbo();
+            //$query = $db->getQuery(true);
+            //$query = (
+            //    "INSERT INTO `#__gm_stock_inventory`
+            //        (`good_id`, `count`, `stock_id`)
+            //    VALUES
+            //        " . $values . "
+            //    ON DUPLICATE KEY UPDATE
+            //        " . $counts . ""
+            //);
+
+            //$query = (
+            //    "INSERT INTO `#__gm_stock_inventory`
+            //        (`good_id`, `count`, `stock_id`)
+            //    VALUES
+            //        (13, 100, 1), (10, 100, 2)
+            //    ON DUPLICATE KEY UPDATE
+            //        `count` = `count` + 100",
+            //        `count` = `count` + 100
+            //);
+
+            //$db->setQuery($query);
+            //$items = $db->loadObject();
+
+            /*$query = $db->getQuery(true);
+            $query ->delete('`#__gm_ceiling_goods_dealer_price`')
+                ->where("`goods_id` in ($ids) and `dealer_id` = $dealer_id");
+            $db->setQuery($query);
+            $db->execute();*/
+
+            return 'true';
+        }
+        catch(Exception $e)
+        {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

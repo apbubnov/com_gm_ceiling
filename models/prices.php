@@ -478,17 +478,15 @@ class Gm_ceilingModelPrices extends JModelList
 			$db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query ->select('*')
+            $query ->select('`j`.`id`,`j`.`name`, `dp`.`price`, `dp`.`id` as `dp_id`, IFNULL(`dp`.`price`, 0) as `price`')
             	->from('`#__gm_ceiling_jobs` as `j`')
-            	->leftJoin('`#__gm_ceiling_jobs_dealer_price` as `dp`
-            		on `j`.`id` = `dp`.`job_id`')
-            	->where("`dp`.`dealer_id` = $dealer_id")
+            	->leftJoin("`#__gm_ceiling_jobs_dealer_price` as `dp`
+            		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealer_id")
+
             	->order('`j`.`id`');
             $db->setQuery($query);
             $db->execute();
 			$items = $db->loadObjectList();
-
-
 			return $items;
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
