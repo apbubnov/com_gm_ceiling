@@ -109,8 +109,9 @@ $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
-
+$projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
 /*____________________end_______________________  */
+
 $data = quotemeta(json_encode($calculationformModel->getFields(1), JSON_HEX_QUOT));
 $componentsInCategories = quotemeta(json_encode($calculationformModel->getcomponentsInCategories(), JSON_HEX_QUOT));
 
@@ -121,6 +122,7 @@ $texturesData = json_encode($canvases_model->getCanvasesTextures());
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
+    $dealerId = $projectModel->getData($calculation->project_id)->dealer_id;
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
@@ -157,12 +159,11 @@ if (!empty($calculation_id)) {
         $manufacturer_title = $canvas->name . " " . $canvas->width;
         $color_file = $canvas->color_file;
     }
-    $calculation->n37 = addslashes($calculation->n37);
     $calculation->extra_components = addslashes($calculation->extra_components);
+    $calculation->photo_print = addslashes($calculation->photo_print);
     $calculation->extra_mounting = addslashes($calculation->extra_mounting);
     $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
-
-
+    $calculation->fields_data = addslashes(gzuncompress(base64_decode($calculation->fields_data)));
     $calc_img_filename = md5('calculation_sketch' . $calculation_id) . '.svg';
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $calc_img_filename)) {
         $calc_img = '/calculation_images/' . $calc_img_filename . '?t=' . time();
@@ -196,6 +197,9 @@ if (!empty($calculation_id)) {
 
     .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xs, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
         padding: 2px !important;
+    }
+    .no-border{
+        border:0px;
     }
 
 </style>
@@ -283,7 +287,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_texture-lbl" for="jform_n4"> Текстура: </label>
                             </td>
                             <td width=65%>
-                                <input name="jform[texture]" class="form-control-input" id="jform_texture"
+                                <input name="jform[texture]" class="form-control-input no-border" id="jform_texture"
                                        value="<?php echo $texture_title ?>" data-next="#jform_proizv" readonly>
                             </td>
                         </tr>
@@ -292,7 +296,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_proizv-lbl" for="jform_proizv"> Производитель: </label>
                             </td>
                             <td width=65%>
-                                <input name="jform[proizv]" class="form-control-input" id="jform_proizv"
+                                <input name="jform[proizv]" class="form-control-input no-border" id="jform_proizv"
                                        value="<?php echo $manufacturer_title ?>" data-next="#jform_color" readonly>
                             </td>
                         </tr>
@@ -311,7 +315,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_color-lbl" for="jform_n4"> Площадь: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5"
+                                <input name="jform[n4]" class="form-control-input no-border" id="jform_n4" data-next="#jform_n5"
                                        readonly>
                             </td>
                             <td width=10%>
@@ -323,7 +327,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_n5-lbl" for="jform_n5"> Периметр: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9"
+                                <input name="jform[n5]" class="form-control-input no-border" id="jform_n5" data-next="#jform_n9"
                                        readonly>
                             </td>
                             <td width=10%>
@@ -335,7 +339,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_n9-lbl" for="jform_n9"> Кол-во углов: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n9]" id="jform_n9" data-next="#jform_n27" class="form-control-input"
+                                <input name="jform[n9]" id="jform_n9" data-next="#jform_n27" class="form-control-input no-border"
                                        readonly>
                             </td>
                             <td width=10%>
@@ -348,7 +352,7 @@ if (!empty($calculation_id)) {
                             </td>
                             <td width=55%>
                                 <input name="jform[shrink_per]" id="jform_shrink_per" data-next="#jform_n27"
-                                       class="form-control-input" readonly>
+                                       class="form-control-input no-border" readonly>
                             </td>
                             <td width=10%>
                                 <label for="jform_n9" class="control-label">%</label>
@@ -359,7 +363,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_n10-lbl" for="jform_n10"> Криволинейный участок: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n10]" id="jform_n10" class="form-control-input" readonly>
+                                <input name="jform[n10]" id="jform_n10" class="form-control-input no-border" readonly>
                             </td>
                             <td width=10%>
                                 <label for="jform_n10" class="control-label">м.</label>
@@ -370,7 +374,7 @@ if (!empty($calculation_id)) {
                                 <label id="jform_n11-lbl" for="jform_n31"> Внутренний вырез: </label>
                             </td>
                             <td width=55%>
-                                <input name="jform[n31]" id="jform_n31" class="form-control-input" readonly>
+                                <input name="jform[n31]" id="jform_n31" class="form-control-input no-border" readonly>
                             </td>
                             <td width=10%>
                                 <label for="jform_n31" class="control-label">м.</label>
@@ -715,7 +719,9 @@ if (!empty($calculation_id)) {
 </form>
 
 <script type="text/javascript">
-    var calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
+        dealerId = '<?php echo $dealerId;?>';
+    console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
             id: "guild_works",
@@ -939,6 +945,10 @@ if (!empty($calculation_id)) {
             parent.before(rowFields);
         });
 
+        jQuery('body').on('input','.form-control',function () {
+            jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
+            jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))|([^\.\d])|(^\D)/gi, '$1'));
+        });
         jQuery('body').on('click', '.delete_goods', function () {
             var parent = jQuery(this).closest('.row-fields'),
                 prevRow = parent.prev(),
@@ -1023,19 +1033,19 @@ if (!empty($calculation_id)) {
             console.log("need_mount",need_mount);
             console.log("need_metiz",need_metiz);
             console.log("need_offcuts",need_offcuts);
-            localStorage.setItem('dataToSave', dataToSave);
-
+            //localStorage.setItem('dataToSave', dataToSave);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
+                type: "post",
                 data: {
                     calc_id: calculation.id,
                     goods: collected_data.goods,
                     jobs: collected_data.jobs,
                     extra_components: JSON.stringify(collected_data.extra_components),
                     extra_mounting: JSON.stringify(collected_data.extra_mounting),
-                    fields_data: "",
+                    fields_data: dataToSave,
                     photo_print: JSON.stringify(collected_data.photo_print),
-                    dealer_id: 2,
+                    dealer_id: dealerId,
                     need_mount: need_mount,
                     need_metiz: need_metiz,
                     need_offcuts: need_offcuts
@@ -1043,7 +1053,8 @@ if (!empty($calculation_id)) {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    console.log(data);
+                    jQuery("#under_calculate").show();
+                    jQuery("#final_price").text( data.common_sum_with_margin.toFixed(0) );
                 },
                 error: function (data) {
                     var n = noty({
@@ -1385,8 +1396,8 @@ if (!empty($calculation_id)) {
             jQuery("#sketch_image").attr('src', filename);
             jQuery("#sketch_image_block").show();
         }
-        console.log(localStorage.getItem('dataToSave'));
-        var savedData = JSON.parse(localStorage.getItem('dataToSave'));
+        var json_savedData = '<?php echo $calculation->fields_data;?>';
+        var savedData = !empty(json_savedData) ? JSON.parse(json_savedData) : '';
         console.log('retrievedObject: ', savedData);
         if (!empty(savedData)) {
             jQuery.each(savedData, function (index, elem) {
@@ -1563,20 +1574,20 @@ if (!empty($calculation_id)) {
         if (!empty(jQuery('[name = "print_square"]').val()) && !empty(jQuery('[name = "print_cost"]').val())) {
             photoprint = {
                 square: jQuery('[name = "print_square"]').val(),
-                cost: jQuery('[name = "print_cost"]').val()
+                price: jQuery('[name = "print_cost"]').val()
             }
         }
 
         jQuery.each(jQuery('[name = "work_title"]'), function (index, elem) {
             var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val();
             if (!empty(cost)) {
-                additional_works.push({work_title: elem.value, work_cost: cost});
+                additional_works.push({title: elem.value, price: cost});
             }
         });
         jQuery.each(jQuery('[name = "component_title"]'), function (index, elem) {
             var cost = jQuery(elem).closest('.field').find('[name="component_cost"]').val();
             if (!empty(cost)) {
-                additional_components.push({component_title: elem.value, component_cost: cost});
+                additional_components.push({title: elem.value, price: cost});
             }
         });
         jobs = sumSameValues(jobs);
@@ -1629,7 +1640,6 @@ if (!empty($calculation_id)) {
                     }
                 }
                 if (input.prop('type') == "text") {
-                    console.log(input);
                     if(input.hasClass('additional')){
                        var parent = input.closest('.field');
                         fieldObj = {
