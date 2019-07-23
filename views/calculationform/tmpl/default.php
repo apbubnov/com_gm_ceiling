@@ -118,7 +118,7 @@ $componentsInCategories = quotemeta(json_encode($calculationformModel->getcompon
 $color_data = json_encode($components_model->getColor());
 
 $texturesData = json_encode($canvases_model->getCanvasesTextures());
-
+$canvases_model->getFilteredItemsCanvas();
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
@@ -720,7 +720,8 @@ if (!empty($calculation_id)) {
 
 <script type="text/javascript">
     var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
-        dealerId = '<?php echo $dealerId;?>';
+        dealerId = '<?php echo $dealerId;?>',
+        texturesData = '<?php echo $texturesData?>';
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -1020,6 +1021,12 @@ if (!empty($calculation_id)) {
 
         });
 
+        jQuery("#sketch_switch").click(function(){
+            jQuery("#walls").val("");
+            jQuery("#auto").val("");
+            submit_form_sketch();
+        });
+
         fill_calc_data();
 
         jQuery('#calculate_button').click(function () {
@@ -1070,6 +1077,20 @@ if (!empty($calculation_id)) {
         });
 
     });
+
+    function submit_form_sketch()
+    {
+        document.getElementById('n4').value = document.getElementById('jform_n4').value;
+        document.getElementById('n5').value = document.getElementById('jform_n5').value;
+        document.getElementById('n9').value = document.getElementById('jform_n9').value;
+        if(calculation && calculation.original_sketch){
+            document.getElementById('walls').value = calculation.original_sketch;
+        }
+        document.getElementById('texturesData').value = texturesData;
+        console.log(jQuery("#texturesData").val());
+        document.getElementById('form_url').submit();
+
+    }
 
     function createBlocks(data) {
         var div, containerDiv = jQuery("#cancel_maingroup");

@@ -869,4 +869,22 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    public function getGoodsUnits(){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`,
+                          `u`.`unit`')
+                ->from('`rgzbn_gm_stock_units` as `u`')
+                ->order('`u`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            return $items;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
