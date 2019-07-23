@@ -546,6 +546,7 @@ class Gm_ceilingModelCanvases extends JModelList
                 $query->where($filter);
             }
             $db->setQuery($query);
+            throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
         }
@@ -850,18 +851,16 @@ class Gm_ceilingModelCanvases extends JModelList
           $query
               ->select("CONCAT( '{\"texture\": {\"id\": \"',
                                 `c`.`texture_id`, '\", \"title\": \"',
-                                `t`.`texture_title`,
+                                `c`.`texture`,
                                 '\"}, \"manufacturers\": [',
                                 GROUP_CONCAT(
-                                    DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `m`.`name`, '\"}') ORDER BY `c`.`manufacturer_id`
+                                    DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `c`.`manufacturer`, '\"}') ORDER BY `c`.`manufacturer_id`
                                     SEPARATOR ', '
                                 ),
                                 ']}'
                         ) AS `textures_data`")
-              ->from("`rgzbn_gm_ceiling_canvases` AS `c`")
-              ->innerJoin("`rgzbn_gm_ceiling_textures` AS `t` ON `c`.`texture_id` = `t`.`id`")
-              ->innerJoin("`rgzbn_gm_ceiling_canvases_manufacturers` AS `m` ON `c`.`manufacturer_id` = `m`.`id`")
-              ->where('`c`.`count` > 0')
+              ->from("`rgzbn_goods_canvases` AS `c`")
+            /*  ->where('`c`.`count` > 0')*/
               ->group("`c`.`texture_id`")
               ->order("`c`.`texture_id`");
           $db->setQuery($query);

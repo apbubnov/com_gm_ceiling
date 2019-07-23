@@ -8,10 +8,10 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
  // No direct access.
- defined('_JEXEC') or die;
- 
- jimport('joomla.application.component.modelitem');
- jimport('joomla.event.dispatcher');
+defined('_JEXEC') or die;
+
+jimport('joomla.application.component.modelitem');
+jimport('joomla.event.dispatcher');
 
 /**
  * Methods supporting a list of Gm_ceiling records.
@@ -50,9 +50,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 			parent::__construct($config);
 		}
 		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
 
 	/**
@@ -80,9 +80,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 			return $query;
 		}
 		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
 	function getData()
 	{
@@ -106,9 +106,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 			return $item;
 		}
 		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
 	function getDataById($dealerId)
 	{
@@ -127,9 +127,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 			return $item;
 		}
 		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
 	/**
 	 * Method to get an array of data items
@@ -150,42 +150,72 @@ class Gm_ceilingModelDealer_info extends JModelList
 			return $result;
 		}
 		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-    
-    public function save ($d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount)
-	{
-		try
 		{
-	        $db = JFactory::getDbo();
-	        $query = $db->getQuery(true);
-	        $query
-	            ->insert('#__gm_ceiling_dealer_info')
-	            ->columns('`dealer_canvases_margin`, `dealer_components_margin`, `dealer_mounting_margin`,`gm_canvases_margin`, `gm_components_margin`, `gm_mounting_margin`,`dealer_id`,`discount`')
-	            ->values("$d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount");
-	        $db->setQuery($query);
-	        $db->execute();
-	    }
-	    catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
 
-	public function updateMarginAndMount($id, $data)
+	public function save ($d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount)
 	{
 		try
 		{
-			
 			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+			->insert('#__gm_ceiling_dealer_info')
+			->columns('`dealer_canvases_margin`, `dealer_components_margin`, `dealer_mounting_margin`,`gm_canvases_margin`, `gm_components_margin`, `gm_mounting_margin`,`dealer_id`,`discount`')
+			->values("$d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount");
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch(Exception $e)
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
+	}
+
+	public function updateMarginAndMount($dealer_id, $array)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select("`id`,`job_id`, `price`")
+			->from("`rgzbn_gm_ceiling_jobs_dealer_price`")
+			->where("`dealer_id` = $dealer_id");
+
+			$db->setQuery($query);
+			$db->execute();
+			$items = $db->loadObjectList();
+
+			$arr_update = [];
+			$arr_insert = [];
+			foreach ($array as $value) {
+				$tmp = $value['job_id'];
+				foreach ($items as $value2) {
+					if ($value2->job_id == $tmp) {
+						$arr_update[] = $value2->id.', '.$value['price'];
+					} else {
+						$arr_insert[] = $value2->job_id.', '.$value['price'];
+					}
+				}
+
+			}
+
+			return $arr_update;
+
+			
+
+			/*$db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
+            
             $query->update('`#__gm_ceiling_dealer_info`')
 				->set('`dealer_canvases_margin` = ' . $db->quote($data['dealer_canvases_margin']))
 				->set('`dealer_components_margin` = ' . $db->quote($data['dealer_components_margin']))
 				->set('`dealer_mounting_margin` = ' . $db->quote($data['dealer_mounting_margin']))
 				->where('dealer_id = ' . $id);
+
             $db->setQuery($query);
 			$db->execute();
 			
@@ -234,44 +264,45 @@ class Gm_ceilingModelDealer_info extends JModelList
 					->values($val);
 	        $db->setQuery($query);
 	        $db->execute();
-			}
-			return 1;
-		}
-	    catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+	    }*/
+	    return 1;
 	}
-	function update_city($id,$city){
-		try{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query
-				->select("*")
-				->from('`#__gm_ceiling_dealer_info`')
-				->where('dealer_id = ' . $id);
+	catch(Exception $e)
+	{
+		Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+	}
+}
+
+function update_city($id,$city){
+	try{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query
+		->select("*")
+		->from('`#__gm_ceiling_dealer_info`')
+		->where('dealer_id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadObjectList();
+		if(count($result) == 0){
+			$query->insert('`#__gm_ceiling_dealer_info`')
+			->columns('`dealer_id`,`city`')
+			->values("$id,'$city'");
 			$db->setQuery($query);
-			$result = $db->loadObjectList();
-			if(count($result) == 0){
-				$query->insert('`#__gm_ceiling_dealer_info`')
-					->columns('`dealer_id`,`city`')
-					->values("$id,'$city'");
-				$db->setQuery($query);
-				$db->execute();
-			}
-			if(count($result) == 1){
-				$query->update('`#__gm_ceiling_dealer_info`')
-					->set('`city` = ' . $db->quote($city))
-					->where('dealer_id = ' . $id);
-				$db->setQuery($query);
-				$db->execute();
-			}
-			
-            
+			$db->execute();
 		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
+		if(count($result) == 1){
+			$query->update('`#__gm_ceiling_dealer_info`')
+			->set('`city` = ' . $db->quote($city))
+			->where('dealer_id = ' . $id);
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+
 	}
+	catch(Exception $e)
+	{
+		Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+	}
+}
 }
