@@ -336,23 +336,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
     }
 
-    public function getCounterparty()
-    {
-        try {
-            $filter = JFactory::getApplication()->input->get('filter', array(), 'array');
-            if ($filter != null) {
-                $model = $this->getModel('Counterparty', 'Gm_ceilingModel');
-                $result = $model->getCounterparty($filter);
-                die(json_encode($result));
-            }
-
-        } catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-        }
-    }
-
     public function addCounterparty(){
         try {
             $jinput = JFactory::getApplication()->input;
@@ -673,6 +656,79 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         {
             $model = $this->getModel();
             $model->setQuery($query);
+        }
+    }
+
+    public function getStockGoods()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $goods_id = $jinput->get('goods_id', null, 'INT');
+
+            $model_goods = $this->getModel('Stock', 'Gm_ceilingModel');
+
+            $result = $model_goods->getGoods($goods_id);
+
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getCounterparty()
+    {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $model = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model->getCounterparty();
+
+            die(json_encode($result));
+
+        } catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
+    public function getStocks(){
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $goods_id = $jinput->get('goods_id', null, 'INT');
+
+            $model_goods = $this->getModel('Stock', 'Gm_ceilingModel');
+
+            $result = $model_goods->getStocks($goods_id);
+
+            die(json_encode($result));
+
+        } catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
+    public function saveInventory(){
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $array = $jinput->get('array', null, 'ARRAY');
+            $id_stock = $jinput->get('id_stock', null, 'INT');
+            $id_counterparty = $jinput->get('id_counterparty', null, 'INT');
+
+            $model_goods = $this->getModel('Stock', 'Gm_ceilingModel');
+
+            $result = $model_goods->saveDataInventory($array, $id_stock, $id_counterparty);
+
+            die(json_encode($result));
+
+        } catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 }

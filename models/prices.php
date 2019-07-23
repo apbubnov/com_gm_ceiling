@@ -432,10 +432,21 @@ class Gm_ceilingModelPrices extends JModelList
             $goods_ids = '';
             $values = array();
 
-			foreach ($dealer_prices as $value) {
-				$goods_ids .= $value['goods_id'].',';
+            if (empty($dealer_id)) {
+            	throw new Exception("Empty dealer_id", 1);	
+            }
 
+			foreach ($dealer_prices as $value) {
+				if ( empty((float)$value['goods_id']) || empty((float)$value['operation_id']) || empty((float)$value['value'])) {
+					continue;
+				}
+
+				$goods_ids .= $value['goods_id'].',';
 				$values[] = $value['goods_id'].','. $value['operation_id'] .','. $value['value'].','. $dealer_id;
+			}
+
+			if (empty($goods_ids)) {
+				return false;
 			}
 
 			$goods_ids = substr($goods_ids, 0, -1);
@@ -456,6 +467,27 @@ class Gm_ceilingModelPrices extends JModelList
             }
 
 			return true;
+		} catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	public function getJobsDealer($dealer_id){
+		 try {
+
+			$db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query ->select('`j`.`id`,`j`.`name`, `dp`.`price`, `dp`.`id` as `dp_id`, IFNULL(`dp`.`price`, 0) as `price`')
+            	->from('`#__gm_ceiling_jobs` as `j`')
+            	->leftJoin("`#__gm_ceiling_jobs_dealer_price` as `dp`
+            		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealer_id")
+            	->order('`j`.`id`');
+            $db->setQuery($query);
+            $db->execute();
+			$items = $db->loadObjectList();
+
+			return $items;
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

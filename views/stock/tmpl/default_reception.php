@@ -1,57 +1,233 @@
 <?php
 
-
 ?>
- <div class="modal_window_container" id="mw_container">
- 	<button type="button" id="btn_close" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
- 	<div id="mw_add_good" class="modal_window">
- 		<div class="row">
- 			<label for="good_category">
- 				Категория:
- 			</label>
- 			<select class="input-gm" id="good_category">
- 				<option>Выберите категорию</option>
- 			</select>
- 		</div>
- 		<div class="row">
- 			<label for="good_name">
- 				Наименование:
- 			</label>
- 			<input id=good_name class="input-gm">
- 		</div>
- 		<div class="row">
- 			<label for="good_count">
- 				Количество:
- 			</label>
- 			<input id=good_count class="input-gm">
- 		</div>
- 	</div>
- </div>
+
+<h1 class="center">Приём товаров</h1>
+<br>
 <div class="container">
-	<div class="row">
-		<h1>Прием товаров</h1>
-		<button type="button" class="btn btn-primary" id="add_position">
-			<i class="fa fa-plus" aria-hidden="true"></i> Товар
-		</button>
+	<div class="row justify-content-md-center">
+		<div class="col-md-4 center">
+			<label>Штрихкод</label><br>
+			<input type="text" id="goods_id" class="form-control" style="width: 70%; display: inline-block;">
+			<button class="btn btn-large btn-primary" id="btn_show" style="margin-bottom: 4px;">ОК</button>
+		</div>
+		<div class="col-md-4 center"> 
+			<label>Поставщик</label><br>
+			<select id="selectCounterparty" class="form-control">
+			</select>
+		</div>
+		<div class="col-md-4 center">
+			<label>Склад</label><br>
+			<select id="selectStocks" class="form-control">
+			</select>
+		</div>
+	</div>
+</div>
+
+<br>
+<div>
+	<table class="table"  id="tgoods" cellspacing="0" width="100%">
+		<thead>
+			<th>Штрихкод</th>
+			<th>Наименование</th>
+			<th>Введите количество</th>
+			<th>Стоимость</th>
+			<th></th>
+		</thead>
+		<tbody id="tbody_goods"></tbody>
+	</table>
+
+	<div class="right">
+		<button class="btn btn-large btn-primary" id="save_btn">Сохранить</button>
 	</div>
 </div>
 
 <script type="text/javascript">
+
+	var INPUT_COUNT='<input class="count center"/>',
+	INPUT_COST='<input class="cost center"/>',
+	BUTTON_DELETE='<button type="button" class="btn btn-danger delete"> <i class="fas fa-trash-alt"></i> </button>';
+
 	jQuery(document).mouseup(function (e){
 		var div = jQuery("#mw_add_good");
-    if (!div.is(e.target) && div.has(e.target).length === 0) { 
-            jQuery("#btn_close").hide();
+		if (!div.is(e.target) && div.has(e.target).length === 0) { 
+			jQuery("#btn_close").hide();
 			jQuery("#mw_container").hide();
 			div.hide();
 		}
 	});
+	
 	jQuery(document).ready(function(){
 		jQuery("#add_position").click(function(){
 			jQuery("#btn_close").show();
 			jQuery("#mw_container").show();
 			jQuery("#mw_add_good").show('slow');
 		});
+		showCounterparty();
+		showStocks();
 	});
+
+	document.getElementById('btn_show').onclick = function() {
+		getData();
+	};
+
+	function getData() {
+		jQuery.ajax({
+			type: 'POST',
+			url: "index.php?option=com_gm_ceiling&task=stock.getStockGoods",
+			data: {
+				goods_id: jQuery('#goods_id').val()
+			},
+			success: function(data){
+				console.log(data);
+				showTableData(data);
+			},
+			dataType:"json",
+			async: false,
+			timeout: 10000,
+			error: function(data){
+				var n = noty({
+					timeout: 2000,
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Ошибка!"
+				});
+			}
+		});
+	}
+
+	function showTableData(data) {
+		var tr, td, com_sum = 0,
+		table_body_elem = document.getElementById('tbody_goods');
+		for (var i = 0; i < data.length; i++) {
+			tr = table_body_elem.insertRow();
+			tr.setAttribute('data-id', data[i].id);
+			td = tr.insertCell();
+			td.innerHTML = data[i].id;
+			td = tr.insertCell();
+			td.innerHTML = data[i].name;
+			td = tr.insertCell();
+			td.innerHTML = INPUT_COUNT;
+			td = tr.insertCell();
+			td.innerHTML = INPUT_COST;
+			td = tr.insertCell();
+			td.innerHTML = BUTTON_DELETE;
+		}
+	}
+
+	jQuery('body').on('click','.delete', function () {
+		jQuery(this).closest('tr').remove();
+	});
+
+	function showCounterparty() {
+		jQuery.ajax({
+			type: 'POST',
+			url: "index.php?option=com_gm_ceiling&task=stock.getCounterparty",
+			success: function(data){
+				console.log(data);
+				fillSelect(data, "#selectCounterparty");
+			},
+			dataType:"json",
+			async: false,
+			timeout: 10000,
+			error: function(data){
+				var n = noty({
+					timeout: 2000,
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Ошибка!"
+				});
+			}
+		});
+	}
+
+	function showStocks() {
+		jQuery.ajax({
+			type: 'POST',
+			url: "index.php?option=com_gm_ceiling&task=stock.getStocks",
+			success: function(data){
+				console.log(data);
+				fillSelect(data, "#selectStocks");
+			},
+			dataType:"json",
+			async: false,
+			timeout: 10000,
+			error: function(data){
+				var n = noty({
+					timeout: 2000,
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Ошибка!"
+				});
+			}
+		});
+	}
+
+	function fillSelect(data, id) {
+		var selectCounterparty = jQuery(id);
+		for (var i = 0; i < data.length; i++) {
+			selectCounterparty.append( jQuery('<option>', {
+				value: data[i].id,
+				text: data[i].name
+			}));
+		}
+	}
+
+	document.getElementById('save_btn').onclick = function() {
+		collectDataTable();
+	};
+
+	var array = [];
+	function collectDataTable(){
+		var rows = jQuery('#tbody_goods > tr');
+		for (var i = 0; i < rows.length; i++) {
+			var inpCount = jQuery(rows[i]).find('.count').val();
+			var inpCost = jQuery(rows[i]).find('.cost').val();
+
+			var id = rows[i].getAttribute("data-id");
+			array.push({
+				id: id,
+				count: inpCount,
+				cost: inpCost
+			});
+		}
+
+		saveData();
+	}
+
+	function saveData() {
+		jQuery.ajax({
+			type: 'POST',
+			url: "index.php?option=com_gm_ceiling&task=stock.saveInventory",
+			data: {
+				array: array,
+				id_stock: jQuery('#selectStocks').val(),
+				id_counterparty: jQuery('#selectCounterparty').val()
+			},
+			success: function(data){
+				console.log(data);
+			},
+			dataType:"json",
+			async: false,
+			timeout: 10000,
+			error: function(data){
+				var n = noty({
+					timeout: 2000,
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Ошибка!"
+				});
+			}
+		});
+	}
 
 
 </script>
