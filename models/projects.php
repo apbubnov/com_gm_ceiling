@@ -163,6 +163,7 @@ class Gm_ceilingModelProjects extends JModelList
                             GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
                                             ORDER BY `pm`.`date_time` DESC SEPARATOR \', \'
                             ) AS `project_mounting_date`,
+                             MAX(`pm`.`date_time`) as `last_mount_date`,
                             `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
@@ -400,8 +401,8 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
                         $query->where("`p`.`mounter_dealer_id` = $user->dealer_id");
                     }
+                    $query->order('`p`.`last_mount_date` DESC');
                     break;
-
                 case 'chief':
                     $query->select('`p`.`project_mounter`,
                                     `p`.`project_mounting_date`,

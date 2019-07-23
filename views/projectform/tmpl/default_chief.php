@@ -20,13 +20,13 @@ $doc = JFactory::getDocument();
 $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 
 $user = JFactory::getUser();
-$userId  = $user->id;
+$userId = $user->get('id');
 
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
-/*_____________блок для всех моделей/models block________________*/ 
+$user_groups = $user->groups;
+if(in_array('17',$user_groups)){
+    $isNMS = true;
+}
+/*_____________блок для всех моделей/models block________________*/
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -36,14 +36,10 @@ $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop
 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
-$model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-if(!empty($service_mount)){
-    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-}
 $self_calc_data = [];
 $self_canvases_sum = 0;
 $self_components_sum = 0;
@@ -55,7 +51,35 @@ $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
+if (!empty($this->item->calcs_mounting_sum)) {
+    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
+}
+$calculations = $calculationsModel->new_getProjectItems($this->item->id);
+if(!empty($service_mount)){
+    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
+}
+if(!empty($this->item->calcs_mounting_sum)){
+    $dealer_moung_sum = json_decode($this->item->calcs_mounting_sum);
+    foreach ($dealer_moung_sum as $key=>$sum){
+        $total_dealer_mount +=$sum;
+    }
+}
+else{
+    foreach ($calculations as $calc) {
+        $total_dealer_mount += $calc->mounting_sum;
+    }
+}
 foreach ($calculations as $calculation) {
+    if (!empty($service_mount)) {
+        $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    }
+    else{
+        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    }
+    if($isNMS){
+        $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"serviceSelf");
+        $calculation->dealer_self_gm_mounting_sum = $mount_data['total_gm_mounting'];
+    }
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
@@ -63,7 +87,6 @@ foreach ($calculations as $calculation) {
     $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
     $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
     $self_components_sum += $calculation->dealer_self_components_sum;
-    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
@@ -104,30 +127,9 @@ $del_flag = 0;
 $project_total = $project_total + $client_sum_transport;
 $project_total_discount = $project_total_discount  + $client_sum_transport;
 
-//address
-$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
-preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
-$house = $house[1];
-preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-$bdq = $bdq[1];
-preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
-$apartment = $apartment[1];
-preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
-$porch = $porch[1];
-preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-$floor = $floor[1];
-preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-$code = $code[1];
-
-$mount_sum = 0;
-if(!empty($this->item->api_phone_id))
-    $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
-else
-    $reklama = "";
-$all_advt = $model_api_phones->getAdvt();
 $json_mount = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
-    $mount_types = $projects_mounts_model->get_mount_types(); 
+    $mount_types = $projects_mounts_model->get_mount_types();
     $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
     foreach ($this->item->mount_data as $value) {
         $value->stage_name = $mount_types[$value->stage];
@@ -139,12 +141,63 @@ if(!empty($this->item->mount_data)){
         }
     }
 }
+$extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
+$penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
+$bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
 
+// календарь
+$month1 = date("n");
+$year1 = date("Y");
+if ($month1 == 12) {
+    $month2 = 1;
+    $year2 = $year1;
+    $year2++;
+} else {
+    $month2 = $month1;
+    $month2++;
+    $year2 = $year1;
+}
 if ($this->item->project_status == 1) {
     $whatCalendar = 0;
+    $FlagCalendar = [3, $user->dealer_id];
 } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
     $whatCalendar = 1;
+    $FlagCalendar = [2, $user->dealer_id];
 }
+//----------------------------------------------------------------------------------
+
+// все бригады
+$Allbrigades = $calculationsModel->FindAllbrigades($user->dealer_id);
+$AllMounters = [];
+if (count($Allbrigades) == 0) {
+    array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
+    array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
+} else {
+    // все монтажники
+    $masid = [];
+    foreach ($Allbrigades as $value) {
+        array_push($masid, $value->id);
+    }
+    foreach ($masid as $value) {
+        if (strlen($where) == 0) {
+            $where = "'".$value."'";
+        } else {
+            $where .= ", '".$value."'";
+        }
+    }
+    $AllMounters = $calculationsModel->FindAllMounters($where);
+}
+//----------------------------------------------------------------------------------
+
+// все замерщики
+if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
+    $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
+} else {
+    $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 21);
+}
+//----------------------------------------------------------------------------------
+
+$mount_sum = 0;
 
 echo parent::getPreloader();
 ?>

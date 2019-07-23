@@ -512,18 +512,23 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$app = JFactory::getApplication();
 			$jinput = $app->input;
 			$calc_id = $jinput->get('calc_id', null, 'INT');
+			$dealer_id = $jinput->get('dealer_id', 1, 'INT');
 			$jobs = $jinput->get('jobs', null, 'ARRAY');
 			$goods = $jinput->get('goods', null, 'ARRAY');
 			$extra_components = $jinput->get('extra_components', null, 'STRING');
 			$extra_mounting = $jinput->get('extra_mounting', null, 'STRING');
 			$photo_print = $jinput->get('photo_print', null, 'STRING');
 			$fields_data = $jinput->get('fields_data', null, 'STRING');
+			$need_mount = $jinput->get('need_mount', 0, 'INT');
+			$need_metiz = $jinput->get('need_metiz', 0, 'INT');
+			$need_offcuts = $jinput->get('need_offcuts', 0, 'INT');
 
 			$data = array();
 			$data['id'] = $calc_id;
 			$data['extra_components'] = $extra_components;
 			$data['extra_mounting'] = $extra_mounting;
-			$data['fields_data'] = $fields_data;
+			$data['photo_print'] = $photo_print;
+			$data['fields_data'] = base64_encode(gzcompress($fields_data));
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
@@ -532,7 +537,92 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$model_calcform->addGoodsInCalculation($calc_id, $goods);
 			$model_calcform->addJobsInCalculation($calc_id, $jobs);
 
-			$result = (object)array('sum' => 0, 'all_goods' => $goods, 'all_jobs' => $jobs);
+			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
+			$all_jobs = [];
+
+			if (!empty($need_mount)) {
+				if ($need_mount == 1) {
+					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id);
+				} elseif ($need_mount == 2) {
+					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id);
+				}
+			}
+
+			if (!empty($need_metiz)) {
+				$temp_goods = [];
+				foreach ($all_goods as $key => $value) {
+					if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
+						$temp_goods[] = $value;
+					}
+				}
+				$all_goods = $temp_goods;
+			}
+
+			$extra_components = json_decode($extra_components);
+			$extra_components_sum = 0;
+			if (!empty($extra_components)) {
+				foreach ($extra_components as $value) {
+					$extra_components_sum += $value->price;
+				}
+			}
+
+			$extra_mounting = json_decode($extra_mounting);
+			$extra_mounting_sum = 0;
+			if (!empty($extra_mounting)) {
+				foreach ($extra_mounting as $value) {
+					$extra_mounting_sum += $value->price;
+				}
+			}
+
+			$photo_print = json_decode($photo_print);
+			$photo_print_sum = 0;
+			if (!empty($photo_print)) {
+				$photo_print_sum = (float)$photo_print->price;
+			}
+
+			$common_sum = 0;
+			$common_sum_with_margin = 0;
+			$canvases_sum = 0;
+			$canvases_sum_with_margin = 0;
+			$components_sum = 0;
+			$components_sum_with_margin = 0;
+			$mounting_sum = 0;
+			$mounting_sum_with_margin = 0;
+
+			foreach ($all_goods as $value) {
+				$common_sum += $value->price_sum;
+				$common_sum_with_margin += $value->price_sum_with_margin;
+				if ($value->category_id == 1) {
+					$canvases_sum += $value->price_sum;
+					$canvases_sum_with_margin += $value->price_sum_with_margin;
+				} else {
+					$components_sum += $value->price_sum;
+					$components_sum_with_margin += $value->price_sum_with_margin;
+				}
+			}
+
+			foreach ($all_jobs as $value) {
+				$common_sum += $value->price_sum;
+				$common_sum_with_margin += $value->price_sum_with_margin;
+				$mounting_sum += $value->price_sum;
+				$mounting_sum_with_margin += $value->price_sum_with_margin;
+			}
+
+			$result = (object)array(
+				'all_goods' => $all_goods,
+				'all_jobs' => $all_jobs,
+				'common_sum' => $common_sum,
+				'common_sum_with_margin' => $common_sum_with_margin,
+				'canvases_sum' => $canvases_sum,
+				'canvases_sum_with_margin' => $canvases_sum_with_margin,
+				'components_sum' => $components_sum,
+				'components_sum_with_margin' => $components_sum_with_margin,
+				'mounting_sum' => $mounting_sum,
+				'mounting_sum_with_margin' => $mounting_sum_with_margin,
+				'extra_components_sum' => $extra_components_sum,
+				'extra_mounting_sum' => $extra_mounting_sum,
+				'photo_print_sum' => $photo_print_sum
+			);
 
 			die(json_encode($result));
 		} catch(Exception $e) {
