@@ -971,5 +971,40 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_stock_goods`')
+                ->columns('`name`,`category_id`,`unit_id`,`multiplicity`,`price`,`created_by`')
+                ->values("'$goodsName',$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->id);
+            $db->setQuery($query);
+            $db->execute();
+            $result = $db->insertId();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function addProps($tableName,$columnName,$goodsId,$propValue){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert("`$tableName`")
+                ->columns("`good_id`,`$columnName`")
+                ->values("$goodsId,$propValue");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
 }

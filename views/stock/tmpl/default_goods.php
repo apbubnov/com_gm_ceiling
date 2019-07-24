@@ -26,7 +26,7 @@
             <legend>Создание нового товара</legend>
             <div class="row" >
                 <div class="col-md-6" style="margin-bottom: 5px;margin-top: 5px;">
-                    <select id="goods_categories" class="input-gm">
+                    <select id="goods_categories" class="form-control">
                         <option value="0">Выберите категорию</option>
                         <?php
                         foreach ($categories as $item) {
@@ -37,23 +37,33 @@
                 </div>
             </div>
             <div class="row">
-                    <div id="special_props" class="col-md-6">
-
-                    </div>
-                    <div id="common_props" class="col-md-12">
+                <div id="common_props">
+                    <div class="col-md-4">
                         <label for="name">Наименование</label><br>
                         <input type="text" class="form-control" id="name"><br>
+                    </div>
+                    <div class="col-md-3">
                         <label for="unit">Единицы измерения</label><br>
                         <select id="unit" class="form-control">
                             <?php foreach ($goodsUnits as $unit){ ?>
                                 <option value="<?= $unit->id;?>"><?= $unit->unit;?></option>
                             <?php } ?>
-                        </select><br>
-                        <label for="multiplicity">Кратность продажи</label><br>
-                        <input type="text" id="multiplicity" class="form-control"><br>
-                        <label for="price">Цена</label><br>
-                        <input type="text" id="price" class="form-control"><br>
+                        </select>
                     </div>
+                    <div class="col-md-3">
+                        <label for="multiplicity">Кратность</label><br>
+                        <input type="text" id="multiplicity" class="form-control formatted"><br>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="price">Цена</label><br>
+                        <input type="text" id="price" class="form-control formatted"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="special_props" class="col-md-12">
+
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12 center">
@@ -96,6 +106,10 @@
 
     jQuery(document).ready(function(){
         allGoods(goods);
+        jQuery('body').on('input','.formatted',function () {
+            jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
+            jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))|([^\.\d])|(^\D)/gi, '$1'));
+        });
         jQuery('#tgoods').DataTable({
             "paging": true
         });
@@ -114,19 +128,23 @@
             jQuery('#special_props').empty();
             switch(this.value) {
                 case '1':
-                    addPropSelect('canvases_textures', propTextures, 'Текстура');
-                    addPropSelect('canvases_manufacturers', propManufacturers, 'Производитель');
-                    addPropSelect('canvases_widths', propCanvasWidths, 'Ширина');
-                    addPropSelect('color', propColors, 'Цвет');
-                    jQuery("#common_props").removeClass('col-md-12');
-                    jQuery("#common_props").addClass('col-md-6');
+                    var div_col1 = jQuery(document.createElement('div')),
+                        div_col2 = jQuery(document.createElement('div'));
+                    div_col1.addClass('col-md-6');
+                    div_col2.addClass('col-md-6');
+                    div_col1.append(addPropSelect('canvases_textures', propTextures, 'Текстура'));
+                    div_col1.append(addPropSelect('canvases_manufacturers', propManufacturers, 'Производитель'));
+                    div_col2.append(addPropSelect('canvases_widths', propCanvasWidths, 'Ширина'));
+                    div_col2.append(addPropSelect('color', propColors, 'Цвет'));
+                    jQuery("#special_props").append(div_col1);
+                    jQuery("#special_props").append(div_col2);
                     break;
                 case '4':
-                    addPropSelect('color', propColors, 'Цвет');
+                    var div_col1 = jQuery(document.createElement('div'));
+                    div_col1.addClass('col-md-6');
+                    div_col1.append(addPropSelect('color', propColors, 'Цвет'));
+                    jQuery("#special_props").append(div_col1);
                     break;
-                default:
-                    jQuery("#common_props").removeClass('col-md-6');
-                    jQuery("#common_props").addClass('col-md-12');
             }
         });
 
@@ -139,7 +157,9 @@
                 texture = jQuery("#canvases_textures").length > 0 ? jQuery("#canvases_textures").val() : "",
                 manufacturer = jQuery("#canvases_manufacturers").length > 0 ? jQuery("#canvases_manufacturers").val() : "",
                 width =  jQuery("#canvases_widths").length > 0 ? jQuery("#canvases_widths").val() : "",
-                color = jQuery("#color").length > 0 ? jQuery("#color").val() : "";
+                color = jQuery("#color").length > 0 ? jQuery("#color").val() : "",
+                empty_flag = false,
+                warning_text = "";
             console.log("category",category);
             console.log("goodsName",goodsName);
             console.log("goodsUnit",goodsUnit);
@@ -149,61 +169,99 @@
             console.log("manufacturer",manufacturer);
             console.log("width",width);
             console.log("color",color);
+            if(empty(category)){
+                empty_flag = true;
+                warning_text = "Не выбрана категория!";
+            }
+            if(empty(goodsName)){
+                empty_flag = true;
+                warning_text = "Пустое наименование!";
+            }
+            if(empty(goodsUnit)){
+                empty_flag = true;
+                warning_text = "Не выбрана едница измерения!";
+            }
+            if(empty(goodsMultiplicity)){
+                empty_flag = true;
+                warning_text = "Пустая кратность!";
+            }
+            if(empty(goodsPrice)){
+                empty_flag = true;
+                warning_text = "Пустая цена!";
+            }
 
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=stock.addGoods",
-                type: "post",
-                data: {
-                    category:category,
-                    goodsName:goodsName,
-                    goodsUnit:goodsUnit,
-                    goodsMultiplicity:goodsMultiplicity,
-                    goodsPrice:goodsPrice,
-                    texture:texture,
-                    manufacturer:manufacturer,
-                    width:width,
-                    color:color
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
-            });
+            if(!empty_flag) {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=stock.addGoods",
+                    type: "post",
+                    data: {
+                        category: category,
+                        goodsName: goodsName,
+                        goodsUnit: goodsUnit,
+                        goodsMultiplicity: goodsMultiplicity,
+                        goodsPrice: goodsPrice,
+                        texture: texture,
+                        manufacturer: manufacturer,
+                        width: width,
+                        color: color
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+            else{
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: warning_text
+                });
+            }
         });
     });
 
     function addPropSelect(selectId, propValueArray, labelText) {
-        var select = document.createElement('select');
-        select.setAttribute('id', selectId);
-        select.classList.add('form-control');
+        var select = jQuery(document.createElement('select')),
+            rowDiv = jQuery(document.createElement(('div')));
+        rowDiv.addClass('row');
+        select.attr('id', selectId);
+        select.addClass('form-control');
+        for(var i = 0; i < propValueArray.length; i++){
+            select.append('<option value = "'+propValueArray[i].id+'">'+propValueArray[i].value+'</option>');
+        }
         var label = document.createElement('label');
         label.innerHTML = labelText;
-        jQuery('#special_props')[0].append(label);
-        jQuery('#special_props')[0].append(document.createElement('br'));
-        jQuery('#special_props')[0].append(select);
-        jQuery('#special_props')[0].append(document.createElement('br'));
-        fillSelect('#'+selectId, propValueArray);
+        rowDiv.append(label);
+        rowDiv.append(document.createElement('br'));
+        rowDiv.append(select);
+        rowDiv.append(document.createElement('br'));
+
+        return rowDiv;
     }
 
 
 
-    function fillSelect(selectId, data) {
+    /*function fillSelect(selectId, data) {
         jQuery(selectId).empty();
         for(var i = 0; i < data.length; i++){
             jQuery(selectId).append('<option value = "'+data[i].id+'">'+data[i].value+'</option>');
         }
-    }
+    }*/
 
     function allGoods(goods){
         var tr, td, tbody_goods = document.getElementById('tbody_goods');
