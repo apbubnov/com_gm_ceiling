@@ -162,7 +162,7 @@
             $manufacturer_title = $canvas->name." ".$canvas->width;
             $color_file = $canvas->color_file;
         }
-        $calculation->n37 = addslashes($calculation->n37);
+        $calculation->photo_print = addslashes($calculation->photo_print);
         $calculation->extra_components = addslashes($calculation->extra_components);
         $calculation->extra_mounting = addslashes($calculation->extra_mounting);
         $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));

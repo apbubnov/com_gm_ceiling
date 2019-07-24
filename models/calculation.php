@@ -207,14 +207,8 @@ class Gm_ceilingModelCalculation extends JModelItem
 				if (empty($item)) {
 					return null;
 				}
-				$item->n13 = $this->n13_load($item->id);
-				$item->n14 = $this->n14_load($item->id);
-	            $item->n15 = $this->n15_load($item->id);
-	            $item->n22 = $this->n22_load($item->id);
-	            $item->n23 = $this->n23_load($item->id);
-	            $item->n26 = $this->n26_load($item->id);
-				$item->n29 = $this->n29_load($item->id);
-                $item->n19 = $this->n19_load($item->id);
+				$item->goods = $this->getGoodsFromCalculation($id);
+				$item->jobs = $this->getJobsFromCalculation($id);
 				$query
 					->select('client.dealer_id')
 					->from('`#__gm_ceiling_clients` as client')
@@ -1029,6 +1023,41 @@ class Gm_ceilingModelCalculation extends JModelItem
                     ->where("`id` = $calcId");
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsFromCalculation($calc_id){
+	    try{
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.`id`,`g`.`category_id`,`g`.`name`,`cgm`.`count`')
+                ->from('`rgzbn_gm_ceiling_calcs_goods_map` as `cgm`')
+                ->innerJoin('`rgzbn_gm_stock_goods` as `g` on `g`.`id` = `cgm`.`goods_id`')
+                ->where("`cgm`.`calc_id` = $calc_id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+	        return $items;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getJobsFromCalculation($calc_id){
+        try{
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`j`.`id`,`j`.`name`,`cjm`.`count`')
+                ->from('`rgzbn_gm_ceiling_calcs_jobs_map` as `cjm`')
+                ->innerJoin('`rgzbn_gm_ceiling_jobs` as `j` on `j`.`id` = `cjm`.`job_id`')
+                ->where("`cjm`.`calc_id` = $calc_id");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

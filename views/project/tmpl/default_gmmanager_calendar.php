@@ -27,6 +27,7 @@
     $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
     $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
     $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+    $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 
     Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
@@ -196,6 +197,19 @@
     $floor = $floor[1];
     preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
     $code = $code[1];
+    $json_mount = $this->item->mount_data;
+    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    if(!empty($this->item->mount_data)) {
+        $mount_types = $projects_mounts_model->get_mount_types();
+        foreach ($this->item->mount_data as $value) {
+            $value->stage_name = $mount_types[$value->stage];
+            if (!array_key_exists($value->mounter, $stages)) {
+                $stages[$value->mounter] = array((object)array("stage" => $value->stage, "time" => $value->time));
+            } else {
+                array_push($stages[$value->mounter], (object)array("stage" => $value->stage, "time" => $value->time));
+            }
+        }
+    }
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -227,6 +241,7 @@
         <input name="subtype" value="calendar" type="hidden">
         <input name="data_change" value="0" type="hidden">
         <input name="data_delete" value="0" type="hidden">
+        <input id="mount" name="mount" type='hidden' value='<?php echo $json_mount ?>'>
         <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
         <input name = "recoil" id = "recoil" value = "" type = "hidden">
         <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
@@ -362,6 +377,27 @@
                         <div id="measures_calendar" align="center"></div>
                     </div>
                 </div>
+                <?php if(!empty($this->item->mount_data)):?>
+                    <div class="row"  style="margin-bottom:15px;">
+                       <div class="col-md-12">
+                           <b>Монтаж</b>
+                       </div>
+                    </div>
+                    <div class="row"  style="margin-bottom:15px;">
+                        <?php foreach ($this->item->mount_data as $value) { ?>
+                                <div class="col-md-4">
+                                    <?php
+                                        $date = date_create($value->time);
+                                        echo date_format($date,"d.m.Y H:i:s");
+                                    ?>
+                                </div>
+                                <div class="col-md-4"><?php echo $value->stage_name;?></div>
+                                <div class="col-md-4"><?php echo JFactory::getUser($value->mounter)->name;?></div>
+
+                        <?php }?>
+                    </div>
+
+                <?php endif;?>
                 <div class="row" style="margin-bottom:15px;">
                     <div class="col-xs-4 col-md-4">
                         <b><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></b>
@@ -501,6 +537,19 @@
                         </tr>
                     </table>
                 <?php }?>
+                <?php if (in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
+                    <div class="row center">
+                        <div class="col-md-12">
+                            <h4>Перенести дату монтажа</h4>
+                            <div id="calendar_mount" align="center"></div>
+                        </div>
+                    </div>
+                    <div class="row center"  style="margin-bottom:15px;">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-primary" id="update_mount">Сохранить изменения</button>
+                        </div>
+                    </div>
+                <?php }?>
             </div>
         </div>
     </div>  
@@ -536,8 +585,7 @@
                 </div>
             </div>
         </div>
-    <?php } ?>
-
+    <?php }?>
     </div>
 <div id="mw_container" class="modal_window_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -549,6 +597,7 @@
         <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
     </div>
     <div class="modal_window" id="mw_measures_calendar"></div>
+    <div id="mw_mounts_calendar" class="modal_window"></div>
     <div class="modal_window" id="mw_find_client">
         <h4>Поиск для объединения</h4>
         <label> Ищем:</label><br>
@@ -584,8 +633,10 @@
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
     init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
+    init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
     var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
@@ -593,9 +644,10 @@
     var self_data = JSON.parse('<?php echo $self_calc_data;?>');
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div1 = jQuery("#mw_recoil"),
-        div2 = jQuery("#mw_measures_calendar"),
-        div3 = jQuery("#mw_call_up"),
-        div4 = jQuery("#mw_find_client");
+            div2 = jQuery("#mw_measures_calendar"),
+            div3 = jQuery("#mw_call_up"),
+            div4 = jQuery("#mw_find_client"),
+            div5 = jQuery("#mw_mounts_calendar");
         if (!div1.is(e.target)
             && div1.has(e.target).length === 0
             && !div2.is(e.target)
@@ -603,13 +655,16 @@
             && !div3.is(e.target)
             && div3.has(e.target).length === 0
             && !div4.is(e.target)
-            && div4.has(e.target).length === 0) {
+            && div4.has(e.target).length === 0
+            && !div5.is(e.target)
+            && div5.has(e.target).length === 0) {
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             div1.hide();
             div2.hide();
             div3.hide();
             div4.hide();
+            div5.hide();
         }
     });
 
@@ -766,7 +821,32 @@
                 }
             });
         }
-
+        jQuery('body').on('click','#update_mount',function () {
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.updateMountDate",
+                data: {
+                    project_id : jQuery("#project_id").val(),
+                    mount_data : jQuery("#mount").val()
+                },
+                success: function(data){
+                    location.reload();
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка обновления!"
+                    });
+                }
+            });
+        });
         jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
 
         jQuery("input[name=client_lk]:radio").change(function(){

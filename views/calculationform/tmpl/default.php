@@ -118,7 +118,7 @@ $componentsInCategories = quotemeta(json_encode($calculationformModel->getcompon
 $color_data = json_encode($components_model->getColor());
 
 $texturesData = json_encode($canvases_model->getCanvasesTextures());
-
+$canvases_model->getFilteredItemsCanvas();
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
@@ -283,23 +283,15 @@ if (!empty($calculation_id)) {
                 <div class="col-sm-6 xs-center">
                     <table style="width: 100%;">
                         <tr>
-                            <td width=35%>
-                                <label id="jform_texture-lbl" for="jform_n4"> Текстура: </label>
+                            <td width=20%>
+                                <label id="jform_texture-lbl" for="jform_n4"> Полотно: </label>
                             </td>
-                            <td width=65%>
-                                <input name="jform[texture]" class="form-control-input no-border" id="jform_texture"
-                                       value="<?php echo $texture_title ?>" data-next="#jform_proizv" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width=35%>
-                                <label id="jform_proizv-lbl" for="jform_proizv"> Производитель: </label>
-                            </td>
-                            <td width=65%>
-                                <input name="jform[proizv]" class="form-control-input no-border" id="jform_proizv"
-                                       value="<?php echo $manufacturer_title ?>" data-next="#jform_color" readonly>
+                            <td colspan="2">
+                                <input name="jform[canvas]" class="form-control-input no-border" style="width:100%" id="jform_canvas"
+                                       value="" data-next="#jform_proizv" readonly>
                             </td>
                         </tr>
+
                         <?php if (!empty($color_file)) { ?>
                             <tr>
                                 <td width=35%>
@@ -500,7 +492,7 @@ if (!empty($calculation_id)) {
                                         </div>
                                     </div>
                                     <div class="col-sm-12 row-fields" data-id="mount_service"
-                                         data-group_id="cancel_mount" data-jobs="[&quot;need_mount&quot;]"
+                                         data-group_id="cancel_mount" data-jobs="['need_mount']"
                                          style="margin-bottom: 5px;">
                                         <div class="countDiv"><input type="radio" data-id="mount_service"
                                                                      id="mount_service" name="cancel_mount"
@@ -509,7 +501,7 @@ if (!empty($calculation_id)) {
                                                     for="mount_service">Монтажная служба</label></div>
                                     </div>
                                     <div class="col-sm-12 row-fields" data-id="self_mount" data-group_id="cancel_mount"
-                                         data-jobs="[&quot;need_mount&quot;]" style="margin-bottom: 5px;">
+                                         data-jobs="['need_mount']" style="margin-bottom: 5px;" checked>
                                         <div class="countDiv"><input type="radio" data-id="self_mount" id="self_mount"
                                                                      name="cancel_mount" class="radio" data-count="1"
                                                                      value="1"><label
@@ -720,7 +712,8 @@ if (!empty($calculation_id)) {
 
 <script type="text/javascript">
     var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
-        dealerId = '<?php echo $dealerId;?>';
+        dealerId = '<?php echo $dealerId;?>',
+        texturesData = '<?php echo $texturesData?>';
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -1020,19 +1013,25 @@ if (!empty($calculation_id)) {
 
         });
 
+        jQuery("#sketch_switch").click(function(){
+            jQuery("#walls").val("");
+            jQuery("#auto").val("");
+            submit_form_sketch();
+        });
+
         fill_calc_data();
 
         jQuery('#calculate_button').click(function () {
             var collected_data = collectData(),
                 dataToSave = collectFieldsDataToSave(),
                 need_mount = jQuery('[name="cancel_mount"]:checked').val(),
-                need_metiz = jQuery("#fieldis_cancel_metiz").is(':checked') ? 1 : 0,
-                need_offcuts = jQuery("#fieldis_cancel_offcut").is(':checked') ? 1 : 0;
+                cancel_metiz = jQuery("#fieldis_cancel_metiz").is(':checked') ? 1 : 0,
+                cancel_offcuts = jQuery("#fieldis_cancel_offcut").is(':checked') ? 1 : 0;
 
             console.log("collected_data",collected_data);
             console.log("need_mount",need_mount);
-            console.log("need_metiz",need_metiz);
-            console.log("need_offcuts",need_offcuts);
+            console.log("cancel_metiz",cancel_metiz);
+            console.log("cancel_offcuts",cancel_offcuts);
             //localStorage.setItem('dataToSave', dataToSave);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
@@ -1047,12 +1046,13 @@ if (!empty($calculation_id)) {
                     photo_print: JSON.stringify(collected_data.photo_print),
                     dealer_id: dealerId,
                     need_mount: need_mount,
-                    need_metiz: need_metiz,
-                    need_offcuts: need_offcuts
+                    cancel_metiz: cancel_metiz,
+                    cancel_offcuts: cancel_offcuts
                 },
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    console.log(data);
                     jQuery("#under_calculate").show();
                     jQuery("#final_price").text( data.common_sum_with_margin.toFixed(0) );
                 },
@@ -1070,6 +1070,20 @@ if (!empty($calculation_id)) {
         });
 
     });
+
+    function submit_form_sketch()
+    {
+        document.getElementById('n4').value = document.getElementById('jform_n4').value;
+        document.getElementById('n5').value = document.getElementById('jform_n5').value;
+        document.getElementById('n9').value = document.getElementById('jform_n9').value;
+        if(calculation && calculation.original_sketch){
+            document.getElementById('walls').value = calculation.original_sketch;
+        }
+        document.getElementById('texturesData').value = texturesData;
+        console.log(jQuery("#texturesData").val());
+        document.getElementById('form_url').submit();
+
+    }
 
     function createBlocks(data) {
         var div, containerDiv = jQuery("#cancel_maingroup");
@@ -1382,6 +1396,10 @@ if (!empty($calculation_id)) {
     }
 
     function fill_calc_data() {
+        var canvas = calculation.goods.filter(function(goods){
+           return goods.category_id == 1;
+        });
+
         if (calculation.n4 && calculation.n5 && calculation.n9) {
             jQuery("#jform_n4").val(calculation.n4);
             jQuery("#jform_n5").val(calculation.n5);
@@ -1390,6 +1408,10 @@ if (!empty($calculation_id)) {
             jQuery("#jform_n31").val(calculation.n31);
             jQuery("#jform_shrink_per").val(((1 - calculation.shrink_percent).toFixed(2) * 100).toFixed(2));
             jQuery("#data-wrapper").show();
+            if(canvas.length){
+                console.log("canvas",canvas[0]);
+                jQuery("#jform_canvas").val(canvas[0].name);
+            }
         }
         let filename = '<?php echo $calc_img;?>';
         if (filename) {

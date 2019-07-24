@@ -731,5 +731,67 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
         }
     }
+
+    public function addGoods(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $category = $jinput->get('category',null,'INT');
+            $goodsName = $jinput->get('goodsName',"",'STRING');
+            $goodsUnit = $jinput->get('goodsUnit',null,'INT');
+            $goodsMultiplicity = $jinput->get('goodsMultiplicity',null,'FLOAT');
+            $goodsPrice = $jinput->get('goodsPrice',null,'FLOAT');
+            $texture = $jinput->get('texture',null,'INT');
+            $manufacturer = $jinput->get('manufacturer',null,'INT');
+            $width = $jinput->get('width',null,'INT');
+            $color = $jinput->get('color',null,'INT');
+            if(!empty($category)){
+                $stockModel = $this->getModel('Stock','Gm_ceilingModel');
+                switch ($category){
+                    case 1:
+                        if(!empty($texture)&&!empty($manufacturer)&&!empty($width)&&!empty($color)&&!empty($goodsName)&&!empty($goodsMultiplicity)&&!empty($goodsUnit)&&!empty($goodsPrice)){
+                            //insert into goods
+                            $goodsId = $stockModel->addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice);
+                            //goods_map_color
+                            $stockModel->addProps('rgzbn_gm_stock_map_prop_colors','color',$goodsId,$color);
+                            //goods_map_manufacturers
+                            $stockModel->addProps('rgzbn_gm_stock_map_prop_manufacturers','manufacturer_id',$goodsId,$manufacturer);
+                            //goods_map_textures
+                            $stockModel->addProps('rgzbn_gm_stock_map_prop_textures','texture_id',$goodsId,$texture);
+                            //goods_map_width
+                            $stockModel->addProps('rgzbn_gm_stock_map_prop_canvas_widths','width',$goodsId,$width);
+                        }
+                        else{
+                            throw new Exception("Empty data!");
+                        }
+                            break;
+                    case 4:
+                        if(!empty($color)&&!empty($goodsName)&&!empty($goodsMultiplicity)&&!empty($goodsUnit)&&!empty($goodsPrice)){
+                            //insert into goods
+                            $goodsId = $stockModel->addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice);
+                            //goods_map_color
+                            $stockModel->addProps('rgzbn_gm_stock_map_prop_colors','color',$goodsId,$color);
+                        }
+                        else{
+                            throw new Exception("Empty data!");
+                        }
+                        break;
+                    default:
+                        if(!empty($goodsName)&&!empty($goodsMultiplicity)&&!empty($goodsUnit)&&!empty($goodsPrice)) {
+                            $goodsId = $stockModel->addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice);
+                        }
+                        else{
+                            throw new Exception("Empty data!");
+                        }
+                        break;
+                }
+            }
+            else{
+                throw new Exception("empty category!");
+            }
+            die(json_encode(true));
+        }catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 

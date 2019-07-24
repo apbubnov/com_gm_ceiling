@@ -181,8 +181,9 @@ let n6_src = {
 let n41_src = {
     name : 'jform[n41]',
     values : [
-        {id:'jform_n41_0',value:0,text:"Не нужен",selected:true},
-        {id:'jform_n41_1',value:1,text:"Нужен"},
+        {id:'jform_n41_2',value:2,text:"Более 5кв.м."},
+        {id:'jform_n41_1',value:1,text:"Менее 5кв.м."},
+        {id:'jform_n41_0',value:0,text:"Не нужен",selected:true}
     ]
 };
 let n41=  create_radios_group(n41_src);
