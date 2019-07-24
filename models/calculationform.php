@@ -1484,7 +1484,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-    public function addGoodsInCalculation($calc_id, $goods) {
+    public function addGoodsInCalculation($calc_id, $goods, $from_sketch) {
         try {
             $values = array();
             foreach ($goods as $value) {
@@ -1494,9 +1494,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query
-                ->delete('`#__gm_ceiling_calcs_goods_map`')
-                ->where("`calc_id` = $calc_id");
+            $query = "
+                DELETE  `cgm`
+                  FROM  `#__gm_ceiling_calcs_goods_map` as `cgm`
+                        INNER JOIN  `#__gm_stock_goods` as `g`
+                                ON  `cgm`.`goods_id` = `g`.`id`
+            ";
+            if ($from_sketch) {
+                $query .= "WHERE `cgm`.`calc_id` = $calc_id AND `g`.`category_id` = 1";
+            } else {
+                $query .= "WHERE `cgm`.`calc_id` = $calc_id AND `g`.`category_id` <> 1";
+            }
+            
             $db->setQuery($query);
             $db->execute();
 
@@ -1518,7 +1527,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-    public function addJobsInCalculation($calc_id, $jobs) {
+    public function addJobsInCalculation($calc_id, $jobs, $from_sketch) {
         try {
             $values = array();
             foreach ($jobs as $value) {
@@ -1530,9 +1539,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query
-                ->delete('`#__gm_ceiling_calcs_jobs_map`')
-                ->where("`calc_id` = $calc_id");
+            $query = "
+                DELETE  `cjm`
+                  FROM  `#__gm_ceiling_calcs_jobs_map` as `cjm`
+                        INNER JOIN  `#__gm_ceiling_jobs` as `j`
+                                ON  `cjm`.`job_id` = `j`.`id`
+            ";
+            if ($from_sketch) {
+                $query .= "WHERE `cjm`.`calc_id` = $calc_id AND `j`.`is_factory_work` = 1";
+            } else {
+                $query .= "WHERE `cjm`.`calc_id` = $calc_id AND `j`.`is_factory_work` = 0";
+            }
+                
             $db->setQuery($query);
             $db->execute();
 
@@ -1744,7 +1762,8 @@ ORDER BY `goods_id`
                 ) AS `jf`
                 INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
                                 ON  `jf`.`job_id` = `j`.`id`
-    WHERE   `j`.`guild_only` = 0
+    WHERE   `j`.`guild_only` = 0 AND
+            `j`.`is_factory_work` = 0
     GROUP BY    `job_id`
     ORDER BY    `job_id`
             ";
@@ -1814,10 +1833,27 @@ ORDER BY `goods_id`
                 LEFT    JOIN    `rgzbn_gm_ceiling_jobs_dealer_price` AS `jdp`
                                 ON  `jf`.`job_id` = `jdp`.`job_id` AND
                                     `jdp`.`dealer_id` = $dealer_id
-    WHERE   `j`.`guild_only` = 0
+    WHERE   `j`.`guild_only` = 0 AND
+            `j`.`is_factory_work` = 0
     GROUP BY    `job_id`
     ORDER BY    `job_id`
             ";
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getFactoryWorksPricesInCalculation($calc_id, $dealer_id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`job_id`, `name`, `final_count`, `price`, `price_sum`, `price_sum_with_margin`')
+                ->from('``')
+
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;

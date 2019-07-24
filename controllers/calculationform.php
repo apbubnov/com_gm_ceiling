@@ -520,8 +520,12 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$photo_print = $jinput->get('photo_print', null, 'STRING');
 			$fields_data = $jinput->get('fields_data', null, 'STRING');
 			$need_mount = $jinput->get('need_mount', 0, 'INT');
-			$need_metiz = $jinput->get('need_metiz', 0, 'INT');
-			$need_offcuts = $jinput->get('need_offcuts', 0, 'INT');
+			$cancel_metiz = $jinput->get('cancel_metiz', 0, 'INT');
+			$cancel_offcuts = $jinput->get('cancel_offcuts', 0, 'INT');
+			$discount = $jinput->get('discount', 0, 'INT');
+			$details = $jinput->get('details', '', 'STRING');
+			$comment = $jinput->get('comment', '', 'STRING');
+			$manager_note = $jinput->get('manager_note', '', 'STRING');
 
 			$data = array();
 			$data['id'] = $calc_id;
@@ -529,18 +533,25 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data['extra_mounting'] = $extra_mounting;
 			$data['photo_print'] = $photo_print;
 			$data['fields_data'] = base64_encode(gzcompress($fields_data));
+			$data['discount'] = $discount;
+			$data['need_mount'] = $need_mount;
+			$data['cancel_metiz'] = $cancel_metiz;
+			$data['cancel_offcuts'] = $cancel_offcuts;
+			$data['details'] = $details;
+			$data['comment'] = $comment;
+			$data['manager_note'] = $manager_note;
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
 
 			$model_calculation->update_calculation($data);
-			$model_calcform->addGoodsInCalculation($calc_id, $goods);
-			$model_calcform->addJobsInCalculation($calc_id, $jobs);
+			$model_calcform->addGoodsInCalculation($calc_id, $goods, false); // Добавление компонентов
 
 			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
 			$all_jobs = [];
 
 			if (!empty($need_mount)) {
+				$model_calcform->addJobsInCalculation($calc_id, $jobs, false); // Добавление работ
 				if ($need_mount == 1) {
 					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id);
 				} elseif ($need_mount == 2) {
@@ -548,7 +559,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				}
 			}
 
-			if (!empty($need_metiz)) {
+			if (!empty($cancel_metiz)) {
 				$temp_goods = [];
 				foreach ($all_goods as $key => $value) {
 					if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
