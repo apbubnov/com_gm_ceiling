@@ -2008,7 +2008,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if(!empty($data)){
                     $data = json_decode($data);
                     $mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
-                    $result = $mounts_model->saveOrUpdateStage($project_id,$data);
+                    $result = $mounts_model->saveOrUpdatStage($project_id,$data);
                     die(json_encode($result));
                 }
                 else{
@@ -2085,6 +2085,32 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    function updateMountDate(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            if(!empty($projectId)){
+                if(empty($data)){
+                    $data = $jinput->get('mount_data','','STRING');
+                }
+                if(!empty($data)){
+                    $data = json_decode($data);
+                    $mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
+                    $result = $mounts_model->save($projectId,$data);
+                    die(json_encode($result));
+                }
+                else{
+                    throw new Exception("Empty mounting data!");
+                }
+            }
+            else {
+                throw new Exception("Empty project_id!");
+            }
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+	    }
     }
 }
 ?>
