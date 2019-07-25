@@ -17,7 +17,7 @@ JHtml::_('formbehavior.chosen', 'select');
 $model_calls = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 
 $user = JFactory::getUser();
-
+$dealerId = $user->dealer_id;
 $outcoming_bad = json_encode($model_calls->selectCallHistoryByStatus(1, $user->dealer_id));
 $outcoming_good = json_encode($model_calls->selectCallHistoryByStatus(2, $user->dealer_id));
 $incoming = json_encode($model_calls->selectCallHistoryByStatus(3, $user->dealer_id));
@@ -38,19 +38,22 @@ echo parent::getButtonBack();
 <h2>Аналитика звонков</h2>
 <button type="button" class="btn btn-primary" id="show_all">Показать за всё время</button>
 <div class="analitic-actions">
-	Выбрать с <input type="date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date" id="date2"  value="<?= date('Y-m-d'); ?>">
+	Выбрать с <input type="date"  class="choose_date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date"  class="choose_date" id="date2"  value="<?= date('Y-m-d'); ?>">
 </div>
-<table class="small_table">
+<table class="small_table table-striped table_cashbox one-touch-view" id="common_table">
+    <thead>
+        <th>
+            Статус
+        </th>
+        <th>
+            Кол-во по менеджерам
+        </th>
+        <th>
+            Общеее кол-во
+        </th>
+    </thead>
 	<tbody>
-		<tr id="s1"><td>Исходящие недозвоны</td><td id="outcoming_bad"></td></tr>
-		<tr id="s2"><td>Исходящие дозвоны</td><td id="outcoming_good"></td></tr>
-		<tr id="s3"><td>Входящие звонки</td><td id="incoming"></td></tr>
-		<tr id="s4"><td>Презентация</td><td id="presentation"></td></tr>
-		<tr id="s5"><td>Лид</td><td id="lid"></td></tr>
 	</tbody>
-	<tfoot>
-		<tr><td>Итого</td><td id="sum"></td></tr>
-	</tfoot>
 </table>
 <hr>
 <table class="small_table table-striped table_cashbox one-touch-view">
@@ -63,115 +66,105 @@ echo parent::getButtonBack();
 	</tbody>
 </table>
 <script type="text/javascript">
-	var outcoming_bad = JSON.parse('<?php echo $outcoming_bad; ?>');
-	var outcoming_good = JSON.parse('<?php echo $outcoming_good; ?>');
-	var incoming = JSON.parse('<?php echo $incoming; ?>');
-	var presentation = JSON.parse('<?php echo $presentation; ?>');
-	var lid = JSON.parse('<?php echo $lid; ?>');
+    jQuery(document).ready(function(){
+        getData();
+        jQuery(".click_tr").click(function(){
+            var status_id = jQuery(this).data('id');
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=callback.getCallsHistory",
+                data: {
+                    dealerId: '<?php echo $dealerId;?>',
+                    dateFrom: jQuery('#date1').val(),
+                    dateTo: jQuery('#date2').val(),
+                    statusId: status_id
+                },
+                success: function(data){
+                    console.log(data);
+                    fillDetailedTable(data);
+                },
+                dataType:"json",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    console.log(data)
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+        });
 
-	var td_outcoming_bad = document.getElementById('outcoming_bad');
-	var td_outcoming_good = document.getElementById('outcoming_good');
-	var td_incoming = document.getElementById('incoming');
-	var td_presentation = document.getElementById('presentation');
-	var td_lid = document.getElementById('lid');
-	var td_sum = document.getElementById('sum');
+        jQuery('.choose_date').change(function(){
+            getData();
+        });
+    });
+    function getData(){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=callback.getCallsAnalytic",
+            data: {
+                dateFrom: jQuery('#date1').val(),
+                dateTo: jQuery('#date2').val(),
+                dealerId: '<?php echo $dealerId;?>'
+            },
+            success: function(data){
+                console.log(data);
+                showTableData(data);
+            },
+            dataType:"json",
+            async: false,
+            timeout: 10000,
+            error: function(data){
+                console.log(data)
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка!"
+                });
+            }
+        });
+    }
+    function showTableData(data) {
+        var table = jQuery('#common_table > tbody'),
+            common_count = 0;
+        table.empty();
+        for(var i=0;i<data.length;i++){
+            table.append('<tr class="click_tr" data-id="'+data[i].id+'"></tr>');
+            var tr = jQuery('#common_table > tbody > tr:last');
+            var manager_info = JSON.parse(data[i].manager_count);
 
-	var info = document.getElementById('info');
+            var common_count_by_status = 0,
+                count_str = '';
 
-	var arr_s1 = [], arr_s2 = [], arr_s3 = [], arr_s4 = [], arr_s5 = [];
+            for(var j=0;j<manager_info.length;j++){
+                count_str += '<div class="row" ><div class="col-md-6">'+manager_info[j].manager+':</div><div class="col-md-3">Звонков-'+manager_info[j].count+'</div><div class="col-md-3">Замеров-'+manager_info[j].measures_count+'</div> </div>';
+                common_count_by_status += +manager_info[j].count;
+            }
+            common_count += common_count_by_status;
+            tr.append('<td>'+data[i].title+'</td><td>'+count_str+'</td><td>'+common_count_by_status+'</td>');
+        }
+        table.append('<tr><td colspan=2><b>Итого</b></td><td>'+common_count+'</td></tr>')
+    }
 
-	document.getElementById('date1').onchange = show;
-	document.getElementById('date2').onchange = show;
-	document.getElementById('show_all').onclick = function() {
-		document.getElementById('date1').value = '';
-		document.getElementById('date2').value = '';
-		show();
-	};
+    function fillDetailedTable(data) {
+        jQuery("#info").empty();
+        for(var i=0;i<data.length;i++){
+            jQuery("#info").append('<tr></tr>');
+            jQuery("#info > tr:last").append('<td>'+data[i].change_time+'</td><td>'+data[i].client_name+'</td><td>'+data[i].manager_name+'</td>')
+        }
+    }
 
-	show();
 
-	document.getElementById('s1').onclick = sClick;
-	document.getElementById('s2').onclick = sClick;
-	document.getElementById('s3').onclick = sClick;
-	document.getElementById('s4').onclick = sClick;
-	document.getElementById('s5').onclick = sClick;
 
-	function sClick() {
-		var tr, td, arr = window[String('arr_'+this.id)];
-		info.innerHTML = '';
-		jQuery('.small_table>tbody>tr').css('background', '');
-		jQuery('.small_table>tbody>tr').css('color', '');
-		jQuery(this).css('background', '#414099');
-		jQuery(this).css('color', '#ffffff');
-		for (var i = arr.length; i--;) {
-			tr = info.insertRow();
-			tr.setAttribute('data-clientId', arr[i].client_id-0);
-			td = tr.insertCell();
-            td.innerHTML = arr[i].change_time;
-            td = tr.insertCell();
-            td.innerHTML = arr[i].client_name;
-            td = tr.insertCell();
-            td.innerHTML = arr[i].manager_name;
-		}
-		var trs_calls = info.getElementsByTagName('tr');
-		for (var i = trs_calls.length; i--;) {
-			trs_calls[i].onclick = function() {
-				location.href = 'index.php?option=com_gm_ceiling&view=clientcard&id='+this.getAttribute('data-clientId');
-			}
-		}
-	}
-
-	function show() {
-		arr_s1 = [];
-		arr_s2 = [];
-		arr_s3 = [];
-		arr_s4 = [];
-		arr_s5 = [];
-		var date1 = document.getElementById('date1').value;
-		var date2 = document.getElementById('date2').value;
-		if (date2 == '') {
-			date2 = '<?php echo date("Y-m-d"); ?>' + ' 23:59:59';
-		} else {
-			date2 += ' 23:59:59';
-		}
-		if (date1 == '') {
-			date1 = '00-00-00 00:00:00';
-		} else {
-			date1 += ' 00:00:00';
-		}
-
-		for (var i = outcoming_bad.length; i--;) {
-			if (outcoming_bad[i].change_time >= date1 && outcoming_bad[i].change_time <= date2) {
-				arr_s1.push(outcoming_bad[i]);
-			}
-		}
-		for (var i = outcoming_good.length; i--;) {
-			if (outcoming_good[i].change_time >= date1 && outcoming_good[i].change_time <= date2) {
-				arr_s2.push(outcoming_good[i]);
-			}
-		}
-		for (var i = incoming.length; i--;) {
-			if (incoming[i].change_time >= date1 && incoming[i].change_time <= date2) {
-				arr_s3.push(incoming[i]);
-			}
-		}
-		for (var i = presentation.length; i--;) {
-			if (presentation[i].change_time >= date1 && presentation[i].change_time <= date2) {
-				arr_s4.push(presentation[i]);
-			}
-		}
-		for (var i = lid.length; i--;) {
-			if (lid[i].change_time >= date1 && lid[i].change_time <= date2) {
-				arr_s5.push(lid[i]);
-			}
-		}
-		td_outcoming_bad.innerHTML = arr_s1.length;
-		td_outcoming_good.innerHTML = arr_s2.length;
-		td_incoming.innerHTML = arr_s3.length;
-		td_presentation.innerHTML = arr_s4.length;
-		td_lid.innerHTML = arr_s5.length;
-		td_sum.innerHTML = arr_s1.length + arr_s2.length + arr_s3.length + arr_s4.length + arr_s5.length;
-	}
 
 
 </script>

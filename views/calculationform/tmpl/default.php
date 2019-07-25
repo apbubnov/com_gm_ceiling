@@ -115,10 +115,8 @@ $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
 $data = quotemeta(json_encode($calculationformModel->getFields(1), JSON_HEX_QUOT));
 $componentsInCategories = quotemeta(json_encode($calculationformModel->getcomponentsInCategories(), JSON_HEX_QUOT));
 
-$color_data = json_encode($components_model->getColor());
 
 $texturesData = json_encode($canvases_model->getCanvasesTextures());
-$canvases_model->getFilteredItemsCanvas();
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
@@ -281,7 +279,7 @@ if (!empty($calculation_id)) {
             <div class="row sm-margin-bottom">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6 xs-center">
-                    <table style="width: 100%;">
+                    <table id = "common_info_table" style="width: 100%;">
                         <tr>
                             <td width=20%>
                                 <label id="jform_texture-lbl" for="jform_n4"> Полотно: </label>
@@ -350,7 +348,7 @@ if (!empty($calculation_id)) {
                                 <label for="jform_n9" class="control-label">%</label>
                             </td>
                         </tr>
-                        <tr>
+                        <!--<tr>
                             <td width=35%>
                                 <label id="jform_n10-lbl" for="jform_n10"> Криволинейный участок: </label>
                             </td>
@@ -371,7 +369,7 @@ if (!empty($calculation_id)) {
                             <td width=10%>
                                 <label for="jform_n31" class="control-label">м.</label>
                             </td>
-                        </tr>
+                        </tr>-->
                     </table>
                     <div id="div_for_test" style="display: none;">
                         <label>Усаженный периметр:</label> <input id="input_n5_shrink" type="text" readonly><br>
@@ -459,7 +457,7 @@ if (!empty($calculation_id)) {
                                                         <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                                                     </svg>
                                                 </span>
-                                                <span>Отментить метизы</span>
+                                                <span>Отменить метизы</span>
                                             </label>
                                         </div>
                                     </div>
@@ -538,7 +536,7 @@ if (!empty($calculation_id)) {
                                                         <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                                                     </svg>
                                                 </span>
-                                                <span> Отментить обрезки</span>
+                                                <span> Отменить обрезки</span>
                                             </label>
                                         </div>
                                     </div>
@@ -1396,10 +1394,21 @@ if (!empty($calculation_id)) {
     }
 
     function fill_calc_data() {
-        var canvas = calculation.goods.filter(function(goods){
-           return goods.category_id == 1;
-        });
-
+        var canvas = calculation.goods.filter(function (goods) {
+                return goods.category_id == 1;
+            }),
+            factory_works = calculation.jobs.filter(function (job) {
+                return job.is_factory_work == 1 && job.guild_only == 0;
+            });
+        console.log('factory_works',factory_works);
+        if(factory_works.length){
+            for(var i = 0;i<factory_works.length;i++){
+                var tr = jQuery(document.createElement('tr'));
+                tr.append('<td width=35%><label>'+factory_works[i].name+'</label></td>')
+                tr.append('<td width=35%><input class="form-control-input no-border" value="'+factory_works[i].count+'" readonly></td>');
+                jQuery("#common_info_table").append(tr);
+            }
+        }
         if (calculation.n4 && calculation.n5 && calculation.n9) {
             jQuery("#jform_n4").val(calculation.n4);
             jQuery("#jform_n5").val(calculation.n5);
@@ -1408,8 +1417,8 @@ if (!empty($calculation_id)) {
             jQuery("#jform_n31").val(calculation.n31);
             jQuery("#jform_shrink_per").val(((1 - calculation.shrink_percent).toFixed(2) * 100).toFixed(2));
             jQuery("#data-wrapper").show();
-            if(canvas.length){
-                console.log("canvas",canvas[0]);
+            if (canvas.length) {
+                console.log("canvas", canvas[0]);
                 jQuery("#jform_canvas").val(canvas[0].name);
             }
         }
@@ -1467,23 +1476,23 @@ if (!empty($calculation_id)) {
                             if (savedInput.type == "radio") {
                                 jQuery('.radio[data-id="' + savedInput.id + '"]').attr('checked', true);
                             }
-                            if(savedInput.type == "additional"){
-                               for(var ai=0;ai<savedInput.data.length;ai++){
-                                   jQuery(rowFields[f]).find('[name="'+savedInput.data[ai].name+'"]').val(savedInput.data[ai].value)
-                               }
+                            if (savedInput.type == "additional") {
+                                for (var ai = 0; ai < savedInput.data.length; ai++) {
+                                    jQuery(rowFields[f]).find('[name="' + savedInput.data[ai].name + '"]').val(savedInput.data[ai].value)
+                                }
                             }
-                            if(savedInput.type == "select-one"){
-                               for(var k=0;k<savedInput.fields_data.length;k++){
-                                   jQuery('[name="choose_category"]').val(savedInput.fields_data[k].category).trigger('change');
-                                   var goods_rows = jQuery("#params_block").find('.row-fields[data-category="'+savedInput.fields_data[k].category+'"]');
-                                   jQuery.each(goods_rows,function (q,g_row) {
-                                      var count_input = jQuery(g_row).find('.countDiv').children();
-                                      if(empty(count_input.val())){
-                                          count_input.val(savedInput.fields_data[k].count);
-                                          jQuery(g_row).find('.goods_select').val(savedInput.fields_data[k].goods);
-                                      }
-                                   });
-                               }
+                            if (savedInput.type == "select-one") {
+                                for (var k = 0; k < savedInput.fields_data.length; k++) {
+                                    jQuery('[name="choose_category"]').val(savedInput.fields_data[k].category).trigger('change');
+                                    var goods_rows = jQuery("#params_block").find('.row-fields[data-category="' + savedInput.fields_data[k].category + '"]');
+                                    jQuery.each(goods_rows, function (q, g_row) {
+                                        var count_input = jQuery(g_row).find('.countDiv').children();
+                                        if (empty(count_input.val())) {
+                                            count_input.val(savedInput.fields_data[k].count);
+                                            jQuery(g_row).find('.goods_select').val(savedInput.fields_data[k].goods);
+                                        }
+                                    });
+                                }
 
                             }
                         }

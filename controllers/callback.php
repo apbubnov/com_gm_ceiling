@@ -54,4 +54,37 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
 
         }
     }
+
+    function getCallsAnalytic(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dealerId = $jinput->get('dealerId',null,'INT');
+            $dateFrom = $jinput->get('dateFrom',null,'STRING');
+            $dateTo = $jinput->get('dateTo',null,'STRING');
+            $callbackModel = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $data = $callbackModel->selectCallAnalytic($dealerId,$dateFrom,$dateTo);
+            die (json_encode($data));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
+    function getCallsHistory(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dealerId = $jinput->get('dealerId',null,'INT');
+            $status = $jinput->get('statusId',null,'INT');
+            $dateFrom = $jinput->get('dateFrom',null,'STRING');
+            $dateTo = $jinput->get('dateTo',null,'STRING');
+            $callbackModel = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $data = $callbackModel->selectCallHistoryByStatus($status,$dealerId,$dateFrom,$dateTo);
+            die (json_encode($data));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
 }

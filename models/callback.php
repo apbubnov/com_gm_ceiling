@@ -306,8 +306,73 @@ class Gm_ceilingModelCallback extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-
-	function selectCallHistoryByStatus($status, $dealerId) {
+	function selectCallAnalytic($dealerId,$date1 = null,$date2 = null){
+	    try{
+	        /*
+	         * SELECT cs.id,cs.title,GROUP_CONCAT(CONCAT('{"manager":"',cnt.manager,'","count":"',cnt.count,':}')) AS manager_count
+                FROM `rgzbn_gm_ceiling_calls_status` AS cs
+                LEFT JOIN (
+                    SELECT `h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT(`h`.`id`)  AS `count`
+                    FROM `rgzbn_gm_ceiling_calls_status_history` AS h
+                    INNER JOIN `rgzbn_users` AS u ON u.id = h.manager_id
+                    WHERE `u`.`dealer_id` = 1 AND `h`.`change_time` BETWEEN '2019-07-24 00:00:00' AND '2019-07-24 23:59:59'
+                    GROUP BY manager_id,`status`
+                ) AS `cnt` ON `cs`.`id` = `cnt`.`status`
+                GROUP BY cs.id
+                */
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $subquery = $db->getQuery(true);
+            $measureQuery = $db->getQuery(true);
+            /*SELECT COUNT(p.id)
+	FROM `rgzbn_gm_ceiling_projects` AS p
+	LEFT JOIN `rgzbn_gm_ceiling_projects_history` AS ph ON p.id = ph.project_id
+	WHERE p.modified_by = h.manager_id AND ph.new_status = 1 AND ph.new_status BETWEEN*/
+            $measureQuery
+                ->select('COUNT(p.id)')
+                ->from('`rgzbn_gm_ceiling_projects` AS p ')
+                ->leftJoin('`rgzbn_gm_ceiling_projects_history` AS ph ON p.id = ph.project_id')
+                ->where('p.modified_by = h.manager_id AND ph.new_status = 1');
+            if(!empty($date1)&&!empty($date2)){
+                $measureQuery->where("`ph`.`date_of_change` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+            }
+            elseif(!empty($date1)&&empty($date2)){
+                $measureQuery->where("`ph`.`date_of_change` > '$date1 00:00:00'");
+            }
+            elseif(empty($date1)&&!empty($date2)){
+                $measureQuery->where("`ph`.`date_of_change` < '$date2 23:59:59'");
+            }
+            $subquery
+                ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT(`h`.`id`)  AS `count`')
+                ->select("($measureQuery) AS `measure_count`")
+                ->from('`rgzbn_gm_ceiling_calls_status_history` AS h ')
+                ->innerJoin('`rgzbn_users` AS u ON u.id = h.manager_id')
+                ->where("`u`.`dealer_id` = $dealerId")
+                ->group('`h`.`manager_id`,`h`.`status`');
+            if(!empty($date1)&&!empty($date2)){
+                $subquery->where("`h`.`change_time` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+            }
+            elseif(!empty($date1)&&empty($date2)){
+                $subquery->where("`h`.`change_time` > '$date1 00:00:00'");
+            }
+            elseif(empty($date1)&&!empty($date2)){
+                $subquery->where("`h`.`change_time` < '$date2 23:59:59'");
+            }
+            $query
+                ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","count":"\',cnt.count,\'","measures_count":"\',cnt.measure_count,\'"}\')),\']\') AS manager_count')
+                ->from('`rgzbn_gm_ceiling_calls_status` AS cs')
+                ->innerJoin("($subquery) AS `cnt` ON `cs`.`id` = `cnt`.`status`")
+                ->group('cs.id');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+	function selectCallHistoryByStatus($status, $dealerId,$date1 = null,$date2 = null) {
 		try {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
@@ -316,6 +381,15 @@ class Gm_ceilingModelCallback extends JModelList
 			$query->leftJoin('`#__gm_ceiling_clients` AS `c` ON `h`.`client_id` = `c`.`id`');
 			$query->leftJoin('`#__users` AS `u` ON `h`.`manager_id` = `u`.`id`');
 			$query->where("`h`.`status` = $status and `u`.`dealer_id` = $dealerId");
+            if(!empty($date1)&&!empty($date2)){
+                $query->where("`h`.`change_time` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+            }
+            elseif(!empty($date1)&&empty($date2)){
+                $query->where("`h`.`change_time` > '$date1 00:00:00'");
+            }
+            elseif(empty($date1)&&!empty($date2)){
+                $query->where("`h`.`change_time` < '$date2 23:59:59'");
+            }
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
