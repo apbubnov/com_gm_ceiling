@@ -192,21 +192,34 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-
+	function getBaseCalculationDataById($id){
+	    try{
+            if(!empty($id)) {
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->select('*')
+                    ->from('`#__gm_ceiling_calculations` as c')
+                    ->where("c.id = $id");
+                $db->setQuery($query);
+                $item = $db->loadObject();
+                return $item;
+            }
+            else{
+                throw new Exception("Empty calculation id!");
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	public function new_getData($id){
 		try{
 			if(!empty($id)){
-				$db = JFactory::getDbo();
-				$query = $db->getQuery(true);
-				$query
-					->select('*')
-					->from('`#__gm_ceiling_calculations` as c')
-					->where("c.id = $id");
-				$db->setQuery($query);
-				$item = $db->loadObject();
-				if (empty($item)) {
-					return null;
-				}
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+				$item = $this->getBaseCalculationDataById($id);
 				$item->goods = $this->getGoodsFromCalculation($id);
 				$item->jobs = $this->getJobsFromCalculation($id);
 				$query
@@ -1051,7 +1064,7 @@ class Gm_ceilingModelCalculation extends JModelItem
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query
-                ->select('`j`.`id`,`j`.`name`,`cjm`.`count`')
+                ->select('`j`.`id`,`j`.`is_factory_work`,`j`.`guild_only`,`j`.`name`,`cjm`.`count`')
                 ->from('`rgzbn_gm_ceiling_calcs_jobs_map` as `cjm`')
                 ->innerJoin('`rgzbn_gm_ceiling_jobs` as `j` on `j`.`id` = `cjm`.`job_id`')
                 ->where("`cjm`.`calc_id` = $calc_id");
