@@ -22,12 +22,14 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $calc_img = $jinput->get('calc_img', '', 'string');
             $cut_img = $jinput->get('cut_img', '', 'string');
-            $n4 = $jinput->get('jform_n4', '', 'string'); //площадь
-            $n5 = $jinput->get('jform_n5', '', 'string'); //периметр
-            $n9 = $jinput->get('jform_n9', '', 'string'); //углы
+            $n4 = $jinput->get('n4', '', 'FLOAT'); //площадь
+            $n5 = $jinput->get('n5', '', 'FLOAT'); //периметр
+            $n9 = $jinput->get('n9', '', 'int'); //углы
             $calc_id = $jinput->get('calc_id', 0, 'int');
             $length_arr = $jinput->get('arr_length', null, 'array'); //длины сторон
             $arr_points = $jinput->get('arr_points', null, 'array'); //координаты раскроя
+            $goods = $jinput->get('goods', array(), 'array'); //полотна
+            $jobs = $jinput->get('jobs', array(), 'array'); //работы
             $offcut_square = $jinput->get('offcut_square', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             $canvas_area = $jinput->get('sq_polo', 0, 'FLOAT');
@@ -66,6 +68,10 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
 
             $canv_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
+
+            $model_calcform->addGoodsInCalculation($calc_id, $goods, true);
+            $model_calcform->addJobsInCalculation($calc_id, $jobs, true);
 
             $data['id'] = $calc_id;
             if (!empty($n4)) {
