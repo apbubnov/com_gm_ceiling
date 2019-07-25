@@ -1851,9 +1851,16 @@ ORDER BY `goods_id`
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`job_id`, `name`, `final_count`, `price`, `price_sum`, `price_sum_with_margin`')
-                ->from('``')
-
+                ->select('
+                    `cjm`.`job_id`,
+                    `j`.`name`,
+                    `cjm`.`count`,
+                    `j`.`price`,
+                    `cjm`.`count` * `j`.`price` as `price_sum`
+                ')
+                ->from('`#__gm_ceiling_calcs_jobs_map` as `cjm`')
+                ->innerJoin('`#__gm_ceiling_jobs` as `j` on `cjm`.`job_id` = `j`.`id`')
+                ->where("`cjm`.`calc_id` = $calc_id and `j`.`guild_only` = 0 and `j`.`is_factory_work` = 1");
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;

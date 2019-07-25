@@ -165,6 +165,20 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
+    public static function deleteMetizFromGoods($goods) {
+        try {
+            $temp_goods = [];
+            foreach ($goods as $key => $value) {
+                if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
+                    $temp_goods[] = $value;
+                }
+            }
+            return $temp_goods;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     /**
      * Get an instance of the named modelt
      *
