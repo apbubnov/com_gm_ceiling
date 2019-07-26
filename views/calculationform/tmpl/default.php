@@ -681,7 +681,8 @@ if (!empty($calculation_id)) {
 <script type="text/javascript">
     var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
         dealerId = '<?php echo $dealerId;?>',
-        texturesData = '<?php echo $texturesData?>';
+        texturesData = '<?php echo $texturesData?>',
+        precalculation = '<?php echo $precalculation; ?>';
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -1051,18 +1052,72 @@ if (!empty($calculation_id)) {
         });
 
         jQuery('body').on('click','#save_new_sum',function(){
-                console.log(calculation.id,jQuery("#new_sum").val());
+            console.log(calculation.id,jQuery("#new_sum").val());
+            jQuery.ajax({
+                type: 'POST',
+                url: '/index.php?option=com_gm_ceiling&task=calculation.updateSum',
+                dataType: "json",
+                timeout: 20000,
+                data: {
+                    calcId: calculation.id,
+                    sum: jQuery("#new_sum").val()
+                },
+                success: function(data){
+                    jQuery("#final_price").text(jQuery("#new_sum").val());
+                },
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery("#save_button").click(function(){
+            let url = '<?php echo $save_button_url;?>';
+            jQuery.ajax({
+                type: 'POST',
+                url: 'index.php?option=com_gm_ceiling&task=calculation.save_details',
+                data: {
+                    title: jQuery("#jform_calculation_title").val() ,
+                    details: jQuery("#jform_details").val(),
+                    manager_note: jQuery("#jform_manager_note").val(),
+                    calc_id: calculation.id
+                },
+                success: function(data){
+                    location.href = url;
+                },
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при сохранении данных. Попробуйте позже"
+                    });
+                }
+            });
+        });
+
+        jQuery('#cancel_button').click(function(){
+            if (precalculation == '1')
+            {
                 jQuery.ajax({
                     type: 'POST',
-                    url: '/index.php?option=com_gm_ceiling&task=calculation.updateSum',
+                    url: '/index.php?option=com_gm_ceiling&task=calculationform.removeClientByProjectId',
                     dataType: "json",
                     timeout: 20000,
                     data: {
-                        calcId: calculation.id,
-                        sum: jQuery("#new_sum").val()
+                        proj_id: <?php echo $project_id; ?>
                     },
                     success: function(data){
-                        jQuery("#final_price").text(jQuery("#new_sum").val());
+                        location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
                     },
                     error: function(data){
                         var n = noty({
@@ -1075,8 +1130,13 @@ if (!empty($calculation_id)) {
                         });
                     }
                 });
-            });
-
+            }
+            else
+            {
+                let url = '<?php echo $save_button_url;?>';
+                location.href = url;
+            }
+        });
     });
 
     function submit_form_sketch()

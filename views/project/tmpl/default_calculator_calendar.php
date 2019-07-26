@@ -71,14 +71,14 @@ foreach ($calculations as $calculation) {
     $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-    $calculation->n13 = $calculationform_model->n13_load($calculation->id);
+    /*$calculation->n13 = $calculationform_model->n13_load($calculation->id);
     $calculation->n14 = $calculationform_model->n14_load($calculation->id);
     $calculation->n15 = $calculationform_model->n15_load($calculation->id);
     $calculation->n22 = $calculationform_model->n22_load($calculation->id);
     $calculation->n23 = $calculationform_model->n23_load($calculation->id);
     $calculation->n26 = $calculationform_model->n26_load($calculation->id);
     $calculation->n29 = $calculationform_model->n29_load($calculation->id);
-    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
+    $calculation->n19 = $calculationform_model->n19_load($calculation->id);*/
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;

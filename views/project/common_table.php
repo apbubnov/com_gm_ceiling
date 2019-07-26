@@ -688,9 +688,8 @@
                 <?php
                     foreach ($calculations as $k => $calculation) { 
                         $mounters = json_decode($calculation->mounting_sum);
-                        if (!empty($calculation->n3)) {
-                            $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
-                        }
+                        $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
+
                 ?>
                         <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                             <div class="other_tabs">
