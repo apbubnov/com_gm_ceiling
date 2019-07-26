@@ -119,27 +119,30 @@ $texturesData = json_encode($canvases_model->getCanvasesTextures());
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
-    $dealerId = $projectModel->getData($calculation->project_id)->dealer_id;
+    $dealerId = $calculation->dealer_id;
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
     if (!empty($calculation->n3)) {
         $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
     }
-
-    if (!empty($canvas)) {
-        $filter = "texture_id = $canvas->texture_id and manufacturer_id = $canvas->manufacturer_id and count>0";
-        if (!empty($canvas->color_id)) {
-            $filter .= " and color_id = $canvas->color_id";
+    $canvas = array_filter(
+        $calculation->goods,
+        function ($e) {
+            return $e->category_id == 1;
         }
-        $widths_data = $canvases_model->getFilteredItemsCanvas($filter);
+    );
+    if (!empty($canvas)) {
+        $filter = "id = ".$canvas[0]->id;
+        $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
+        $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
+        $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);
         $arr_widths = [];
         $widths = [];
-        foreach ($widths_data as $value) {
-            $width = (float)$value->width * 100;
-            if (!in_array($width, $arr_widths)) {
-                array_push($arr_widths, $width);
-                array_push($widths, (object)array("width" => $width, "price" => $value->price));
+        foreach ($selected_canvases as $value) {
+            if (!in_array($value->width, $arr_widths)) {
+                array_push($arr_widths, $value->width);
+                array_push($widths, (object)array("width" => $value->width, "price" => $value->price));
             }
         }
         usort($widths, function ($a, $b) {
@@ -152,9 +155,8 @@ if (!empty($calculation_id)) {
             return 0;
         });
         $widths = json_encode($widths);
-        $texture_title = $canvas->texture_title;
-        $manufacturer_title = $canvas->name . " " . $canvas->width;
-        $color_file = $canvas->color_file;
+        $color = $detailed_canvas[0]->color;
+        $hex = $detailed_canvas[0]->hex;
     }
     $calculation->extra_components = addslashes($calculation->extra_components);
     $calculation->photo_print = addslashes($calculation->photo_print);
@@ -197,6 +199,10 @@ if (!empty($calculation_id)) {
     }
     .no-border{
         border:0px;
+    }
+    .total_price{
+        font-family: "Cuprum";
+        color: #414099;
     }
 
 </style>
@@ -280,22 +286,22 @@ if (!empty($calculation_id)) {
                 <div class="col-sm-6 xs-center">
                     <table id = "common_info_table" style="width: 100%;">
                         <tr>
-                            <td width=20%>
+                            <td width=35%>
                                 <label id="jform_texture-lbl" for="jform_n4"> Полотно: </label>
                             </td>
-                            <td colspan="2">
+                            <td width=65%>
                                 <input name="jform[canvas]" class="form-control-input no-border" style="width:100%" id="jform_canvas"
-                                       value="" data-next="#jform_proizv" readonly>
+                                       value="<?php echo !empty($detailed_canvas[0])?$detailed_canvas[0]->name  :"";?>" data-next="#jform_proizv" readonly>
                             </td>
                         </tr>
-
-                        <?php if (!empty($color_file)) { ?>
+                        <?php if (!empty($color)) { ?>
                             <tr>
                                 <td width=35%>
                                     <label id="jform_color-lbl" for="jform_color"> Цвет: </label>
                                 </td>
                                 <td width=65%>
-                                    <img src="<?php echo $color_file ?>" style="height:55px">
+                                    <div class="col-md-3"><?=$color;?></div>
+                                    <div class="col-md-9" style="background-color:<?="#".$hex;?>;color:<?="#".$hex;?>"><?=$color;?></div>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -347,28 +353,6 @@ if (!empty($calculation_id)) {
                                 <label for="jform_n9" class="control-label">%</label>
                             </td>
                         </tr>
-                        <!--<tr>
-                            <td width=35%>
-                                <label id="jform_n10-lbl" for="jform_n10"> Криволинейный участок: </label>
-                            </td>
-                            <td width=55%>
-                                <input name="jform[n10]" id="jform_n10" class="form-control-input no-border" readonly>
-                            </td>
-                            <td width=10%>
-                                <label for="jform_n10" class="control-label">м.</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width=35%>
-                                <label id="jform_n11-lbl" for="jform_n31"> Внутренний вырез: </label>
-                            </td>
-                            <td width=55%>
-                                <input name="jform[n31]" id="jform_n31" class="form-control-input no-border" readonly>
-                            </td>
-                            <td width=10%>
-                                <label for="jform_n31" class="control-label">м.</label>
-                            </td>
-                        </tr>-->
                     </table>
                     <div id="div_for_test" style="display: none;">
                         <label>Усаженный периметр:</label> <input id="input_n5_shrink" type="text" readonly><br>
@@ -399,19 +383,6 @@ if (!empty($calculation_id)) {
                 </div>
             </div>
         <?php } ?>
-
-        <div id="add_mount_and_components" class="container">
-            <div class="row">
-                <div class="col-sm-3"></div>
-                <div class="col-sm-6">
-                    <button type="button" id="btn_add_components" class="btn btn-primary"
-                            style="width: 100%; margin-bottom: 25px;"><img src="../../../../../images/screwdriver.png"
-                                                                           class="img_calcform"> <b>Добавить монтаж и
-                            комплектующие</b></button>
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
-        </div>
 
         <div id="params_block">
             <div class="row" id="cancel_maingroup">
@@ -632,7 +603,7 @@ if (!empty($calculation_id)) {
                                     <td class="td_calcform2">
                                         <div class="btn-primary help"
                                              style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px; margin-left: 5px;">
-                                            <div class="help_question">?</div>
+                                            <div class="help_question center" style="padding-top:2px;">?</div>
                                             <span class="airhelp">
 													Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня".
 												</span>
@@ -1016,6 +987,17 @@ if (!empty($calculation_id)) {
             submit_form_sketch();
         });
 
+        jQuery(".to_redactor").click(function(){
+            jQuery("#calc_id").val(calculation.id);
+            jQuery("#proj_id").val(calculation.project_id);
+            jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
+            submit_form_sketch();
+        });
+
+        jQuery("#btn_details").click(function(){
+            jQuery("#jform_details").toggle();
+        });
+
         fill_calc_data();
 
         jQuery('#calculate_button').click(function () {
@@ -1044,7 +1026,9 @@ if (!empty($calculation_id)) {
                     dealer_id: dealerId,
                     need_mount: need_mount,
                     cancel_metiz: cancel_metiz,
-                    cancel_offcuts: cancel_offcuts
+                    cancel_offcuts: cancel_offcuts,
+                    discount: jQuery("#new_discount").val(),
+
                 },
                 dataType: "json",
                 async: false,
@@ -1393,9 +1377,9 @@ if (!empty($calculation_id)) {
     }
 
     function fill_calc_data() {
-        var canvas = calculation.goods.filter(function (goods) {
+        var /*canvas = calculation.goods.filter(function (goods) {
                 return goods.category_id == 1;
-            }),
+            }),*/
             factory_works = calculation.jobs.filter(function (job) {
                 return job.is_factory_work == 1 && job.guild_only == 0;
             });
@@ -1416,10 +1400,11 @@ if (!empty($calculation_id)) {
             jQuery("#jform_n31").val(calculation.n31);
             jQuery("#jform_shrink_per").val(((1 - calculation.shrink_percent).toFixed(2) * 100).toFixed(2));
             jQuery("#data-wrapper").show();
-            if (canvas.length) {
+            /*if (canvas.length) {
                 console.log("canvas", canvas[0]);
                 jQuery("#jform_canvas").val(canvas[0].name);
-            }
+            }*/
+            jQuery(jQuery("#params_block").find('[data-group_id = "1"]').find('.countDiv')[0]).children().val(calculation.n5);
         }
         let filename = '<?php echo $calc_img;?>';
         if (filename) {
