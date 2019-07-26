@@ -1050,6 +1050,33 @@ if (!empty($calculation_id)) {
             });
         });
 
+        jQuery('body').on('click','#save_new_sum',function(){
+                console.log(calculation.id,jQuery("#new_sum").val());
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=calculation.updateSum',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        calcId: calculation.id,
+                        sum: jQuery("#new_sum").val()
+                    },
+                    success: function(data){
+                        jQuery("#final_price").text(jQuery("#new_sum").val());
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
+
     });
 
     function submit_form_sketch()
@@ -1160,7 +1187,14 @@ if (!empty($calculation_id)) {
                 if (elem.input_type == 0) {
                     resultDiv.append(titleDiv);
                     countDiv.append(createInput());
+                    countDiv.addClass('col-md-10')
                     divRow.append(countDiv);
+                    if(elem.duplicate == 1){
+                        var deleteDiv = jQuery(document.createElement('div'));
+                        deleteDiv.addClass('col-md-2');
+                        deleteDiv.append(createDeleteBtn());
+                        divRow.append(deleteDiv);
+                    }
                 }
                 if (elem.input_type == 1) {
                     var checkBox = createCheckBox(elem);
