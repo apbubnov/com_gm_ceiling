@@ -549,6 +549,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
 			$all_jobs = [];
+			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id, $dealer_id);
 
 			if (!empty($need_mount)) {
 				$model_calcform->addJobsInCalculation($calc_id, $jobs, false); // Добавление работ
@@ -560,13 +561,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			}
 
 			if (!empty($cancel_metiz)) {
-				$temp_goods = [];
-				foreach ($all_goods as $key => $value) {
-					if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
-						$temp_goods[] = $value;
-					}
-				}
-				$all_goods = $temp_goods;
+				$all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
 			}
 
 			$extra_components = json_decode($extra_components);
@@ -599,22 +594,46 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$components_sum_with_margin = 0;
 			$mounting_sum = 0;
 			$mounting_sum_with_margin = 0;
+			$canvas_price = 0;
+
+			$calculation = $model_calculation->getBaseCalculationDataById($calc_id);
+			if (empty($calculation)) {
+				throw new Exception('Empty calculation!');
+			}
 
 			foreach ($all_goods as $value) {
-				$common_sum += $value->price_sum;
-				$common_sum_with_margin += $value->price_sum_with_margin;
-				if ($value->category_id == 1) {
-					$canvases_sum += $value->price_sum;
-					$canvases_sum_with_margin += $value->price_sum_with_margin;
-				} else {
+				if ($value->category_id != 1) {
 					$components_sum += $value->price_sum;
 					$components_sum_with_margin += $value->price_sum_with_margin;
+				} else {
+					$canvases_sum += $value->dealer_price * $calculation->n4;
+					$canvas_price = $value->dealer_price;
 				}
 			}
 
+			if (!empty($cancel_offcuts) && $calculation->offcut_square > ($calculation->n4 * 0.5)) {
+            	$canvases_sum += $calculation->offcut_square * $canvas_price * 0.5;
+            }
+
+			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            if (empty($dealer_info)) {
+                $canvases_margin = 0;
+                $components_margin = 0;
+                $mounting_margin = 0;
+            } else {
+                $canvases_margin = $dealer_info->dealer_canvases_margin;
+                $components_margin = $dealer_info->dealer_components_margin;
+                $mounting_margin = $dealer_info->dealer_mounting_margin;
+            }
+
+            $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
+
+            foreach ($factory_jobs as $value) {
+            	$canvases_sum += $value->price_sum;
+            	$canvases_sum_with_margin += $value->price_sum;
+            }
+
 			foreach ($all_jobs as $value) {
-				$common_sum += $value->price_sum;
-				$common_sum_with_margin += $value->price_sum_with_margin;
 				$mounting_sum += $value->price_sum;
 				$mounting_sum_with_margin += $value->price_sum_with_margin;
 			}
@@ -622,6 +641,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$result = (object)array(
 				'all_goods' => $all_goods,
 				'all_jobs' => $all_jobs,
+				'factory_jobs' => $factory_jobs,
 				'common_sum' => $common_sum,
 				'common_sum_with_margin' => $common_sum_with_margin,
 				'canvases_sum' => $canvases_sum,
@@ -632,7 +652,10 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'mounting_sum_with_margin' => $mounting_sum_with_margin,
 				'extra_components_sum' => $extra_components_sum,
 				'extra_mounting_sum' => $extra_mounting_sum,
-				'photo_print_sum' => $photo_print_sum
+				'photo_print_sum' => $photo_print_sum,
+				'canvases_margin' => $canvases_margin,
+				'components_margin' => $components_margin,
+				'mounting_margin' => $mounting_margin
 			);
 
 			die(json_encode($result));
