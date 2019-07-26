@@ -107,7 +107,6 @@ if ($type == "gmchief") {
 /*____________________Models_______________________  */
 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
-$components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
 /*____________________end_______________________  */
