@@ -547,18 +547,19 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$model_calculation->update_calculation($data);
 			$model_calcform->addGoodsInCalculation($calc_id, $goods, false); // Добавление компонентов
 
-			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id);
 			$all_jobs = [];
-			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id, $dealer_id);
 
 			if (!empty($need_mount)) {
 				$model_calcform->addJobsInCalculation($calc_id, $jobs, false); // Добавление работ
 				if ($need_mount == 1) {
-					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id);
+					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу дилера
 				} elseif ($need_mount == 2) {
-					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id);
+					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу монажной службы
 				}
 			}
+
+			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id); // Получение компонентов
+			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id, $dealer_id); // Получение цеховских работ
 
 			if (!empty($cancel_metiz)) {
 				$all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
@@ -586,6 +587,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				$photo_print_sum = (float)$photo_print->price;
 			}
 
+			$final_sum = 0;
 			$common_sum = 0;
 			$common_sum_with_margin = 0;
 			$canvases_sum = 0;
@@ -602,17 +604,20 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			}
 
 			foreach ($all_goods as $value) {
-				if ($value->category_id != 1) {
+				if ($value->category_id != 1) { // если не полотно
 					$components_sum += $value->price_sum;
 					$components_sum_with_margin += $value->price_sum_with_margin;
 				} else {
-					$canvases_sum += $value->dealer_price * $calculation->n4;
+					$canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
 					$canvas_price = $value->dealer_price;
 				}
 			}
+			$components_sum += $extra_components_sum;
+			$components_sum_with_margin += $extra_components_sum * 100 / (100 - $components_margin);
 
-			if (!empty($cancel_offcuts) && $calculation->offcut_square > ($calculation->n4 * 0.5)) {
-            	$canvases_sum += $calculation->offcut_square * $canvas_price * 0.5;
+			$offcut_square = $calculation->offcut_square-0;
+			if (empty($cancel_offcuts) && $offcut_square > ($calculation->n4 * 0.5)) {
+            	$canvases_sum += $offcut_square * $canvas_price * 0.5; // обрезки
             }
 
 			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
@@ -621,14 +626,15 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                 $components_margin = 0;
                 $mounting_margin = 0;
             } else {
-                $canvases_margin = $dealer_info->dealer_canvases_margin;
-                $components_margin = $dealer_info->dealer_components_margin;
-                $mounting_margin = $dealer_info->dealer_mounting_margin;
+                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
+                $components_margin = $dealer_info->dealer_components_margin-0;
+                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
             }
 
-            $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
+            $canvases_sum += $photo_print_sum;
+            $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin); // маржа на полотна
 
-            foreach ($factory_jobs as $value) {
+            foreach ($factory_jobs as $value) { // работы в цеху
             	$canvases_sum += $value->price_sum;
             	$canvases_sum_with_margin += $value->price_sum;
             }
@@ -637,11 +643,18 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				$mounting_sum += $value->price_sum;
 				$mounting_sum_with_margin += $value->price_sum_with_margin;
 			}
+			$mounting_sum += $extra_mounting_sum;
+			$mounting_sum_with_margin += $extra_mounting_sum * 100 / (100 - $mounting_margin);
+
+			$common_sum = $canvases_sum + $components_sum + $mounting_sum;
+			$common_sum_with_margin = $canvases_sum_with_margin + $components_sum_with_margin + $mounting_sum_with_margin;
+			$final_sum = $common_sum_with_margin - ($common_sum_with_margin * $discount / 100);
 
 			$result = (object)array(
 				'all_goods' => $all_goods,
 				'all_jobs' => $all_jobs,
 				'factory_jobs' => $factory_jobs,
+				'final_sum' => $final_sum,
 				'common_sum' => $common_sum,
 				'common_sum_with_margin' => $common_sum_with_margin,
 				'canvases_sum' => $canvases_sum,
@@ -655,7 +668,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'photo_print_sum' => $photo_print_sum,
 				'canvases_margin' => $canvases_margin,
 				'components_margin' => $components_margin,
-				'mounting_margin' => $mounting_margin
+				'mounting_margin' => $mounting_margin,
+				'discount' => $discount,
+				'offcut_square' => $offcut_square
 			);
 
 			die(json_encode($result));
