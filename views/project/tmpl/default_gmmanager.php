@@ -666,7 +666,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
             });
             jQuery("[name = 'change_calc']").click(function(){
                 let id = jQuery(this).data('calc_id');
-                location.href = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&calc_id='+id;
+                location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&calc_id='+id;
             });
 
             jQuery('#btn_back').click(function(){

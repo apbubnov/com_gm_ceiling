@@ -19,7 +19,7 @@
 			{
 				url_subtype = `&subtype=${url_getparams['subtype']}`;
 			}
-			location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&calc_id=${data-0}&api=1`;
+			location.href = `/index.php?option=com_gm_ceiling&view=calculationform&calc_id=${data-0}&api=1`;
         },
         error: function(data){
             var n = noty({

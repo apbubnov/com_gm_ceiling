@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  *
  * @since  1.6
  */
-class Gm_ceilingViewCalculationform2 extends JViewLegacy
+class Gm_ceilingViewcalculationform2 extends JViewLegacy
 {
 	protected $state;
 

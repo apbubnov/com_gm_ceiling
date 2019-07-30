@@ -37,7 +37,7 @@ function create_calculation(proj_id)
 			if(jQuery("#client").prop('checked')){
             	url_api = '&api=1'
         	}
-			location.href = `/index.php?option=com_gm_ceiling&view=calculationform2${url_type}${url_subtype}${url_api}&calc_id=${data-0}`;
+			location.href = `/index.php?option=com_gm_ceiling&view=calculationform${url_type}${url_subtype}${url_api}&calc_id=${data-0}`;
         },
         error: function(data){
             var n = noty({

@@ -417,7 +417,7 @@ function save_data_to_session(action_type,id=null,obj=null){
                     window.location = obj.attr('href');
                 }
                 else{
-                    window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
+                    window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
                 }
             }
             if(action_type == 3){

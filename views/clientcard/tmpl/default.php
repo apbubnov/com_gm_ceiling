@@ -630,10 +630,10 @@
                     console.log(data);
                     <?php
                     if (in_array("16", $user_group)){
-                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=';";
+                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=';";
                     }
                     else{
-                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=precalc&calc_id=';";
+                        echo "var url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=precalc&calc_id=';";
                     }
                     ?>
                     location.href = url+data;

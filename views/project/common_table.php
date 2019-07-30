@@ -701,7 +701,7 @@
                                 if (!empty($subtype)){
                                     $subtype_url = "&subtype=$subtype";
                                 }
-                                $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
+                                $button_url = "index.php?option=com_gm_ceiling&view=calculationform$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
 
                             <?php } ?>
