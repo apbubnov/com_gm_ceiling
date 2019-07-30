@@ -851,3 +851,59 @@ jQuery(document).on('click','#close_detailed_prepayment',function(){
     this.remove();
 
 });
+
+jQuery(document).on('click','#mount_jobs',function(){
+    jQuery("#table_jobs").toggle();
+    var i = jQuery(this).find('i');
+    if(i.hasClass('fa-angle-down')){
+        i.removeClass("fa-angle-down").addClass("fa-angle-up");
+    }
+    else if(i.hasClass('fa-angle-up')){
+        i.removeClass("fa-angle-up").addClass("fa-angle-down");
+    }
+
+});
+
+jQuery(document).on('click','#calc_goods',function(){
+    jQuery("#table_goods").toggle();
+    var i = jQuery(this).find('i');
+    if(i.hasClass('fa-angle-down')){
+        i.removeClass("fa-angle-down").addClass("fa-angle-up");
+    }
+    else if(i.hasClass('fa-angle-up')){
+        i.removeClass("fa-angle-up").addClass("fa-angle-down");
+    }
+});
+
+jQuery(document).on('click','#factory_jobs',function(){
+    jQuery("#table_factory_jobs").toggle();
+    var i = jQuery(this).find('i');
+    if(i.hasClass('fa-angle-down')){
+        i.removeClass("fa-angle-down").addClass("fa-angle-up");
+    }
+    else if(i.hasClass('fa-angle-up')){
+        i.removeClass("fa-angle-up").addClass("fa-angle-down");
+    }
+});
+
+jQuery(document).on('click','#additional_jobs',function(){
+    jQuery("#additional_jobs_table").toggle();
+    var i = jQuery(this).find('i');
+    if(i.hasClass('fa-angle-down')){
+        i.removeClass("fa-angle-down").addClass("fa-angle-up");
+    }
+    else if(i.hasClass('fa-angle-up')){
+        i.removeClass("fa-angle-up").addClass("fa-angle-down");
+    }
+});
+
+jQuery(document).on('click','#additional_goods',function(){
+    jQuery("#additional_goods_table").toggle();
+    var i = jQuery(this).find('i');
+    if(i.hasClass('fa-angle-down')){
+        i.removeClass("fa-angle-down").addClass("fa-angle-up");
+    }
+    else if(i.hasClass('fa-angle-up')){
+        i.removeClass("fa-angle-up").addClass("fa-angle-down");
+    }
+});
