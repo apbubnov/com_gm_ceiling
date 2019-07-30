@@ -17,8 +17,8 @@ $jinput = JFactory::getApplication()->input;
 $user = JFactory::getUser();
 $userId = (empty($jinput->getInt('id'))) ? $user->get('id') : $jinput->getInt('id');
 $userType = JFactory::getUser($userId)->dealer_type;
-$model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-$margin = $model_dealer_info->getData();
+//$model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+//$margin = $model_dealer_info->getData();
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount = $model_mount->getDataAll($userId);
 $gm_mount = json_encode($model_mount->getDataAll(1));
@@ -29,8 +29,11 @@ if(!$user->getDealerInfo()->update_check) {
 
 $model_prices = Gm_ceilingHelpersGm_ceiling::getModel('prices');
 $dealer_jobs = $model_prices->getJobsDealer($userId);
-
 $gm_price = json_encode($model_prices->getJobsDealer(1));
+
+$model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+$dealer_info = $model_dealer_info->getDealerInfo($userId);
+
 ?>
 
 
@@ -81,7 +84,7 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
             <label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >от полотен</label>
           </div>
           <div class="controls">
-            <input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin)?$margin->dealer_canvases_margin:0 ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+            <input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" class="required" style="width:100%;" size="3" required aria-required="true" value = "<?=$dealer_info->dealer_canvases_margin;?>" />
           </div>
         </div>
       </div>
@@ -91,7 +94,7 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
             <label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">от комплектующих</label>
           </div>
           <div class="controls">
-            <input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />
+            <input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value = "<?=$dealer_info->dealer_components_margin;?>"  class="required"style="width:100%;" size="3" required aria-required="true" />
           </div>
         </div>
       </div>
@@ -101,7 +104,7 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
             <label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">от монтажа</label>
           </div>
           <div class="controls">
-            <input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />
+            <input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value = "<?=$dealer_info->dealer_mounting_margin;?>"  class="required" style="width:100%;"size="3" required aria-required="true" />
           </div>
         </div>
       </div>
@@ -116,7 +119,7 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
   <br>
 
   <?php 
-  /*print_r($dealer_jobs);*/
+  //print_r($dealer_info);
   ?>  
   <?php foreach ($dealer_jobs as $value) { ?>
     <div class="row" style="margin-top: 5px;">
@@ -138,9 +141,25 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
           <label id="jform_min_sum-lbl" for="jform_min_sum" >Минимальная сумма</label>
         </div>
         <div class="controls">
-          <input type="text" name="jform[min_sum]" id="jform_min_sum" value=<?php echo ($mount->min_sum)?$mount->min_sum:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+          <input type="text" name="jform[min_sum]" id="jform_min_sum" value = "<?=$dealer_info->min_sum;?>" style="width:100%;" size="3" required aria-required="true" />				
         </div>
       </div>
+    </div>
+    <div class="col-md-4">
+      <div class="control-label">
+          <label id="jform_min_sum-lbl" for="jform_min_sum" >Сумма транспорта по городу</label>
+        </div>
+        <div class="controls">
+          <input type="text" name="jform[transport]" id="jform_transport" value = "<?=$dealer_info->transport;?>" style="width:100%;" size="3" required aria-required="true" />       
+        </div>
+    </div>
+    <div class="col-md-4">      
+        <div class="control-label">
+          <label id="jform_min_sum-lbl" for="jform_min_sum" >Сумма транспорта вне города (за 1 км.)</label>
+        </div>
+        <div class="controls">
+          <input type="text" name="jform[distance]" id="jform_distance" value = "<?=$dealer_info->distance;?>" style="width:100%;" size="3" required aria-required="true" />       
+        </div>
     </div>
   </div>
 <?php }?>
@@ -233,7 +252,9 @@ collectDataTable();
 }); 
 
   var array = [];
+  var data = [];
   function collectDataTable(){
+    array = [];
     jQuery.each(jQuery('.input'), function(index, value){
       array.push({
         job_id: value.id,
@@ -241,36 +262,45 @@ collectDataTable();
       }); 
     });
 
-    console.log(array);
-    saveData();
-  }
+    data = [];
+    data = {canvases_margin: jform_dealer_canvases_margin.value,
+      components_margin: jform_dealer_components_margin.value,
+      mounting_margin: jform_dealer_mounting_margin.value,
+      min_sum: jform_min_sum.value,
+      transport: jform_transport.value,
+      distance: jform_distance.value};
 
-  function saveData() {
-    jQuery.ajax({
-      type: 'POST',
-      url: "index.php?option=com_gm_ceiling&task=dealer.updatedata",
-      data: {
-        array: array,
-        dealer_id: <?= $userId ?>
-      },
-      success: function(data){
-        console.log(data);
-      },
-      dataType:"json",
-      async: false,
-      timeout: 10000,
-      error: function(data){
-        var n = noty({
-          timeout: 2000,
-          theme: 'relax',
-          layout: 'center',
-          maxVisible: 5,
-          type: "error",
-          text: "Ошибка!"
-        });
-      }
-    });
-  }
+      console.log(data);
+      saveData();
+    }
+
+    function saveData() {
+      jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=dealer.updatedata",
+        data: {
+          array: array,
+          dealer_id: <?= $userId ?>,
+          data: data
+        },
+        success: function(data){
+          console.log(data);
+        },
+        dataType:"json",
+        async: false,
+        timeout: 10000,
+        error: function(data){
+          var n = noty({
+            timeout: 2000,
+            theme: 'relax',
+            layout: 'center',
+            maxVisible: 5,
+            type: "error",
+            text: "Ошибка!"
+          });
+        }
+      });
+    }
 
 
-</script>
+  </script>

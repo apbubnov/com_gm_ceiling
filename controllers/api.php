@@ -333,7 +333,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -401,7 +401,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -434,7 +434,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -467,7 +467,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -528,7 +528,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -645,7 +645,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);
@@ -725,7 +725,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             $data = json_decode($_POST['data']);
             $key_number = $data->key_number;
-            $this->checkSubscription($data->key_number);
+            //$this->checkSubscription($data->key_number);
             $decrypt = $this->decrypt($data);
             if (empty($decrypt)) {
                 die($result);

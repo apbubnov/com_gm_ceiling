@@ -174,10 +174,11 @@ class Gm_ceilingModelDealer_info extends JModelList
 		}
 	}
 
-	public function updateMarginAndMount($dealer_id, $array)
+	public function updateMarginAndMount($dealer_id, $array, $data)
 	{
 		try
 		{
+
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
@@ -189,120 +190,126 @@ class Gm_ceilingModelDealer_info extends JModelList
 			$db->execute();
 			$items = $db->loadObjectList();
 
-			$arr_update = [];
-			$arr_insert = [];
+			$str_update = "";
+			$arr_insert = array();
 			foreach ($array as $value) {
-				$tmp = $value['job_id'];
+				$bool = false;
+				$job_id = $value['job_id'];
+				$price = $value['price'];
 				foreach ($items as $value2) {
-					if ($value2->job_id == $tmp) {
-						$arr_update[] = $value2->id.', '.$value['price'];
-					} else {
-						$arr_insert[] = $value2->job_id.', '.$value['price'];
+					if ($value2->job_id == $value['job_id']) {
+						$str_update .= "when `job_id` = $job_id then $price \n";
+						$bool = true;
+						break;
 					}
 				}
 
+				if (!$bool) {
+					$arr_insert[] = $value['job_id'].','.$value['price'].','.$dealer_id;
+				}
 			}
 
-			return $arr_update;
+			if (!empty($arr_insert)) {
+				$query = $db->getQuery(true);
 
+				$query->insert('`rgzbn_gm_ceiling_jobs_dealer_price`')
+				->columns('`job_id`,`price`,`dealer_id`')
+				->values($arr_insert);
+
+				$db->setQuery($query);
+				$db->execute();
+			}
 			
 
-			/*$db = JFactory::getDbo();
-	        $query = $db->getQuery(true);
-            
-            $query->update('`#__gm_ceiling_dealer_info`')
-				->set('`dealer_canvases_margin` = ' . $db->quote($data['dealer_canvases_margin']))
-				->set('`dealer_components_margin` = ' . $db->quote($data['dealer_components_margin']))
-				->set('`dealer_mounting_margin` = ' . $db->quote($data['dealer_mounting_margin']))
-				->where('dealer_id = ' . $id);
+			if (!empty($str_update)) {
+				$str_update = "`price` = case \n".$str_update.'end';
+				$query = $db->getQuery(true);
 
-            $db->setQuery($query);
-			$db->execute();
-			
-			unset($data['dealer_canvases_margin'],$data['dealer_components_margin'],$data['dealer_mounting_margin']);
+				$query->update('`rgzbn_gm_ceiling_jobs_dealer_price`')
+				->set($str_update)
+				->where("`dealer_id` = $dealer_id");
+				
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+			$canvases_margin = $data['canvases_margin'];
+			$components_margin = $data['components_margin'];
+			$mounting_margin = $data['mounting_margin'];
+			$min_sum = $data['min_sum'];
+			$transport = $data['transport'];
+			$distance = $data['distance'];
 
 			$query = $db->getQuery(true);
-			$query->select('`id`');
-			$query->from('`#__gm_ceiling_mount`');
-			$query->where("`user_id` = $id");
-			$db->setQuery($query);
-			$result = $db->loadResult();
-			if(!empty($result)) {
-				$query = $db->getQuery(true);
-				$query->update('`#__gm_ceiling_mount`')
-					->where('user_id = ' . $id);
+			$query->update('`rgzbn_gm_ceiling_dealer_info`')
+			->set("`dealer_canvases_margin` = $canvases_margin")
+			->set("`dealer_components_margin` = $components_margin")
+			->set("`dealer_mounting_margin` =  $mounting_margin")
+			->set("`min_sum` =  $min_sum")
+			->set("`transport` =  $transport")
+			->set("`distance` =  $distance")
+			->where("`dealer_id` = $dealer_id");
 
-				foreach ($data as $key => $value)
-				{
-					$query->set("$key = '$value'");
-				}
-
-				$db->setQuery($query);
-				$db->execute();	
-			}
-			else {
-				$query = $db->getQuery(true);
-				$query->select('mp20')
-				->from('#__gm_ceiling_mount')
-				->where('user_id = 2');
-				$db->setQuery($query);
-				$mp20 = $db->loadObject()->mp20;
-
-				$col = '';
-				$val = '';
-				foreach ($data as $key => $value)
-				{
-					$col .= "`$key`,";
-					$val .= "'$value',";
-				}
-				$col .= '`user_id`,`mp20`';
-				$val .= "$id, '$mp20'";
-
-				$query = $db->getQuery(true);
-	        	$query->insert('`#__gm_ceiling_mount`')
-	            	->columns($col)
-					->values($val);
-	        $db->setQuery($query);
-	        $db->execute();
-	    }*/
-	    return 1;
-	}
-	catch(Exception $e)
-	{
-		Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-	}
-}
-
-function update_city($id,$city){
-	try{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query
-		->select("*")
-		->from('`#__gm_ceiling_dealer_info`')
-		->where('dealer_id = ' . $id);
-		$db->setQuery($query);
-		$result = $db->loadObjectList();
-		if(count($result) == 0){
-			$query->insert('`#__gm_ceiling_dealer_info`')
-			->columns('`dealer_id`,`city`')
-			->values("$id,'$city'");
 			$db->setQuery($query);
 			$db->execute();
+			
+			return 1;
 		}
-		if(count($result) == 1){
-			$query->update('`#__gm_ceiling_dealer_info`')
-			->set('`city` = ' . $db->quote($city))
+		catch(Exception $e)
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
+	}
+
+	function update_city($id,$city){
+		try{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+			->select("*")
+			->from('`#__gm_ceiling_dealer_info`')
 			->where('dealer_id = ' . $id);
 			$db->setQuery($query);
-			$db->execute();
+			$result = $db->loadObjectList();
+			if(count($result) == 0){
+				$query->insert('`#__gm_ceiling_dealer_info`')
+				->columns('`dealer_id`,`city`')
+				->values("$id,'$city'");
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if(count($result) == 1){
+				$query->update('`#__gm_ceiling_dealer_info`')
+				->set('`city` = ' . $db->quote($city))
+				->where('dealer_id = ' . $id);
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+
 		}
-
-
+		catch(Exception $e)
+		{
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
-	catch(Exception $e)
-	{
-		Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+	public function getDealerInfo($dealer_id){
+		try {
+
+			$db = $this->getDbo();
+
+			$query = $db->getQuery(true);
+			$query ->select('*')
+			->from('`rgzbn_gm_ceiling_dealer_info`')
+			->where("`dealer_id` = $dealer_id");
+			$db->setQuery($query);
+			$db->execute();
+			$items = $db->loadObject();
+			return $items;
+		} catch(Exception $e) {
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+		}
 	}
-}
+
 }
