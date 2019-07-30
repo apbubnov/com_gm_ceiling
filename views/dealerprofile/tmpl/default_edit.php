@@ -258,18 +258,19 @@ collectDataTable();
     jQuery.each(jQuery('.input'), function(index, value){
       array.push({
         job_id: value.id,
-        price: value.value
+        price: value.value.replace(',', '.').replace(/[^\d\.]/g, '')
       }); 
     });
 
     data = [];
-    data = {canvases_margin: jform_dealer_canvases_margin.value,
-      components_margin: jform_dealer_components_margin.value,
-      mounting_margin: jform_dealer_mounting_margin.value,
-      min_sum: jform_min_sum.value,
-      transport: jform_transport.value,
-      distance: jform_distance.value};
-
+    data = {
+      canvases_margin: jform_dealer_canvases_margin.value.replace(',', '.').replace(/[^\d\.]/g, ''),
+      components_margin: jform_dealer_components_margin.value.replace(',', '.').replace(/[^\d\.]/g, ''),
+      mounting_margin: jform_dealer_mounting_margin.value.replace(',', '.').replace(/[^\d\.]/g, ''),
+      min_sum: jform_min_sum.value.replace(',', '.').replace(/[^\d\.]/g, ''),
+      transport: jform_transport.value.replace(',', '.').replace(/[^\d\.]/g, ''),
+      distance: jform_distance.value.replace(',', '.').replace(/[^\d\.]/g, '')
+    };
       console.log(data);
       saveData();
     }
@@ -285,6 +286,14 @@ collectDataTable();
         },
         success: function(data){
           console.log(data);
+          var n = noty({
+            timeout: 2000,
+            theme: 'relax',
+            layout: 'center',
+            maxVisible: 5,
+            type: "success",
+            text: "Данные сохранены!"
+          });
         },
         dataType:"json",
         async: false,
