@@ -481,8 +481,8 @@ class Gm_ceilingModelPrices extends JModelList
             $query ->select('`j`.`id`,`j`.`name`, `dp`.`price`, `dp`.`id` as `dp_id`, IFNULL(`dp`.`price`, 0) as `price`')
             	->from('`#__gm_ceiling_jobs` as `j`')
             	->leftJoin("`#__gm_ceiling_jobs_dealer_price` as `dp`
-            		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealer_id")
-
+            		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealer_id ")
+            	->where('`guild_only` = 0 and `is_factory_work` = 0')
             	->order('`j`.`id`');
             $db->setQuery($query);
             $db->execute();

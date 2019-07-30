@@ -43,7 +43,7 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 	 * @throws Exception
 	 * @since  1.6
 	 */
-	public function updatedata($array = NULL, $dealer_id = NULL)
+	public function updatedata($array = NULL, $dealer_id = NULL, $data = null)
 	{
 		try
 		{
@@ -63,9 +63,10 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$jinput = JFactory::getApplication()->input;
             $array = $jinput->get('array', null, 'ARRAY');
             $dealer_id = $jinput->get('dealer_id', null, 'INT');
+            $data = $jinput->get('data', null, 'ARRAY');
 
 	        $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-	        $result = $model_dealer_info->updateMarginAndMount($dealer_id, $array);
+	        $result = $model_dealer_info->updateMarginAndMount($dealer_id, $array, $data);
 
             die(json_encode($result));
 
