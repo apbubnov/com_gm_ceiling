@@ -165,6 +165,20 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
+    public static function deleteMetizFromGoods($goods) {
+        try {
+            $temp_goods = [];
+            foreach ($goods as $key => $value) {
+                if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
+                    $temp_goods[] = $value;
+                }
+            }
+            return $temp_goods;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     /**
      * Get an instance of the named modelt
      *
@@ -2270,13 +2284,23 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
                 if($data['n41'] > 0){
+                    if($data['n41'] ==  1){
+                        $mp70  =  $results->mp70;
+                        $gm_mp70 = $gm_mount->mp70;
+                        $dem_title = "Демонтаж потолка менее 5кв.м";
+                    }
+                    else{
+                        $mp70  =  $results->mp74;
+                        $gm_mp70 = $gm_mount->mp74;
+                        $dem_title = "Демонтаж потолка более 5кв.м";
+                    }
                     $mounting_data[] = array(
-                        "title" => "Демонтаж потолка",                                                       //Название
-                        "quantity" => $data['n41'],                                                   //Кол-во
-                        "gm_salary" => $gm_mount->mp70,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" =>$data['n41'] * $gm_mount->mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp70,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" =>$data['n41'] * $results->mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "title" => $dem_title,                                                       //Название
+                        "quantity" => 1,                                                   //Кол-во
+                        "gm_salary" => $gm_mp70,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" =>1 * $gm_mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $mp70,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" =>1*$mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>1
                     );
                 }

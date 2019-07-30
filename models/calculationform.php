@@ -287,403 +287,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-
-    public function n13_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('fixtures.*, components_option.id AS option_id, components_option.component_id AS component_id')
-                ->from('`#__gm_ceiling_fixtures` AS fixtures')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = fixtures.n13_size')
-                ->select('type.title AS type_title, type.id AS type_id')
-                ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = fixtures.n13_type')
-                ->where('fixtures.calculation_id' . ' = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            /*
-                    foreach ($result AS $key => $value)
-                    {
-                        $type_id = $value->type_id;
-                        $query = $db->getQuery(true);
-                        $query -> select('*, components.id AS comp_id')
-                            ->from('`#__gm_ceiling_type` AS type')
-                            ->join('LEFT', '`#__gm_ceiling_type_option` AS options ON options.type_id = type.id')
-                            ->join('LEFT', '`#__gm_ceiling_components` AS components ON options.component_id = components.id')
-                            ->join('LEFT', '`#__gm_ceiling_components_option` AS com_option ON options.default_comp_option_id = com_option.id')
-                            ->where('type.id = '.$type_id);
-                        $db->setQuery($query);
-                        $result[$key]->type_options = $db->loadObjectList();
-
-                        foreach ($result[$key]->type_options AS $optKey => $optValue) if ($optValue->comp_id)
-                        {
-                            $query = $db->getQuery(true);
-                            $query -> select('*')
-                                ->from('`#__gm_ceiling_components_option`')
-                                ->where('component_id = '.$optValue->comp_id);
-                            $db->setQuery($query);
-                            $result[$key]->option[$optKey]->comp_options = $db->loadObjectList();
-                        }
-                    }*/
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function n13($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('fixtures.*')
-                ->from('`#__gm_ceiling_fixtures` AS fixtures')
-                ->where('fixtures.calculation_id = ' . $id);
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function n14_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('pipes.*')
-                ->from('`#__gm_ceiling_pipes` AS pipes')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = pipes.n14_size')
-                ->where('pipes.calculation_id = ' . $id);
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListBypass()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 24');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-
-    public function n15_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('cornice.*')
-                ->from('`#__gm_ceiling_cornice` AS cornice')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = cornice.n15_size')
-                ->select('type.title AS type_title, type.id AS type_id')
-                ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = cornice.n15_type')
-                ->where('cornice.calculation_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListCornice()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 51');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function n22_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('hoods.*')
-                ->from('`#__gm_ceiling_hoods` AS hoods')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = hoods.n22_size')
-                ->select('type.title AS type_title, type.id AS type_id')
-                ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = hoods.n22_type')
-                ->where('hoods.calculation_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-
-    public function n22($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('hoods.*')
-                ->from('`#__gm_ceiling_hoods` AS hoods')
-                ->where('(hoods.n22_type = 7 or hoods.n22_type = 8) and  hoods.calculation_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function n23_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('diffusers.*')
-                ->from('`#__gm_ceiling_diffusers` AS diffusers')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = diffusers.n23_size')
-                ->where('diffusers.calculation_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListDiffuz()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 22');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function n26_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('ecola.*')
-                ->from('`#__gm_ceiling_ecola` AS ecola')
-                ->select('components_option.title AS component_title_illum')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = ecola.n26_illuminator')
-                ->select('components_option_lamp.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option_lamp ON components_option_lamp.id = ecola.n26_lamp')
-                ->where('ecola.calculation_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-    public function n19_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query
-                ->select('wires.*')
-                ->select('components_option.title AS wire_title')
-                ->from('`#__gm_ceiling_wires` AS wires')
-                ->leftJoin('`#__gm_ceiling_components_option` AS components_option ON components_option.id = wires.wire_id')
-                ->where('wires.calc_id = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListEcola()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 19 AND ( components_option.title LIKE(\'%Эcola%\') OR components_option.title LIKE(\'%Экола%\') )');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListEcolaLamp()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 20 AND ( components_option.title LIKE(\'%Эcola%\') OR components_option.title LIKE(\'%Экола%\') )');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-
-    public function n29_load($id)
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->select('profil.*')
-                ->from('`#__gm_ceiling_profil` AS profil')
-                ->select('components_option.title AS component_title')
-                ->join('LEFT', '`#__gm_ceiling_components_option` AS components_option ON components_option.id = profil.n29_profil')
-                ->select('type.title AS type_title')
-                ->join('LEFT', '`#__gm_ceiling_type` AS type ON type.id = profil.n29_type')
-                ->where('profil.calculation_id' . ' = ' . $id);
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-
-    public function getListProfil()
-    {
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-
-            $query->select('components_option.*')
-                ->from('`#__gm_ceiling_components_option` AS components_option')
-                ->where('components_option.component_id = 14');
-
-
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-            return $result;
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
     /**
      * Method to get the table
      *
@@ -1029,10 +632,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             сохраняются на контроллере skecth (controllers/sketch.php)*/
             $date_created = date("Y-m-d H:i:s");
             $columns = [
-                "calculation_title","n6","n7","n8","n11","n12","n16","n17","n18","n20","n20_1","n21","n22_1","n24","n27","n28","remove_n28",
-                "n30","n32","n33","n33_2","n34","n34_2","n35","n36","n37","n38","n39","n40","n41","n42","n43","n44","niche","height","components_sum","canvases_sum","mounting_sum","dealer_components_sum",
-                "dealer_canvases_sum","dop_krepezh","extra_components","extra_mounting","components_stock","need_mount","need_metiz","need_cuts",
-                "color","details","discount","manager_note","scaffolding"
+                "calculation_title","details","manager_note"
             ];
             $calculationId = $data['id'];
 
@@ -1048,166 +648,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query->where('id = ' . $data['id']);
             $db->setQuery($query);
             $db->execute();
-
-
-            /*сохранение комлектующих, которые имеют виды*/
-            $n13 = json_decode($data['n13']);
-            $n14 = json_decode($data['n14']);
-            $n15 = json_decode($data['n15']);
-            $n19 = json_decode($data['n19']);
-            $n22 = json_decode($data['n22']);
-            $n23 = json_decode($data['n23']);
-            $n26 = json_decode($data['n26']);
-            $n29 = json_decode($data['n29']);
-            
-
-
-            if (!empty($n29)) {
-                foreach ($n29 as $key => $value) $n29[$key][0] = str_replace(",",".", $value[0]);
-            }
-            if ($del_flag) {
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_fixtures'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_pipes'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_cornice'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_hoods'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_diffusers'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_ecola'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_profil'));
-                $query->where('calculation_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__gm_ceiling_wires'));
-                $query->where('calc_id = ' . $data['id']);
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (!empty($n13)) {
-                $query = $db->getQuery(true);
-                $query
-                    ->insert('`#__gm_ceiling_fixtures`')
-                    ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
-
-                foreach ($n13 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (!empty($n14)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_pipes`')
-                    ->columns('calculation_id, n14_count, n14_size');
-                foreach ($n14 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n15)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_cornice`')
-                    ->columns('calculation_id, n15_count, n15_type, n15_size');
-                foreach ($n15 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if(!empty($n19)){
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_wires`')
-                    ->columns('calc_id, wire_id, count');
-                foreach ($n19 as $value) {
-                    if (!empty($value[1]))
-                        $query->values($data['id'] . ', ' . $value[1] . ', ' . $value[0]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n22)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_hoods`')
-                    ->columns('calculation_id, n22_count, n22_type, n22_size');
-                foreach ($n22 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n23)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_diffusers`')
-                    ->columns('calculation_id, n23_count, n23_size');
-                foreach ($n23 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n26)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_ecola`')
-                    ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
-                foreach ($n26 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n29)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_profil`')
-                    ->columns('calculation_id, n29_count, n29_type');
-                foreach ($n29 as $value) {
-                    if (!empty($value[0]))
-                        $query->values($data['id'] . ', ' . $value[0] . ', ' . $value[1] );
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-
 
            return $calculationId;
         }
@@ -1484,7 +924,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-    public function addGoodsInCalculation($calc_id, $goods) {
+    public function addGoodsInCalculation($calc_id, $goods, $from_sketch) {
         try {
             $values = array();
             foreach ($goods as $value) {
@@ -1494,9 +934,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query
-                ->delete('`#__gm_ceiling_calcs_goods_map`')
-                ->where("`calc_id` = $calc_id");
+            $query = "
+                DELETE  `cgm`
+                  FROM  `#__gm_ceiling_calcs_goods_map` as `cgm`
+                        INNER JOIN  `#__gm_stock_goods` as `g`
+                                ON  `cgm`.`goods_id` = `g`.`id`
+            ";
+            if ($from_sketch) {
+                $query .= "WHERE `cgm`.`calc_id` = $calc_id AND `g`.`category_id` = 1";
+            } else {
+                $query .= "WHERE `cgm`.`calc_id` = $calc_id AND `g`.`category_id` <> 1";
+            }
+            
             $db->setQuery($query);
             $db->execute();
 
@@ -1518,7 +967,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-    public function addJobsInCalculation($calc_id, $jobs) {
+    public function addJobsInCalculation($calc_id, $jobs, $from_sketch) {
         try {
             $values = array();
             foreach ($jobs as $value) {
@@ -1530,9 +979,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query
-                ->delete('`#__gm_ceiling_calcs_jobs_map`')
-                ->where("`calc_id` = $calc_id");
+            $query = "
+                DELETE  `cjm`
+                  FROM  `#__gm_ceiling_calcs_jobs_map` as `cjm`
+                        INNER JOIN  `#__gm_ceiling_jobs` as `j`
+                                ON  `cjm`.`job_id` = `j`.`id`
+            ";
+            if ($from_sketch) {
+                $query .= "WHERE `cjm`.`calc_id` = $calc_id AND `j`.`is_factory_work` = 1";
+            } else {
+                $query .= "WHERE `cjm`.`calc_id` = $calc_id AND `j`.`is_factory_work` = 0";
+            }
+                
             $db->setQuery($query);
             $db->execute();
 
@@ -1744,6 +1202,8 @@ ORDER BY `goods_id`
                 ) AS `jf`
                 INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
                                 ON  `jf`.`job_id` = `j`.`id`
+    WHERE   `j`.`guild_only` = 0 AND
+            `j`.`is_factory_work` = 0
     GROUP BY    `job_id`
     ORDER BY    `job_id`
             ";
@@ -1813,9 +1273,34 @@ ORDER BY `goods_id`
                 LEFT    JOIN    `rgzbn_gm_ceiling_jobs_dealer_price` AS `jdp`
                                 ON  `jf`.`job_id` = `jdp`.`job_id` AND
                                     `jdp`.`dealer_id` = $dealer_id
+    WHERE   `j`.`guild_only` = 0 AND
+            `j`.`is_factory_work` = 0
     GROUP BY    `job_id`
     ORDER BY    `job_id`
             ";
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getFactoryWorksPricesInCalculation($calc_id, $dealer_id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('
+                    `cjm`.`job_id`,
+                    `j`.`name`,
+                    `cjm`.`count`,
+                    `j`.`price`,
+                    `cjm`.`count` * `j`.`price` as `price_sum`
+                ')
+                ->from('`#__gm_ceiling_calcs_jobs_map` as `cjm`')
+                ->innerJoin('`#__gm_ceiling_jobs` as `j` on `cjm`.`job_id` = `j`.`id`')
+                ->where("`cjm`.`calc_id` = $calc_id and `j`.`guild_only` = 0 and `j`.`is_factory_work` = 1");
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;
