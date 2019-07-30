@@ -123,9 +123,6 @@ if (!empty($calculation_id)) {
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
-    if (!empty($calculation->n3)) {
-        $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
-    }
     $canvas = array_filter(
         $calculation->goods,
         function ($e) {
@@ -142,7 +139,7 @@ if (!empty($calculation_id)) {
         foreach ($selected_canvases as $value) {
             if (!in_array($value->width, $arr_widths)) {
                 array_push($arr_widths, $value->width);
-                array_push($widths, (object)array("width" => $value->width, "price" => $value->price));
+                array_push($widths, (object)array("id"=>$value->id,"width" => $value->width, "price" => $value->price));
             }
         }
         usort($widths, function ($a, $b) {
@@ -354,6 +351,12 @@ if (!empty($calculation_id)) {
                             </td>
                         </tr>
                     </table>
+                    <div id="div_for_test" style="display: none;">
+                        <label>Площадь полотна:</label> <input id="input_camvas_area" type="text" readonly><br>
+                        <label>Площадь обрезков:</label> <input name="jform[offcut_square]" id="jform_offcut_square" type="text" readonly><br>
+                        <label>Координаты:</label> <textarea id="input_cut_data" style="width: 600px; height: 200px;" readonly resize></textarea><br>
+                        <img id="cut_image" style="width: 100%;">
+                    </div>
                     <div id="div_for_test" style="display: none;">
                         <label>Усаженный периметр:</label> <input id="input_n5_shrink" type="text" readonly><br>
                         <label>Площадь обрезков:</label> <input name="jform[offcut_square]" id="jform_offcut_square"
@@ -1035,8 +1038,15 @@ if (!empty($calculation_id)) {
                 async: false,
                 success: function (data) {
                     console.log(data);
+                    var sum = 0;
+                    for(var c = 0;c<data.all_goods.length;c++){
+                        if(data.all_goods[c].category_id != 1) {
+                            sum += data.all_goods[c].price_sum - 0;
+                        }
+                    }
+                    console.log("SUM",sum+data.extra_components_sum);
                     jQuery("#under_calculate").show();
-                    jQuery("#final_price").text( data.common_sum_with_margin.toFixed(0) );
+                    jQuery("#final_price").text( data.final_sum.toFixed(0) );
                 },
                 error: function (data) {
                     var n = noty({
@@ -1149,6 +1159,7 @@ if (!empty($calculation_id)) {
         }
         document.getElementById('texturesData').value = texturesData;
         console.log(jQuery("#texturesData").val());
+        console.log("W",jQuery("#width").val());
         document.getElementById('form_url').submit();
 
     }
@@ -1532,7 +1543,7 @@ if (!empty($calculation_id)) {
                             }
                             if (savedInput.type == "text") {
                                 countDiv = jQuery(rowFields[f]).find('.countDiv');
-                                input = jQuery(countDiv).children();
+                                input = jQuery(countDiv).find('.form-control');
                                 input.val(savedInput.value);
                                 if (savedInput.related.length) {
                                     for (var k = 0; k < savedInput.related.length; k++) {
@@ -1543,8 +1554,9 @@ if (!empty($calculation_id)) {
                                         if (savedInput.related[k].type == 'radio') {
                                             var radioBtn = jQuery('#' + savedInput.related[k].id + '[data-parent = "' + elem.groups[i].fields[j].field_id + '"]');
                                             radioBtn.attr('checked', true);
-                                            radioBtn.trigger('click');
+
                                             if (savedInput.related[k].assoc) {
+                                                radioBtn.trigger('click');
                                                 radioBtn.closest('.row-fields').find('.div-goods_select').children().val(savedInput.related[k].assoc.value);
                                             }
                                         }
@@ -1882,5 +1894,17 @@ if (!empty($calculation_id)) {
                 return false;
             }
         });
+    }
+
+    function puf() {
+        let filename = '<?php echo $cut_img;?>';
+        if (filename) {
+            jQuery('#cut_image').attr('src', filename);
+            jQuery('#input_cut_data').val(calculation.cut_data);
+            jQuery('#input_shrink_percent').val(calculation.shrink_percent);
+            jQuery('#jform_offcut_square').val(calculation.offcut_square);
+            jQuery('#input_camvas_area').val(calculation.canvas_area);
+            jQuery('#div_for_test').show();
+        }
     }
 </script>

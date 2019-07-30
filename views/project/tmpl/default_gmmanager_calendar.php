@@ -55,50 +55,6 @@
     $total_perimeter = 0;
     $calculation_total_discount = 0;
     $calculations = $model_calculations->new_getProjectItems($this->item->id);
-    foreach ($calculations as $calculation) {
-        $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-        $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
-        $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-        $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-        $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
-        $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-        $self_components_sum += $calculation->dealer_self_components_sum;
-        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-        $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
-        $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-        $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-        $calculation->n13 = $calculationform_model->n13_load($calculation->id);
-        $calculation->n14 = $calculationform_model->n14_load($calculation->id);
-        $calculation->n15 = $calculationform_model->n15_load($calculation->id);
-        $calculation->n22 = $calculationform_model->n22_load($calculation->id);
-        $calculation->n23 = $calculationform_model->n23_load($calculation->id);
-        $calculation->n26 = $calculationform_model->n26_load($calculation->id);
-        $calculation->n29 = $calculationform_model->n29_load($calculation->id);
-        $calculation->n19 = $calculationform_model->n19_load($calculation->id);
-        $total_square +=  $calculation->n4;
-        $total_perimeter += $calculation->n5;
-        $project_total += $calculation->calculation_total;
-        $project_total_discount += $calculation->calculation_total_discount;
-        $self_calc_data[$calculation->id] = array(
-            "canv_data" => $calculation->dealer_self_canvases_sum,
-            "comp_data" => $calculation->dealer_self_components_sum,
-            "mount_data" => $calculation->dealer_self_gm_mounting_sum,
-            "square" => $calculation->n4,
-            "perimeter" => $calculation->n5,
-            "sum" => $calculation->calculation_total,
-            "sum_discount" => $calculation->calculation_total_discount
-        );
-        $calculation_total = $calculation->calculation_total;
-        $calculation_total_discount =  $calculation->calculation_total_discount;
-    }
-    $self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
-    $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
-
-    $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-    $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
-    $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
-
-    $project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
     $del_flag = 0;
     $project_total = $project_total + $client_sum_transport;

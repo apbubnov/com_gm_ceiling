@@ -118,7 +118,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
             $this->item->types = $this->types();
             if ($this->item->id) {
-                $this->item->n13 = $this->n13_load($this->item->id);
+               /* $this->item->n13 = $this->n13_load($this->item->id);
                 $this->item->n14 = $this->n14_load($this->item->id);
                 $this->item->n14_all = $this->getListBypass();
                 $this->item->n15 = $this->n15_load($this->item->id);
@@ -131,7 +131,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $this->item->n26_lamp = $this->getListEcolaLamp();
                 $this->item->n29 = $this->n29_load($this->item->id);
                 $this->item->n29_all = $this->getListProfil();
-                $this->item->n19 = $this->n19_load($this->item->id);
+                $this->item->n19 = $this->n19_load($this->item->id);*/
             }
 
             return $this->item;
