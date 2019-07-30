@@ -559,7 +559,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			}
 
 			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id); // Получение компонентов
-			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id, $dealer_id); // Получение цеховских работ
+			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id); // Получение цеховских работ
 
 			if (!empty($cancel_metiz)) {
 				$all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
@@ -649,6 +649,16 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$common_sum = $canvases_sum + $components_sum + $mounting_sum;
 			$common_sum_with_margin = $canvases_sum_with_margin + $components_sum_with_margin + $mounting_sum_with_margin;
 			$final_sum = $common_sum_with_margin - ($common_sum_with_margin * $discount / 100);
+
+			$data2 = array();
+			$data2['id'] = $calc_id;
+			$data2['canvases_sum'] = $canvases_sum;
+			$data2['components_sum'] = $components_sum;
+			$data2['mounting_sum'] = $mounting_sum;
+			$data2['canvases_sum_with_margin'] = $canvases_sum_with_margin;
+			$data2['components_sum_with_margin'] = $components_sum_with_margin;
+			$data2['mounting_sum_with_margin'] = $mounting_sum_with_margin;
+			$model_calculation->update_calculation($data2);
 
 			$result = (object)array(
 				'all_goods' => $all_goods,

@@ -1286,7 +1286,7 @@ ORDER BY `goods_id`
         }
     }
 
-    public function getFactoryWorksPricesInCalculation($calc_id, $dealer_id) {
+    public function getFactoryWorksPricesInCalculation($calc_id) {
         try {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
