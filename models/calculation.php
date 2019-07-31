@@ -828,9 +828,10 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
     }
 
-    function saveComment($calcId,$comment){
-	    try{
+    function saveComment($calcId, $comment) {
+	    try {
             $db = JFactory::getDBO();
+            $comment = $db->escape($comment);
             $query = $db->getQuery(true);
                 $query
                     ->update('`#__gm_ceiling_calculations`')
@@ -838,8 +839,7 @@ class Gm_ceilingModelCalculation extends JModelItem
                     ->where("`id` = $calcId");
             $db->setQuery($query);
             $db->execute();
-        }
-        catch(Exception $e){
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

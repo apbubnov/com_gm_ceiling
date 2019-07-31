@@ -586,12 +586,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			if (!empty($photo_print)) {
 				$photo_print_sum = (float)$photo_print->price;
 			}
-
-			$final_sum = 0;
-			$common_sum = 0;
-			$common_sum_with_margin = 0;
+            $data_for_manager_estimate = [];
 			$canvases_sum = 0;
-			$canvases_sum_with_margin = 0;
 			$components_sum = 0;
 			$components_sum_with_margin = 0;
 			$mounting_sum = 0;
@@ -603,11 +599,23 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				throw new Exception('Empty calculation!');
 			}
 
+			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            if (empty($dealer_info)) {
+                $canvases_margin = 0;
+                $components_margin = 0;
+                $mounting_margin = 0;
+            } else {
+                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
+                $components_margin = $dealer_info->dealer_components_margin-0;
+                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
+            }
+
 			foreach ($all_goods as $value) {
 				if ($value->category_id != 1) { // если не полотно
 					$components_sum += $value->price_sum;
 					$components_sum_with_margin += $value->price_sum_with_margin;
 				} else {
+                    $data_for_manager_estimate['canvas'] = $value;
 					$canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
 					$canvas_price = $value->dealer_price;
 				}
@@ -618,17 +626,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$offcut_square = $calculation->offcut_square-0;
 			if (empty($cancel_offcuts) && $offcut_square > ($calculation->n4 * 0.5)) {
             	$canvases_sum += $offcut_square * $canvas_price * 0.5; // обрезки
-            }
-
-			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
-            if (empty($dealer_info)) {
-                $canvases_margin = 0;
-                $components_margin = 0;
-                $mounting_margin = 0;
-            } else {
-                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
-                $components_margin = $dealer_info->dealer_components_margin-0;
-                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
+                $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$offcut_square,"price"=>$canvas_price * 0.5);
             }
 
             $canvases_sum += $photo_print_sum;
@@ -682,8 +680,22 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'discount' => $discount,
 				'offcut_square' => $offcut_square
 			);
+			$data_for_manager_estimate['photoprint'] = $photo_print;
+			$data_for_manager_estimate['factory_jobs'] = $factory_jobs;
+			$data_for_manager_estimate['calculation'] = $calculation;
+			/*generate PDF's*/
+            //PDF раскроя
+            Gm_ceilingHelpersGm_ceiling::create_cut_pdf($data_for_manager_estimate);
+            //для менеджера
+            Gm_ceilingHelpersGm_ceiling::create_manager_estimate($data_for_manager_estimate);
+            //клиентская смета
+            $data_for_client_estimate = $data_for_manager_estimate;
+            $data_for_client_estimate['dealer_id'] = $dealer_id;
+            $data_for_client_estimate['jobs'] = $all_jobs;
+            $data_for_client_estimate['goods'] = $all_goods;
+            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
 
-			die(json_encode($result));
+            die(json_encode($result));
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
