@@ -117,22 +117,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
 
             $this->item->types = $this->types();
-            if ($this->item->id) {
-               /* $this->item->n13 = $this->n13_load($this->item->id);
-                $this->item->n14 = $this->n14_load($this->item->id);
-                $this->item->n14_all = $this->getListBypass();
-                $this->item->n15 = $this->n15_load($this->item->id);
-                $this->item->n15_all = $this->getListCornice();
-                $this->item->n22 = $this->n22_load($this->item->id);
-                $this->item->n23 = $this->n23_load($this->item->id);
-                $this->item->n23_all = $this->getListDiffuz();
-                $this->item->n26 = $this->n26_load($this->item->id);
-                $this->item->n26_all = $this->getListEcola();
-                $this->item->n26_lamp = $this->getListEcolaLamp();
-                $this->item->n29 = $this->n29_load($this->item->id);
-                $this->item->n29_all = $this->getListProfil();
-                $this->item->n19 = $this->n19_load($this->item->id);*/
-            }
 
             return $this->item;
         }
@@ -1160,6 +1144,7 @@ ORDER BY `goods_id`
             $query = "
             SELECT  `jf`.`job_id`,
                 `j`.`name`,
+                `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 `j`.`price`,
                 ROUND(SUM(`jf`.`job_count_all`) * `j`.`price`, 2) AS `price_sum`,
@@ -1228,6 +1213,7 @@ ORDER BY `goods_id`
             $query = $db->getQuery(true);
             $query = "SELECT    `jf`.`job_id`,
                 `j`.`name`,
+                `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 IFNULL(`jdp`.`price`, 0) AS `price`,
                 ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0), 2) AS `price_sum`,

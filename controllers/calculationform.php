@@ -637,6 +637,11 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             	$canvases_sum_with_margin += $value->price_sum;
             }
 
+            if ($canvases_sum < 200) {
+            	$canvases_sum = 200;
+            	$canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
+            }
+
 			foreach ($all_jobs as $value) {
 				$mounting_sum += $value->price_sum;
 				$mounting_sum_with_margin += $value->price_sum_with_margin;
@@ -694,6 +699,17 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $data_for_client_estimate['jobs'] = $all_jobs;
             $data_for_client_estimate['goods'] = $all_goods;
             Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
+
+            $data_for_mount_estimate = [];
+            $data_for_mount_estimate['calculation'] = $calculation;
+            $data_for_mount_estimate['jobs'] = $all_jobs;
+            if($need_mount == 1){
+                $data_for_mount_estimate['gm_jobs'] = [];
+            }
+            if($need_mount == 2){
+                $data_for_mount_estimate['gm_jobs'] = $model_calcform->getMountingServicePricesInCalculation($calc_id, 1);
+            }
+            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
 
             die(json_encode($result));
 		} catch(Exception $e) {
