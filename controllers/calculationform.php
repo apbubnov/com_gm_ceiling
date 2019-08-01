@@ -599,6 +599,17 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				throw new Exception('Empty calculation!');
 			}
 
+			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            if (empty($dealer_info)) {
+                $canvases_margin = 0;
+                $components_margin = 0;
+                $mounting_margin = 0;
+            } else {
+                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
+                $components_margin = $dealer_info->dealer_components_margin-0;
+                $mounting_margin = $dealer_info->dealer_mounting_margin-0;s
+            }
+
 			foreach ($all_goods as $value) {
 				if ($value->category_id != 1) { // если не полотно
 					$components_sum += $value->price_sum;
@@ -616,17 +627,6 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			if (empty($cancel_offcuts) && $offcut_square > ($calculation->n4 * 0.5)) {
             	$canvases_sum += $offcut_square * $canvas_price * 0.5; // обрезки
                 $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$offcut_square,"price"=>$canvas_price * 0.5);
-            }
-
-			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
-            if (empty($dealer_info)) {
-                $canvases_margin = 0;
-                $components_margin = 0;
-                $mounting_margin = 0;
-            } else {
-                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
-                $components_margin = $dealer_info->dealer_components_margin-0;
-                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
             }
 
             $canvases_sum += $photo_print_sum;
@@ -694,6 +694,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $data_for_client_estimate['jobs'] = $all_jobs;
             $data_for_client_estimate['goods'] = $all_goods;
             Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
+
             $data_for_mount_estimate = [];
             if($need_mount == 1){
                 $data_for_mount_estimate['calculation'] = $calculation;
@@ -705,6 +706,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                 $data_for_mount_estimate['gm_jobs'] = $model_calcform->getMountingServicePricesInCalculation($calc_id, 1);
             }
             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
+
             die(json_encode($result));
 		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
