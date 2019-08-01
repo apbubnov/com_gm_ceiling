@@ -607,7 +607,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             } else {
                 $canvases_margin = $dealer_info->dealer_canvases_margin-0;
                 $components_margin = $dealer_info->dealer_components_margin-0;
-                $mounting_margin = $dealer_info->dealer_mounting_margin-0;s
+                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
             }
 
 			foreach ($all_goods as $value) {
