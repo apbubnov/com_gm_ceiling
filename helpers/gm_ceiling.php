@@ -764,69 +764,30 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
-    $mounting_data = null){
+    public static function create_client_single_estimate($data){
         try {
-            $html = self::create_client_single_estimate_html($need_mount,$calc_id,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
-            if(empty($calc_id)){
-                $calc_id = $data['id'];
-            }
-            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            $filename = md5($calc_id . "client_single") . ".pdf";
-            Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-        }
-        catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
-    public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
-    $mounting_data = null){
-        try {
-            if(empty($canvases_data)){
-                if(!empty($calc_id)){
-                    $canvases_data = self::calculate_canvases($calc_id);
-                }
-
-            }
-
-            if(empty($components_data)){
-                $components_data = self::calculate_components($calc_id,null,0);
-            }
-            if(empty($guild_data)){
-                $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
-            }
-            else $guild_data = $guild_data['guild_data'];
-            if(empty($mounting_data)){
-                $mounting_data = self::calculate_mount(0,$calc_id,null);
-            }
-            if(!empty($calc_id)){
-                $calculation_model = self::getModel('calculation');
-                $data = get_object_vars($calculation_model->getData($calc_id));
-            }
-            if(empty($offcut_square_data)){
-                if($data['need_cuts']) {
-                    if (!empty($calc_id)) {
-                        $offcut_square_data = self::calculate_offcut($calc_id);
-                    }
-                }
-            }
+            $calculation = $data['calculation'];
+            $factory_jobs = $data['factory_jobs'];
+            $offcuts = $data['offcuts'];
+            $photoprint = $data['photoprint'];
+            $extra_components = json_decode($calculation->extra_components);
+            $extra_mounting = json_decode($calculation->extra_mounting);
+            $jobs = $data['jobs'];
+            $goods = !empty($calculation->cancel_netiz) ? self::deleteMetizFromGoods($data['goods']) : $data['goods'];
             $dealer = JFactory::getUser($data['dealer_id']);
-            $dealer_components_sum = 0;
-            foreach ($components_data as $component_item) {
-                $dealer_components_sum += $component_item['dealer_total'];
+            $dealer_info = self::getDealerInfo($dealer->id);
+            if (empty($dealer_info)) {
+                $canvases_margin = 0;
+                $components_margin = 0;
+                $mounting_margin = 0;
+            } else {
+                $canvases_margin = $dealer_info->dealer_canvases_margin-0;
+                $components_margin = $dealer_info->dealer_components_margin-0;
+                $mounting_margin = $dealer_info->dealer_mounting_margin-0;
             }
-            if($canvases_data['min_dealer_total']){
-                $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
-                $offcut_square_data['dealer_total'] = 0;
-            }
-            $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
-            $total_with_gm_dealer_margin_guild = $mount_data['total_with_gm_dealer_margin_guild'];
-            $guild_data_itog = $data['guild_data']['total_dealer_guild'];
-            $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2);
-            $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
+            $total_goods_sum = 0;$total_mount_sum = 0;
             $html = '<h1>Смета по материалам и комплектующим</h1>';
-            $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
+            $html .= "<h1>Название: " . $calculation->calculation_title . "</h1>";
             $html .= '<div class = "date_lbl"><h2>Дата:' . date("d.m.Y") . '</h2></div>';
             $html .= '<table class = "tbl_contacts">';
             $html .= '<tr>';
@@ -841,14 +802,14 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</table>';
             $html .= '<table class = "no_border">';
             $html .= '<tr>';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch_client" . $data['id']) . ".svg"))
-                $html .= '<td>Схема потолка:</td> <td><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch_client" . $data['id']) . '.svg" align="right" width="200" height="200"/></td>';
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch_client" . $calculation->id) . ".svg"))
+                $html .= '<td>Схема потолка:</td> <td><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch_client" . $calculation->id) . '.svg" align="right" width="200" height="200"/></td>';
             $html .= '</tr>';
             $html .= '</table>';
-            $html .= '<h2>Общее: ' . $new_total . ' руб.</h2>';
-            if ($data['discount'] != 0){
+            /*$html .= '<h2>Общее: ' . $new_total . ' руб.</h2>';*/
+            /*if ($data['discount'] != 0){
                 $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
-            }
+            }*/
             $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -856,70 +817,125 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Цена, руб.</th>
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th></tr>';
-            if ($data['n3_id']) {
-                if ($data['color'] > 0) {
-                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-                    $color = $color_model->getData($data['color']);
-                    $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
-                } else {
-                    $name = $canvases_data['title'];
-                    }
-                $html .= '<tr>';
-                $html .= '<td>' . $name . '</td>';
-                $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
-                $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-                $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
-                $html .= '</tr>';
-            }
-            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
-                $name = $offcut_square_data['title'];
-                $html .= '<tr>';
-                $html .= '<td>' . $name . '</td>';
-                $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
-                $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-                $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
-                $html .= '</tr>';
-            }
-            foreach ($components_data as $key => $item) {
-                    if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+            foreach ($goods as $item){
+                if($item->category_id == 1){
+                    $canvases_margin_price = round(self::margin($item->dealer_price,$canvases_margin),2);
+                    $html .= '<tr>';
+                    $html .= '<td>' . $item->name . '</td>';
+                    $html .= '<td class="center">' . $canvases_margin_price . '</td>';
+                    $html .= '<td class="center">' . $calculation->n4 . '</td>';
+                    $html .= '<td class="center">' . $calculation->n4*$canvases_margin_price . '</td>';
+                    $html .= '</tr>';
+                    $total_goods_sum += $calculation->n4*$canvases_margin_price;
+                    if(!empty($offcuts)){
+                        $offcuts_price_with_margin = round(self::margin($offcuts->price,$canvases_margin),2);
+                        $offcuts_total = $offcuts_price_with_margin*$offcuts->count;
                         $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
+                        $html .= '<td>' . $item->name . '</td>';
+                        $html .= '<td class="center">' . $offcuts_price_with_margin . '</td>';
+                        $html .= '<td class="center">' . $offcuts->count . '</td>';
+                        $html .= '<td class="center">' . $offcuts_total . '</td>';
                         $html .= '</tr>';
+                        $total_goods_sum += $offcuts_total;
                     }
                 }
-            foreach ($guild_data as $item) {
-                $html .= '<tr>';
-                $html .= '<td>' . $item['title'] . '</td>';
-                $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
-                $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                $html .= '<td class="center">' . $item['dealer_salary_total']. '</td>';
-                $html .= '</tr>';
+                else{
+                    $html .= '<tr>';
+                    $html .= '<td>' . $item->name . '</td>';
+                    $html .= '<td class="center">' . round(self::margin($item->dealer_price,$components_margin),2) . '</td>';
+                    $html .= '<td class="center">' . $item->final_count . '</td>';
+                    $html .= '<td class="center">' . $item->price_sum_with_margin . '</td>';
+                    $html .= '</tr>';
+                    $total_goods_sum += $item->price_sum_with_margin;
+                }
+
             }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2) . '</th></tr>';
+            if(!empty($factory_jobs)) {
+                foreach ($factory_jobs as $f_job) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $f_job->name . '</td>';
+                    $html .= '<td class="center">' . $f_job->price . '</td>';
+                    $html .= '<td class="center">' . $f_job->count . '</td>';
+                    $html .= '<td class="center">' . round($f_job->price_sum, 2) . '</td>';
+                    $html .= '</tr>';
+                    $total_goods_sum += round($f_job->price_sum, 2);
+                }
+            }
+            if(!empty($photoprint)){
+                $photoprint_sum = round(self::margin($photoprint->price,$canvases_margin),2) ;
+                $html .= '<tr>';
+                $html .= '<td>Фотопечать</td>';
+                $html .= '<td class="center"></td>';
+                $html .= '<td class="center">' . $photoprint->square.'</td>';
+                $html .= '<td class="center">'.$photoprint_sum .'</td>';
+                $html .= '</tr>';
+                $total_goods_sum += $photoprint_sum;
+            }
+            if(!empty($extra_components)){
+                foreach ($extra_components as $extra_component) {
+                    $extra_component_sum = round(self::margin($extra_component->price,$components_margin),2);
+                    $html .= '<tr>';
+                    $html .= '<td>'.$extra_component->title.'</td>';
+                    $html .= '<td class="center"></td>';
+                    $html .= '<td class="center"></td>';
+                    $html .= '<td class="center">'.$extra_component_sum.'</td>';
+                    $html .= '</tr>';
+                    $total_goods_sum += $extra_component_sum;
+                }
+
+            }
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_goods_sum, 2) . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
-            if ($need_mount || $data["need_mount_extra"]) {
+
+            if (!empty($jobs)) {
                 $html .= '<h1>Смета по монтажным работам</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-                foreach ($mounting_data['mounting_data'] as $item) {
+                foreach ($jobs as $job) {
                     $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
+                    $html .= '<td>' . $job->name . '</td>';
+                    $html .= '<td class="center">' . round(margin($job->price,$mounting_margin), 2) . '</td>';
+                    $html .= '<td class="center">' . round($job->final_count,2) . '</td>';
+                    $html .= '<td class="center">' . $job->price_sum_with_margin . '</td>';
                     $html .= '</tr>';
-
+                    $total_mount_sum += $job->price_sum_with_margin;
                 }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
+                if(!empty($extra_mounting)){
+                    foreach ($extra_mounting as $extra_mount) {
+                        $extra_mount_sum = round(self::margin($extra_mount->price,$mounting_margin),2);
+                        $html .= '<tr>';
+                        $html .= '<td>'.$extra_mount->title.'</td>';
+                        $html .= '<td class="center"></td>';
+                        $html .= '<td class="center"></td>';
+                        $html .= '<td class="center">'.$extra_mount_sum.'</td>';
+                        $html .= '</tr>';
+                        $total_mount_sum += $extra_mount_sum;
+                    }
+                }
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_mount_sum, 2) . '</th></tr>';
                 $html .= '</tbody></table><p>&nbsp;</p>';
             }
-            if ($data['discount'] != 0)
-                $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
-            else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
+
+            $total_sum = $total_goods_sum + $total_mount_sum;
+            if ($calculation->discount != 0) {
+                $new_total_discount = round($total_sum - $total_sum*$calculation->discount/100,2);
+                $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $total_sum . ' руб. - ' . $calculation->discount . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+            }
+            else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $total_sum . ' руб.</div>';
+            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+            $filename = md5($calculation->id . "client_single") . ".pdf";
+            Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
+    $mounting_data = null){
+        try {
+
             return $html;
         }
         catch(Exception $e)
@@ -3572,19 +3588,19 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    static function create_mount_estimate_by_stage($calc_id,$mounter,$stage,$mount_date=null,$service=null,$need_mount = null){
+    static function create_mount_estimate_by_stage($data,$mounter,$stage,$need_mount){
         try{
-            if(!empty($calc_id)){
-                $calculation_model = self::getModel('calculation');
+            //throw new Exception(print_r($data,true));
+            if(!empty($data)){
+                $calculation = $data['calculation'];
+                $jobs = $data['jobs'];
                 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
                 $calculations_model = self::getModel('calculations');
-                $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
-                $project = $project_model->getData($data['project_id']);
-                if(!empty($project->calcs_mounting_sum)){
+                $project = $project_model->getData($calculation->project_id);
+                if(!empty($project->calcs_mounting_sum) || $need_mount == 2){
                     $service = "service";
                 }
-                $data_mount = self::calculate_mount(0,$data['id'],null,$service);
 
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
@@ -3657,8 +3673,6 @@ class Gm_ceilingHelpersGm_ceiling
                     $jdate = new JDate($mount_date);
                     $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
                 }
-                $mounting_data = $data_mount['mounting_data'];
-
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>';
@@ -3672,9 +3686,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                $html_gm .= $html;
-                $html_dealer .= $html;
-                foreach ($mounting_data as $item) {
+                foreach ($jobs as $job) {
                     if(!$full){
                         if($item["stage"] == $stage){
                             $html_gm .= '<tr>';
@@ -3847,209 +3859,202 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция генерации pdf раскроя */
-    public static function create_cut_pdf($calc_id=null,$data = null){
+    public static function create_cut_pdf($data){
         try{
-            if(!empty($calc_id)){
-                $calculation_model = self::getModel('calculation');
-                $data = $calculation_model->getData($calc_id);
-                $data = get_object_vars($data);
-            }
-            if(empty($calc_id)){
-                $calc_id = $data['id'];
-            }
-            $project_model = self::getModel('project');
-            $project = $project_model->getData($data['project_id']);
-            $canvases_data = self::calculate_canvases($calc_id);
-            $client_model = self::getModel('client');
-            $client = $client_model->getClientById($project->id_client);
-            $dealer_name = JFactory::getUser($client->dealer_id)->name;
-            if(!empty($data['shrink_percent'])) {
-                $cut_data = $data['cut_data'];
-                $p_usadki = $data['shrink_percent'];
+            if(empty($data)) {
+                throw new Exception("Empty data for cut PDF");
             }
             else{
-                $array_cut = explode('||',$data['cut_data']);
-                $cut_data = $array_cut[0];
-                $p_usadki = $array_cut[1];
-            }
-            $usadka = (1-$p_usadki)*100;
-            $array1 = array();
-            $array2 = explode(';', $data['calc_data']);
-            array_pop($array2);
-            foreach($array2 as $str) {
-                list($key, $value) = explode('=', $str);
-                $array1[$key] = $value;
-            }
-            foreach($array1 as $key=>$value){
-                $us_walls .= $key.'='.round($value*$p_usadki,1).';';
-            }
-            $mpdf = new mPDF('utf-8', 'A4','8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
-            $mpdf->setAutoTopMargin='stretch';
-            $mpdf->setAutoBottomMargin = 'stretch';
-            //throw new Exception($data['calculation_title']);
-            $header = '
+                $calculation = $data['calculation'];
+                $project_model = self::getModel('project');
+                $project = $project_model->getData($calculation->project_id);
+                $canvas = $data['canvas'];
+                $client_model = self::getModel('client');
+                $client = $client_model->getClientById($project->id_client);
+                $dealer_name = JFactory::getUser($client->dealer_id)->name;
+                $cut_data = $calculation->cut_data;
+                $p_usadki = $calculation->shrink_percent;
+                $usadka = (1-$p_usadki)*100;
+                $array1 = array();
+                $array2 = explode(';', $calculation->calc_data);
+                array_pop($array2);
+                foreach($array2 as $str) {
+                    list($key, $value) = explode('=', $str);
+                    $array1[$key] = $value;
+                }
+                foreach($array1 as $key=>$value){
+                    $us_walls .= $key.'='.round($value*$p_usadki,1).';';
+                }
+                $factory_jobs = $data['factory_jobs'];
+                $mpdf = new mPDF('utf-8', 'A4','8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
+                $mpdf->setAutoTopMargin='stretch';
+                $mpdf->setAutoBottomMargin = 'stretch';
+                $header = '
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">'.$data['calculation_title'].'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">'.$calculation->calculation_title.'</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
-            $mpdf->SetHTMLHeader($header);
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
-            $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
-            $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
-            $html .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $html .= '<table>';
-            $html .= '<tbody>';
-            $html .= '<tr>';
-            $html .= '<th>Площадь:</th><td class="td-val">' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td class="td-val">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+                $mpdf->SetHTMLHeader($header);
+                $html .= '<table>';
+                $html .= '<tbody>';
+                $html .= '<tr>';
+                $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+                $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
+                $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
+                $html .= '</tr>';
+                $html .= '<tr>';
+                $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
+                $html .= '</tr>';
+                $html .= '<tr>';
+                $html .= '<th>Цвет: </th><td colspan="2" >' . $canvas->name . '</td>';
+                $html .= '<th>Примечание:</th><td >' . $calculation->manager_note . '</td>';
+                $html .= '</tr>';
+                $html .= '</tbody>';
+                $html .= '</table>';
+                $html .= '<table>';
+                $html .= '<tbody>';
+                $html .= '<tr>';
+                $html .= '<th>Стороны и диагонали: </th><td>' . str_replace(';', '; ', $calculation->calc_data) . '</td>';
+                $html .= '</tr>';
+                $html .= '</tbody>';
+                $html .= '</table>';
+                $html .= '<table>';
+                $html .= '<tbody>';
+                $html .= '<tr>';
+                $html .= '<th>Площадь:</th><td class="td-val">' . $calculation->n4 . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td class="td-val">' . round($calculation->offcut_square,2) . 'м<sup>2</sup></td>
                       <th>% усадки:</th><td class="td-val">'.$usadka.'</td> ';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Периметр:</th><td class="td-val">' . $data['n5'] . 'м</td>
-                      <th>Кол-во углов:</th><td class="td-val">' . $data['n9'] . '</td>
-                      <th>Криволинейный участок:</th><td class="td-val">' . $data['n10'] . '</td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<th>Внутренний вырез:</th><td class="td-val">' . $data['n31'] . 'м</td>';
-            $html .= '</tr>';
-            $html .= '</tbody>';
-            $html .= '</table>';
-            $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html, 2);
-            $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-            if($mpdf->y < $unusedSpaceH){
-                $min_height = ($unusedSpaceH -5)*3.779528;
-                $max_height_attr = " max-height:$min_height;";
-            }
-            else{
-                $max_height_attr = "";
-            }
-            $html_image = '<div align="center" style="width: 100%;page-break-after:always;">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
-                $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
-            $html_image .= '</div>';
-            $html_image .= "<pagebreak/>";
+                $html .= '</tr>';
+                $html .= '<tr>';
+                $html .= '<th>Периметр:</th><td class="td-val">' .$calculation->n5 . 'м</td>
+                      <th>Кол-во углов:</th><td class="td-val">' . $calculation->n9 . '</td>';
+                $html .= '</tr>';
+                $html .= '<tr>';
+                foreach ($factory_jobs as $job) {
+                    $html .= "<th>$job->name</th><td class=\"td-val\">$job->count</td>";
+                }
+                $html .= '</tr>';
+                $html .= '</tbody>';
+                $html .= '</table>';
+                $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
+                $mpdf->WriteHTML($stylesheet, 1);
+                $mpdf->WriteHTML($html, 2);
+                $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
+                if($mpdf->y < $unusedSpaceH){
+                    $min_height = ($unusedSpaceH -5)*3.779528;
+                    $max_height_attr = " max-height:$min_height;";
+                }
+                else{
+                    $max_height_attr = "";
+                }
+                $html_image = '<div align="center" style="width: 100%;page-break-after:always;">';
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"))
+                    $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                $html_image .= '</div>';
+                $html_image .= "<pagebreak/>";
 
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html_image, 2);
-            $html .= $html_image;
-            $html .= '<pagebreak/>';
-            $mpdf->WriteHTML($html, 2);
-            $header = '
+                $mpdf->WriteHTML($stylesheet, 1);
+                $mpdf->WriteHTML($html_image, 2);
+                $html .= $html_image;
+                $html .= '<pagebreak/>';
+                $mpdf->WriteHTML($html, 2);
+                $header = '
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:'.$data['calculation_title'].'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:'.$calculation->calculation_title.'</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
-            $mpdf->SetHTMLHeader($header,'O',true);
-            $html_cut .= '<table >';
-            $html_cut .= '<tbody>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
-            $html_cut .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
-            $html_cut .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Цвет: </th><td colspan="3" >' . $canvases_data["title"] . '</td>';
-            $html_cut .= '<th>Примечание:</th><td >' . $data['manager_note'] . '</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '</tbody>';
-            $html_cut .= '</table>';
-            $html_cut .= '<table>';
-            $html_cut .= '<tbody>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Полотна: </th><td style="font-size: 14pt">' . str_replace('|', ";<br>", $cut_data) . '</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '</tbody>';
-            $html_cut .= '</table>';
-            $html_cut .= '<table>';
-            $html_cut .= '<tbody>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '</tbody>';
-            $html_cut .= '</table>';
-            $html_cut .= '<table>';
-            $html_cut .= '<tbody>';
-            $html_cut .= '<tr>';
-            $html_cut .=  '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
+                $mpdf->SetHTMLHeader($header,'O',true);
+                $html_cut .= '<table >';
+                $html_cut .= '<tbody>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+                $html_cut .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
+                $html_cut .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Цвет: </th><td colspan="3" >' . $canvas->name . '</td>';
+                $html_cut .= '<th>Примечание:</th><td >' . $calculation->manager_note . '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '</tbody>';
+                $html_cut .= '</table>';
+                $html_cut .= '<table>';
+                $html_cut .= '<tbody>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Полотна: </th><td style="font-size: 14pt">' . str_replace('|', ";<br>", $cut_data) . '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '</tbody>';
+                $html_cut .= '</table>';
+                $html_cut .= '<table>';
+                $html_cut .= '<tbody>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '</tbody>';
+                $html_cut .= '</table>';
+                $html_cut .= '<table>';
+                $html_cut .= '<tbody>';
+                $html_cut .= '<tr>';
+                $html_cut .=  '<th>Площадь:</th><td>' . $calculation->n4 . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($calculation->offcut_square,2) . 'м<sup>2</sup></td>
                       <th>% усадки:</th> <td>'.$usadka.'</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>
-                      <th>Криволинейный участок:</th><td class="td-val">' . $data['n10'] . '</td>;';
-            $html_cut .= '</tr>';
-            $html_cut .= '<tr>';
-            $html_cut .= '<th>Внутренний вырез:</th><td class="td-val">' . $data['n31'] . 'м</td>';
-            $html_cut .= '</tr>';
-            $html_cut .= '</tbody>';
-            $html_cut .= '</table>';
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html_cut, 2);
-            $footer ='<hr style="color:#414099;size:4px">';
-            $footer .= '<div class="left_f">';
-            $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
-            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
-            $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
-            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
-            $footer .= '</div>';
-            $footer .= '<div class="right_f">';
-            $footer .= "<span>Принял:</span><div class='lines'> _______________  __________________</div>";
-            $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
-            $footer .= '</div>';
-            $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
-            $footer .= '<b>Сумма:'. $data['canvases_sum'] .'р.</b>';
-            $footer .= '</div>';
-            $mpdf->SetHTMLFooter($footer);
-            $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-            if($mpdf->y < $unusedSpaceH){
-                $min_height = ($unusedSpaceH -5)*3.779528;
-                $max_height_attr = " max-height:$min_height;";
-            }
-            else{
-                $max_height_attr = "";
-            }
-            $html = '<div align="center" style="width: 100%;">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
-            $html .= '</div>';
+                $html_cut .= '</tr>';
+                $html_cut .= '<tr>';
+                $html_cut .= '<th>Периметр:</th><td>' . $calculation->n5 . 'м</td><th>Кол-во углов:</th><td>' . $calculation->n9 . '</td>';
+                $html_cut .= '</tr>';
+                $html_cut .= '<tr>';
+                foreach ($factory_jobs as $job) {
+                    $html_cut .= "<th>$job->name</th><td class=\"td-val\">$job->count</td>";
+                }
+                $html_cut .= '</tr>';
+                $html_cut .= '</tbody>';
+                $html_cut .= '</table>';
+                $mpdf->WriteHTML($stylesheet, 1);
+                $mpdf->WriteHTML($html_cut, 2);
+                $footer ='<hr style="color:#414099;size:4px">';
+                $footer .= '<div class="left_f">';
+                $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
+                $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+                $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
+                $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+                $footer .= '</div>';
+                $footer .= '<div class="right_f">';
+                $footer .= "<span>Принял:</span><div class='lines'> _______________  __________________</div>";
+                $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
+                $footer .= '</div>';
+                $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
+                $footer .= '<b>Сумма:'. $calculation->canvases_sum .'р.</b>';
+                $footer .= '</div>';
+                $mpdf->SetHTMLFooter($footer);
+                $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
+                if($mpdf->y < $unusedSpaceH){
+                    $min_height = ($unusedSpaceH -5)*3.779528;
+                    $max_height_attr = " max-height:$min_height;";
+                }
+                else{
+                    $max_height_attr = "";
+                }
+                $html = '<div align="center" style="width: 100%;">';
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $calculation->id) . ".svg"))
+                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                $html .= '</div>';
 
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html, 2);
-            $mpdf->WriteHTML('<pagebreak>', 2);
-            $mpdf->WriteHTML($html_cut, 2);
-            $mpdf->WriteHTML($html, 2);
-            $filename = md5($calc_id . 'cutpdf') . '.pdf';
-            $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');
+                $mpdf->WriteHTML($stylesheet, 1);
+                $mpdf->WriteHTML($html, 2);
+                $mpdf->WriteHTML('<pagebreak>', 2);
+                $mpdf->WriteHTML($html_cut, 2);
+                $mpdf->WriteHTML($html, 2);
+                $filename = md5($calculation->id . 'cutpdf') . '.pdf';
+                $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');
+            }
         }
         catch(Exception $e)
         {
@@ -4058,33 +4063,18 @@ class Gm_ceilingHelpersGm_ceiling
 
     }
     /*функция генерации pdf для менеджера*/
-    public static function create_manager_estimate($need_price,$calc_id=null,$data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null){
+    public static function create_manager_estimate($data){
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            if(!empty($calc_id)){
-                $calculation_model = self::getModel('calculation');
-                $data = get_object_vars($calculation_model->getData($calc_id));
-            }
-            if(empty($calc_id)){
-                $calc_id = $data['id'];
-            }
+            $canvas = $data['canvas'];
+            $calculation = $data['calculation'];
+            $offcuts = isset($data['offcuts']) ? $data['offcuts'] : [];
+            $photoprint = $data['photoprint'];
+            $factory_jobs = $data['factory_jobs'];
             $project_model = self::getModel('project');
-            $project = $project_model->getData($data['project_id']);
-            if(!empty($data['n3'])) {
-                if (empty($canvases_data)) {
-                    $canvases_data = self::calculate_canvases($calc_id);
-                }
-                if (empty($offcut_square_data)) {
-                    if($data['need_cuts']) {
-                        $offcut_square_data = self::calculate_offcut($calc_id);
-                    }
-                }
-            }
-            if(empty($guild_data)){
-                $guild_data = self::calculate_guild_jobs($calc_id);
-            }
+            $project = $project_model->getData($calculation->project_id);
             $html = '<h1>Информация</h1>';
-            $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
+            $html .= "<b>Название: </b>" . $calculation->calculation_title . "<br>";
             if (isset($project->id)) {
                 if ($project->id) {
                     $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
@@ -4100,101 +4090,88 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Адрес: </b>" . $project->project_info . "<br>";
                 }
             }
-            if (isset($project->project_mounter)&&$need_price == 1) {
-                if ($project->project_mounter) {
-                    $html .= "<b>Монтажная группа: </b>" . JFactory::getUser($project->project_mounter)->name . "<br>";
-                }
-            }
+
             if (isset($calculation_title)) {
                 if ($calculation_title) {
-                    $html .= "<b>Потолок: </b>" . $calculation_title . "<br>";
+                    $html .= "<b>Потолок: </b>" . $calculation->calculation_title . "<br>";
                 }
             }
+            $total_sum = 0;
             $html .= '<p>&nbsp;</p>
-                    <h1>Для менеджера</h1>
-                    <table border="0" cellspacing="0" width="100%">
+                    <h1>Для менеджера</h1>';
+            $html .= '<table style="width:100%;border:0px"><thead><td>Изображение</td><td>Длины сторон</td></thead>';
+            $html .= '<tbody>
+                       <tr>';
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" .  $calculation->id) . ".svg")) {
+                $html .= '<td><div class="col-md-8"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg" . '" style="width: 100%; max-height: 530px;"/></div></td>';
+            }
+            else{
+                $html.= '<td>Отсутствует</td>';
+            }
+            $html .= '<td>'.str_replace(';','<br>',$calculation->calc_data).'</td>';
+            $html .='</tr></tbody></table>';
+
+
+            $html .= '<table border="0" cellspacing="0" width="100%">
                     <tbody><tr><th>Наименование</th>';
-            if($need_price == 1){
-                $html .='<th class="center">Себестоимость</th>';
-            }
+
+            $html .='<th class="center">Себестоимость</th>';
             $html .='<th class="center">Кол-во</th>';
-            if($need_price == 1){
-                $html .=' <th>Итого</th>';
-            }
+            $html .='<th>Итого</th>';
             $html .='</tr>';
-            if($canvases_data['min_self_dealer_total']){
-                $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
-            }
-            if ($data['n3']) {
-                if ($data['color'] > 0) {
-                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-                    $color = $color_model->getData($data['color']);
-                    $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
-                } else {
-                    $name = $canvases_data['title'];
-                }
+            $html .= '<tr>';
+            $html .= '<td>' . $canvas->name . '</td>';
+            $html .= '<td>' . round($canvas->dealer_price, 2) . '</td>';
+            $html .= '<td class="center">' . $canvas->final_count . '</td>';
+            $html .= '<td>' . $canvas->price_sum . '</td>';
+            $html .= '</tr>';
+            $total_sum += $canvas->price_sum;
+            if(!empty($offcuts)){
+                $offcuts_total = $offcuts->count*$offcuts->price;
                 $html .= '<tr>';
-                $html .= '<td>' . $name . '</td>';
-                if($need_price == 1){
-                    $html .= '<td>' . round($canvases_data['self_dealer_price'], 2) . '</td>';
-                }
-                $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-                if($need_price == 1){
-                    $html .= '<td>' . $canvases_data['self_dealer_total'] . '</td>';
-                }
+                $html .= '<td>' . $offcuts->name . '</td>';
+                $html .= '<td >' . round($offcuts->price, 2) . '</td>';
+                $html .= '<td class="center">' . $offcuts->count . '</td>';
+                $html .= '<td>' . $offcuts_total . '</td>';
                 $html .= '</tr>';
+                $total_sum += $offcuts_total;
             }
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
-                $name = $offcut_square_data['title'];
+            if(!empty($factory_jobs)){
+                foreach ($factory_jobs as $job) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $job->name . '</td>';
+                    $html .= '<td>' . round($job->price, 2) . '</td>';
+                    $html .= '<td class="center">' . $job->count . '</td>';
+                    $html .= '<td>' . $job->price_sum. '</td>';
+                    $html .= '</tr>';
+                    $total_sum += $job->price_sum;
+                }
+            }
+            if(!empty($photoprint)){
                 $html .= '<tr>';
-                $html .= '<td>' . $name . '</td>';
-                if($need_price == 1){
-                    $html .= '<td >' . round($offcut_square_data['self_dealer_price'], 2) . '</td>';
-                }
-                $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-                if($need_price == 1){
-                    $html .= '<td>' . $offcut_square_data['self_dealer_total'] . '</td>';
-                }
+                $html .= '<td>Фотопечать</td>';
+                $html .= '<td>-</td>';
+                $html .= '<td class="center">'.$photoprint->square.'</td>';
+                $html .= '<td>'.$photoprint->price.'</td>';
                 $html .= '</tr>';
+                $total_sum += $photoprint->price;
             }
-            foreach ($guild_data["guild_data"] as $item) {
-                $html .= '<tr>';
-                $html .= '<td>' . $item['title'] . '</td>';
-                if($need_price == 1){
-                    $html .= '<td>' . round($item['gm_salary'], 2) . '</td>';
-                }
-                $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                if($need_price == 1){
-                    $html .= '<td>' . $item['gm_salary_total'] . '</td>';
-                }
-                $html .= '</tr>';
-            }
-            if ($data['n9'] > 0) {
+            if ( $calculation->n9 > 0) {
                 $html .= '<tr>';
                 $html .= '<td>Всего углов</td>';
                 $html .= '<td></td>';
-                $html .= '<td class="center">' . $data['n9'] . '</td>';
+                $html .= '<td class="center">' .  $calculation->n9 . '</td>';
                 $html .= '<td></td>';
                 $html .= '</tr>';
             }
-            if($canvases_data['min_self_dealer_total']) {
-                $offcut_square_data['self_dealer_total']  = 0;
-                $guild_data["total_gm_guild"] = 0;
-            }
-            if($need_price == 1){
-                $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
-            }
+
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum, 2) . '</th></tr>';
+
             $html .= '</tbody></table><p>&nbsp;</p>';
-            $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
-            if($need_price == 1){
-                $filename = md5($calc_id . "manager") . ".pdf";
-            }
-            else{
-                $filename = md5($calc_id . "managernone") . ".pdf";
-            }
+
+
+            $filename = md5( $calculation->id . "manager") . ".pdf";
+
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             return 1;
         }
