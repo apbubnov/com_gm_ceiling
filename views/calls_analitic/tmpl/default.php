@@ -28,42 +28,42 @@ echo parent::getButtonBack();
 
 ?>
 <style type="text/css">
-	.small_table {
-		cursor: pointer;
-	}
-	.small_table tbody tr:hover {
-		background: #ddeeff;
-	}
+    .small_table {
+        cursor: pointer;
+    }
+    .small_table tbody tr:hover {
+        background: #ddeeff;
+    }
 </style>
 <h2>Аналитика звонков</h2>
 <button type="button" class="btn btn-primary" id="show_all">Показать за всё время</button>
 <div class="analitic-actions">
-	Выбрать с <input type="date"  class="choose_date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date"  class="choose_date" id="date2"  value="<?= date('Y-m-d'); ?>">
+    Выбрать с <input type="date"  class="choose_date" id="date1" value="<?= date('Y-m-d'); ?>"> по <input type="date"  class="choose_date" id="date2"  value="<?= date('Y-m-d'); ?>">
 </div>
 <table class="small_table table-striped table_cashbox one-touch-view" id="common_table">
     <thead>
-        <th>
-            Статус
-        </th>
-        <th>
-            Кол-во по менеджерам
-        </th>
-        <th>
-            Общеее кол-во
-        </th>
+    <th>
+        Статус
+    </th>
+    <th>
+        Кол-во по менеджерам
+    </th>
+    <th>
+        Общеее кол-во
+    </th>
     </thead>
-	<tbody>
-	</tbody>
+    <tbody>
+    </tbody>
 </table>
 <hr>
 <table class="small_table table-striped table_cashbox one-touch-view">
-	<thead>
-		<th>Дата</th>
-		<th>Клиент</th>
-		<th>Менеджер</th>
-	</thead>
-	<tbody id="info">
-	</tbody>
+    <thead>
+    <th>Дата</th>
+    <th>Клиент</th>
+    <th>Менеджер</th>
+    </thead>
+    <tbody id="info">
+    </tbody>
 </table>
 <script type="text/javascript">
     jQuery(document).ready(function(){
@@ -145,8 +145,31 @@ echo parent::getButtonBack();
             var common_count_by_status = 0,
                 count_str = '';
 
+
             for(var j=0;j<manager_info.length;j++){
-                count_str += '<div class="row" ><div class="col-md-6">'+manager_info[j].manager+':</div><div class="col-md-3">Звонков-'+manager_info[j].count+'</div><div class="col-md-3">Замеров-'+manager_info[j].measures_count+'</div> </div>';
+                var projects =  manager_info[j].measures_count,
+                    measures_count = 0,
+                    deals_count = 0,
+                    refuse_count = 0;
+                for (var p = projects.length - 1; p >= 0; p--) {
+                    if(projects[p].status == 1){
+                        measures_count += +projects[p].count;
+                    }
+                    if(projects[p].status == 4 || projects[p].status == 5){
+                        deals_count += +projects[p].count;
+                    }
+                    if(projects[p].status == 3){
+                        refuse_count += +projects[p].count;
+                    }
+                }
+
+                count_str +='<div class="row" >'+
+                    '<div class="col-md-4">'+manager_info[j].manager+':</div>'+
+                    '<div class="col-md-2">Звонков-'+manager_info[j].count+'</div>'+
+                    '<div class="col-md-2">Замеров-'+measures_count+'</div>'+
+                    '<div class="col-md-2">Договоров-'+deals_count+'</div>'+
+                    '<div class="col-md-2">Отказовф-'+refuse_count+'</div>'+
+                    '</div>';
                 common_count_by_status += +manager_info[j].count;
             }
             common_count += common_count_by_status;
