@@ -670,7 +670,7 @@ if (empty($list['direction']))
             $query = $db->getQuery(true);
             $query
                 ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
-                p.project_status,p.project_info,p.id,cm.mounter_id,SUM(calc.n7) as n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
+                p.project_status,p.project_info,p.id,cm.mounter_id,SUM(0) as n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
