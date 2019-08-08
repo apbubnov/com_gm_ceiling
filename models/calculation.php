@@ -193,7 +193,7 @@ class Gm_ceilingModelCalculation extends JModelItem
                 $query
                     ->select('c.*,cut.canvas_area')
                     ->from('`#__gm_ceiling_calculations` as c')
-                    ->innerJoin('`#__gm_ceiling_cuttings` as `cut` on `cut`.`id` = `c`.`id`')
+                    ->leftJoin('`#__gm_ceiling_cuttings` as `cut` on `cut`.`id` = `c`.`id`')
                     ->where("c.id = $id");
                 $db->setQuery($query);
                 $item = $db->loadObject();

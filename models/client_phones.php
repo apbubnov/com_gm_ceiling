@@ -29,21 +29,16 @@ class Gm_ceilingModelClient_phones extends JModelList
 	 * @since      1.6
 	 */
 	
-	public function getItemsByPhoneNumber($number, $dealer_id)
-	{
-		try
-		{
+	public function getItemsByPhoneNumber($number, $dealer_id) {
+		try {
 			$number = mb_ereg_replace('[^\d]', '', $number);
-	        if (strlen($number) == 10)
-	        {
+	        if (strlen($number) == 10) {
 	            $number = '7'.$number;
 	        }
-	        if (strlen($number) != 11)
-	        {
+	        if (strlen($number) != 11) {
 	            throw new Exception('Неверный формат номера телефона.');
 	        }
-	        if (mb_substr($number, 0, 1) != '7')
-	        {
+	        if (mb_substr($number, 0, 1) != '7') {
 	            $number = substr_replace($number, '7', 0, 1);
 	        }
 			$db    = JFactory::getDbo();
@@ -56,32 +51,27 @@ class Gm_ceilingModelClient_phones extends JModelList
 				->where("`a`.`phone` LIKE(".$db->quote("%".$number."%").")")
 				->order('`b`.`dealer_id`');
 			$db->setQuery($query);
-			$db->execute();
 			$items = $db->loadObjectList();
 			$result = null;
-
-			foreach ($items as $key => $item)
-			{
-				if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type))
-				{
-					$result = $item;
-					break;
-				}
-				if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 3 || $item->dealer_type == 5) && $item->user_dealer_id == $dealer_id)
-				{
-					$result = $item;
-					break;
-				}
-				if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id)
-				{
-					$result = $item;
-					break;
+			if (!empty($items)) {
+				$result = $items[0];
+				foreach ($items as $key => $item) {
+					if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type)) {
+						$result = $item;
+						break;
+					}
+					if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 3 || $item->dealer_type == 5) && $item->user_dealer_id == $dealer_id) {
+						$result = $item;
+						break;
+					}
+					if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id) {
+						$result = $item;
+						break;
+					}
 				}
 			}
 			return $result;
-		}
-		catch(Exception $e)
-        {
+		} catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}

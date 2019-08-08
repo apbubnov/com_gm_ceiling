@@ -1144,6 +1144,7 @@ ORDER BY `goods_id`
             $query = "
             SELECT  `jf`.`job_id`,
                 `j`.`name`,
+                `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 `j`.`price`,
                 ROUND(SUM(`jf`.`job_count_all`) * `j`.`price`, 2) AS `price_sum`,
@@ -1212,6 +1213,7 @@ ORDER BY `goods_id`
             $query = $db->getQuery(true);
             $query = "SELECT    `jf`.`job_id`,
                 `j`.`name`,
+                `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 IFNULL(`jdp`.`price`, 0) AS `price`,
                 ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0), 2) AS `price_sum`,

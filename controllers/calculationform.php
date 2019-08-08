@@ -637,6 +637,11 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             	$canvases_sum_with_margin += $value->price_sum;
             }
 
+            if ($canvases_sum < 200) {
+            	$canvases_sum = 200;
+            	$canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
+            }
+
 			foreach ($all_jobs as $value) {
 				$mounting_sum += $value->price_sum;
 				$mounting_sum_with_margin += $value->price_sum_with_margin;
