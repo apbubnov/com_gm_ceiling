@@ -111,7 +111,7 @@ class Gm_ceilingModelProjects_mounts extends JModelList
                     $query->columns("`project_id`,`mounter_id`,`date_time`,`type`");
                     $query->values("$projectId,$value->mounter,'$value->time',$value->stage");
                     $db->setQuery($query);
-                    $result = $db->execute();
+                    $db->execute();
                 }
             }
             else{
@@ -121,7 +121,7 @@ class Gm_ceilingModelProjects_mounts extends JModelList
                     $query->set("`mounter_id`= $value->mounter");
                     $query->where("project_id = $projectId and `type` = $value->stage");
                     $db->setQuery($query);
-                    $result = $db->execute();
+                    $db->execute();
                 }
             }
             return true;

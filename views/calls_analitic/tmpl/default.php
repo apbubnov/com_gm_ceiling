@@ -145,32 +145,33 @@ echo parent::getButtonBack();
             var common_count_by_status = 0,
                 count_str = '';
 
+            if(!empty(manager_info)) {
+                for (var j = 0; j < manager_info.length; j++) {
+                    var projects = manager_info[j].measures_count,
+                        measures_count = 0,
+                        deals_count = 0,
+                        refuse_count = 0;
+                    for (var p = projects.length - 1; p >= 0; p--) {
+                        if (projects[p].status == 1) {
+                            measures_count += +projects[p].count;
+                        }
+                        if (projects[p].status == 4 || projects[p].status == 5) {
+                            deals_count += +projects[p].count;
+                        }
+                        if (projects[p].status == 3) {
+                            refuse_count += +projects[p].count;
+                        }
+                    }
 
-            for(var j=0;j<manager_info.length;j++){
-                var projects =  manager_info[j].measures_count,
-                    measures_count = 0,
-                    deals_count = 0,
-                    refuse_count = 0;
-                for (var p = projects.length - 1; p >= 0; p--) {
-                    if(projects[p].status == 1){
-                        measures_count += +projects[p].count;
-                    }
-                    if(projects[p].status == 4 || projects[p].status == 5){
-                        deals_count += +projects[p].count;
-                    }
-                    if(projects[p].status == 3){
-                        refuse_count += +projects[p].count;
-                    }
+                    count_str += '<div class="row" >' +
+                        '<div class="col-md-4">' + manager_info[j].manager + ':</div>' +
+                        '<div class="col-md-2">Звонков-' + manager_info[j].count + '</div>' +
+                        '<div class="col-md-2">Замеров-' + measures_count + '</div>' +
+                        '<div class="col-md-2">Договоров-' + deals_count + '</div>' +
+                        '<div class="col-md-2">Отказовф-' + refuse_count + '</div>' +
+                        '</div>';
+                    common_count_by_status += +manager_info[j].count;
                 }
-
-                count_str +='<div class="row" >'+
-                    '<div class="col-md-4">'+manager_info[j].manager+':</div>'+
-                    '<div class="col-md-2">Звонков-'+manager_info[j].count+'</div>'+
-                    '<div class="col-md-2">Замеров-'+measures_count+'</div>'+
-                    '<div class="col-md-2">Договоров-'+deals_count+'</div>'+
-                    '<div class="col-md-2">Отказовф-'+refuse_count+'</div>'+
-                    '</div>';
-                common_count_by_status += +manager_info[j].count;
             }
             common_count += common_count_by_status;
             tr.append('<td>'+data[i].title+'</td><td>'+count_str+'</td><td>'+common_count_by_status+'</td>');

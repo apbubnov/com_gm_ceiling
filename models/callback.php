@@ -308,26 +308,12 @@ class Gm_ceilingModelCallback extends JModelList
     }
     function selectCallAnalytic($dealerId,$date1 = null,$date2 = null){
         try{
-            /*
-             * SELECT cs.id,cs.title,GROUP_CONCAT(CONCAT('{"manager":"',cnt.manager,'","count":"',cnt.count,':}')) AS manager_count
-                FROM `rgzbn_gm_ceiling_calls_status` AS cs
-                LEFT JOIN (
-                    SELECT `h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT(`h`.`id`)  AS `count`
-                    FROM `rgzbn_gm_ceiling_calls_status_history` AS h
-                    INNER JOIN `rgzbn_users` AS u ON u.id = h.manager_id
-                    WHERE `u`.`dealer_id` = 1 AND `h`.`change_time` BETWEEN '2019-07-24 00:00:00' AND '2019-07-24 23:59:59'
-                    GROUP BY manager_id,`status`
-                ) AS `cnt` ON `cs`.`id` = `cnt`.`status`
-                GROUP BY cs.id
-                */
+
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
             $measureQuery = $db->getQuery(true);
-            /*SELECT COUNT(p.id)
-	FROM `rgzbn_gm_ceiling_projects` AS p
-	LEFT JOIN `rgzbn_gm_ceiling_projects_history` AS ph ON p.id = ph.project_id
-	WHERE p.modified_by = h.manager_id AND ph.new_status = 1 AND ph.new_status BETWEEN*/
+
             $measureQuery
                 ->select('ph.new_status,p.created_by,COUNT(p.id) AS `count`')
                 ->from('`rgzbn_gm_ceiling_projects` AS p ')
@@ -344,11 +330,11 @@ class Gm_ceilingModelCallback extends JModelList
                 $measureQuery->where("`ph`.`date_of_change` < '$date2 23:59:59'");
             }
             $subquery
-                ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT(`h`.`id`)  AS `count`')
-                ->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',pr.new_status,\'","count":"\',pr.count,\'"}\')) AS projects_count')
+                ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT( DISTINCT `h`.`id`)  AS `count`')
+                ->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',IFNULL(pr.new_status,"-"),\'","count":"\',IFNULL(pr.count,"-"),\'"}\')) AS projects_count')
                 ->from('`rgzbn_gm_ceiling_calls_status_history` AS h ')
                 ->innerJoin('`rgzbn_users` AS u ON u.id = h.manager_id')
-                ->innerJoin("($measureQuery) as pr ON pr.created_by = h.manager_id")
+                ->leftJoin("($measureQuery) as pr ON pr.created_by = h.manager_id")
                 ->where("`u`.`dealer_id` = $dealerId")
                 ->group('`h`.`manager_id`,`h`.`status`');
             if(!empty($date1)&&!empty($date2)){
@@ -363,7 +349,7 @@ class Gm_ceilingModelCallback extends JModelList
             $query
                 ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","count":"\',cnt.count,\'","measures_count":[\',cnt.projects_count,\']}\')),\']\') AS manager_count')
                 ->from('`rgzbn_gm_ceiling_calls_status` AS cs')
-                ->innerJoin("($subquery) AS `cnt` ON `cs`.`id` = `cnt`.`status`")
+                ->leftJoin("($subquery) AS `cnt` ON `cs`.`id` = `cnt`.`status`")
                 ->group('cs.id');
             $db->setQuery($query);
             $items = $db->loadObjectList();

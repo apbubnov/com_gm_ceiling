@@ -413,20 +413,22 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 	                	calcs:incl_calcs
 	                },
 	                success: function(data) {
-	                	var transport = data['transport'];
-	                	delete data['transport'];
-	                	var old_mount_sum = 0, new_mount_sum = 0;
-	                	jQuery.each(data,function(index,elem){
-	                		if (typeof self_data !== 'undefined' || self_data !== null) {
-	                			old_mount_sum += self_data[index].mount_data;
-		                		new_mount_sum += elem['total_dealer_mounting'];
-		                		self_data[index].mount_data = elem['total_dealer_mounting'];
-							}
-	                	});
-	                	console.log(jQuery("#transport_sum span.sum").data('selfval'));
-	                	old_mount_sum += jQuery("#transport_sum span.sum").data('selfval');
-	                	new_mount_sum += transport;
-	                	change_self_sum(old_mount_sum,new_mount_sum);
+	                	if(!empty(data)) {
+                            var transport = data['transport'];
+                            delete data['transport'];
+                            var old_mount_sum = 0, new_mount_sum = 0;
+                            jQuery.each(data, function (index, elem) {
+                                if (typeof self_data !== 'undefined' || self_data !== null) {
+                                    old_mount_sum += self_data[index].mount_data;
+                                    new_mount_sum += elem;
+                                    self_data[index].mount_data = elem;
+                                }
+                            });
+                            console.log(jQuery("#transport_sum span.sum").data('selfval'));
+                            old_mount_sum += jQuery("#transport_sum span.sum").data('selfval');
+                            new_mount_sum += transport;
+                            change_self_sum(old_mount_sum, new_mount_sum);
+                        }
 	                },
 	                dataType: "json",
 	                timeout: 10000,

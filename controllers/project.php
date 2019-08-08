@@ -1870,23 +1870,27 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $service_mount = $this->check_mount_for_service($mount_data);
             if(empty($service_mount)){
                 foreach ($include_calculations as $calc) {
-                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc);
+                    $all_jobs = $model_calcform->getJobsPricesInCalculation($calc, $dealer_id); // Получение работ по прайсу дилера
+                    foreach ($all_jobs as $job){
+                        $total_mount_sum += $job->price_sum;
+                    }
+                    $result[$calc] = $total_mount_sum;
                 }
-                die(json_encode($result));
             }
             else{
-                $mount_sum = [];
                 foreach ($include_calculations as $calc) {
-                    $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
+                    $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $dealer_id);
+                    foreach ($all_jobs as $job){
+                        $total_mount_sum += $job->price_sum;
+                    }
+                    $result[$calc] = $total_mount_sum;
                     if(!empty($project_id)){
                         $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id,"service")['mounter_sum'];
                     }
-                    $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
                     $result['transport'] = $transport;        
                 }
-                die(json_encode($result));
             }
-
+            die(json_encode($result));
         }
         catch(Exception $e)
         {
@@ -2008,7 +2012,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if(!empty($data)){
                     $data = json_decode($data);
                     $mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
-                    $result = $mounts_model->saveOrUpdatStage($project_id,$data);
+                    $result = $mounts_model->saveOrUpdateStage($project_id,$data);
                     die(json_encode($result));
                 }
                 else{

@@ -696,14 +696,13 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
 
             $data_for_mount_estimate = [];
+            $data_for_mount_estimate['calculation'] = $calculation;
+            $data_for_mount_estimate['jobs'] = $all_jobs;
             if($need_mount == 1){
-                $data_for_mount_estimate['calculation'] = $calculation;
-                $data_for_mount_estimate['jobs'] = $all_jobs;
+                $data_for_mount_estimate['gm_jobs'] = [];
             }
             if($need_mount == 2){
-                $data_for_mount_estimate['calculation'] = $calculation;
-                $data_for_mount_estimate['jobs'] = $all_jobs;
-                $data_for_mount_estimate['gm_jobs'] = $model_calcform->getMountingServicePricesInCalculation($calc_id, 1);
+                $data_for_mount_estimate['gm_jobs'] = $model_calcform->getJobsPricesInCalculation($calc_id, 1);
             }
             Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
 
