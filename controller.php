@@ -830,8 +830,8 @@ public function register_mnfctr(){
     {
         try
         {
-            $fromDomain = "gm-vrn.ru";
-            header('Access-Control-Allow-Origin: http://' . $fromDomain);
+            $fromDomain = 'http://promo.gm-vrn.ru';
+            header('Access-Control-Allow-Origin: ' . $fromDomain);
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
             header('Access-Control-Allow-Headers: Content-Type');
@@ -867,7 +867,7 @@ public function register_mnfctr(){
                 $cl_phones_model->save($client_id, $phones);
                 $proj_id = $this->createProject($client_id, $api_phone_id, $adress, $calc_date_time);
             } else {
-                $client_id = $result->client_id;
+                $client_id = $result->id;
                 $pr_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
                 $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                 $projects = $pr_model->getProjectsByClientID($client_id);

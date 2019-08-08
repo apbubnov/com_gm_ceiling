@@ -899,75 +899,25 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function saveDataInventory($array, $stock_id, $id_counterparty){
-        try
-        {
-            /*$ids = '';
-            $values = '';
-
-            foreach ($array as $value) {
-                $ids .= $value['id'].',';
-                $values[] = $value['id'].','. $value['count'] .','. $value['cost'];
+    public function saveDataInventory($array_reception, $stock_id, $id_counterparty){
+        try {
+            $inventory_values = array();
+            $reception_values = array();
+            foreach ($array_reception as $value) {
+                $inventory_values[] = $value->id.','.$value->count.','.$stock_id;
             }
-
-            $ids = substr($ids, 0, -1);
 
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->from("`#__gm_stock_inventory` AS si")
-                ->select("`si`.`good_id`,
-                          `si`.`id`")
-                ->where("`si`.`stock_id` = ".$stock_id." and `si`.`good_id` in ($ids)");
+            $query
+                ->insert('`rgzbn_gm_stock_goods`')
+                ->columns('`goods_id`, `count`, `stock_id`')
+                ->values($inventory_values);
             $db->setQuery($query);
-            $items = $db->loadAssocList('good_id','id');*/
+            $db->execute();
 
-            //$ids = '';
-            //$values = '';
-            //$counts = '';
-            //foreach ($array as $value) {
-            //    $ids .= $value['id'].',';
-            //    $values .= '('.$value['id'].','. $value['count'] .','. $value['cost'].'),';
-            //    $counts .= '`count` = VALUES (`count` + ' . $value['cost'].'),';
-            //}
-
-            //$ids = substr($ids, 0, -1);
-            //$values = substr($values, 0, -1);
-            //$counts = substr($counts, 0, -1);
-
-            //$db = $this->getDbo();
-            //$query = $db->getQuery(true);
-            //$query = (
-            //    "INSERT INTO `#__gm_stock_inventory`
-            //        (`good_id`, `count`, `stock_id`)
-            //    VALUES
-            //        " . $values . "
-            //    ON DUPLICATE KEY UPDATE
-            //        " . $counts . ""
-            //);
-
-            //$query = (
-            //    "INSERT INTO `#__gm_stock_inventory`
-            //        (`good_id`, `count`, `stock_id`)
-            //    VALUES
-            //        (13, 100, 1), (10, 100, 2)
-            //    ON DUPLICATE KEY UPDATE
-            //        `count` = `count` + 100",
-            //        `count` = `count` + 100
-            //);
-
-            //$db->setQuery($query);
-            //$items = $db->loadObject();
-
-            /*$query = $db->getQuery(true);
-            $query ->delete('`#__gm_ceiling_goods_dealer_price`')
-                ->where("`goods_id` in ($ids) and `dealer_id` = $dealer_id");
-            $db->setQuery($query);
-            $db->execute();*/
-
-            return 'true';
-        }
-        catch(Exception $e)
-        {
+            return true;
+        } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
