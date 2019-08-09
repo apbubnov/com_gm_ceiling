@@ -722,7 +722,7 @@ if (!empty($calculation_id)) {
                         }
                     ]
                 },
-                {
+               /* {
                     title: "Обработка углов",
                     description: "В расчет включается стоимость обработки углов",
                     id: "angle_processing",
@@ -741,7 +741,7 @@ if (!empty($calculation_id)) {
                             title: "Обработка углов"
                         }
                     ]
-                },
+                },*/
                 {
                     title: "Перегарпунка",
                     description: "В расчет включается стоимость перегарпунки",

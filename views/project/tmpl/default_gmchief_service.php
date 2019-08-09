@@ -90,14 +90,7 @@ foreach ($calculations as $calculation) {
     $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-    $calculation->n13 = $calculationform_model->n13_load($calculation->id);
-    $calculation->n14 = $calculationform_model->n14_load($calculation->id);
-    $calculation->n15 = $calculationform_model->n15_load($calculation->id);
-    $calculation->n22 = $calculationform_model->n22_load($calculation->id);
-    $calculation->n23 = $calculationform_model->n23_load($calculation->id);
-    $calculation->n26 = $calculationform_model->n26_load($calculation->id);
-    $calculation->n29 = $calculationform_model->n29_load($calculation->id);
-    $calculation->n19 = $calculationform_model->n19_load($calculation->id);
+
     $total_square +=  $calculation->n4;
     $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;
@@ -125,6 +118,12 @@ $project_total_discount_transport = $project_total_discount + $client_sum_transp
 $del_flag = 0;
 $project_total = $project_total + $client_sum_transport;
 $project_total_discount = $project_total_discount  + $client_sum_transport;
+
+if ($this->item->id_client!=1) {
+    $phone = $calculationsModel->getClientPhones($this->item->id_client);
+} else  {
+    $phone = [];
+}
 /*________________________________________________________________*/
 ?>
 <style>
@@ -275,8 +274,8 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
+        <div class="col-md-6" style="border: 1px solid #414099;border-radius: 15px">
+            <table class="table_info" >
                 <tr>
                     <th>
                         Дилер
@@ -313,29 +312,62 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                         </a>
                     </td>
                 </tr>
+                <tr>
+                    <th>Клиент</th>
+                    <td colspan=2>
+                        <?php echo $this->item->client_id; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Контакты</th>
+                    <td colspan="2">
+                        <?php
+                        foreach ($phone AS $contact) {
+                            echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                            echo "<br>";
+                        }
+                        ?>
+                    </td>
+
+                </tr>
             </table>
         </div>
-        <div class="col-md-6">
-            <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                <tr>
-                    <th colspan="3" style="text-align: center">Монтаж</th>
-                </tr>
-                <?php if(!empty($this->item->mount_data)):?>
-                    <?php foreach ($this->item->mount_data as $value) { ?>
+        <div class="col-md-6" >
+            <div style="border: 1px solid #414099;border-radius: 15px">
+                <table class="table_info" >
+                    <tr>
+                        <th colspan="3" style="text-align: center">Монтаж</th>
+                    </tr>
+                    <?php if(!empty($this->item->mount_data)):?>
+                        <?php foreach ($this->item->mount_data as $value) { ?>
+                            <tr>
+                                <th>
+                                    <?php echo $value->stage_name;?>
+                                </th>
+                                <td>
+                                    <?php echo $value->time;?>
+                                </td>
+                                <td>
+                                    <?php echo JFactory::getUser($value->mounter)->name;?>
+                                </td>
+                            </tr>
+                        <?php }?>
                         <tr>
-                            <th>
-                                <?php echo $value->stage_name;?>
-                            </th>
-                            <td>
-                                <?php echo $value->time;?>
-                            </td>
-                            <td>
-                                <?php echo JFactory::getUser($value->mounter)->name;?>
-                            </td>
+                           <td colspan="3">
+
+                           </td>
                         </tr>
-                    <?php }?>
+                    <?php endif;?>
+                </table>
+                <?php if(!empty($this->item->mount_data)):?>
+                    <div class="row center">
+                        <h4>Перенести дату монтажа</h4>
+                        <div id="change_mount" align="center"></div>
+                        <input type="hidden" id="change_mount">
+                        <button class="btn btn-primary" type = "button" id = "save_changes">Сохранить</button>
+                    </div>
                 <?php endif;?>
-            </table>
+            </div>
             <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
 
         </div>
@@ -1162,6 +1194,7 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
     <script type="text/javascript">
         init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
+        init_mount_calendar('change_mount','change_mount','mw_mounts_calendar',['close_mw','mw_container']);
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
@@ -1181,6 +1214,34 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
         jQuery(document).ready(function(){
             jQuery("#save").click(function(){
                 jQuery("#mount_form").submit();
+            });
+
+            jQuery("#save_changes").click(function () {
+               console.log(project_id,jQuery("#change_mount").val());
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=project.updateMountDate",
+                    data:{
+                        project_id:project_id,
+                        mount_data:jQuery("#change_mount").val(),
+                    },
+                    success: function(data) {
+                       location.reload();
+                    },
+                    dataType: "json",
+                    timeout: 10000,
+                    error: function(error) {
+                        console.log(error);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "error"
+                        });
+                    }
+                });
             });
         });
     </script>

@@ -701,7 +701,6 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
 
             $data_for_mount_estimate = [];
-
             $data_for_mount_estimate['calculation'] = $calculation;
             $data_for_mount_estimate['jobs'] = $all_jobs;
             if($need_mount == 1){

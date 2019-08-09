@@ -488,7 +488,7 @@
                                         <input class="input-gm" id="prepayment" style="vertical-align: middle;">
                                     </div>
                                     <div class="col-md-3 col-xs-3" style="padding-left: 0;padding-right: 0;">
-                                        <button id="prepayment_save" class="btn btn-primary btn-sm"><i class="fas fa-save" aria-hidden="true"></i></button>
+                                        <button id="prepayment_save" class="btn btn-primary btn-sm" type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </td>

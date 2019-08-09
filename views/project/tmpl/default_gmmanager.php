@@ -57,7 +57,7 @@ $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"m
 $mounter_approve = true;
 
 /*ГЕНЕРАЦИЯ ПДФ*/
-foreach($calculations as $calc){
+/*foreach($calculations as $calc){
     if(!empty($calc->n3)){
         Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
         Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
@@ -65,16 +65,19 @@ foreach($calculations as $calc){
     $mount = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id);
     $calc->total_gm_mount_sum = $mount['total_gm_mounting'];
     $calc->total_dealer_mount_sum = $mount['total_dealer_mounting'];
-}
+}*/
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+
 
 //статус проекта
 $status = $model->WhatStatusProject($_GET['id']);
 if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status == 11) || ((int)$status[0]->project_status == 22) || $this->item->dealer_id != $user->dealer_id){
     $display = 'style="display:none;"';
 }
+
 ?>
 
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
@@ -164,6 +167,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     <?php
                     $mount = $mount_model->getDataAll();
                     $common_canvases_sum = 0;
+                    $total_components_sum = 0;
                     ?>
                     <thead>
                         <tr>
@@ -188,14 +192,59 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($calculations as $calculation) {
-                        $guild_data = Gm_ceilingHelpersGm_ceiling::calculate_guild_jobs($calculation->id);
-                        ?>
-                        
+                    <?php
+                        foreach ($calculations as $calculation) {
+                            $common_canvases_sum += $calculation->canvases_sum;
+                            $total_components_sum += $calculation->components_sum;
+                            $calc_data = [];
+
+                            $canvas = array_filter(
+                                $calculation->goods,
+                                function ($e) {
+                                    return $e->category_id == 1;
+                                }
+                            );
+                            if (!empty($canvas)) {
+                                $filter = "id = ".$canvas[0]->id;
+                                $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
+                                $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
+                                $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);
+                                $arr_widths = [];
+                                $widths = [];
+                                foreach ($selected_canvases as $value) {
+                                    if (!in_array($value->width, $arr_widths)) {
+                                        array_push($arr_widths, $value->width);
+                                        array_push($widths, (object)array("id"=>$value->id,"width" => $value->width, "price" => $value->price));
+                                    }
+                                }
+                                usort($widths, function ($a, $b) {
+                                    if ($a->width < $b->width) {
+                                        return 1;
+                                    }
+                                    if ($a->width > $b->width) {
+                                        return -1;
+                                    }
+                                    return 0;
+                                });
+                                $calc_data[$calculation->id] = array(
+                                    "n4" => $calculation->n4,
+                                    "n5" => $calculation->n5,
+                                    "n9" => $calculation->n9,
+                                    "widths" => $widths,
+                                    "texture" => $canvas->texture_id,
+                                    "manufacturer" => $canvas->manufacturer_id,
+                                    "color" => $canvas->color_id,
+                                    "walls" => $calculation->original_sketch
+                                );
+                                $widths = json_encode($widths);
+                                $color = $detailed_canvas[0]->color;
+                                $hex = $detailed_canvas[0]->hex;
+                            }
+                    ?>
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                             <td>
-                                <?php echo $calculation->canvases_sum; $common_canvases_sum += $calculation->canvases_sum;?> руб.
+                                <?php echo $calculation->canvases_sum;?> руб.
                             </td>
                             <td>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
@@ -259,48 +308,12 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 </table>
                 <h4>Расходные материалы</h4>
                 <table class="table">
-                    <?php $total_components_sum = 0;
-                    //получаем прайс комплектующих
-                    
-                    $calc_data = [];
-                    foreach ($calculations as $calculation) {
-                        $total_components_sum += $calculation->components_sum;
-                        if(!empty($calculation->n3)){
-                            $color_filter = "";
-                            $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
-                            if(!empty($canvas->color_id)){
-                                $color_filter = "and color_id = $canvas->color_id";
-                            }
-                            $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0 $color_filter");
-                            $widths = [];
-                            foreach ($canvases as $item) {
-                                $widths[] = (object)array("width" =>$item->width*100,"price" => $item->price);    
-                            }
-
-                            usort($widths, function($obj_a,$obj_b){
-                                 return ($obj_a > $obj_b) ? -1 : 1;
-
-                            });
-                            $calc_data[$calculation->id] = array(
-                                "n4" => $calculation->n4,
-                                "n5" => $calculation->n5,
-                                "n9" => $calculation->n9,
-                                "widths" => $widths,
-                                "texture" => $canvas->texture_id,
-                                "manufacturer" => $canvas->manufacturer_id,
-                                "color" => $canvas->color_id,
-                                "walls" => $calculation->original_sketch
-                            );
-                            
-                        }
-                    }
-                    ?>
                     <tr>
                         <th>Общая себестоимость расходников</th>
                         <td>
                             <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <?php echo $total_components_sum;// - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
+                            <?php echo $total_components_sum;?>
                             руб.
                             <?php } else { ?>
                                 0
@@ -332,12 +345,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                             <th>
                                 Название
                             </th>
-                            <?php if($need_service){ ?>
-                                <th>Сумма монтажной слубы</th>
-                                <th>Сумма монтажа ГМ</th>
-                            <?php } else {?>
                                 <th>Сумма</th>
-                            <?php }?>
                             <th>
                                 Наряды
                             </th>
@@ -347,73 +355,39 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         <?php foreach ($calculations as $calculation) {?>
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
-                            <?php if($need_service) {?>
                                 <td>
                                     <?php
-                                        $total_service += $calculation->total_dealer_mount_sum;
-                                        echo  $calculation->total_dealer_mount_sum;
+                                        $total_mount += $calculation->mounting_sum;
+                                        echo $calculation->mounting_sum;
                                     ?> руб.
                                 </td>
-                                <td>
-                                    <?php
-                                        $total_gm_mount += $calculation->total_gm_mount_sum;
-                                        echo $calculation->total_gm_mount_sum;
-                                    ?> руб.
-                                </td>
-                                <?php }else{ ?>
-                                    <td>
-                                        <?php
-                                            $total_mount += $calculation->total_dealer_mount_sum;
-                                            echo $calculation->total_dealer_mount_sum;
-                                        ?> руб.
-                                    </td>
-                               <?php } ?>
                             <td>
                                 <?php
                                 if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
                                     $path = "/costsheets/" . md5($calculation->id.'mount_single_dealer').'.pdf';
-                                    if($need_service){
-                                        $path_gm = "/costsheets/" . md5($calculation->id.'mount_single_gm').'.pdf';
-                                    }
-
-                                    if($need_service) {
-                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд МС</a>';
+                                    $path_gm = "/costsheets/" . md5($calculation->id.'mount_single_gm').'.pdf';
+                                    echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд МС</a>';
+                                    if (file_exists($_SERVER['DOCUMENT_ROOT'].$path_gm)) {
                                         echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Наряд бригаде</a>';
-                                    }else{
-                                        echo '<a href="'.$path.'" class="btn btn-secondary" target="_blank">Наряд</a>';
                                     }
                                 }
                                 else {
                                     foreach ($mount_data as $value) {
-                                        if($need_service){
-                                            $path_gm = "/costsheets/" . md5($calculation->id.'mount_stage_gm'.$value->stage).'.pdf';
-                                        }
+                                        $path_gm = "/costsheets/" . md5($calculation->id.'mount_stage_gm'.$value->stage).'.pdf';
                                         $path = "/costsheets/" . md5($calculation->id.'mount_stage_dealer'.$value->stage).'.pdf';
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                                             switch ($value->stage) {
                                                 case 2:
-                                                    if($need_service) {
-                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Обагечивание МС</a>';
-                                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Обагечивание ГМ</a>';
-                                                    }else{
-                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Обагечивание</a>';
-                                                    }
+                                                    echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Обагечивание МС</a>';
+                                                    echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Обагечивание ГМ</a>';
                                                     break;
                                                 case 3:
-                                                    if($need_service) {
-                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Натяжка МС</a>';
-                                                        echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Натяжка ГМ</a>';
-                                                    }else{
-                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Натяжка</a>';
-                                                    }
+                                                    echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Натяжка МС</a>';
+                                                    echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Натяжка ГМ</a>';
                                                     break;
                                                 case 4:
-                                                    if($need_service) {
                                                         echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Вставка МС</a>';
                                                         echo '<a href="' . $path_gm . '" class="btn btn-secondary" target="_blank">Вставка ГМ</a>';
-                                                    }else{
-                                                        echo '<a href="' . $path . '" class="btn btn-secondary" target="_blank">Вставка</a>';
-                                                    }
                                                     break;
                                                 default:
                                                     break;
@@ -429,31 +403,16 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         <td>
                             <b>Итого</b>
                         </td>
-                        <?php if($need_service) {?>
-                            <td>
-                                <?php echo $total_service + $transport_service;?> руб.
-                            </td>
-                            <td> 
-                                <?php echo $total_gm_mount + $transport;?> руб.
-                            </td>
-                        <?php }else{ ?>
-                            <td>
-                               <?php echo $total_mount + $transport;?> руб.
-                            </td>
-                       <?php } ?>
+                        <td>
+                            <?php echo $total_mount + $transport;?> руб.
+                        </td>
                         <td>
                             <?php
-                                if($need_service){
-                                    $path = "/costsheets/" . md5($this->item->id . "mount_common_gm") . ".pdf";
-                                    $path_gm = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
-                                    ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Наряд МС</a>
-                                        <a href="<?php echo $path_gm; ?>" class="btn btn-secondary" target="_blank">Наряд ГМ</a>
-                            <?php }else {
-                                $path = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
-                                ?>
-                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть наряд бригаде</a>
-                            <?php } ?>
+                                $path = "/costsheets/" . md5($this->item->id . "mount_common_gm") . ".pdf";
+                                $path_gm = "/costsheets/" . md5($this->item->id . "mount_common_dealer") . ".pdf";
+                            ?>
+                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Наряд МС</a>
+                            <a href="<?php echo $path_gm; ?>" class="btn btn-secondary" target="_blank">Наряд ГМ</a>
                         </td>
         </tbody>
     </table>
