@@ -30,8 +30,8 @@
 		<thead>
 			<th>Штрихкод</th>
 			<th>Наименование</th>
-			<th>Введите количество</th>
-			<th>Стоимость</th>
+			<th>Кол-во</th>
+			<th>Себестоимость</th>
 			<th></th>
 		</thead>
 		<tbody id="tbody_goods"></tbody>
@@ -80,7 +80,18 @@
 			},
 			success: function(data){
 				console.log(data);
-				showTableData(data);
+				if (empty(data)) {
+					var n = noty({
+						timeout: 2000,
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "warning",
+						text: "Товар с данным кодом не найден!"
+					});
+				} else {
+					showTableData(data);
+				}
 			},
 			dataType:"json",
 			async: false,
@@ -186,6 +197,7 @@
 	var array = [];
 	function collectDataTable(){
 		var rows = jQuery('#tbody_goods > tr');
+		array = [];
 		for (var i = 0; i < rows.length; i++) {
 			var inpCount = jQuery(rows[i]).find('.count').val();
 			var inpCost = jQuery(rows[i]).find('.cost').val();
@@ -212,6 +224,15 @@
 			},
 			success: function(data){
 				console.log(data);
+				var n = noty({
+					timeout: 2000,
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "success",
+					text: "Успешно!"
+				});
+				document.getElementById('tbody_goods').innerHTML = '';
 			},
 			dataType:"json",
 			async: false,
