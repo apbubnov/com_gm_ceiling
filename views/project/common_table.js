@@ -12,9 +12,10 @@ if (jQuery("input[name='transport']:checked").val() == '1') {
 }
 
 jQuery("[name = 'include_calculation[]']").change(function(){
-    let canv_data = (self_data[jQuery(this).val()].canv_data).toFixed(0);
+    let canv_data = parseFloat(self_data[jQuery(this).val()].canv_data).toFixed(0);
     let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
     let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
+    let gm_mount_data = (self_data[jQuery(this).val()].gm_mount_data).toFixed(0);
     let calc_sum = (self_data[jQuery(this).val()].sum).toFixed(0);
     let calc_sum_discount = (self_data[jQuery(this).val()].sum_discount).toFixed(0);
     let n4 = self_data[jQuery(this).val()].square;
@@ -22,6 +23,7 @@ jQuery("[name = 'include_calculation[]']").change(function(){
     let old_canv = jQuery("#calcs_self_canvases_total span.sum").text();
     let old_comp = jQuery("#calcs_self_components_total span.sum").text();
     let old_mount = jQuery("#calcs_self_mount_total span.sum" ).text();
+    let old_gm_mount = jQuery("#calcs_self_mount_total span.gm_sum" ).text();
     let old_all = jQuery("#calcs_total_border").text();
     let old_total = jQuery("#project_total span.sum").text();
     let old_total_discount = jQuery("#project_total_discount span.sum").text();
@@ -33,6 +35,7 @@ jQuery("[name = 'include_calculation[]']").change(function(){
            jQuery("#calcs_self_components_total span.sum").text(parseInt(old_comp) + parseInt(comp_data));
        }
        jQuery("#calcs_self_mount_total span.sum").text(parseInt(old_mount) + parseInt(mount_data));
+       jQuery("#calcs_self_mount_total span.gm_sum").text(parseInt(old_gm_mount) + parseInt(gm_mount_data));
        jQuery("#calcs_total_border").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
        jQuery("#project_total span.sum").text(parseInt(old_total)+ parseInt(calc_sum));
        jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
@@ -46,6 +49,7 @@ jQuery("[name = 'include_calculation[]']").change(function(){
             jQuery("#calcs_self_components_total span.sum").text(old_comp-comp_data);
         }
         jQuery("#calcs_self_mount_total span.sum").text(old_mount-mount_data);
+        jQuery("#calcs_self_mount_total span.gm_sum").text(old_gm_mount-gm_mount_data);
         jQuery("#calcs_total_border").text(old_all - canv_data - comp_data - mount_data);
         jQuery("#project_total span.sum").text(old_total - calc_sum);
         jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);

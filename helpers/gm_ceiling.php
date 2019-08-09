@@ -3390,9 +3390,9 @@ class Gm_ceilingHelpersGm_ceiling
                     break;
                 }
             }
-            $total_gm_sum = 0;$total_dealer_sum=0;
             foreach ($calculations as $calc) {
                 $stage_sum = [];$gm_stage_sum = [];
+                $total_dealer_sum = 0;$total_gm_sum =0;
                 foreach ($calc->dealer_mount as $job){
                     $stage_sum[$job->stage] += $job->price_sum;
                     $total_dealer_sum += $job->price_sum;
@@ -3607,7 +3607,7 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    static function create_mount_estimate_by_stage($data,$mounter,$stage,$need_mount){
+    static function create_mount_estimate_by_stage($data,$mounter,$stage){
         try{
             //throw new Exception(print_r($data,true));
             if(!empty($data)){

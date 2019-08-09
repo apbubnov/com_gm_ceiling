@@ -518,16 +518,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 				}
-				/*$client_model->updateClientSex($client_id,$sex);
-				if(count($new_phones)>0){
-					$cl_phones_model->save($client_id,$new_phones);
-				}
-                if(count($change_phones)>0){
-                    $cl_phones_model->update($client_id,$change_phones);
-                }*/
+
             }
             $data->project_sum = $sum;
-			//$data->project_verdict = 1;
 			$calculations = $calculationsModel->new_getProjectItems($data->id);
 			$all_calculations = array();
 			foreach($calculations as $calculation){
@@ -543,14 +536,25 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $send_data['mount'] = $service_data;
                 $pr_data['id'] = $project_id;
                 if(!empty($service_data)){
+                    $model_calculation = Gm_ceilingHelpersGm_ceiling::getModel('Calculation');
                     foreach ($include_calculation as $calc) {
-                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
-                        $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
-                        foreach ($service_data as $key => $value) {
-                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
+                        $total_mount_sum = 0;
+                        $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $data->dealer_id);
+                        $all_gm_jobs = $model_calcform->getJobsPricesInCalculation($calc, 1);
+                        foreach ($all_jobs as $job){
+                            $total_mount_sum += $job->price_sum;
                         }
-                    }
+                        $mount_sum[$calc] = $total_mount_sum;
 
+                        $calc_data['calculation'] = $model_calculation->getBaseCalculationDataById($calc);
+                        $calc_data['jobs'] = $all_jobs;
+                        $calc_data['gm_jobs'] = $all_gm_jobs;
+                        foreach ($service_data as $key => $value) {
+                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc_data,$value->mounter,$value->stage);
+                        }
+
+                    }
+                    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
                     $pr_data['mounting_check'] = json_encode($mount_sum);
                     $this->change_project_data($pr_data);
                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
@@ -844,17 +848,28 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                 $send_data['mount'] = $service_data;
                                 $pr_data['id'] = $project_id;
                                 if(!empty($service_data)){
+                                    $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
+                                    $model_calculation = Gm_ceilingHelpersGm_ceiling::getModel('Calculation');
                                     foreach ($include_calculation as $calc) {
-                                        $result[$calc] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc,null,"service");
-                                        $mount_sum[$calc] =  $result[$calc]['total_dealer_mounting'];
+                                        $total_mount_sum = 0;
+                                        $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $data->dealer_id);
+                                        $all_gm_jobs = $model_calcform->getJobsPricesInCalculation($calc, 1);
+                                        foreach ($all_jobs as $job){
+                                            $total_mount_sum += $job->price_sum;
+                                        }
+                                        $mount_sum[$calc] = $total_mount_sum;
+
+                                        $calc_data['calculation'] = $model_calculation->getBaseCalculationDataById($calc);
+                                        $calc_data['jobs'] = $all_jobs;
+                                        $calc_data['gm_jobs'] = $all_gm_jobs;
                                         foreach ($service_data as $key => $value) {
-                                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc,$value->mounter,$value->stage,$value->time,true);    
+                                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc_data,$value->mounter,$value->stage);
                                         }
                                     }
                                     $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
                                     $this->change_project_data($pr_data);
                                     Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
-                                    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation,"service");
+                                    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation);
                                 }
                                 else{
                                       $pr_data['calcs_mounting_sum'] = "";
@@ -1865,11 +1880,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         try{ 
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get("project_id",null,"INT");
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
+            $project = $project_model->getData($project_id);
             $include_calculations = $jinput->get("calcs",array(),"ARRAY");
             $mount_data = json_decode($jinput->get("mount","","STRING"));
+            $dealer_id = $project->dealer_id;
             $service_mount = $this->check_mount_for_service($mount_data);
             if(empty($service_mount)){
                 foreach ($include_calculations as $calc) {
+                    $total_mount_sum = 0;
                     $all_jobs = $model_calcform->getJobsPricesInCalculation($calc, $dealer_id); // Получение работ по прайсу дилера
                     foreach ($all_jobs as $job){
                         $total_mount_sum += $job->price_sum;
@@ -1879,6 +1899,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             }
             else{
                 foreach ($include_calculations as $calc) {
+                    $total_mount_sum = 0;
                     $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $dealer_id);
                     foreach ($all_jobs as $job){
                         $total_mount_sum += $job->price_sum;

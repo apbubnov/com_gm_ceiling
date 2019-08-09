@@ -26,38 +26,63 @@
     $self_canvases_sum = 0;
     $self_components_sum = 0;
     $self_mounting_sum = 0;
+    $self_gm_mounting_sum = 0;
     $project_self_total = 0;
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
     $total_perimeter = 0;
-    $calculation_total_discount = 0;
+    //$calculation_total_discount = 0;
     if (!empty($this->item->calcs_mounting_sum)) {
+        $use_service = true ;
         $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
     }
+    else{
+        foreach ($calculations as $calculation) {
+            if ($calculation->need_mount == 2) {
+                $use_service = true;
+                break;
+            }
+        }
+    }
+
     $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 
     if(!empty($service_mount)){
         $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
     }
     foreach ($calculations as $calculation) {
+       $total_gm_sum = 0;$total_dealer_sum = 0;
+        if($use_service){
+            $all_jobs = $calculationformModel->getMountingServicePricesInCalculation($calculation->id, $this->item->dealer_id);
+            foreach ($all_jobs as $job){
+                $total_dealer_sum += $job->price_sum;
+            }
+            $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
+            foreach ($all_gm_jobs as $job){
+                $total_gm_sum += $job->price_sum;
+            }
+        }
         if (!empty($service_mount)) {
-            $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+            $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: $total_dealer_sum;
         }
         else{
-            $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+            $calculation->dealer_self_mounting_sum = $calculation->mounting_sum;
         }
+        $calculation->gm_self_mounting_sum = $total_gm_sum;
         $calculation->dealer_canvases_sum = $calculation->canvases_sum_with_margin;
         $calculation->dealer_components_sum = $calculation->components_sum_with_margin;
         $calculation->dealer_gm_mounting_sum = $calculation->mounting_sum_with_margin;
         $calculation->dealer_self_canvases_sum = $calculation->canvases_sum;
-        $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
         $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-        $self_components_sum += $calculation->dealer_self_components_sum;
-        $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
         $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
         $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
 
+
+        $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+        $self_components_sum += $calculation->dealer_self_components_sum;
+        $self_mounting_sum += $calculation->dealer_self_mounting_sum;
+        $self_gm_mounting_sum += $calculation->gm_self_mounting_sum;
         $total_square +=  $calculation->n4;
         $total_perimeter += $calculation->n5;
         $project_total += $calculation->calculation_total;
@@ -65,14 +90,15 @@
         $self_calc_data[$calculation->id] = array(
             "canv_data" => $calculation->dealer_self_canvases_sum,
             "comp_data" => $calculation->dealer_self_components_sum,
-            "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+            "mount_data" => $calculation->dealer_self_mounting_sum,
+            "gm_mount_data" => $calculation->gm_self_mounting_sum,
             "square" => $calculation->n4,
             "perimeter" => $calculation->n5,
             "sum" => $calculation->calculation_total,
             "sum_discount" => $calculation->calculation_total_discount
         );
-        $calculation_total = $calculation->calculation_total;
-        $calculation_total_discount =  $calculation->calculation_total_discount;
+        //$calculation_total = $calculation->calculation_total;
+        //$calculation_total_discount =  $calculation->calculation_total_discount;
     }
     $self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
     $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
@@ -83,21 +109,9 @@
 
     $project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
-    $del_flag = 0;
     $project_total = $project_total + $client_sum_transport;
     $project_total_discount = $project_total_discount  + $client_sum_transport;
 
-    if(!empty($this->item->calcs_mounting_sum)){
-            $service_mount = true ;
-        }
-        else{
-            foreach ($calculations as $calculation){
-                if($calculation->need_mount == 2){
-                    $service_mount = true;
-                    break;
-                }
-            }
-        }
 
 ?>
 <style>
@@ -467,7 +481,7 @@
                             <td colspan="2">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span id="prepayment_total" style="vertical-align: middle;"><?php echo $this->item->prepayment_total;?></span>руб.
+                                        <span id="prepayment_total" style="vertical-align: middle;"><?php echo !empty($this->item->prepayment_total) ? $this->item->prepayment_total : 0 ;?></span>руб.
                                     </div>
                                     <div class="col-md-3">
                                         <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>
@@ -505,10 +519,10 @@
                                         <?php } else{?>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <span>МС </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
+                                                    <span>МС </span><span class = "gm_sum"><?php echo round($self_gm_mounting_sum+$self_sum_transport, 0); ?></span>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <span>МД </span><span class = "sum"><?php echo round($total_dealer_mount+$self_sum_transport, 0); ?></span>
+                                                    <span>МД </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span>
                                                 </div>
                                             </div>
                                         <?php }?>
@@ -799,7 +813,9 @@
                             <?php } ?>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
+                                        <?php if($needShow){ ?>
+                                            <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
+                                        <?php }?>
                                         <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" data-img-type="before" style="display: none;" multiple accept="image/*">
                                         <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
                                         <input type="hidden" id="input_delete_uploaded_calc_img">
