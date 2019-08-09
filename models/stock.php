@@ -794,7 +794,7 @@ class Gm_ceilingModelStock extends JModelList
                     `stoc`.`id` as `stock_id`, 
                     `inv`.`count`')
                 ->from('`#__gm_stock_goods` as `go`')
-                ->leftJoin('`#__gm_stock_inventory` as `inv` on `go`.`id` = `inv`.`good_id`')
+                ->leftJoin('`#__gm_stock_inventory` as `inv` on `go`.`id` = `inv`.`goods_id`')
                 ->leftJoin('`#__gm_stock_stocks` as `stoc` on `inv`.`stock_id` = `stoc`.`id`')
                 ->order('`go`.`id`');
 
@@ -901,17 +901,24 @@ class Gm_ceilingModelStock extends JModelList
 
     public function saveDataInventory($array_reception, $stock_id, $id_counterparty){
         try {
-            $inventory_values = array();
+            $user = JFactory::getUser();
+            $db = $this->getDbo();
             $reception_values = array();
             foreach ($array_reception as $value) {
-                $inventory_values[] = $value->id.','.$value->count.','.$stock_id;
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`rgzbn_gm_stock_inventory`')
+                    ->columns('`goods_id`, `count`, `stock_id`')
+                    ->values($value['id'].','.$value['count'].','.$stock_id);
+                $db->setQuery($query);
+                $db->execute();
+                $inventory_values[] = $db->insertid().','.$value['cost'].','.$value['count'].',NOW(),'.$user->id.','.$id_counterparty;
             }
 
-            $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->insert('`rgzbn_gm_stock_goods`')
-                ->columns('`goods_id`, `count`, `stock_id`')
+                ->insert('`rgzbn_gm_stock_reception`')
+                ->columns('`inventory_id`, `cost_price`, `count`, `date_time`, `created_by`, `provider_id`')
                 ->values($inventory_values);
             $db->setQuery($query);
             $db->execute();
