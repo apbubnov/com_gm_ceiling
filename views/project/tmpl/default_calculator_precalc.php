@@ -23,37 +23,14 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
 /*_____________блок для всех моделей/models block________________*/ 
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 
 /*________________________________________________________________*/
-$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-$client_sum_transport = $transport['client_sum'];
-$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-$self_calc_data = [];
-$self_canvases_sum = 0;
-$self_components_sum = 0;
-$self_mounting_sum = 0;
-$project_self_total = 0;
-$project_total = 0;
-$project_total_discount = 0;
-$total_square = 0;
-$total_perimeter = 0;
-$calculation_total_discount = 0;
-$calculations = $calculationsModel->new_getProjectItems($this->item->id);
-if (!empty($this->item->calcs_mounting_sum)) {
-    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
-}
-if(!empty($service_mount)){
-    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-}
+
+
 
 //address
 $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];

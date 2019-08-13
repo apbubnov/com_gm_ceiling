@@ -16,7 +16,6 @@
     $dealer_type = JFactory::getUser($dealer_id)->dealer_type;
     $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-    $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
     $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
     $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
     $model_client_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
@@ -25,41 +24,9 @@
     $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
     $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
     $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
-    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-    $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
     $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 
-    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
     $project_id = $this->item->id;
-
-    //транспорт
-    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-    /* минимальная сумма заказа */
-    $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-    $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
-    $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
-    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-    $client_sum_transport = $transport['client_sum'];
-    $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-    $self_calc_data = [];
-    $self_canvases_sum = 0;
-    $self_components_sum = 0;
-    $self_mounting_sum = 0;
-    $project_self_total = 0;
-    $project_total = 0;
-    $project_total_discount = 0;
-    $total_square = 0;
-    $total_perimeter = 0;
-    $calculation_total_discount = 0;
-    $calculations = $model_calculations->new_getProjectItems($this->item->id);
-
-    $del_flag = 0;
-    $project_total = $project_total + $client_sum_transport;
-    $project_total_discount = $project_total_discount  + $client_sum_transport;
-
     $project_card = '';
     $phones = [];
     if (!empty($_SESSION["project_card_$project_id"]))
@@ -91,28 +58,7 @@
         $all_advt = $model_api_phones->getDealersAdvt($dealer_id);
     }
 
-    /*
-    if (!empty($phoneto) && !empty($phonefrom)) {
-        $reklama = $model_api_phones->getNumberInfo($phoneto);
-        $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-    } elseif (!empty($this->item->api_phone_id)) {
-        
-        
-        if ($this->item->api_phone_id == 10) {
-            if (!empty($repeat_advt->advt_id)) {
-                $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-            } else {
-                $need_choose = true;
-            }
-        }
-        else {
-            $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-        }
-        $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-    } else {
-        $need_choose = true;
-    }*/
-    
+
     $cl_phones = $model_client_phones->getItemsByClientId($this->item->id_client);
     $date_time = $this->item->project_calculation_date;
     $date_arr = date_parse($date_time);
@@ -420,15 +366,7 @@
                             }?>" readonly>
                     </div>
                 </div>
-               <!-- <div class="row" style="margin-bottom:15px;">
-                    <div class="col-xs-6 col-md-6"><b>Клиентский просчет?</b></div>
-                    <div class="col-xs-6 col-md-6">
-                        <input id='no_client' type='radio' class = "radio" name='slider_which_calc' value='0' checked= "checked">
-                        <label  for='no_client'>Нет</label>
-                        <input id='client' type='radio' class = "radio" name='slider_which_calc' value='1'>
-                        <label for='client'>Да</label>
-                    </div>
-                </div> -->
+
                 <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) {
                     $skidka = 0;
                     if (!empty($calculation_total)) {

@@ -138,15 +138,16 @@ class Gm_ceilingModelProjectForm extends JModelForm
 							$query
 								->select('client.`client_name`')
 								->select('client.`id`')
+                                ->select('client.`dealer_id`')
 								->select('contact.`phone`')
 								->from($db->quoteName('#__gm_ceiling_clients', 'client'))
-	                            ->from($db->quoteName('#__gm_ceiling_clients_contacts', 'contact'))
-								->where($db->quoteName('client.id') . ' = ' . $db->quote($db->escape($value)) .'AND'.$db->quoteName('contact.client_id') .' = '. $db->quoteName('client.id'));
-
+	                            ->leftJoin('#__gm_ceiling_clients_contacts as contact ON contact.client_id = client.id')
+								->where($db->quoteName('client.id') . ' = ' . $db->quote($db->escape($value)));
 							$db->setQuery($query);
 							$results = $db->loadObject();
 
 							if ($results) {
+							    $dealer_id = $results->dealer_id;
 								$textValue[] = $results->client_name;
 								$textValue3[] = $results->id;
 								$textValue2[] = $results->phone;
@@ -163,10 +164,11 @@ class Gm_ceilingModelProjectForm extends JModelForm
 				
 				$mount_array = $db->loadObjectList();
 				$this->item->mount_data = htmlspecialchars(json_encode((!empty($mount_array)) ? $mount_array : array()),ENT_QUOTES);
-					
+				$this->item->dealer_id = !empty($dealer_id) ? implode(', ', $textValue1) : $this->_item->dealer_id;
 					if (!empty($textValue)) $this->item->client_id = implode(', ', $textValue);
 					if (!empty($textValue3)) $this->item->id_client = implode(', ', $textValue3);
 					if (!empty($textValue2)) $this->item->client_contacts = implode(', ', $textValue2);
+					if (!empty($dealer_id)) $this->item->dealer_id = $dealer_id;
 
 					}
 				}

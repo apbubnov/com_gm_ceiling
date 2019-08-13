@@ -31,7 +31,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
     <input id="jform_project_status" type="hidden" value="jform[project_status]" />
 </form>
 <?php if ($user->dealer_type != 2): ?><h2 class="center">Завершенные монтажи</h2><?php else: ?><h2 class="center">Заказы</h2><?php endif; ?>
-<form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&&subtype=run'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=run'); ?>" method="post"
       name="adminForm" id="adminForm">
     <?php if (false): ?>
         <div class="toolbar">
@@ -82,11 +82,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             <?php echo $item->id; ?>
                         </td>
 
-                        <?php $jdate = new JDate(JFactory::getDate($item->closed)); ?>
                         <td class="center one-touch">
-                            <?php if ( $item->closed == "0000-00-00"): ?> -
-                            <?php else: ?><?= $jdate->format('d.m.Y'); ?>
-                            <?php endif; ?>
+                            <?= $item->closed;?>
                         </td>
 
                         <td class="center one-touch">

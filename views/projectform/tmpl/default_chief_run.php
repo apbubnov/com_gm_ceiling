@@ -28,19 +28,6 @@ $userId = $user->get('id');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
 
-$db = JFactory::getDbo();
-$query = $db->getQuery(true);
-$query
-    ->select(
-        array(
-            '`id`',
-            '`name`',
-        )
-    )
-    ->from($db->quoteName("#__gm_ceiling_groups"))
-    ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
-$db->setQuery($query);
-$results = $db->loadObjectList();
 
 //$project_mounter = "<select id='jform_project_mounter' name='jform[project_mounter]' class='inputbox'>";
 //// Iterate through all the results

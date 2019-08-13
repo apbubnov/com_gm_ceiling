@@ -12,65 +12,6 @@ defined('_JEXEC') or die;
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $user_group = $user->groups;
-
-$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
-
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
-$project_total = 0;
-$project_total_discount = 0;
-$total_square = 0;
-$total_perimeter = 0;
-$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->new_getProjectItems($this->item->id);
-//$need_mount = 1;
-
-$sum_transport = 0;  $sum_transport_discount = 0;
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount_transport = $mountModel->getDataAll();
-
-if($this->item->transport == 0 ) $sum_transport = 0;
-if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-if($this->item->transport == 1 ) {
-    $min = 100;
-    foreach($calculations as $d) {
-        if($d->discount < $min) $min = $d->discount;
-    }
-    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-}
-//if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-//    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-//}
-$project_total_discount_transport = $project_total_discount + $sum_transport;
-
-$project_total = $project_total  + $sum_transport;
-$project_total_discount = $project_total_discount  + $sum_transport;
-$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations1 = $calculationsModel->new_getProjectItems($this->item->id);
-$components_data = array();
-$project_sum = 0;
-$counter = 0;
-
-// календарь
-$month = date("n");
-$year = date("Y");
-$FlagCalendar = [3, $user->dealer_id];
-
-//----------------------------------------------------------------------------------
-
-// все замерщики
-$AllGauger = $model->FindAllGauger($user->dealer_id, 14);
-//----------------------------------------------------------------------------------
-
 ?>
 
 <style>
@@ -83,47 +24,31 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?= parent::getButtonBack(); ?>
-<?php //print_r($this->item); ?>
-<?php if ($this->item) : ?>
-    <?php
-        $need_choose = false;
+<?php
+    if ($this->item) :
         $jinput = JFactory::getApplication()->input;
-        $phoneto = $jinput->get('phoneto', '0', 'STRING');
-        $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
         $call_id = $jinput->get('call_id', 0, 'INT');
-        $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-        $all_advt = $model_api_phones->getAdvt();
-
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
-        $date_time = $this->item->project_calculation_date;
-        $date_arr = date_parse($date_time);
-        $date = $date_arr['year'] . '-' . $date_arr['month'] . '-' . $date_arr['day'];
-        $time = $date_arr['hour'] . ':00';
-
-        //обновляем менеджера для клиента
         $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+        $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+        $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
+        $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+
+        $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
+        //обновляем менеджера для клиента
+
         if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
             $model_client->updateClientManager($this->item->id_client, $userId);
         }
-        $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
         $projects_model->updateManagerId($userId, $this->item->id_client);
-        $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
-        //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
-        //throw new Exception($client_dealer_id);
+
         if($this->item->id_client!=1){
-            $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
         }
-        $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
 
-        if($client_dealer->name == $this->item->client_id){
-            $lk = true;
-        }
-        $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
-        $all_recoil = $recoil_model->getData();
+
 
         $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
         preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info, $house);
@@ -172,8 +97,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         echo "0";
                     } ?>
                     " type="hidden">
-                <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
-                <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
+
                 <input id="emails" name="emails" value="" type="hidden">
                 <input name="without_advt" value="1" type="hidden">
 
@@ -365,28 +289,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         }
     }
 
-    function formatDate(date) {
 
-        var dd = date.getDate();
-        if (dd < 10) dd = '0' + dd;
-
-        var mm = date.getMonth() + 1;
-        if (mm < 10) mm = '0' + mm;
-
-        var yy = date.getFullYear();
-        if (yy < 10) yy = '0' + yy;
-
-        var hh = date.getHours();
-        if (hh < 10) hh = '0' + hh;
-
-        var ii = date.getMinutes();
-        if (ii < 10) ii = '0' + ii;
-
-        var ss = date.getSeconds();
-        if (ss < 10) ss = '0' + ss;
-
-        return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-    }
 
     jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
 
@@ -469,62 +372,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
        // num_counts--;
     });
 
-    jQuery("#add_birthday").click(function () {
-        var birthday = jQuery("#jform_birthday").val();
-        var id_client = <?php echo $this->item->id_client;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
-            data: {
-                birthday: birthday,
-                id_client: id_client
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Дата рождения добавлена"
-                });
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка отправки"
-                });
-            }
-        });
-    });
 
-    // Подсказки по городам
-    ymaps.ready(init);
-    function init() {
-		var provider
-        // Подключаем поисковые подсказки к полю ввода.
-        var suggestView = new ymaps.SuggestView('jform_address');
-		input = jQuery('#jform_address');
-
-		suggestView.events.add('select', function (e) {
-		var s = e.get('item').value.replace('Россия, ','');
-		input.val(s);
-		});
-
-        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
-        Data.ProjectInfoYMaps.click(hideYMaps);
-    }
-
-    function hideYMaps() {
-        setTimeout(function () {
-            Data.ProjectInfoYMaps.hide();
-            $("#jform_house").focus();
-        }, 75);
-    }
 
 </script>

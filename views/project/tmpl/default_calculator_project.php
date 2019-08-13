@@ -24,13 +24,6 @@
 
 /*_____________блок для всех моделей/models block________________*/ 
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
@@ -165,11 +158,6 @@ $all_advt = $model_api_phones->getAdvt();
 </div>
 <?php if ($this->item) : ?>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-    <!-- чтото для клиенткого кабинета, потом стили применю, если не уберется это вообще -->
-        <?php if ($user->dealer_type == 2) { ?>
-            <button type="button" class="btn btn-primary" id="btn_pay">Оплатить с помощью карты</button>
-        <?php } ?>
-    <!-- конец -->
     <? if ($this->item->project_status >= 5 && $this->item->project_status != 12): ?>
         <button class="btn btn-primary btn-done" data-project_id="<?= $this->item->id; ?>" type="button">Выполнено</button>
     <? endif; ?>
@@ -191,8 +179,6 @@ $all_advt = $model_api_phones->getAdvt();
         });
 
         jQuery(document).ready(function () {
-
-
             $(".head_comsumables").click(function () {
                 e = $(this);
                 if (e.val() === "") e.val(true);
@@ -344,47 +330,7 @@ $all_advt = $model_api_phones->getAdvt();
                     });
                 }
             });
-        });           
-            jQuery("#btn_pay").click(function () {
-                var id = "<?php echo $sb_project_id ?>";
-                var number = <?php echo $project_id ?>;
-                jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=get_paymanet_form&",
-                    data: {
-                        amount: <?php echo $project_total_discount * 100 ?>,
-                        orderNumber: number.toString() + Date.now(),
-                        description: "Количество потолков: "+<?php echo sizeof($calculations) ?>+
-                        " на сумму " +<?php echo $project_total_discount ?>,
-                        id: number
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.errorCode) {
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: data.ErrorMessage
-                            });
-                        }
-                        if (data.formUrl) {
-                            location.href = data.formUrl;
-                        }
-                    },
-                    timeout: 10000,
-                    error: function (data) {
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при попытке оплаты, попробуйте позднее"
-                        });
-                    }
-                });
-            });
+        });
         });
 
         function change_project_status(project_id, project_status) {

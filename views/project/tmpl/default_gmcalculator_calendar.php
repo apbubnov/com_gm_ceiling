@@ -10,50 +10,18 @@
     defined('_JEXEC') or die;
 
     $user = JFactory::getUser();
-    $userId = $user->get('id');
+
 
     $userId = $user->get('id');
     $userName = $user->get('username');
-    $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-    if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-        $canEdit = JFactory::getUser()->id == $this->item->created_by;
-    }
 
-    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
     /*_____________блок для всех моделей/models block________________*/ 
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-    $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-    $reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-    $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
     $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 
     /*________________________________________________________________*/
-    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-    $client_sum_transport = $transport['client_sum'];
-    $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-    $self_calc_data = [];
-    $self_canvases_sum = 0;
-    $self_components_sum = 0;
-    $self_mounting_sum = 0;
-    $project_self_total = 0;
-    $project_total = 0;
-    $project_total_discount = 0;
-    $total_square = 0;
-    $total_perimeter = 0;
-    $calculation_total_discount = 0;
-    $calculations = $calculationsModel->new_getProjectItems($this->item->id);
-
-    $del_flag = 0;
-    $project_total = $project_total + $client_sum_transport;
-    $project_total_discount = $project_total_discount  + $client_sum_transport;
 
 
     $json_mount = $this->item->mount_data;

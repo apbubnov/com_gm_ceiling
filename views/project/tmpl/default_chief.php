@@ -14,25 +14,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
 
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
-if ($month1 == 12) {
-    $month2 = 1;
-    $year2 = $year1 + 1;
-} else {
-    $month2 = $month1 + 1;
-    $year2 = $year1;
-}
-
-$jdate = new JDate($this->item->project_mounting_from);
-$current_from = $jdate->format('Y-m-d H:i:s');
-
-$jdate = new JDate($this->item->project_mounting_to);
-$current_to = $jdate->format('Y-m-d H:i:s');
-
-
 ?>
 
 <?= parent::getButtonBack(); ?>
@@ -150,14 +131,7 @@ $current_to = $jdate->format('Y-m-d H:i:s');
     <script type="text/javascript">
         var project_id = "<?php echo $this->item->id; ?>";
         jQuery(document).ready(function () {
-            jQuery("input[name^='include_calculation']").click(function () {
-                if (jQuery(this).prop("checked")) {
-                    jQuery(this).closest("tr").removeClass("not-checked");
-                } else {
-                    jQuery(this).closest("tr").addClass("not-checked");
-                }
-                calculate_total();
-            });
+
             jQuery("#change_data").click(function () {
                 jQuery("#mounter_wraper").toggle();
                 jQuery("#title").toggle();
@@ -172,26 +146,6 @@ $current_to = $jdate->format('Y-m-d H:i:s');
                 create_calculation(<?php echo $this->item->id; ?>);
             };
 
-            function calculate_total() {
-                var components_total = 0;
-                gm_total = 0;
-                dealer_total = 0;
-
-                jQuery("input[name^='include_calculation']:checked").each(function () {
-                    var parent = jQuery(this).closest(".include_calculation"),
-                        components_sum = parent.find("input[name^='components_sum']").val(),
-                        gm_mounting_sum = parent.find("input[name^='gm_mounting_sum']").val(),
-                        dealer_mounting_sum = parent.find("input[name^='dealer_mounting_sum']").val();
-
-                    components_total += parseFloat(components_sum);
-                    gm_total += parseFloat(gm_mounting_sum);
-                    dealer_total += parseFloat(dealer_mounting_sum);
-                });
-
-                jQuery("#components_total").text(components_total.toFixed(2));
-                jQuery("#gm_total").text(gm_total.toFixed(2));
-                jQuery("#dealer_total").text(dealer_total.toFixed(2));
-            }
 
 
             var calendar_toggle = 0,

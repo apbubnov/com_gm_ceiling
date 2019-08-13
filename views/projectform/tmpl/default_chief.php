@@ -29,96 +29,8 @@ if(in_array('17',$user_groups)){
 /*_____________блок для всех моделей/models block________________*/
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 /*________________________________________________________________*/
-$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-$client_sum_transport = $transport['client_sum'];
-$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-$self_calc_data = [];
-$self_canvases_sum = 0;
-$self_components_sum = 0;
-$self_mounting_sum = 0;
-$project_self_total = 0;
-$project_total = 0;
-$project_total_discount = 0;
-$total_square = 0;
-$total_perimeter = 0;
-$calculation_total_discount = 0;
-$calculations = $calculationsModel->new_getProjectItems($this->item->id);
-if (!empty($this->item->calcs_mounting_sum)) {
-    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
-}
-$calculations = $calculationsModel->new_getProjectItems($this->item->id);
-if(!empty($service_mount)){
-    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-}
-if(!empty($this->item->calcs_mounting_sum)){
-    $dealer_moung_sum = json_decode($this->item->calcs_mounting_sum);
-    foreach ($dealer_moung_sum as $key=>$sum){
-        $total_dealer_mount +=$sum;
-    }
-}
-else{
-    foreach ($calculations as $calc) {
-        $total_dealer_mount += $calc->mounting_sum;
-    }
-}
-foreach ($calculations as $calculation) {
-    if (!empty($service_mount)) {
-        $calculation->dealer_self_gm_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-    }
-    else{
-        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-    }
-    if($isNMS){
-        $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"serviceSelf");
-        $calculation->dealer_self_gm_mounting_sum = $mount_data['total_gm_mounting'];
-    }
-    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
-    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-    $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-    $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
-    $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-    $self_components_sum += $calculation->dealer_self_components_sum;
-    $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
-    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-
-    $total_square +=  $calculation->n4;
-    $total_perimeter += $calculation->n5;
-    $project_total += $calculation->calculation_total;
-    $project_total_discount += $calculation->calculation_total_discount;
-    $self_calc_data[$calculation->id] = array(
-        "canv_data" => $calculation->dealer_self_canvases_sum,
-        "comp_data" => $calculation->dealer_self_components_sum,
-        "mount_data" => $calculation->dealer_self_gm_mounting_sum,
-        "square" => $calculation->n4,
-        "perimeter" => $calculation->n5,
-        "sum" => $calculation->calculation_total,
-        "sum_discount" => $calculation->calculation_total_discount
-    );
-    $calculation_total = $calculation->calculation_total;
-    $calculation_total_discount =  $calculation->calculation_total_discount;
-}
-$self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
-$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
-
-$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
-$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
-
-$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
-
-$del_flag = 0;
-$project_total = $project_total + $client_sum_transport;
-$project_total_discount = $project_total_discount  + $client_sum_transport;
 
 $json_mount = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
@@ -134,9 +46,6 @@ if(!empty($this->item->mount_data)){
         }
     }
 }
-$extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
-$penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
-$bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
 
 // календарь
 $month1 = date("n");
@@ -152,45 +61,9 @@ if ($month1 == 12) {
 }
 if ($this->item->project_status == 1) {
     $whatCalendar = 0;
-    $FlagCalendar = [3, $user->dealer_id];
 } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
     $whatCalendar = 1;
-    $FlagCalendar = [2, $user->dealer_id];
 }
-//----------------------------------------------------------------------------------
-
-// все бригады
-$Allbrigades = $calculationsModel->FindAllbrigades($user->dealer_id);
-$AllMounters = [];
-if (count($Allbrigades) == 0) {
-    array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
-    array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
-} else {
-    // все монтажники
-    $masid = [];
-    foreach ($Allbrigades as $value) {
-        array_push($masid, $value->id);
-    }
-    foreach ($masid as $value) {
-        if (strlen($where) == 0) {
-            $where = "'".$value."'";
-        } else {
-            $where .= ", '".$value."'";
-        }
-    }
-    $AllMounters = $calculationsModel->FindAllMounters($where);
-}
-//----------------------------------------------------------------------------------
-
-// все замерщики
-if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
-    $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
-} else {
-    $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 21);
-}
-//----------------------------------------------------------------------------------
-
-$mount_sum = 0;
 
 echo parent::getPreloader();
 ?>

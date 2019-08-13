@@ -3,6 +3,7 @@
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
     /*-----------------------------*/
     $jinput = JFactory::getApplication()->input;
     $type = $jinput->get('type', '', 'STRING');
@@ -20,6 +21,7 @@
     $isBuilder = (JFactory::getUser($this->item->dealer_id)->dealer_type == 7);//проект застройщика или нет
     $needShow = !in_array($this->item->project_status,VERDICT_STATUSES) || $isBuilder;
     $displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder)?  "style=\"display:none;\"" : "";//скрыть элемент
+    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
     $client_sum_transport = $transport['client_sum'];
     $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
     $self_calc_data = [];
