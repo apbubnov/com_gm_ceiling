@@ -13,9 +13,9 @@ if (jQuery("input[name='transport']:checked").val() == '1') {
 
 jQuery("[name = 'include_calculation[]']").change(function(){
     let canv_data = parseFloat(self_data[jQuery(this).val()].canv_data).toFixed(0);
-    let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
-    let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
-    let gm_mount_data = (self_data[jQuery(this).val()].gm_mount_data).toFixed(0);
+    let comp_data = parseFloat(self_data[jQuery(this).val()].comp_data).toFixed(0);
+    let mount_data = parseFloat(self_data[jQuery(this).val()].mount_data).toFixed(0);
+    let gm_mount_data = parseFloat(self_data[jQuery(this).val()].gm_mount_data).toFixed(0);
     let calc_sum = (self_data[jQuery(this).val()].sum).toFixed(0);
     let calc_sum_discount = (self_data[jQuery(this).val()].sum_discount).toFixed(0);
     let n4 = self_data[jQuery(this).val()].square;
@@ -362,6 +362,7 @@ jQuery("#sh_estimate").click(function () {
 });
 
 jQuery('#create_pdfs').click(function(){
+    jQuery("#preloader").show();
     jQuery.ajax({
         type: 'POST',
         url: "/index.php?option=com_gm_ceiling&task=createPdfs",
@@ -372,6 +373,15 @@ jQuery('#create_pdfs').click(function(){
             location.reload();
         },
         error: function(data) {
+            jQuery("#preloader").hide();
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка при попытке перегенерации смет!"
+            });
             console.log(data);
         }
     });

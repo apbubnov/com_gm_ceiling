@@ -251,7 +251,10 @@
         }
     }
 </style>
-
+<div id="preloader" style="display: none;" class="PRELOADER_GM PRELOADER_GM_OPACITY">
+    <div class="PRELOADER_BLOCK"></div>
+    <img src="/images/GM_R_HD.png" class="PRELOADER_IMG">
+</div>
 <div class="modal_window_container" id="img_modal_container">
     <button type="button" class="close_btn" id="btn_close_img"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <button type="button" class="close_btn" id="btn_del_img"><i class="fa fa-trash" aria-hidden="true"></i> Удалить изображение</button>

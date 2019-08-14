@@ -440,7 +440,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			//получение нужных моделей
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
-			$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
 			$client_model =  $this->getModel('client', 'Gm_ceilingModel');
 			$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
@@ -448,16 +447,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('project_id', '0', 'INT');
 			$data = $model->getData($project_id);
-			$type = $jinput->get('type', '', 'STRING');
-			$subtype = $jinput->get('subtype', '', 'STRING');
-			$call_id =  $jinput->get('call_id',0, 'INT');
 			$isDataChange = $jinput->get('data_change', '0', 'INT');
 			$client_id = $jinput->get('client_id', 1, 'INT');
-            $sex = $jinput->get('slider-sex',"NULL",'STRING');
 			$include_calculation = $jinput->get('include_calculation', '', 'ARRAY');
-			$call_comment = $jinput->get('call_comment', "Отсутствует", 'STRING');
-			$call_date = $jinput->get('call_date', "0", 'STRING');
-			$status = $jinput->get('status','','INT');
 			$name = $jinput->get('new_client_name', '', 'STRING');
 			$phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
             $sum = $jinput->get('project_sum', '', 'STRING');
@@ -478,7 +470,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$porch = $jinput->get('new_porch', '', 'STRING');
 			$floor = $jinput->get('new_floor', '', 'STRING');
 			$code = $jinput->get('new_code', '', 'STRING');
-			if(!empty($house)) $address = $street.", дом: ".$house;
+            $address = $street;
+			if(!empty($house)) $address .= ", дом: ".$house;
 			if(!empty($bdq)) $address .= ", корпус: ".$bdq;
 			if(!empty($apartment)) $address .= ", квартира: ".$apartment;
 			if(!empty($porch)) $address .= ", подъезд: ".$porch;

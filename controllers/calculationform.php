@@ -685,6 +685,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'discount' => $discount,
 				'offcut_square' => $offcut_square
 			);
+            $calculation = $model_calculation->getBaseCalculationDataById($calc_id);
 			$data_for_manager_estimate['photoprint'] = $photo_print;
 			$data_for_manager_estimate['factory_jobs'] = $factory_jobs;
 			$data_for_manager_estimate['calculation'] = $calculation;

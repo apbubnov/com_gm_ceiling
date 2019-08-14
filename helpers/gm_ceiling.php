@@ -991,9 +991,9 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
             foreach ($calculations as $calc) {
-                $calc_itog_sum = $calc->dealer_components_sum;
-                $calc_itog_sum += $calc->dealer_canvases_sum;
-                $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+                $calc_itog_sum = $calc->components_sum_with_margin;
+                $calc_itog_sum += $calc->canvases_sum_with_margin;
+                $calc_itog_sum += $calc->mounting_sum_with_margin;
                 $calc_itog_sum = round($calc_itog_sum, 2);
                 $calc_itog_discount_sum = round($calc_itog_sum * (100 - $calc->discount) / 100, 2);
                 $html .= '<tr>';
@@ -3411,6 +3411,11 @@ class Gm_ceilingHelpersGm_ceiling
                     $calc->mount_sum[1] = $total_dealer_sum;
                     $calc->gm_mount_sum[1] = $total_gm_sum;
                 }
+            }
+            /*если монтаж еще не назначен ставим полный монтаж*/
+            if(empty($mount_data)){
+                $stage_insert = (object)array(stage => 1,time => "","mounter" => "","stage_name" => "Полный монтаж");
+                array_push($mount_data,$stage_insert);
             }
             $gm_html = self::createCommonSheet($project,$calculations,$mount_data,$transport,$full,"gm");
             $dealer_html = self::createCommonSheet($project,$calculations,$mount_data,$transport,$full,"dealer");
