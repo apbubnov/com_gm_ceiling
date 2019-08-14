@@ -515,10 +515,10 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$dealer_id = $jinput->get('dealer_id', 1, 'INT');
 			$jobs = $jinput->get('jobs', null, 'ARRAY');
 			$goods = $jinput->get('goods', null, 'ARRAY');
-			$extra_components = $jinput->get('extra_components', null, 'STRING');
-			$extra_mounting = $jinput->get('extra_mounting', null, 'STRING');
-			$photo_print = $jinput->get('photo_print', null, 'STRING');
-			$fields_data = $jinput->get('fields_data', null, 'STRING');
+			$extra_components = $jinput->get('extra_components', '', 'STRING');
+			$extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
+			$photo_print = $jinput->get('photo_print', '', 'STRING');
+			$fields_data = $jinput->get('fields_data', '', 'STRING');
 			$need_mount = $jinput->get('need_mount', 0, 'INT');
 			$cancel_metiz = $jinput->get('cancel_metiz', 0, 'INT');
 			$cancel_offcuts = $jinput->get('cancel_offcuts', 0, 'INT');
@@ -529,9 +529,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$data = array();
 			$data['id'] = $calc_id;
-			$data['extra_components'] = $extra_components;
-			$data['extra_mounting'] = $extra_mounting;
-			$data['photo_print'] = $photo_print;
+			$data['extra_components'] = strlen($extra_components) < 10 ? '' : $extra_components;
+			$data['extra_mounting'] = strlen($extra_mounting) < 10 ? '' : $extra_mounting;
+			$data['photo_print'] = strlen($photo_print) < 10 ? '' : $photo_print;
 			$data['fields_data'] = base64_encode(gzcompress($fields_data));
 			$data['discount'] = $discount;
 			$data['need_mount'] = $need_mount;
@@ -685,6 +685,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'discount' => $discount,
 				'offcut_square' => $offcut_square
 			);
+            $calculation = $model_calculation->getBaseCalculationDataById($calc_id);
 			$data_for_manager_estimate['photoprint'] = $photo_print;
 			$data_for_manager_estimate['factory_jobs'] = $factory_jobs;
 			$data_for_manager_estimate['calculation'] = $calculation;
