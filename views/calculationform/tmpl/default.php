@@ -1005,6 +1005,12 @@ if (!empty($calculation_id)) {
         fill_calc_data();
 
         jQuery('#calculate_button').click(function () {
+            var calculate_button = jQuery(this);
+            if (!calculate_button.hasClass("loading")) {
+                calculate_button.addClass("loading");
+                calculate_button.find("span.static").hide();
+                calculate_button.find("span.loading").show();
+            }
             var collected_data = collectData(),
                 dataToSave = collectFieldsDataToSave(),
                 need_mount = jQuery('[name="cancel_mount"]:checked').val(),
@@ -1035,7 +1041,7 @@ if (!empty($calculation_id)) {
 
                 },
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function (data) {
                     console.log(data);
                     var sum = 0;
@@ -1047,6 +1053,9 @@ if (!empty($calculation_id)) {
                     console.log("SUM",sum+data.extra_components_sum);
                     jQuery("#under_calculate").show();
                     jQuery("#final_price").text( data.final_sum.toFixed(0) );
+                    calculate_button.removeClass("loading");
+                    calculate_button.find("span.loading").hide();
+                    calculate_button.find("span.static").show();
                 },
                 error: function (data) {
                     var n = noty({
@@ -1057,6 +1066,9 @@ if (!empty($calculation_id)) {
                         type: "error",
                         text: "Ошибка сервера"
                     });
+                    calculate_button.removeClass("loading");
+                    calculate_button.find("span.loading").hide();
+                    calculate_button.find("span.static").show();
                 }
             });
         });
