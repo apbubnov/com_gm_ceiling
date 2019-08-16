@@ -719,9 +719,9 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $id_stock = $jinput->get('id_stock', null, 'INT');
             $id_counterparty = $jinput->get('id_counterparty', null, 'INT');
 
-            $model_goods = $this->getModel('Stock', 'Gm_ceilingModel');
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
 
-            $result = $model_goods->saveDataInventory($array, $id_stock, $id_counterparty);
+            $result = $model_stock->saveDataInventory($array, $id_stock, $id_counterparty);
 
             die(json_encode($result));
 
@@ -729,6 +729,127 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
+        }
+    }
+
+    public function addPropColor() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->addPropColor($id, $value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addPropManufacturer() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->addPropManufacturer($value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addPropTexture() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->addPropTexture($value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropColor() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->delPropColor($id);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropManufacturer() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->delPropManufacturer($id);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropTexture() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->delPropTexture($id);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropColor() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->editPropColor($id, $value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropManufacturer() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->editPropManufacturer($id, $value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropTexture() {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $value = $jinput->get('value', '', 'STRING');
+
+            $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $result = $model_stock->editPropTexture($id, $value);
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
