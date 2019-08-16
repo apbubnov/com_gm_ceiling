@@ -711,7 +711,7 @@ class Gm_ceilingModelStock extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
             foreach ($items as $value) {
-                $result[] = (object) array('id' => $value->color, 'value' => $value->color);
+                $result[] = (object) array('id' => $value->color, 'value' => $value->color, 'hex' => $value->hex);
             }
             return $result;
         } catch(Exception $e) {
@@ -754,6 +754,147 @@ class Gm_ceilingModelStock extends JModelList
                 $result[] = (object) array('id' => $value->id, 'value' => $value->texture);
             }
             return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addPropColor($color_id, $hex) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_stock_prop_colors`')
+                ->columns('`color`, `hex`')
+                ->values("$color_id, '$hex'");
+            $db->setQuery($query);
+            $db->execute();
+            return $db->insertid();
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addPropManufacturer($manufacturer_title) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_stock_prop_manufacturers`')
+                ->columns('`manufacturer`')
+                ->values("'$manufacturer_title'");
+            $db->setQuery($query);
+            $db->execute();
+            return $db->insertid();
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function addPropTexture($texture_title) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_stock_prop_textures`')
+                ->columns('`texture`')
+                ->values("'$texture_title'");
+            $db->setQuery($query);
+            $db->execute();
+            return $db->insertid();
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropColor($id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`#__gm_stock_prop_colors`')
+                ->where("`color` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropManufacturer($id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`#__gm_stock_prop_manufacturers`')
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delPropTexture($id) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`#__gm_stock_prop_textures`')
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropColor($id, $value) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`#__gm_stock_prop_colors`')
+                ->set("`hex` = '$value'")
+                ->where("`color` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropManufacturer($id, $value) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`#__gm_stock_prop_manufacturers`')
+                ->set("`manufacturer` = '$value'")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function editPropTexture($id, $value) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`#__gm_stock_prop_textures`')
+                ->set("`texture` = '$value'")
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
