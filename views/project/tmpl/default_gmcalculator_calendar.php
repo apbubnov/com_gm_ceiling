@@ -262,7 +262,9 @@
                     <textarea name="production_note" id="jform_production_note" class="input-gm" placeholder="Примечание в производство" aria-invalid="false"></textarea>
                     <br>
                     <b><label id="jform_mount_note-lbl" for="jform_mount_note" class="">Примечание к монтажу</label></b><br>
-                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea><br>
+                    <b><label id="jform_ref_note-lbl" for="jform_ref_note" class="">Примечание к отказу</label></b><br>
+                    <textarea name="refuse_note" id="jform_refuse_note" class="input-gm" placeholder="Примечание к отказу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
                 </div>
             </div>
             <div class="row center">

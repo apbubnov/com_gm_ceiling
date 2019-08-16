@@ -910,7 +910,7 @@ if (!empty($calculation_id)) {
             parent.before(rowFields);
         });
 
-        jQuery('body').on('input','.form-control',function () {
+        jQuery('body').on('input','.quantity_input',function () {
             jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
             jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))|([^\.\d])|(^\D)/gi, '$1'));
         });
@@ -971,7 +971,9 @@ if (!empty($calculation_id)) {
             duplicateDiv.css({'text-align': 'right'}, {'padding': 0});
             deleteDiv.addClass('col-sm-2 col-xs-2');
             duplicateDiv.css({'padding': 0});
-            countDiv.append(createInput());
+            var input = createInput();
+            input.addClass('quantity_input');
+            countDiv.append(input);
             selectDiv.append(createSelect(goods));
             duplicateDiv.append('<button class="btn btn-primary duplicate_extra_goods" type="button"><i class="far fa-clone"></i></button>')
             deleteDiv.append(createDeleteBtn());
@@ -1269,7 +1271,9 @@ if (!empty($calculation_id)) {
             if (empty(elem.goods_category_id)) {
                 if (elem.input_type == 0) {
                     resultDiv.append(titleDiv);
-                    countDiv.append(createInput());
+                    var input = createInput();
+                    input.addClass('quantity_input');
+                    countDiv.append(input);
                     countDiv.addClass('col-md-10')
                     divRow.append(countDiv);
                     if(elem.duplicate == 1){
@@ -1361,7 +1365,9 @@ if (!empty($calculation_id)) {
                         selectDiv.addClass('col-sm-10 col-xs-10 selectDiv');
 
                     }
-                    countDiv.append(createInput());
+                    var input = createInput();
+                    input.addClass('quantity_input');
+                    countDiv.append(input);
                     selectDiv.append(createSelect(elem.goods));
                     if (elem.duplicate == 1) {
                         deleteDiv.append(createDeleteBtn());

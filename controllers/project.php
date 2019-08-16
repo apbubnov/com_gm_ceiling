@@ -664,6 +664,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             if (!empty($refuse_note)) {
                 $this->addNote($project_id, $refuse_note,3);
             }
+
+            $calcs_refuse_note = $jinput->get('refuse_note','','STRING');
 			$street = $jinput->get('new_address', '', 'STRING');
 			$house = $jinput->get('new_house', '', 'STRING');
 			$bdq = $jinput->get('new_bdq', '', 'STRING');
@@ -936,7 +938,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 							$client_id = $data->id_client_num;
 							$project_data->project_status = 3;
-                            $this->addNote($project_id, "Не вошедшие в договор №".$data->id,3);
+
 							//$project_data->project_verdict = 0;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
@@ -954,6 +956,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							foreach($ignored_calculations as $ignored_calculation){
 								$calculationModel->changeProjectId($ignored_calculation, $refuse_id);
 							}
+							if(!empty($calcs_refuse_note)) {
+                                $this->addNote($refuse_id, $calcs_refuse_note, 3);
+                            }
 						}
 					}
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
