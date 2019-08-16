@@ -997,7 +997,7 @@ class Gm_ceilingModelStock extends JModelList
     }
 
 
-    public function getGoodsUnits(){
+    public function getGoodsUnits() {
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -1040,7 +1040,8 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function saveDataInventory($array_reception, $stock_id, $id_counterparty){
+    //ПРИЕМКА
+    public function saveDataInventory($array_reception, $stock_id, $id_counterparty) {
         try {
             $user = JFactory::getUser();
             $db = $this->getDbo();
@@ -1069,7 +1070,8 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    function addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice){
+
+    function addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice) {
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
