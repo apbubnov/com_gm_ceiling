@@ -1,6 +1,30 @@
 <?php
 ?>
 <?=parent::getButtonBack();
+$service_projects = [];
+foreach($this->items as $item) {
+    $mount_data = json_decode($item->mount_data);
+    $date_times = [];
+    foreach($mount_data as $mount_date){
+        $mounter_groups = JFactory::getUser($mount_date->mounter_id)->groups;
+        if(in_array('26',$mounter_groups) && !in_array($mount_date->date_time,$date_times)){
+            $date_times[] = $mount_date->date_time;
+        }
+    }
+    if(!empty($date_times)){
+        $item->mount_dates = implode(',',$date_times);
+        $service_projects[] = $item;
+    }
+}
+//throw new Exception(print_r($service_projects,true));
+usort($service_projects,function ($project1,$project2){
+    $date1 = new DateTime(explode(',',$project1->mount_dates)[0]);
+    $date2 = new DateTime(explode(',',$project2->mount_dates)[0]);
+    if($date1 == $date2){
+        return 0;
+    }
+    return $date1 > $date2 ? -1 : 1;
+});
 ?>
 
 <table class="table table-striped one-touch-view table_cashbox " id="projectList">
@@ -30,10 +54,10 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($this->items as $item){
-        $flag = false;
+    <?php foreach($service_projects as $item){
+        //$flag = false;
         $dealer = JFactory::getUser($item->dealer_id);
-        $mounters = explode(',',$item->project_mounter);
+       /* $mounters = explode(',',$item->project_mounter);
         foreach($mounters as $mounter_id){
             $mounter = JFactory::getUser($mounter_id);
             if(in_array('26',$mounter->groups)){
@@ -41,7 +65,7 @@
                 break;
             }
         }
-        if($flag){
+        if($flag){*/
             if($item->project_status == 30){
                 $style = 'style = "background: linear-gradient( to right, white 50%, red 100%);"';
             }
@@ -54,7 +78,7 @@
                     <?php echo $item->id;?>
                 </td>
                 <td class='center one-touch'>
-                    <?php echo str_replace(',', ',<br>',$item->project_mounting_date);?>
+                    <?php echo str_replace(',', ',<br>',$item->mount_dates);?>
                 </td>
                 <td class="one-touch">
                     <?php echo $item->project_info;?>
@@ -73,7 +97,7 @@
                     <button class="btn btn-danger delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 </td>
             </tr>
-        <?php }
+        <?php //}
     }?>
     </tbody>
 </table>

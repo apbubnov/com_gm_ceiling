@@ -1,4 +1,4 @@
-<?php
+create_new_goods<?php
     $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
     $categories = $stockModel->getGoodsCategories();
     $textures = json_encode($stockModel->getPropTextures());

@@ -7,11 +7,11 @@
  * @copyright  2016 SpectralEye
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
- // No direct access.
- defined('_JEXEC') or die;
- 
- jimport('joomla.application.component.modelitem');
- jimport('joomla.event.dispatcher');
+// No direct access.
+defined('_JEXEC') or die;
+
+jimport('joomla.application.component.modelitem');
+jimport('joomla.event.dispatcher');
 
 /**
  * Methods supporting a list of Gm_ceiling records.
@@ -20,10 +20,13 @@
  */
 class Gm_ceilingModelAnalytic_Dealers extends JModelList
 {
-    public function getData($date_from,$date_to)
+    public function getData($date_from,$date_to,$status)
     {
         try {
-            $data = $this->getAllDataByperiod($date_from,$date_to);
+            if(empty($status)){
+                $status = 5;
+            }
+            $data = $this->getAllDataByperiod($date_from,$date_to,$status);
             /*$result = []; $proizvs = [];
             $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -74,27 +77,27 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         }
     }
 
-    function getAllDataByperiod($date1,$date2){
+    function getAllDataByperiod($date1,$date2,$status){
         try{
             $db = $this->getDbo();
-           /* $query="SELECT c.id AS calc_id,p.id AS project_id,u.id AS user_id,u.name AS user_name,p.date_of_change,MAX(canv.self_price) AS self_price,canv.manuf_id AS manufacturer_id,canv.name,
-                    `c`.`n3` AS `n3`,`c`.`n4` AS `n4`,`c`.`n5` AS `n5`,`c`.`n31` AS `n31`,`c`.`n5_shrink` AS `n5_shrink`,`c`.`offcut_square` AS `offcut_square`,
-                    `c`.`n9` AS `n9`,`cs`.`sum` AS `components_sum`, `c`.`canvases_sum` AS `canvases_sum`,`cut`.`canvas_area` AS `canvas_area`,cs.self_sum
-                    FROM (
-                    SELECT p1.id,ph.date_of_change,p1.client_id
-                    FROM `rgzbn_gm_ceiling_projects` AS p1
-                    INNER JOIN `rgzbn_gm_ceiling_projects_history` AS ph ON p1.id = ph.project_id
-                    WHERE ph.new_status = 5 and ph.date_of_change between '$date1' and '$date2'
-                    GROUP BY p1.id
-                    ) AS p
-                    INNER JOIN `rgzbn_gm_ceiling_calculations` AS c ON c.project_id = p.id
-                    LEFT JOIN `rgzbn_gm_ceiling_clients` AS cl ON cl.id = p.client_id
-                    LEFT JOIN `rgzbn_users` AS u ON u.id = cl.dealer_id
-                    LEFT JOIN `rgzbn_canvases` AS canv ON canv.id = c.n3
-                    LEFT JOIN `rgzbn_gm_ceiling_cuttings` AS  `cut` ON `c`.`id` = `cut`.`id`
-                    LEFT JOIN `rgzbn_comp_self` AS cs ON cs.calc_id = c.id
-                    
-                    GROUP BY c.id";*/
+            /* $query="SELECT c.id AS calc_id,p.id AS project_id,u.id AS user_id,u.name AS user_name,p.date_of_change,MAX(canv.self_price) AS self_price,canv.manuf_id AS manufacturer_id,canv.name,
+                     `c`.`n3` AS `n3`,`c`.`n4` AS `n4`,`c`.`n5` AS `n5`,`c`.`n31` AS `n31`,`c`.`n5_shrink` AS `n5_shrink`,`c`.`offcut_square` AS `offcut_square`,
+                     `c`.`n9` AS `n9`,`cs`.`sum` AS `components_sum`, `c`.`canvases_sum` AS `canvases_sum`,`cut`.`canvas_area` AS `canvas_area`,cs.self_sum
+                     FROM (
+                     SELECT p1.id,ph.date_of_change,p1.client_id
+                     FROM `rgzbn_gm_ceiling_projects` AS p1
+                     INNER JOIN `rgzbn_gm_ceiling_projects_history` AS ph ON p1.id = ph.project_id
+                     WHERE ph.new_status = 5 and ph.date_of_change between '$date1' and '$date2'
+                     GROUP BY p1.id
+                     ) AS p
+                     INNER JOIN `rgzbn_gm_ceiling_calculations` AS c ON c.project_id = p.id
+                     LEFT JOIN `rgzbn_gm_ceiling_clients` AS cl ON cl.id = p.client_id
+                     LEFT JOIN `rgzbn_users` AS u ON u.id = cl.dealer_id
+                     LEFT JOIN `rgzbn_canvases` AS canv ON canv.id = c.n3
+                     LEFT JOIN `rgzbn_gm_ceiling_cuttings` AS  `cut` ON `c`.`id` = `cut`.`id`
+                     LEFT JOIN `rgzbn_comp_self` AS cs ON cs.calc_id = c.id
+
+                     GROUP BY c.id";*/
             $query = "SET @harp_price = (
                             SELECT 	MAX(`price`) AS `price`
                                 FROM	`rgzbn_gm_ceiling_analytics_components`
@@ -144,11 +147,11 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                             INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
                                 `calc`.`project_id` = `p`.`id`
                             INNER JOIN 
-                                (SELECT `project_id`,
+                                (SELECT distinct `project_id`,
                                                 `new_status`,
                                                 `date_of_change`
                                     FROM	`rgzbn_gm_ceiling_projects_history`
-                                    WHERE	`new_status` = 5 and `date_of_change` between '$date1' and '$date2'
+                                    WHERE	`new_status` = $status and `date_of_change` between '$date1' and '$date2'
                                     GROUP BY	`project_id`
                                 ) AS `ph` ON
                                 `p`.`id` = `ph`.`project_id`
@@ -186,11 +189,11 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                                                 INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
                                                     `calc`.`project_id` = `p`.`id`
                                                 INNER JOIN 
-                                                    (SELECT `project_id`,
+                                                    (SELECT distinct `project_id`,
                                                                     `new_status`,
                                                                     `date_of_change`
                                                         FROM	`rgzbn_gm_ceiling_projects_history`
-                                                        WHERE	`new_status` = 5
+                                                        WHERE	`new_status` =  $status
                                                         GROUP BY	`project_id`
                                                     ) AS `ph` ON
                                                     `p`.`id` = `ph`.`project_id`
@@ -198,7 +201,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                                                     `p`.`client_id` = `cl`.`id`
                                                 INNER JOIN `rgzbn_users` AS `u` ON
                                                     `cl`.`dealer_id` = `u`.`id`
-                                                WHERE `ph`.`new_status` = 5 and `ph`.`date_of_change` between '$date1' and '$date2'
+                                                WHERE `ph`.`new_status` =  $status and `ph`.`date_of_change` between '$date1' and '$date2'
                                             GROUP BY	`u`.`id`,
                                                                 `canv_manf`.`id`
                                     ) AS `manf_sq`
@@ -250,7 +253,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-   }
+    }
 
     function calculateSelfPrice($calculation,$reject_rate,$project_id){
         try {
@@ -262,18 +265,18 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $harp_dop = $component_model->getComponentsParameters(null,$harpoon[0]->component_id,$harpoon[0]->id);
 
             $harp_price  = $component_model->getComponentsSelfPrice($harpoon[0]->component_id,$harpoon[0]->id,$harp_dop->good_id,$harp_dop->barcode,$harp_dop->article);
-            
+
             $price_comp = $this->calculateCompSelfPrice($calculation);
-            $calculation->n9 = ($calculation->n9 > 4) ? $calculation->n9-4 : 0; 
+            $calculation->n9 = ($calculation->n9 > 4) ? $calculation->n9-4 : 0;
             $results = $mount_model->getDataAll(1);
 
-           
+
             return array("sum" => ($calculation->canvas_area*($calculation->self_price + $calculation->self_price*$reject_rate)+/*($calculation->canvas_area - $calculation->offcut_square)*/$calculation->n4*11 + $calc->n31*$results->mp22 + $calculation->n5_shrink*$harp_price->price +  $calculation->n9*5+ $price_comp->self),
                 "self_price"=>$price_comp->self);
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-   }
+    }
 
     function calculateCompSelfPrice($calculation = null,$components = null){
         try {
@@ -285,16 +288,16 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             if(!empty($components)){
                 foreach ($components as  $value) {
                     if(gettype($value) == 'array'){
-                       if(!empty($value['id']) && !empty($value['component_id']))
+                        if(!empty($value['id']) && !empty($value['component_id']))
                             $dop_params = $component_model->getComponentsParameters($project_id,$value['component_id'],$value['id']);
-                        
+
                         if(!empty($dop_params)){
                             $price_comp += $value['quantity']*$component_model->getComponentsSelfPrice($dop_params->component_id,$dop_params->option_id,$dop_params->good_id,$dop_params->barcode,$dop_params->article)->price;
                         }
                     }
                     if(gettype($value) == 'object'){
-                         $price_comp += $value->quantity*$component_model->getComponentsSelfPrice($value->component_id,$value->option_id,$value->good_id,$value->barcode,$value->article)->price;
-                         $project_sum += $value->quantity*$value->price;
+                        $price_comp += $value->quantity*$component_model->getComponentsSelfPrice($value->component_id,$value->option_id,$value->good_id,$value->barcode,$value->article)->price;
+                        $project_sum += $value->quantity*$value->price;
                     }
                 }
             }
@@ -303,7 +306,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-   }
+    }
 
     function calculateQuadratureByPeriod($date1,$date2,$select_type){
         try{
@@ -333,5 +336,5 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-   }
+    }
 }

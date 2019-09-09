@@ -586,6 +586,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			if (!empty($photo_print)) {
 				$photo_print_sum = (float)$photo_print->price;
 			}
+
+			$canvas_exist = false; // флаг есть ли полотно в калькуляции
             $data_for_manager_estimate = [];
 			$canvases_sum = 0;
 			$components_sum = 0;
@@ -615,6 +617,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 					$components_sum += $value->price_sum;
 					$components_sum_with_margin += $value->price_sum_with_margin;
 				} else {
+                    $canvas_exist = true;
                     $data_for_manager_estimate['canvas'] = $value;
 					$canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
 					$canvas_price = $value->dealer_price;
@@ -637,7 +640,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             	$canvases_sum_with_margin += $value->price_sum;
             }
 
-            if ($canvases_sum < 200) {
+            if ($canvas_exist && $canvases_sum < 200) {
             	$canvases_sum = 200;
             	$canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
             }

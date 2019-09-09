@@ -219,31 +219,18 @@ $manufacturers = $stockModel->getPropManufacturers();
     jQuery(document).mouseup(function (e) {
         var div = jQuery("#mwEditColor"),
             div1 = jQuery("#mwCreateColor"),
-            div2 = jQuery(".colorpicker"),
-            div3 = jQuery("#mwEditCanvases"),
-            div4 = jQuery("#mw_addTexture"),
-            div5 = jQuery("#mw_editTexture");
+            div2 = jQuery(".colorpicker");
         if (!div.is(e.target)
             && div.has(e.target).length === 0 &&
             !div1.is(e.target)
             && div1.has(e.target).length === 0 &&
             !div2.is(e.target)
-            && div2.has(e.target).length === 0 &&
-            !div3.is(e.target)
-            && div3.has(e.target).length === 0 &&
-            !div4.is(e.target)
-            && div4.has(e.target).length === 0 &&
-            !div5.is(e.target)
-            && div5.has(e.target).length === 0) {
+            && div2.has(e.target).length === 0 ) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
             div1.hide();
             div2.hide();
-            div3.hide();
-            div4.hide();
-            div5.hide();
-            jQuery("#imagesEdit").empty();
         }
     });
 

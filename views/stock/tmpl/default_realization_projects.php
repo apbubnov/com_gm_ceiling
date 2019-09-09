@@ -16,7 +16,7 @@ JHtml::_('behavior.multiselect');
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $userGroup = $user->groups;
-if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: ' . $_SERVER['REDIRECT_URL']);
+//if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: ' . $_SERVER['REDIRECT_URL']);
 
 $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForRealization();
 ?>

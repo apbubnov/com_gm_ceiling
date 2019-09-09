@@ -161,9 +161,9 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`project_calculator`,
                             GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \', \') AS `project_mounter`,
                             GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
-                                            ORDER BY `pm`.`date_time` DESC SEPARATOR \', \'
+                                            ORDER BY `pm`.`date_time` ASC SEPARATOR \', \'
                             ) AS `project_mounting_date`,
-                             MAX(`pm`.`date_time`) as `last_mount_date`,
+                            MIN(`pm`.`date_time`) as `last_mount_date`,
                             `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
                                                             DATE_FORMAT(`pm`.`mount_end`, \'%d.%m.%Y %H:%i\')
@@ -394,8 +394,11 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`dealer_id` = 1');
 
                     } elseif ($subtype == 'service') {
+                        $query->select("CONCAT('[',GROUP_CONCAT(CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
                         $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
+                        $query->innerJoin("`rgzbn_gm_ceiling_projects_mounts` AS `prm` ON prm.project_id = p.id");
                         $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
+                        $query->group("p.id");
 
                     } else {
                         $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
@@ -1104,7 +1107,6 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('user.name as dealer')
                 ->order('project.created DESC')
                 ->order('project.id desc');
-
             $db->setQuery($query);
             $return = $db->loadObjectList();
             return $return;

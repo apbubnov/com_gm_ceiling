@@ -3278,9 +3278,8 @@ public function register_mnfctr(){
             $model_users = $this->getModel('Users', 'Gm_ceilingModel');
             $result = $model_projects->getMountsAndDayoffsByDealerId($user->dealer_id);
             $result_mounters = $model_users->getDealerMounters($user->dealer_id);
-
+            $brigades_count = $model_users->getCountOfUsersByGroupAndDealer(11,1);
             $final_result = (object)['data' => null, 'mounters' => $result_mounters];
-            
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
                     if (!empty($value->mount_dates)) {
@@ -3307,8 +3306,26 @@ public function register_mnfctr(){
                         $final_result->data[$y][$m][$d][$result[$key]->project_mounter][$h] = (object)['id' => $value2[1], 'info' => $value2[2]];
                     }
                 }
+                $mount_service_brigade = [];
+                $final_result->brigades_count = $brigades_count->brigades_count;
+                foreach ($final_result->data as $year=>$month_array){
+                    foreach($month_array as $month=>$days_array){
+                        foreach ($days_array as $day=>$mounters_array){
+                            foreach ($mounters_array as $mounter=>$times_array){
+                                foreach($times_array as $time=>$project){
+                                    if(!empty($mount_service_brigade[$year][$month][$day][$time])){
+                                        $mount_service_brigade[$year][$month][$day][$time] -= 1;
+                                    }
+                                    else{
+                                        $mount_service_brigade[$year][$month][$day][$time] = $brigades_count->brigades_count-1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                $final_result->free_brigades_data = $mount_service_brigade;
             }
-            
             die(json_encode($final_result));
         }
         catch(Exception $e) {
@@ -3319,12 +3336,13 @@ public function register_mnfctr(){
 
     function getDealersAnalyticData(){
         try{
-             $jinput = JFactory::getApplication()->input;
-             $date1 = $jinput->get('date_from','','STRING');
-             $date2 = $jinput->get('date_to','','STRING');
-             $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
-             $data = $model->getData($date1,$date2);
-             die(json_encode($data));
+            $jinput = JFactory::getApplication()->input;
+            $date1 = $jinput->get('date_from','','STRING');
+            $date2 = $jinput->get('date_to','','STRING');
+            $status = $jinput->getInt('status');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
+            $data = $model->getData($date1,$date2,$status);
+            die(json_encode($data));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

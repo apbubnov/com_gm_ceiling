@@ -1,7 +1,7 @@
 function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 {
-	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,
-	mw_elem = document.getElementById(modal_window), stages = [],
+	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,service_data,
+	brigades_count,mw_elem = document.getElementById(modal_window), stages = [],
 	mw_stages = `<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:0px auto; top:10px;background:rgba(255,255,255,0.9);border: 1px solid #414099;border-radius:2px;width:300px;height:200px;display:none;">
 					<p><br>
 						<input type="radio" id="radio_full_mount" name="radio_stages">Полный монтаж<br>
@@ -94,13 +94,26 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            	}
 		            	html += '<center><div style="overflow-y:auto; border: 1px solid #414099; border-radius: 4px;"><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in mounters) {
-			    			var c = mounters[key].id;
+			    			var c = mounters[key].id,
+                                free_brigades_count;
 			    			html += '<tr><th>'+mounters[key].name+'</th>';
+                            console.log(mounters[key]);
 			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined || data_array[y][m][d][c] == undefined) {
 			    				for (var h = 9; h < 21; h++) {
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class = 'free-day';
-			    					html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'"></td>';
+                                    if(mounters[key].service){
+                                        if(service_data[y][m][d][h] != undefined){
+                                            free_brigades_count = service_data[y][m][d][h];
+                                        }
+                                        else{
+                                            free_brigades_count = brigades_count;
+                                        }
+                                    }
+                                    else{
+                                        free_brigades_count = "";
+                                    }
+			    					html += '<td class="'+_class+'" data-time="'+time+'" data-mounter="'+c+'">'+free_brigades_count+'</td>';
 			    				}
 			    			}
 			    			else {
@@ -111,7 +124,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    						if (ymdch) {
 		    							var unlock = false;
 		    							for (var i = stages.length; i--;) {
-		    								if (stages[i].time == time) {
+		    								if (stages[i].time == time && c == stages[i].mounter) {
 		    									unlock = true;
 		    									data_array[y][m][d][c][h] = undefined;
 		    									delete data_array[y][m][d][c][h];
@@ -363,8 +376,13 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
                 url: "index.php?option=com_gm_ceiling&task=getArrayForMountsCalendar",
                 success: function(data) {
                 	data_array = (data.data == null) ? [] : data.data;
+                	service_data = data.free_brigades_data;
+                	brigades_count = data.brigades_count;
                 	mounters = data.mounters;
-                    console.log(data_array, mounters);
+                    console.log("data",data_array);
+                    console.log("mounters", mounters);
+                    console.log("service_data", service_data);
+                    console.log("brigades_count", brigades_count);
                     cont.onclick = clicks_on_calendar;
                     draw_calendar();
                 },

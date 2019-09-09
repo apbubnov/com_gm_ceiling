@@ -34,7 +34,7 @@ const help_block_n23 = '<span class="airhelp"><img src="/images/diffuser.jpg" wi
 
 const help_block_n30 = '<span class="airhelp">В расчет на 1м парящего потолка входит:<ul style="text-align: left;"><li>1м багета для парящих потолков (а из периметра вычитается 1м стенового багета)</li><li>1м светопропускающей вставки для парящих потолков</li></ul>+ монтажная работа по установке профиля для парящих потолков</span>';
 
-const help_block_n29 = '<span class="airhelp">Для перехода без нишей в расчет входит 343 р. + маржа на комплектующие</br>Для перехода с нишей в расчет входит 532 о. + маржа на комплектующие</br>+ монтажная работа "переход уровня с нишей или без"</span>';
+const help_block_n29 = '<span class="airhelp">Для перехода без ниши в расчет входит 343 р. + маржа на комплектующие</br>Для перехода с нишей в расчет входит 532 о. + маржа на комплектующие</br>+ монтажная работа "переход уровня с нишей или без"</span>';
 
 /*const help_block_n31 = '<span class="airhelp">В расчет на 1м внутреннего выреза в цеху входит:<br><ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>10 дюбелей (красн. 6*51)</li><li>10 саморезов (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 внутренний вырез</li></ul></span>';*/
 
@@ -49,6 +49,8 @@ const help_block_n24 = '<span class="airhelp">В расчет входит мо�
 const help_block_n33 = '<span class="airhelp">В расчет входит монтажная работа "монтаж люка"/"обход люка". Считается по количеству/по метрам.</span>';
 
 const help_block_n34 = '<span class="airhelp">В расчет входит монтажная работа "светодиодная лента прокладка, проклейка" и "монтаж и подключения блока питания". Считается по метрам.</span>';
+
+const help_block_n45 = '<span class="airhelp">В расчет на 1м входит:<ul style="text-align: left;"><li>1м багета для световых линий</li><li>4 шт. Кронштейн 100*125</li><li>8 шт. пресс-шайба 4,2*13</li><li>4 шт. саморез 3,5*51</li><li>4 шт. дюбель 6*51 </li></ul>+ монтажная работа по установке профиля для световых линий</span>  Считается по метрам.</span>';
 
 const help_block_n35 = '<span class="airhelp">В расчет входит монтажная работа "монтаж контурного профиля". Считается по метрам.</span>';
 
@@ -136,6 +138,7 @@ let arr_blocks = [
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n35",btn_cont_id:"btn_cont_n35",prev_id:"block_oter_mount_cptn",btn_id:"btn_n35",btn_text:"Контурный профиль",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n45",btn_cont_id:"btn_cont_n45",prev_id:"block_oter_mount_cptn",btn_id:"btn_n45",btn_text:"Световые линии",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
@@ -163,6 +166,7 @@ let n_data = {};
 let n28_src = {
     name : 'jform[n28]',
     values : [
+        {id:'jform_n28_4',value:4,text:"KRAAB"},
         {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
         {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
         {id:'jform_n28',value:3,text:"Стеновой багет ПВХ"},
@@ -418,6 +422,8 @@ let extra_mounting_src = {
     ]
 }
 let extra_mounting =  create_block_with_divs(extra_mounting_src);
+
+let n45 = create_single_input(1,"jform_n45","jform[n45]","Световые линии,м","Кол-во,м.","tel");
 
 let n34 = create_single_input(1,"jform_n34","jform[n34]","Диодная лента,м","Кол-во,м.","tel");
 n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питания,шт","Кол-во,шт.","tel");

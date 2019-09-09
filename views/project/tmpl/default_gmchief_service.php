@@ -374,8 +374,8 @@ if ($this->item->id_client!=1) {
                 <?php if(!empty($this->item->mount_data)):?>
                     <div class="row center">
                         <h4>Перенести дату монтажа</h4>
-                        <div id="change_mount" align="center"></div>
-                        <input type="hidden" id="change_mount">
+                        <div id="change_mount_div" align="center"></div>
+                        <input type="hidden" id="change_mount"  value='<?php echo $json_mount ?>'>
                         <button class="btn btn-primary" type = "button" id = "save_changes">Сохранить</button>
                     </div>
                 <?php endif;?>
@@ -944,7 +944,7 @@ if ($this->item->id_client!=1) {
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
     <script type="text/javascript">
         init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
-        init_mount_calendar('change_mount','change_mount','mw_mounts_calendar',['close_mw','mw_container']);
+        init_mount_calendar('change_mount_div','change_mount','mw_mounts_calendar',['close_mw','mw_container']);
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;

@@ -971,7 +971,7 @@
                                                         <tbody>
                                                             <?php foreach ($calculation->jobs as $job){
                                                                 if(!$job->guild_only && !$job->is_factory_work){
-                                                                    echo "<tr><td>$job->name</td><td>$job->final_count</td></tr>";
+                                                                    echo "<tr><td>$job->name</td><td>".round($job->final_count,2)."</td></tr>";
                                                                 }
                                                             }
                                                             ?>

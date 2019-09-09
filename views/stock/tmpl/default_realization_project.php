@@ -24,10 +24,10 @@ $canEdit = (in_array(18, $groups) || in_array(19, $groups));
 $canDelete = (in_array(18, $groups) || in_array(19, $groups));
 
 $app = JFactory::getApplication();
-$numberProject = $app->input->get('id', 0, 'int');
+$projectId = $app->input->get('id', 0, 'int');
 $jcookie = $app->input->cookie;
 
-$data = Gm_ceilingHelpersGm_ceiling::getModel('Project')->getProjectForStock($numberProject);
+$data = Gm_ceilingHelpersGm_ceiling::getModel('Project')->getProjectForStock($projectId);
 $stocks = $model->getStocks();
 
 $goods = $data->goods;
@@ -531,21 +531,12 @@ $server_name = $_SERVER['SERVER_NAME'];
 
     </style>
 
-    <h1>Реализация проекта №<?=$numberProject;?></h1>
+    <h1>Реализация проекта №<?=$projectId;?></h1>
     <form class="Realization" action="javascript:Realization();">
-        <input type="number" name="project" value="<?=$numberProject;?>" hidden>
+        <input type="number" name="project" value="<?=$projectId;?>" hidden>
         <input type="number" name="status" value="<?=$statusNumber;?>" hidden>
         <div class="Actions">
             <?= parent::getButtonBack(); ?>
-            <div class="Action ButInp Customer">
-                <input type="text" name="customer" class="InputButInp" required>
-                <button type="button" class="btn btn-primary ButtonButInp" onclick="OpenModalCustomer(this)">
-                    <i class="fa fa-user" aria-hidden="true"></i> Покупатель
-                </button>
-            </div>
-            <button type="button" class="Action btn btn-primary Add Canvas" onclick="ShowModal(this)">
-                <i class="fa fa-plus" aria-hidden="true"></i> Полотно
-            </button>
             <button type="button" class="Action btn btn-primary Add Component" onclick="ShowModal(this)">
                 <i class="fa fa-plus" aria-hidden="true"></i> Компонент
             </button>
@@ -558,6 +549,7 @@ $server_name = $_SERVER['SERVER_NAME'];
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> <?=$status;?>
             </button>
         </div>
+
         <div class="CustomerInfo">
             <table class="CustomerInfoTable">
                 <tbody>
@@ -571,17 +563,17 @@ $server_name = $_SERVER['SERVER_NAME'];
                 </tr>
                 <tr class="Client" style="display: none;">
                     <td class="Name">Клиент:</td>
-                    <td class="Value">Романов Роман Романович</td>
+                    <td class="Value"></td>
                 </tr>
                 <tr class="Dealer" style="display: none;">
                     <td class="Name">Дилер:</td>
-                    <td class="Value">Иванов Иван Иванович</td>
+                    <td class="Value"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <div class="Table">
-            <table class="Elements">
+            <table class="Elements" id="goods_table">
                 <thead class="ElementsHead">
                 <tr class="ElementsHeadTr">
                     <td>Название</td>
@@ -813,9 +805,12 @@ $server_name = $_SERVER['SERVER_NAME'];
     <script>
         var $ = jQuery;
         var server_name ='<?php echo $server_name;?>';
-        $(document).ready(Init);
-        $(document).scroll(Scroll);
-        $(window).resize(Resize);
+        $(document).ready(function(){
+            fillTable();
+            $(".PRELOADER_GM").hide();
+        });
+        /*$(document).scroll(Scroll);
+        $(window).resize(Resize);*/
 
         var Modal = {},
             Element = {},
@@ -826,7 +821,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             Calc = false,
             Customer = <?=json_encode($customer);?>,
             Goods = <?=json_encode($goods);?>;
-
+            console.log(Goods);
         function Init() {
             $(".Actions .Customer").width($(".Actions .Customer .ButtonButInp").outerWidth(true));
             $('.chosen-container').remove();
@@ -837,7 +832,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             ModalInit();
             ElementsInit();
 
-            Goods.forEach(function (t, i) { AddElementPHP(t) });
+            //Goods.forEach(function (t, i) { AddElementPHP(t) });
             AddCustomer();
 
             ScrollInit();
@@ -846,6 +841,31 @@ $server_name = $_SERVER['SERVER_NAME'];
             $(".PRELOADER_GM").hide();
         }
 
+        function fillTable(){
+            jQuery('#goods_table > tbody').empty();
+            var total_sum = 0,
+                goods_name;
+            jQuery.each(Goods,function(eindex,elem){
+                jQuery('#goods_table > tbody').append('<tr></tr>');
+                if(elem.category_id == 1){
+                    goods_name = 'Полотно: '+elem.name;
+                }
+                else{
+                    goods_name = 'Компонент: '+elem.name;
+                }
+                jQuery('#goods_table > tbody > tr:last').append('<td>'+goods_name+'</td><td>'+elem.dealer_price+'</td><td>'+elem.final_count+'</td><td>'+elem.price_sum+'</td><td></td>')
+                total_sum += +elem.price_sum;
+            });
+            jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td>'+total_sum+'</td></tr>');
+            ModalInit();
+            ElementsInit();
+
+            //Goods.forEach(function (t, i) { AddElementPHP(t) });
+            AddCustomer();
+
+            ScrollInit();
+            Resize();
+        }
         function AddElementPHP(s, i) {
             var TopSum = $(".CustomerInfoTable .Pay"),
                 element = Element.tr.clone();
@@ -1047,7 +1067,7 @@ $server_name = $_SERVER['SERVER_NAME'];
             $.ajax({
                 url: "http://"+server_name+"/index.php?option=com_gm_ceiling&task=stock.getProject",
                 async: false,
-                data: {id: <?=(empty($numberProject))?0:$numberProject;?>},
+                data: {id: <?=(empty($projectId))?0:$projectId;?>},
                 type: "POST",
                 success: function (data) {
                     //data = JSON.parse(data);
@@ -1795,12 +1815,12 @@ $server_name = $_SERVER['SERVER_NAME'];
     }
 </style>
 
-<h1>Реализация полотен и компонентов по проекту №<?= $numberProject; ?></h1>
+<h1>Реализация полотен и компонентов по проекту №<?= $projectId; ?></h1>
 <form class="receipt" target="_blank"
       action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=stock.realization'); ?>"
       method="post" class="form-validate form-horizontal" enctype="multipart/form-data" >
     <input type="hidden" name="status" value="2">
-    <input type="number" name="project" value="<?=$numberProject;?>" hidden>
+    <input type="number" name="project" value="<?=$projectId;?>" hidden>
     <div class="infoCustomer">
         <input name="customer[type]" value="1" type="number" hidden>
         <div class="Customer Client">
@@ -2507,7 +2527,7 @@ $server_name = $_SERVER['SERVER_NAME'];
         jQuery.ajax({
             type: 'POST',
             url: '<?= JRoute::_('index.php?option=com_gm_ceiling&task=stock.Status');?>',
-            data: {status: s, id: <?=$numberProject;?>},
+            data: {status: s, id: <?=$projectId;?>},
             success: function () {window.history.back();},
             dataType: "text",
             timeout: 10000,

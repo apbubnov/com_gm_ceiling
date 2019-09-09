@@ -880,6 +880,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                             $stockModel->addProps('rgzbn_gm_stock_map_prop_textures','texture_id',$goodsId,$texture);
                             //goods_map_width
                             $stockModel->addProps('rgzbn_gm_stock_map_prop_canvas_widths','width',$goodsId,$width);
+                            //привязываем натяжку за каждым полотном
+                            $stockModel->addJobToGoods($goodsId,26);
                         }
                         else{
                             throw new Exception("Empty data!");
@@ -911,6 +913,100 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             }
             die(json_encode(true));
         }catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function makeRealisation(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $input_data = $jinput->get('goods','','STRING');
+            $goods = json_decode($input_data);
+            $stockModel = $this->getModel('Stock','Gm_ceilingModel');
+            $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+            $goodsInventory = $stockModel->getGoodsFromInvetory($goods->ids);
+            $diff = [];
+            $userId = JFactory::getUser()->id;
+            foreach ($goods->goods as $key=>$value){
+                $existInInventory = false;
+                foreach ($goodsInventory as $key2=>$value2){
+                    if($value->goods_id == $value2->goods_id){
+                        $existInInventory = true;
+                        if($value->count > $value2->total_count){
+                            array_push($diff,$value);
+                        }
+                    }
+                }
+                if(!$existInInventory){
+                    array_push($diff,$value);
+                }
+            }
+            if(count($diff)){
+                die(json_encode((object)array("type"=>"error","text"=>"Реализация невозможна, некоторые товары отсутствуют на складе!","goods"=>$diff),JSON_UNESCAPED_UNICODE ));
+            }
+            else{
+                $realisationArr = [];
+                $updateInventoryArr = [];
+                foreach($goods->goods as $key => $value){
+                    $realiseCount = $value->count;
+                    foreach ($goodsInventory as $value1){
+                        if($value1->goods_id == $value->goods_id){
+                            $goodsExistenceArray = json_decode($value1->detailed_count);
+                            break;
+                        }
+                    }
+
+                    if(!empty($goodsExistenceArray)){
+                        foreach ($goodsExistenceArray as $i_goods) {
+                            if ($i_goods->count >= $realiseCount) {
+                                //throw new Exception("$i_goods->count >= $realiseCount");
+                                $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                $realisationArr[] = $rObject;
+
+                                $uObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                                $updateInventoryArr[] = $uObject;
+                                $realiseCount = 0;
+                            } else {
+                                if ($realiseCount > 0 && $i_goods->count != 0) {
+                                    $partOfCount = $i_goods->count;
+                                    $realiseCount -= $partOfCount;
+                                    $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $partOfCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                    $realisationArr[] = $rObject;
+
+                                    $uObject = (object)array("id" => $i_goods->id, "count" => 0);
+                                    $updateInventoryArr[] = $uObject;
+                                }
+                            }
+                            if ($realiseCount == 0) {
+                                break;
+                            }
+                        }
+                    }
+                    else{
+                        throw new Exception("EMPTY!!!");
+                    }
+                }
+                $stockModel->makeRealisation($realisationArr,$updateInventoryArr); // обновление данных в таблице inventories и записиь в sales
+                $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
+                die(json_encode(true));
+            }
+
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function makeReturn(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $input_data = json_decode($jinput->get('data','','STRING'));
+            $stockModel = $this->getModel('Stock','Gm_ceilingModel');
+            $stockModel->makeReturn($input_data->return_array,$input_data->realisation_update,$input_data->inventory_update,$projectId);
+        }
+        catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

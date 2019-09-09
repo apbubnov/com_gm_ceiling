@@ -187,11 +187,12 @@ $projects = json_encode($this->items);
 		jQuery("#search_btn").click(function () {
 		    var style,check_btn;
 		    jQuery("#projectList > tbody").empty();
-		    var search_str = jQuery("#search_text").val();
+		    var search_str = jQuery("#search_text").val().toLowerCase(),
+                regExp = new RegExp(search_str);
 		    jQuery.each(projects,function (index,project) {
-                if(project.client_name.indexOf(search_str) != -1 ||
-                    project.project_info.indexOf(search_str) != -1 ||
-                    project.dealer_name.indexOf(search_str) != -1){
+                if(regExp.test(project.client_name.toLowerCase()) ||
+                    regExp.test(project.project_info.toLowerCase()) ||
+                    regExp.test(project.dealer_name.toLowerCase())){
                     if(project.project_status == 30){
                         style = 'style = "background: linear-gradient( to right, white 50%, red 100%);"';
                     }

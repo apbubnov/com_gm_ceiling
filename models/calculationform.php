@@ -873,7 +873,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         }
     }
 
-    public function getComponentsInCategories() {
+    public function getComponentsInCategories($dealer_id = null) {
         try {
             $temp_result = array();
             $result = array();
@@ -881,11 +881,36 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query = $db->getQuery(true);
             $query
                 ->select('`g`.*, `gc`.`category`')
+
                 ->from('`#__gm_stock_goods` as `g`')
                 ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
-                ->where('`category_id` <> 1 AND `visibility` <> 3')
+                ->where('`visibility` <> 3')
                 ->order('`id`');
+            if(!empty($dealer_id)){
+                $query
+                    ->select('ROUND(
+                                    CASE
+                                      WHEN `gdp`.`operation_id` = 1 THEN
+                                        `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 2 THEN
+                                        `g`.`price` + `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 3 THEN
+                                        `g`.`price` - `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 4 THEN
+                                        `g`.`price` + `gdp`.`value` / 100 * `g`.`price`
+                                      WHEN `gdp`.`operation_id` = 5 THEN
+                                        `g`.`price` - `gdp`.`value` / 100 * `g`.`price`
+                                      ELSE
+                                        `g`.`price`
+                                    END, 2
+                                  ) AS `dealer_price`')
+                    ->leftJoin("`rgzbn_gm_ceiling_goods_dealer_price` AS `gdp` ON `gdp`.`goods_id` = `g`.`id` AND `gdp`.`dealer_id` = $dealer_id");
+            }
+            else{
+                $query->where('`category_id` <> 1');
+            }
             $db->setQuery($query);
+            //throw new Exception($query);
             $items = $db->loadObjectList();
             foreach ($items as $value) {
                 if (empty($temp_result[$value->category_id])) {

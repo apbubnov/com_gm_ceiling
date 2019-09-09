@@ -641,18 +641,20 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function getRealizedComponents($id){
+    public function getRealisedComponents($id){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('ac.component_id,ac.option_id,ac.option_id as id,ac.good_id,ac.barcode,ac.article,ABS(ac.count) as count,ABS(ac.count) as quantity,ac.price')
-                ->from('`#__gm_ceiling_analytics_components` as ac')
-                ->innerJoin('`#__gm_ceiling_components_option` as co on ac.option_id = co.id')
-                ->innerJoin('`#__gm_ceiling_components` as c on ac.component_id = c.id')
-                ->where("ac.project_id = $id");
+                ->select('g.id AS goods_id,g.category_id,g.name,s.sale_price AS dealer_price,SUM(s.count) AS final_count,s.sale_price*s.count AS price_sum')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"inventory_id":"\',s.inventory_id,\'","i_count":"\',i.count,\'","r_count":"\',s.count,\'"}\') ORDER BY s.inventory_id DESC SEPARATOR \',\'),\']\') AS inventories')
+                ->from('`rgzbn_gm_stock_sales` AS s ')
+                ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = s.inventory_id')
+                ->leftJoin('`rgzbn_gm_stock_goods` AS g ON i.goods_id = g.id')
+                ->where("s.project_id = $id")
+                ->group('g.id');
             $db->setQuery($query);
-            $items = $db->loadObjectList();
+            $items = $db->loadObjectList('goods_id');
             return $items;
         }
         catch(Exception $e)
@@ -1105,4 +1107,175 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    public function getGoodsInCategories($dealer_id = null) {
+        try {
+            $temp_result = array();
+            $result = array();
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.`id` as `goods_id`,`g`.`name`,`g`.`category_id`,`g`.`price` as `original_price`,`g`.`multiplicity`,`gc`.`category`')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
+                ->where('`visibility` <> 3')
+                ->order('`g`.`id`');
+            if(!empty($dealer_id)){
+                $query
+                    ->select('ROUND(
+                                    CASE
+                                      WHEN `gdp`.`operation_id` = 1 THEN
+                                        `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 2 THEN
+                                        `g`.`price` + `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 3 THEN
+                                        `g`.`price` - `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 4 THEN
+                                        `g`.`price` + `gdp`.`value` / 100 * `g`.`price`
+                                      WHEN `gdp`.`operation_id` = 5 THEN
+                                        `g`.`price` - `gdp`.`value` / 100 * `g`.`price`
+                                      ELSE
+                                        `g`.`price`
+                                    END, 2
+                                  ) AS `dealer_price`')
+                    ->leftJoin("`rgzbn_gm_ceiling_goods_dealer_price` AS `gdp` ON `gdp`.`goods_id` = `g`.`id` AND `gdp`.`dealer_id` = $dealer_id");
+            }
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadObjectList();
+            foreach ($items as $value) {
+                if (empty($temp_result[$value->category_id])) {
+                    $temp_result[$value->category_id] = (object) array(
+                        'category_id' => $value->category_id,
+                        'category_name' => $value->category,
+                        'goods' => array()
+                    );
+                }
+                $temp_result[$value->category_id]->goods[] = $value;
+            }
+
+            foreach ($temp_result as $value) {
+                $result[] = $value;
+            }
+
+            return $result;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsFromInvetory($ids){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`gi`.`goods_id`,SUM(`gi`.`count`) AS total_count,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',`gi`.`id`,\'","count":"\',`gi`.`count`,\'"}\') ORDER BY `gi`.`id` ASC SEPARATOR \',\'),\']\') AS detailed_count')
+                ->from('`rgzbn_gm_stock_inventory` AS `gi`')
+                ->where("`gi`.`goods_id` IN ($ids)")
+                ->group('`gi`.`goods_id`');
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function makeRealisation($realisationArr,$inventoryArr){
+       try{
+           if(!empty($realisationArr) && !empty($inventoryArr)) {
+
+               $columns = implode(',', array_keys(get_object_vars($realisationArr[0])));
+               $values_arr = [];
+               foreach ($realisationArr as $item) {
+                   $values_arr[] = implode(',', array_values(get_object_vars($item)));
+               }
+
+               $db = $this->getDbo();
+               $query = $db->getQuery(true);
+               $query
+                   ->insert('`rgzbn_gm_stock_sales`')
+                   ->columns("$columns")
+                   ->values($values_arr);
+               $db->setQuery($query);
+               $db->execute();
+               foreach ($inventoryArr as $inventory) {
+                   $query = $db->getQuery(true);
+                   $query
+                       ->update('`rgzbn_gm_stock_inventory`')
+                       ->set("`count` = $inventory->count")
+                       ->where("`id` = $inventory->id");
+                   $db->setQuery($query);
+                   $db->execute();
+               }
+           }
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+    }
+     function makeReturn($returnArr,$realisattionUpdateArray,$inventoryUpdateArr,$projectId){
+        try{
+            $values = [];
+            foreach ($returnArr as $returnItem){
+                $values[]="$returnItem->inventory_id,$returnItem->count,$projectId";
+            }
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_stock_returns`')
+                ->columns("inventory_id,count,project_id")
+                ->values($values);
+            $db->setQuery($query);
+            $db->execute();
+
+            foreach ($realisattionUpdateArray as $r_update) {
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_stock_sales`')
+                    ->set("`count` = $r_update->count")
+                    ->where("`id` = $r_update->inventory_id and project_id = $projectid");
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            foreach ($inventoryUpdateArr as $inventory) {
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_stock_inventory`')
+                    ->set("`count` = $inventory->count")
+                    ->where("`id` = $inventory->inventory_id");
+                $db->setQuery($query);
+                $db->execute();
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function addJobToGoods($goodsId,$jobId,$dealerId){
+        try{
+            $user = JFactory::getUser();
+            if(!empty($user->id)) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`rgzbn_gm_ceiling_jobs_from_goods_map`')
+                    ->columns('`parent_goods_id`,`child_job_id`,`count`,`dealer_id`')
+                    ->values("$goodsId,$jobId,1,$user->dealer_id");
+                $db->setQuery($query);
+                $db->execute();
+
+                return true;
+            }
+            else{
+                throw new Exception("Empty user!");
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
 }

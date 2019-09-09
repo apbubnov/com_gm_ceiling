@@ -593,7 +593,9 @@ class Gm_ceilingModelUsers extends JModelList
 				}
 			}
 			$mount_service = $this->getUserByGroup(26);
-
+			foreach ($mount_service as $ms_brigade){
+			    $ms_brigade->service = true;
+            }
 			$free_mounter = ($dealerId == 1 ) ? $this->getUserByGroup(32) : [];
 			$items = array_merge($items,$free_mounter,$mount_service);
 
@@ -605,6 +607,23 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
+	function getCountOfUsersByGroupAndDealer($group,$dealer_id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('count(distinct `u`.`id`) as brigades_count')
+                ->from('`#__users` AS `u`')
+                ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+                ->where("`u`.`dealer_id` = $dealer_id AND `g`.`group_id` = $group");
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            return $item;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	function getUserByGroup($group_id){
 		try{
 			$db = JFactory::getDbo();

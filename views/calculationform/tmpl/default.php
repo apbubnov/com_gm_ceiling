@@ -924,7 +924,11 @@ if (!empty($calculation_id)) {
         });
 
         jQuery('body').on('click', '.add_fields', function () {
-            jQuery(this).closest('.row').find('.div-fields').toggle();
+            var div_fields = jQuery(this).closest('.row').find('.div-fields');
+            div_fields.toggle();
+            if(jQuery(this).data('group_id') == 1 || jQuery(this).data('group_id') == 2 ){
+                jQuery(div_fields.find('.countDiv')[0]).children().val(calculation.n5);
+            }
         });
 
         jQuery('body').on('click', 'input[type="radio"]', function () {
@@ -1527,7 +1531,7 @@ if (!empty($calculation_id)) {
                 console.log("canvas", canvas[0]);
                 jQuery("#jform_canvas").val(canvas[0].name);
             }*/
-            jQuery(jQuery("#params_block").find('[data-group_id = "1"]').find('.countDiv')[0]).children().val(calculation.n5);
+
         }
         let filename = '<?php echo $calc_img;?>';
         if (filename) {
@@ -1789,7 +1793,9 @@ if (!empty($calculation_id)) {
 
                         var inputs = parent.find('.additional');
                         jQuery.each(inputs,function (index,elem) {
-                           fieldObj.data.push({name:jQuery(elem).prop('name'),value:elem.value});
+                            if(!empty(elem.value)) {
+                                fieldObj.data.push({name: jQuery(elem).prop('name'), value: elem.value});
+                            }
                        });
                     }
                     else{
@@ -1874,6 +1880,21 @@ if (!empty($calculation_id)) {
         jQuery.each(dataToSave, function (index, elem) {
             for (var i = elem.groups.length; i--;) {
                 for (var j = 0; j < elem.groups[i].fields.length; j++) {
+                    if(elem.groups[i].fields[j].field_data.length > 0){
+                        for(var k=0;k < elem.groups[i].fields[j].field_data.length;k++){
+                            if(elem.groups[i].fields[j].field_data[k].hasOwnProperty('data')) {
+                                if (empty(elem.groups[i].fields[j].field_data[k].data)) {
+                                    elem.groups[i].fields[j].field_data.splice(k, 1);
+                                    continue;
+                                }
+                            }
+                            if(elem.groups[i].fields[j].field_data[k].hasOwnProperty('fields_data')) {
+                                if (empty(elem.groups[i].fields[j].field_data[k].fields_data)) {
+                                    elem.groups[i].fields[j].field_data.splice(k, 1);
+                                }
+                            }
+                        }
+                    }
                     if (elem.groups[i].fields[j].field_data.length == 0) {
                         elem.groups[i].fields.splice(j, 1);
                     }
