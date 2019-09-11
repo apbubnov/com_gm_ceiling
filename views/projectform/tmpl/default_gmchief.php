@@ -302,19 +302,12 @@
                     <div class="control-group">
                         <div class="controls">
                             <button type="submit" class="validate btn btn-primary">Сохранить</button>
-                            <?php if ($whatCalendar == 0) { ?>
-                                <a class="btn btn-success"
-                                    href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings'); ?>"
-                                    title="">Вернуться к замерам
-                                </a>
-                            <?php } else { ?>
                                 <a class="btn btn-success"
                                     href="<?php if ($this->item->project_status == 4)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
                                     elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
                                     else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
                                     title="">Вернуться к монтажам
                                 </a>
-                            <?php } ?>
                         </div>
                     </div>
                 </form>

@@ -1095,7 +1095,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('jform[id]', '0', 'INT');
-            $mount_data = json_decode($jinput->get('mount','','STRING'));
+			$json_mount_data = $jinput->get('mount','','STRING');
+            $mount_data = json_decode($json_mount_data);
 			$get_data = JFactory::getApplication()->input->get('jform', array(), 'array');
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_history');
             $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');

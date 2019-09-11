@@ -276,6 +276,25 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     <div class="col-md-6">
                         <div class="row">
                             <h4>Назначить дату готовности полотен</h4>
+                            <div class="row center"  style="padding-bottom: 5px;">
+                                <div class="col-md-4 ">
+                                    <b>Все потолки</b>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="checkbox" id="all_calcs" name = "runByCallAll" class="inp-cbx" style="display: none">
+                                    <label for="all_calcs" class="cbx">
+                                            <span>
+                                                <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                </svg>
+                                            </span>
+                                        <span>По звонку</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 left">
+                                    <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"  name="date_all_canvas_ready" class="input-gm">
+                                </div>
+                            </div>
                             <?php foreach($calculations as $calculation){?>
                                 <div class="row center"  style="padding-bottom: 5px;">
                                     <div class="col-md-4 ">
@@ -974,6 +993,33 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     }
                 });
             });
+
+            jQuery("#all_calcs").change(function () {
+                if(jQuery(this).prop('checked')){
+                    jQuery('[name="runByCall"]').prop('checked',true);
+                    jQuery('[name = "date_all_canvas_ready"]').val("");
+                    jQuery('[name = "date_canvas_ready"]').val("");
+
+                }
+                else{
+                    jQuery('[name="runByCall"]').prop('checked',false);
+                }
+            });
+            jQuery('[name = "date_all_canvas_ready"]').focus(function () {
+                var date = new Date,
+                    month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
+                    day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate(),
+                    value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+                this.value = value;
+                jQuery('[name = "date_canvas_ready"]').val(value);
+                jQuery("#all_calcs").prop('checked',false);
+                jQuery('[name = "runByCall"]').prop('checked',false);
+            });
+            jQuery('[name = "date_all_canvas_ready"]').change(function () {
+                var date_time = this;
+                jQuery('[name = "date_canvas_ready"]').val(this.value);
+            });
+
             jQuery('[name = "runByCall"]').change(function () {
                 var checkBox = this;
                 if(checkBox.checked){
@@ -982,15 +1028,21 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             this.value =  "";
                         };
                     });
+                    jQuery('[name = "date_all_canvas_ready"]').val("");
                 }
-            });
+                else{
+                    jQuery("#all_calcs").prop('checked',false);
+                }
 
+            });
 
             jQuery('[name = "date_canvas_ready"]').focus(function () {
                 var date = new Date,
                     month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
                     day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
                 this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
+                jQuery('[name = "date_all_canvas_ready"]').val("");
+                jQuery('#all_calcs').prop('checked',false);
             });
             jQuery('[name = "date_canvas_ready"]').change(function () {
                 var date_time = this;

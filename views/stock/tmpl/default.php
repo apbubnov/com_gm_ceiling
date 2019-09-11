@@ -44,6 +44,7 @@ $userGroup = $user->groups;
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=projects', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Реализация</a>
     </p>
     <p class="center">
-        <?= parent::getButtonBack(); ?>
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=issued&subtype=projects', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Выданные заказы</a>
+
     </p>
 </div>

@@ -1364,4 +1364,23 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
+    function getProjectsByHistoryStatus($status){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('p.id,p.project_info,u.id,u.name,DATE_FORMAT(ph.date_of_change,\'%d.%m.%Y\') AS `date`')
+                ->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->innerjoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = p.id')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
+                ->innerJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+                ->where("ph.new_status = $status");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
