@@ -376,9 +376,18 @@ class Gm_ceilingModelStock extends JModelList
         {
             $user = JFactory::getUser();
             $db = $this->getDbo();
-            $isDealer = false;
-
-            $filter['where']['IS'] = array();
+            $query = $db->getQuery(true);
+            $query
+                ->select('u.id,u.name,u.username,c.client_name,cc.phone,u.associated_client')
+                ->from('`rgzbn_users` AS u')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = u.associated_client')
+                ->innerJoin('`rgzbn_gm_ceiling_clients_contacts` AS cc ON cc.client_id = c.id')
+                ->where("u.name LIKE '%$filter%' OR u.username LIKE '%$filter%' OR cc.phone LIKE '%$filter%' OR c.client_name LIKE '%$filter%'");
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadAssocList('id');
+            return $items;
+            /*$filter['where']['IS'] = array();
             foreach ($filter['where']['like'] as $k => $v)
             {
                 if ($v == "'%%'") unset($filter['where']['like'][$k]);
@@ -417,7 +426,7 @@ class Gm_ceilingModelStock extends JModelList
                 ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
                 ->group("dealer.id");
             $query_2 = "(" . (string) $q . ")";
-*/
+
             $q = $db->getQuery(true);
             $q  ->from('`#__gm_ceiling_clients` AS client')
                 ->join('LEFT','`#__gm_ceiling_clients_contacts` AS contact ON contact.client_id = client.id ')
@@ -492,7 +501,7 @@ class Gm_ceilingModelStock extends JModelList
                 }
             }
 
-            return $result;
+            return $result;*/
         }
         catch(Exception $e)
         {
@@ -646,7 +655,7 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('g.id AS goods_id,g.category_id,g.name,s.sale_price AS dealer_price,SUM(s.count) AS final_count,s.sale_price*s.count AS price_sum')
+                ->select('g.id AS goods_id,g.category_id,g.unit_id,g.name,s.sale_price AS dealer_price,SUM(s.count) AS final_count,s.sale_price*s.count AS price_sum')
                 ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"inventory_id":"\',s.inventory_id,\'","i_count":"\',i.count,\'","r_count":"\',s.count,\'"}\') ORDER BY s.inventory_id DESC SEPARATOR \',\'),\']\') AS inventories')
                 ->from('`rgzbn_gm_stock_sales` AS s ')
                 ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = s.inventory_id')
@@ -1016,7 +1025,23 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    public function getGoodsUnitsAssoc() {
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`,
+                          `u`.`unit`')
+                ->from('`rgzbn_gm_stock_units` as `u`')
+                ->order('`u`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadAssoc('id');
 
+            return $items;
+        } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public function getCounterparty($id = null){
         try
         {
@@ -1116,7 +1141,7 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`g`.`id` as `goods_id`,`g`.`name`,`g`.`category_id`,`g`.`price` as `original_price`,`g`.`multiplicity`,`gc`.`category`')
+                ->select('`g`.`id` as `goods_id`,`g`.`name`,`g`.`category_id`,`g`.`unit_id`,`g`.`price` as `original_price`,`g`.`multiplicity`,`gc`.`category`')
                 ->from('`#__gm_stock_goods` as `g`')
                 ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
                 ->where('`visibility` <> 3')
@@ -1168,16 +1193,40 @@ class Gm_ceilingModelStock extends JModelList
     function getGoodsFromInvetory($ids){
         try{
             $db = $this->getDbo();
+
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
+
             $query = $db->getQuery(true);
             $query
-                ->select('`gi`.`goods_id`,SUM(`gi`.`count`) AS total_count,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',`gi`.`id`,\'","count":"\',`gi`.`count`,\'"}\') ORDER BY `gi`.`id` ASC SEPARATOR \',\'),\']\') AS detailed_count')
+                ->select('`gi`.`goods_id`,SUM(`gi`.`count`) AS total_count,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',`gi`.`id`,\'","count":"\',`gi`.`count`,\'","stock":"\',`gi`.`stock_id`,\'"}\') ORDER BY `gi`.`id` ASC SEPARATOR \',\'),\']\') AS detailed_count')
                 ->from('`rgzbn_gm_stock_inventory` AS `gi`')
                 ->where("`gi`.`goods_id` IN ($ids)")
                 ->group('`gi`.`goods_id`');
             $db->setQuery($query);
-            //throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateInventory($inventoryArr){
+        try{
+            $db = $this->getDbo();
+            if(!empty($inventoryArr)) {
+                foreach ($inventoryArr as $inventory) {
+                    $query = $db->getQuery(true);
+                    $query
+                        ->update('`rgzbn_gm_stock_inventory`')
+                        ->set("`count` = $inventory->count")
+                        ->where("`id` = $inventory->id");
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+            }
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -1202,15 +1251,7 @@ class Gm_ceilingModelStock extends JModelList
                    ->values($values_arr);
                $db->setQuery($query);
                $db->execute();
-               foreach ($inventoryArr as $inventory) {
-                   $query = $db->getQuery(true);
-                   $query
-                       ->update('`rgzbn_gm_stock_inventory`')
-                       ->set("`count` = $inventory->count")
-                       ->where("`id` = $inventory->id");
-                   $db->setQuery($query);
-                   $db->execute();
-               }
+               $this->updateInventory($inventoryArr);
            }
        }
        catch(Exception $e) {
@@ -1251,6 +1292,54 @@ class Gm_ceilingModelStock extends JModelList
                 $db->setQuery($query);
                 $db->execute();
             }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function makeGoodsMovement($moveArray,$updateInventoryArr){
+        try{
+            $db = $this->getDbo();
+            $moving_arr = [];
+            $inserted=[];
+            if(!empty($moveArray)){
+                foreach ($moveArray as $item){
+                    $queryInsert = $db->getQuery(true);
+                    $queryInsert
+                        ->insert('`rgzbn_gm_stock_inventory`')
+                        ->columns('`goods_id`,`count`,`stock_id`')
+                        ->values($item->goods_id,$item->count,$item->new_stock);
+                    $db->setQuery($queryInsert);
+                    $db->execute();
+                    $new_inventory_id = $db->insertId();
+                    $inserted[]=$new_inventory_id;
+                    $moving_arr[] = (object)array("from_inventory"=>$item->old_inventory_id,"to_inventory"=>$new_inventory_id,"count"=>$item->count);
+                }
+            }
+            $inserted = implode(',',$inserted);
+            $values = [];
+            foreach ($moving_arr as $moving_object){
+                $values[]= "$moving_object->from_inventory,$moving_object->to_inventory,$moving_object->count";
+            }
+            $queryMove = $db->getQuery(true);
+            $queryMove
+                ->insert('`rgzbn_gm_stock_moving`')
+                ->columns('`from_inventory_id`,`to_inventory_id`,`count`')
+                ->values($values);
+            $db->execute();
+            $this->updateInventory($updateInventoryArr);
+
+
+            $query = $db->getQuery(true);
+            $query
+                ->select('`id`,`count`,`stock`')
+                ->from('`rgzbn_gm_stock_inventory`')
+                ->where("id in($inserted)")
+                ->order('id ASC');
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

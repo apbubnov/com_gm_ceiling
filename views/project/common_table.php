@@ -262,15 +262,6 @@
 </div>
 
 <div class="row">
-    <div class="col-md-3 no_padding"><b>Ввести общее примечание к проекту:</b></div>
-    <div class="col-md-6 col-xs-9 no_padding">
-        <textarea class="inputactive" id="textarea_note" style="width: 98%;"></textarea>
-    </div>
-    <div class="col-md-3 col-xs-3 no_padding">
-        <button type="button" class="btn btn-primary" id="btn_add_note">Ок</button>
-    </div>
-</div>
-<div class="row">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
         <!-- Nav tabs -->

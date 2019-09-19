@@ -270,8 +270,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
     public function getCustomer()
     {
         try {
-            $filter = JFactory::getApplication()->input->get('filter', array(), 'array');
-            if ($filter != null) {
+            $filter = JFactory::getApplication()->input->get('filter', '', 'STRING');
+            if (!empty($filter)) {
                 $model = $this->getModel();
                 $result = $model->getCustomer($filter);
                 die(json_encode($result));
@@ -921,6 +921,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $projectId = $jinput->getInt('project_id');
+            $stockId = $jinput->getInt('stock');
             $input_data = $jinput->get('goods','','STRING');
             $goods = json_decode($input_data);
             $stockModel = $this->getModel('Stock','Gm_ceilingModel');
@@ -946,8 +947,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 die(json_encode((object)array("type"=>"error","text"=>"Реализация невозможна, некоторые товары отсутствуют на складе!","goods"=>$diff),JSON_UNESCAPED_UNICODE ));
             }
             else{
-                $realisationArr = [];
-                $updateInventoryArr = [];
                 foreach($goods->goods as $key => $value){
                     $realiseCount = $value->count;
                     foreach ($goodsInventory as $value1){
@@ -957,29 +956,96 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         }
                     }
 
-                    if(!empty($goodsExistenceArray)){
-                        foreach ($goodsExistenceArray as $i_goods) {
-                            if ($i_goods->count >= $realiseCount) {
-                                //throw new Exception("$i_goods->count >= $realiseCount");
-                                $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
-                                $realisationArr[] = $rObject;
+                    if(!empty($goodsExistenceArray)) {
+                        if ($value->category_id != 1) { //реализация для компонентов, берем то что раньше приняли и списываем частями если не хватает целиком
+                            $goodsExistanceOnStocks = [];
+                            $gTotalCountOnStocks = [];
+                            foreach ($goodsExistenceArray as $var) {
+                                $goodsExistanceOnStocks[$var->stock][] = $var;
+                            }
+                            foreach ($goodsExistanceOnStocks as $stock_id=>$var) {
+                                $gTotalCountOnStocks[$stock_id] = array_sum(array_column($var, 'count'));
+                            }
 
-                                $uObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
-                                $updateInventoryArr[] = $uObject;
-                                $realiseCount = 0;
+                            if ($gTotalCountOnStocks[$stockId] >= $realiseCount) {
+                                //если общее количество компонента на выбранном складе достаточно, то списываем
+                                $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount);
+
                             } else {
-                                if ($realiseCount > 0 && $i_goods->count != 0) {
-                                    $partOfCount = $i_goods->count;
-                                    $realiseCount -= $partOfCount;
-                                    $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $partOfCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
-                                    $realisationArr[] = $rObject;
-
-                                    $uObject = (object)array("id" => $i_goods->id, "count" => 0);
-                                    $updateInventoryArr[] = $uObject;
+                                //если не хватает общего количества на выбранном складе
+                                $lackOfQuantity = $realiseCount - $gTotalCountOnStock[$stockId];
+                                $moveArray = [];
+                                $updateInvetory = [];
+                                foreach ($goodsExistanceOnStocks as $stock_id=>$goodsArrayOnStock) {
+                                    //бежим по остальным складам
+                                    if($stockId != $stock_id){
+                                        foreach($goodsArrayOnStock as $stockGoods){
+                                            //если кол-во достаточное, готовим массивы для перемещения кол-ва с одного на другой склад
+                                            if($stockGoods->count >= $lackOfQuantity){
+                                                $moveArray[] = (object)array("old_stock"=>$stock_id,"new_stock"=>$stockId,
+                                                                            "count"=>$lackOfQuantity,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->id);
+                                                $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $lackOfQuantity);
+                                                $lackOfQuantity = 0;
+                                                break;
+                                            }
+                                            else {
+                                                //иначе собираем кол-во частями
+                                                if ($lackOfQuantity > 0 && $stockGoods > 0) {
+                                                    $partOfLack = $stockGoods->count;
+                                                    $lackOfQuantity -= $partOfLack;
+                                                    $moveArray[] = (object)array("old_stock" => $stock_id, "new_stock" => $stockId, "count" => $partOfLack,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->id);
+                                                    $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => 0);
+                                                }
+                                            }
+                                        }
+                                        if($lackOfQuantity == 0){
+                                            break;
+                                        }
+                                    }
+                                }
+                                //перемещаем товары и добавляем только что созданные позициии
+                                //в таблице inventaries в массив наличия на складе и создаем массивы для реализации
+                                $newGoodsOnStock = $stockModel->makeGoodsMovement($moveArray,$updateInvetory);
+                                array_merge($goodsExistanceOnStocks[$stockId],$newGoodsOnStock);
+                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount);
+                            }
+                        }
+                        else{
+                            //реализация для полотна, берем то что подходит по квадратуре целиком
+                            foreach ($goodsExistanceOnStocks[$stockId] as $existGoods){
+                                //бежим по компонентам на выбранном складе
+                                if($existGoods->count >= $realiseCount){
+                                    //если кол-во больше списываемого, создаем объекты и выходим из цикла
+                                    $rCanvObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                    $uCanvObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                                    $realiseCount = 0;
+                                    break;
                                 }
                             }
-                            if ($realiseCount == 0) {
-                                break;
+
+                            if($realiseCount != 0){
+                                //если на выбранном складе нет нужного кол-ва бежим по другим складам и производим такой же поиск
+                                foreach ($goodsExistanceOnStocks as $stock_id=>$goodsArrayOnStock) {
+                                    if ($stockId != $stock_id) {
+                                        foreach($goodsArrayOnStock as $stockGoods){
+                                            if($stockGoods->count >= $realiseCount){
+                                                $rCanvObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                                $uCanvObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                                                $realiseCount = 0;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if($realiseCount!= 0){
+                                    //если не нашли подходящее, то возвращаем ошиьбку
+                                    die(json_encode((object)array("type"=>"error","text"=>"Реализация невозможна, товара не хватает на складе!","goods"=>[$value]),JSON_UNESCAPED_UNICODE ));
+                                }
+                            }
+                            if($realiseCount == 0 && !empty($rCanvObject)&&!empty($uCanvObject)){
+                                //если найдено и объекты созданы добавляем их в массив для реализации
+                                $realiseArrays['realisation'][] = $rCanvObject;
+                                $realiseArrays['inventory'][] = $uCanvObject;
                             }
                         }
                     }
@@ -987,8 +1053,32 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         throw new Exception("EMPTY!!!");
                     }
                 }
-                $stockModel->makeRealisation($realisationArr,$updateInventoryArr); // обновление данных в таблице inventories и записиь в sales
+                throw new Exception('Success realisation');
+                $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
                 $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
+
+                $date = date("Y-m-d H:i:s");
+                $dateFormat = (object)[];
+                $dateFormat->date = date("d.m.Y");
+                $dateFormat->day = date("d");
+                $dateFormat->month = date("m");
+                $dateFormat->year = date("Y");
+                $dateFormat->time = time();
+
+                $info = (object) [];
+                $info->customer = $customer;
+                $info->date = $date;
+                $info->user = $userId;
+                $info->stock = $stockId;
+                $info->dateFormat = $dateFormat;
+
+                $out = Gm_ceilingHelpersPDF::Format($goods->goods);
+
+                $href = array();
+                $href['PackingList'] = Gm_ceilingHelpersPDF::PackingList($info, $out->PackingList);
+                $href['RetailCashOrder'] = Gm_ceilingHelpersPDF::RetailCashOrder($info);
+                $href['SalesInvoice'] = Gm_ceilingHelpersPDF::SalesInvoice($info, $out->SalesInvoice);
+                $href['MergeFiles'] = Gm_ceilingHelpersPDF::MergeFiles($href);
                 die(json_encode(true));
             }
 
@@ -998,6 +1088,44 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
     }
 
+    function makeArrayForRealisation($goodsExistanceOnStock,$realiseCount){
+        try{
+            $result = [];
+            $realisationArr = [];
+            $updateInventoryArr = [];
+            foreach ($goodsExistanceOnStock as $i_goods) {
+                if ($i_goods->count >= $realiseCount) {
+                    //throw new Exception("$i_goods->count >= $realiseCount");
+                    $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                    $realisationArr[] = $rObject;
+
+                    $uObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                    $updateInventoryArr[] = $uObject;
+                    $realiseCount = 0;
+                } else {
+                    if ($realiseCount > 0 && $i_goods->count != 0) {
+                        $partOfCount = $i_goods->count;
+                        $realiseCount -= $partOfCount;
+                        $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $partOfCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                        $realisationArr[] = $rObject;
+
+
+                        $uObject = (object)array("id" => $i_goods->id, "count" => 0);
+                        $updateInventoryArr[] = $uObject;
+                    }
+                }
+                if ($realiseCount == 0) {
+                    break;
+                }
+            }
+            $result['realisation'] = $realisationArr;
+            $result['inventory'] = $updateInventoryArr;
+            return $result;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     function makeReturn(){
         try{
             $jinput = JFactory::getApplication()->input;

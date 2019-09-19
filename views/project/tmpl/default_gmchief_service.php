@@ -136,6 +136,15 @@ if ($this->item->id_client!=1) {
 } else  {
     $phone = [];
 }
+$mount_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id,5);
+$mount_note = "";
+foreach ($mount_notes as $m_note) {
+    if($m_note->author == JFactory::getUser()->id){
+
+        $mount_note = $m_note->value;
+    }
+}
+
 /*________________________________________________________________*/
 ?>
 <style>
@@ -343,6 +352,18 @@ if ($this->item->id_client!=1) {
 
                 </tr>
             </table>
+            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-3 no_padding"><b>Ввести примечание к монтажу:</b></div>
+                    <div class="col-md-6 col-xs-9 no_padding">
+                        <textarea class="inputactive" id="mount_note" style="width: 98%;"><?=$mount_note?></textarea>
+                    </div>
+                    <div class="col-md-3 col-xs-3 no_padding">
+                        <button type="button" class="btn btn-primary" id="btn_add_mount_note">Ок</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6" >
             <div style="border: 1px solid #414099;border-radius: 15px">
@@ -380,7 +401,7 @@ if ($this->item->id_client!=1) {
                     </div>
                 <?php endif;?>
             </div>
-            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+
 
         </div>
     </div>
@@ -989,6 +1010,33 @@ if ($this->item->id_client!=1) {
                             maxVisible: 5,
                             type: "error",
                             text: "error"
+                        });
+                    }
+                });
+            });
+
+            jQuery("#btn_add_mount_note").click(function(){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=project.addNote",
+                    data: {
+                        project_id: project_id,
+                        note:jQuery("#mount_note").val(),
+                        type:5
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    dataType: "json",
+                    timeout: 10000,
+                    error: function(data) {
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при добавлении примечания"
                         });
                     }
                 });

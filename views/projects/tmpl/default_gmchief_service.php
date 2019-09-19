@@ -1,25 +1,35 @@
 <?php
 ?>
 <?=parent::getButtonBack();
+$projectMountModel = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
+$mountTypes = $projectMountModel->get_mount_types();
+
 $service_projects = [];
 foreach($this->items as $item) {
     $mount_data = json_decode($item->mount_data);
     $date_times = [];
     foreach($mount_data as $mount_date){
         $mounter_groups = JFactory::getUser($mount_date->mounter_id)->groups;
-        if(in_array('26',$mounter_groups) && !in_array($mount_date->date_time,$date_times)){
-            $date_times[] = $mount_date->date_time;
+        if(in_array('26',$mounter_groups)){
+            $unique_dates = array_column($date_times,'date_time');
+            if(!in_array($mount_date->date_time,$unique_dates)){
+                $date_times[] = (object)array("date_time" => $mount_date->date_time,"stage"=>mb_substr($mountTypes[$mount_date->stage],0,1));
+            }
+            else{
+                $index = array_search($mount_date->date_time,$unique_dates);
+                $date_times[$index]->stage = mb_substr($mountTypes[$mount_date->stage],0,1).', '.  $date_times[$index]->stage;
+            }
         }
     }
     if(!empty($date_times)){
-        $item->mount_dates = implode(',',$date_times);
+        $item->mount_dates = $date_times;//implode(',',$date_times);
         $service_projects[] = $item;
     }
 }
 //throw new Exception(print_r($service_projects,true));
 usort($service_projects,function ($project1,$project2){
-    $date1 = new DateTime(explode(',',$project1->mount_dates)[0]);
-    $date2 = new DateTime(explode(',',$project2->mount_dates)[0]);
+    $date1 = new DateTime($project1->mount_dates[0]->date_time);
+    $date2 = new DateTime($project2->mount_dates[0]->date_time);
     if($date1 == $date2){
         return 0;
     }
@@ -78,7 +88,9 @@ usort($service_projects,function ($project1,$project2){
                     <?php echo $item->id;?>
                 </td>
                 <td class='center one-touch'>
-                    <?php echo str_replace(',', ',<br>',$item->mount_dates);?>
+                    <?php foreach ($item->mount_dates as $mount_date){
+                        echo $mount_date->date_time." ".$mount_date->stage."<br>";
+                    }?>
                 </td>
                 <td class="one-touch">
                     <?php echo $item->project_info;?>

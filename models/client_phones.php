@@ -51,6 +51,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 				->where("`a`.`phone` LIKE(".$db->quote("%".$number."%").")")
 				->order('`b`.`dealer_id`');
 			$db->setQuery($query);
+
 			$items = $db->loadObjectList();
 			$result = null;
 			if (!empty($items)) {

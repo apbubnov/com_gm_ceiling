@@ -3277,9 +3277,11 @@ public function register_mnfctr(){
             $model_projects = $this->getModel('Projects', 'Gm_ceilingModel');
             $model_users = $this->getModel('Users', 'Gm_ceilingModel');
             $result = $model_projects->getMountsAndDayoffsByDealerId($user->dealer_id);
+            $gm_result = $model_projects->getMountsAndDayoffsByDealerId(1);
             $result_mounters = $model_users->getDealerMounters($user->dealer_id);
             $brigades_count = $model_users->getCountOfUsersByGroupAndDealer(11,1);
             $final_result = (object)['data' => null, 'mounters' => $result_mounters];
+            $gm_final_result = (object)['data' => null];
             if (!empty($result)) {
                 foreach ($result as $key => $value) {
                     if (!empty($value->mount_dates)) {
@@ -3306,26 +3308,55 @@ public function register_mnfctr(){
                         $final_result->data[$y][$m][$d][$result[$key]->project_mounter][$h] = (object)['id' => $value2[1], 'info' => $value2[2]];
                     }
                 }
-                $mount_service_brigade = [];
-                $final_result->brigades_count = $brigades_count->brigades_count;
-                foreach ($final_result->data as $year=>$month_array){
-                    foreach($month_array as $month=>$days_array){
-                        foreach ($days_array as $day=>$mounters_array){
-                            foreach ($mounters_array as $mounter=>$times_array){
-                                foreach($times_array as $time=>$project){
-                                    if(!empty($mount_service_brigade[$year][$month][$day][$time])){
-                                        $mount_service_brigade[$year][$month][$day][$time] -= 1;
-                                    }
-                                    else{
-                                        $mount_service_brigade[$year][$month][$day][$time] = $brigades_count->brigades_count-1;
-                                    }
+            }
+            if(!empty($gm_result)){
+                foreach ($gm_result as $key => $value) {
+                    if (!empty($value->mount_dates)) {
+                        $prj_dates = explode('!', $value->mount_dates);
+                        foreach ($prj_dates as $key2 => $value2) {
+                            $prj_dates[$key2] = explode('|', $value2);
+                        }
+                        $gm_result[$key]->dates = $prj_dates;
+                    }
+                    $off_dates1 = explode(',', $value->off_dates);
+                    foreach ($off_dates1 as $key2 => $value2) {
+                        $off_dates2 = explode('|', $value2);
+                        while ($off_dates2[0] < $off_dates2[1]) {
+                            $gm_result[$key]->dates[] = [$off_dates2[0], null, null];
+                            $off_dates2[0] = date('Y-m-d H:i:s', strtotime($off_dates2[0].' +1 hour'));
+                        }
+                    }
+                    foreach ($gm_result[$key]->dates as $key2 => $value2) {
+                        $datetime = strtotime($value2[0]);
+                        $y = intval(date("Y", $datetime));
+                        $m = intval(date("m", $datetime));
+                        $d = intval(date("d", $datetime));
+                        $h = intval(date("H", $datetime));
+                        $gm_final_result->data[$y][$m][$d][$gm_result[$key]->project_mounter][$h] = (object)['id' => $value2[1], 'info' => $value2[2]];
+                    }
+                }
+            }
+            $mount_service_brigade = [];
+            $final_result->brigades_count = $brigades_count->brigades_count;
+            foreach ($gm_final_result->data as $year=>$month_array){
+                foreach($month_array as $month=>$days_array){
+                    foreach ($days_array as $day=>$mounters_array){
+                        foreach ($mounters_array as $mounter=>$times_array){
+                            foreach($times_array as $time=>$project){
+                                if(!empty($mount_service_brigade[$year][$month][$day][$time])){
+                                    $mount_service_brigade[$year][$month][$day][$time] -= 1;
+                                }
+                                else{
+                                    $mount_service_brigade[$year][$month][$day][$time] = $brigades_count->brigades_count-1;
                                 }
                             }
                         }
                     }
                 }
-                $final_result->free_brigades_data = $mount_service_brigade;
             }
+            $final_result->free_brigades_data = $mount_service_brigade;
+
+            //throw new Exception(json_encode($final_result));
             die(json_encode($final_result));
         }
         catch(Exception $e) {

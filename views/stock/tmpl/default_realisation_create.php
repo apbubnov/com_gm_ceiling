@@ -2,10 +2,9 @@
 /**
  * Created by PhpStorm.
  * User: bubnov
- * Date: 21.08.2019
- * Time: 9:42
+ * Date: 11.09.2019
+ * Time: 10:28
  */
-// No direct access
 defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
@@ -18,33 +17,25 @@ $model = $this->getModel();
 $userId = $user->get('id');
 $groups = $user->get('groups');
 
-$canCreate = (in_array(18, $groups) || in_array(19, $groups));
-$canEdit = (in_array(18, $groups) || in_array(19, $groups));
-$canDelete = (in_array(18, $groups) || in_array(19, $groups));
 
 $app = JFactory::getApplication();
-$projectId = $app->input->get('id', 0, 'int');
-$projectModel = Gm_ceilingHelpersGm_ceiling::getModel('Project');
-$calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
-$data = $projectModel->getProjectForStock($projectId);
-$project = $projectModel->getData($projectId);
-$stocks = $model->getStocks();
 
 $dealer = JFactory::getUser($project->dealer_id);
 $goods = $data->goods;
 
 $customer = $data->customer;
-
+$stocks = $model->getStocks();
 $status = floatval($customer->Status);
 $statusNumber = $status;
 
 $goodsInCategories = $model->getGoodsInCategories($dealer->id);
 $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUOT));
-
-echo parent::getPreloaderNotJS();
 ?>
-
 <style>
+    body {
+        background-color: #E6E6FA;
+    }
+
     .Actions {
         line-height: 42px;
     }
@@ -361,7 +352,7 @@ echo parent::getPreloaderNotJS();
     .Modal .Form .Action .Button {
         display: inline-block;
         float: left;
-        width: calc(70% - 5px);
+        width: calc(40% - 5px);
         height: 30px;
         overflow: visible;
         margin-right: 10px;
@@ -370,6 +361,10 @@ echo parent::getPreloaderNotJS();
         background-color: rgb(54, 53, 127);
         color: #ffffff;
         border: none;
+    }
+
+    .Modal .Form .Action .Button.Reset {
+        width: calc(30% - 10px);
     }
 
     .Modal .Form .Action .Button.Cancel {
@@ -523,110 +518,107 @@ echo parent::getPreloaderNotJS();
         text-align: center;
     }
 
-</style>
-<h1>Реализация проекта №<?=$projectId;?></h1>
-<form class="Realization">
-<input type="number" name="project" value="<?=$projectId;?>" hidden>
-<input type="number" name="status" value="<?=$statusNumber;?>" hidden>
-<div class="Actions">
-    <?= parent::getButtonBack(); ?>
-    <?php if($statusNumber !=8) {?>
-    <button type="button" class="btn btn-primary add_goods"">
-        <i class="fa fa-plus" aria-hidden="true"></i> Компонент
-    </button>
-    <select class="Action Stock" name="stock">
-        <?foreach ($stocks as $s):?>
-            <option value="<?=$s->id;?>"><?=$s->name;?></option>
-        <?endforeach;?>
-    </select>
-    <button type="button" class="btn btn-primary make_realisation" <?php if ($data->customer->status == 8) echo "style='display:none;'"?>>
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i> Реализовать
-    </button>
-    <?php }?>
-</div>
+    .result_row{
+        border:1px solid #414099;
+        color: black;
+        padding: 12px 16px;
+        margin-bottom: 5px;
+        text-decoration: none;
+        display: block;
+    }
+    .result_row:hover {
+        background-color: #f1f1f1
+    }
 
-<div class="CustomerInfo">
-    <table class="CustomerInfoTable">
-        <tbody>
-            <tr class="Project">
-                <td class="Name">Проект №:</td>
-                <td class="Value"><?=$project->id;?></td>
-            </tr>
-            <tr class="Project_info">
-                <td class="Name">Адрес:</td>
-                <td class="Value"><?=$project->project_info?></td>
-            </tr>
-            <tr class="Client">
-                <td class="Name">Клиент:</td>
-                <td class="Value"><?=$project->client_id?></td>
-            </tr>
-            <tr class="Dealer">
-                <td class="Name">Дилер:</td>
-                <td class="Value"><?=$dealer->name?></td>
-            </tr>
+</style>
+<h2 class="center">Создание новой реализации</h2>
+<div class="Realization">
+    <div class="Actions">
+        <?= parent::getButtonBack(); ?>
+        <div class="Action ButInp Customer">
+            <input type="text" name="customer" class="InputButInp" required>
+            <button type="button" class="btn btn-primary" id="choose_customer_btn">
+                <i class="fa fa-user" aria-hidden="true"></i> Покупатель
+            </button>
+        </div>
+        <button type="button" class="btn btn-primary add_goods">
+            <i class="fa fa-plus" aria-hidden="true"></i> Товар
+        </button>
+        <select class="Action Stock" name="stock">
+            <?foreach ($stocks as $s):?>
+                <option value="<?=$s->id;?>"><?=$s->name;?></option>
+            <?endforeach;?>
+        </select>
+        <button type="button" class="btn btn-primary" id="make_realisation">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i> Реализовать
+        </button>
+    </div>
+    <div class="CustomerInfo">
+        <table class="CustomerInfoTable">
+            <tbody>
             <tr class="Pay">
                 <td class="Name">Оплата:</td>
                 <td class="Value">
-                    <div class="Radio">
-                        <div class="RUB"><span class="RV">-</span> <i class="fas fa-ruble-sign"></i></div>
-                    </div>
+                    <span class="RV">0</span><i class="fas fa-ruble-sign"></i>
                 </td>
             </tr>
-        </tbody>
-    </table>
-</div>
-<div class="Table">
-    <table class="Elements" id="goods_table">
-        <thead class="ElementsHead">
-        <tr class="ElementsHeadTr">
-            <td>Название</td>
-            <td>Стоимость</td>
-            <td>Значение</td>
-            <td>Цена</td>
-            <?php if($statusNumber !=8){?>
-                <td colspan="2" class="ButtonTD">Функции</td>
-            <?php } ?>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-</form>
+            <tr class="Dealer" style="">
+                <td class="Name">Дилер:</td>
+                <td class="Value"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-<div class="modal_window_container" id="mw_container">
-    <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div class="modal_window" id="mw_add_goods">
-        <div class="row">
-            <div class="col-md-6 center" style="border:2px solid #414099;border-radius: 5px;">
-                <label>Штрихкод</label><br>
-                <div class="col-md-10">
-                    <input type="text" id="goods_id" class="form-control" style="margin-bottom: 10px;">
+    <div class="Table">
+        <table class="Elements" id="goods_table">
+            <thead class="ElementsHead">
+            <tr class="ElementsHeadTr">
+                <td>Название</td>
+                <td>Стоимость</td>
+                <td>Значение</td>
+                <td>Цена</td>
+                <td colspan="2" class="ButtonTD">Функции</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal_window_container" id="mw_container">
+        <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div class="modal_window" id="mw_add_goods">
+            <div class="row">
+                <div class="col-md-6 center" style="border:2px solid #414099;border-radius: 5px;">
+                    <label>Штрихкод</label><br>
+                    <div class="col-md-10">
+                        <input type="text" id="goods_id" class="form-control" style="margin-bottom: 10px;">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-large btn-primary" id="add_by_id" style="margin-bottom: 10px;">ОК</button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-large btn-primary" id="add_by_id" style="margin-bottom: 10px;">ОК</button>
+                <div class="col-md-6 center" style="border:2px solid #414099;border-radius: 5px;">
+                    <label>Категория</label><br>
+                    <div class="col-md-12">
+                        <select class="form-control" id="goods_category_select" style="margin-bottom: 10px;">
+                            <option>Выберите категорию</option>
+                            <?php foreach ($goodsInCategories as $category){?>
+                                <option value="<?=$category->category_id?>"><?=$category->category_name?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-12" id="div_goods_select" style="display:none">
+                        <select class="form-control" id="goods_select" style="margin-bottom: 10px;">
+                            <option>Выберите компонент</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 center" style="border:2px solid #414099;border-radius: 5px;">
-                <label>Категория</label><br>
-                <div class="col-md-12">
-                    <select class="form-control" id="goods_category_select" style="margin-bottom: 10px;">
-                        <option>Выберите категорию</option>
-                        <?php foreach ($goodsInCategories as $category){?>
-                            <option value="<?=$category->category_id?>"><?=$category->category_name?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="col-md-12" id="div_goods_select" style="display:none">
-                    <select class="form-control" id="goods_select" style="margin-bottom: 10px;">
-                        <option>Выберите компонент</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <table id="added_goods" class="table table-stripped table_cashbox">
-                <thead>
+            <div class="row">
+                <table id="added_goods" class="table table-stripped table_cashbox">
+                    <thead>
                     <td>
                         Наименование
                     </td>
@@ -636,20 +628,34 @@ echo parent::getPreloaderNotJS();
                     <td>
                         <i class="far fa-trash-alt"></i>
                     </td>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <button class="btn btn-primary" id="add_dop_goods">Добавить</button>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="add_dop_goods">Добавить</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal_window" id="mw_edit">
+        <div class="modal_window" id="mw_customer">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label>Введите данные для поиска</label>
+                    <input class="form-control" id="search_inp">
+                    <div id="search_result" style="height: 300px; overflow-y: scroll;">
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+
+        </div>
+
+        <div class="modal_window" id="mw_edit">
         <div class="row">
             <div class="col-md-4">
                 <input type="hidden" class="edit_goods_id">
@@ -670,51 +676,34 @@ echo parent::getPreloaderNotJS();
             </div>
         </div>
     </div>
-    <div class="modal_window" id="mw_shortage">
-        <div class="row">
-            <table id="shortage_goods" class="table table-stripped table_cashbox">
-                <thead>
-                    <td>
-                        Наименование
-                    </td>
-                    <td>
-                        Количество
-                    </td>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>
 
 <script type="text/javascript">
     var EDIT_BUTTON = '<button type="button" class="Clone">' +
-                         '<i class="fa fa-edit" aria-hidden="true"></i>' +
-                      '</button>',
+        '<i class="fa fa-edit" aria-hidden="true"></i>' +
+        '</button>',
         DELETE_BUTTON = '<button type="button" class="Remove">' +
-                            '<i class="fas fa-trash-alt" aria-hidden="true"></i>' +
-                        '</button>',
+            '<i class="fas fa-trash-alt" aria-hidden="true"></i>' +
+            '</button>',
         INPUT_COUNT='<input class="count center"/>',
         BUTTON_DELETE_MW='<button type="button" class="btn btn-danger delete"> <i class="fas fa-trash-alt"></i> </button>',
-        Customer = <?=json_encode($customer);?>,
-        Goods = <?=json_encode($goods);?>,
+        found_users,
+        customer ={},
+        Goods = {},
         goodsInCategories = JSON.parse('<?= $goodsInCategories_json?>'),
-        goodsToAdd = {},
-        project_id = '<?=$projectId?>',
-        status = '<?= $statusNumber;?>';
-        console.log(goodsInCategories);
+        goodsToAdd = {};
+    console.log(goodsInCategories);
     jQuery(document).mouseup(function (e) {
         var div = jQuery("#mw_add_goods"),
-            div1 = jQuery("#mw_edit"),
-            div2 = jQuery("#mw_shortage");
+            div1 = jQuery("#mw_customer"),
+            div2 = jQuery("#mw_edit");
         if (!div.is(e.target)
             && div.has(e.target).length === 0 &&
             !div1.is(e.target)
             && div1.has(e.target).length === 0 &&
             !div2.is(e.target)
-            && div2.has(e.target).length === 0 ) {
+            && div2.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
@@ -723,11 +712,152 @@ echo parent::getPreloaderNotJS();
         }
     });
 
-    jQuery(document).ready(function () {
-       jQuery(".PRELOADER_GM").hide();
-       fillData(Goods);
+    jQuery('#mw_customer').on('click','.result_row',function(){
+        var dealer_id = jQuery(this).data('id');
+        customer = found_users[dealer_id];
+        console.log(customer);
+        jQuery('.Dealer').find('.Value').text(customer.name);
+        jQuery("#mw_container").hide();
+        jQuery("#mw_customer").hide();
+        jQuery("#close_btn").hide();
+    });
 
-       jQuery('body').on('click','.Remove',function(){
+    jQuery(document).ready(function () {
+        jQuery('.add_goods').click(function () {
+            jQuery("#mw_container").show();
+            jQuery("#close").show();
+            jQuery("#mw_add_goods").show('slow');
+        });
+
+        jQuery("#choose_customer_btn").click(function () {
+            jQuery("#mw_container").show();
+            jQuery("#close").show();
+            jQuery("#mw_customer").show('slow');
+        });
+
+        jQuery("#goods_category_select").change(function(){
+            var selected_category = jQuery(this).val(),
+                goodsByCategory = goodsInCategories.filter(function(category){
+                    return category.category_id == selected_category;
+                })[0].goods;
+            jQuery("#goods_select").empty();
+            jQuery("#goods_select").append('<option>Выберите компонент</option>');
+            jQuery.each(goodsByCategory,function(index,elem){
+                jQuery("#goods_select").append('<option value = "'+elem.goods_id+'">'+elem.name+'</option>');
+            });
+            jQuery("#div_goods_select").show();
+        });
+
+        jQuery("#goods_select").change(function() {
+            var selectedId = jQuery(this).val(),
+                goodsByCategory = goodsInCategories.filter(function(category){
+                    return category.category_id == jQuery("#goods_category_select").val();
+                })[0].goods,
+                selected_goods = goodsByCategory.filter(function (elem) {
+                    console.log(elem);
+                    return elem.goods_id == selectedId;
+                })[0];
+            console.log(goodsByCategory);
+            addGoodsInTable(selected_goods);
+            Goods[selected_goods.goods_id] = selected_goods;
+        });
+
+        jQuery("#add_by_id").click(function () {
+            var found_goods = findGoods(jQuery('#goods_id').val());
+            console.log(found_goods);
+            addGoodsInTable(found_goods);
+            Goods[found_goods.goods_id] = found_goods;
+
+       })
+
+        jQuery("#add_dop_goods").click(function(){
+            var addTotalSum = 0;
+            jQuery.each(jQuery("#added_goods > tbody > tr"),function (index,elem) {
+                elem = jQuery(elem);
+                Goods[elem.data('id')].final_count = elem.find('.count').val();
+                Goods[elem.data('id')].price_sum = Goods[elem.data('id')].dealer_price* Goods[elem.data('id')].final_count;
+                addTotalSum += Goods[elem.data('id')].price_sum;
+            });
+            fillData(Goods);
+            jQuery("#close").hide();
+            jQuery("#mw_container").hide();
+            jQuery("#mw_add_goods").hide();
+        });
+
+        jQuery("#search_inp").keyup(function(){
+            jQuery.ajax({
+                url: "/index.php?option=com_gm_ceiling&task=stock.getCustomer",
+                async: false,
+                data: {
+                   filter:jQuery("#search_inp").val()
+                },
+                type: "POST",
+                success: function (data) {
+                    if(!empty(data)){
+                        found_users = JSON.parse(data);
+                        console.log(found_users);
+                        var row;
+                        jQuery("#search_result").empty();
+                        for(var i  in found_users){
+                            row = '<div class="result_row" data-id="'+found_users[i].id+'">'+found_users[i].name+'</div>';
+                            jQuery("#search_result").append(row);
+                        }
+                    }
+                    else{
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "success",
+                            text: "Ничего не найдено!"
+                        });
+                    }
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
+                }
+            });
+        });
+
+        jQuery("#make_realisation").click(function () {
+            console.log(customer.associated_client);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+                data: {
+                    client_id: customer.associated_client
+
+                },
+                async:false,
+                type: "POST",
+                success: function (data) {
+                    console.log(data);
+                    data = JSON.parse(data);
+                    makeRealisation(parseInt(data));
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
+                }
+            });
+            
+        });
+
+        jQuery('body').on('click','.Remove',function(){
            var btn = jQuery(this);
            noty({
                theme: 'relax',
@@ -756,9 +886,8 @@ echo parent::getPreloaderNotJS();
                    }
                ]
            });
-       });
-
-       jQuery('body').on('click','.delete',function() {
+        });
+        jQuery('body').on('click','.delete',function() {
            jQuery(this).closest('tr').remove();
        });
        jQuery('.add_goods').click(function () {
@@ -794,59 +923,74 @@ echo parent::getPreloaderNotJS();
            updateTotalSum(diff_sum);
            updateGoodsInArray(id,new_count,new_sum);
         });
+    });
+    function addGoodsInTable(goods){
+        console.log(goods);
+        jQuery("#added_goods > tbody").append('<tr data-id="'+goods.goods_id+'"></tr>');
+        jQuery("#added_goods > tbody > tr:last").append('<td>'+goods.name+'</td><td>'+INPUT_COUNT+'</td><td>'+BUTTON_DELETE_MW+'</td>');
 
-        jQuery("#add_by_id").click(function () {
-            var found_goods = findGoods(jQuery('#goods_id').val());
-            console.log(found_goods);
-            addGoodsInTable(found_goods);
-            Goods[found_goods.goods_id] = found_goods;
-
-       });
-
-        jQuery("#add_dop_goods").click(function(){
-            var addTotalSum = 0;
-            jQuery.each(jQuery("#added_goods > tbody > tr"),function (index,elem) {
-                elem = jQuery(elem);
-                Goods[elem.data('id')].final_count = elem.find('.count').val();
-                Goods[elem.data('id')].price_sum = Goods[elem.data('id')].dealer_price* Goods[elem.data('id')].final_count;
-                addTotalSum += Goods[elem.data('id')].price_sum;
-            });
-            fillData(Goods);
-            jQuery("#close").hide();
-            jQuery("#mw_container").hide();
-            jQuery("#mw_add_goods").hide();
+    }
+    function fillData(goods){
+        jQuery('#goods_table > tbody').empty();
+        var total_sum = 0,
+            goods_name,
+            td_edit = '<td>'+EDIT_BUTTON+'</td>',
+            td_delete = '<td>'+DELETE_BUTTON+'</td>';
+        jQuery.each(goods,function(eindex,elem){
+            jQuery('#goods_table > tbody').append('<tr data-id="' + elem.goods_id + '"></tr>');
+            if (elem.category_id == 1) {
+                goods_name = 'Полотно: ' + elem.name;
+            }
+            else {
+                goods_name = 'Компонент: ' + elem.name;
+            }
+            jQuery('#goods_table > tbody > tr:last').append('<td>' + goods_name + '</td>' +
+                '<td>' + elem.dealer_price + '</td>' +
+                '<td class="goods_count">' + parseFloat(elem.final_count).toFixed(2) + '</td>' +
+                '<td class="goods_sum">' + parseFloat(elem.price_sum).toFixed(2) + '</td>' +
+                td_edit +
+                td_delete)
+            total_sum += +elem.price_sum;
         });
+        jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td colspan="3" class="total_sum_td"><b>'+total_sum+'</b></td></tr>');
+        jQuery('.RV').text(total_sum);
+    }
 
-        jQuery("#goods_category_select").change(function(){
-            var selected_category = jQuery(this).val(),
-                goodsByCategory = goodsInCategories.filter(function(category){
-                    return category.category_id == selected_category;
-                })[0].goods;
-            jQuery("#goods_select").empty();
-            jQuery("#goods_select").append('<option>Выберите компонент</option>');
-            jQuery.each(goodsByCategory,function(index,elem){
-                jQuery("#goods_select").append('<option value = "'+elem.goods_id+'">'+elem.name+'</option>');
-            });
-            jQuery("#div_goods_select").show();
-        })
+    function findGoods(goods_id){
+        var result;
+        console.log(goods_id);
+        jQuery.each(goodsInCategories,function (index,category) {
+            for(var i = category.goods.length;i--;){
 
-        jQuery("#goods_select").change(function() {
-            var selectedId = jQuery(this).val(),
-                goodsByCategory = goodsInCategories.filter(function(category){
-                return category.category_id == jQuery("#goods_category_select").val();
-            })[0].goods,
-                selected_goods = goodsByCategory.filter(function (elem) {
-                    console.log(elem);
-                    return elem.goods_id == selectedId;
-                })[0];
-            console.log(goodsByCategory);
-            addGoodsInTable(selected_goods);
-            Goods[selected_goods.goods_id] = selected_goods;
+                if(category.goods[i].goods_id == goods_id){
+                    console.log(category.goods[i]);
+                    result = category.goods[i];
+                    return;
+                }
+            }
         });
+        return result;
+    }
+    function updateTotalSum(sum){
+        var old_total_sum = jQuery('.RV').text();
+        jQuery('.RV').text(old_total_sum-sum);
+        jQuery('.total_sum_td').text(old_total_sum-sum);
+    }
 
-        jQuery(".make_realisation").click(function () {
-            console.log(Object.keys);
-            var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length};
+    function updateGoodsInfoInList(goods_id,new_sum,new_count){
+        var tr = jQuery('#goods_table > tbody > tr[data-id = "'+goods_id+'"]');
+        tr.find('.goods_count').text(new_count);
+        tr.find('.goods_sum').text(new_sum);
+    }
+
+    function updateGoodsInArray(goods_id,new_count,new_sum){
+
+        Goods[goods_id].final_count = new_count;
+        Goods[goods_id].price_sum = new_sum;
+    }
+
+    function makeRealisation(project_id){
+        var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length};
             jQuery.each(Goods,function(index,elem){
                 goodsToRealisation.goods.push({goods_id:elem.goods_id,name:elem.name,dealer_price:elem.dealer_price,count:elem.final_count});
             });
@@ -890,6 +1034,18 @@ echo parent::getPreloaderNotJS();
                            ]
                        });
                    }
+                   else{
+                       noty({
+                           theme: 'relax',
+                           layout: 'center',
+                           timeout: 5000,
+                           type: "success",
+                           text: "Успешно!"
+                       });
+                       setTimeout(function(){
+                           window.location = '/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=projects';
+                       },2500);
+                   }
                 },
                 dataType: "text",
                 timeout: 10000,
@@ -903,73 +1059,5 @@ echo parent::getPreloaderNotJS();
                     });
                 }
             });
-        });
-    });
-
-    function updateGoodsInfoInList(goods_id,new_sum,new_count){
-        var tr = jQuery('#goods_table > tbody > tr[data-id = "'+goods_id+'"]');
-        tr.find('.goods_count').text(new_count);
-        tr.find('.goods_sum').text(new_sum);
-    }
-
-    function updateTotalSum(sum){
-        var old_total_sum = jQuery('.RV').text();
-        jQuery('.RV').text(old_total_sum-sum);
-        jQuery('.total_sum_td').text(old_total_sum-sum);
-    }
-
-    function findGoods(goods_id){
-        var result;
-        console.log(goods_id);
-        jQuery.each(goodsInCategories,function (index,category) {
-            for(var i = category.goods.length;i--;){
-
-                if(category.goods[i].goods_id == goods_id){
-                    console.log(category.goods[i]);
-                    result = category.goods[i];
-                    return;
-                }
-            }
-        });
-        return result;
-    }
-    function updateGoodsInArray(goods_id,new_count,new_sum){
-
-        Goods[goods_id].final_count = new_count;
-        Goods[goods_id].price_sum = new_sum;
-    }
-
-    function addGoodsInTable(goods){
-        console.log(goods);
-        jQuery("#added_goods > tbody").append('<tr data-id="'+goods.goods_id+'"></tr>');
-        jQuery("#added_goods > tbody > tr:last").append('<td>'+goods.name+'</td><td>'+INPUT_COUNT+'</td><td>'+BUTTON_DELETE_MW+'</td>');
-
-    }
-
-    function fillData(goods){
-
-        jQuery('#goods_table > tbody').empty();
-        var total_sum = 0,
-            goods_name,
-            td_edit = (status !=8) ? '<td>'+EDIT_BUTTON+'</td>' : '',
-            td_delete = (status !=8) ?  '<td>'+DELETE_BUTTON+'</td>' : '';
-        jQuery.each(goods,function(eindex,elem){
-            jQuery('#goods_table > tbody').append('<tr data-id="'+elem.goods_id+'"></tr>');
-            if(elem.category_id == 1){
-                goods_name = 'Полотно: '+elem.name;
-            }
-            else{
-                goods_name = 'Компонент: '+elem.name;
-            }
-            jQuery('#goods_table > tbody > tr:last').append('<td>'+goods_name+'</td>' +
-                                                            '<td>'+elem.dealer_price+'</td>' +
-                                                            '<td class="goods_count">'+parseFloat(elem.final_count).toFixed(2)+'</td>' +
-                                                            '<td class="goods_sum">'+parseFloat(elem.price_sum).toFixed(2)+'</td>' +
-                                                            td_edit +
-                                                            td_delete)
-            total_sum += +elem.price_sum;
-        });
-        jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td colspan="3" class="total_sum_td"><b>'+total_sum+'</b></td></tr>');
-        jQuery('.RV').text(total_sum);
     }
 </script>

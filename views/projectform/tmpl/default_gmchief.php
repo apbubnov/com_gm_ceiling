@@ -97,6 +97,15 @@
     $mount_sum = 0;
 
     echo parent::getPreloader();
+
+    $mount_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id,5);
+    $mount_note = "";
+    foreach ($mount_notes as $m_note) {
+        if($m_note->author == JFactory::getUser()->id){
+
+            $mount_note = $m_note->value;
+        }
+    }
 ?>
 
 <?=parent::getButtonBack();?>
@@ -246,7 +255,7 @@
 
                         <tr>
                             <th>Примечание к монтажу</th>
-                            <td><textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea></td>
+                            <td><textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" aria-invalid="false"><?=$mount_note;?></textarea></td>
                         </tr>
                         <tr>
                             <th>Замерщик</th>

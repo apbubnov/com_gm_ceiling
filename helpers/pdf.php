@@ -44,12 +44,32 @@ class Gm_ceilingHelpersPDF {
     {
         $PackingList = [];
         $SalesInvoice = [];
-
         $i = 1;
         $sum = 0;
-
+        $stock_model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+        $units = $stock_model->getGoodsUnitsAssoc();
         foreach ($data as $d) {
-            if (!empty($d->rollers))
+            if($d->category_id == 1) {
+                $symbol = "П";
+            }
+            else{
+                $symbol = "К";
+            }
+                $object = (object) [];
+                $object->name = $d->name;
+                $object->code = $symbol." ".self::Code($d->goods_id);
+                $object->unit = $units[$d->unit_id]->unit;
+                $object->unitCode = $d->unit_id;
+                $object->price = $d->price;
+                $object->number = $i++;
+                $object->count = $d->final_count;
+                $object->totalVAL = $d->price_sum;
+                $object->VALTotal = $object->totalVAL;
+                $sum += floatval($object->VALTotal);
+                $PackingList[] = $object;
+                $SalesInvoice[] = $object;
+
+           /* if (!empty($d->rollers))
             {
                 $object = (object) [];
                 $object->name = $d->name . " " . $d->country . " " . $d->texture . ((empty($d->color))?" ":" ".$d->color." ") . $d->width;
@@ -87,7 +107,7 @@ class Gm_ceilingHelpersPDF {
                 $SalesInvoice[] = $object;
                 $PackingList[] = $object;
                 $sum += floatval($object->VALTotal);
-            }
+            }*/
         }
         return (object) ["PackingList" => $PackingList, "SalesInvoice" => $SalesInvoice, "sum" => $sum];
     }

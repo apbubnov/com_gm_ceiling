@@ -394,7 +394,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`dealer_id` = 1');
 
                     } elseif ($subtype == 'service') {
-                        $query->select("CONCAT('[',GROUP_CONCAT(CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
+                        $query->select("CONCAT('[',GROUP_CONCAT(CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\",\"stage\":\"',prm.type,'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
                         $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
                         $query->innerJoin("`rgzbn_gm_ceiling_projects_mounts` AS `prm` ON prm.project_id = p.id");
                         $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");

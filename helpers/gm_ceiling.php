@@ -5853,40 +5853,52 @@ class Gm_ceilingHelpersGm_ceiling
             $model_project = self::getModel('project');
             $notes = $model_project->getProjectNotes($project_id,$type);
             $result = [];
-
             foreach ($notes as $key => $value) {
                 $user = JFactory::getUser($value->user_id);
                 $groups = $user->get('groups');
                 $groupTitle = self::groupMapNoteTitle($groups);
-                $noteObject = (object)array("value"=>"","description"=>"");
+                $noteObject = (object)array("value"=>"","description"=>"","type"=>"","author"=>"");
 
                 switch($value->type){
                     case 1://общее примечание
                         $noteObject->description = 'Общее примечание по проекту: ';
                         $noteObject->value = $value->note;
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
+                        $result[$groupTitle->title."_common"] = $noteObject;
                         break;
                     case 2://примечание к замеру
                         $noteObject->value =$value->note;
                         $noteObject->description = $groupTitle->description."к замеру: ";
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
                         $result[$groupTitle->title."_measure"] = $noteObject;
                         break;
                     case 3://примечание отказа
                         $noteObject->value =$value->note;
                         $noteObject->description = $groupTitle->description." к отказу: ";
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
                         $result[$groupTitle->title."_refuse"] = $noteObject;
                         break;
                     case 4://в производство
                         $noteObject->value =$value->note;
                         $noteObject->description = $groupTitle->description." к производству: ";
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
                         $result[$groupTitle->title."_production"] = $noteObject;
                         break;
                     case 5://к монтажу
                         $noteObject->value =$value->note;
                         $noteObject->description = $groupTitle->description." к монтажу: ";
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
                         $result[$groupTitle->title."_mount"] = $noteObject;
                         break;
                     case 6://после монтажа
                         $noteObject->value =$value->note;
+                        $noteObject->type = $value->type;
+                        $noteObject->author = $value->user_id;
                         $result[$groupTitle->title."_after_mount"] = $noteObject;
                         break;
                 }

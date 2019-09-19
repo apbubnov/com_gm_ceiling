@@ -345,12 +345,14 @@ class Gm_ceilingModelClientForm extends JModelForm
             }
 			if(empty($data['dealer_id'])) {
 				if(isset($user->dealer_id)) {
+
 					$data['dealer_id'] = $user->dealer_id;
+
 				} else {
 					$data['dealer_id'] = 1;
 				}
 			}
-			
+
 			if(in_array("13",$groups)){
 				$data['manager_id'] = $user->id;
 			}
@@ -379,8 +381,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 	            $result = $project_model->getItemsByPhoneNumber($phone, $data['dealer_id']);
 	            //throw new Exception(print_r($result->deleted_by_user,true));
 
-	            if (!empty($result) && $result->deleted_by_user == 0)
-	            {
+	            if (!empty($result) && $result->deleted_by_user == 0 && $result->client_dealer_id == $data['dealer_id']){
 	            	return 'client_found';
 	            }
 	            if(!empty($result) && $result->deleted_by_user == 1){

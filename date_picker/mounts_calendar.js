@@ -95,7 +95,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            	html += '<center><div style="overflow-y:auto; border: 1px solid #414099; border-radius: 4px;"><table class="mounts_grafik"><tbody><tr><th></th><th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th><th>18:00</th><th>19:00</th><th>20:00</th></tr>';
 		            	for (var key in mounters) {
 			    			var c = mounters[key].id,
-                                free_brigades_count;
+                                free_brigades_count = brigades_count;
 			    			html += '<tr><th>'+mounters[key].name+'</th>';
                             console.log(mounters[key]);
 			    			if (data_array[y] == undefined || data_array[y][m] == undefined || data_array[y][m][d] == undefined || data_array[y][m][d][c] == undefined) {
@@ -103,11 +103,12 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			    					var time = y+'-'+m+'-'+d+' '+h+':00:00';
 			    					var _class = 'free-day';
                                     if(mounters[key].service){
-                                        if(service_data[y][m][d][h] != undefined){
-                                            free_brigades_count = service_data[y][m][d][h];
-                                        }
-                                        else{
-                                            free_brigades_count = brigades_count;
+                                        if(!empty(service_data)){
+                                            if(!empty(service_data[y])&&!empty(service_data[y][m])&&!empty(service_data[y][m][d])){
+                                                if(service_data[y][m][d][h] != undefined){
+                                                    free_brigades_count = service_data[y][m][d][h];
+                                                }
+                                            }
                                         }
                                     }
                                     else{
