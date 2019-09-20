@@ -1309,7 +1309,7 @@ class Gm_ceilingModelStock extends JModelList
                     $queryInsert
                         ->insert('`rgzbn_gm_stock_inventory`')
                         ->columns('`goods_id`,`count`,`stock_id`')
-                        ->values($item->goods_id,$item->count,$item->new_stock);
+                        ->values("$item->goods_id,$item->count,$item->new_stock");
                     $db->setQuery($queryInsert);
                     $db->execute();
                     $new_inventory_id = $db->insertId();
@@ -1317,6 +1317,8 @@ class Gm_ceilingModelStock extends JModelList
                     $moving_arr[] = (object)array("from_inventory"=>$item->old_inventory_id,"to_inventory"=>$new_inventory_id,"count"=>$item->count);
                 }
             }
+
+
             $inserted = implode(',',$inserted);
             $values = [];
             foreach ($moving_arr as $moving_object){
@@ -1327,13 +1329,14 @@ class Gm_ceilingModelStock extends JModelList
                 ->insert('`rgzbn_gm_stock_moving`')
                 ->columns('`from_inventory_id`,`to_inventory_id`,`count`')
                 ->values($values);
+            $db->setQuery($queryMove);
             $db->execute();
             $this->updateInventory($updateInventoryArr);
 
 
             $query = $db->getQuery(true);
             $query
-                ->select('`id`,`count`,`stock`')
+                ->select('`id`,`count`,`stock_id`')
                 ->from('`rgzbn_gm_stock_inventory`')
                 ->where("id in($inserted)")
                 ->order('id ASC');

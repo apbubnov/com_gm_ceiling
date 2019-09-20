@@ -955,21 +955,19 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                             break;
                         }
                     }
-
+                    $goodsExistanceOnStocks = [];
+                    $gTotalCountOnStocks = [];
+                    foreach ($goodsExistenceArray as $var) {
+                        $goodsExistanceOnStocks[$var->stock][] = $var;
+                    }
+                    foreach ($goodsExistanceOnStocks as $stock_id=>$var) {
+                        $gTotalCountOnStocks[$stock_id] = array_sum(array_column($var, 'count'));
+                    }
                     if(!empty($goodsExistenceArray)) {
                         if ($value->category_id != 1) { //реализация для компонентов, берем то что раньше приняли и списываем частями если не хватает целиком
-                            $goodsExistanceOnStocks = [];
-                            $gTotalCountOnStocks = [];
-                            foreach ($goodsExistenceArray as $var) {
-                                $goodsExistanceOnStocks[$var->stock][] = $var;
-                            }
-                            foreach ($goodsExistanceOnStocks as $stock_id=>$var) {
-                                $gTotalCountOnStocks[$stock_id] = array_sum(array_column($var, 'count'));
-                            }
-
                             if ($gTotalCountOnStocks[$stockId] >= $realiseCount) {
                                 //если общее количество компонента на выбранном складе достаточно, то списываем
-                                $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount);
+                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
 
                             } else {
                                 //если не хватает общего количества на выбранном складе
@@ -983,7 +981,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                             //если кол-во достаточное, готовим массивы для перемещения кол-ва с одного на другой склад
                                             if($stockGoods->count >= $lackOfQuantity){
                                                 $moveArray[] = (object)array("old_stock"=>$stock_id,"new_stock"=>$stockId,
-                                                                            "count"=>$lackOfQuantity,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->id);
+                                                                            "count"=>$lackOfQuantity,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->goods_id);
                                                 $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $lackOfQuantity);
                                                 $lackOfQuantity = 0;
                                                 break;
@@ -993,7 +991,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                                 if ($lackOfQuantity > 0 && $stockGoods > 0) {
                                                     $partOfLack = $stockGoods->count;
                                                     $lackOfQuantity -= $partOfLack;
-                                                    $moveArray[] = (object)array("old_stock" => $stock_id, "new_stock" => $stockId, "count" => $partOfLack,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->id);
+                                                    $moveArray[] = (object)array("old_stock" => $stock_id, "new_stock" => $stockId, "count" => $partOfLack,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->goods_id);
                                                     $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => 0);
                                                 }
                                             }
@@ -1006,8 +1004,9 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                 //перемещаем товары и добавляем только что созданные позициии
                                 //в таблице inventaries в массив наличия на складе и создаем массивы для реализации
                                 $newGoodsOnStock = $stockModel->makeGoodsMovement($moveArray,$updateInvetory);
-                                array_merge($goodsExistanceOnStocks[$stockId],$newGoodsOnStock);
-                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount);
+
+                                $goodsExistanceOnStocks[$stockId] = array_merge($goodsExistanceOnStocks[$stockId],$newGoodsOnStock);
+                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
                             }
                         }
                         else{
@@ -1016,8 +1015,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                 //бежим по компонентам на выбранном складе
                                 if($existGoods->count >= $realiseCount){
                                     //если кол-во больше списываемого, создаем объекты и выходим из цикла
-                                    $rCanvObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
-                                    $uCanvObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                                    $rCanvObject = (object)array("inventory_id" => $existGoods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                    $uCanvObject = (object)array("id" => $existGoods->id, "count" => $existGoods->count - $realiseCount);
                                     $realiseCount = 0;
                                     break;
                                 }
@@ -1029,8 +1028,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                     if ($stockId != $stock_id) {
                                         foreach($goodsArrayOnStock as $stockGoods){
                                             if($stockGoods->count >= $realiseCount){
-                                                $rCanvObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
-                                                $uCanvObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
+                                                $moveArray[] = (object)array("old_stock"=>$stock_id,"new_stock"=>$stockId,
+                                                    "count"=>$realiseCount,"old_inventory_id"=>$stockGoods->id,"goods_id"=>$value->goods_id);
+                                                $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $realiseCount);
+                                                $newGoodsOnStock = $stockModel->makeGoodsMovement($moveArray,$updateInvetory);
+                                                $rCanvObject = (object)array("inventory_id" => $newGoodsOnStock[0]->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                                                $uCanvObject = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $realiseCount);
                                                 $realiseCount = 0;
                                                 break;
                                             }
@@ -1053,7 +1056,6 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         throw new Exception("EMPTY!!!");
                     }
                 }
-                throw new Exception('Success realisation');
                 $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
                 $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
 
@@ -1088,7 +1090,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
     }
 
-    function makeArrayForRealisation($goodsExistanceOnStock,$realiseCount){
+    function makeArrayForRealisation($goodsExistanceOnStock,$realiseCount,$dealer_price,$projectId,$userId){
         try{
             $result = [];
             $realisationArr = [];
@@ -1096,7 +1098,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             foreach ($goodsExistanceOnStock as $i_goods) {
                 if ($i_goods->count >= $realiseCount) {
                     //throw new Exception("$i_goods->count >= $realiseCount");
-                    $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                    $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
                     $realisationArr[] = $rObject;
 
                     $uObject = (object)array("id" => $i_goods->id, "count" => $i_goods->count - $realiseCount);
@@ -1106,7 +1108,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                     if ($realiseCount > 0 && $i_goods->count != 0) {
                         $partOfCount = $i_goods->count;
                         $realiseCount -= $partOfCount;
-                        $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $value->dealer_price, "count" => $partOfCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
+                        $rObject = (object)array("inventory_id" => $i_goods->id, "sale_price" => $dealer_price, "count" => $partOfCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
                         $realisationArr[] = $rObject;
 
 

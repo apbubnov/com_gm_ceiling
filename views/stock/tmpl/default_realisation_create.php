@@ -992,7 +992,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
     function makeRealisation(project_id){
         var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length};
             jQuery.each(Goods,function(index,elem){
-                goodsToRealisation.goods.push({goods_id:elem.goods_id,name:elem.name,dealer_price:elem.dealer_price,count:elem.final_count});
+                goodsToRealisation.goods.push({goods_id:elem.goods_id,category_id:elem.category_id,name:elem.name,dealer_price:elem.dealer_price,unit_id:elem.unit_id,count:elem.final_count});
             });
             console.log(goodsToRealisation);
             jQuery.ajax({
