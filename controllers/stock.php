@@ -9,10 +9,6 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-
-/* включаем библиотеку для формирования PDF */
-//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-
 /**
  * Stock list controller class.
  *
@@ -714,16 +710,60 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
     public function saveInventory(){
         try {
+            $userId = JFactory::getUser()->id;
             $jinput = JFactory::getApplication()->input;
             $array = $jinput->get('array', null, 'ARRAY');
             $id_stock = $jinput->get('id_stock', null, 'INT');
             $id_counterparty = $jinput->get('id_counterparty', null, 'INT');
-
+            $ids = implode(',',array_column($array,'id'));
             $model_stock = $this->getModel('Stock', 'Gm_ceilingModel');
+            $goods_cost = [];
+            foreach ($array as $item) {
+                $goods_cost[$item['id']]['cost'] = $item['cost'];
+                $goods_cost[$item['id']]['count'] = $item['count'];
+            }
+            $goods = $model_stock->getGoodsArrayByIds($ids);
+            foreach($goods as $value){
+                $value->cost = $goods_cost[$value->goods_id]['cost'];
+                $value->count = $goods_cost[$value->goods_id]['count'];
+            }
+            $model_stock->saveDataInventory($array, $id_stock, $id_counterparty);
 
-            $result = $model_stock->saveDataInventory($array, $id_stock, $id_counterparty);
+            $date = date("Y-m-d H:i:s");
+            $dateFormat = (object)[];
+            $dateFormat->date = date("d.m.Y");
+            $dateFormat->day = date("d");
+            $dateFormat->month = date("m");
+            $dateFormat->year = date("Y");
+            $dateFormat->time = time();
 
-            die(json_encode($result));
+            $info = (object) [];
+            $info->counterparty = $id_counterparty;
+            $info->customer = (object)['dealer'=>(object)['counterparty' => $id_counterparty]];
+            $info->date = $date;
+            $info->user = $userId;
+            $info->stock = $id_stock;
+            $info->dateFormat = $dateFormat;
+
+
+            $out = Gm_ceilingHelpersPDF::Format($goods);
+
+            $info->sum = $out->sum;
+            $href = array();
+            $href['InventoryOfGoods'] = Gm_ceilingHelpersPDF::InventoryOfGoods($info, $out->SalesInvoice);
+            $href['RetailCashOrder'] = Gm_ceilingHelpersPDF::RetailCashOrder($info);
+            $href['MergeFiles'] = Gm_ceilingHelpersPDF::MergeFiles($href);
+
+
+            /*
+             *  $info->sum = $out->sum;
+                $href = array();
+                $href['PackingList'] = Gm_ceilingHelpersPDF::PackingList($info, $out->PackingList);
+                $href['RetailCashOrder'] = Gm_ceilingHelpersPDF::RetailCashOrder($info);
+                $href['SalesInvoice'] = Gm_ceilingHelpersPDF::SalesInvoice($info, $out->SalesInvoice);
+                $href['MergeFiles'] = Gm_ceilingHelpersPDF::MergeFiles($href);*/
+            die(json_encode((object) ["status" => "ok", "href" => $href]));
+
 
         } catch(Exception $e)
         {
@@ -1056,8 +1096,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         throw new Exception("EMPTY!!!");
                     }
                 }
-                $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
-                $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
+                //$stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
+                //$projectModel->change_status($projectId,8);//переводим в статус "Выдан"
 
                 $date = date("Y-m-d H:i:s");
                 $dateFormat = (object)[];
@@ -1076,12 +1116,13 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 $out = Gm_ceilingHelpersPDF::Format($goods->goods);
 
+                $info->sum = $out->sum;
                 $href = array();
                 $href['PackingList'] = Gm_ceilingHelpersPDF::PackingList($info, $out->PackingList);
                 $href['RetailCashOrder'] = Gm_ceilingHelpersPDF::RetailCashOrder($info);
                 $href['SalesInvoice'] = Gm_ceilingHelpersPDF::SalesInvoice($info, $out->SalesInvoice);
                 $href['MergeFiles'] = Gm_ceilingHelpersPDF::MergeFiles($href);
-                die(json_encode(true));
+                die(json_encode((object)array("status"=>"ok","href" =>$href)));
             }
 
         }

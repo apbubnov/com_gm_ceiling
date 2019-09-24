@@ -687,6 +687,34 @@ echo parent::getPreloaderNotJS();
             </table>
         </div>
     </div>
+
+    <div class="modal_window ModalDoc" id="mw_doc" style="display: none;">
+        <div class="Document">
+            <iframe class="iFrame" >
+
+            </iframe>
+            <div class="Actions">
+                <div class="CheckBox">
+                    <div class="Name">Товарная накладная</div>
+                    <input type="checkbox" id="PackingList" name="page">
+                </div>
+                <div class="CheckBox">
+                    <div class="Name">Приходный кассовый ордер</div>
+                    <input type="checkbox" id="RetailCashOrder" name="page">
+                </div>
+                <div class="CheckBox">
+                    <div class="Name">Расходная накладная</div>
+                    <input type="checkbox" id="SalesInvoice" name="page">
+                </div>
+                <div class="Right">
+                    <button type="button" id="print_doc" <!--onclick="print_frame();-->"><i class="fa fa-print" aria-hidden="true"></i></button>
+                    <button type="button" id="save_doc" <!--onclick="save_frame();-->"><i class="fas fa-save" aria-hidden="true"></i></button>
+                    <button type="button" id="close_doc" <!--onclick="close_frame();-->"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -758,14 +786,31 @@ echo parent::getPreloaderNotJS();
            });
        });
 
-       jQuery('body').on('click','.delete',function() {
+        jQuery("#print_doc").click(function() {
+            (jQuery(".iFrame")[0].contentWindow || jQuery('.iFrame')[0]).print();
+        });
+
+        jQuery("#save_doc").click(function () {
+            var now = new Date();
+            var link = document.createElement('a');
+            link.setAttribute('href',$(".iFrame").attr("src"));
+            link.setAttribute('download',"Реализация " + now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear() + " " + now.getHours() + ":" + now.getMinutes() + ".pdf");
+            onload=link.click();
+        });
+
+        jQuery("#close_doc").click(function () {
+            jQuery(".ModalDoc").hide();
+        });
+
+        jQuery('body').on('click','.delete',function() {
            jQuery(this).closest('tr').remove();
-       });
-       jQuery('.add_goods').click(function () {
-          jQuery("#mw_container").show();
-          jQuery("#close").show();
-          jQuery("#mw_add_goods").show('slow');
-       });
+        });
+
+        jQuery('.add_goods').click(function () {
+            jQuery("#mw_container").show();
+            jQuery("#close").show();
+            jQuery("#mw_add_goods").show('slow');
+        });
 
         jQuery('body').on('click','.Clone',function() {
             jQuery("#mw_container").show();
@@ -890,6 +935,16 @@ echo parent::getPreloaderNotJS();
                            ]
                        });
                    }
+                   else{
+                       console.log(data);
+                       if (data != null)
+                       {
+                           jQuery.each(data, function (i, t) { jQuery("#"+i).val(t); jQuery("#"+i).attr("checked",true); });
+                           jQuery(".ModalDoc .Document .iFrame").attr("src", data.href.MergeFiles);
+                           jQuery(".ModalDoc").show();
+                           jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]").change(LoadPDF);
+                       }
+                   }
                 },
                 dataType: "text",
                 timeout: 10000,
@@ -905,6 +960,33 @@ echo parent::getPreloaderNotJS();
             });
         });
     });
+
+    function LoadPDF() {
+        var checkbox = jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]:checked"),
+            values = [];
+        console.log("cbx",checkbox);
+        jQuery.each(checkbox, function (i, t) { values.push(jQuery(t).val());});
+
+        if (values.length > 0) jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=stock.MergeFiles",
+            data: {files: values},
+            success: function (data) {
+                jQuery(".ModalDoc .Document .iFrame").attr("src", data);
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 5000,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    }
 
     function updateGoodsInfoInList(goods_id,new_sum,new_count){
         var tr = jQuery('#goods_table > tbody > tr[data-id = "'+goods_id+'"]');

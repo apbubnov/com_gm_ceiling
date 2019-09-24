@@ -1134,6 +1134,46 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    public function getGoodsArrayByIds($ids){
+        try{
+            $dealer_id = JFactory::getUser()->dealer_id;
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.`id` as `goods_id`,`g`.`name`,`g`.`category_id`,`g`.`unit_id`,`g`.`price` as `original_price`,`g`.`multiplicity`')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->where("`g`.`id` in ($ids)");
+            if(!empty($dealer_id)){
+                $query
+                    ->select('ROUND(
+                                    CASE
+                                      WHEN `gdp`.`operation_id` = 1 THEN
+                                        `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 2 THEN
+                                        `g`.`price` + `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 3 THEN
+                                        `g`.`price` - `gdp`.`value`
+                                      WHEN `gdp`.`operation_id` = 4 THEN
+                                        `g`.`price` + `gdp`.`value` / 100 * `g`.`price`
+                                      WHEN `gdp`.`operation_id` = 5 THEN
+                                        `g`.`price` - `gdp`.`value` / 100 * `g`.`price`
+                                      ELSE
+                                        `g`.`price`
+                                    END, 2
+                                  ) AS `dealer_price`')
+                    ->leftJoin("`rgzbn_gm_ceiling_goods_dealer_price` AS `gdp` ON `gdp`.`goods_id` = `g`.`id` AND `gdp`.`dealer_id` = $dealer_id");
+            }
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     public function getGoodsInCategories($dealer_id = null) {
         try {
             $temp_result = array();

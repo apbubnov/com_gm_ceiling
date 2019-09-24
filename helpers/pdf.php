@@ -1,18 +1,8 @@
 <?php
-
-/**
- * @version    CVS: 0.1.7
- * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- */
 defined('_JEXEC') or die;
-//echo Gm_ceilingHelpersPDF::Code(5);
 
 /* включаем библиотеку для формирования PDF */
-include_once($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-
+//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 /* Данный хелпер используется для создания pdf файлов. Например: Накладная. */
 class Gm_ceilingHelpersPDF {
 
@@ -60,12 +50,23 @@ class Gm_ceilingHelpersPDF {
                 $object->code = $symbol." ".self::Code($d->goods_id);
                 $object->unit = $units[$d->unit_id]->unit;
                 $object->unitCode = $d->unit_id;
-                $object->price = $d->price;
+
+
                 $object->number = $i++;
-                $object->count = $d->final_count;
-                $object->totalVAL = $d->price_sum;
-                $object->VALTotal = $object->totalVAL;
-                $sum += floatval($object->VALTotal);
+                $object->count = $d->count;
+                if(!empty(floatval($d->cost))){
+                    $object->price = $d->cost;
+                    $object->totalVAL = round($object->count*$d->cost,2);
+                    $object->VALTotal = $object->totalVAL;
+                    $sum += floatval($object->VALTotal);
+                }
+                else{
+                    $object->price = $d->dealer_price;
+                    $object->totalVAL = round($object->count*$d->dealer_price,2);
+                    $object->VALTotal = $object->totalVAL;
+                    $sum += floatval($object->VALTotal);
+                }
+
                 $PackingList[] = $object;
                 $SalesInvoice[] = $object;
 
