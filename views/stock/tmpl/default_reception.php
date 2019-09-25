@@ -1,5 +1,7 @@
 <?php
-
+$model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+$goodsInCategories = $model->getGoodsInCategories($dealer->id);
+$goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUOT));
 ?>
 <style>
     .ModalDoc {
@@ -104,9 +106,27 @@
 <div class="container">
 	<div class="row justify-content-md-center">
 		<div class="col-md-4 center">
-			<label>Штрихкод</label><br>
-			<input type="text" id="goods_id" class="form-control" style="width: 70%; display: inline-block;">
-			<button class="btn btn-large btn-primary" id="btn_show" style="margin-bottom: 4px;">ОК</button>
+            <div class="row">
+                <label>Штрихкод</label><br>
+                <input type="text" id="goods_id" class="form-control" style="width: 70%; display: inline-block;">
+                <button class="btn btn-large btn-primary" id="btn_show" style="margin-bottom: 4px;">ОК</button>
+            </div>
+            или
+            <div class="row" style="margin-bottom: 5px;">
+                <div class="col-md-12" style="margin-bottom: 5px;">
+                    <select class="form-control" id="choose_category">
+                        <option>Выберите категорию</option>
+                        <?php foreach ($goodsInCategories as $category){?>
+                            <option value="<?=$category->category_id?>"><?=$category->category_name?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 5px;">
+                    <select class="form-control" id="choose_goods">
+                    </select>
+                </div>
+            </div>
+
 		</div>
 		<div class="col-md-4 center"> 
 			<label>Поставщик</label><br>
@@ -153,9 +173,9 @@
                 <input type="checkbox" id="RetailCashOrder" name="page">
             </div>
             <div class="Right">
-                <button type="button" onclick="print_frame();"><i class="fa fa-print" aria-hidden="true"></i></button>
-                <button type="button" onclick="save_frame();"><i class="fas fa-save" aria-hidden="true"></i></button>
-                <button type="button" onclick="close_frame();"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <button type="button"><i class="fa fa-print" aria-hidden="true"></i></button>
+                <button type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
+                <button type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
@@ -163,8 +183,9 @@
 <script type="text/javascript">
 
 	var INPUT_COUNT='<input class="count center"/>',
-	INPUT_COST='<input class="cost center"/>',
-	BUTTON_DELETE='<button type="button" class="btn btn-danger delete"> <i class="fas fa-trash-alt"></i> </button>';
+        INPUT_COST='<input class="cost center"/>',
+        BUTTON_DELETE='<button type="button" class="btn btn-danger delete"> <i class="fas fa-trash-alt"></i> </button>',
+        goodsInCategories = JSON.parse('<?= $goodsInCategories_json?>');
 
 	jQuery(document).mouseup(function (e){
 		var div = jQuery("#mw_add_good");
@@ -199,11 +220,43 @@
         jQuery("#close_doc").click(function () {
             jQuery("#mw_doc").hide();
         });
+
+        jQuery("#choose_category").change(function(){
+            var selected_category = jQuery(this).val(),
+                goodsByCategory = goodsInCategories.filter(function(category){
+                    return category.category_id == selected_category;
+                })[0].goods;
+            jQuery("#choose_goods").empty();
+            jQuery("#choose_goods").append('<option>Выберите компонент</option>');
+            jQuery.each(goodsByCategory,function(index,elem){
+                jQuery("#choose_goods").append('<option value = "'+elem.goods_id+'">'+elem.name+'</option>');
+            });
+            jQuery("#div_goods_select").show();
+        });
+
+        jQuery("#choose_goods").change(function() {
+            var selectedId = jQuery(this).val(),
+                goodsByCategory = goodsInCategories.filter(function(category){
+                    return category.category_id == jQuery("#choose_category").val();
+                })[0].goods,
+                selected_goods = goodsByCategory.filter(function (elem) {
+                    console.log(elem);
+                    return elem.goods_id == selectedId;
+                })[0];
+            addGoodsInTable(selected_goods);
+
+        });
 	});
 
 	document.getElementById('btn_show').onclick = function() {
 		getData();
 	};
+
+    function addGoodsInTable(goods){
+        console.log(goods);
+        jQuery("#tgoods > tbody").append('<tr data-id="'+goods.goods_id+'"></tr>');
+        jQuery("#tgoods > tbody > tr:last").append('<td>'+goods.goods_id+'</td><td>'+goods.name+'</td><td>'+INPUT_COUNT+'</td><td>'+INPUT_COST+'</td><td>'+BUTTON_DELETE+'</td>');
+    }
 
 	function getData() {
 		jQuery.ajax({

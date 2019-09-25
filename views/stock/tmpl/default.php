@@ -34,9 +34,9 @@ $userGroup = $user->groups;
     <p class="center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=reception', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Прием</a>
     </p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=inventory', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Инвентаризация</a>
-    </p>
+    <!--<p class="center">
+        <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=inventory', false, 2); */?>"><i class="fa fa-bars" aria-hidden="true"></i> Инвентаризация</a>
+    </p>-->
     <p class="center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=goods', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> На складе</a>
     </p>

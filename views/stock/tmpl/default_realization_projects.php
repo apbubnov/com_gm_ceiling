@@ -114,7 +114,7 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
 <div class="Actions">
     <?= parent::getButtonBack(); ?>
     <a class="btn btn-large btn-primary" id="Create"
-       href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=create', false, 2); ?>"
+       href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=create', false, 2); ?>"
        style="margin-left: 10px;"><i class="fas fa-edit" aria-hidden="true"></i> Создать реализацию</a>
 </div>
 <div class="Projects">
@@ -131,7 +131,7 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
         </thead>
         <tbody>
         <? foreach ($projects as $p):?>
-            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=project&id=' . (int)$p->id); ?>">
+            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=project&id=' . (int)$p->id); ?>">
                 <td class="Name"><?= $p->id; ?></td>
                 <td class="Name"><?= $p->name; ?></td>
                 <td class="Client"><?= $p->client; ?></td>

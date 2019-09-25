@@ -1369,7 +1369,7 @@ class Gm_ceilingModelProjects extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('p.id,p.project_info,u.id,u.name,DATE_FORMAT(ph.date_of_change,\'%d.%m.%Y\') AS `date`')
+                ->select('p.id,p.project_info,u.id as user_id,u.name,DATE_FORMAT(ph.date_of_change,\'%d.%m.%Y\') AS `date`')
                 ->from('`rgzbn_gm_ceiling_projects` AS p')
                 ->innerjoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = p.id')
                 ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
