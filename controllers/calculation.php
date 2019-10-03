@@ -289,8 +289,26 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $calcsId = $jinput->get('calcs',"", 'STRING');
             $calcsId = json_decode($calcsId);
+            $dealer_id = $jinput->getInt('dealer_id');
+            if(empty($dealer_id)){
+                throw new Exception("Empty dealer_id");
+            }
+            $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
             foreach ($calcsId as $id){
-                Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
+                $all_jobs = $model_calcform->getJobsPricesInCalculation($id, $dealer_id); // Получение работ по прайсу дилера
+                $stages = [];
+                foreach ($all_jobs as $value) {
+                    $stages[$value->mount_type_id] += $value->price_sum;
+                }
+                if(empty($stages)){
+                    $stages[2] = 0;
+                    $stages[3] = 0;
+                    $stages[4] = 0;
+                }
+                $calcMountData['id'] = $id;
+                $calcMountData['stages'] = $stages;
+                $calcsMountModel = self::getModel('calcs_mount');
+                $calcsMountModel->save($calcMountData);
             }
             die(json_encode(true));
         }

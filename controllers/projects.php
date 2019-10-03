@@ -17,29 +17,28 @@ defined('_JEXEC') or die;
  */
 class Gm_ceilingControllerProjects extends Gm_ceilingController
 {
-	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional
-	 * @param   array   $config  Configuration array for model. Optional
-	 *
-	 * @return object	The model
-	 *
-	 * @since	1.6
-	 */
-	public function &getModel($name = 'Projects', $prefix = 'Gm_ceilingModel', $config = array())
-	{
-		try {
-			$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-			
-			return $model;
-		}
-		catch(Exception $e) {
+    /**
+     * Proxy for getModel.
+     *
+     * @param   string $name The model name. Optional.
+     * @param   string $prefix The class prefix. Optional
+     * @param   array $config Configuration array for model. Optional
+     *
+     * @return object    The model
+     *
+     * @since    1.6
+     */
+    public function &getModel($name = 'Projects', $prefix = 'Gm_ceilingModel', $config = array())
+    {
+        try {
+            $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+
+            return $model;
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
-	}
+    }
 
     public function deleteEmptyProject()
     {
@@ -48,87 +47,87 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             $client_id = $jinput->get('client_id', 1, 'INT');
             $user = JFactory::getUser();
             $model = $this->getModel('Projects', 'Gm_ceilingModel');
-            if($user->dealer_type == 1) {
+            if ($user->dealer_type == 1) {
                 $model->deleteEmptyProject($client_id);
             }
             die(true);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
 
-    function getProjectsInfo(){
-    	try {
+    function getProjectsInfo()
+    {
+        try {
             $jinput = JFactory::getApplication()->input;
             $projects_str = $jinput->get('projects', '', 'STRING');
             $model = $this->getModel('Projects', 'Gm_ceilingModel');
             $result = $model->getInfoDealersAnalytic($projects_str);
             die(json_encode($result));
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
 
-    function getUnpaidProjects(){
-	    try{
-	        $jinput = JFactory::getApplication()->input;
-	        $dealer_id = $jinput->get("dealer_id",null,"INT");
+    function getUnpaidProjects()
+    {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $dealer_id = $jinput->get("dealer_id", null, "INT");
             $model = $this->getModel('Projects', 'Gm_ceilingModel');
             $result = $model->getUnpaidProjects($dealer_id);
             die(json_encode($result));
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function duplicate(){
-	    try{
+    function duplicate()
+    {
+        try {
             $jinput = JFactory::getApplication()->input;
             $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $calcModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
             $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $ids = $jinput->get('clients',array(),'ARRAY');
-            $fromId = $jinput->get('idFrom',null,'INT');
+            $ids = $jinput->get('clients', array(), 'ARRAY');
+            $fromId = $jinput->get('idFrom', null, 'INT');
             $fromProjects = $projectsModel->getClientsProjects($fromId);
             $toDupProjects = [];
-            foreach ($ids as $id){
+            foreach ($ids as $id) {
                 foreach ($projectsModel->getClientsProjects($id) as $value)
-                    array_push($toDupProjects,$value);
+                    array_push($toDupProjects, $value);
             }
             foreach ($toDupProjects as $dupProj) {
                 $calculationsModel->deleteAllByProjectId($dupProj->id);
             }
-            foreach ($fromProjects as $proj){
+            foreach ($fromProjects as $proj) {
                 $calcsId = $calculationsModel->getIdsByProjectId($proj->id);
-                foreach ($calcsId as $calcId){
+                foreach ($calcsId as $calcId) {
                     $calcData = $calcModel->new_getData($calcId->id);
                     unset($calcData->id);
                     $calcData = get_object_vars($calcData);
                     $mountData = $calcsMountModel->getData($calcId->id);
                     $calcData['mountData'] = $mountData;
-                    foreach ($toDupProjects as $dupProj){
-                        if($dupProj->project_info == $proj->project_info){
+                    foreach ($toDupProjects as $dupProj) {
+                        if ($dupProj->project_info == $proj->project_info) {
                             $calcData['canvas_area'] = $canvasesModel->getCutsData($calcId->id);
                             $calcData['project_id'] = $dupProj->id;
                             $newCalcId = $calcModel->duplicate($calcData);
 
-                            $oldFileName = md5('calculation_sketch'.$calcId->id);
-                            $oldImage = $_SERVER['DOCUMENT_ROOT']."/calculation_images/$oldFileName.svg";
-                            $newFileName = md5('calculation_sketch'.$newCalcId);
-                            $newImage =  $_SERVER['DOCUMENT_ROOT']."/calculation_images/$newFileName.svg";
+                            $oldFileName = md5('calculation_sketch' . $calcId->id);
+                            $oldImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$oldFileName.svg";
+                            $newFileName = md5('calculation_sketch' . $newCalcId);
+                            $newImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$newFileName.svg";
                             copy($oldImage, $newImage);
                             //раскрой
-                            $oldCutFileName = md5('cut_sketch'.$calcId->id);
-                            $oldCutImage = $_SERVER['DOCUMENT_ROOT']."/cut_images/$oldCutFileName.svg";
-                            $newCutFileName = md5('cut_sketch'.$newCalcId);
-                            $newCutImage =  $_SERVER['DOCUMENT_ROOT']."/cut_images/$newCutFileName.svg";
+                            $oldCutFileName = md5('cut_sketch' . $calcId->id);
+                            $oldCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$oldCutFileName.svg";
+                            $newCutFileName = md5('cut_sketch' . $newCalcId);
+                            $newCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$newCutFileName.svg";
                             copy($oldCutImage, $newCutImage);
                         }
                     }
@@ -136,12 +135,13 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             }
 
             die(json_encode(true));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function getProjectsForBuh($dateFrom, $dateTo) {
+    function getProjectsForBuh($dateFrom, $dateTo)
+    {
         try {
             if (empty($dateFrom) && empty($dateTo)) {
                 $jinput = JFactory::getApplication()->input;
@@ -151,26 +151,34 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $result = $projectsModel->getProjectsForBuh($dateFrom, $dateTo);
             die(json_encode($result));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    function getMeasures(){
-	    try{
+    function getMeasures()
+    {
+        try {
             $jinput = JFactory::getApplication()->input;
             $dateFrom = $jinput->get('dateFrom', date('Y-m-d'), 'STRING');
             $dateTo = $jinput->get('dateTo', date('Y-m-d'), 'STRING');
             $type = $jinput->get('type', '', 'STRING');
-            $subtype = $jinput->get('subtype','', 'STRING');
+            $subtype = $jinput->get('subtype', '', 'STRING');
             $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $result = $projectsModel->getProjectsData($type,$subtype,$dateFrom,$dateTo);
-            foreach ($result as $key=>$value){
-                $result[$key]->note = Gm_ceilingHelpersGm_ceiling::getProjectNotes($value->id,2);
+            $result = $projectsModel->getProjectsData($type, $subtype, $dateFrom, $dateTo);
+            foreach ($result as $key => $value) {
+                if (!empty($value->read_by_manager)) {
+                    $manager = JFactory::getUser($value->read_by_manager);
+                } else {
+                    if (!empty($value->created_by)) {
+                        $manager = JFactory::getUser($value->created_by);
+                    }
+                }
+                $value->manager_name = (!empty($manager)) ? $manager->name : "-";
+                $result[$key]->note = Gm_ceilingHelpersGm_ceiling::getProjectNotes($value->id, 2);
             }
             die(json_encode($result));
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

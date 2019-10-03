@@ -43,6 +43,8 @@ $projects = $this->items;
 
     <tbody>
         <?php foreach ($projects as $project){
+            $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project->id);
+            $project->mounting_sum += $transport['mounter_sum'];
             $project_sum = (!empty(floatval($project->project_sum))) ? $project->project_sum :$project->project_margin_sum+$project->transport_cost;?>
             <tr data-canv_sum ="<?=$project->canvases_sum;?>" data-comp_sum="<?=$project->components_sum;?>" data-mount_sum="<?=$project->mounting_sum?>">
                 <td class="center">

@@ -527,6 +527,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$comment = $jinput->get('comment', '', 'STRING');
 			$manager_note = $jinput->get('manager_note', '', 'STRING');
 
+			$user = JFactory::getUser($dealer_id);
+			$userType = $user->dealer_type;
+
 			$data = array();
 			$data['id'] = $calc_id;
 			$data['extra_components'] = strlen($extra_components) < 10 ? '' : $extra_components;
@@ -548,11 +551,14 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$model_calcform->addGoodsInCalculation($calc_id, $goods, false); // Добавление компонентов
 
 			$all_jobs = [];
-
 			if (!empty($need_mount)) {
 				$model_calcform->addJobsInCalculation($calc_id, $jobs, false); // Добавление работ
 				if ($need_mount == 1) {
-					$all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу дилера
+                    $all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу дилера
+                    if($userType == 3 ){
+                        $all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, 1); // Получение работ по прайсу ГМ
+                    }
+
 				} elseif ($need_mount == 2) {
 					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу монажной службы
 				}
@@ -595,6 +601,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$mounting_sum = 0;
 			$mounting_sum_with_margin = 0;
 			$canvas_price = 0;
+            $stages = [];
 
 			$calculation = $model_calculation->getBaseCalculationDataById($calc_id);
 			if (empty($calculation)) {
@@ -645,10 +652,22 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             	$canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
             }
 
+            //throw new Exception(print_r($all_jobs,true));
 			foreach ($all_jobs as $value) {
 				$mounting_sum += $value->price_sum;
 				$mounting_sum_with_margin += $value->price_sum_with_margin;
+                $stages[$value->mount_type_id] += $value->price_sum;
 			}
+            if(empty($stages)){
+                $stages[2] = 0;
+                $stages[3] = 0;
+                $stages[4] = 0;
+            }
+            $calcMountData['id'] = $data['id'];
+            $calcMountData['stages'] = $stages;
+            $calcsMountModel = self::getModel('calcs_mount');
+            $calcsMountModel->save($calcMountData);
+
 			$mounting_sum += $extra_mounting_sum;
 			$mounting_sum_with_margin += $extra_mounting_sum * 100 / (100 - $mounting_margin);
 

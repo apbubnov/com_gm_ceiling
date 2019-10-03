@@ -334,6 +334,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->select('`p`.`dealer_name`');
 
                     if ($subtype == 'calendar') {
+                        $query->select('p.read_by_manager');
                         $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
                                         DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
                         $query->where('`p`.`project_status` = 1');

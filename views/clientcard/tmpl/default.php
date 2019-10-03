@@ -337,7 +337,7 @@
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
         <p>
             <button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>
-            <button type="button" id="cancel" class="btn btn-primary">Отмена</button>
+            <button type="button" id="cancel_fio" class="btn btn-primary">Отмена</button>
         </p>
     </div>
     <div id="mw_change_manager" class="modal_window">
@@ -349,7 +349,7 @@
             </select> </p>
         <p>
             <button type="button" id="save_new_manager" class="btn btn-primary">Сохранить</button>
-            <button type="button" class="btn btn-primary cancel">Отмена</button>
+            <button type="button" class="btn btn-primary cancel" id="cancel_manager">Отмена</button>
         </p>
     </div>
 </div>
@@ -357,17 +357,17 @@
 <script>
     var client_id = '<?php echo $this->item->id;?>';
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-    var div = jQuery("#mw_call"), // тут указываем ID элемента
-        div1 = jQuery("#mw_change_manager");
-    if (!div.is(e.target) // если клик был не по нашему блоку
-        && div.has(e.target).length === 0 &&
-        div1.is(e.target) // если клик был не по нашему блоку
-        && div1.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#btn_close").hide();
-			jQuery("#mw_container").hide();
-			jQuery("#mw_call").hide();
-            jQuery("#mw_change_manager").hide();
-		}
+        var div = jQuery("#mw_call"), // тут указываем ID элемента
+            div1 = jQuery("#mw_change_manager");
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0 &&
+            div1.is(e.target) // если клик был не по нашему блоку
+            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#btn_close").hide();
+                jQuery("#mw_container").hide();
+                jQuery("#mw_call").hide();
+                jQuery("#mw_change_manager").hide();
+            }
 	});
 
     jQuery("#edit_manager").click(function () {
@@ -375,6 +375,19 @@
         jQuery("#mw_container").show();
         jQuery("#mw_change_manager").show("slow");
     });
+
+    jQuery("#cancel_fio").click(function(){
+        jQuery("#btn_close").hide();
+        jQuery("#mw_container").hide();
+        jQuery("#mw_call").hide();
+    });
+
+    jQuery("#cancel_manager").click(function(){
+        jQuery("#btn_close").hide();
+        jQuery("#mw_container").hide();
+        jQuery("#mw_change_manager").hide();
+    });
+
 
     jQuery("#update_fio").click(function(){
         jQuery.ajax({

@@ -36,7 +36,21 @@ class Gm_ceilingControllerAnalytic extends Gm_ceilingController
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function getIssuedData(){
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $date_from = $jinput->get('date_from', date('Y-m-d'), 'STRING');
+            $date_to = $jinput->get('date_to', date('Y-m-d'), 'STRING');
+            $dealersAnalyticModel = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
+            $issuedData = json_encode($dealersAnalyticModel->getIssuedData($date_from, $date_to));
+            die($issuedData);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

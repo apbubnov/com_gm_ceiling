@@ -1083,7 +1083,7 @@ foreach($all_builders as $builder){
                         '<span name="total_fl_sum"></span>'+
                     '</td>');
 
-                for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button,n7_val,n7_cost; j < elem.projects.length; j++) {
+                for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button; j < elem.projects.length; j++) {
                     var mountersArr = [],
                     val = parseFloat(elem.projects[j].value);
                     sum = parseFloat(elem.projects[j].sum);
@@ -1097,8 +1097,6 @@ foreach($all_builders as $builder){
 
                     }
                     var mountersStr = '<div class="row" style="font-size:9pt;">';
-                    n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
-                    n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "---"
                     mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
                     acceptDoneBtn = "";
                     button = ACCEPT_BUTTON;
@@ -1142,10 +1140,6 @@ foreach($all_builders as $builder){
                             break;
                     }
                     var isDefect = checkDefect(elem.projects[j].calcs);
-
-                    var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
-                        "<div class='col-md-6'>Пл"+ n7_val + "</div><div class='col-md-6'><span class='sum'>"+n7_cost+"</span></div>" +
-                        "</div>" : "";
                     var defect_div;
                     if(isDefect == 1){
                         defect_div ="<div class='right'>"+DEFECT_ICON+"</div>";
@@ -1161,7 +1155,6 @@ foreach($all_builders as $builder){
                         "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
                         "</div>" +
-                        n7 +
                         "<div class='row center' style='margin-bottom: 5px'>" +
                         "<div class='col-md-12' name='mounter_div'><button name = 'btn_mounters'class='btn btn-primary btn-sm'>Монтажники</buuton></div>" +
                         "</div>"
@@ -1529,7 +1522,8 @@ foreach($all_builders as $builder){
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=calculation.recalcMount",
                     data: {
-                        calcs: JSON.stringify(calcsId)
+                        calcs: JSON.stringify(calcsId),
+                        dealer_id: '<?php echo $dealer->id?>'
                     },
                     method : 'POST',
                     dataType: "json",

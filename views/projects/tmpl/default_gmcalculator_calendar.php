@@ -20,6 +20,9 @@ $groups = $user->get('groups');
 $jinput = JFactory::getApplication()->input;
 $type = $jinput->get('type', '', 'STRING');
 $subtype = $jinput->get('subtype', '', 'STRING');
+foreach ($this->items as $item){
+
+}
 ?>
 <?=parent::getButtonBack();?>
 
@@ -56,6 +59,9 @@ $subtype = $jinput->get('subtype', '', 'STRING');
             <th class="center">
                 Дилер
             </th>
+            <th class="center">
+                Менеджер
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -83,6 +89,18 @@ $subtype = $jinput->get('subtype', '', 'STRING');
                 </td>
                 <td class="center one-touch">
                     <?php echo $item->dealer_name; ?>
+                </td>
+                <td class="center one-touch">
+                    <?php if(!empty($item->read_by_manager)){
+                        $manager = JFactory::getUser($item->read_by_manager);
+                    }
+                    else{
+                        if(!empty($item->created_by)){
+                            $manager = JFactory::getUser($item->created_by);
+                        }
+                    }
+                    $item->manager_name = (!empty($manager)) ? $manager->name : "-"?>
+                    <?= $item->manager_name; ?>
                 </td>
             </tr>
 
@@ -178,9 +196,13 @@ $subtype = $jinput->get('subtype', '', 'STRING');
 
     function fillProjectsTable(projects){
         var dateFrom = jQuery("#measure_from").val(),
-            dateTo = jQuery("#measure_to").val();
+            dateTo = jQuery("#measure_to").val(),
+            thDate = jQuery("#date");
+        console.log(empty(thDate));
         if(dateFrom != dateTo) {
-            jQuery("#project_id").after('<th>Дата</th>');
+            if(thDate.length == 0){
+                jQuery("#project_id").after('<th id="date">Дата</th>');
+            }
             jQuery("#measure_preiod").empty();
             jQuery("#measure_preiod")[0].innerHTML = 'c '+changeDateFormat(dateFrom)+' по '+changeDateFormat(dateTo);
         }
@@ -202,7 +224,8 @@ $subtype = $jinput->get('subtype', '', 'STRING');
                                                             '<td>'+elem.project_info+'</td>' +
                                                             '<td>'+noteStr+'</td>' +
                                                             '<td>'+elem.client_name+'<br>'+client_contacts+'</td>'+
-                                                            '<td>'+elem.dealer_name+'</td>');
+                                                            '<td>'+elem.dealer_name+'</td>'+
+                                                            '<td>'+elem.manager_name+'</td>');
         });
 
         OpenPage();

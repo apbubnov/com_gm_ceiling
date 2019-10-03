@@ -1096,8 +1096,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         throw new Exception("EMPTY!!!");
                     }
                 }
-                //$stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
-                //$projectModel->change_status($projectId,8);//переводим в статус "Выдан"
+                $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
+                $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
 
                 $date = date("Y-m-d H:i:s");
                 $dateFormat = (object)[];

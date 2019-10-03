@@ -849,8 +849,21 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                                 foreach ($mount_data as $value) {
                                     $c_date = date_create($value->time);
                                     date_sub($c_date, date_interval_create_from_date_string('1 day'));
+
+                                    $checkDate = date_format($c_date,'Y-m-d');
+
+                                    if(date('N',strtotime($checkDate)) == 7){
+                                        date_sub($c_date, date_interval_create_from_date_string('2 days'));
+                                        //$callbackDate = ($measureDate->sub(date_interval_create_from_date_string('2 days')))->format('Y-m-d');
+                                    }
+                                    if(date('N',strtotime($checkDate)) == 6){
+                                        date_sub($c_date, date_interval_create_from_date_string('2 days'));
+                                        //$callbackDate = ($measureDate->sub(date_interval_create_from_date_string('1 days')))->format('Y-m-d');
+                                    }
+
                                     $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$manager_id);
-                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
+                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
+
                                 }
 
                                 $projects_mounts_model->save($project_id,$mount_data);

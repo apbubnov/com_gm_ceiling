@@ -33,7 +33,10 @@ $gm_price = json_encode($model_prices->getJobsDealer(1));
 
 $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
 $dealer_info = $model_dealer_info->getDealerInfo($userId);
-
+$style = "";
+if($userType == 7){
+    $style = "style=\"display:none;\"";
+}
 ?>
 
 
@@ -72,44 +75,45 @@ $dealer_info = $model_dealer_info->getDealerInfo($userId);
     <a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
   </div>
 <?php } ?>
-<form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
-  <input type="hidden" name="jform[dealer_id]" id="jform_dealer_id" value="<?php echo $userId?>">
-  <?php if($userType != 7) { ?>
-    <h3 class="caption1">Редактирование маржинальности</h3>
-    <h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="control-group">
-          <div class="control-label">
-            <label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >от полотен</label>
-          </div>
-          <div class="controls">
-            <input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" class="required" style="width:100%;" size="3" required aria-required="true" value = "<?=$dealer_info->dealer_canvases_margin;?>" />
-          </div>
+<div id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
+    <input type="hidden" name="jform[dealer_id]" id="jform_dealer_id" value="<?php echo $userId?>">
+    <div <?=$style?>
+        <h3 class="caption1">Редактирование маржинальности</h3>
+        <h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >от полотен</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dejform_dealer_canvases_marginaler_canvases_margin]" id="jform_dealer_canvases_margin" class="required" style="width:100%;" size="3" required aria-required="true" value = "<?=$dealer_info->dealer_canvases_margin;?>" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">от комплектующих</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value = "<?=$dealer_info->dealer_components_margin;?>"  class="required"style="width:100%;" size="3" required aria-required="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="control-group">
+                    <div class="control-label">
+                        <label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">от монтажа</label>
+                    </div>
+                    <div class="controls">
+                        <input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value = "<?=$dealer_info->dealer_mounting_margin;?>"  class="required" style="width:100%;"size="3" required aria-required="true" />
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="control-group">
-          <div class="control-label">
-            <label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">от комплектующих</label>
-          </div>
-          <div class="controls">
-            <input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value = "<?=$dealer_info->dealer_components_margin;?>"  class="required"style="width:100%;" size="3" required aria-required="true" />
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="control-group">
-          <div class="control-label">
-            <label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">от монтажа</label>
-          </div>
-          <div class="controls">
-            <input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value = "<?=$dealer_info->dealer_mounting_margin;?>"  class="required" style="width:100%;"size="3" required aria-required="true" />
-          </div>
-        </div>
-      </div>
     </div>
-  <?php } ?>
+</div>
   <h3 class="caption1">Редактирование прайса монтажа</h3>
   <div>
     <button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
@@ -132,7 +136,7 @@ $dealer_info = $model_dealer_info->getDealerInfo($userId);
   <?php } ?>
 </div>
 
-<?php if($userType != 7) { ?>
+<div <?= $style;?>>
   <h3 class="caption1">Минимальная сумма заказа</h3>
   <div class="row">
     <div class="col-md-4">
@@ -162,7 +166,7 @@ $dealer_info = $model_dealer_info->getDealerInfo($userId);
         </div>
     </div>
   </div>
-<?php }?>
+</div>
 <div  class = "col-md-12" style="margin-top:15px;">
   <div class = "col-md-4"></div>
   <div class = "col-md-4">
