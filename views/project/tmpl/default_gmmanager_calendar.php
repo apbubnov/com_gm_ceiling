@@ -176,7 +176,7 @@
                                 <option value="<?php echo $item['id'] ?>"><?php echo $item['advt_title'] ?></option>
                             <?php } ?>
                         </select>
-                        <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="fa fa-plus-square-o" aria-hidden="true"></i></button>
+                        <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="far fa-plus-square"></i></button>
                         <select id="recoil_choose" name ="recoil_choose" style="display:none;">
                             <option value="0">-Выберите откатника-</option>
                             <?php foreach ($all_recoil as $item) { ?>
@@ -184,9 +184,7 @@
                             <?php } ?>
                         </select>
                         <button type="button" id = "show_window" style = "display:none;" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        <div id="new_advt_div" style="display:none;"><input id="new_advt_name" placeholder="Название рекламы"><br>
-                            <button type="button" class="btn btn-primary" id="save_advt">Ok</button>
-                        </div>
+
                     <?php } ?>
                 </h5>
             </div>
@@ -521,6 +519,25 @@
         <br>
         <button class="btn btn-primary act_btn" id="add_call_and_submit_up" type="button"><i class="fas fa-save" aria-hidden="true"></i> Сохранить</button>
     </div>
+    <div class="modal_window" id="mw_new_adwt">
+        <h4>Добавление нового вида рекламы</h4>
+        <div class="row">
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-10">
+                    <input id="new_advt_name" class="form-control"  placeholder="Название рекламы">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" id="save_advt">Ok</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+
+            </div>
+        </div>
+    </div>
 </div>
 </form>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
@@ -541,7 +558,8 @@
             div2 = jQuery("#mw_measures_calendar"),
             div3 = jQuery("#mw_call_up"),
             div4 = jQuery("#mw_find_client"),
-            div5 = jQuery("#mw_mounts_calendar");
+            div5 = jQuery("#mw_mounts_calendar"),
+            div6 = jQuery("#mw_new_adwt");
         if (!div1.is(e.target)
             && div1.has(e.target).length === 0
             && !div2.is(e.target)
@@ -551,7 +569,9 @@
             && !div4.is(e.target)
             && div4.has(e.target).length === 0
             && !div5.is(e.target)
-            && div5.has(e.target).length === 0) {
+            && div5.has(e.target).length === 0
+            && !div6.is(e.target)
+            && div6.has(e.target).length === 0) {
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             div1.hide();
@@ -559,6 +579,7 @@
             div3.hide();
             div4.hide();
             div5.hide();
+            div6.hide();
         }
     });
 
@@ -1396,7 +1417,9 @@
     });
 
     jQuery("#add_new_dvt").click(function () {
-        jQuery("#new_advt_div").toggle();
+        jQuery("#mw_container").show();
+        jQuery("#mw_new_adwt").show('slow');
+        jQuery("#close").show();
     })
 
     jQuery("#save_advt").click(function() {
@@ -1416,6 +1439,9 @@
                 select.appendChild(opt);
                 jQuery("#new_advt_div").hide();
                 jQuery("#selected_advt").val(data.id);
+                jQuery('#mw_container').hide();
+                jQuery('#mw_new_adwt').hide();
+                jQuery('#close').hide();
             },
             error: function (data) {
                 console.log(data);

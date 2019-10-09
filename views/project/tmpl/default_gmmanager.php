@@ -19,10 +19,15 @@ $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
 /*______________*/
 
 $project_id = $this->item->id;
 $calculations = $model_calculations->new_getProjectItems($this->item->id);
+foreach ($calculations as $calculation){
+    $calculation->goods = $calculationModel->getGoodsFromCalculation($calculation->id);
+    $calculation->jobs = $calculationModel->getJobsFromCalculation($calculation->id);
+}
 $type = $jinput->get('type', '', 'STRING');
 $subtype = $jinput->get('subtype', '', 'STRING');
 $client = $client_model->getClientById($this->item->id_client);
@@ -57,15 +62,19 @@ $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"m
 $mounter_approve = true;
 
 /*ГЕНЕРАЦИЯ ПДФ*/
-/*foreach($calculations as $calc){
-    if(!empty($calc->n3)){
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
-        Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
+$canvases_sum = [];
+$model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
+foreach($calculations as $calc){
+    $all_goods = $model_calcform->getGoodsPricesInCalculation($calc->id, $this->item->dealer_id);
+    foreach ($all_goods as $goods) {
+        if ($goods->category_id == 1) {
+            $canvases_sum[$calc->id] = $goods->price_sum;
+            break;
+        }
     }
-    $mount = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calc->id);
-    $calc->total_gm_mount_sum = $mount['total_gm_mounting'];
-    $calc->total_dealer_mount_sum = $mount['total_dealer_mounting'];
-}*/
+}
+
+
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
@@ -193,10 +202,11 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     </thead>
                     <tbody>
                     <?php
+                    $calc_data = [];
                         foreach ($calculations as $calculation) {
                             $common_canvases_sum += $calculation->canvases_sum;
                             $total_components_sum += $calculation->components_sum;
-                            $calc_data = [];
+
 
                             $canvas = array_filter(
                                 $calculation->goods,
@@ -205,6 +215,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                 }
                             );
                             if (!empty($canvas)) {
+
                                 $filter = "id = ".$canvas[0]->id;
                                 $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
                                 $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
@@ -231,9 +242,9 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                     "n5" => $calculation->n5,
                                     "n9" => $calculation->n9,
                                     "widths" => $widths,
-                                    "texture" => $canvas->texture_id,
-                                    "manufacturer" => $canvas->manufacturer_id,
-                                    "color" => $canvas->color_id,
+                                    "texture" => $detailed_canvas[0]->texture_id,
+                                    "manufacturer" => $detailed_canvas[0]->manufacturer_id,
+                                    "color" => $detailed_canvas[0]->color,
                                     "walls" => $calculation->original_sketch
                                 );
                                 $widths = json_encode($widths);
@@ -244,7 +255,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                             <td>
-                                <?php echo $calculation->canvases_sum;?> руб.
+                                <?php echo $canvases_sum[$calculation->id]?> руб.
                             </td>
                             <td>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
@@ -610,8 +621,11 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
 
             let calc_data = JSON.parse('<?php echo json_encode($calc_data);?>');
             jQuery("[name = 'change_cut']").click(function(){
+
                 let id = jQuery(this).data('calc_id');
+                console.log("id",id);
                 let data = calc_data[id];
+                console.log(calc_data);
                 jQuery("#calc_id").val(id);
                 jQuery('#texture').val(data.texture);
                 jQuery("#color").val(data.color);

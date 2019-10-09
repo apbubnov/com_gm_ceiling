@@ -109,7 +109,7 @@ class Gm_ceilingController extends JControllerLegacy
                             $app->input->set('type', $type);
                         }
                     } else {
-                        $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
+                        $this->setRedirect(JRoute::_('index.php?option=com_users&view=registration', false));
                     }
                 }
             }
@@ -3469,6 +3469,60 @@ public function register_mnfctr(){
             }
             die(true);
         } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function register_from_login(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $fio = $jinput->get('fio','','STRING');
+            $phone = $jinput->get('phone','','STRING');
+            $isDealer = $jinput->getInt('isDealer');
+
+            $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
+
+            $client_data['client_name'] = $fio;
+            $client_data['client_contacts'] = $phone;
+            $client_id = $clientform_model->save($client_data);
+            if(!$isDealer){
+                if (mb_ereg('[\d]', $client_id)) {
+                    $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации на calc.gm-vrn');
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
+                } else {
+                    $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент пытался зарегистрироваться на calc.gm-vrn', $client->id, 1);
+                }
+            }
+            else{
+                $email = $jinput->get('email', '', 'STRING');
+                $city = $jinput->get('city', '', 'STRING');
+
+                if (mb_ereg('[\d]', $client_id)) {
+                    //создание user'а
+                    $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($fio, $phone, $email, $client_id, 1);
+                    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+                    $client_model->updateClient($client_id,null,$dealer_id);
+                    $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+                    $dealer_info_model->update_city($dealer_id,$city);
+                    $clients_dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                    $clients_dop_contacts->save($client_id,1,$email);
+                    $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый дилер', $client->id, 1);
+
+                }
+                else{
+                    $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент пытался зарегистрироваться как дилер на calc.gm-vrn', $client->id, 1);
+                }
+
+            }
+            die(json_encode(true));
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

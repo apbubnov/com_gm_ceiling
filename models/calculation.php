@@ -211,6 +211,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 	public function new_getData($id){
 		try{
 			if(!empty($id)){
+			    //$calculationFormModel = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true);
 				$item = $this->getBaseCalculationDataById($id);
@@ -224,6 +225,14 @@ class Gm_ceilingModelCalculation extends JModelItem
 					->where('calc.id  = ' . $id);
 				$db->setQuery($query);
 				$item->dealer_id = $db->loadObject()->dealer_id;
+				/*$allGoods = $calculationFormModel->getGoodsPricesInCalculation($id,$item->dealer_id);
+                if(!empty($calculation->cancel_metiz)){
+                    $item->allGoods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($allGoods);
+                }
+                else{
+                    $item->allGoods = $allGoods;
+                }
+                $item->allJobs = $calculationFormModel->getJobsPricesInCalculation($id,$item->dealer_id);*/
 				return $item;
 			}
 			else{
@@ -607,30 +616,23 @@ class Gm_ceilingModelCalculation extends JModelItem
 
     function duplicate($data){
 	    try{
+            $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             //throw new Exception(print_r($data,true));
-            $n13 = $data['n13'];
-            $n14 = $data['n14'];
-            $n15 = $data['n15'];
-            $n22 = $data['n22'];
-            $n23 = $data['n23'];
-            $n26 = $data['n26'];
-            $n29 = $data['n29'];
-            $n19 = $data['n19'];
+            $dealer_id = $data['dealer_id'];
             $mountData = $data['mountData'];
             $canvasesArea = $data['canvas_area'];
-            unset($data['n13']);
-            unset($data['n14']);
-            unset($data['n15']);
-            unset($data['n22']);
-            unset($data['n23']);
-            unset($data['n26']);
-            unset($data['n29']);
-            unset($data['n19']);
+            $goods = $data['goods'];
+            $jobs = $data['jobs'];
+
             unset($data['dealer_id']);
             unset($data['mountData']);
             unset($data['canvas_area']);
+            unset($data['goods']);
+            unset($data['jobs']);
+
+
             $columns = array_keys($data);
             $values = array_values($data);
             foreach ($values as $key=>$value){
@@ -646,6 +648,9 @@ class Gm_ceilingModelCalculation extends JModelItem
             $db->execute();
             $calculationId = $db->insertId();
 
+            $model_calcform->addGoodsInCalculation($calculationId, $goods, false); // Добавление компонентов
+            $model_calcform->addJobsInCalculation($calculationId, $jobs, false); // Добавление работ
+
             if(!empty($mountData)){
                 $query = $db->getQuery(true);
                 $query
@@ -658,92 +663,6 @@ class Gm_ceilingModelCalculation extends JModelItem
                 $db->execute();
             }
 
-            if (!empty($n13)) {
-                $query = $db->getQuery(true);
-                $query
-                    ->insert('`#__gm_ceiling_fixtures`')
-                    ->columns('`calculation_id`, `n13_count`, `n13_type`, `n13_size`');
-
-                foreach ($n13 as $value) {
-                    $query->values($calculationId . ', ' . $value->n13_count . ', ' . $value->n13_type . ', ' . $value->n13_size);
-                }
-                $db->setQuery($query);
-                $db->execute();
-
-            }
-
-            if (!empty($n14)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_pipes`')
-                    ->columns('calculation_id, n14_count, n14_size');
-                foreach ($n14 as $value) {
-                    $query->values($calculationId . ', ' . $value->n14_count . ', ' . $value->n14_size);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n15)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_cornice`')
-                    ->columns('calculation_id, n15_count, n15_type, n15_size');
-                foreach ($n15 as $value) {
-                    $query->values($calculationId . ', ' . $value->n15_count . ', ' . $value->n15_type . ', ' . $value->n15_size);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n22)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_hoods`')
-                    ->columns('calculation_id, n22_count, n22_type, n22_size');
-                foreach ($n22 as $value) {
-                    $query->values($calculationId . ', ' . $value->n22_count . ', ' . $value->n22_type . ', ' . $value->n22_size);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n23)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_diffusers`')
-                    ->columns('calculation_id, n23_count, n23_size');
-                foreach ($n23 as $value) {
-                    $query->values($calculationId . ', ' . $value->n23_count . ', ' . $value->n23_size);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if(!empty($n19)){
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_wires`')
-                    ->columns('calc_id, wire_id, count');
-                foreach ($n19 as $value) {
-                    if (!empty($value[1]))
-                        $query->values($data['id'] . ', ' . $value[1] . ', ' . $value[0]);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-            if (!empty($n26)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_ecola`')
-                    ->columns('calculation_id, n26_count, n26_illuminator, n26_lamp');
-                foreach ($n26 as $value) {
-                    $query->values($calculationId . ', ' . $value->n26_count . ', ' . $value->n26_illuminator . ', ' . $value->n26_lamp);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (!empty($n29)) {
-                $query = $db->getQuery(true);
-                $query->insert('`#__gm_ceiling_profil`')
-                    ->columns('calculation_id, n29_count, n29_type');
-                foreach ($n29 as $value) {
-                    $query->values($calculationId . ', ' . $value->n29_count . ', ' . $value->n29_type);
-                }
-                $db->setQuery($query);
-                $db->execute();
-            }
 
             if(!empty($canvasesArea)){
                 $query = $db->getQuery(true);
@@ -871,6 +790,7 @@ class Gm_ceilingModelCalculation extends JModelItem
                 ->innerJoin('`rgzbn_gm_ceiling_jobs` as `j` on `j`.`id` = `cjm`.`job_id`')
                 ->where("`cjm`.`calc_id` = $calc_id");
             $db->setQuery($query);
+            //throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
         }

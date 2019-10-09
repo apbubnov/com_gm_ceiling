@@ -507,25 +507,207 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
         }
 	}
 
-	public function calculate() {
+	public function reCalculate($calc_id){
+        $model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
+        $model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+        $projectModel = $this->getModel('Project','Gm_ceilingModel');
+
+        $calculationData = $model_calculation->new_getData($calc_id);
+        $project = $projectModel->getData($calculationData->project_id);
+
+        $extra_components = $calculationData->extra_components;
+        $extra_mounting = $calculationData->extra_mounting;
+        $photo_print = $calculationData->photo_print;
+        $need_mount = $calculationData->need_mount;
+        $cancel_metiz = $calculationData->cancel_metiz;
+        $cancel_offcuts = $calculationData->cancel_cuts;
+
+        $dealer_id = $project->dealer_id;
+
+        $user = JFactory::getUser($dealer_id);
+        $userType = $user->dealer_type;
+
+        $all_jobs = [];
+        if (!empty($need_mount)) {
+            if ($need_mount == 1) {
+                $all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу дилера
+                if($userType == 3 ){
+                    $all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, 1); // Получение работ по прайсу ГМ
+                }
+
+            } elseif ($need_mount == 2) {
+                $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу монажной службы
+            }
+        }
+
+        $all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id); // Получение компонентов
+        $factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id); // Получение цеховских работ
+
+        if (!empty($cancel_metiz)) {
+            $all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
+        }
+
+        $extra_components = json_decode($extra_components);
+        $extra_components_sum = 0;
+        if (!empty($extra_components)) {
+            foreach ($extra_components as $value) {
+                $extra_components_sum += $value->price;
+            }
+        }
+
+        $extra_mounting = json_decode($extra_mounting);
+        $extra_mounting_sum = 0;
+        if (!empty($extra_mounting)) {
+            foreach ($extra_mounting as $value) {
+                $extra_mounting_sum += $value->price;
+            }
+        }
+
+        $photo_print = json_decode($photo_print);
+        $photo_print_sum = 0;
+        if (!empty($photo_print)) {
+            $photo_print_sum = (float)$photo_print->price;
+        }
+
+        $canvas_exist = false; // флаг есть ли полотно в калькуляции
+        $data_for_manager_estimate = [];
+        $canvases_sum = 0;
+        $components_sum = 0;
+        $components_sum_with_margin = 0;
+        $mounting_sum = 0;
+        $mounting_sum_with_margin = 0;
+        $canvas_price = 0;
+        $stages = [];
+
+        $calculation = $model_calculation->getBaseCalculationDataById($calc_id);
+        if (empty($calculation)) {
+            throw new Exception('Empty calculation!');
+        }
+
+        $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+        if (empty($dealer_info)) {
+            $canvases_margin = 0;
+            $components_margin = 0;
+            $mounting_margin = 0;
+        } else {
+            $canvases_margin = $dealer_info->dealer_canvases_margin-0;
+            $components_margin = $dealer_info->dealer_components_margin-0;
+            $mounting_margin = $dealer_info->dealer_mounting_margin-0;
+        }
+        $temp = [];
+        foreach ($all_goods as $value) {
+            if ($value->category_id != 1) { // если не полотно
+                $components_sum += $value->price_sum;
+                $components_sum_with_margin += $value->price_sum_with_margin;
+            } else {
+                $temp[] = $value;
+                $canvas_exist = true;
+                $data_for_manager_estimate['canvas'] = $value;
+                $canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
+                $canvas_price = $value->dealer_price;
+
+            }
+        }
+        $components_sum += $extra_components_sum;
+        $components_sum_with_margin += $extra_components_sum * 100 / (100 - $components_margin);
+
+        $offcut_square = $calculation->offcut_square-0;
+        if (empty($cancel_offcuts) && $offcut_square > ($calculation->n4 * 0.5)) {
+            $canvases_sum += $offcut_square * $canvas_price * 0.5; // обрезки
+            $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$offcut_square,"price"=>$canvas_price * 0.5);
+        }
+
+        $canvases_sum += $photo_print_sum;
+        $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin); // маржа на полотна
+
+        foreach ($factory_jobs as $value) { // работы в цеху
+            $canvases_sum += $value->price_sum;
+            $canvases_sum_with_margin += $value->price_sum;
+        }
+
+        if ($canvas_exist && $canvases_sum < 200) {
+            $canvases_sum = 200;
+            $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
+        }
+
+        foreach ($all_jobs as $value) {
+            $mounting_sum += $value->price_sum;
+            $mounting_sum_with_margin += $value->price_sum_with_margin;
+            $stages[$value->mount_type_id] += $value->price_sum;
+        }
+        if(empty($stages)){
+            $stages[2] = 0;
+            $stages[3] = 0;
+            $stages[4] = 0;
+        }
+        $calcMountData['id'] = $calc_id;
+        $calcMountData['stages'] = $stages;
+        $calcsMountModel = self::getModel('calcs_mount');
+        $calcsMountModel->save($calcMountData);
+
+        $mounting_sum += $extra_mounting_sum;
+        $mounting_sum_with_margin += $extra_mounting_sum * 100 / (100 - $mounting_margin);
+
+
+        $data2 = array();
+        $data2['id'] = $calc_id;
+        $data2['canvases_sum'] = $canvases_sum;
+        $data2['components_sum'] = $components_sum;
+        $data2['mounting_sum'] = $mounting_sum;
+        $data2['canvases_sum_with_margin'] = $canvases_sum_with_margin;
+        $data2['components_sum_with_margin'] = $components_sum_with_margin;
+        $data2['mounting_sum_with_margin'] = $mounting_sum_with_margin;
+        //throw new Exception(print_r($data2,true));
+        $model_calculation->update_calculation($data2);
+
+
+        $calculation = $model_calculation->getBaseCalculationDataById($calc_id);
+        $data_for_manager_estimate['photoprint'] = $photo_print;
+        $data_for_manager_estimate['factory_jobs'] = $factory_jobs;
+        $data_for_manager_estimate['calculation'] = $calculation;
+        /*generate PDF's*/
+        //PDF раскроя
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($data_for_manager_estimate);
+        //для менеджера
+        Gm_ceilingHelpersGm_ceiling::create_manager_estimate($data_for_manager_estimate);
+        //клиентская смета
+        $data_for_client_estimate = $data_for_manager_estimate;
+        $data_for_client_estimate['dealer_id'] = $dealer_id;
+        $data_for_client_estimate['jobs'] = $all_jobs;
+        $data_for_client_estimate['goods'] = $all_goods;
+        Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
+
+        $data_for_mount_estimate = [];
+        $data_for_mount_estimate['calculation'] = $calculation;
+        $data_for_mount_estimate['jobs'] = $all_jobs;
+        if($need_mount == 1){
+            $data_for_mount_estimate['gm_jobs'] = [];
+        }
+        if($need_mount == 2){
+            $data_for_mount_estimate['gm_jobs'] = $model_calcform->getJobsPricesInCalculation($calc_id, 1);
+        }
+        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
+
+    }
+	public function calculate($calc_id = null) {
 		try {
 			$app = JFactory::getApplication();
 			$jinput = $app->input;
 			$calc_id = $jinput->get('calc_id', null, 'INT');
-			$dealer_id = $jinput->get('dealer_id', 1, 'INT');
-			$jobs = $jinput->get('jobs', null, 'ARRAY');
-			$goods = $jinput->get('goods', null, 'ARRAY');
-			$extra_components = $jinput->get('extra_components', '', 'STRING');
-			$extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
-			$photo_print = $jinput->get('photo_print', '', 'STRING');
-			$fields_data = $jinput->get('fields_data', '', 'STRING');
-			$need_mount = $jinput->get('need_mount', 0, 'INT');
-			$cancel_metiz = $jinput->get('cancel_metiz', 0, 'INT');
-			$cancel_offcuts = $jinput->get('cancel_offcuts', 0, 'INT');
-			$discount = $jinput->get('discount', 0, 'INT');
-			$details = $jinput->get('details', '', 'STRING');
-			$comment = $jinput->get('comment', '', 'STRING');
-			$manager_note = $jinput->get('manager_note', '', 'STRING');
+            $dealer_id = $jinput->get('dealer_id', 1, 'INT');
+            $jobs = $jinput->get('jobs', null, 'ARRAY');
+            $goods = $jinput->get('goods', null, 'ARRAY');
+            $extra_components = $jinput->get('extra_components', '', 'STRING');
+            $extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
+            $photo_print = $jinput->get('photo_print', '', 'STRING');
+            $fields_data = $jinput->get('fields_data', '', 'STRING');
+            $need_mount = $jinput->get('need_mount', 0, 'INT');
+            $cancel_metiz = $jinput->get('cancel_metiz', 0, 'INT');
+            $cancel_offcuts = $jinput->get('cancel_offcuts', 0, 'INT');
+            $discount = $jinput->get('discount', 0, 'INT');
+            $details = $jinput->get('details', '', 'STRING');
+            $comment = $jinput->get('comment', '', 'STRING');
+            $manager_note = $jinput->get('manager_note', '', 'STRING');
 
 			$user = JFactory::getUser($dealer_id);
 			$userType = $user->dealer_type;

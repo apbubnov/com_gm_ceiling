@@ -937,7 +937,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         try {
             $values = array();
             foreach ($goods as $value) {
-                $values[] = $calc_id.','.$value['id'].','.$value['count'];
+                if(is_array($value)) {
+                    $values[] = $calc_id . ',' . $value['id'] . ',' . $value['count'];
+                }
+                if(is_object($value)){
+                    $values[] = $calc_id . ',' . $value->id . ',' . $value->count;
+                }
             }
 
             $db = $this->getDbo();
@@ -980,8 +985,15 @@ class Gm_ceilingModelCalculationForm extends JModelForm
         try {
             $values = array();
             foreach ($jobs as $value) {
-                if (is_numeric($value['id']) && is_numeric($value['count'])) {
-                    $values[] = $calc_id.','.$value['id'].','.$value['count'];
+                if(is_array($value)) {
+                    if (is_numeric($value['id']) && is_numeric($value['count'])) {
+                        $values[] = $calc_id . ',' . $value['id'] . ',' . $value['count'];
+                    }
+                }
+                if(is_object($value)){
+                    if (is_numeric($value->id) && is_numeric($value->count)) {
+                        $values[] = $calc_id . ',' . $value->id . ',' . $value->count;
+                    }
                 }
             }
 

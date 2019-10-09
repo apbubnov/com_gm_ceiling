@@ -26,6 +26,11 @@ $user_group = $user->groups;
 <?= parent::getButtonBack(); ?>
 <?php
     if ($this->item) :
+        $user       = JFactory::getUser();
+        $userId     = $user->get('id');
+        $user_group = $user->groups;
+        $dealer_id = $user->dealer_id;
+        $dealer_type = JFactory::getUser($dealer_id)->dealer_type;
         $jinput = JFactory::getApplication()->input;
         $call_id = $jinput->get('call_id', 0, 'INT');
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
@@ -33,6 +38,7 @@ $user_group = $user->groups;
         $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
         $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
         $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+        $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
         //обновляем менеджера для клиента
@@ -48,7 +54,22 @@ $user_group = $user->groups;
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
         }
 
-
+        if(!empty($this->item->api_phone_id)){
+            if ($this->item->api_phone_id == 10) {
+                $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
+                if (!empty($repeat_advt->advt_id)) {
+                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
+                } else {
+                    $need_choose = true;
+                }
+            }
+            $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
+            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
+        }
+        else{
+            $need_choose = true;
+            $all_advt = $model_api_phones->getDealersAdvt($dealer_id);
+        }
 
         $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
         preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info, $house);
@@ -67,11 +88,45 @@ $user_group = $user->groups;
     ?>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
     <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+        <div class="row center">
+            <div class="col-xs-12 col-md-12">
+                <h5 class="center">
+                    <?php if (!$need_choose) { ?>
+                        <input id="advt_info" class="h5-input" readonly value= <?php echo '"' . $write . '"'; ?>>
+                        <?php if($reklama->id == 17) { ?>
+                            <select id="recoil_choose" name ="recoil_choose">
+                                <option value="0">-Выберите откатника-</option>
+                                <?php foreach ($all_recoil as $item) { ?>
+                                    <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                                <?php } ?>
+                            </select>
+                            <button type="button" id = "show_window" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        <?php }?>
+                    <?php } elseif ($need_choose) { ?>
+                        <select id="advt_choose">
+                            <option value="0">Выберите рекламу</option>
+                            <?php foreach ($all_advt as $item) { ?>
+                                <option value="<?php echo $item['id'] ?>"><?php echo $item['advt_title'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="far fa-plus-square"></i></button>
+                        <select id="recoil_choose" name ="recoil_choose" style="display:none;">
+                            <option value="0">-Выберите откатника-</option>
+                            <?php foreach ($all_recoil as $item) { ?>
+                                <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
+                            <?php } ?>
+                        </select>
+                        <button type="button" id = "show_window" style = "display:none;" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+
+                    <?php } ?>
+                </h5>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
+                <input name="advt_id" id ="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
                 <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                 <input name="status" id="project_status" value="" type="hidden">
                 <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
@@ -79,7 +134,7 @@ $user_group = $user->groups;
                 <input name="subtype" value="calendar" type="hidden">
                 <input name="data_change" value="0" type="hidden">
                 <input name="data_delete" value="0" type="hidden">
-                <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id)) ? $this->item->api_phone_id : '0' ?>" type="hidden">
+                <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id)) ? $this->item->api_phone_id : '' ?>" type="hidden">
                 <input name="recoil" id="recoil" value="" type="hidden">
                 <input name="project_new_calc_date" id="jform_project_new_calc_date" value="
                     <?php if (isset($_SESSION['date'])) {
@@ -99,7 +154,7 @@ $user_group = $user->groups;
                     " type="hidden">
 
                 <input id="emails" name="emails" value="" type="hidden">
-                <input name="without_advt" value="1" type="hidden">
+                <input name="without_advt" value="0" type="hidden">
 
                 <div class="row" style="margin-bottom: 15px">
                     <div class="col-md-4 col-xs-4">
@@ -257,6 +312,25 @@ $user_group = $user->groups;
 <div class="modal_window_container" id="mw_container">
     <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_measures_calendar"></div>
+    <div class="modal_window" id="mw_new_adwt">
+        <h4>Добавление нового вида рекламы</h4>
+        <div class="row">
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-10">
+                    <input id="new_advt_name" class="form-control"  placeholder="Название рекламы">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" id="save_advt">Ok</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
@@ -270,12 +344,15 @@ $user_group = $user->groups;
         var div = jQuery("#modal_window_measures_calendar"); // тут указываем ID элемента
         var div1 = jQuery("#modal_window_mounts_calendar");
         var div2 = jQuery("#modal-window-call-tar");
+        var div3 = jQuery("#mw_new_adwt");
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0
             && !div1.is(e.target)
             && div1.has(e.target).length === 0
             && !div2.is(e.target)
-            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div2.has(e.target).length === 0
+            && !div3.is(e.target)
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();
@@ -289,7 +366,58 @@ $user_group = $user->groups;
         }
     }
 
+    jQuery("#add_new_dvt").click(function () {
+        jQuery("#mw_container").show();
+        jQuery("#mw_new_adwt").show('slow');
+        jQuery("#close").show();
+    })
 
+    jQuery("#save_advt").click(function() {
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
+            data: {
+                name: jQuery("#new_advt_name").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                select = document.getElementById('advt_choose');
+                var opt = document.createElement('option');
+                opt.selected = true;
+                opt.value = data.id;
+                opt.innerHTML = data.name;
+                select.appendChild(opt);
+                jQuery("#new_advt_div").hide();
+                jQuery("#selected_advt").val(data.id);
+                jQuery('#mw_container').hide();
+                jQuery('#mw_new_adwt').hide();
+                jQuery('#close').hide();
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "ошибка"
+                });
+            }
+        });
+    });
+
+    jQuery("#advt_choose").change(function () {
+        jQuery("#selected_advt").val(jQuery("#advt_choose").val());
+        if(jQuery("#advt_choose").val()==17){
+            jQuery("#recoil_choose").show();
+            jQuery("#show_window").show();
+        }
+        else{
+            jQuery("#recoil_choose").hide();
+            jQuery("#show_window").hide();
+        }
+    });
 
     jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
 
