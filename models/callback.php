@@ -313,6 +313,7 @@ class Gm_ceilingModelCallback extends JModelList
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
             $measureQuery = $db->getQuery(true);
+            $designerQuery = $db->getQuery(true);
 
             $query = 'SET SESSION group_concat_max_len  = 163840';
             $db->setQuery($query);
@@ -333,12 +334,30 @@ class Gm_ceilingModelCallback extends JModelList
             elseif(empty($date1)&&!empty($date2)){
                 $measureQuery->where("`ph`.`date_of_change` < '$date2 23:59:59'");
             }
+
+            $designerQuery
+                ->select('`c`.`manager_id`,COUNT(`us`.`id`) AS `added_users`')
+                ->from('`rgzbn_users` AS `us`')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS `c` ON `c`.`id` = `us`.`associated_client`')
+                ->where('`us`.`dealer_type` = 3')
+                ->group('`c`.`manager_id`');
+            if(!empty($date1)&&!empty($date2)){
+                $designerQuery->where("`u`.`registerDate` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+            }
+            elseif(!empty($date1)&&empty($date2)){
+                $designerQuery->where("`u`.`registerDate` > '$date1 00:00:00'");
+            }
+            elseif(empty($date1)&&!empty($date2)){
+                $designerQuery->where("`u`.`registerDate` < '$date2 23:59:59'");
+            }
+
             $subquery
-                ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,COUNT( DISTINCT `h`.`id`)  AS `count`')
-                ->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',IFNULL(pr.new_status,"-"),\'","count":"\',IFNULL(pr.count,"-"),\'","ids":"\',pr.ids,\'"}\')) AS projects_count')
+                ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,IFNULL(`au`.`added_users`,\'-\') AS `added_users`,COUNT( DISTINCT `h`.`id`)  AS `count`')
+                ->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',IFNULL(pr.new_status,"-"),\'","count":"\',IFNULL(pr.count,"-"),\'","ids":"\',IFNULL(pr.ids,"-"),\'"}\')) AS projects_count')
                 ->from('`rgzbn_gm_ceiling_calls_status_history` AS h ')
                 ->innerJoin('`rgzbn_users` AS u ON u.id = h.manager_id')
                 ->leftJoin("($measureQuery) as pr ON pr.created_by = h.manager_id")
+                ->leftJoin("($designerQuery) AS au ON au.manager_id = h.manager_id")
                 ->where("`u`.`dealer_id` = $dealerId")
                 ->group('`h`.`manager_id`,`h`.`status`');
             if(!empty($date1)&&!empty($date2)){
@@ -352,7 +371,7 @@ class Gm_ceilingModelCallback extends JModelList
             }
             $query = $db->getQuery(true);
             $query
-                ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","count":"\',cnt.count,\'","measures_count":[\',cnt.projects_count,\']}\')),\']\') AS manager_count')
+                ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","added_users":"\',cnt.added_users,\'","count":"\',cnt.count,\'","measures_count":[\',cnt.projects_count,\']}\')),\']\') AS manager_count')
                 ->from('`rgzbn_gm_ceiling_calls_status` AS cs')
                 ->leftJoin("($subquery) AS `cnt` ON `cs`.`id` = `cnt`.`status`")
                 ->group('cs.id');

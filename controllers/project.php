@@ -2166,5 +2166,39 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 	    }
     }
+
+    function sendFiles(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $files = $jinput->get('files',array(),'ARRAY');
+            $email = $jinput->get('email','','STRING');
+            $project_id = $jinput->get('project_id',null,'INT');
+            $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $project = $projectModel->getData($project_id);
+            if(!empty($files)&& !empty($email)){
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($email);
+                $body = "Здравствуйте. Файлы по $project->project_info";
+                $mailer->setSubject('Сметы');
+                $mailer->setBody($body);
+
+               foreach ($files as $file){
+                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . $file);
+                }
+                $send = $mailer->Send();
+                die(json_encode(true));
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
 }
 ?>

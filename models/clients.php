@@ -669,21 +669,17 @@ if (empty($list['direction']))
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
-                p.project_status,p.project_info,p.id,cm.mounter_id,SUM(0) as n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
+                ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"calc_status\":\"',IFNULL(cm.status_id,'-'),'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
+                p.project_status,p.project_info,p.id,cm.mounter_id,SUM(0) AS n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
                 ->leftJoin("`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id AND cm.stage_id = $stage")
-                /*->leftJoin("`rgzbn_gm_ceiling_projects_mounts` as pm on pm.project_id = p.id and pm.type=$stage")*/
                 ->where("c.dealer_id = $dealer_id")
                 ->group("p.id");
-                //throw new Exception($query);
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];
-            $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-            $priceMount = $mountModel->getDataAll($dealer_id);
 
             foreach ($items as $value){
                 $calcsData = [];
@@ -693,6 +689,7 @@ if (empty($list['direction']))
                     $calcsData[$calc->calc_id]['title'] = $calc->title;
                     $calcsData[$calc->calc_id]['sum'] = $calc->sum;
                     $calcsData[$calc->calc_id]['defect_status'] = $calc->defect_status;
+                    $calcsData[$calc->calc_id]['calc_status'] = $calc->calc_status;
                     if(!empty($calc->mounter)) {
                         $calcsData[$calc->calc_id]['mounters'][] =  JFactory::getUser($calc->mounter);
                     }
@@ -705,8 +702,6 @@ if (empty($list['direction']))
                                                                          "calcs"=>$calcsData,
                                                                          "sum"=>$value->total_sum,
                                                                          "status"=>$value->project_status,
-                                                                         "n7"=>$value->n7,
-                                                                         "n7_cost"=>$value->n7 * $priceMount->mp13,
                                                                          "calcs_count" => $value->calcs_count,
                                                                          "mounters_count" => $value->mounters_count
                                                                         );
@@ -851,4 +846,25 @@ if (empty($list['direction']))
         }
     }
 
+    function getBuilderCommonData($builderId){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('c.id,c.client_name,SUM(calc.n4) AS square,SUM(calc.n5) AS perimeter,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"project_id":"\',p.id,\'","name":"\',p.project_info,\'","status":"\',s.title,\'"}\') SEPARATOR \',\'),\']\') AS projects')
+                ->from('`rgzbn_gm_ceiling_clients` AS c')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id')
+                ->innerJoin('`rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id')
+                ->innerJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.project_id = p.id')
+                ->where("c.dealer_id = $builderId")
+                ->group('c.id');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

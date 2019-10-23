@@ -105,7 +105,7 @@ $user_group = $user->groups;
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fas fa-pencil-ruler"></i> Запись на замер</a>
 		</p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fas fa-ruble-sign"></i> Прайсы</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=price&type=goods', false); ?>"><i class="fas fa-ruble-sign"></i> Прайс</a>
 		</p>
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fas fa-eye-dropper"></i> Цвета, фактуры</a>

@@ -142,4 +142,26 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveInHistory(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $run = $jinput->get('calcs_ro_run',array(),'ARRAY');
+            $issued = $jinput->get('calcs_to_issue',array(),'ARRAY');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('calcshistory');
+            if(!empty($run) && empty($issued)){
+                $data['ids'] = $run;
+                $data['status'] = 1;
+            }
+            if(!empty($issued) && empty($run)){
+                $data['ids'] = $issued;
+                $data['status'] = 2;
+            }
+            $model->saveData($data);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -43,7 +43,7 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
 
             $data['id'] = $projectId;
             if(!$refreshFlag) {
-                $data['project_status'] = $stage + 25;
+                $data['project_status'] = $stage + 29;
             }
             $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
             $projectModel->save($data);

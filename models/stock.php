@@ -1412,4 +1412,44 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
      }
+
+     function getAllGoods(){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id,name,price')
+                ->from('`rgzbn_gm_stock_goods`');
+            $db->setQuery($query);
+            $items = $db->LoadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function updateGoods($id,$name,$price){
+        try{
+            if(!empty($id)&&(!empty($price) || !empty($name))) {
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_stock_goods`')
+                    ->where("id = $id");
+                if (!empty($name)) {
+                    $query->set("name = '$name'");
+                }
+                if (!empty($price)) {
+                    $query->set("price = $price");
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+        }
+
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
 }

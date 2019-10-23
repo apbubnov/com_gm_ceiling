@@ -295,7 +295,10 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             // комменты
                             jQuery.each(notes,function (index,elem) {
                                 if(index.indexOf("mount") >=0){
-                                    note += elem.description + elem.value;
+                                    note += elem.description + elem.value+"<br>";
+                                }
+                                if(index.indexOf("common") >=0){
+                                    note += elem.description + elem.value+"<br>";
                                 }
                             });
 
@@ -329,7 +332,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             }
                             console.log(typeParam);
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+',\''+typeParam+'\');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны">'+element.client_phones+'</td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+',\''+typeParam+'\');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны"><a href="tel:+'+element.client_phones+'">'+element.client_phones+'</a></td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
                             jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';

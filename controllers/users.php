@@ -116,7 +116,20 @@ class Gm_ceilingControllerUsers extends JControllerForm
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function closeBuilderObject(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $builderid = $jinput->getInt('builderId');
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $userModel->addGroup($builderid,36);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

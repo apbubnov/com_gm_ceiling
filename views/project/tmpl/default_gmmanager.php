@@ -427,6 +427,34 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         </td>
         </tbody>
     </table>
+                <h4>Отправить общий раскрой, смету по расходным материалам и общий наряд на монтаж на почту</h4>
+                <?php
+                    $filestoSend = [];
+                    $path = "/costsheets/" . md5($this->item->id . "mount_common_gm") . ".pdf";
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                        $filestoSend[] = $path;
+                    }
+                    $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf";
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                        $filestoSend[] = $path;
+                    }
+                    $path = "/costsheets/".md5($this->item->id."common_cutpdf").".pdf";
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                        $filestoSend[] = $path;
+                    }
+                    $filestoSend = json_encode($filestoSend);
+                ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-10">
+                            <input type="text" id= "emailToSend" class="form-control" placeholder="Введите e-mail">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="sendFiles" class="btn btn-primary">Отправить</button>
+                        </div>
+                    </div>
+                </div>
+
                 <h4>Изменить время, дату и монтажную бригаду</h4>
                 <div style="border-top: 1px solid #eceeef;">
                     <label><strong>Текущие данные</strong></label>
@@ -620,6 +648,48 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
         jQuery(document).ready(function () {
 
             let calc_data = JSON.parse('<?php echo json_encode($calc_data);?>');
+            let sendFiles = JSON.parse('<?php echo $filestoSend;?>');
+            console.log('sF',sendFiles);
+
+            jQuery("#sendFiles").click(function(){
+                var email = jQuery('#emailToSend').val();
+                if(sendFiles.length<3){
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Какая-то из смет отсутствует! Пожалуйста, перегенерируйте сметы!"
+                    });
+                }
+                else{
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "index.php?option=com_gm_ceiling&task=project.sendFiles",
+                        data: {
+                            project_id: <?php echo $this->item->id; ?>,
+                            files: sendFiles,
+                            email: email
+                        },
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        dataType: "text",
+                        timeout: 10000,
+                        error: function (data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка сервера"
+                            });
+                        }
+                    });
+                }
+            });
             jQuery("[name = 'change_cut']").click(function(){
 
                 let id = jQuery(this).data('calc_id');
@@ -637,6 +707,8 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 jQuery("#width").val(JSON.stringify(data.widths));
                 jQuery("#form_url").submit();
             });
+
+
             jQuery("[name = 'change_calc']").click(function(){
                 let id = jQuery(this).data('calc_id');
                 location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&calc_id='+id;

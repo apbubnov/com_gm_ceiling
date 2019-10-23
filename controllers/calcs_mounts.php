@@ -24,4 +24,20 @@ class Gm_ceilingControllerCalcs_mounts extends JControllerLegacy{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function approve(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $calcsId = $jinput->get('calcsId',array(),'ARRAY');
+            $stage = $jinput->getInt('stage');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('Calcs_mount');
+            $model->approveTaking($calcsId,$stage);
+
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

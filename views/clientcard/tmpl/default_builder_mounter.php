@@ -77,6 +77,25 @@ $rest_sum = $closedSums->sum - $total_pay;
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-3" >
+        <div style="height:35px;background:linear-gradient(135deg, white, palevioletred 150%);">
+           Выбрано другой бригадой
+        </div>
+    </div>
+    <div class="col-md-3" >
+        <div style="height:35px;background:linear-gradient(135deg, white, yellow 150%);">
+            Ожидание подтверждения
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div style="height:35px;background:linear-gradient(135deg, white, #414099 150%);">
+            Выбрано
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="right">
         <button class="btn btn-primary" id="show_detailed">Детализация</button>
@@ -188,21 +207,30 @@ $rest_sum = $closedSums->sum - $total_pay;
         var temp_sums = [];
         var html = "";
         for(var i=0,elem;i<Object.keys(progressData).length;i++) {
+            var floor_sum = 0,
+                floor_sq = 0;
             html = '<div class="row" data-client_id = "'+Object.keys(progressData)[i]+'">';
             elem = progressData[Object.keys(progressData)[i]];
-            html += '<div class="col-md-1">'+elem.name+'</div>';
+            html += '<div class="col-md-1"><div class="row">'+elem.name+'</div><div class="row"> sq_total </div></div>';
             html += '<div class="col-md-11">';
 
-            for (var j = 0, td, val, sum,mounter,n7_val,n7_cost; j < elem.projects.length; j++) {
+            for (var j = 0, td, val, sum,mounter; j < elem.projects.length; j++) {
                 var colIndex = (elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
                 var style;
                 jQuery.each(elem.projects[j].calcs,function(index,elem){
                    if(elem.mounters && elem.mounters[0].id == user_id){
-                       style = 'style = "background:linear-gradient(135deg, white, #414099 150%);"';
+                       console.log(elem);
+                       if(elem.calc_status == 3){
+                           style = 'style = "background:linear-gradient(135deg, white, yellow 150%);"';
+                       }
+                       if(elem.calc_status == 4){
+                           style = 'style = "background:linear-gradient(135deg, white, #414099 150%);"';
+                       }
+
                    }
                    else{
                        if(elem.mounters && elem.mounters[0].id != user_id) {
-                           style = 'style = "background:linear-gradient(135deg, white, yellow 150%);"';
+                           style = 'style = "background:linear-gradient(135deg, white, palevioletred 150%);"';
                        }
                        else{
                            style = '';
@@ -212,6 +240,8 @@ $rest_sum = $closedSums->sum - $total_pay;
                 html +='<div class="col-md-'+colIndex+' center cell" '+style+' data-proj_id = "'+elem.projects[j].id+'" >';
                 val = parseFloat(elem.projects[j].value);
                 sum = parseFloat(elem.projects[j].sum);
+                floor_sq +=val;
+                floor_sum += sum;
                 if(temp_sums[elem.name]) {
                     temp_sums[elem.name] += val;
                 }
@@ -219,27 +249,23 @@ $rest_sum = $closedSums->sum - $total_pay;
                     temp_sums[elem.name] = val;
 
                 }
-                n7_val = (parseFloat(elem.projects[j].n7)) ? "="+parseFloat(elem.projects[j].n7) : "";
-                n7_cost = (parseFloat(elem.projects[j].n7_cost)) ? "("+parseFloat(elem.projects[j].n7_cost)+")" : "-"
-
-
                 var value = (stage == 3) ? "S=" : "P=";
 
-                var n7 = (stage == 2) ? "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
-                    "<div class='left_half'>Пл"+ n7_val + "</div><div class='right_half'><span class='sum'>"+n7_cost+"</span></div>" +
-                    "</div>" : "";
                 td = '<b>'+elem.projects[j].title +'</b>'+
                     "<div class='row' style='font-size:11pt;font-style:italic;'>" +
                     "<div class='col-xs-5 col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-xs-7 col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
-                    "</div>" +
-                    n7;
+                    "</div>";
 
                 html += td;
                 html +='</div>';
             }
             html +='</div>';
             html +='</div>';
+
+            html = html.replace("sq_total",value+floor_sq.toFixed(2));
+            console.log(html);
             jQuery("#report_table").append(html);
+
         }
 
         jQuery(".cell").click(function () {
@@ -360,7 +386,8 @@ $rest_sum = $closedSums->sum - $total_pay;
                 data: {
                     calcsId: calcsId,
                     stage: stage,
-                    mounterId: mounterId
+                    mounterId: mounterId,
+                    change_status: stage+1
                 },
                 dataType: "json",
                 async: false,

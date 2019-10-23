@@ -65,13 +65,14 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
 	        $jinput = JFactory::getApplication()->input;
 	        $floorCount = $jinput->get('floors',null,'INT');
 	        $apartmentCount = $jinput->get('apartment',null,'INT');
+            $startNumber = $jinput->get('start',null,'INT');
 	        $builderId = $jinput->get('builderId',null,'INT');
 	        $model = Gm_ceilingHelpersGm_ceiling::getModel('clientForm');
 	        $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
 	        $data = [];$project_data = [];
 	        $data['dealer_id'] = $builderId;
-	        for($i=0;$i<$floorCount;$i++){
-	            $data['client_name'] = "Этаж ".($i+1);
+	        for($i=$startNumber;$i<$startNumber+$floorCount;$i++){
+	            $data['client_name'] = "Этаж ".($i);
 	            $floorId = $model->save($data);
 	            $project_data['client_id'] = $floorId;
                 $project_data['project_status'] = 0;
@@ -164,4 +165,16 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
         }
     }
 
+    function getBuilderCommonData(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $builderId = $jinput->getInt('builderId');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $model->getBuilderCommonData($builderId);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

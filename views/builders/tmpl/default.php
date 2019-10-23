@@ -12,22 +12,47 @@ defined('_JEXEC') or die;
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
-$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-$result_clients = $clients_model->getDesignersByClientName('', 7);
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+$result_clients = $clients_model->getBuilders();
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Застройщики</h2>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="new_builder" class="btn btn-primary">Создать застройщика</button>
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="col-md-4">
+            <button type="button" id="new_builder" class="btn btn-primary">Добавить застройщика</button>
+        </div>
+        <div class="col-md-4">
+            <select id="show_type" class="form-control">
+                <option value="0">Показать всё</option>
+                <option value="1" selected>Только в работе</option>
+                <option value="2">Только закрытые</option>
+            </select>
+        </div>
+        <div class="col-md-4 right">
+            <div class="col-md-10">
+                <input type="text" id="name_find_builder" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="find_builder" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </div>
+        </div>
     </div>
-    <div style="display:inline-block; width: 48%; text-align: left;">
-        <input type="text" id="name_find_builder">
-        <button type="button" id="find_builder" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+    <div class="row" id="legend" style="display:none;margin-bottom: 15px;">
+            <div class="col-md-4">
+                <div style="height:35px;background:linear-gradient(135deg, white, green 150%);">
+                    Объект закрыт
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div style="height:35px;background:linear-gradient(135deg, white, #414099 150%);">
+                    Объект в работе
+                </div>
+            </div>
     </div>
-    <br>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view " id="buildersList">
         <thead>
         <tr>
             <th>
@@ -45,38 +70,30 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             <?php
                 foreach ($result_clients as $key => $value)
                 {
-                    if ($value->refused_to_cooperate == 0)
-                    {
-                        $color = '';
-                        if (is_null($value->call_id) && (is_null($value->project_status) || $value->project_status == 0 || $value->project_status == 2))
-                        {
-                            $color = 'style="background-color: DarkSalmon;"';
-                        }
-                        else
-                        {
-                            $color = 'style="background-color: PaleGreen;"';
-                        }
-            ?>
-                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.(int) $value->id); ?>">
-                        <td>
-                           <?php echo $value->client_name; ?>
-                        </td>
-                        <td>
-                           <?php echo $value->client_contacts; ?>
-                        </td>
-                        <td>
-                           <?php
-                                if($value->created == "0000-00-00 00:00:00") {
+                    $groups = explode(';',$value->groups);
+                    if(!in_array(36,$groups)) {
+                        ?>
+                        <tr class="row"
+                            data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' . (int)$value->associated_client); ?>">
+                            <td>
+                                <?php echo $value->name; ?>
+                            </td>
+                            <td>
+                                <?php echo $value->client_contacts; ?>
+                            </td>
+                            <td>
+                                <?php
+                                if ($value->created == "0000-00-00 00:00:00") {
                                     echo "-";
                                 } else {
                                     $jdate = new JDate($value->created);
                                     $created = $jdate->format("d.m.Y H:i");
                                     echo $created;
                                 }
-                           ?>
-                        </td>
-                    </tr>
-            <?php
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
                     }
                 }
             ?>
@@ -95,8 +112,20 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
     </div>
 
 <script>
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+        if (!div3.is(e.target) // если клик был не по нашему блоку
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close4-tar").hide();
+            jQuery("#modal-window-container").hide();
+            jQuery("#modal-window-1-tar").hide();
+        }
+    });
+
     jQuery(document).ready(function()
     {
+        var builders = JSON.parse('<?=json_encode($result_clients)?>');
+        console.log(builders);
         jQuery('#builder_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)
         {
@@ -105,13 +134,39 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             } 
         });
 
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-            if (!div3.is(e.target) // если клик был не по нашему блоку
-                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery("#close4-tar").hide();
-                jQuery("#modal-window-container").hide();
-                jQuery("#modal-window-1-tar").hide();
+        jQuery("#show_type").change(function(){
+            var builders_to_show = [];
+            if(this.value == 0){
+                jQuery("#legend").show();
+                fillTable(builders);
+            }
+            if(this.value == 1){
+                jQuery.each(builders,function(index,elem){
+                    var groups = elem.groups.split(';'),
+                        check = groups.find(function(g){
+                            return g == 36;
+                        });
+                    console.log(check);
+                    if(empty(check)){
+                        builders_to_show.push(elem);
+                    }
+                });
+                jQuery("#legend").hide();
+                fillTable(builders_to_show);
+            }
+            if(this.value == 2){
+                jQuery.each(builders,function(index,elem){
+                    var groups = elem.groups.split(';'),
+                        check = groups.find(function(g){
+                            return g == 36;
+                        });
+                    console.log(check);
+                    if(!empty(check)){
+                        builders_to_show.push(elem);
+                    }
+                });
+                jQuery("#legend").hide();
+                fillTable(builders_to_show);
             }
         });
 
@@ -216,4 +271,26 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             });
         });
     });
+    function fillTable(builders){
+        jQuery("#tbody_builders").empty();
+        var showAll = jQuery("#show_type").val() == 0,
+            style = '';
+        jQuery.each(builders,function (index,builder) {
+            if(showAll){
+                var groups = builder.groups.split(';'),
+                    check = groups.find(function(g){
+                        return g == 36;
+                    });
+                if(!empty(check)){
+                    style = 'background:linear-gradient(135deg, white, green 150%);'
+                }
+                else{
+                    style = 'background:linear-gradient(135deg, white, #414099 150%);'
+
+                }
+            }
+           jQuery("#tbody_builders").append('<tr style="'+style+'" data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='+builder.associated_client+'"></tr>');
+           jQuery('#tbody_builders > tr:last').append('<td>'+builder.name+'</td><td>'+builder.client_contacts+'</td><td>'+builder.created+'</td>');
+        });
+    }
 </script>

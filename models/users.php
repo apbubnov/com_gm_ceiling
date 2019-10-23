@@ -95,6 +95,29 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
+	function getBuilders(){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(distinct `b`.`phone` SEPARATOR \', \') AS `client_contacts`,`u`.`refused_to_cooperate`');
+            $query->select('GROUP_CONCAT(um.group_id SEPARATOR \';\') as groups');
+            $query->from('`#__users` AS `u`');
+            $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
+            $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
+            $query->INNERJOIN('`#__user_usergroup_map` AS `um` ON `um`.`user_id` = `u`.`id`');
+            $query->where('`dealer_type` = 7');
+            $query->group('`id`');
+            $query->order('`id` DESC');
+            $db->setQuery($query);
+            $item = $db->loadObjectList();
+            return $item;
+        }
+
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	function addCommercialOfferCode($user_id, $code, $manager_id)
 	{
 		try
@@ -697,6 +720,23 @@ class Gm_ceilingModelUsers extends JModelList
             $items = $db->loadObjectList();
             return $items;
         } catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addGroup($userId,$group){
+	    try{
+	        $db= JFactory::getDbo();
+	        $query = $db->getQuery(true);
+            $query
+                ->insert('rgzbn_user_usergroup_map')
+                ->columns('`user_id`,`group_id`')
+                ->values("$userId,$group");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

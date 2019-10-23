@@ -26,6 +26,7 @@ $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, 
 
 
 $dealer = JFactory::getUser($client->dealer_id);
+echo $dealer->id;
 if ($dealer->associated_client != $this->item->id)
 {
     throw new Exception("this is not dealer", 403);
@@ -167,14 +168,18 @@ foreach($all_builders as $builder){
 
 </div>
 <div class="row" style="padding:15px 15px 15px 15px;border: #414099 solid 2px;border-radius: 15px">
-    <div class="row">
-        <div class="col-md-6 center">
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-4 center">
             <label for="floor_count">Кол-во этажей</label><br>
-            <input type="text" id="floor_count" class="input-gm">
+            <input type="number" id="floor_count" class="input-gm">
         </div>
-        <div class="col-md-6 center">
+        <div class="col-md-4 center">
+            <label for="start_number">Начало нумерации</label><br>
+            <input type="number" id="start_number" class="input-gm">
+        </div>
+        <div class="col-md-4 center">
             <label for="apartment_count">Кол-во квартир на этаже</label><br>
-            <input type="text" id="apartment_count" class="input-gm">
+            <input type="number" id="apartment_count" class="input-gm">
         </div>
     </div>
     <div class="row center">
@@ -313,8 +318,44 @@ foreach($all_builders as $builder){
     </div>
 </div>
 <hr>
+<h4>Легенда</h4>
+<div class="row" style="margin-bottom: 15px;">
+    <div class="col-md-4">
+        <div style="height:35px;background:linear-gradient(135deg, white, green 150%);">
+            Объем закрыт
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div style="height:35px;background:linear-gradient(135deg, white, yellow 150%);">
+            Не на все потолки назначены бригады
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div style="height:35px;background:linear-gradient(135deg, white, #414099 150%);">
+            На все потолки назначены бригады
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <i class="fas fa-house-damage"></i> Дефект
+    </div>
+    <div class="col-md-4">
+        <i class="fas fa-check-double"></i> Дефект исправлен
+    </div>
+    <div class="col-md-4">
+        <i class="far fa-calendar-check"></i> Нужно подтвердить взятие объема
+    </div>
+
+</div>
+<hr>
 <div class="row">
     <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link common_tab" data-toggle="tab" role="tab">
+                Общее
+            </a>
+        </li>
         <?php foreach ($mountTypes as $k => $mountStage) { ?>
             <li class="nav-item">
                 <a class="nav-link mount_stage" data-toggle="tab" data-mount_type="<?php echo $k;?>" data-mount_status="<?php echo $mountStage['status'];?>" role="tab">
@@ -344,6 +385,12 @@ foreach($all_builders as $builder){
 <div class="row center" style="margin-top:15px">
     <div class="col-md-12">
         <a href="/index.php?option=com_gm_ceiling&view=mounterscommon" class="btn btn-primary"> Посмотреть сводную таблицу</a>
+    </div>
+</div>
+<hr>
+<div class="row center">
+    <div class="col-md-12">
+        <button class="btn btn-primary" type="button" id="btn_close">Закрыть объект</button>
     </div>
 </div>
 <div id="mv_container" class="modal_window_container">
@@ -460,6 +507,7 @@ foreach($all_builders as $builder){
                             <td>Комната</td>
                             <td>Монтажники</td>
                             <td>Сумма</td>
+                            <td>Подтвердить взятие</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -495,7 +543,9 @@ foreach($all_builders as $builder){
             BUILDERS_SELECT = '<select class="input-gm builders_select" style ="vertical-align: middle;"><?php echo $options ?></select>',
             MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fas fa-save" aria-hidden="true"></i></buttton>',
             DEFECT_ICON = '<i class="fas fa-house-damage"></i>',
-            DEFECT_FIXED_ICON = '<i class="fas fa-check-double"></i>';
+            DEFECT_FIXED_ICON = '<i class="fas fa-check-double"></i>',
+            NEED_TAKING_ICON = '<i class="far fa-calendar-check"></i>',
+            APPROVE_TAKING_BUTTON = '<button class="btn btn-primary btn-sm approve_btn"><i class="fas fa-check-double"></i></button>';
 
         function fillDuplicateInFields(value){
             jQuery("#where_duplicate").empty();
@@ -583,6 +633,30 @@ foreach($all_builders as $builder){
             });
         });
 
+        jQuery('#btn_close').click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=users.closeBuilderObject",
+                data: {
+                    builderId: '<?php echo $dealer->id?>'
+                },
+                success: function(data){
+                    location.reload();
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+        });
         jQuery("#copy_from_select").change(function(){
             if(this.value){
                 fillDuplicateInFields(this.value);
@@ -905,7 +979,8 @@ foreach($all_builders as $builder){
         jQuery("#createFloors").click(function(){
             var floorsCount = jQuery("#floor_count").val(),
                 apartmentCount = jQuery("#apartment_count").val(),
-                builderId = '<?php echo $client->dealer_id; ?>';
+                builderId = '<?php echo $client->dealer_id; ?>',
+                startNumber = jQuery('#start_number').val();
             if(floorsCount && apartmentCount){
                 jQuery.ajax({
                     type: 'POST',
@@ -913,6 +988,7 @@ foreach($all_builders as $builder){
                     data: {
                         floors: floorsCount,
                         apartment: apartmentCount,
+                        start: startNumber,
                         builderId: builderId
                     },
                     success: function(data){
@@ -979,6 +1055,31 @@ foreach($all_builders as $builder){
             {
                 document.location.href = jQuery(this).data('href');
             }
+        });
+
+        jQuery('body').on('click', '.approve_all', function(e)
+        {
+            var btn = jQuery(this),
+                floor_id = btn.data('floor_id'),
+                project_id = btn.data('project_id'),
+                project = progressData[floor_id].projects.find(function(obj){return obj.id == project_id}),
+                calcs = project.calcs,
+                ids = [];
+            jQuery.each(calcs,function(index,calc){
+                if(calc.calc_status == 3){
+                    ids.push(calc.id);
+                }
+                approveScope(ids);
+            });
+
+
+        });
+        jQuery('body').on('click', '.approve_btn', function(e)
+        {
+            var btn = jQuery(this),
+                tr = btn.closest('tr'),
+                calc_id = [tr.data('calc_id')];
+            approveScope(calc_id);
         });
 
         jQuery('body').on('click', '.accept_mounter', function(e)
@@ -1060,6 +1161,38 @@ foreach($all_builders as $builder){
             });
         });
 
+        function approveScope(ids){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=Calcs_mounts.approve",
+                data: {
+                    calcsId:ids,
+                    stage: jQuery("[name='stage']:checked").val()
+                },
+                success: function(data){
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Успешно!"
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при создании заказа. Сервер не отвечает"
+                    });
+                }
+            });
+        }
         function rb_email_click(elem)
         {
             jQuery("#email_comm").val(elem.value);
@@ -1100,7 +1233,7 @@ foreach($all_builders as $builder){
                     mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
                     acceptDoneBtn = "";
                     button = ACCEPT_BUTTON;
-                    if(+elem.projects[j].status < stage+25)
+                    if(+elem.projects[j].status < stage+29)
                     {
                         acceptDoneBtn = CHECK_BUTTON;
 
@@ -1128,7 +1261,7 @@ foreach($all_builders as $builder){
                             style = 'style = "background:linear-gradient(135deg, white, yellow 100%);"';
                             break;
                         case elem.projects[j].calcs_count == elem.projects[j].mounters_count:
-                            if(+elem.projects[j].status >= stage+25){
+                            if(+elem.projects[j].status >= stage+29){
                                 style = 'style = "background:linear-gradient(135deg, white, green 150%);"';
                             }
                             else{
@@ -1139,18 +1272,24 @@ foreach($all_builders as $builder){
                             style= "";
                             break;
                     }
-                    var isDefect = checkDefect(elem.projects[j].calcs);
-                    var defect_div;
-                    if(isDefect == 1){
-                        defect_div ="<div class='right'>"+DEFECT_ICON+"</div>";
+                    var calculations = elem.projects[j].calcs,
+                        isDefect = checkDefect(calculations),
+                        needApproveTaking = checkTaking(calculations);
+                    var info_div ='';
+                    if(isDefect || needApproveTaking){
+                        info_div = '<div class="row">';
+                        if(needApproveTaking == 1){
+                            info_div += '<div class="col-md-6 left">'+NEED_TAKING_ICON+'</div>';
+                        }
+                        if(isDefect == 1){
+                            info_div +="<div class='col-md-6 right'>"+DEFECT_ICON+"</div>";
+                        }
+                        else if(isDefect == 2){
+                            info_div +="<div class='col-md-6 right'>"+DEFECT_FIXED_ICON+"</div>";
+                        }
+                        info_div += '</div>';
                     }
-                    else if(isDefect == 2){
-                        defect_div ="<div class='right'>"+DEFECT_FIXED_ICON+"</div>";
-                    }
-                    else{
-                        defect_div = "";
-                    }
-                    td =  defect_div +
+                    td =  info_div +
                         "<div class='row center project_href' data-project_id = '"+elem.projects[j].id+"'><div class='col-md-12'><b>" + elem.projects[j].title + "</b></div></div>" +
                         "<div class='row center' style='font-size:11pt;font-style:italic;'>" +
                         "<div class='col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
@@ -1176,14 +1315,20 @@ foreach($all_builders as $builder){
                     projectId = td.data('id'),
                     project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
                     calcs = project.calcs,
+                    need_approve = checkTaking(calcs),
                     mounters,tr,
                     trAdd = '<div class="row">' +
                         '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
                         '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
-                        '</div>';
+                        '</div>',
+                    trApprove = '<h4>Подтвердить ВСЕ запросы</h4>' +
+                                '<div class="row">'+
+                                    '<button class="btn btn-primary approve_all" data-floor_id ="'+floorId+'"data-project_id = "'+projectId+'">Подтвердить</button>'+
+                                '</div>';
                 jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ потолки</h4>");
-                if(project.status < stage+25) {
+                if(project.status < stage+29) {
                     jQuery("#all_calcs_mounter").append(trAdd);
+                    jQuery("#all_calcs_mounter").append(trApprove);
                 }
                 else{
                     jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
@@ -1198,6 +1343,8 @@ foreach($all_builders as $builder){
 
         function fillMountersTable(projectStatus,stage,calcs){
             console.log(projectStatus,stage);
+            console.log("calcs",calcs);
+
             var mounters,tr,
                 trAdd = '<div class="row">' +
                     '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
@@ -1222,6 +1369,7 @@ foreach($all_builders as $builder){
                 }
                 tr+='</td>';
                 tr +='<td>'+elem.sum+'</td>';
+                tr += '<td>'+((elem.calc_status == 3) ? APPROVE_TAKING_BUTTON : DEFECT_FIXED_ICON)+'</td>';
                 jQuery("#calcsMounters > tbody > tr:last").append(tr);
             });
         }
@@ -1231,6 +1379,17 @@ foreach($all_builders as $builder){
             jQuery.each(calcs,function(index,elem){
                 if(elem.defect_status == 1 || elem.defect_status == 2){
                     result = elem.defect_status;
+                    return;
+                }
+            });
+            return result;
+        }
+
+        function checkTaking(calcs){
+            var result = false;
+            jQuery.each(calcs,function(index,elem){
+                if(elem.calc_status == 3){
+                    result = true
                     return;
                 }
             });
@@ -1247,6 +1406,31 @@ foreach($all_builders as $builder){
                 async: false,
                 success: function(data) {
                     progressData = data;
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных"
+                    });
+                }
+            });
+        }
+
+        function getBuilderCommonData(){
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=clients.getBuilderCommonData",
+                data: {
+                    builderId: '<?php echo $client->dealer_id; ?>'
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    console.log("common",data);
+                    fillCommonTab(data);
                 },
                 error: function(data) {
                     var n = noty({
@@ -1358,7 +1542,7 @@ foreach($all_builders as $builder){
                         type: "success",
                         text: "Сохранено!"
                     });
-                    if(project.status >= stage + 25)
+                    if(project.status >= stage + 29)
                     {
                         updateMounterSum(calc.title,calc.mounters[0].id,mounterId,projectId,calc.sum);
                     }
@@ -1460,7 +1644,7 @@ foreach($all_builders as $builder){
                     success: function (data) {
                         if(elem.name == "check_sum") {
                             elem.remove();
-                            project.status = stage + 25;
+                            project.status = stage + 29;
                         }
                         else{
                             var n = noty({
@@ -1600,6 +1784,10 @@ foreach($all_builders as $builder){
                     saveSum(this);
                 });
                 jQuery("")
+            });
+
+            jQuery(".common_tab").click(function(){
+                getBuilderCommonData();
             });
 
             jQuery(".sum_btn").click(function () {
@@ -1887,4 +2075,23 @@ foreach($all_builders as $builder){
             });
         }
 
+        function fillCommonTab(data){
+            jQuery('#report_table > tbody').empty();
+            jQuery.each(data,function(index,elem){
+                jQuery('#report_table > tbody').append('<tr></tr>');
+                jQuery('#report_table > tbody > tr:last').append('<td>' +
+                                                                    '<div class="row"><b>'+elem.client_name+'</b></div>' +
+                                                                    '<div class="row"><b>S=</b>'+elem.square+'</div>' +
+                                                                    '<div class="row"><b>P=</b>'+elem.perimeter+'</div>' +
+                                                                 '</td>');
+                var projects = JSON.parse(elem.projects);
+                jQuery.each(projects,function(ind,project){
+                    jQuery('#report_table > tbody > tr:last').append('<td>' +
+                                                                        '<div class="row"><b>'+project.name+'</b></div>' +
+                                                                        '<div class="row"> <b>Статус:</b> '+project.status+'</div>' +
+                                                                     '</td>');
+                });
+            });
+
+        }
     </script>
