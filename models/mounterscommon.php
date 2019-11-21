@@ -58,6 +58,13 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
             $takenSubquery = $db->getQuery(true);
             $closedSubquery = $db->getQuery(true);
             $payedSubQuery = $db->getQuery(true);
+            $debtSubQuery = $db->getQuery(true);
+
+            $debtSubQuery
+                ->select('mounter_id,SUM(IF(`type`= 1,`sum`,0)) AS debt,SUM(IF(`type`= 2,`sum`,0)) AS decrease_debt')
+                ->from('`rgzbn_gm_ceiling_mounters_debt`')
+                ->group('mounter_id');
+
             $takenSubquery
                 ->select('cli.dealer_id,cm.mounter_id,SUM(cm.sum) AS `taken`')
                 ->from('`rgzbn_gm_ceiling_calcs_mount` AS cm')
@@ -85,6 +92,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
 
             $query
                 ->select('u.id AS mounter_id,u.name AS mounter_name,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed')
+                ->select('md.debt-md.decrease_debt AS debt_rest')
                 ->from('`rgzbn_users` AS u')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS um ON u.id = um.user_id')
                 ->leftJoin('`rgzbn_gm_ceiling_calcs_mount` AS cm ON u.id = cm.mounter_id')
@@ -92,11 +100,13 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->leftJoin('`rgzbn_gm_ceiling_projects` AS p ON calc.project_id = p.id')
                 ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
                 ->leftJoin('`rgzbn_users` AS builder ON builder.id = c.dealer_id')
+                ->leftJoin("($debtSubQuery) AS md ON md.mounter_id = u.id")
                 ->leftJoin("($takenSubquery) AS t ON t.dealer_id = builder.id AND t.mounter_id = u.id")
                 ->leftJoin("($closedSubquery) AS cs ON cs.mounter_id = u.id AND cs.dealer_id = builder.id")
                 ->leftJoin("($payedSubQuery) AS ps ON ps.mounter_id = u.id AND ps.builder_id = builder.id")
                 ->where('um.group_id = 34')
-                ->group('cm.mounter_id,builder.id');
+                ->group('cm.mounter_id,builder.id')
+                ->order('mounter_name ASC');
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];
@@ -106,6 +116,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 $object->rest = $object->closed+$object->payed;
                 unset($object->mounter_name);
                 unset($object->mounter_id);
+                $result[$item->mounter_id]['mounter_debt'] = $item->debt_rest;
                 $result[$item->mounter_id]['builder_data'][] = $object;
             }
             return $result;

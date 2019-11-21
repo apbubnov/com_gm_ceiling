@@ -113,7 +113,13 @@
 
     $project_total = $project_total + $client_sum_transport;
     $project_total_discount = $project_total_discount  + $client_sum_transport;
-
+    echo !empty(floatval($this->item->project_sum));
+    if(!empty(floatval($this->item->project_sum))){
+        if($project_total == $project_total_discount){
+            $project_total = $this->item->project_sum;
+        }
+        $project_total_discount = $this->item->project_sum;
+    }
 
 ?>
 <style>
@@ -427,26 +433,36 @@
                                 <th id="project_total"><span class="sum">
                                     <?php echo round($project_total, 0); ?></span> р. /
                                 </th>
-                                <th colspan="2" id="project_total_discount">
-                                    <?php
-                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                        $old_price = $project_total_discount;
-                                        if ($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) {
-                                            $project_total_discount = $min_components_sum;
-                                        } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
-                                            $project_total_discount = $min_components_sum;
-                                        } elseif ($project_total_discount <  $min_project_sum && $project_total_discount > 0) {
-                                            $project_total_discount =  $min_project_sum;
-                                        }
-                                    ?>
-                                    <span class="sum"><?= round($project_total_discount, 0);?></span> р.
-                                    <?php if($old_price != $project_total_discount): ?>
-                                        <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
-                                    <?php endif; ?>
+                                <th id="project_total_discount">
+                                    <div class="col-md-6" style="padding-top: 10px;">
+                                        <?php
+                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                            $old_price = $project_total_discount;
+                                            if ($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) {
+                                                $project_total_discount = $min_components_sum;
+                                            } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                                                $project_total_discount = $min_components_sum;
+                                            } elseif ($project_total_discount <  $min_project_sum && $project_total_discount > 0) {
+                                                $project_total_discount =  $min_project_sum;
+                                            }
+                                        ?>
+                                        <span class="sum"><?= round($project_total_discount, 0);?></span> р.
+                                        <?php if($old_price != $project_total_discount): ?>
+                                            <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="row" style="padding-top: 10px;">
+                                            <div class="col-xs-5 col-md-5" style="padding:0;"><span style="font-size: 10pt">Финальная сумма</span></div>
+                                            <div class="col-xs-4 col-md-4"><input class="input-gm final_sum" style="width: 100px !important;"></div>
+                                            <div class="col-xs-3 col-md-3"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
+                                        </div>
+                                    </div>
                                 </th>
                             <?php } else { ?>
                                 <th>Итого</th>
-                                <th id="project_total" colspan="2">
+                                <th id="project_total">
                                     <?php
                                         //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                                         $old_price = $project_total;
@@ -462,6 +478,14 @@
                                     <?php if($old_price != $project_total): ?>
                                         <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                     <?endif;?>
+                                </th>
+                                <th>
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-5">Финальная сумма</div>
+                                        <div class="col-md-5"><input class="input-gm final_sum"></div>
+                                        <div class="col-md-2"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
+                                    </div>
+
                                 </th>
                             <?php } ?>
                         </tr>
@@ -935,8 +959,8 @@
                                                     <?php } ?>
                                                 </table>
                                                 <?php if(!empty($calculation->jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
-                                                    <table class="table_info2" id="table_goods" style="display:none;">
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
+                                                    <table class="table_info2 table_goods" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
                                                         <th>Количество</th>
@@ -953,8 +977,8 @@
                                                     </table>
                                                 <?php }?>
                                                 <?php if(!empty($calculation->jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
-                                                    <table class="table_info2" id="table_jobs" style="display:none;">
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
+                                                    <table class="table_info2 table_jobs" style="display:none;">
                                                         <thead>
                                                             <th>Название</th>
                                                             <th>Количество</th>
@@ -970,8 +994,8 @@
                                                     </table>
                                                 <?php }?>
                                                 <?php if(!empty($calculation->factory_jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="factory_jobs"><i class="fas fa-angle-down"></i> Работы цеха</h4>
-                                                    <table class="table_info2" id="table_factory_jobs" style="display:none;">
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="factory_jobs"><i class="fas fa-angle-down"></i> Работы цеха</h4>
+                                                    <table class="table_info2 table_factory_jobs" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
                                                         <th>Количество</th>
@@ -985,8 +1009,8 @@
                                                 <?php }?>
                                                 <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                                                 <?php if (!empty($extra_mounting) ) { ?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="additional_jobs" s><i class="fas fa-angle-down"></i> Дополнительные работы</h4>
-                                                    <table class="table_info2" id="additional_jobs_table" width="100%" style="display:none;">
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="additional_jobs" s><i class="fas fa-angle-down"></i> Дополнительные работы</h4>
+                                                    <table class="table_info2 additional_jobs_table" width="100%" style="display:none;">
                                                         <thead>
                                                             <th>Название</th>
                                                             <th>Цена</th>
@@ -1003,8 +1027,8 @@
                                                 <?php } ?>
                                                 <?php $extra_components = (array) json_decode($calculation->extra_components);?>
                                                 <?php if (!empty($extra_components) ) { ?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="additional_goods"><i class="fas fa-angle-down"></i> Дополнительные комплектующие</h4>
-                                                    <table class="table_info2"id="additional_goods_table" width="100%" style="display:none;">
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="additional_goods"><i class="fas fa-angle-down"></i> Дополнительные комплектующие</h4>
+                                                    <table class="table_info2 additional_goods_table" width="100%" style="display:none;">
                                                         <thead>
                                                             <th>Название</th>
                                                             <th>Цена</th>

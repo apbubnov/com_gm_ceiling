@@ -59,8 +59,30 @@ class Gm_ceilingModelProjects_mounts extends JModelList
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-		
 	}
+
+    function deleteByStage($project_id,$stages){
+        try{
+
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'mount_stage_history.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.print_r($this->getData($project_id),true)."\n----------\n", FILE_APPEND);
+
+
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->delete('`#__gm_ceiling_projects_mounts`');
+            $query->where("project_id = $project_id and type in ($stages)");
+            $db->setQuery($query);
+            $result = $db->execute();
+
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	function save($project_id,$mounts){
 		try{
 

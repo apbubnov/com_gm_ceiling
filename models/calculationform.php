@@ -1334,4 +1334,38 @@ ORDER BY `goods_id`
         }
     }
 
+    public function getNainGroupsData(){
+        try{
+            $db = $this->getDbo();
+            $query = "SET SESSION group_concat_max_len = 1000000;";
+            $db->setQuery($query);
+            $db->execute();
+
+            $query = $db->getQuery(true);
+            $subquery = $db->getQuery(true);
+
+            $subquery
+                ->select('fg.id,fg.title,fg.main_group_id')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',f.id,\'","title":"\',f.title,\'","goods_category":"\',IFNULL(f.goods_category_id,\'\'),\'","input_type":"\',f.input_type,\'","duplicate":"\',f.duplicate,
+\'","parent":"\',IFNULL(f.parent,\'\'),\'","order":"\',f.order,\'"}\') SEPARATOR \',\'),\']\') AS `fields`')
+                ->from('`rgzbn_gm_ceiling_fields_groups` AS fg')
+                ->leftjoin('`rgzbn_gm_ceiling_fields` AS f ON f.group_id = fg.id')
+                ->group('fg.id');
+
+
+            $query
+                ->select('mg.id,mg.title,mg.order')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"group_id":"\',fd.id,\'","title":"\',fd.title,\'","fields":\',fd.fields,\'}\')),\']\') AS `data`')
+                ->from('`rgzbn_gm_ceiling_fields_main_groups` AS mg')
+                ->innerJoin("($subquery) AS fd ON fd.main_group_id = mg.id ")
+                ->group('mg.id');
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

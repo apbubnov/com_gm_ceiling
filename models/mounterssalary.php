@@ -42,7 +42,8 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                 ->where("cli.dealer_id = $builder_id AND cm.mounter_id IS NOT NULL")
                 ->group("cm.mounter_id");
             $db->setQuery($taken_query);
-            $taken_items =$db->loadObjectList();
+
+            $taken_items = $db->loadObjectList();
 
             $query->select("ms.mounter_id,u.name,SUM(GREATEST(0.00,ms.sum)) AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed")
                 ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
@@ -256,6 +257,52 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                 $db->execute();
                 return true;
             }
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function recalcClosedSum($builder_id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $deleteQuery = $db->getQuery(true);
+            $deleteSubQuery = $db->getQuery(true);
+            $deleteSubQuery
+                ->select('p.id')
+                ->from('`rgzbn_gm_ceiling_projects` as p ')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` as c on c.id = p.client_id')
+                ->where("c.dealer_id = $builder_id");
+            $deleteQuery
+                ->delete('`rgzbn_gm_ceiling_mounters_salary`')
+                ->where("project_id in ($deleteSubQuery)");
+            $db->setQuery($deleteQuery);
+            $db->execute();
+            $query
+                ->select('p.id as project_id,p.project_status,mt.title,c.calculation_title,cl.client_name,cm.*')
+                ->from('`rgzbn_gm_ceiling_calcs_mount` AS cm')
+                ->innerJoin('`rgzbn_gm_ceiling_calculations` AS c ON c.id = cm.calculation_id')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = c.project_id')
+                ->innerJoin('`rgzbn_gm_ceiling_mounts_types` AS mt ON cm.stage_id = mt.id')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS cl ON cl.id = p.client_id')
+                ->where(" cl.dealer_id = $builder_id AND mounter_id IS NOT NULL");
+            $db->setQuery($query);
+            $items = $db->loadObjectlist();
+            //throw new Exception(print_r($items,true));
+            $insertArr = [];
+            foreach ($items as $item){
+                if($item->project_status >= $item->stage+29){
+                    $insertArr[] = "$item->mounter_id,$item->project_id,$item->sum,'$item->client_name $item->calculation_title $item->title'";
+                }
+            }
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_ceiling_mounters_salary`')
+                ->columns('`mounter_id`,`project_id`,`sum`,`note`')
+                ->values($insertArr);
+            $db->setQuery($query);
+            $db->execute();
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

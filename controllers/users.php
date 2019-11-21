@@ -132,5 +132,37 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveMounterDebt(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $mounterId = $jinput->getInt('mounterId');
+	        $type = $jinput->getInt('type');
+	        $sum = $jinput->get('sum','','STRING');
+	        $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersDebt');
+	        $result = $model->save($mounterId,$sum,$type);
+	        die(json_encode($result));
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
+
+    function getMounterDebtData(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $mounterId = $jinput->getInt('mounterId');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersDebt');
+            $result = $model->getData($mounterId);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

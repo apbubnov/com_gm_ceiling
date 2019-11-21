@@ -4010,6 +4010,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $client = $client_model->getClientById($project->id_client);
                 $dealer_name = JFactory::getUser($client->dealer_id)->name;
                 $cut_data = $calculation->cut_data;
+                $calc_data = explode('||',$calculation->calc_data);
+                $walls = $calc_data[0];
+                $diags = $calc_data[1];
                 $p_usadki = $calculation->shrink_percent;
                 $usadka = (1-$p_usadki)*100;
                 $array1 = array();
@@ -4054,7 +4057,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<table>';
                 $html .= '<tbody>';
                 $html .= '<tr>';
-                $html .= '<th>Стороны и диагонали: </th><td>' . str_replace(';', '; ', $calculation->calc_data) . '</td>';
+                $html .= '<th>Стороны: </th><td>' . str_replace(';', '; ', $walls) . '</td>';
+                $html .= '</tr>';
+                $html .= '<tr>';
+                $html .= '<th>Диагонали: </th><td>' . str_replace(';', '; ', $diags) . '</td>';
                 $html .= '</tr>';
                 $html .= '</tbody>';
                 $html .= '</table>';

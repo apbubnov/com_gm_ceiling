@@ -148,7 +148,10 @@ class Gm_ceilingModelCalcs_mount extends JModelItem{
                     }
                 }
                 if(!empty($projectId)){
-                    $projectModel->newStatus($projectId,$stageId+25);
+                    $project = $projectModel->getData($projectId);
+                    if($project->project_status <$stageId+25) {
+                        $projectModel->newStatus($projectId, $stageId + 25);
+                    }
                 }
             }
         }

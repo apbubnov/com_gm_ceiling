@@ -866,8 +866,8 @@ jQuery(document).on('click','#close_detailed_prepayment',function(){
 
 });
 
-jQuery(document).on('click','#mount_jobs',function(){
-    jQuery("#table_jobs").toggle();
+jQuery(document).on('click','.mount_jobs',function(){
+    jQuery(".table_jobs").toggle();
     var i = jQuery(this).find('i');
     if(i.hasClass('fa-angle-down')){
         i.removeClass("fa-angle-down").addClass("fa-angle-up");
@@ -878,8 +878,8 @@ jQuery(document).on('click','#mount_jobs',function(){
 
 });
 
-jQuery(document).on('click','#calc_goods',function(){
-    jQuery("#table_goods").toggle();
+jQuery(document).on('click','.calc_goods',function(){
+    jQuery(".table_goods").toggle();
     var i = jQuery(this).find('i');
     if(i.hasClass('fa-angle-down')){
         i.removeClass("fa-angle-down").addClass("fa-angle-up");
@@ -889,8 +889,8 @@ jQuery(document).on('click','#calc_goods',function(){
     }
 });
 
-jQuery(document).on('click','#factory_jobs',function(){
-    jQuery("#table_factory_jobs").toggle();
+jQuery(document).on('click','.factory_jobs',function(){
+    jQuery(".table_factory_jobs").toggle();
     var i = jQuery(this).find('i');
     if(i.hasClass('fa-angle-down')){
         i.removeClass("fa-angle-down").addClass("fa-angle-up");
@@ -900,8 +900,8 @@ jQuery(document).on('click','#factory_jobs',function(){
     }
 });
 
-jQuery(document).on('click','#additional_jobs',function(){
-    jQuery("#additional_jobs_table").toggle();
+jQuery(document).on('click','.additional_jobs',function(){
+    jQuery(".additional_jobs_table").toggle();
     var i = jQuery(this).find('i');
     if(i.hasClass('fa-angle-down')){
         i.removeClass("fa-angle-down").addClass("fa-angle-up");
@@ -911,8 +911,8 @@ jQuery(document).on('click','#additional_jobs',function(){
     }
 });
 
-jQuery(document).on('click','#additional_goods',function(){
-    jQuery("#additional_goods_table").toggle();
+jQuery(document).on('click','.additional_goods',function(){
+    jQuery(".additional_goods_table").toggle();
     var i = jQuery(this).find('i');
     if(i.hasClass('fa-angle-down')){
         i.removeClass("fa-angle-down").addClass("fa-angle-up");
@@ -920,4 +920,39 @@ jQuery(document).on('click','#additional_goods',function(){
     else if(i.hasClass('fa-angle-up')){
         i.removeClass("fa-angle-up").addClass("fa-angle-down");
     }
+});
+
+jQuery('.save_final_btn').click(function () {
+    var final_sum = jQuery('.final_sum').val();
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=project.saveSum",
+        data: {
+            project_id: project_id,
+            final_sum: final_sum
+        },
+        success: function (data) {
+            jQuery("#project_sum").val(final_sum);
+            if(jQuery("#project_total_discount span").length){
+                jQuery("#project_total_discount span").text(final_sum);
+
+            }
+            else{
+                jQuery("#project_total span").text(final_sum);
+            }
+        },
+        dataType: "json",
+        timeout: 20000,
+        error: function (data) {
+            console.log(data);
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка сохранения!"
+            });
+        }
+    });
 });

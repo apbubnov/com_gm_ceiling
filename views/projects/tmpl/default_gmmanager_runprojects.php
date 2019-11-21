@@ -43,8 +43,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         <table class="table table-striped one-touch-view g_table" id="projectList">
             <thead>
             <tr>
-                <th class='center'> 
-                </th>
                 <th class='center'>
                     <?php //echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
                     Номер договора
@@ -90,71 +88,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     $canEdit = JFactory::getUser()->id == $item->created_by;
                 endif; ?>
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
-                    <td>
-                        <?php if(!($dealer->dealer_type == 1 || $dealer->dealer_type == 0) || $user->dealer_id == $dealer->dealer_id):?>
-                        <button class="btn btn-sm btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check"></i></button>
-                        <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.5);">
-                            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-                            </button>
-                            <div id="modal_window_del" class="modal_window">
-                                <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
-                                <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
-                                <p>
-                                    <button type="button" id="ok" onclick="click_ok(<?= $item->id; ?>);" class="btn btn-primary">Да</button>
-                                    <button type="button" id="cancel" onclick="click_cancel(<?= $item->id; ?>);" class="btn btn-primary">Отмена</button>
-                                </p>
-                            </div>
-                        </div>
-                        <?endif;?>
-                    </td>
                     <td class="center one-touch">
                         <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
-                        <?php echo $item->id;
-                            $calculations = $model->new_getProjectItems($item->id);
-                            $mounting_sum = 0; $material_sum = 0; $cost_price = 0;
-                            foreach ($calculations as $calculation) {
-                                $calculation->dealer_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-                                $calculation->dealer_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-                                $calculation->dealer_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-                                $mounting_sum += $calculation->dealer_gm_mounting_sum;
-                                $material_sum += $calculation->dealer_components_sum + $calculation->dealer_canvases_sum;
-                                $cost_price += $mounting_sum + $material_sum;
-                                }
-                                $sum_transport = 0;  $sum_transport_discount = 0; $sum_transport_cost = 0;
-                                $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                                $mount_transport = $mountModel->getDataAll();
-
-                                if($item->transport == 0 ) { $sum_transport = 0; $sum_transport_cost = 0;} 
-                                if($item->transport == 1 ) { 
-                                    $sum_transport = margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin); 
-                                    $sum_transport_cost = $mount_transport->transport * $item->distance_col; } 
-                                if($item->transport == 2 ) { 
-                                    $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
-                                    $sum_transport_cost = $sum_transport; }
-                                
-                                $cost_price = $cost_price + $sum_transport_cost;
-                                
-                                $temp = 0;
-                                if($item->check_mount_done == 0) { 
-                                    $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
-                                    $temp = $temp - $item->new_project_mounting;
-                                    $temp_project_sum = $item->project_sum - $item->new_project_sum;
-                                    $temp_material_sum = ($material_sum - $item->new_material_sum);
-                                    ?>
-                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($temp_project_sum <= 0)?0:round(($temp_project_sum), 2); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
-                                
-                                <?php }
-                                if($item->check_mount_done == 1) { ?>
-                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
-                                <?php }
-
-                            ?>
-                            <input id="<?= $item->id; ?>_cost_price" value="<?php echo $cost_price; ?>"  hidden>
-                            <input id="<?= $item->id; ?>_new_project_sum" value="<?php echo $item->new_project_sum; ?>"  hidden>
+                        <?php echo $item->id;?>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>

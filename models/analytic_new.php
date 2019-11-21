@@ -150,4 +150,53 @@ class Gm_ceilingModelAnalytic_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function getGaugersAnalytic($date1,$date2){
+	    try{
+	        $user = JFactory::getUser();
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $costQuery = $db->getQuery(true);
+            $projectsQuery = $db->getQuery(true);
+
+            $costQuery
+                ->select('c.project_id,SUM(c.canvases_sum + c.components_sum + c.mounting_sum)+ 
+                            (CASE pr.transport
+                                WHEN 1 THEN (pr.distance_col*m.transport)
+                                WHEN 2 THEN IF(pr.distance <= 50,(500*pr.distance_col),(pr.distance*pr.distance_col*m.distance))
+                                ELSE 0
+                            END) AS cost')
+                ->from('`rgzbn_gm_ceiling_calculations` AS c')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` AS pr ON pr.id = c.project_id')
+                ->innerJoin("`rgzbn_gm_ceiling_mount` AS m ON m.user_id = $user->dealer_id")
+                ->group('c.project_id');
+            $projectsQuery
+                ->select('p.project_calculator,COUNT(DISTINCT p.id) AS projects_count,GROUP_CONCAT(p.id) AS projects')
+                ->select('SUM(CASE 
+								WHEN (p.new_project_sum IS NOT NULL AND p.new_project_sum > 0)  THEN p.new_project_sum
+								ELSE p.project_sum
+							END) AS total_sum')
+                ->select('SUM(CASE
+								WHEN (p.new_material_sum IS NOT NULL AND p.new_material_sum > 0 AND p.new_mount_sum IS NOT NULL AND p.new_mount_sum > 0 )  THEN p.new_material_sum + p.new_mount_sum
+								ELSE cs.cost
+							END)  AS total_cost')
+                ->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->innerJoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = p.id')
+                ->leftJoin("($costQuery) AS cs ON cs.project_id = p.id")
+                ->where("p.project_calculator IS NOT NULL AND ph.new_status IN(4,5) and ph.date_of_change between '$date1' and '$date2'")
+                ->group('p.project_calculator');
+            $query
+                ->select('u.id,u.name,IFNULL(pr.projects_count,0) AS projects_count,IFNULL(pr.total_sum,0) AS total_sum,IFNULL(pr.total_cost,0) AS total_cost,IFNULL(pr.projects,\'\') AS projects')
+                ->from('`rgzbn_users` AS u')
+                ->innerJoin("`rgzbn_user_usergroup_map` AS um ON um.user_id = u.id AND (um.group_id = 22 or um.group_id = 21) and u.dealer_id = $user->dealer_id")
+                ->leftJoin("($projectsQuery) AS pr ON pr.project_calculator = u.id ");
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

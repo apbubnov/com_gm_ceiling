@@ -23,6 +23,10 @@ $today = date('Y-m-d');
 echo parent::getButtonBack();
 
 ?>
+<div id="preloader" style="display: none;" class="PRELOADER_GM PRELOADER_GM_OPACITY">
+    <div class="PRELOADER_BLOCK"></div>
+    <img src="/images/GM_R_HD.png" class="PRELOADER_IMG">
+</div>
 <div class="container">
     <div class="row right">
         <label for="c_date_from">Выбрать с:</label>
@@ -68,12 +72,17 @@ echo parent::getButtonBack();
         </div>
     </div>
 <?php if($user->dealer_id == 1 && ($user->dealer_type == 0 || $user->dealer_type == 1)){?>
-    <br>
-    <h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a></h2>
-    <br>
-    <br>
-    <h2><a сlass = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytic_dealers">Аналитика дилеров</a></h2>
-    <br>
+    <div class="row" style="margin-top: 5px;">
+        <div class="col-md-4">
+            <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a>
+        </div>
+        <div class="col-md-4">
+            <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytic_dealers">Аналитика дилеров</a>
+        </div>
+        <div class="col-md-4">
+            <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytics&type=gaugers">Аналитика по замерщикам</a>
+        </div>
+    </div>
 <?php }?>
 <script type="text/javascript">
     var data = [],total = [];
@@ -94,6 +103,9 @@ echo parent::getButtonBack();
 
     jQuery(document).ready(function(){
         jQuery.ajax({
+            beforeSend:function(){
+                jQuery("#preloader").show();
+            },
             url: "index.php?option=com_gm_ceiling&task=analytic.getData",
             data: {
                 c_date_from: jQuery("#c_date_from").val(),
@@ -142,8 +154,10 @@ echo parent::getButtonBack();
                     console.log(table_name);
                     update_total(arr,table_name);
                 });
+                jQuery("#preloader").hide();
             },
             error: function (data) {
+                jQuery("#preloader").hide();
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -369,6 +383,9 @@ echo parent::getButtonBack();
             table_ths = det_ths;
         }
         jQuery.ajax({
+            beforeSend: function(){
+                jQuery("#preloader").show();
+            },
             url: url,
             data: {
                 date1: date1,
@@ -388,9 +405,11 @@ echo parent::getButtonBack();
                 fill_table(table_name,result,table_ths);
                 hideEmptyTr(table_name);
                 console.log(result);
+                jQuery("#preloader").hide();
             },
             error: function (data) {
                 console.log(data.responseText);
+                jQuery("#preloader").hide();
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',

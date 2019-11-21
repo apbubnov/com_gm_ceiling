@@ -2006,7 +2006,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $data['id'] = $project_id;
             $data['calcs_mounting_sum'] = '';
             $project_model->save($data);
-            $projects_mounts_model->delete($project_id);
+            $stages_data = $projects_mounts_model->getData($project_id);
+            $stages = [];
+            foreach ($stages_data as $stage){
+                $groups = JFactory::getUser($stage->mounter)->groups;
+                if(in_array(26,$groups)){
+                    $stages[] = $stage->stage;
+                }
+            }
+            $stages = implode(',',$stages);
+            $projects_mounts_model->deleteByStage($project_id,$stages);
             die(json_encode(true));
         }
         catch(Exception $e)
@@ -2199,6 +2208,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
+    }
+
+    function saveSum(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $final_sum = $jinput->get('final_sum','','STRING');
+            $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $projectModel->saveFinalSum($projectId,$final_sum);
+            die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 }
 ?>

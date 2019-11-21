@@ -131,6 +131,13 @@ class Gm_ceilingModelProjects extends JModelList
             $db->setQuery($query);
             $db->execute();
 
+            $mount_subquery = $db->getQuery(true);
+            $mount_subquery
+                ->select('mounter_id')
+                ->from('`rgzbn_gm_ceiling_projects_mounts`')
+                ->where('project_id = p.id');
+
+
             $calc_subquery = $db->getQuery(true);
             $calc_subquery
                 ->select("`project_id`,
@@ -142,8 +149,8 @@ class Gm_ceilingModelProjects extends JModelList
                            MAX(`run_by_call`) AS `run_by_call`")
                 ->from("`rgzbn_gm_ceiling_calculations`")
                 ->group("`project_id`");
-            $subquery = $db->getQuery(true);
-            $subquery->select('`p`.`id`,
+            $query = $db->getQuery(true);
+            $query->select('`p`.`id`,
                             `p`.`created_by`,
                             `p`.`modified_by`,
                             `p`.`client_id`,
@@ -222,24 +229,24 @@ class Gm_ceilingModelProjects extends JModelList
                                    \']\'
                             ) AS `project_status_history`
                         ');
-            $subquery->select('ROUND(CASE 
+            $query->select('ROUND(CASE 
                                         WHEN p.transport = 1 THEN ((p.distance_col*`um`.`transport`*100)/(100-30))
                                         WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
                                         ELSE 0
                                     END,0) AS transport_cost');
-            $subquery->from('`#__gm_ceiling_projects` AS `p`');
-            $subquery->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
-            $subquery->leftJoin('`#__gm_ceiling_clients` AS `cl` ON `cl`.`id` = `p`.`client_id`');
-            $subquery->leftJoin('`#__users` as `u` ON `u`.`id` = `cl`.`dealer_id`');
-            $subquery->leftJoin('`#__gm_ceiling_clients_contacts` AS `cl_con` ON `cl_con`.`client_id` = `p`.`client_id`');
-            $subquery->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
-            $subquery->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
-            $subquery->leftJoin("($calc_subquery) AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
-            $subquery->leftJoin("`#__gm_ceiling_projects_history` AS `ph` ON `ph`.`project_id` = `p`.`id`");
-            $subquery->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `cl`.`dealer_id`");
-            $subquery->where('`p`.`deleted_by_user` = 0');
-            $subquery->group('`p`.`id`');
-            $query = $db->getQuery(true);
+            $query->from('`#__gm_ceiling_projects` AS `p`');
+            $query->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
+            $query->leftJoin('`#__gm_ceiling_clients` AS `cl` ON `cl`.`id` = `p`.`client_id`');
+            $query->leftJoin('`#__users` as `u` ON `u`.`id` = `cl`.`dealer_id`');
+            $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `cl_con` ON `cl_con`.`client_id` = `p`.`client_id`');
+            $query->leftJoin("`#__gm_ceiling_projects_mounts` AS `pm` ON `p`.`id` = `pm`.`project_id`");
+            $query->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
+            $query->leftJoin("($calc_subquery) AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
+            $query->leftJoin("`#__gm_ceiling_projects_history` AS `ph` ON `ph`.`project_id` = `p`.`id`");
+            $query->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `cl`.`dealer_id`");
+            $query->where('`p`.`deleted_by_user` = 0');
+            $query->group('`p`.`id`');
+            /*$query = $db->getQuery(true);
             $query->select('`p`.`id`,
                         `p`.`created_by`,
                         `p`.`dealer_id`,
@@ -256,7 +263,7 @@ class Gm_ceilingModelProjects extends JModelList
                             `p`.`canvases_margin_sum` +
                             `p`.`mounting_margin_sum`
                         ) AS `project_margin_sum`');
-            $query->from('('.$subquery.') AS `p`');
+            $query->from('('.$subquery.') AS `p`');*/
 
             //throw new Exception($subquery);
             $user = JFactory::getUser();
@@ -270,41 +277,21 @@ class Gm_ceilingModelProjects extends JModelList
                 //     $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                 //     break;
                 case 'chiefprojects':
-                    $query->where("((`p`.`project_status` = 4
-                                    AND `p`.`project_mounting_date` IS NOT NULL
-                                    AND `p`.`project_mounting_date` <> '00.00.0000 00:00')
-                                    OR (`p`.`project_status` IN (5, 10)
-                                        AND (`p`.`project_mounting_date` IS NULL
-                                            OR `p`.`project_mounting_date` = '00.00.0000 00:00')))
-                                    AND `p`.`dealer_id` = $user->dealer_id
+                    $query->where("((`project_status` = 4
+                                    AND `project_mounting_date` IS NOT NULL
+                                    AND `project_mounting_date` <> '00.00.0000 00:00')
+                                    OR (`project_status` IN (5, 10)
+                                        AND (`project_mounting_date` IS NULL
+                                            OR `project_mounting_date` = '00.00.0000 00:00')))
+                                    AND `cl`.`dealer_id` = $user->dealer_id
                                 ");
                     break;
 
                 case 'gmmanager':
-                    $start_date = date('Y-m-d H:i:s', strtotime(' - 1 month'));
-                    $query->select('`p`.`project_status_history`');
                     if ($subtype == 'runprojects') {
-                        $query->select('`p`.`transport`,
-                                        `p`.`distance`,
-                                        `p`.`distance_col`,
-                                        `p`.`new_mount_sum`,
-                                        `p`.`project_sum`,
-                                        `p`.`new_project_sum`,
-                                        `p`.`new_material_sum`,
-                                        `p`.`project_mounting_date`,
-                                        `p`.`last_run_date`,
-                                        `p`.`run_by_call`
-                                ');
-                        $query->where("
-                            `p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30) AND
-                            (`p`.`run_by_call` = 1 OR `p`.`last_run_date` > '$start_date')
-                        ");
+                        $query->where("`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30)");
 
                     } elseif ($subtype == 'archive') {
-                        $query->select('`p`.`new_project_sum`,
-                                        `p`.`project_sum`,
-                                        `p`.`closed`
-                                ');
                         $query->where('`p`.`project_status` = 12');
                         $query->order('`p`.`closed` DESC');
 
@@ -312,15 +299,12 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`project_status` = 22');
 
                     } else {
-                        $query->select('`p`.`project_mounting_date`,
-                                        `p`.`dealer_name`
-                                    ');
                         $query->where('`p`.`project_status` IN (5)');
                     }
                     break;
 
                 case 'manager':
-                    $query->where('dealer_id = '.$user->dealer_id);
+                    $query->where('`cl`.`dealer_id` = '.$user->dealer_id);
 
                     if ($subtype == 'refused') {
                         $query->where('`p`.`project_status` IN (2, 3, 15)');
@@ -331,8 +315,6 @@ class Gm_ceilingModelProjects extends JModelList
                     break;
 
                 case 'gmcalculator':
-                    $query->select('`p`.`dealer_name`');
-
                     if ($subtype == 'calendar') {
                         $query->select('p.read_by_manager');
                         $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
@@ -343,111 +325,111 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
-                        $query->where('`p`.`project_status` BETWEEN 5 AND 15');
+                        $query->where('`project_status` BETWEEN 5 AND 15');
 
                     } elseif ($subtype == 'refused') {
-                        $query->where("`p`.`project_status` IN (2, 3) and p.dealer_id = $user->dealer_id");
+                        $query->where("`p`.`project_status` IN (2, 3) and cl.dealer_id = $user->dealer_id");
                     }
                     break;
 
                 case 'calculator':
 
                     if (in_array(14, $groups)) {
-                        $query->where('(`p`.`dealer_id` = '.$user->id.')');
+                        $query->where('(cl.`dealer_id` = '.$user->id.')');
                     } elseif (in_array(12, $groups)) {
-                        $query->where('(`p`.`dealer_id` = '.$user->dealer_id.')');
+                        $query->where('(cl.`dealer_id` = '.$user->dealer_id.')');
                     } elseif (in_array(21, $groups)) {
-                        $query->where('(`p`.`project_calculator` = '.$user->id.')');
+                        $query->where('(`project_calculator` = '.$user->id.')');
                     }
 
                     if ($subtype == 'calendar') {
-                        $query->select("DATE_FORMAT(`p`.`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
-                                        DATE_FORMAT(`p`.`project_calculation_date`,'%H:%i:%s') AS calculation_time");
-                        $query->where('`p`.`project_status` = 1');
+                        $query->select("DATE_FORMAT(`project_calculation_date`, '%Y-%m-%d') AS calculation_date,
+                                        DATE_FORMAT(`project_calculation_date`,'%H:%i:%s') AS calculation_time");
+                        $query->where('`project_status` = 1');
                         $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
-                        $query->where('`p`.`project_status` BETWEEN 5 AND 15');
+                        $query->where('`project_status` BETWEEN 5 AND 15');
 
                     } elseif ($subtype == 'refused') {
-                        $query->where('`p`.`project_status` IN (2, 3, 15)');
+                        $query->where('`project_status` IN (2, 3, 15)');
                     }
                     break;
 
                 case 'gmchief':
-                    $query->select('`p`.`quadrature`,
-                                    `p`.`dealer_name`,
-                                    `p`.`project_mounter`,
-                                    `p`.`project_mounting_date`,
-                                    `p`.`mounter_dealer_id`
-                                ');
+                    /*$query->select('`quadrature`,
+                                    `dealer_name`,
+                                    `project_mounter`,
+                                    `project_mounting_date`,
+                                    `mounter_dealer_id`
+                                ');*/
 
                     if ($subtype != 'service' && !empty($subtype)) {
-                        $query->where('`p`.`dealer_id` = '.$user->dealer_id);
+                        $query->where('`cl`.`dealer_id` = '.$user->dealer_id);
                     }
 
                     if ($subtype == 'run') {
-                        $query->select('`p`.`closed`');
-                        $query->where('`p`.`project_status` = 12');
+                        $query->select('`closed`');
+                        $query->where('`project_status` = 12');
 
                     } elseif ($subtype == 'gaugings') {
-                        $query->where('`p`.`project_status` = 1');
-                        $query->where('`p`.`dealer_id` = 1');
+                        $query->where('`project_status` = 1');
+                        $query->where('`cl`.`dealer_id` = 1');
 
                     } elseif ($subtype == 'service') {
-                        $query->select("CONCAT('[',GROUP_CONCAT(CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\",\"stage\":\"',prm.type,'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
-                        $query->innerJoin('`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN (`p`.`project_mounter`)');
+                        $query->select("CONCAT('[',GROUP_CONCAT( distinct CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\",\"stage\":\"',prm.type,'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
+                        $query->innerJoin("`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN ($mount_subquery)");
                         $query->innerJoin("`rgzbn_gm_ceiling_projects_mounts` AS `prm` ON prm.project_id = p.id");
-                        $query->where("`umap`.`group_id` IN (11, 26) AND `p`.`project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
+                        $query->where("`umap`.`group_id` IN (11, 26) AND `project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
                         $query->group("p.id");
 
                     } else {
-                        $query->where('`p`.`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
-                        $query->where("`p`.`mounter_dealer_id` = $user->dealer_id");
+                        $query->where('`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
+                        $query->where("`u2`.`dealer_id` = $user->dealer_id");
                     }
-                    $query->order('`p`.`last_mount_date` DESC');
+                    $query->order('`last_mount_date` DESC');
                     break;
                 case 'chief':
-                    $query->select('`p`.`project_mounter`,
-                                    `p`.`project_mounting_date`,
-                                    `p`.`transport`,
-                                    `p`.`distance`,
-                                    `p`.`distance_col`,
-                                    `p`.`new_mount_sum`,
-                                    `p`.`project_sum`,
-                                    `p`.`new_project_sum`,
-                                    `p`.`new_material_sum`,
-                                    `p`.`self_price`,
-                                    `p`.`count_ceilings`
-                                ');
+                    /*$query->select('`project_mounter`,
+                                    `project_mounting_date`,
+                                    `transport`,
+                                    `distance`,
+                                    `distance_col`,
+                                    `new_mount_sum`,
+                                    `project_sum`,
+                                    `new_project_sum`,
+                                    `new_material_sum`,
+                                    `self_price`,
+                                    `count_ceilings`
+                                ');*/
 
-                    $query->where('`p`.`dealer_id` = '.$user->dealer_id);
+                    $query->where('`u2`.`dealer_id` = '.$user->dealer_id);
 
                     if ($subtype == 'run') {
-                        $query->select('`p`.`closed`');
-                        $query->where('`p`.`project_status` = 12');
+                        $query->select('`closed`');
+                        $query->where('`project_status` = 12');
 
                     } elseif ($subtype == 'gaugings') {
-                        $query->where('`p`.`project_status` = 1');
+                        $query->where('`project_status` = 1');
 
                     } else {
-                        $query->where('`p`.`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29,30)');
+                        $query->where('`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29,30)');
                     }
                     break;
 
                 case 'dealer':
-                    $query->where('(`p`.`dealer_id` = '.$user->id.' OR `p`.`dealer_id` = '.$user->dealer_id.')');
+                    $query->where('(`cl`.`dealer_id` = '.$user->id.' OR `cl`.`dealer_id` = '.$user->dealer_id.')');
                     break;
                 case 'accountant':
                     if($subtype == 'close'){
-                        $query->select('`p`.`project_mounting_date`');
-                        $query->select('`p`.`components_sum`');
-                        $query->select('`p`.`canvases_sum`');
-                        $query->select('`p`.`mounting_sum`');
-                        $query->select('`p`.`self_price`');
-                        $query->select('`p`.`project_sum`');
-                        $query->select('`p`.`transport_cost`');
-                        $query->where("`p`.`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) AND `p`.`dealer_id` = $user->dealer_id");
+                        /*$query->select('`project_mounting_date`');
+                        $query->select('`components_sum`');
+                        $query->select('`canvases_sum`');
+                        $query->select('`mounting_sum`');
+                        $query->select('`self_price`');
+                        $query->select('`project_sum`');
+                        $query->select('`transport_cost`');*/
+                        $query->where("`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) AND `cl`.`dealer_id` = $user->dealer_id");
 
                     }
                     break;
@@ -471,7 +453,8 @@ class Gm_ceilingModelProjects extends JModelList
             // else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
             //     $query->order('a.calculation_date DESC');
 
-            $query->order('`p`.`id` DESC');
+            $query->order('`id` DESC');
+            //throw new Exception($query);
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -841,8 +824,8 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('COALESCE(p.new_project_sum,0) as new_project_sum')
                 ->select('COALESCE(p.new_mount_sum,0) as new_mount_sum')
                 ->select('COALESCE(p.new_material_sum,0) as new_material_sum')
-                ->select('IF(((ISNULL(`p`.`project_sum`) OR (`p`.`project_sum` = 0)) AND ((`p`.`new_project_sum` IS NOT NULL) OR (`p`.`new_project_sum` <> 0))),`p`.`new_project_sum`,`p`.`project_sum`) AS `sum`')
-                ->select("(IF(((ISNULL(`p`.`project_sum`) OR (`p`.`project_sum` = 0)) AND ((`p`.`new_project_sum` IS NOT NULL) OR (`p`.`new_project_sum` <> 0))),`p`.`new_project_sum`,`p`.`project_sum`) - IF((COALESCE((`p`.`new_material_sum` + `p`.`new_mount_sum`),0) = 0),
+                ->select('IF((`p`.`new_project_sum` IS NOT NULL AND `p`.`new_project_sum` > 0),`p`.`new_project_sum`,`p`.`project_sum`) AS `sum`')
+                ->select("(IF((`p`.`new_project_sum` IS NOT NULL AND `p`.`new_project_sum` > 0),`p`.`new_project_sum`,`p`.`project_sum`) - IF((COALESCE((`p`.`new_material_sum` + `p`.`new_mount_sum`),0) = 0),
                 ($subquery),COALESCE((`p`.`new_material_sum` + `p`.`new_mount_sum`),0))) AS `profit`")
                 ->select('p.client_id')
                 ->select("ifnull(($subquery),0) as cost")

@@ -5,6 +5,7 @@
 
     $clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+    $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
     $history = $historyModel->getDataByClientId($this->item->id);
     $projects = $clientcardModel->getProjects($this->item->id);
     $jinput = JFactory::getApplication()->input;
@@ -242,7 +243,11 @@
                 <th></th>
             </tr>
         </thead>
-        <?php foreach($projects as $item): ?>
+        <?php foreach($projects as $item):
+            if($isBuilder) {
+                $item->notes = $projectModel->getProjectNotes($item->id,1);
+            }
+            ?>
             <tr class="row_project" data-proj_id="<?php echo $item->id; ?>" data-href="
                 <?php
                     if($user->dealer_type == 1) {
@@ -266,7 +271,7 @@
                 ?>
             ">
                 <td>
-                    <?php echo $item->id;?>
+                    <?php echo ($isBuilder) ? $item->project_info : $item->id;?>
                 </td>
                 <td>
                     <?php 
@@ -275,41 +280,47 @@
                     ?>
                 </td>
                 <td>
-                    <?php echo $item->project_sum;?>
+                    <?php
+                    echo $item->project_sum;?>
                 </td>
                 <td>
                     <?php
-                        $note = '';
-                        if ($item->project_status < 3 || $item->project_status == 15) {
-                            if (!empty($item->gm_manager_note)) {
-                                $note .= $item->gm_manager_note.'<br>';
-                            }
-                            if (!empty($item->dealer_manager_note)) {
-                                $note .= $item->dealer_manager_note.'<br>';
-                            }
-                            if (!empty($item->project_note)) {
-                                $note .= $item->project_note.'<br>';
-                            }
-                        } elseif ($item->project_status == 3 || $item->project_status == 4) {
-                            if (!empty($item->gm_calculator_note)) {
-                                $note .= $item->gm_calculator_note.'<br>';
-                            }
-                            if (!empty($item->dealer_calculator_note)) {
-                                $note .= $item->dealer_calculator_note.'<br>';
-                            }
-                        } elseif ($item->project_status > 4 || $item->project_status < 11) {
-                            if (!empty($item->gm_chief_note)) {
-                                $note .= $item->gm_chief_note.'<br>';
-                            }
-                            if (!empty($item->dealer_chief_note)) {
-                                $note .= $item->dealer_chief_note.'<br>';
-                            }
-                        } else {
-                            if (!empty($item->gm_mount_note)) {
-                                $note .= $item->gm_mount_note.'<br>';
-                            }
-                            if (!empty($item->mount_note)) {
-                                $note .= $item->mount_note.'<br>';
+                        if($isBuilder){
+                            echo $item->notes[0]->note;
+                        }
+                        else{
+                            $note = '';
+                            if ($item->project_status < 3 || $item->project_status == 15) {
+                                if (!empty($item->gm_manager_note)) {
+                                    $note .= $item->gm_manager_note.'<br>';
+                                }
+                                if (!empty($item->dealer_manager_note)) {
+                                    $note .= $item->dealer_manager_note.'<br>';
+                                }
+                                if (!empty($item->project_note)) {
+                                    $note .= $item->project_note.'<br>';
+                                }
+                            } elseif ($item->project_status == 3 || $item->project_status == 4) {
+                                if (!empty($item->gm_calculator_note)) {
+                                    $note .= $item->gm_calculator_note.'<br>';
+                                }
+                                if (!empty($item->dealer_calculator_note)) {
+                                    $note .= $item->dealer_calculator_note.'<br>';
+                                }
+                            } elseif ($item->project_status > 4 || $item->project_status < 11) {
+                                if (!empty($item->gm_chief_note)) {
+                                    $note .= $item->gm_chief_note.'<br>';
+                                }
+                                if (!empty($item->dealer_chief_note)) {
+                                    $note .= $item->dealer_chief_note.'<br>';
+                                }
+                            } else {
+                                if (!empty($item->gm_mount_note)) {
+                                    $note .= $item->gm_mount_note.'<br>';
+                                }
+                                if (!empty($item->mount_note)) {
+                                    $note .= $item->mount_note.'<br>';
+                                }
                             }
                         }
                         echo $note;

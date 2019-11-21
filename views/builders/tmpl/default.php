@@ -231,23 +231,9 @@ $result_clients = $clients_model->getBuilders();
                     var tbody = document.getElementById('tbody_builders');
                     tbody.innerHTML = '';
                     var html = '';
-                    var color;
                     for(var i in data)
                     {
-                        color = '';
-                        if (data[i].refused_to_cooperate == 1)
-                        {
-                            color = 'style="background-color: DarkGrey;"';
-                        }
-                        else if (data[i].call_id == null && (data[i].project_status == null || data[i].project_status == 0 || data[i].project_status == 2))
-                        {
-                            color = 'style="background-color: DarkSalmon;"';
-                        }
-                        else
-                        {
-                            color = 'style="background-color: PaleGreen;"';
-                        }
-                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' + data[i].id + '">';
+                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';

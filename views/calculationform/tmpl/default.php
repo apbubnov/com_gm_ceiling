@@ -467,9 +467,9 @@ if (!empty($calculation_id)) {
                                          style="margin-bottom: 5px;">
                                         <div class="countDiv"><input type="radio" data-id="mount_service"
                                                                      id="mount_service" name="cancel_mount"
-                                                                     class="radio" data-count="2"
-                                                                     value="2"><label
-                                                    for="mount_service">Монтажная служба</label></div>
+                                                                     class="radio" data-count="2" checked
+                                                                     value="2">
+                                            <label for="mount_service">Монтажная служба</label></div>
                                     </div>
                                     <div class="col-sm-12 row-fields" data-id="self_mount" data-group_id="cancel_mount"
                                          data-jobs="['need_mount']" style="margin-bottom: 5px;" checked>

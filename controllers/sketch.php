@@ -26,7 +26,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $n5 = $jinput->get('n5', '', 'FLOAT'); //периметр
             $n9 = $jinput->get('n9', '', 'int'); //углы
             $calc_id = $jinput->get('calc_id', 0, 'int');
-            $length_arr = $jinput->get('arr_length', null, 'array'); //длины сторон
+            $length_arr = json_decode($jinput->get('arr_length','', 'STRING')); //длины сторон
             $arr_points = $jinput->get('arr_points', null, 'array'); //координаты раскроя
             $goods = $jinput->get('goods', array(), 'array'); //полотна
             $jobs = $jinput->get('jobs', array(), 'array'); //работы
@@ -40,6 +40,8 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $calc_data = '';
             $cut_data = '';
 
+            $walls = $length_arr->walls;
+            $diags = $length_arr->diags;
             for ($i = 0; $i < count($arr_points); $i++) {
                 $points_polonta = '';
                 for ($j = 0; $j < count($arr_points[$i]); $j++) {
@@ -51,10 +53,24 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
             $cut_data = substr($cut_data, 0, -1);
 
-            for ($i = 0; $i < count($length_arr); $i++) {
+            usort($walls,function($a,$b){
+                return strcasecmp($a->name,$b->name);
+            });
+            usort($diags,function($a,$b){
+                return strcasecmp($a->name,$b->name);
+            });
+
+            for ($i = 0; $i < count($walls); $i++) {
+                $calc_data .= $walls[$i]->name.'='.$walls[$i]->length.';';
+            }
+            $calc_data .= "||";
+            for ($i = 0; $i < count($diags); $i++) {
+                $calc_data .= $diags[$i]->name.'='.$diags[$i]->length.';';
+            }
+            /*for ($i = 0; $i < count($length_arr); $i++) {
                 $calc_data .= implode('=', $length_arr[$i]);
                 $calc_data .= ';';
-            }
+            }*/
 
             $client_calc_img = base64_decode($calc_img);
             $client_calc_img = preg_replace('/<text [^\<\>]+>\d+\.{0,1}\d*<\/text>/', '', $client_calc_img);

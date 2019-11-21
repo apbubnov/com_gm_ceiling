@@ -26,7 +26,6 @@ $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, 
 
 
 $dealer = JFactory::getUser($client->dealer_id);
-echo $dealer->id;
 if ($dealer->associated_client != $this->item->id)
 {
     throw new Exception("this is not dealer", 403);
@@ -50,6 +49,8 @@ foreach($all_builders as $builder){
         $options .= "<option value = $builder->dealer_id>$builder->client_name</option>";
     }
 }
+//$mounterSalaryModel = Gm_ceilingHelpersGm_ceiling::getModel('mounterssalary');
+//$mounterSalaryModel->recalcClosedSum($dealer->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div class="container">
@@ -1132,6 +1133,7 @@ foreach($all_builders as $builder){
             jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
             this.remove();
         });
+
         jQuery("#add_new_project").click(function(){
             jQuery.ajax({
                 type: 'POST',

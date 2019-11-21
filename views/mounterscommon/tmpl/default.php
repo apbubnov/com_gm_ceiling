@@ -33,10 +33,15 @@ $items = $model->getData();
             <th class="center">
                 Закрыть
             </th>
+            <th class="center">
+                Долг
+            </th>
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($items as $mounter_id => $item) { ?>
+    <?php foreach ($items as $mounter_id => $item) {
+        $total_taken = 0;$total_closed = 0;$total_payed = 0;$total_rest = 0;
+        ?>
         <tr data-mounter_id="<?php echo $mounter_id;?>">
             <td rowspan="<?php echo count($item['builder_data'])?>">
                 <?php echo $item['mounter_name'];?>
@@ -47,32 +52,86 @@ $items = $model->getData();
                     <?php echo !empty($value->builder_name) ? $value->builder_name : "-";?>
                 </td>
                 <td class = "builder">
-                    <?php echo !empty($value->taken) ? $value->taken : "0";;?>
+                    <?php if(!empty($value->taken)){
+                        $total_taken += $value->taken;
+                        echo round($value->taken,2);
+                    }
+                    else{
+                        echo "0";
+                    }
+                    ?>
                 </td>
                 <td class = "builder">
-                    <?php echo !empty($value->closed) ? $value->closed : "0" ;?>
+                    <?php if(!empty($value->closed)){
+                        $total_closed += $value->closed;
+                        echo round($value->closed,2);
+                    }
+                    else{
+                        echo "0";
+                    }
+                    ?>
                 </td>
                 <td class="payed builder">
-                    <?php echo !empty($value->payed) ? $value->payed : "0";?>
+                    <?php if(!empty($value->payed)){
+                        $total_payed += $value->payed;
+                        echo round($value->payed,2);
+
+                    }
+                    else{
+                        echo "0";
+                    }
+                    ?>
                 </td>
                 <td class="rest builder">
-                    <?php echo $value->rest;?>
+                    <?php if (!empty($value->rest)){
+                        $total_rest += $value->rest;
+                        echo round($value->rest,2);
+                    }
+                    ?>
                 </td>
                 <td>
                     <input class="input-gm close_sum">
-                    <button class="btn btn-primary btn-sm save_sum">Save</button>
+                    <button class="btn btn-primary btn-sm save_sum"><i class="far fa-save"></i></button>
                 </td>
+                <?php if($key == 0){?>
+                    <td rowspan="<?php echo count($item['builder_data'])+1?>">
+                        <div class="row">
+                            <input class="input-gm debt_sum">
+                            <button class="btn btn-primary btn-sm save_debt_sum"><i class="far fa-save"></i></button>
+                        </div>
+                        <?php if(!empty($item['mounter_debt'])) {?>
+                            <div class="row">
+                                <b>Остаток:</b>
+                                <span class="debt_rest"><?php echo (!empty($item['mounter_debt'])) ? $item['mounter_debt'] : 0;?></span>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary btn-sm debt_detailed">Детализация</button>
+                            </div>
+                        <?php }?>
+                    </td>
+                <?php }?>
             <?php if(count($item > 1)){
                 $rowspan = true;
                 echo '</tr>';
              } ?>
             <?php }?>
             <?php $rowspan = false;?>
+
+        </tr>
+        <tr>
+            <td colspan="2">
+                <b>Итого</b>
+            </td>
+            <td><?=round($total_taken,2);?></td>
+            <td><?=round($total_closed,2);?></td>
+            <td><?=round($total_payed,2);?></td>
+            <td><?=round($total_rest,2);?></td>
+            <td>-</td>
         </tr>
     <?php } ?>
     </tbody>
 </table>
-<div id="mv_container" class="modal_window_container">
+<div id="mw_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="one_mounter_salary" class="modal_window">
         <table id="detailed_salary" class="table_project_analitic">
@@ -94,19 +153,43 @@ $items = $model->getData();
             </tbody>
         </table>
     </div>
+    <div id="detailed_debt" class="modal_window">
+        <table id="mounter_debt_detailed" class="table_project_analitic">
+            <thead>
+                <tr class="caption_table">
+                    <th class="center">
+                        Сумма
+                    </th>
+                    <th class="center">
+                        Тип
+                    </th>
+                    <th class="center">
+                        Дата
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     var data = JSON.parse('<?php echo json_encode($items)?>');
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#one_mounter_salary"); // тут указываем ID элемента
-        if (!div.is(e.target) && div.has(e.target).length === 0 ) {
+        var div = jQuery("#one_mounter_salary"),
+            div1 = jQuery("#detailed_debt"); // тут указываем ID элемента
+        if (!div.is(e.target) && div.has(e.target).length === 0 &&
+            !div1.is(e.target) && div1.has(e.target).length === 0) {
             jQuery("#close").hide();
-            jQuery("#mv_container").hide();
+            jQuery("#mw_container").hide();
             div.hide();
+            div1.hide();
         }
     });
 
     jQuery(document).ready(function () {
+        console.log(data);
         jQuery(".save_sum").click(function () {
             var tr = jQuery(this).closest('tr'),
                 mounter_id = tr.data('mounter_id'),
@@ -116,11 +199,10 @@ $items = $model->getData();
             if(close_sum>0){
                 close_sum = -close_sum;
             }
-            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'));
+            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'),tr.find('.close_sum'));
         });
 
         jQuery('.builder').click(function () {
-
             var tr = jQuery(this).closest('tr'),
                 builder_id = tr.find('.builder_name').data('builder_id'),
                 mounter_id = tr.data('mounter_id');
@@ -157,28 +239,90 @@ $items = $model->getData();
                     });
                 }
             });
-            jQuery("#mv_container").show();
+            jQuery("#mw_container").show();
             jQuery("#one_mounter_salary").show();
             jQuery("#close").show();
+        });
+
+        jQuery('body').on('click','.debt_detailed',function(){
+            var tr = jQuery(this).closest('tr'),
+                mounter_id = tr.data('mounter_id');
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=users.getMounterDebtData",
+                data: {
+                    mounterId: mounter_id
+                },
+                dataType: "json",
+                async: false,
+                success: function (responseData) {
+                    jQuery("#mounter_debt_detailed > tbody").empty();
+                    jQuery.each(responseData,function(index,elem){
+                        jQuery("#mounter_debt_detailed > tbody").append('<tr>' +
+                                                                            '<td>'+elem.sum+'</td>'+
+                                                                            '<td>'+elem.title+'</td>'+
+                                                                            '<td>'+elem.date_time+'</td>'+
+                                                                        '</tr>');
+                    });
+                    console.log(responseData);
+                    jQuery("#mw_container").show();
+                    jQuery("#detailed_debt").show('slow');
+                    jQuery("#close").show();
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        jQuery('.save_debt_sum').click(function () {
+            var tr = jQuery(this).closest('tr'),
+                mounter_id = tr.data('mounter_id'),
+                sum = parseFloat(tr.find('.debt_sum').val());
+            console.log(tr);
+            saveDebtSum(mounter_id, sum, tr,1);
         });
     });
 
     function check_pay_possibility(current_builder,close_sum){
         var unclosed_sum = current_builder.taken - current_builder.closed,
             available_sum = unclosed_sum + current_builder.rest;
-        console.log(unclosed_sum);
-        if(available_sum >= Math.abs(close_sum) ||
-            available_sum >= Math.abs(close_sum)) {
+        /*console.log('unclosed',unclosed_sum);
+        console.log('available',available_sum);
+        console.log(available_sum >= Math.abs(close_sum));*/
+        if(available_sum >= Math.abs(close_sum)) {
             return true;
         }
         else return false;
     }
-    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td) {
-        var mounter_data = data[mounter_id];
+    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td,input) {
+        var mounter_data = data[mounter_id],
+            percent_sum = 0,
+            tr = rest_td.closest('tr');
+        if(!empty(mounter_data['mounter_debt'])){
+            percent_sum = Math.abs(close_sum)*0.25;
+        }
+        close_sum -= percent_sum;
         if(mounter_data['builder_data'].length == 1){
-            console.log(mounter_data['builder_data'][0]);
-            if(check_pay_possibility(mounter_data['builder_data'][0]),close_sum){
+            if(check_pay_possibility(mounter_data['builder_data'][0],close_sum)){
                 savePay(mounter_id,close_sum,mounter_data['builder_data'][0].builder_id,payed_td,rest_td,mounter_data['builder_data'][0]);
+                input.val("");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Успешно!"
+                });
+                if(!empty(percent_sum)){
+                    saveDebtSum(mounter_id, percent_sum, tr,2);
+                }
             }
             else{
                 var n = noty({
@@ -199,9 +343,20 @@ $items = $model->getData();
                 }
                 return result;
             });
-            console.log(check_pay_possibility(current_builder,close_sum));
             if(check_pay_possibility(current_builder,close_sum)){
                 savePay(mounter_id,close_sum,current_builder.builder_id,payed_td,rest_td,current_builder);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Успешно!"
+                });
+                input.val("");
+                if(!empty(percent_sum)){
+                    saveDebtSum(mounter_id, percent_sum, tr,2);
+                }
             }
             else{
                 /*проверить больше ли общая доступная сумма по всем объектам суммы выплаты*/
@@ -225,6 +380,18 @@ $items = $model->getData();
                             }
                         }
                     });
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Успешно!"
+                    });
+                    input.val("");
+                    if(!empty(percent_sum)){
+                        saveDebtSum(mounter_id, percent_sum, tr,2);
+                    }
                 }
                 else {
                     var n = noty({
@@ -259,6 +426,48 @@ $items = $model->getData();
                 /!*payed_td[0].innerText = data.payed;
                 rest_td[0].innerText = data.rest;*!/*/
                 console.log(data);
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    }
+
+    function saveDebtSum(mounter_id, sum, tr, type) {
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=users.saveMounterDebt",
+            data: {
+                mounterId: mounter_id,
+                sum: sum,
+                type: type
+            },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Сохранено!"
+                });
+                tr.find('.debt_sum').val('');
+                var old_sum = tr.find('.debt_rest').text();
+                if(type == 2){
+                    tr.find('.debt_rest').text((+old_sum - sum).toFixed(2));
+
+                }
+                else{
+                    tr.find('.debt_rest').text((+old_sum + sum).toFixed(2));
+                }
             },
             error: function (data) {
                 var n = noty({
