@@ -30,5 +30,7 @@ $userId     = $user->get('id');
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-building" aria-hidden="true"></i>Застройщики</a>
 	</p>
-
+    <p class="center">
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mounterscommon', false); ?>"><i class="fa fa-building" aria-hidden="true"></i>Сводная таблица</a>
+    </p>
 </div>

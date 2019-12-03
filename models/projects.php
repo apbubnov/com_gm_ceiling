@@ -433,6 +433,9 @@ class Gm_ceilingModelProjects extends JModelList
 
                     }
                     break;
+                case 'client':
+                    $query->where("p.client_id = $user->associated_client");
+                    break;
                 default:
                     break;
             }

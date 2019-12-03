@@ -64,7 +64,27 @@ if ($this->item->project_status == 1) {
 } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
     $whatCalendar = 1;
 }
+//address
+$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
+$house = $house[1];
+preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
+$bdq = $bdq[1];
+preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
+$apartment = $apartment[1];
+preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
+$porch = $porch[1];
+preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
+$floor = $floor[1];
+preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
+$code = $code[1];
 
+if(!empty($street)&&!empty($house)) {
+    $addressForMap = "$street,$house";
+    if (!empty($porch)) {
+        $addressForMap .= ",$porch";
+    }
+}
 echo parent::getPreloader();
 ?>
 
@@ -182,11 +202,16 @@ echo parent::getPreloader();
                             $mod = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
                             $contact = $mod->getData($this->item->id);
                         ?>
-                        <td><?php echo $contact->client_contacts; ?></td>
+                        <td><?php echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>" ?></td>
                     </tr>
                     <tr>
                         <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                        <td><?php echo $this->item->project_info; ?></td>
+                        <td>
+                            <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$addressForMap;?>">
+                                <?=$this->item->project_info;?>
+                            </a>
+                        </td>
+
                     </tr>
                     <tr>
                         <th>
@@ -232,7 +257,7 @@ echo parent::getPreloader();
                     <input name="type" value="gmchief" type="hidden">
                 <?php } ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-xs-12 col-md-6">
                 <h4 class="center"> Примечания</h4>
                 <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
             </div>

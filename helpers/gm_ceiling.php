@@ -247,12 +247,15 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function registerUser($FIO, $phone, $email, $client_id, $type = null)
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null,$reset = null)
     {
         try {
             jimport('joomla.user.helper');
             if(empty($type)){
                 $type = 1;
+            }
+            if(empty($reset)){
+                $reset = 0;
             }
             $phone = mb_ereg_replace('[^\d]', '', $phone);
             if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
@@ -277,7 +280,8 @@ class Gm_ceilingHelpersGm_ceiling
                 "groups" => array(2, 14),
                 "phone" => $phone,
                 "block" => 0,
-                "dealer_type" => $type
+                "dealer_type" => $type,
+                "requireReset" => $reset
             );
             $user = new JUser;
             if (!$user->bind($data)) {
@@ -5813,7 +5817,12 @@ class Gm_ceilingHelpersGm_ceiling
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function groupMapNoteTitle($groups){
+    public static function groupMapNoteTitle($groups,$user = null){
+        if(!empty($user)){
+            if($user->dealer_type == 2){
+                $isClient=true;
+            }
+        }
         $result = (object)[];
         if (in_array("13", $groups)) { //Менеджер дилера
             $result->title = "d_manager";
@@ -5830,6 +5839,9 @@ class Gm_ceilingHelpersGm_ceiling
         if (in_array("14", $groups)) { //Дилер
             $result->title = "dealer";
             $result->description = "Дилер ";
+            if($isClient){
+                $result->description = "Клиент ";
+            }
         }
         if (in_array("16", $groups)) { //Менеджер ГМ
             $result->title = "gm_manager";
@@ -5862,7 +5874,7 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($notes as $key => $value) {
                 $user = JFactory::getUser($value->user_id);
                 $groups = $user->get('groups');
-                $groupTitle = self::groupMapNoteTitle($groups);
+                $groupTitle = self::groupMapNoteTitle($groups,$user);
                 $noteObject = (object)array("value"=>"","description"=>"","type"=>"","author"=>"");
 
                 switch($value->type){

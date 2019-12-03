@@ -41,7 +41,7 @@
     // контакты клиента
     $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
     //-----------------
     $group_id = ($user->dealer_id == 1) ? 16 : 13;
@@ -90,7 +90,13 @@
     <?php if(count($managers)){?>
         <button type="button" id="edit_manager" value="" class = "btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></button>
     <?php }?>
-   
+</div>
+<div class="row center">
+    <div class="col-md-12">
+        <button class="btn btn-primary" id="grant_access">
+            Предоставить доступ<br> для онлайн просчета
+        </button>
+    </div>
 </div>
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
     <select id="select_phones" style="display:none;">
@@ -722,6 +728,64 @@
         });
             
             return false;
+        });
+
+        jQuery('#grant_access').click(function () {
+            var client_id = '<?= $this->item->id; ?>',
+                phones = JSON.parse('<?=json_encode($client_phones); ?>'),
+                dop_contacts = JSON.parse('<?= json_encode($dop_contacts); ?>'),
+                phone,email;
+            if(!empty(phones)){
+                phone = phones[0].phone;
+            }
+            else{
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "У клиента отсутствует номер телефона!"
+                });
+                return;
+            }
+            if(!empty(dop_contacts)){
+                email = dop_contacts[0].contact;
+            }
+            else{
+                email = client_id+"@"+client_id;
+            }
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=users.registerClient",
+                data: {
+                    client_id: client_id,
+                    phone: phone,
+                    email:email
+                },
+                dataType: "json",
+                async: true,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Доступ предоставлен!Логин и пароль совпадают с первым номером телефона клиента!"
+                    });
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
         });
     });
 

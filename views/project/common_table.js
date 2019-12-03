@@ -1,4 +1,3 @@
-
 jQuery("[name = click_transport]").click(function () {
     calculate_transport();
 });

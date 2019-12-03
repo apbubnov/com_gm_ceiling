@@ -52,25 +52,66 @@ foreach($all_builders as $builder){
 //$mounterSalaryModel = Gm_ceilingHelpersGm_ceiling::getModel('mounterssalary');
 //$mounterSalaryModel->recalcClosedSum($dealer->id);
 ?>
+
+<style>
+    fieldset {
+        margin: 10px;
+        border: 2px solid #414099;
+        padding: 4px;
+        border-radius: 4px;
+    }
+    legend{
+        width: auto;
+    }
+    .td_div{
+        border-bottom: #414099 1px solid;
+    }
+    hr {
+        border: 0;
+        height: 2px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(65,64,153, 0.75), rgba(0, 0, 0, 0));
+    }
+
+    .choose_file .form-group{
+        padding:1em;margin:1em
+    }
+    input[type=file]{outline:0;opacity:0;pointer-events:none;user-select:none}
+    .label{width:100%;height:38px;border:2px dashed grey;border-radius:5px;display:block;padding:0.25em;transition:border 300ms ease;cursor:pointer;text-align:center;margin-left: auto;
+        margin-right: auto}
+    .label i{display:block;font-size:28px;}
+    .label i,.label .title{color:grey;transition:200ms color}
+    .label:hover{border:2px solid #414099}
+    .label:hover i,.choose_file .label:hover .title{color:#414099}
+
+    .small_img {
+        display: inline-block;
+        height: 40px;
+
+    }
+    .big_img {
+        width:100%;
+        height:auto;
+    }
+</style>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
-            <div class="col-md-2">
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="col-xs-12 col-md-8">
+            <div class="col-xs-6 col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
+            <div class="col-xs-3 col-md-2">
                 <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></button>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-3 col-md-2">
                 <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-3 col-md-2">
                 <a href="/index.php?index.php?option=com_gm_ceiling&view=dealerprofile&type=edit&id=<?php echo $dealer->id?>" class = "btn btn-primary" i>Прайс</a>
             </div>
         </div>
-        <div class="col-md-2 left">
-            <button type="button" class="btn btn-primary" id="show_info_div">Показать инф-ю</button>
+        <div class="col-xs-6 col-md-2 left">
+            <button type="button" class="btn btn-primary" id="show_info_div">Информация</button>
         </div>
-        <div class="col-md-2 left">
+        <div class="col-xs-6 col-md-2 left">
             <button type="button" class="btn btn-primary" id="show_actions_div">Действия</button>
         </div>
     </div>
@@ -218,25 +259,7 @@ foreach($all_builders as $builder){
         </div>
     </div>
 </div>
-<style>
-    fieldset {
-        margin: 10px;
-        border: 2px solid #414099;
-        padding: 4px;
-        border-radius: 4px;
-    }
-    legend{
-        width: auto;
-    }
-    .td_div{
-        border-bottom: #414099 1px solid;
-    }
-    hr {
-        border: 0;
-        height: 2px;
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(65,64,153, 0.75), rgba(0, 0, 0, 0));
-    }
-</style>
+
 <hr>
 <div class="row">
     <p class="caption-tar">Дублировать замеры</p>
@@ -298,7 +321,17 @@ foreach($all_builders as $builder){
         </div>
         <div class="row">
             <div class="col-md-12">
-                Общая себестоимость: <span id="common_self_sum"></span> м<sup>2</sup>.
+                Общая себестоимость: <span id="common_self_sum"></span> p.
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="btn_add_dop_costs"> Добавить доп.затраты</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="btn_show_dop_costs"> Просмотреть доп.затраты</button>
             </div>
         </div>
     </div>
@@ -532,11 +565,61 @@ foreach($all_builders as $builder){
             </tbody>
         </table>
     </div>
+    <div class="modal_window" id="mw_dop_costs">
+        <div class="row center" >
+            <div class="col-md-4">
+                <span>Cумма</span>
+                <input class="form-control" id="dop_cost_sum">
+            </div>
+            <div class="col-md-4">
+                <span>Комментарий</span>
+                <input class="form-control" id="dop_cost_comment">
+            </div>
+            <div class="col-md-4">
+                <span>Прикрепить чек</span>
+                <!--<input type="file" class="btn btn-primary" id="check">-->
+                    <label class="label">
+                        <i class="fas fa-paperclip"></i>
+                        <input type="file" id="attach_check" multiple >
+                    </label>
+            </div>
+        </div>
+        <div class="row center">
+            <button class="btn btn-primary" type="button" id="save_dop_costs">Сохранить</button>
+        </div>
+    </div>
+    <div class="modal_window" id="mw_view_dop_costs">
+        <table id="table_dop_costs" class="table_project_analitic">
+            <thead>
+                <tr class="caption_table">
+                    <td>
+                        Сумма
+                    </td>
+                    <td>
+                        Комментарий
+                    </td>
+                    <td>
+                        От кого
+                    </td>
+                    <td>
+                        Подтверждено
+                    </td>
+                    <td>
+                        Чек
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </div>
     <script>
         var progressData = [],
             mountersOption = "<option>Выберите</option>",
-            mountersForDelete = [];
+            mountersForDelete = [],
+            checks;
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
@@ -580,30 +663,100 @@ foreach($all_builders as $builder){
                 div9 = jQuery("#one_mounter_salary"),
                 div10 = jQuery("#add_mounters"),
                 div11 = jQuery("#delete_mounter_window"),
-                div12 = jQuery("#noty_center_layout_container");
+                div12 = jQuery("#noty_center_layout_container"),
+                div13 = jQuery("#mw_dop_costs"),
+                div14 = jQuery("#mw_view_dop_costs");
             if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
                 && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
-                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target)&& !div10.is(e.target)&&!div11.is(e.target)&&!div12.is(e.target)
+                && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
+                &&!div11.is(e.target)&&!div12.is(e.target) && !div13.is(e.target) &&!div14.is(e.target)
                 && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
                 && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
                 && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
-                && div10.has(e.target).length === 0 && div11.has(e.target).length === 0&& div12.has(e.target).length === 0) {
+                && div10.has(e.target).length === 0 && div11.has(e.target).length === 0&& div12.has(e.target).length === 0
+                && div13.has(e.target).length === 0 && div14.has(e.target).length === 0) {
                 jQuery("#close").hide();
                 jQuery("#mv_container").hide();
-                jQuery("#modal_window_fio").hide();
-                jQuery("#modal_window_client").hide();
-                jQuery("#modal_window_comm").hide();
-                jQuery("#modal_window_call").hide();
-                jQuery("#call").hide();
-                jQuery("#modal_window_select_number").hide();
-                jQuery("#apartment_change").hide();
-                jQuery("#mounters_salary").hide();
-                jQuery("#one_mounter_salary").hide();
-                jQuery("#add_mounters").hide();
-                jQuery("#delete_mounter_window").hide();
+                div.hide();
+                div2.hide();
+                div3.hide();
+                div4.hide();
+                div5.hide();
+                div6.hide();
+                div7.hide();
+                div8.hide();
+                div9.hide();
+                div10.hide();
+                div11.hide();
+                div12.hide();
+                div13.hide();
+                div14.hide();
             }
         });
 
+        jQuery("#btn_show_dop_costs").click(function(){
+            var builderId = '<?php echo $dealer->id?>';
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=users.getBuildersDopCost",
+                data: {
+                    builder_id: builderId
+                },
+                success: function(data){
+                   console.log(data);
+                   jQuery.each(data,function(index,elem){
+                       var images = elem.check.split(','),
+                           img = '';
+                       for(var i=0;i<images.length;i++){
+                           img += '<img class="small_img" src="/additional_builder_costs/'+builderId+'/'+images[i]+'">';
+                       }
+                       console.log('img',img);
+                       jQuery("#table_dop_costs > tbody").append('<tr>' +
+                                                                    '<td>'+elem.sum+'</td>'+
+                                                                    '<td>'+elem.description+'</td>'+
+                                                                    '<td>'+elem.from_name+'</td>'+
+                                                                    '<td>'+elem.accepted_name+'</td>'+
+                                                                    '<td>'+img+'</td>'+
+                                                                 '</tr>');
+                   });
+
+                   jQuery("#mv_container").show();
+                   jQuery("#close").show();
+                   jQuery("#mw_view_dop_costs").show('slow');
+
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка!"
+                    });
+                }
+            });
+
+
+        });
+        jQuery('body').on('click', '.small_img', function(e)
+        {
+           jQuery(this).removeClass('small_img');
+           jQuery(this).addClass('big_img');
+        });
+        jQuery('body').on('click', '.big_img', function(e)
+        {
+            jQuery(this).removeClass('big_img');
+            jQuery(this).addClass('small_img');
+        });
+
+        jQuery("#btn_add_dop_costs").click(function(){
+            jQuery("#mv_container").show();
+            jQuery("#close").show();
+            jQuery("#mw_dop_costs").show('slow');
+        });
         jQuery("#duplicate").click(function () {
             var clients_id = [];
             jQuery.each(jQuery("input[name='need_duplicate']:checked"),function(index,elem){
@@ -889,6 +1042,7 @@ foreach($all_builders as $builder){
                 e.preventDefault();
                 return false;
             });
+
 
             function savePay(mounter_id, paid_sum, paid, oldval,rest,restOld) {
                 jQuery.ajax({
@@ -1693,6 +1847,56 @@ foreach($all_builders as $builder){
                 status = firstTab.data("mount_status");
             firstTab.addClass('active');
             drawReportTable(stage);
+
+
+            jQuery('#attach_check').change(function(){
+                checks = this.files;
+                console.log(checks);
+            });
+
+            jQuery("#btn_show_dop_costs").click(function(){
+                jQuery("#mv_container").show();
+                jQuery("#close").show();
+                jQuery("#mw_view_dop_costs").show('slow');
+            });
+            // обработка и отправка AJAX запроса при клике на кнопку upload_files
+            jQuery('#save_dop_costs').click(function(){
+                if( typeof checks == 'undefined' ) return;
+                var data = new FormData();
+                jQuery.each( checks, function( key, value ){
+                    data.append( key, value );
+                });
+                data.append('checks_upload', 1 );
+                data.append('cost_sum',jQuery("#dop_cost_sum").val());
+                data.append('cost_comment',jQuery("#dop_cost_comment").val());
+                data.append('builder_id','<?php echo $dealer->id?>');
+                for (var p of data) {
+                    console.log(p);
+                }
+                jQuery.ajax({
+                     url: 'index.php?option=com_gm_ceiling&task=users.saveBuilderDopCosts',
+                     type: 'POST',
+                     data: data,
+                     cache: false,
+                     dataType: 'json',
+                     processData: false,
+                     contentType: false,
+                     success: function(respond){
+                         console.log('respond',respond);
+                     },
+                     error: function(respondData){
+                         var n = noty({
+                             timeout: 2000,
+                             theme: 'relax',
+                             layout: 'center',
+                             maxVisible: 5,
+                             type: "error",
+                             text: "Ошибка сервера"
+                         });
+                     }
+                 });
+
+            });
 
             jQuery("#new_mounter_phone").mask('+7(999) 999-9999');
 

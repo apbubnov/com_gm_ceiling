@@ -849,9 +849,12 @@ if (empty($list['direction']))
     function getBuilderCommonData($builderId){
 	    try{
             $db    = JFactory::getDbo();
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
             $query = $db->getQuery(true);
             $query
-                ->select('c.id,c.client_name,SUM(calc.n4) AS square,SUM(calc.n5) AS perimeter,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"project_id":"\',p.id,\'","name":"\',p.project_info,\'","status":"\',s.title,\'"}\') SEPARATOR \',\'),\']\') AS projects')
+                ->select('c.id,c.client_name,SUM(calc.n4) AS square,SUM(calc.n5) AS perimeter,CONCAT(\'[\',GROUP_CONCAT( DISTINCT CONCAT(\'{"project_id":"\',p.id,\'","name":"\',p.project_info,\'","status":"\',s.title,\'"}\') SEPARATOR \',\'),\']\') AS projects')
                 ->from('`rgzbn_gm_ceiling_clients` AS c')
                 ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id')
                 ->innerJoin('`rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id')

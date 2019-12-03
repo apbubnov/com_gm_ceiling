@@ -173,7 +173,7 @@ $rest = -($total_sum) - $contributed;
                 <?php } ?>
             </div>
         </div>
-        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style="precalc_btn margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php
                 if ($userId == 1 || $userId == 2){

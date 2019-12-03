@@ -18,6 +18,9 @@
     if(in_array('17',$user_groups || $user->id == 2)){
         $isNMS = true;
     }
+    if($user->dealer_type == 2){
+        $isClient = true;
+    }
     $isBuilder = (JFactory::getUser($this->item->dealer_id)->dealer_type == 7);//проект застройщика или нет
     $needShow = !in_array($this->item->project_status,VERDICT_STATUSES) || $isBuilder;
     $displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder)?  "style=\"display:none;\"" : "";//скрыть элемент
@@ -113,7 +116,6 @@
 
     $project_total = $project_total + $client_sum_transport;
     $project_total_discount = $project_total_discount  + $client_sum_transport;
-    echo !empty(floatval($this->item->project_sum));
     if(!empty(floatval($this->item->project_sum))){
         if($project_total == $project_total_discount){
             $project_total = $this->item->project_sum;
@@ -451,14 +453,15 @@
                                             <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                         <?php endif; ?>
                                     </div>
-
-                                    <div class="col-md-6">
-                                        <div class="row" style="padding-top: 10px;">
-                                            <div class="col-xs-5 col-md-5" style="padding:0;"><span style="font-size: 10pt">Финальная сумма</span></div>
-                                            <div class="col-xs-4 col-md-4"><input class="input-gm final_sum" style="width: 100px !important;"></div>
-                                            <div class="col-xs-3 col-md-3"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
+                                    <?php if(!isClient){ ?>
+                                        <div class="col-md-6">
+                                            <div class="row" style="padding-top: 10px;">
+                                                <div class="col-xs-5 col-md-5" style="padding:0;"><span style="font-size: 10pt">Финальная сумма</span></div>
+                                                <div class="col-xs-4 col-md-4"><input class="input-gm final_sum" style="width: 100px !important;"></div>
+                                                <div class="col-xs-3 col-md-3"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 </th>
                             <?php } else { ?>
                                 <th>Итого</th>
@@ -480,15 +483,17 @@
                                     <?endif;?>
                                 </th>
                                 <th>
+                                    <?php if(!$isClient){?>
                                     <div class="row" style="padding-top: 10px;">
                                         <div class="col-md-5">Финальная сумма</div>
                                         <div class="col-md-5"><input class="input-gm final_sum"></div>
                                         <div class="col-md-2"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
                                     </div>
-
+                                    <?php }?>
                                 </th>
                             <?php } ?>
                         </tr>
+                        <?php if(!$isClient){ ?>
                         <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="3">
                                 Предоплата
@@ -527,6 +532,7 @@
                                 </div>
                             </td>
                         </tr>
+                        <?php }?>
 
                         <?php if ($user->dealer_type != 2) { ?>
                             <tr style="background-color: rgba(0,0,0,0.05);">

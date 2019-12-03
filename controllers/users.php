@@ -164,5 +164,87 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveBuilderDopCosts(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $costSum = $jinput->get('cost_sum','','STRING');
+            $costComment = $jinput->get('cost_comment','','STRING');
+            $checksUpload = $jinput->getInt('checks_upload');
+            $builderId = $jinput->getInt('builder_id');
+            $images = [];
+            if(!empty($checksUpload)){
+                foreach ($_FILES as $file){
+                    if(exif_imagetype($file['tmp_name'])){
+                        $images[] = $file;
+                    }
+                }
+            }
+            if(!empty($images)){
+                if (!is_dir('additional_builder_costs/'.$builderId)) {
+                    if (!mkdir('additional_builder_costs/'.$builderId, 0777, true)) {
+                        throw new Exception('Dir not maked', 500);
+                    }
+                }
+                $dir = 'additional_builder_costs/'.$builderId.'/';
+                $checks = [];
+                foreach ($images as $file) {
+                    $md5 = md5($builderId.microtime().$file['name']);
+                    if (is_uploaded_file($file['tmp_name'])) {
+                        if (move_uploaded_file($file['tmp_name'], $dir.$md5)) {
+                        } else {
+                            throw new Exception('Uploaded file not moved', 500);
+                        }
+                    } else {
+                        throw new Exception('File not uploaded', 500);
+                    }
+                    $checks[] = $md5;
+                }
+                $checks = implode(',',$checks);
+                $dopCostModel = Gm_ceilingHelpersGm_ceiling::getModel('buildersdopcosts');
+                $dopCostModel->save($builderId,$costSum,$costComment,$checks);
+            }
+            else{
+                $result = (object)array("type"=>"error","text"=>"Отсутствует изображение чека!");
+            }
+            die(json_encode($result));
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getBuildersDopCost(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $builderId = $jinput->get('builder_id');
+            $dopCostModel = Gm_ceilingHelpersGm_ceiling::getModel('buildersdopcosts');
+            $result = $dopCostModel->getData($builderId);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function registerClient(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $clientId = $jinput->getInt('client_id');
+            $phone = $jinput->get('phone','','STRING');
+            $email = $jinput->get('email','','STRING');
+            $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $client = $clientModel->getClientById($clientId);
+            Gm_ceilingHelpersGm_ceiling::registerUser($client->client_name,$phone,$email,$clientId,2,0);
+            die(json_encode(true));
+	    }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
 }
 ?>

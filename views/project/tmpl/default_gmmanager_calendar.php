@@ -548,11 +548,11 @@
 <script type="text/javascript">
     init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
-    var project_id = "<?php echo $this->item->id; ?>";
-    var $ = jQuery;
-    var min_project_sum = <?php echo  $min_project_sum;?>;
-    var min_components_sum = <?php echo $min_components_sum;?>;
-    var self_data = JSON.parse('<?php echo $self_calc_data;?>');
+    var project_id = "<?php echo $this->item->id; ?>",
+        $ = jQuery,
+        min_project_sum = <?php echo  $min_project_sum;?>,
+        min_components_sum = <?php echo $min_components_sum;?>,
+        self_data = JSON.parse('<?php echo $self_calc_data;?>');
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div1 = jQuery("#mw_recoil"),
             div2 = jQuery("#mw_measures_calendar"),

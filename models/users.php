@@ -597,7 +597,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$type = 11;
 			$items = [];
-			if(!in_array(16, $groups)){
+			if(!in_array(16, $groups) && $user->dealer_type != 2){
 				$query = $db->getQuery(true);
 				$query->select('`u`.`id`, `u`.`name`')
 					->from('`#__users` AS `u`')
