@@ -530,11 +530,11 @@ if (empty($list['direction']))
 				->leftJoin('(SELECT `id`,`project_info`,`project_status`,`client_id` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')/*подзапрос нужен чтоб вывести адрес последнего проекта*/
 				->leftJoin('`#__gm_ceiling_clients_dop_contacts` AS `d` ON `c`.`id` = `d`.`client_id`')
                 ->leftJoin('`#__gm_ceiling_status` as s on `s`.`id` = `p`.`project_status`')
-				->where("`c`.`client_name` LIKE '%$search%' OR
+				->where("(`c`.`client_name` LIKE '%$search%' OR
 					`b`.`phone` LIKE '%$search%' OR
 					`p`.`project_info` LIKE '%$search%' OR
 					`p`.`id` LIKE '%$search%' OR
-					`d`.`contact` LIKE '%$search%'")
+					`d`.`contact` LIKE '%$search%')")
 				->group('`c`.`id`');
 				if(!empty($dealer_id)){
 				    $query->where("`c`.`dealer_id` = $dealer_id");

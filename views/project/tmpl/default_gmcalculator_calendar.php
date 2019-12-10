@@ -63,10 +63,12 @@
         position: absolute;
         right:0;
     }
+    .row{
+        margin-bottom: 5px;
+    }
 </style>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?=parent::getButtonBack();?>
 <?php if ($this->item) : ?>
@@ -98,110 +100,148 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
-                <div>
-                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                         <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                        <tr>
-                            <th>
+                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                    <div class="row">
+                        <div class="col-md-4 col-xs-4">
+                            <b>
                                 <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
-                            </th>
-                            <td>
-                                <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
-                                    <?php echo $this->item->client_id; ?>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
+                            </b>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
+                                <?php echo $this->item->client_id; ?>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>
                                 <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
-                            </th>
+                            </b>
+                        </div>
+                        <div class="col-md-8">
                             <?php
-                                if ($this->item->id_client!=1) { 
+                                if ($this->item->id_client!=1) {
                                     $phone = $calculationsModel->getClientPhones($this->item->id_client);
                                 } else  {
                                     $phone = [];
                                 }
+                                foreach ($phone AS $contact) {
+                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                                    echo "<br>";
+                                }
                             ?>
-                            <td>
-                                <?php
-                                    foreach ($phone AS $contact) {
-                                        echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
-                                        echo "<br>";
-                                    } 
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Почта</th>
-                            <td>
-                                <?php
-                                    foreach ($contact_email AS $contact) {
-                                        echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                        echo "<br>";
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                         <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                        <tr>
-                            <th>
-                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
-                            </th>
-                            <td>
-                                <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
-                                    <?=$this->item->project_info;?>
-                                </a>
-                            </td> 
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td>
-                                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php if(!empty($this->item->project_calculator)):?>
-                            <tr>
-                                <th>Замерщик</th>
-                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                            </tr>
-                        <?php endif;?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>
+                                Почта
+                            </b>
+                        </div>
+                        <div class="col-md-8">
+                            <?php
+                                foreach ($contact_email AS $contact) {
+                                    echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                    echo "<br>";
+                                }
+                            ?>
+                        </div>
+                    </div>
 
-                    </table>
-                    <table class="table_info">
-                        <?php if(!empty($this->item->mount_data)):?>
-                            <tr>
-                                <th colspan="3" style="text-align: center;">Монтаж</th>
-                            </tr>
-                            <?php foreach ($this->item->mount_data as $value) { ?>                          
-                                <tr>
-                                    <th><?php echo $value->time;?></th>
-                                    <td><?php echo $value->stage_name;?></td>
-                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
-                                </tr>
-                            <?php }?>
-                        <?php endif;?>
-                        <tr>
-                            <th>
-                                Скидка
-                            </th>
-                            <td>
-                                <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
-                            </td>
-                            <td style="text-align: right;">
-                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-                    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php')?>
                 </div>
+
+                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                    <div class="row">
+                        <div class="col-md-4 col-xs-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
+                                <?=$this->item->project_info;?>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-8">
+                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                -
+                            <?php } else { ?>
+                                <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                <?php echo $jdate->format('d.m.Y H:i'); ?>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                    <?php if(!empty($this->item->project_calculator)):?>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
+                                    Замерщик
+                                </b>
+                            </div>
+                            <div class="col-md-8">
+                                <?php echo JFactory::getUser($this->item->project_calculator)->name;?>
+                            </div>
+                        </div>
+                    <?php endif;?>
+                </div>
+
+                <div class="container">
+                    <?php if(!empty($this->item->mount_data)):?>
+                        <div class="row center">
+                            <div class="col-md-12">
+                                <b>
+                                    Монтаж
+                                </b>
+                            </div>
+                        </div>
+                        <?php foreach ($this->item->mount_data as $value) { ?>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>
+                                        <?php echo $value->time;?>
+                                    </b>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php echo $value->stage_name;?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php echo JFactory::getUser($value->mounter)->name;?>
+                                </div>
+                            </div>
+                        <?php }?>
+                    <?php endif;?>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>
+                                Скидка
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
+                        </div>
+                        <div class="col-md-2" style="text-align: right;">
+                             <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php')?>
+
             </div>
             <div class="col-xs-12 col-md-6 comment">
                 <label> История клиента: </label>
@@ -227,25 +267,32 @@
             <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
                 <div class="row center">
                     <div class="col-md-6">
-                        <p>
+                        <div class="row">
                             <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project" type="button">Договор</button>
-                        </p>
-                        <p>
+                        </div>
+                        <div class="row">
                             <button id="simple_save" class="btn btn-primary act_btn">Сохранить</button>
-                        </p>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <p>
+                        <div class="row">
                             <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
-                            <div id="ref_comment" style="display:none;">
-                                <label for= "ref_note" >Примечание:</label><br>
-                                <textarea name="ref_note" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
-                                <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                            <div class="row center" id="ref_comment" style="display:none;">
+                                <div class="col-md-4">
+                                    <label for= "ref_note" >Примечание:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea name="ref_note" class="input-gm" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                                </div>
                             </div>
-                        </p>
-                        <p>
+                        </div>
+
+                        <div class="row">
                             <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
-                        </p>
+                        </div>
                     </div>
                 </div>
             <?php } ?>
@@ -258,13 +305,34 @@
                     <div id="calendar_mount" align="center"></div>
                 </div>
                 <div class = "col-xs-12 col-md-6">
-                    <b><label id="jform_production_note-lbl" for="jform_production_note">Примечание в производство</label></b><br>
-                    <textarea name="production_note" id="jform_production_note" class="input-gm" placeholder="Примечание в производство" aria-invalid="false"></textarea>
-                    <br>
-                    <b><label id="jform_mount_note-lbl" for="jform_mount_note" class="">Примечание к монтажу</label></b><br>
-                    <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea><br>
-                    <b><label id="jform_ref_note-lbl" for="jform_ref_note" class="">Примечание к отказу</label></b><br>
-                    <textarea name="refuse_note" id="jform_refuse_note" class="input-gm" placeholder="Примечание к отказу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <label id="jform_production_note-lbl" for="jform_production_note">Примечание в производство</label>
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea name="production_note" id="jform_production_note" class="input-gm" placeholder="Примечание в производство" aria-invalid="false"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b><label id="jform_mount_note-lbl" for="jform_mount_note" class="">Примечание к монтажу</label></b><br>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <label id="jform_refuse_note-lbl" for="jform_refuse_note" class="">Примечание к незапускаемым потолкам(если есть)</label>
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea name="refuse_note" id="jform_refuse_note" class="input-gm" placeholder="Примечание к незапускаемым потолкам" aria-invalid="false"><?php echo $project_notes->gm_chief_note->value; ?></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row center">
@@ -1045,30 +1113,6 @@
     jQuery("#send_all").click(function () {
         jQuery(".email-all").toggle();
     });
-
-    ymaps.ready(init);
-
-    var Data = {};
-    function init() {
-        // Подключаем поисковые подсказки к полю ввода.
-        var suggestView = new ymaps.SuggestView('jform_address');
-        input = jQuery('#jform_address');
-
-        suggestView.events.add('select', function (e) {
-            var s = e.get('item').value.replace('Россия, ','');
-            input.val(s);
-        });
-
-        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
-        Data.ProjectInfoYMaps.click(hideYMaps);
-    }
-
-    function hideYMaps() {
-        setTimeout(function () {
-            Data.ProjectInfoYMaps.hide();
-            $("#jform_house").focus();
-        }, 75);
-    }
 
     /*function PressEnter(your_text, your_event) {
         if (your_text != "" && your_event.keyCode == 13)

@@ -3936,14 +3936,13 @@ class Gm_ceilingHelpersGm_ceiling
                         if (array_key_exists($goods->goods_id, $all_goods)) {
                             $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
                             $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
-                            $all_goods[$goods->goods_id]->final_count = $goods->final_count;
+                            $all_goods[$goods->goods_id]->final_count += $goods->final_count;
                         } else {
                             $all_goods[$goods->goods_id] = $goods;
                         }
                     }
                 }
             }
-
             $html = '<h1>Расходные материалы</h1>';
             if (isset($project_id)) {
                 if ($project_id) {

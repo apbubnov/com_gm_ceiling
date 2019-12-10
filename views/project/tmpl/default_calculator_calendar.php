@@ -126,15 +126,24 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 }
 .save_bnt{
     width:250px;
+    height: 60px;
 }
 .btn_edit{
     position: absolute;
     right:0;
 }
-
+.manuf_div{
+    height:80px;
+    border: 2px solid grey;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+.manuf_div.selected{
+    border: 2px solid #414099;
+    background-color: #d3d3f9;
+}
 </style>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?= parent::getButtonBack(); ?>
 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
@@ -162,125 +171,163 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
-                <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                    <tr>
-                        <th>
-                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
-                        </th>
-                        <td>
+                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-4 col-xs-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
                             <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
                                 <?php echo $this->item->client_id; ?>
                             </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
-                        </th>
-                        <?php
-                            if ($this->item->id_client!=1) { 
-                                $phone = $calculationsModel->getClientPhones($this->item->id_client);
-                            } else  {
-                                $phone = [];
-                            }
-                        ?>
-                        <td>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-8">
                             <?php
+                                if ($this->item->id_client!=1) {
+                                    $phone = $calculationsModel->getClientPhones($this->item->id_client);
+                                } else  {
+                                    $phone = [];
+                                }
                                 foreach ($phone AS $contact) {
                                     echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                     echo "<br>";
-                                } 
+                                }
                             ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Почта</th>
-                        <td>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-4">
+                            <b>
+                                Почта
+                            </b>
+                        </div>
+                        <div class="col-md-8">
                             <?php
                                 foreach ($contact_email AS $contact) {
                                     echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
                                     echo "<br>";
                                 }
                             ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan = 2 style="text-align: center;">
-                            <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>    
-                        </td>
-                    </tr>
-                </table>
-                <br>
-                <table class="table_info" style="border: 1px solid #414099;border-radius: 15px">
-                     <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                    <tr>
-                        <th>
-                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
-                        </th>
-                        <td>
+                        </div>
+                    </div>
+                    <div class="row center" style="margin-bottom: 5px;">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-md-4 col-xs-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
                             <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
                                 <?=$this->item->project_info;?>
                             </a>
-                        </td> 
-                    </tr>
-                    <tr>
-                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                        <td>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-md-4">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-8">
                             <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                 -
                             <?php } else { ?>
                                 <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
                                 <?php echo $jdate->format('d.m.Y H:i'); ?>
                             <?php } ?>
-                        </td>
-                    </tr>
+                        </div>
+
+                    </div>
                     <?php if(!empty($this->item->project_calculator)):?>
-                        <tr>
-                            <th>Замерщик</th>
-                            <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                        </tr>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-4">
+                                <b>
+                                    Замерщик
+                                </b>
+                            </div>
+                            <div class="col-md-8">
+                                <?php echo JFactory::getUser($this->item->project_calculator)->name;?>
+                            </div>
+                        </div>
                     <?php endif;?>
 
-                </table>
-                <table class="table_info">
+                </div>
+                <div class="container">
                     <?php if(!empty($this->item->mount_data)):?>
-                        <tr>
-                            <th colspan="3" style="text-align: center;">Монтаж</th>
-                        </tr>
+                        <div class="row center" style="margin-bottom: 5px">
+                            <div class="col-md-12">
+                                <b>Монтаж</b>
+                            </div>
+                        </div>
                         <?php foreach ($this->item->mount_data as $value) { ?>                          
-                            <tr>
-                                <th><?php echo $value->time;?></th>
-                                <td><?php echo $value->stage_name;?></td>
-                                <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
-                            </tr>
+                            <div class="row" style="margin-bottom: 5px">
+                                <div class="col-md-4">
+                                    <b>
+                                        <?php echo $value->time;?>
+                                    </b>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php echo $value->stage_name;?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php echo JFactory::getUser($value->mounter)->name;?>
+                                </div>
+                            </div>
                         <?php }?>
                     <?php endif;?>
-                    <tr>
-                        <th>
-                            Скидка
-                        </th>
-                        <td>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-md-4">
+                            <b>
+                                Скидка
+                            </b>
+                        </div>
+                        <div class="col-md-6">
                             <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
-                        </td>
-                        <td style="text-align: right;">
+                        </div>
+                        <div class="col-md-2" style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Реклама
-                        </th>
-                        <td>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-md-4">
+                            <b>
+                                Реклама
+                            </b>
+                        </div>
+                        <div class="col-md-6">
                             <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
-                        </td>
-                        <td style="text-align: right;">
+                        </div>
+                        <div class="col-md-2" style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                        </td>
-                </table>
-                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+                        </div>
+                    </div>
+                    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+                </div>
             </div>
-
             <div class="col-xs-12 col-md-6 comment">
                 <label> История клиента: </label>
                 <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
@@ -301,28 +348,34 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
     <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
-        <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
+        <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?>>
             <div class="row center">
                 <div class="col-md-6">
-                    <p>
+                    <div class="row">
                         <button class="btn btn-success act_btn" <?php echo $status_attr;?> id="accept_project" type="button">Договор</button>
-                    </p>
-                    <p>
+                    </div>
+                    <div class="row">
                         <button id="simple_save" class="btn btn-primary act_btn">Сохранить</button>
-                    </p>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <p>
+                    <div class="row">
                         <button id="refuse" class="btn btn-danger act_btn" type="button">Отказ от договора</button>
-                        <div id="ref_comment" style="display:none;">
-                            <label for= "ref_note" >Примечание:</label><br>
-                            <textarea name="ref_note" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
-                            <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                        <div class="row center" id="ref_comment" style="display:none;">
+                            <div class="col-md-4">
+                                <label for= "ref_note" >Примечание:</label>
+                            </div>
+                            <div class="col-md-6">
+                                <textarea name="ref_note" class="input-gm" id="ref_note" placeholder="Примечание" aria-invalid="false"></textarea><br>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" id="refuse_submit" type="button">Ок</button>
+                            </div>
                         </div>
-                    </p>
-                    <p>
+                    </div>
+                    <div class="row">
                         <button id="refuse_cooperate" class="btn btn-danger act_btn" type="button">Отказ от сотрудничества</button>
-                    </p>
+                    </div>
                 </div>
             
         </div>
@@ -332,11 +385,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
            <!-- <div id="mounter_wraper" <?php /*if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""*/?>>
             </div>-->
             <div class="row center">
-                <div class="col-md-6">
+                <div class="col-md-6 col-lg-4">
                     <h4>Назначить дату монтажа</h4>
                     <div id="calendar_mount" align="center"></div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-lg-8">
                     <div class="row">
                         <h4>Назначить дату готовности полотен</h4>
                         <div class="row center"  style="padding-bottom: 5px;">
@@ -408,6 +461,14 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                     <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b><label id="jform_ref_note-lbl" for="jform_refuse_note" class="">Примечание к незапускаемым потолкам(если есть)</label></b>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea name="refuse_note" id="jform_refuse_note" class="input-gm" placeholder="Примечание к незапускаемым потолкам" aria-invalid="false"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
             </div>
@@ -417,13 +478,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
             </p>
             <div class="row center">
-                <div class="col-md-6" style="padding-top: 25px;">
+                <div class="col-md-4" style="padding-top: 25px;">
                     <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                 </div>
-               <!--  <div class="col-md-4" style="padding-top: 25px;">
+                <div class="col-md-4" style="padding-top: 25px;">
                     <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
-                </div> -->
-                <div class="col-md-6" style="padding-top: 25px;">
+                </div>
+                <div class="col-md-4" style="padding-top: 25px;">
                     <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                 </div>
             </div>
@@ -437,11 +498,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <div class="modal_window" id="modal_window_measures_calendar" style="border: 2px solid black; border-radius: 4px;"></div>
         <div class="modal_window" id="modal_window_mounts_calendar"></div>
         <div id="modal_window_by_email" class = "modal_window">
-            <p><strong>Введите адрес эл.почты:</strong></p>
-            <p>
-                <input id = "email_to_send" name = "email_to_send" class = "input-gm">
-            </p>
-            <p><button class = "btn btn-primary">Запустить</button></p>
+            <h4>Выберите производство</h4>
+            <div id="manufacturer_list" class="container">
+
+            </div>
+            <div class="row">
+                <button class = "btn btn-primary" id="runByEmail" type="button">Запустить в выбранное производтсво</button>
+            </div>
         </div>
         <div id="mw_cl_info" class="modal_window">
             <h4>Изменение данных клиента</h4>
@@ -624,12 +687,14 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
 
         var $ = jQuery;
-        var min_project_sum = <?php echo  $min_project_sum;?>;
-        var min_components_sum = <?php echo $min_components_sum;?>;
-        var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-        var project_id = "<?php echo $this->item->id; ?>";
-        var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-        var deleted_phones = [], deleted_emails = [];
+        var min_project_sum = '<?php echo  $min_project_sum;?>',
+            min_components_sum = '<?php echo $min_components_sum;?>',
+            self_data = JSON.parse('<?php echo $self_calc_data;?>'),
+            project_id = "<?php echo $this->item->id; ?>",
+            precalculation = '<?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>',
+            deleted_phones = [],
+            deleted_emails = [],
+            manufacturersData = [];
 
         // закрытие окон модальных
         jQuery(document).mouseup(function (e){// событие клика по веб-документу
@@ -702,7 +767,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             jQuery("#edit_discount").click(function(){
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
-                jQuery("#mw_discount").show();
+                jQuery("#mw_discount").show('slow');
             });
 
             jQuery("#assign_call").click(function(){
@@ -1148,12 +1213,101 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 jQuery("#accept_project").trigger('click');
             }
 
+            /*Запуск в производтсвто по email*/
             jQuery("#save_email").click(function(){
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=users.getManufacturerInfo",
+                    data: {
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        manufacturersData = data;
+                        var manufacturersHtml = '';
+                        jQuery("#manufacturer_list").empty();
+                        for(var i=0;i<data.length;i++){
+                            if(i%3 == 0){
+                                console.log('1',i);
+                                manufacturersHtml += '<div class="row">';
+                            }
+                            manufacturersHtml += '<div class="col-md-4 manuf_div" data-email="'+data[i].email+'">';
+                            manufacturersHtml += '<div class=row><b>'+data[i].name+'</b></div>';
+                            manufacturersHtml += '<div class=row><b>Адрес выдачи:</b> '+data[i].address+'</div>';
+                            manufacturersHtml += '</div>';
+                            if((i+1) % 3 == 0 || i+1 == data.length){
+                                console.log('2',i);
+                                manufacturersHtml += '</div>';
+                            }
+                        }
+                        jQuery("#manufacturer_list").append(manufacturersHtml);
+
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!Попробуйте позднее!"
+                        });
+                    }
+                });
+
                 jQuery("#activate_by_email").val(1);
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
                 jQuery("#modal_window_by_email").show();
             });
+
+            jQuery('#modal_window_by_email').on('click','.manuf_div',function(){
+                jQuery('.manuf_div').removeClass('selected');
+                jQuery(this).addClass('selected');
+            });
+
+            jQuery('#runByEmail').click(function(){
+                var div = jQuery('.manuf_div.selected'),
+                    email = div.data('email'),
+                    include_calculations = get_selected_calcs();
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.activateByEmail",
+                    data: {
+                        project_id: project_id,
+                        email: email,
+                        include_calcs: include_calculations,
+                        mount_data: jQuery('#mount').val(),
+                        production_note: jQuery('#jform_production_note').val(),
+                        mount_note: jQuery('#jform_mount_note').val(),
+                        ref_note: jQuery('#jform_refuse_note').val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Проект запущен в производство!"
+                        });
+                        setTimeout(function(){location.reload();},3000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!Попробуйте позднее!"
+                        });
+                    }
+                });
+            });
+            /*--------*/
 
             jQuery("#accept_changes").click(function () {
                 jQuery("input[name='data_change']").val(1);

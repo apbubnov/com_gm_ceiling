@@ -429,7 +429,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->select('`self_price`');
                         $query->select('`project_sum`');
                         $query->select('`transport_cost`');*/
-                        $query->where("`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) AND `cl`.`dealer_id` = $user->dealer_id");
+                        $query->where("`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) AND (`cl`.`dealer_id` = $user->dealer_id OR u.dealer_type in(3,8) )");
 
                     }
                     break;

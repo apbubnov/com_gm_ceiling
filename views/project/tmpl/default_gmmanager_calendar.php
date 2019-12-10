@@ -448,7 +448,7 @@
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
     <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
-        <divclass="container">
+        <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-xm-12 col-md-4 col-lg-4">
                     <button class="btn  btn-primary act_btn" id="rec_to_measurement" type ="button">
@@ -466,14 +466,30 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <div id="call" class="call col" style="display:none;">
-                    <label for="call">Добавить звонок</label>
-                    <br>
-                    <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
-                    <input name="call_comment" id="call_comment" placeholder="Введите примечание">
-                    <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
-                                class="fas fa-save" aria-hidden="true"></i></button>
+            <div class="row" id="call" class="call col" style="display:none;">
+                <div class="col-md-6">
+                    <div class="row center">
+                        <div class="col-md-12">
+                            <b>
+                                <label for="call">Если нужно добавьте звонок по <span class="for_span"></span></label>
+                            </b>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-6">
+                            <input name="call_date" id="call_date" class="form-control" type="datetime-local" placeholder="Дата звонка">
+                        </div>
+                        <div class="col-md-6">
+                            <input name="call_comment" id="call_comment" class="form-control" placeholder="Введите примечание">
+                        </div>
+                    </div>
+                    <div class="row center" >
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" id="add_call_and_submit" type="button">
+                                <i class="fas fa-save" aria-hidden="true"></i> Записать
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1034,8 +1050,18 @@
         });
 
         jQuery("#rec_to_measurement").click(function () {
+            if (jQuery("#call").is(':hidden')){
+                jQuery("#call").show();
+
+            }
+            else{
+                if(jQuery("#project_status").val() == 1){
+                    jQuery("#call").hide();
+                }
+            }
+            jQuery(".for_span").text('замеру');
+            jQuery("#add_call_and_submit").html("<i class=\"fas fa-save\" aria-hidden=\"true\"></i>  Записать");
             jQuery("#project_status").val(1);
-            jQuery("#call").toggle();
         });
 
         jQuery("#refuse_partnership").click(function () {
@@ -1058,8 +1084,18 @@
         });
 
         jQuery("#refuse_project").click(function () {
+            if (jQuery("#call").is(':hidden')){
+                jQuery("#call").show();
+
+            }
+            else{
+                if(jQuery("#project_status").val() == 2){
+                    jQuery("#call").hide();
+                }
+            }
+            jQuery(".for_span").text('отказу');
+            jQuery("#add_call_and_submit").html("<i class=\"fas fa-save\" aria-hidden=\"true\"></i> Отказ");
             jQuery("#project_status").val(2);
-            jQuery("#call").toggle();
         });
 
         jQuery("#accept_changes").click(function () {

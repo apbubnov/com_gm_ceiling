@@ -253,6 +253,9 @@ $rest = -($total_sum) - $contributed;
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
         </p>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
+        </p>
          
     <?php } elseif ($user->dealer_type == 2) { ?>
         <p class="center">

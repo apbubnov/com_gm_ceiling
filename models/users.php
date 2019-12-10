@@ -740,4 +740,24 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getManufacturersInfo(){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('u.id,u.name,CONCAT(c.name,\', \',ui.address) AS address,ui.email')
+                ->from('`rgzbn_users` AS u')
+                ->innerJoin('`rgzbn_user_info` AS ui ON u.id = ui.user_id')
+                ->innerJoin('`rgzbn_city` AS c ON c.id = ui.city_id ')
+                ->where('u.dealer_type = 6');
+
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

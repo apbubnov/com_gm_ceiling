@@ -246,5 +246,17 @@ class Gm_ceilingControllerUsers extends JControllerForm
         }
 	}
 
+    function getManufacturerInfo(){
+        try{
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $manufacturersInfo = $userModel->getManufacturersInfo();
+            die(json_encode($manufacturersInfo));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
 ?>

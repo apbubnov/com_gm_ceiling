@@ -1074,11 +1074,128 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
         }
 	}
-	public function activate_by_email(){
+	public function activateByEmail(){
 		try{
-			$app = JFactory::getApplication();
+		    $user = JFactory::getUser();
 			$jinput = JFactory::getApplication()->input;
-			$project_id = $jinput->get('id', null, 'INT');
+			$projectId = $jinput->getInt('project_id');
+			$email = $jinput->getString('email');
+			$includeCalculations = $jinput->get('include_calcs',array(),'ARRAY');
+			$projectMount = $jinput->getString('mount_data');
+			$projectMount = json_decode($projectMount);
+			$productionNote = $jinput->getString('production_note');
+            $mountNote = $jinput->getString('mount_note');
+            $refNote = $jinput->getString('ref_note');
+
+            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $projectModel = $this->getModel('Project', 'Gm_ceilingModel');
+            $clientHistoryModel = $this->getModel('Client_history', 'Gm_ceilingModel');
+            $projectsMountsModel = $this->getModel('projects_mounts','Gm_ceilingModel');
+            $calculationFormModel = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+
+            $project = $projectModel->getData($projectId);
+            $calculations = $calculationsModel->new_getProjectItems($projectId);
+            $all_calculations = array();
+            foreach($calculations as $calculation){
+                $all_calculations[] = $calculation->id;
+                /*перегенерировать pdf-раскроя*/
+                $data_for_manager_estimate = [];
+                $all_goods = $calculationFormModel->getGoodsPricesInCalculation($calculation->id, $user->dealer_id);
+                if (!empty($calculation->cancel_metiz)) {
+                    $all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
+                }
+                $factory_jobs = $calculationFormModel->getFactoryWorksPricesInCalculation($calculation->id);
+                foreach ($all_goods as $value) {
+                    if ($value->category_id == 1) { // если полотно
+                        $data_for_manager_estimate['canvas'] = $value;
+                        $canvas_price = $value->dealer_price;
+                        break;
+                    }
+                }
+                if (empty($calculation->cancel_cuts) && !empty($calculation->offcuts) ) {
+                    $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$calculation->offcuts,"price"=>$canvas_price * 0.5);
+                }
+                $data_for_manager_estimate['photoprint'] = json_decode($calculation->photo_print);
+                $data_for_manager_estimate['factory_jobs'] = $factory_jobs;
+                $data_for_manager_estimate['calculation'] = $calculation;
+                Gm_ceilingHelpersGm_ceiling::create_cut_pdf($data_for_manager_estimate);
+            }
+            $ignored_calculations = array_diff($all_calculations, $includeCalculations);
+
+            if(count($ignored_calculations) > 0) {
+                $project_data = clone $project;
+                unset($project_data->id);
+                $project_data->project_sum = 0;
+                $project->project_sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($projectId)['client_sum'];
+                foreach ($calculations as $calculation) {
+                    if (in_array($calculation->id, $ignored_calculations)) {
+                        $project_data->project_sum += $calculation->canvases_sum_with_margin;
+                        $project_data->project_sum += $calculation->components_sum_with_margin;
+                        $project_data->project_sum += $calculation->mounting_sum_with_margin;
+                    } else {
+                        $project->project_sum += $calculation->canvases_sum_with_margin;
+                        $project->project_sum += $calculation->components_sum_with_margin;
+                        $project->project_sum += $calculation->mounting_sum_with_margin;
+                    }
+                }
+                $client_id = $project->id_client_num;
+                $project_data->project_status = 3;
+
+                $old_advt = $project_data->api_phone_id;
+                if(!empty($old_advt)){
+                    $project_data->api_phone_id = 10;
+                }
+
+                $project_data->client_id = $client_id;
+
+                $projectFormModel = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+                $refuse_id = $projectFormModel->save(get_object_vars($project_data));
+
+                if(!empty($old_advt)) {
+                    $repeatRequestModel = Gm_ceilingHelpersGm_ceiling::getModel('RepeatRequest');
+                    $repeatRequestModel->save($refuse_id, $old_advt);
+                }
+
+                $clientHistoryModel->save($client_id, "Не вошедшие в договор № ".$projectId." потолки перемещены в проект №".$refuse_id);
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                foreach($ignored_calculations as $ignored_calculation){
+                    $calculationModel->changeProjectId($ignored_calculation, $refuse_id);
+                }
+                if(!empty($refNote)){
+                    $this->addNote($refuse_id,$refNote,3);
+                }
+            }
+            $projectModel->activate($project, 23);
+
+            if(!empty($projectMount)){
+                $projectsMountsModel->save($projectId,$projectMount);
+            }
+
+            if(!empty($productionNote)){
+                $this->addNote($projectId,$productionNote,4);
+            }
+            if(!empty($mountNote)){
+                $this->addNote($projectId,$mountNote,5);
+            }
+            Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($projectId);
+            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($projectId,0);
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = "Запуск в производство.\nПримечание: $productionNote.\nИнформация о потолках и расходных материалах во вложении.";
+            $mailer->setSubject('Запуск в производство');
+            $mailer->setBody($body);
+            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($projectId . "common_cutpdf") . ".pdf");
+            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.md5($projectId . "consumablesnone") . ".pdf");
+            $send = $mailer->Send();
+
+			/*$project_id = $jinput->get('id', null, 'INT');
 			$email = $jinput->get('email', null, 'STRING');
 			$calculations_model = self::getModel('calculations');
 			$calculations = $calculations_model->new_getProjectItems($project_id);
@@ -1107,7 +1224,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $mailer->setBody($body);
             $mailer->addAttachment($sheets_dir.$filename);
             $send = $mailer->Send();
-            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);*/
             die($send);
 		}
 		catch(Exception $e)

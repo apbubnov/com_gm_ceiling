@@ -76,19 +76,22 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
  $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
 ?>
 <style>
-.act_btn{
-    width:210px;
-    margin-bottom: 10px;
-}
-.save_bnt{
-    width:250px;
-}
+    .act_btn{
+        width:210px;
+        margin-bottom: 10px;
+    }
+    .save_bnt{
+        width:250px;
+    }
 
-.btn_edit{
-    position: absolute;
-    top:0px;
-    right:0px;
-}
+    .btn_edit{
+        position: absolute;
+        top:0px;
+        right:0px;
+    }
+    .row{
+        margin-bottom: 5px;
+    }
 </style>
  <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
     <div class="project_activation" style="display: none;">
@@ -117,96 +120,110 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-md-6 no_padding">
-                    <div>
-                        <table class="table_info" style="border: 1px solid #414099;border-radius: 35px">
-                             <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                            <tr>
-                                <th>
+                    <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4">
+                                <b>
                                     <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
-                                </th>
-                                <td>
-                                    <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
-                                        <?php echo $this->item->client_id; ?>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
+                                </b>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>">
+                                    <?php echo $this->item->client_id; ?>
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-xs-2">
+                                <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
                                     <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
-                                </th>
+                                </b>
+                            </div>
+                            <?php
+                                if ($this->item->id_client!=1) {
+                                    $phone = $calculationsModel->getClientPhones($this->item->id_client);
+                                } else  {
+                                    $phone = [];
+                                }
+                            ?>
+                            <div class="col-md-8">
                                 <?php
-                                    if ($this->item->id_client!=1) { 
-                                        $phone = $calculationsModel->getClientPhones($this->item->id_client);
-                                    } else  {
-                                        $phone = [];
+                                    foreach ($phone AS $contact) {
+                                        echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                                        echo "<br>";
                                     }
                                 ?>
-                                <td>
-                                    <?php
-                                        foreach ($phone AS $contact) {
-                                            echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
-                                            echo "<br>";
-                                        } 
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Почта</th>
-                                <td>
-                                    <?php
-                                        foreach ($contact_email AS $contact) {
-                                            echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                            echo "<br>";
-                                        }
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan = 2 style="text-align: center;">
-                                    <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>    
-                                </td>
-                            </tr>
-                        </table>
-                        <br>
-                        <table class="table_info">
-                            <tr>
-                                <th>
-                                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
-                                </th>
-                                <td>
-                                    <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
-                                        <?=$this->item->project_info;?>
-                                    </a>
-                                </td>
-                                <td style="text-align: right;">
-                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Скидка
-                                </th>
-                                <td>
-                                    <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
-                                </td>
-                                <td style="text-align: right;">
-                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Реклама
-                                </th>
-                                <td>
-                                    <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
-                                </td>
-                                <td style="text-align: right;">
-                                     <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fas fa-pen" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                        </table>
-                        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
+                                    Почта
+                                </b>
+                            </div>
+                            <div class="col-md-8">
+                                <?php
+                                    foreach ($contact_email AS $contact) {
+                                        echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                        echo "<br>";
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="row center">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>
+                            </div>
+                        </div>
                     </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
+                                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
+                                    <?=$this->item->project_info;?>
+                                </a>
+                            </div>
+                            <div class="col-md-2" style="text-align: right;">
+                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
+                                    Скидка
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
+                            </div>
+                            <div class="col-md-2" style="text-align: right;">
+                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>
+                                    Реклама
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
+                            </div>
+                            <div class="col-md-2" style="text-align: right;">
+                                 <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
                 </div>
 
                 <div class="col-xs-12 col-md-6 comment">

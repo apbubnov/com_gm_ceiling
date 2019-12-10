@@ -53,13 +53,29 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
             $cut_data = substr($cut_data, 0, -1);
 
-            usort($walls,function($a,$b){
-                return strcasecmp($a->name,$b->name);
-            });
-            usort($diags,function($a,$b){
-                return strcasecmp($a->name,$b->name);
-            });
+            $wallsNames = [];
+            $wallsAssoc = [];
 
+            foreach ($walls as $key => $value) {
+                $wallsNames[] = $value->name;
+                $wallsAssoc[$value->name] = $value;
+            }
+            $walls = [];
+            usort($wallsNames, strnatcasecmp($a,$b));
+            foreach ($wallsNames as $value) {
+                $walls[] = $wallsAssoc[$value];
+            }
+            usort($diags,function($a,$b){
+                if(strlen($a->name) > strlen($b->name)){
+                    return 1;
+                }
+                elseif(strlen($a->name) < strlen($b->name)){
+                    return -1;
+                }
+                elseif(strlen($a->name) == strlen($b->name)){
+                    return strcasecmp($a->name,$b->name);
+                }
+            });
             for ($i = 0; $i < count($walls); $i++) {
                 $calc_data .= $walls[$i]->name.'='.$walls[$i]->length.';';
             }

@@ -269,7 +269,7 @@
     <div class="modal_window" id="modal_window_img" style="border: 2px solid black; border-radius: 4px;"></div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom: 5px;">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
         <!-- Nav tabs -->
