@@ -31,7 +31,7 @@ if (!empty($this->item->calcs_mounting_sum)) {
 
 
 //address
-$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+/*$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
 preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
 $house = $house[1];
 preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
@@ -43,7 +43,7 @@ $porch = $porch[1];
 preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
 $floor = $floor[1];
 preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-$code = $code[1];
+$code = $code[1];*/
 
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
@@ -120,28 +120,50 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
 ?>
 <style>
-.act_btn{
-    width:210px;
-    margin-bottom: 10px;
-}
-.save_bnt{
-    width:250px;
-    height: 60px;
-}
-.btn_edit{
-    position: absolute;
-    right:0;
-}
-.manuf_div{
-    height:80px;
-    border: 2px solid grey;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-.manuf_div.selected{
-    border: 2px solid #414099;
-    background-color: #d3d3f9;
-}
+    .act_btn{
+        width:210px;
+        margin-bottom: 10px;
+    }
+    .save_bnt{
+        width:250px;
+        height: 60px;
+    }
+    .btn_edit{
+        position: absolute;
+        right:0;
+    }
+    .manuf_div{
+        height:80px;
+        border: 2px solid grey;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+    .manuf_div.selected{
+        border: 2px solid #414099;
+        background-color: #d3d3f9;
+    }
+    .edit_div{
+        position: absolute;
+        right:0px;
+    }
+    .row{
+        margin-bottom: 5px !important;
+        margin-left: 2px !important;
+        padding-right: 5px !important;
+    }
+
+    .border_container{
+        border: 1px solid #414099;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .container{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
 </style>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
@@ -154,16 +176,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <input name="subtype" value="calendar" type="hidden">
     <input id="project_verdict" name="project_verdict" value="0" type="hidden">
     <input id="project_status" name="project_status" value="<?php echo $this->item->project_status;?>" type="hidden">
-    <input name="data_change" value="0" type="hidden">
-    <input name="data_delete" value="0" type="hidden">
     <input id="mounting_date" name="mounting_date" type='hidden'>
     <input id="mount" name="mount" type='hidden' value='<?php echo $json_mount ?>'>
     <input id="jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
     <input id="project_mounter" name="project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
-    <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
+    <input id="project_sum" name="project_sum" value="" type="hidden">
     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-    <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
     <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
     <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>
 </div>
@@ -171,7 +190,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
-                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
+                <div class="container border_container">
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-4 col-xs-4">
                             <b>
@@ -183,11 +202,11 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 <?php echo $this->item->client_id; ?>
                             </a>
                         </div>
-                        <div class="col-md-2 col-xs-2">
+                        <div class="col-md-2 col-xs-2 edit_div">
                             <button class="btn btn-sm btn-primary btn_edit" type = "button" id="change_data"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom: 5px;">
+                    <div class="row">
                         <div class="col-md-4">
                             <b>
                                 <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
@@ -207,7 +226,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             ?>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom: 5px;">
+                    <div class="row">
                         <div class="col-md-4">
                             <b>
                                 Почта
@@ -222,7 +241,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             ?>
                         </div>
                     </div>
-                    <div class="row center" style="margin-bottom: 5px;">
+                    <div class="row center">
                         <div class="col-md-12">
                             <button class="btn btn-primary" type="button" id="assign_call">Назначить звонок</button>
                         </div>
@@ -230,8 +249,8 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
                 </div>
 
-                <div class="container" style="border: 1px solid #414099;border-radius: 5px;margin-bottom: 15px;">
-                    <div class="row" style="margin-bottom: 5px">
+                <div class="container border_container" >
+                    <div class="row">
                         <div class="col-md-4 col-xs-4">
                             <b>
                                 <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
@@ -242,17 +261,17 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                 <?=$this->item->project_info;?>
                             </a>
                         </div>
-                        <div class="col-md-2 col-xs-2">
+                        <div class="col-md-2 col-xs-2 edit_div">
                             <button class="btn btn-sm btn-primary btn_edit" type = "button" id="edit_address"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom: 5px">
-                        <div class="col-md-4">
+                    <div class="row" >
+                        <div class="col-xs-4 col-md-4">
                             <b>
                                 <?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?>
                             </b>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-xs-8 col-md-8">
                             <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                 -
                             <?php } else { ?>
@@ -263,13 +282,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
                     </div>
                     <?php if(!empty($this->item->project_calculator)):?>
-                        <div class="row" style="margin-bottom: 5px">
-                            <div class="col-md-4">
+                        <div class="row" >
+                            <div class="col-xs-4 col-md-4">
                                 <b>
                                     Замерщик
                                 </b>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-xs-8 col-md-8">
                                 <?php echo JFactory::getUser($this->item->project_calculator)->name;?>
                             </div>
                         </div>
@@ -278,50 +297,50 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 </div>
                 <div class="container">
                     <?php if(!empty($this->item->mount_data)):?>
-                        <div class="row center" style="margin-bottom: 5px">
-                            <div class="col-md-12">
+                        <div class="row center" >
+                            <div class="col-xs-12 col-md-12">
                                 <b>Монтаж</b>
                             </div>
                         </div>
                         <?php foreach ($this->item->mount_data as $value) { ?>                          
-                            <div class="row" style="margin-bottom: 5px">
-                                <div class="col-md-4">
+                            <div class="row" >
+                                <div class="col-xs-4 col-md-4">
                                     <b>
                                         <?php echo $value->time;?>
                                     </b>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-xs-4 col-md-4">
                                     <?php echo $value->stage_name;?>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-xs-4 col-md-4">
                                     <?php echo JFactory::getUser($value->mounter)->name;?>
                                 </div>
                             </div>
                         <?php }?>
                     <?php endif;?>
-                    <div class="row" style="margin-bottom: 5px">
-                        <div class="col-md-4">
+                    <div class="row" >
+                        <div class="col-xs-4 col-md-4">
                             <b>
                                 Скидка
                             </b>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xs-6 col-md-6">
                             <?php echo (!empty($this->item->project_discount))?  $this->item->project_discount : " - ";?>
                         </div>
-                        <div class="col-md-2" style="text-align: right;">
+                        <div class="col-xs-2 col-md-2" style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_discount"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom: 5px">
-                        <div class="col-md-4">
+                    <div class="row" >
+                        <div class="col-xs-4 col-md-4">
                             <b>
                                 Реклама
                             </b>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xs-6 col-md-6">
                             <?php echo (!empty($advt_str)) ? $advt_str : " - ";?>
                         </div>
-                        <div class="col-md-2" style="text-align: right;">
+                        <div class="col-xs-2 col-md-2" style="text-align: right;">
                              <button class="btn btn-sm btn-primary" type = "button" id="edit_advt"><i class="fas fa-pen" aria-hidden="true"></i></button>
                         </div>
                     </div>
@@ -348,7 +367,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
     <?php if (!in_array($this->item->project_status,VERDICT_STATUSES)) { ?>
-        <div class="container" <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?>>
+        <div class="container">
             <div class="row center">
                 <div class="col-md-6">
                     <div class="row">
@@ -474,9 +493,9 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             </div>
 
             <hr>
-            <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
+            <!--<p class="contract" style="display:none;">
                 <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-            </p>
+            </p>-->
             <div class="row center">
                 <div class="col-md-4" style="padding-top: 25px;">
                     <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
@@ -691,7 +710,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             min_components_sum = '<?php echo $min_components_sum;?>',
             self_data = JSON.parse('<?php echo $self_calc_data;?>'),
             project_id = "<?php echo $this->item->id; ?>",
-            precalculation = '<?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>',
             deleted_phones = [],
             deleted_emails = [],
             manufacturersData = [];
@@ -745,6 +763,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             var client_id = "<?php echo $this->item->id_client;?>";
             var client_name = "<?php echo $this->item->client_id;?>";
             jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
+            fillProjectSum();
             if(document.getElementById('add_calc')) {
                 document.getElementById('add_calc').onclick = function () {
                     create_calculation(<?php echo $this->item->id; ?>);
@@ -1139,9 +1158,34 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 jQuery("input[name='project_verdict']").val(1);
             });
             jQuery("#save").click(function() {
-                jQuery("input[name='project_status']").val(5);
-                jQuery("input[name='project_verdict']").val(1);
-                document.getElementById('form-client').submit();
+                if(empty(jQuery("#mount").val())){
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "alert",
+                        text: "Не указана дата монтажа. Продолжить?",
+                        buttons:[
+                            {addClass: 'btn btn-primary', text: 'Да', onClick: function(modal) {
+                                    jQuery("input[name='project_status']").val(5);
+                                    jQuery("input[name='project_verdict']").val(1);
+                                    jQuery('#form-client').submit();
+                                    modal.close();
+                                }
+                            },
+                            {addClass: 'btn btn-primary', text: 'Нет', onClick: function(modal) {
+                                    modal.close();
+                                }
+                            }
+                        ]
+                    });
+                }
+                else {
+                    jQuery("input[name='project_status']").val(5);
+                    jQuery("input[name='project_verdict']").val(1);
+                    jQuery('#form-client').submit();
+                }
+
             });
             $tmp_accept = 0; $tmp_refuse = 0;
 
@@ -1200,18 +1244,10 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             });
             
             jQuery("#change_data").click(function () {
-                console.log(1);
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
-                jQuery("#mw_cl_info").show();
+                jQuery("#mw_cl_info").show('slow');
             });
-
-            
-            if (precalculation == 1) {
-                jQuery("input[name='data_change']").val(1);
-                jQuery("#change_data").trigger('click');
-                jQuery("#accept_project").trigger('click');
-            }
 
             /*Запуск в производтсвто по email*/
             jQuery("#save_email").click(function(){
@@ -1227,7 +1263,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                         jQuery("#manufacturer_list").empty();
                         for(var i=0;i<data.length;i++){
                             if(i%3 == 0){
-                                console.log('1',i);
                                 manufacturersHtml += '<div class="row">';
                             }
                             manufacturersHtml += '<div class="col-md-4 manuf_div" data-email="'+data[i].email+'">';
@@ -1235,7 +1270,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                             manufacturersHtml += '<div class=row><b>Адрес выдачи:</b> '+data[i].address+'</div>';
                             manufacturersHtml += '</div>';
                             if((i+1) % 3 == 0 || i+1 == data.length){
-                                console.log('2',i);
                                 manufacturersHtml += '</div>';
                             }
                         }
@@ -1255,7 +1289,6 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     }
                 });
 
-                jQuery("#activate_by_email").val(1);
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
                 jQuery("#modal_window_by_email").show();
@@ -1309,12 +1342,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             });
             /*--------*/
 
-            jQuery("#accept_changes").click(function () {
-                jQuery("input[name='data_change']").val(1);
-                jQuery("#close_mw").hide();
-                jQuery("#mw_container").hide();
-                jQuery("#mw_cl_info").hide();
-            });
+
 
             var temp = 0;
             jQuery("#change_discount").click(function () {

@@ -5323,7 +5323,12 @@ class Gm_ceilingHelpersGm_ceiling
                     // для вывода монтажника (по одному)
                     if ($flag[0] == 1) {
                         $model = self::getModel('teams');
-                        $brigade_id = $model->getDatas($flag[1]);
+                        $brigadesData = $model->getDatas($flag[1]);
+                        $brigade_id = [];
+                        foreach($brigadesData as $value){
+                            $brigade_id = array_merge($brigade_id,json_decode($value->mounters));
+                        }
+
                         if (strlen($month) == 1) {
                             $monthfull = "0" . $month;
                         } else {
@@ -5448,10 +5453,12 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             foreach ($DateStatys as $value) {
                                 if ($value["mount_date"] == $year . "-" . $monthfull . "-" . $t) {
-                                    if(!in_array($value["id"],$need_calc_projects[$value["mount_date"]])){
-                                        $perimeter += $value["perimeter"];
-                                        $need_calc_projects[$value["mount_date"]][] = $value["id"];
+                                    if(!empty($need_calc_projects[$value["mount_date"]])) {
+                                        if (!in_array($value["id"], $need_calc_projects[$value["mount_date"]])) {
+                                            $need_calc_projects[$value["mount_date"]][] = $value["id"];
+                                        }
                                     }
+                                    $perimeter += $value["perimeter"];
                                     if ($value["read_by_mounter"] == 0) {
                                         $DayMounter[$r] = ["red", $perimeter];
                                     } else if ($value['read_by_mounter'] == 1) {
@@ -5953,4 +5960,28 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
+    public static function parseProjectInfo($project_info){
+        try{
+            $street = preg_split("/,.дом:.([\d\w\/\s]{1,4})/", $project_info)[0];
+            preg_match("/.дом:.([\d\w\/\s]{1,4})/", $project_info,$house);
+            $house = $house[1];
+            preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $project_info,$bdq);
+            $bdq = $bdq[1];
+            preg_match("/.квартира:.([\d\s]{1,4})/", $project_info,$apartment);
+            $apartment = $apartment[1];
+            preg_match("/.подъезд:.([\d\s]{1,4})/", $project_info,$porch);
+            $porch = $porch[1];
+            preg_match("/.этаж:.([\d\s]{1,4})/", $project_info,$floor);
+            $floor = $floor[1];
+            preg_match("/.код:.([\d\S\s]{1,10})/", $project_info,$code);
+            $code = $code[1];
+
+            $result = (object)array("street"=>$street,"house"=>$house,"bdq"=>$bdq,"apartment"=>$apartment,
+                                     "porch"=>$porch,"floor"=>$floor,"code"=>$code);
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

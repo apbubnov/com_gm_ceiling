@@ -29,26 +29,21 @@ $dealer = JFactory::getUser($client->dealer_id);
         <div class="col-md-6">
             <div class="item_fields">
                 <h4>Информация по проекту № <?= $this->item->id; ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
-                      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <table class="table">
-                        <tr>
-                            <th>Объект</th>
-                            <td><?php echo $dealer->name; ?></td>
-                        </tr>
+                <table class="table">
+                    <tr>
+                        <th>Объект</th>
+                        <td><?php echo $dealer->name; ?></td>
+                    </tr>
 
-                        <tr>
-                            <th>Этаж</th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Квартира</th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
-
-                    </table>
-                </form>
+                    <tr>
+                        <th>Этаж</th>
+                        <td><?php echo $this->item->client_id; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Квартира</th>
+                        <td><?php echo $this->item->project_info; ?></td>
+                    </tr>
+                </table>
             </div>
             <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
             <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">

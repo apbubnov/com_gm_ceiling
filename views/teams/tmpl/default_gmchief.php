@@ -19,9 +19,7 @@ $userId     = $user->get('id');
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getDatas($dealerId);
-if(!empty($brigade_id))
-$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
+$brigadesData = $teams_model->getDatas($dealerId);
 
 // календарь
 $month1 = date("n");
@@ -36,54 +34,144 @@ if ($month1 == 12) {
     $year2 = $year1;
 }
 $FlagCalendar = [1, $dealerId];
+$allBrigades = [];
+foreach ($brigadesData as $value){
+    $brigades = json_decode($value->mounters);
+    $allBrigades = array_merge($allBrigades,$brigades);
+    $city = (!empty($value->name) ? $value->name : 'Город не указан');
+    $calendars .= "<div class='row brigade_city' data-id='$value->city_id' style='text-align: left'>";
+    $calendars .= "<div class='col-md-10' style='font-size: 22pt'>$city <i class=\"fas fa-angle-down\"></i></div>";
+    $calendars .= '</div>';
+    $calendars .= '<div class="city_brigades" data-city_id="'.$value->city_id.'" style="display:none;">';
+    for($i=0;$i<count($brigades);$i++){
+        if($i % 3 == 0){
+            $calendars.= '<div class="row" style="margin-bottom: 15px;">';
+        }
+        $calendars .= '<div class="col-md-4" >';
+        $calendars .= '<div class="row center" style="width: 98%">';
+        $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
+        $calendars .= '</div>';
+        $calendars .= '<div class="row" style="width: 98%">';
+        $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
+        $calendars .= '</div>';
+        $calendars .= '<div class="row center firstMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+        $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($brigades[$i]->id, $month1, $year1, $FlagCalendar);
+        $calendars .= '</div>';
+        $calendars .= '<div class="row center secondMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+        $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($brigades[$i]->id, $month2, $year2, $FlagCalendar);
+        $calendars .= '</div>';
+        $calendars .= '</div>';
+        if(($i+1) % 3 == 0 || $i+1 == count($brigades)){
+            $calendars .= '</div>';
+        }
 
-foreach ($brigade_id as $value) {
-	$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
-	$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
-	$calendars .= "</p>";
-	$names = null;
-	foreach ($brigade_mounter as $val) {
-		if ($val->id_brigade == $value->id) {
-			$name = stristr($val->name, ' ', true);			
-		} else {
-			$name = "&nbsp;";
-		}
-		if ($names == null) {
-			$names = $name;
-		} else if ($names == "&nbsp;") {
-			$names = null;
-		} else {
-			if ($name != "&nbsp;") {
-				$names .= ", ".$name;				
-			}
-		}
-	}
-	
-	$calendars .= "<table id=\"name\"><tr><td nowrap>$names</tr></td></table>";
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
-	$calendars .= "</div>";
+    }
+    $calendars .= '</div>';
 }
-//----------------------------------------------------------------------------------------------------------
 
 ?>
-
 <?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teams/tmpl/css/style.css" type="text/css" />
-
+<style>
+    #legenda-container img{
+        max-height: 35px;
+    }
+    #legenda-container{
+        font-size: 10pt;
+        text-align: left;
+    }
+</style>
 <div id="content-tar">
 	<h2>Бригады</h2>
 	<div id="btn-container">
 		<button id="add-brigade" class="btn btn-success btn-small" onClick='location.href="/index.php?option=com_gm_ceiling&view=teamform"'>Добавить бригаду</button>
 	</div>
-	<div id="legenda-container">
-		<table id="legenda"></table>
+	<div  id="legenda-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный">
+                    </div>
+                    <div class="col-md-8">
+                        Новый монтаж. Не просмотрен монтажником
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый">
+                    </div>
+                    <div class="col-md-8">
+                        Новый монтаж. Просмотрен монтажником
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий">
+                    </div>
+                    <div class="col-md-8">
+                        Монтаж в работе
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый">
+                    </div>
+                    <div class="col-md-8">
+                        Монтаж недовыполнен
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый">
+                    </div>
+
+                    <div class="col-md-8">
+                        Монтаж выполнен
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый">
+                    </div>
+                    <div class="col-md-8">
+                        Заказ закрыт
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной">
+                    </div>
+                    <div class="col-md-8">
+                        Выходные часы
+                    </div>
+
+                </div>
+            </div>
+        </div>
 	</div>
 	<div id="prev-button-container">
 		<button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
 	</div>
-	<div id="calendars-container">
+	<div class="container" id="calendars-container">
 		<?php echo $calendars; ?>
 	</div>
 	<div id="next-button-container">
@@ -155,213 +243,18 @@ foreach ($brigade_id as $value) {
 </div>
 
 <script>
-    var notes=[];
-	// листание календаря
-    month_old1 = 0;
-    year_old1 = 0;
-    month_old2 = 0;
-    year_old2 = 0;
-    jQuery("#button-next").click(function () {
-        month1 = <?php echo $month1; ?>;
-        year1 = <?php echo $year1; ?>;
-        month2 = <?php echo $month2; ?>;
-        year2 = <?php echo $year2; ?>;
-        if (month_old1 != 0) {
-            month1 = month_old1;
-            year1 = year_old1;
-            month2 = month_old2;
-            year2 = year_old2;
-        }
-        if (month1 == 12) {
-            month1 = 1;
-            year1++;
-        } else {
-            month1++;
-        }
-        if (month2 == 12) {
-            month2 = 1;
-            year2++;
-        } else {
-            month2++;
-        }
-        month_old1 = month1;
-        year_old1 = year1;
-        month_old2 = month2;
-        year_old2 = year2;
-        jQuery("#calendars-container").empty();
-		<?php foreach ($brigade_id as $value) { ?>
-			calendars = "";
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month1,
-					year: year1,
-				},
-				success: function (msg) {
-					calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
-					calendars += msg;
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month2,
-					year: year2,
-				},
-				success: function (msg) {
-					calendars += msg;
-					calendars += '</div>';
-					jQuery("#calendars-container").append(calendars);
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>		
-    });
-    jQuery("#button-prev").click(function () {
-        month1 = <?php echo $month1; ?>;
-        year1 = <?php echo $year1; ?>;
-        month2 = <?php echo $month2; ?>;
-        year2 = <?php echo $year2; ?>;
-        if (month_old1 != 0) {
-            month1 = month_old1;
-            year1 = year_old1;
-            month2 = month_old2;
-            year2 = year_old2;
-        }
-        if (month1 == 1) {
-            month1 = 12;
-            year1--;
-        } else {
-            month1--;
-        }
-        if (month2 == 1) {
-            month2 = 12;
-            year2--;
-        } else {
-            month2--;
-        }
-        month_old1 = month1;
-        year_old1 = year1;
-        month_old2 = month2;
-		year_old2 = year2;
-		jQuery("#calendars-container").empty();
-		<?php foreach ($brigade_id as $value) { ?>
-			calendars = "";
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month1,
-					year: year1,
-				},
-				success: function (msg) {
-					calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
-					calendars += msg;
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month2,
-					year: year2,
-				},
-				success: function (msg) {
-					calendars += msg;
-					calendars += '</div>';
-					jQuery("#calendars-container").append(calendars);
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
-	});
-	//---------------------------------------------
+    var notes=[],
+        month_old1 = 0,
+        year_old1 = 0,
+        month_old2 = 0,
+        year_old2 = 0,
+        brigades = JSON.parse('<?= json_encode($allBrigades)?>'),
+        calendar,
+        today = new Date(),
+        NowYear = today.getFullYear(),
+        NowMonth = today.getMonth(),
+        day = today.getDate();
 
-	// функция подсвета сегоднешней даты
-	var Today = function (day, month, year, id) {
-		month++;
-		jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+id+"I").addClass("today");
-	}   		 
-    //------------------------------------------
-
-    // функция чтобы другая функция выполнилась позже чем document ready
-    Function.prototype.process= function(state){
-        var process= function(){
-            var args= arguments;
-            var self= arguments.callee;
-            setTimeout(function(){
-                self.handler.apply(self, args);
-            }, 0 )
-        }
-        for(var i in state) process[i]= state[i];
-        process.handler= this;
-        return process;
-    }
-    //------------------------------------------
-
-	// закрытие модального окна, при нажатии вне модального окна
     jQuery(document).mouseup(function (e) { // событие клика по веб-документу
         var div = jQuery("#window-with-table"); // тут указываем ID элемента
         if (!div.is(e.target) && div.has(e.target).length == 0) { // не по элементу и не по его дочерним элементам
@@ -377,64 +270,111 @@ foreach ($brigade_id as $value) {
             jQuery("#modal-window-container-tar").hide();
         }
     });
-	// ----------------------------------------------
-
-	// перенаправление на страницу заказа
-	function ReplaceToOrder(project) {
-		location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id="+project);
-        //location.href="/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project;
-    }
-	// ------------------------------------------------
 
 	jQuery(document).ready(function () {
-		// легенда
+
+	    jQuery('.brigade_city').click(function(){
+	        var city_id = jQuery(this).data('id');
+            jQuery('.city_brigades[data-city_id="'+city_id+'"]').toggle();
+            var i = jQuery(this).find('i');
+
+            if(i.hasClass('fa-angle-down')){
+                i.removeClass("fa-angle-down").addClass("fa-angle-up");
+            }
+            else if(i.hasClass('fa-angle-up')){
+                i.removeClass("fa-angle-up").addClass("fa-angle-down");
+            }
+        });
+
 		if (screen.width < 768) {
-			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
-			legenda += '<td>Новый монтаж. Не просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый"></td>';	
-			legenda += '<td>Новый монтаж. Просмотрен монтажником</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий"></td>';
-			legenda += '<td>Монтаж в работе</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
-			legenda += '<td>Монтаж недовыполнен</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
-			legenda += '<td>Монтаж выполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
-			legenda += '<td>Заказ закрыт</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
-			legenda += '<td>Выходные часы</td></tr>';
-			jQuery("#button-prev").css({"width":"25px"});
+            jQuery("#button-prev").css({"width":"25px"});
 			jQuery("#prev-button-container").css({"left":"0px"});
 			jQuery("#button-next").css({"width":"25px"});
 			jQuery("#next-button-container").css({"right":"0px"});
 			jQuery("#legenda").append(legenda);
-		} else {
-			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
-			legenda += '<td>Новый монтаж. Не просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый"></td>';	
-			legenda += '<td>Новый монтаж. Просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий"></td>';
-			legenda += '<td>Монтаж в работе</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
-			legenda += '<td>Монтаж недовыполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
-			legenda += '<td>Монтаж выполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
-			legenda += '<td>Заказ закрыт</td></tr>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
-			legenda += '<td>Выходные часы</td>';
-			jQuery("#legenda").append(legenda);
 		}
-		// -------------------------------
-		
-		// подсвет сегоднешней даты
-        window.today = new Date();
-        window.NowYear = today.getFullYear();
-        window.NowMonth = today.getMonth();
-		window.day = today.getDate();
-		<?php foreach ($brigade_id as $value) { ?>
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
+
+		jQuery.each(brigades,function (index,elem) {
+            Today(day, NowMonth, NowYear, elem.id);
+        });
+
+        jQuery("#button-next").click(function () {
+            var month1 = <?php echo $month1; ?>,
+                year1 = <?php echo $year1; ?>,
+                month2 = <?php echo $month2; ?>,
+                year2 = <?php echo $year2; ?>;
+
+            if (month_old1 != 0) {
+                month1 = month_old1;
+                year1 = year_old1;
+                month2 = month_old2;
+                year2 = year_old2;
+            }
+            if (month1 == 12) {
+                month1 = 1;
+                year1++;
+            } else {
+                month1++;
+            }
+            if (month2 == 12) {
+                month2 = 1;
+                year2++;
+            } else {
+                month2++;
+            }
+            month_old1 = month1;
+            year_old1 = year1;
+            month_old2 = month2;
+            year_old2 = year2;
+
+            jQuery.each(brigades,function (index,elem) {
+                updateCalendar(elem.id,month1,year1);
+                jQuery('.firstMonth[data-brigade_id='+elem.id+']').empty();
+                jQuery('.firstMonth[data-brigade_id='+elem.id+']').append(calendar);
+                updateCalendar(elem.id,month2,year2);
+                jQuery('.secondMonth[data-brigade_id='+elem.id+']').empty();
+                jQuery('.secondMonth[data-brigade_id='+elem.id+']').append(calendar);
+                Today(day, NowMonth, NowYear, elem.id);
+            });
+        });
+
+        jQuery("#button-prev").click(function () {
+            var month1 = <?php echo $month1; ?>,
+                year1 = <?php echo $year1; ?>,
+                month2 = <?php echo $month2; ?>,
+                year2 = <?php echo $year2; ?>;
+            if (month_old1 != 0) {
+                month1 = month_old1;
+                year1 = year_old1;
+                month2 = month_old2;
+                year2 = year_old2;
+            }
+            if (month1 == 1) {
+                month1 = 12;
+                year1--;
+            } else {
+                month1--;
+            }
+            if (month2 == 1) {
+                month2 = 12;
+                year2--;
+            } else {
+                month2--;
+            }
+            month_old1 = month1;
+            year_old1 = year1;
+            month_old2 = month2;
+            year_old2 = year2;
+            jQuery.each(brigades,function (index,elem) {
+                updateCalendar(elem.id,month1,year1);
+                jQuery('.firstMonth[data-brigade_id='+elem.id+']').empty();
+                jQuery('.firstMonth[data-brigade_id='+elem.id+']').append(calendar);
+                updateCalendar(elem.id,month2,year2);
+                jQuery('.secondMonth[data-brigade_id='+elem.id+']').empty();
+                jQuery('.secondMonth[data-brigade_id='+elem.id+']').append(calendar);
+                Today(day, NowMonth, NowYear, elem.id);
+            });
+        });
         //------------------------------------------
 
 		// нажатие на день, чтобы посмотреть проекты на день
@@ -478,6 +418,7 @@ foreach ($brigade_id as $value) {
 			jQuery("#close-modal-window").show();
 			jQuery("#modal-window-with-table").show();
 		});
+
 		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
 			ChoosenDay = this.id;
 			kind = "empty";
@@ -864,5 +805,55 @@ foreach ($brigade_id as $value) {
         });
 	});
 
+    var Today = function (day, month, year, id) {
+        month++;
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+id+"I").addClass("today");
+    }
+
+    Function.prototype.process= function(state){
+        var process= function(){
+            var args= arguments;
+            var self= arguments.callee;
+            setTimeout(function(){
+                self.handler.apply(self, args);
+            }, 0 )
+        }
+        for(var i in state) process[i]= state[i];
+        process.handler= this;
+        return process;
+    }
+
+    function ReplaceToOrder(project) {
+        location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id="+project);
+    }
+
+    function updateCalendar(id,month,year){
+        jQuery.ajax({
+            async: false,
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: id,
+                id_dealer: '<?php echo $dealerId; ?>',
+                flag: 1,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                calendar = msg;
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
 
 </script>

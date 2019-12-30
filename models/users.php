@@ -760,4 +760,37 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveUserCity($cityId,$userId){
+	    try{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+                ->insert('`rgzbn_user_info`')
+                ->columns('`user_id`,`city_id`')
+                ->values("$userId,$cityId");
+	        $db->setQuery($query);
+	        $db->execute();
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUserByUsername($username){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("*")
+                ->from('`rgzbn_users`')
+                ->where("username = '$username'");
+            $db->setQuery($query);
+            $user = $db->loadObject();
+            return $user;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -81,7 +81,7 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            
 		            elem.classList.remove('nice-busy');
 		            if (elem.classList.contains('nice-busy-all')) {
-		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
+		            	setTimeout(function(){elem.classList.remove('nice-selected');}, 500);
 		            }
 		            else {
 		            	if (Array.isArray(dop_mw)) {
@@ -357,16 +357,30 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            		this.classList.remove('free-day');
 		            	});
 		            	jQuery('#'+modal_window+' .hide_calendar').click(function(){
-		            		if (Array.isArray(dop_mw)) {
-			            		for (var i in dop_mw) {
-			            			document.getElementById(dop_mw[i]).style.display = 'none';
-			            		}
-			            	}
-			            	else {
-			            		document.getElementById(dop_mw).style.display = 'none';
-			            	}
-			            	mw_elem.style.display = 'none';
-			            	check_mount_service();
+		            		console.log(jQuery('.mw_stages').is(':visible'));
+		            		if(jQuery('.mw_stages').is(':visible')){
+                                noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'topCenter',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Пожалуйста, выберите этапы монтажа на эту дату!"
+                                });
+                                jQuery('#'+modal_window).animate({ scrollTop: (0) }, 'slow');
+							}
+							else{
+                                if (Array.isArray(dop_mw)) {
+                                    for (var i in dop_mw) {
+                                        document.getElementById(dop_mw[i]).style.display = 'none';
+                                    }
+                                }
+                                else {
+                                    document.getElementById(dop_mw).style.display = 'none';
+                                }
+                                mw_elem.style.display = 'none';
+                                check_mount_service();
+							}
 		            	});
 		            }
 		        }

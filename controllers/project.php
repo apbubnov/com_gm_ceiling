@@ -638,25 +638,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	public function activate() {
 		try
 		{
-			$app = JFactory::getApplication();
-			$user = JFactory::getUser();
-
+            /*models*/
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
-			$model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
 			$client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
-            $model_for_mail = Gm_ceilingHelpersGm_ceiling::getModel('calculations');        
 			$callback_model = $this->getModel('callback', 'Gm_ceilingModel');
-            $cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
-
+            $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            /*get data*/
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get('project_id', 0, 'INT');
             $data = $model->getData($project_id);
             $include_calculation = $jinput->get('include_calculation', '', 'ARRAY');
             $type = $jinput->get('type', '', 'STRING');
             $subtype = $jinput->get('subtype', '', 'STRING');
-            $activate_by_email = $jinput->get('activate_by_email',null,'INT');
-            $email = $jinput->get('email_to_send',null,'STRING');
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
             if(!empty($mount_data)){
                 $mount_str = "";
@@ -667,41 +662,30 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $mount_str .= $date->format('d.m.Y H:i:s')." - ".$mount_types[$value->stage]."; ";
                 }
             }
-			$data->project_sum =  $jinput->get('project_sum',0, 'INT');
+			$data->project_sum =  $jinput->get('project_sum',1000, 'INT');
+            throw new Exception($data->project_sum);
             //получение примечаний
 			$mount_note = $jinput->get('mount_note','','STRING');
+            $production_note = $jinput->get('production_note', '', 'STRING');
+            $refuse_note = $jinput->get('ref_note','','STRING');
+            $calcs_refuse_note = $jinput->get('refuse_note','','STRING');
+            /*Запись примечаний*/
             if (!empty($mount_note)) {
                 $this->addNote($project_id, $mount_note,5);
             }
-            $production_note = $jinput->get('production_note', '', 'STRING');
             if (!empty($production_note)) {
                 $this->addNote($project_id, $production_note,4);
             }
-            $refuse_note = $jinput->get('ref_note','','STRING');
             if (!empty($refuse_note)) {
                 $this->addNote($project_id, $refuse_note,3);
             }
+            /*-------*/
+            $smeta = $jinput->get('smeta', '0', 'INT');
+            $project_verdict = $jinput->get('project_verdict', '0', 'INT');
+            $project_status = $jinput->get('project_status', '0', 'INT');
 
-            $calcs_refuse_note = $jinput->get('refuse_note','','STRING');
-			$street = $jinput->get('new_address', '', 'STRING');
-			$house = $jinput->get('new_house', '', 'STRING');
-			$bdq = $jinput->get('new_bdq', '', 'STRING');
-			$apartment = $jinput->get('new_apartment', '', 'STRING');
-			$porch = $jinput->get('new_porch', '', 'STRING');
-			$floor = $jinput->get('new_floor', '', 'STRING');
-			$code = $jinput->get('new_code', '', 'STRING');
-			if(!empty($house)) $address = $street.", дом: ".$house;
-			if(!empty($bdq)) $address .= ", корпус: ".$bdq;
-			if(!empty($apartment)) $address .= ", квартира: ".$apartment;
-			if(!empty($porch)) $address .= ", подъезд: ".$porch;
-			if(!empty($floor)) $address .= ", этаж: ".$floor;
-			if(!empty($code)) $address .= ", код: ".$code;
-			$new_address = $address;
-			$isDataChange = $jinput->get('data_change', '0', 'INT');
-
-			$smeta = $jinput->get('smeta', '0', 'INT');
-			// перимерт и зп бригаде
-			$project_info_for_mail = $model_for_mail->InfoForMail($project_id);
+            // перимерт и зп бригаде
+			$project_info_for_mail = $calculationsModel->InfoForMail($project_id);
 			$perimeter = 0;
 			$salary = 0;
 			foreach ($project_info_for_mail as $value) {
@@ -710,363 +694,219 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			$data->perimeter = $perimeter;
 			$data->salary = $salary;
-			if ($isDataChange) {
-                $newFIO = $jinput->get('new_client_name','', 'STRING');
-                $newDate = $jinput->get('project_new_calc_date','','STRING');
-                $newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
-                $newGauger = $jinput->get('project_gauger','','STRING');
-                $phones = [];
-                $phones[] = $jinput->get('new_client_contacts',null, 'STRING');
-                if($data->id_client!=1){
-                    if(!empty($newFIO)){
-                        if($newFIO!=$data->client_id){
-                            $client_model->updateClient($data->id_client,$newFIO);
-                            $client_history_model->save($data->id_client,"Изменено ФИО пользователя");
-                        }
-                    }
+            $data->project_status = $project_status;
+
+
+            $calculations = $calculationsModel->new_getProjectItems($data->id);
+            $all_calculations = array();
+            foreach($calculations as $calculation){
+                $all_calculations[] = $calculation->id;
+            }
+            $ignored_calculations = array_diff($all_calculations, $include_calculation);
+            $client = $clientModel->getClientById($data->id_client);
+            $manager_id =   $client->dealer_id;
+            if(!empty($client->manager_id)){
+                $manager_id = $client->manager_id;
+            }
+            else{
+                if(!empty($data->read_by_manager)){
+                    $manager_id = $data->read_by_manager;
+                }
+            }
+            if($project_verdict == 1){
+                if(empty($mount_data)){
+                    $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
+                    $call_datetime = date('Y-m-d hh:ii:ss');
+                    $callback_model->save($call_datetime,"Заключен договор без даты монтажа",$data->id_client,$manager_id);
+                    $client_history_model->save($data->id_client,"Добавлен новый звонок");
                 }
                 else{
-                    $client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
-                    $client_data['created'] = date("d.m.Y");
-                    $client_data['client_name'] = $newFIO;
-                    $client_data['client_contacts'] = $newContacts;
-                    $client_data['dealer_id'] = $user->dealer_id;
-                    $client_data['manager_id'] = $user->id;
-                    $client_id = $client_model->save($client_data);
-                    $model->update_client($data->id,$client_id);
-                    if (empty($newFIO))
-                    {
-                        $cl_model = $this->getModel('Client', 'Gm_ceilingModel');
-                        $newFIO = "$client_id";
-                        $cl_model->updateClient($client_id,$newFIO);
-                    }
-                    if(!empty($phones[0])){
-                        $cl_phones_model->save($client_id,$phones);
-                    }
-                }
-                if(!empty($new_address)){
-                    if($new_address!=$data->project_info){
-                        $model->update_address($data->id,$new_address);
-                        $client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$new_address);
-                    }
-                }
-                $date_time = $data->project_calculation_date;
-                $date_arr = date_parse($date_time);
-                $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-                $time = $date_arr['hour'].':00';
-                if(!empty($newDate) && !empty($newDayPart))
-                {
-                    if($date!=$newDate && $time!=$newDayPart){
-                        $model->update_date_time($data->id,$newDate." ".$newDayPart);
-                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$newDayPart);
-                    }
-                    elseif ($date!=$newDate) {
-                        $model->update_date_time($data->id,$newDate." ".$time);
-                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$time);
-                    }
-                    elseif ($newDayPart!=$time) {
-                        $model->update_date_time($data->id,$date." ".$newDayPart);
-                        $client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
+                    if($project_status == 4){
+                        $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
+                        $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж.".$mount_str );
+                    } else {
+                        $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
+                        $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
                     }
 
-                }
-                if (!empty($newGauger)) {
-                    $model->update_date_gauger($data->id,$newGauger);
-                    $name_gauger = $model->GetNameGauger($newGauger);
-                    $client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
-                }
+                    foreach ($mount_data as $value) {
+                        $c_date = date_create($value->time);
+                        date_sub($c_date, date_interval_create_from_date_string('1 day'));
 
-				$this->setMessage("Данные успешно изменены");
-				if($type === "gmcalculator" && $subtype === "calendar") {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.$project_id, false));
-				}
-				elseif ($type === "calculator" && $subtype === "calendar") {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.$project_id, false));
-				}
-				else {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
-				}
-			} else {
-				if($subtype === "refused") {
-					$model->return_project($project_id);
-				    // Clear the profile id from the session.
-					$app->setUserState('com_gm_ceiling.edit.project.id', null);
-				    // Flush the data from the session.
-					$app->setUserState('com_gm_ceiling.edit.project.data', null);
+                        $checkDate = date_format($c_date,'Y-m-d');
 
-					$this->setMessage("Проект вернулся в Замеры");
-
-				} else {
-					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
-                    $project_status = $jinput->get('project_status', '0', 'INT');
-                    $data->project_status = $project_status;
-					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$calculations = $calculationsModel->new_getProjectItems($data->id);
-					$all_calculations = array();
-					foreach($calculations as $calculation){
-						$all_calculations[] = $calculation->id;
-					}
-					$ignored_calculations = array_diff($all_calculations, $include_calculation);
-					// Attempt to save the data.
-					if($activate_by_email == 0){
-                        $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
-                        $client = $clientModel->getClientById($data->id_client);
-                        $manager_id =   $client->dealer_id;
-                        if(!empty($client->manager_id)){
-                            $manager_id = $client->manager_id;
+                        if(date('N',strtotime($checkDate)) == 7){
+                            date_sub($c_date, date_interval_create_from_date_string('2 days'));
                         }
-                        else{
-                            if(!empty($data->read_by_manager)){
-                                $manager_id = $data->read_by_manager;
-                            }
+                        if(date('N',strtotime($checkDate)) == 6){
+                            date_sub($c_date, date_interval_create_from_date_string('2 days'));
                         }
 
-                        if($user->dealer_type!=2 && $project_verdict == 1)
-						{
-						    if(empty($mount_data)){
-								//$data->project_verdict = 0;
-								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
-								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
-								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING');
-								$call_datetime = (!empty($call_mount_date) && !empty($call_mount_time)) ? $call_mount_date.' '.$call_mount_time : date('Y-m-d hh:ii:ss');
-                                $callback_model->save($call_datetime,"Заключен договор без даты монтажа",$data->id_client,$manager_id);
-                                $client_history_model->save($data->id_client,"Добавлен новый звонок");
+                        $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$manager_id);
+                        $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
+                    }
 
-							}
-							else{
-								if($project_status == 4){
-									//$data->project_verdict = 0;
-									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
-									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж.".$mount_str );
-									//$return = $model->activate($data, 4);
+                    $projects_mounts_model->save($project_id,$mount_data);
 
-								} else {
-									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
-									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж. ".$mount_str);
-									//$return = $model->activate($data, 5/*3*/);
-								}
-
-                                foreach ($mount_data as $value) {
-                                    $c_date = date_create($value->time);
-                                    date_sub($c_date, date_interval_create_from_date_string('1 day'));
-
-                                    $checkDate = date_format($c_date,'Y-m-d');
-
-                                    if(date('N',strtotime($checkDate)) == 7){
-                                        date_sub($c_date, date_interval_create_from_date_string('2 days'));
-                                        //$callbackDate = ($measureDate->sub(date_interval_create_from_date_string('2 days')))->format('Y-m-d');
-                                    }
-                                    if(date('N',strtotime($checkDate)) == 6){
-                                        date_sub($c_date, date_interval_create_from_date_string('2 days'));
-                                        //$callbackDate = ($measureDate->sub(date_interval_create_from_date_string('1 days')))->format('Y-m-d');
-                                    }
-
-                                    $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к этапу монтажа $value->stage_name",$data->id_client,$manager_id);
-                                    $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к этапу монтажа $value->stage_name");
-
-                                }
-
-                                $projects_mounts_model->save($project_id,$mount_data);
-                                $service_data = $this->check_mount_for_service($mount_data);
-                                $send_data['project_id'] = $project_id;
-                                $send_data['client_id'] = $data->id_client;
-                                $send_data['mount'] = $service_data;
-                                $pr_data['id'] = $project_id;
-                                if(!empty($service_data)){
-                                    $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
-                                    $model_calculation = Gm_ceilingHelpersGm_ceiling::getModel('Calculation');
-                                    foreach ($include_calculation as $calc) {
-                                        $total_mount_sum = 0;
-                                        $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $data->dealer_id);
-                                        $all_gm_jobs = $model_calcform->getJobsPricesInCalculation($calc, 1);
-                                        foreach ($all_jobs as $job){
-                                            $total_mount_sum += $job->price_sum;
-                                        }
-                                        $mount_sum[$calc] = $total_mount_sum;
-
-                                        $calc_data['calculation'] = $model_calculation->getBaseCalculationDataById($calc);
-                                        $calc_data['jobs'] = $all_jobs;
-                                        $calc_data['gm_jobs'] = $all_gm_jobs;
-                                        foreach ($service_data as $key => $value) {
-                                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc_data,$value->mounter,$value->stage);
-                                        }
-                                    }
-                                    $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
-                                    $this->change_project_data($pr_data);
-                                    Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
-                                    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation);
-                                }
-                                else{
-                                      $pr_data['calcs_mounting_sum'] = "";
-                                }
-							}
-							
-						}
-						else if ($user->dealer_type!=2 && $project_verdict == 0 && $project_status == 3)
-						{
-						    $ref_note = $jinput->get("ref_note","Отсутсвует","STRING");
-							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание : ".$ref_note);
-                            $callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$manager_id);
-                            $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание  :".$ref_note);
-						}
-                        $return = $model->activate($data, $project_status);
-					}
-					else{
-						$return = $model->activate($data, 23);
-						$array = [];
-						foreach($include_calculation as $calc){
-                            if($calc->n3){
-                                Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc);
+                    $service_data = $this->check_mount_for_service($mount_data);
+                    $send_data['project_id'] = $project_id;
+                    $send_data['client_id'] = $data->id_client;
+                    $send_data['mount'] = $service_data;
+                    $pr_data['id'] = $project_id;
+                    if(!empty($service_data)){
+                        $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
+                        $model_calculation = Gm_ceilingHelpersGm_ceiling::getModel('Calculation');
+                        foreach ($include_calculation as $calc) {
+                            $total_mount_sum = 0;
+                            $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc, $data->dealer_id);
+                            $all_gm_jobs = $model_calcform->getJobsPricesInCalculation($calc, 1);
+                            foreach ($all_jobs as $job){
+                                $total_mount_sum += $job->price_sum;
                             }
-							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc. "managernone") . ".pdf";
-						}
-						Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
-						$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
-						$filename = "project№".$project_id. ".pdf";
-						$sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
-						Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
-						$mailer = JFactory::getMailer();
-						$config = JFactory::getConfig();
-						$sender = array(
-							$config->get('mailfrom'),
-							$config->get('fromname')
-						);
+                            $mount_sum[$calc] = $total_mount_sum;
 
-						$mailer->setSender($sender);
-						$mailer->addRecipient($email);
-						$body = "Запуск в производство";
-						$mailer->setSubject('Запуск в производство');
-						$mailer->setBody($body);
-						$mailer->addAttachment($sheets_dir.$filename);
-						$send = $mailer->Send();
-						unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);					
-					}
-                    $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
-                    $gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
-                    if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
-                    $gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
-                    $dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
-                    if($smeta == 0) $dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
-                    $dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
-
-					// Check for errors.
-					if ($return === false)
-					{
-						$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
-					}
-					else {
-
-						if($project_verdict == 1 && count($ignored_calculations) > 0) {
-                            $project_data = $model->getData($project_id);
-                            $project_data->project_sum = 0;
-						    foreach ($calculations as $calculation)
-						        if (in_array($calculation->id, $ignored_calculations)) {
-                                    $project_data->project_sum += $calculation->dealer_components_sum;
-                                    $project_data->project_sum += $calculation->dealer_canvases_sum;
-                                    $project_data->project_sum += margin($calculation->mounting_sum, $dealer_mounting_margin);
-                                }
-
-							$client_id = $data->id_client_num;
-							$project_data->project_status = 3;
-
-							//$project_data->project_verdict = 0;
-							$old_advt = $project_data->api_phone_id; 
-							$project_data->api_phone_id = 10;
-							$project_data->client_id = $client_id;
-
-							unset($project_data->id);
-							$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
-							$refuse_id = $project_model->save(get_object_vars($project_data));
-
-							$repeat_request = Gm_ceilingHelpersGm_ceiling::getModel('RepeatRequest');
-							$repeat_request->save($refuse_id,$old_advt);
-
-							$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
-							$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-							foreach($ignored_calculations as $ignored_calculation){
-								$calculationModel->changeProjectId($ignored_calculation, $refuse_id);
-							}
-							if(!empty($calcs_refuse_note)) {
-                                $this->addNote($refuse_id, $calcs_refuse_note, 3);
-                            }
-						}
-					}
-					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$project_sum = 0;
-					foreach($include_calculation as $calculation){                        
-						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
-						$calculations = $calculationsModel->new_getProjectItems($calculation);
-						foreach($calculations as $calc) {
-							if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
-							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
-							$project_sum += margin($calc->mounting_sum, $dealer_mounting_margin);
-						}
-					if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
-					} 
-
-					// Clear the profile id from the session.
-					$app->setUserState('com_gm_ceiling.edit.project.id', null);
-
-					// Flush the data from the session.
-					$app->setUserState('com_gm_ceiling.edit.project.data', null);
-
-					// Redirect to the list screen.
-					if($project_verdict == 1) {
-						if( count($ignored_calculations) > 0 ) {
-							$data = $model->getNewData($project_id);
-							$data->refuse_id = $refuse_id;
-							if($activate_by_email==0){
-								Gm_ceilingHelpersGm_ceiling::notify($data, 6);
-							}
-							$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
-						} else {
-						    if($project_status == 4 )  { $this->setMessage("Проект сохранен");}
-						    else {
-								if($activate_by_email==0){
-									Gm_ceilingHelpersGm_ceiling::notify($data, 2);
-								}
-                               
-                                $this->setMessage("Проект сформирован");
-                                Gm_ceilingHelpersGm_ceiling::notify($data, 7);
-                            }
-						}
-					} elseif($project_verdict == 0) {
-                        if(in_array($project_status, [2,3,15])){
-                            Gm_ceilingHelpersGm_ceiling::notify($data, 4);
-                            $this->setMessage("Проект отправлен в список отказов",'error');
-                        }
-                        else{
-                            if($project_status == 1){
-                                $this->setMessage("Проект записан на замер",'success');
-                            }
-                            else{
-                                $this->setMessage("Сохранено",'success');
+                            $calc_data['calculation'] = $model_calculation->getBaseCalculationDataById($calc);
+                            $calc_data['jobs'] = $all_jobs;
+                            $calc_data['gm_jobs'] = $all_gm_jobs;
+                            foreach ($service_data as $key => $value) {
+                                Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc_data,$value->mounter,$value->stage);
                             }
                         }
-                        
-						
-					}
+                        $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
+                        $this->change_project_data($pr_data);
+                        Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
+                        Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$include_calculation);
+                    }
+                    else{
+                          $pr_data['calcs_mounting_sum'] = "";
+                    }
+                }
 
-					$menu = JFactory::getApplication()->getMenu();
+            }
+            else if ($project_verdict == 0 && $project_status == 3)
+            {
+                $ref_note = $jinput->get("ref_note","Отсутсвует","STRING");
+                $client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание : ".$ref_note);
+                $callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$manager_id);
+                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание  :".$ref_note);
+            }
 
-					$item = $menu->getActive();
+            // Check for errors.
+            /*if ($return === false)
+            {
+                $this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
+            }
+            else {*/
+            if($project_verdict == 1 && count($ignored_calculations) > 0) {
+                $project_data = clone $data;
+                $project_data->project_sum = 0;
+                foreach ($calculations as $calculation) {
+                    if (in_array($calculation->id, $ignored_calculations)) {
+                        $project_data->project_sum += $calculation->components_sum_with_margin;
+                        $project_data->project_sum += $calculation->canvases_sum_with_margin;
+                        $project_data->project_sum += $calculation->mounting_sum_with_margin;
+                    } else {
+                        $data->project_sum += $calculation->components_sum_with_margin;
+                        $data->project_sum += $calculation->canvases_sum_with_margin;
+                        $data->project_sum += $calculation->mounting_sum_with_margin;
+                    }
+                }
 
-					}
+                $client_id = $data->id_client_num;
+                $project_data->project_status = 3;
 
-					if($type === "gmcalculator" && $subtype === "calendar") {
-						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar&id='.$project_id, false));
-					}
-					elseif ($type === "calculator" && $subtype === "calendar") {
-						if($user->dealer_type!=2)
-						    if($project_status == 4 ) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage', false));
-							else $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.$project_id, false));
-						else $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.$project_id, false));
-					}
-					else {
-						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
-					}
-					if(!$project_verdict) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
-			}
+                //$project_data->project_verdict = 0;
+                $old_advt = $project_data->api_phone_id;
+                $project_data->api_phone_id = 10;
+                $project_data->client_id = $client_id;
+
+                unset($project_data->id);
+                $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+                $refuse_id = $project_model->save(get_object_vars($project_data));
+
+                $repeat_request = Gm_ceilingHelpersGm_ceiling::getModel('RepeatRequest');
+                $repeat_request->save($refuse_id,$old_advt);
+
+                $client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                foreach($ignored_calculations as $ignored_calculation){
+                    $calculationModel->changeProjectId($ignored_calculation, $refuse_id);
+                }
+                if(!empty($calcs_refuse_note)) {
+                    $this->addNote($refuse_id, $calcs_refuse_note, 3);
+                }
+            }
+            $return = $model->activate($data, $project_status);
+            //}
+            /*$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $project_sum = 0;
+            foreach($include_calculation as $calculation){
+                if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
+                $calculations = $calculationsModel->new_getProjectItems($calculation);
+                foreach($calculations as $calc) {
+                    if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
+                    $project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
+                    $project_sum += margin($calc->mounting_sum, $dealer_mounting_margin);
+                }
+            if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
+            }*/
+
+            /*// Clear the profile id from the session.
+            $app->setUserState('com_gm_ceiling.edit.project.id', null);
+
+            // Flush the data from the session.
+            $app->setUserState('com_gm_ceiling.edit.project.data', null);*/
+            if ($return === false)
+            {
+                $this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
+            }
+            // Redirect to the list screen.
+            if($project_verdict == 1) {
+                if( count($ignored_calculations) > 0 ) {
+                    //$data = $model->getNewData($project_id);
+                    $data->refuse_id = $refuse_id;
+                    Gm_ceilingHelpersGm_ceiling::notify($data, 6);
+                    $this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
+                } else {
+                    if($project_status == 4){
+                        $this->setMessage("Проект сохранен");
+                    }
+                    else {
+                        Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+                        $this->setMessage("Проект сформирован");
+                        Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+                    }
+                }
+            } elseif($project_verdict == 0) {
+                if(in_array($project_status, [2,3,15])){
+                    Gm_ceilingHelpersGm_ceiling::notify($data, 4);
+                    $this->setMessage("Проект отправлен в список отказов",'error');
+                }
+                else{
+                    if($project_status == 1){
+                        $this->setMessage("Проект записан на замер",'success');
+                    }
+                    else{
+                        $this->setMessage("Сохранено",'success');
+                    }
+                }
+            }
+            /*
+            $menu = JFactory::getApplication()->getMenu();
+            $item = $menu->getActive();
+            */
+
+            if($type === "gmcalculator" && $subtype === "calendar") {
+                $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar&id='.$project_id, false));
+            }
+            elseif ($type === "calculator" && $subtype === "calendar") {
+                if($project_status == 4 ) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage', false));
+                else $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.$project_id, false));
+            }
+            else {
+                $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
+            }
+            if(!$project_verdict) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 		}
 		catch(Exception $e)
         {
@@ -1459,6 +1299,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $data = $model->return($id);
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            /*удаление из истории статусов проекта еслион был в статусе 5,10,19*/
             $model_projectshistory->delete($id);
             $model_projectshistory->save($id,1);
             $model_recoil_map_project = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
@@ -1478,6 +1319,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
         }
 	}
+
+
 	public function update_transport(){
 		try{
 			$jinput = JFactory::getApplication()->input;
@@ -1567,39 +1410,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
 	}
 
-    public function save_mount()
-    {
-		try{
-			$jinput = JFactory::getApplication()->input;
-			$id = $jinput->get('id', '0', 'INT');
-			$type = $jinput->get('type', '', 'STRING');
-			$jform = $jinput->get('jform',array(), 'ARRAY');
-			//print_r($id."                ".$type); exit;
-			$model = $this->getModel('Project', 'Gm_ceilingModel');
-			$return = $model->activate_mount($id, $jform);
-			//throw new Exception($id);
-
-			if ($return === false)
-			{
-				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
-			} else {
-				$this->setMessage("Данные успешно изменены");
-			}
-			if($type=="gmchief")
-			{
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmchief&id='.$id, false));
-			}
-			else if ($type=="chief")
-			{
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=chief&id='.$id, false));
-			}
-			}
-			catch(Exception $e)
-			{
-				Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-			}
-		}
 	public function done()
 	{
 		try
@@ -2364,6 +2174,23 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $model = $this->getModel('Project', 'Gm_ceilingModel');
             $result = $model->newStatus($projectId, $status);
             die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateProjectData(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $projectId = $jinput->getInt('project_id');
+	        $data = $jinput->get('project_data',array(),'ARRAY');
+	        if(!empty($data)&&$projectId) {
+	            $data['id'] = $projectId;
+                $projectModel = $this->getModel('Project', 'Gm_ceilingModel');
+                $projectModel->save($data);
+            }
+            die(json_encode(true));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

@@ -33,20 +33,7 @@ $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 
 
 //address
-$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
-preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
-$house = $house[1];
-preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-$bdq = $bdq[1];
-preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
-$apartment = $apartment[1];
-preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
-$porch = $porch[1];
-preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-$floor = $floor[1];
-preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-$code = $code[1];
-
+$address = Gm_ceilingHelpersGm_ceiling::parseProjectInfo($this->item->project_info);
 $status = $this->item->project_status;
 $status_attr = "data-status = \"$status\"";
 
@@ -92,6 +79,16 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
     .row{
         margin-bottom: 5px;
     }
+    .manuf_div{
+        height:80px;
+        border: 2px solid grey;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+    .manuf_div.selected{
+        border: 2px solid #414099;
+        background-color: #d3d3f9;
+    }
 </style>
  <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
     <div class="project_activation" style="display: none;">
@@ -107,13 +104,12 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <input id="mount" name="mount" type='hidden' value='<?php echo $this->item->mount_data;?>'>
         <input id="jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
         <input id="project_mounter" name="project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
-        <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
+        <input id="project_sum" name="project_sum" value="" type="hidden">
         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
         <input name = "project_new_calc_date" id = "jform_project_new_calc_date" type = "hidden">
         <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
         <input name = "project_gauger" id = "jform_project_gauger" type = "hidden">
-        <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
     </div>
        <?= parent::getButtonBack();?>
         <h4 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h4>
@@ -358,23 +354,31 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                                             <textarea name="mount_note" id="jform_mount_note" class="input-gm" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <b><label id="jform_ref_note-lbl" for="jform_refuse_note" class="">Примечание к незапускаемым потолкам(если есть)</label></b>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <textarea name="refuse_note" id="jform_refuse_note" class="input-gm" placeholder="Примечание к незапускаемым потолкам" aria-invalid="false"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr>
-                <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
+               <!-- <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-                </p>
+                </p>-->
                 <div class="row center">
-                    <div class="col-md-6" style="padding-top: 25px;">
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save" type="button" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                     </div>
-                    <!-- <div class="col-md-4" style="padding-top: 25px;">
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
-                    </div> -->
-                    <div class="col-md-6" style="padding-top: 25px;">
+                    </div>
+                    <div class="col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary save_bnt" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                     </div>
                 </div>
@@ -462,43 +466,43 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                     <tr>
                         <td>Улица:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">                            
+                            <input name="new_address" id="jform_address" value="<?=$address->street?>" placeholder="Улица" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Дом:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
+                            <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $address->house ?>" placeholder="Дом"  aria-required="true" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Корпус:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
+                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $address->bdq ?>" placeholder="Корпус" aria-required="true" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Квартира:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
+                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $address->apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Подъезд:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
+                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $address->porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Этаж:</td>
                         <td style="padding-bottom: 10px;">
-                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
+                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $address->floor ?>" placeholder="Этаж" aria-required="true" type="text">
                         </td>
                     </tr>
                     <tr>
                         <td>Код:</td>
                         <td style="padding-bottom: 10px;">                
-                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
+                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $address->code ?>" placeholder="Код" aria-required="true" type="text">
                         </td>
                     </tr>
                 </table>
@@ -542,11 +546,13 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 <button class="btn btn-primary" id="save_advt" type="button">Сохранить </button>
             </div>
             <div id="modal_window_by_email" class = "modal_window">
-                <p><strong>Введите адрес эл.почты:</strong></p>
-                <p>
-                    <input id = "email_to_send" name = "email_to_send" class = "input-gm">
-                </p>
-                <p><button class = "btn btn-primary">Запустить</button></p>
+                <h4>Выберите производство</h4>
+                <div id="manufacturer_list" class="container">
+
+                </div>
+                <div class="row">
+                    <button class = "btn btn-primary" id="runByEmail" type="button">Запустить в выбранное производтсво</button>
+                </div>
             </div>
             <div id="mw_rec_to_msr" class="modal_window">
                 <div class="row">
@@ -679,7 +685,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             var client_id = "<?php echo $this->item->id_client;?>";
             var client_name = "<?php echo $this->item->client_id;?>";
             jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
-
+            fillProjectSum();
             if(document.getElementById('add_calc')) {
                 document.getElementById('add_calc').onclick = function () {
                     create_calculation(<?php echo $this->item->id; ?>);
@@ -739,12 +745,100 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 }
             });
 
+            /*Запуск в производтсвто по email*/
             jQuery("#save_email").click(function(){
-                jQuery("#activate_by_email").val(1);
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=users.getManufacturerInfo",
+                    data: {
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        manufacturersData = data;
+                        var manufacturersHtml = '';
+                        jQuery("#manufacturer_list").empty();
+                        for(var i=0;i<data.length;i++){
+                            if(i%3 == 0){
+                                console.log('1',i);
+                                manufacturersHtml += '<div class="row">';
+                            }
+                            manufacturersHtml += '<div class="col-md-4 manuf_div" data-email="'+data[i].email+'">';
+                            manufacturersHtml += '<div class=row><b>'+data[i].name+'</b></div>';
+                            manufacturersHtml += '<div class=row><b>Адрес выдачи:</b> '+data[i].address+'</div>';
+                            manufacturersHtml += '</div>';
+                            if((i+1) % 3 == 0 || i+1 == data.length){
+                                console.log('2',i);
+                                manufacturersHtml += '</div>';
+                            }
+                        }
+                        jQuery("#manufacturer_list").append(manufacturersHtml);
+
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!Попробуйте позднее!"
+                        });
+                    }
+                });
+
                 jQuery("#close_mw").show();
                 jQuery("#mw_container").show();
                 jQuery("#modal_window_by_email").show();
             });
+
+            jQuery('#modal_window_by_email').on('click','.manuf_div',function(){
+                jQuery('.manuf_div').removeClass('selected');
+                jQuery(this).addClass('selected');
+            });
+
+            jQuery('#runByEmail').click(function(){
+                var div = jQuery('.manuf_div.selected'),
+                    email = div.data('email'),
+                    include_calculations = get_selected_calcs();
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.activateByEmail",
+                    data: {
+                        project_id: project_id,
+                        email: email,
+                        include_calcs: include_calculations,
+                        mount_data: jQuery('#mount').val(),
+                        production_note: jQuery('#jform_production_note').val(),
+                        mount_note: jQuery('#jform_mount_note').val(),
+                        ref_note: jQuery('#jform_refuse_note').val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Проект запущен в производство!"
+                        });
+                        setTimeout(function(){location.reload();},3000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!Попробуйте позднее!"
+                        });
+                    }
+                });
+            });
+            /*--------*/
 
             jQuery("#save_exit").click(function() {
                 jQuery("input[name='project_status']").val(4);
@@ -752,10 +846,36 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             });
 
             jQuery("#save").click(function() {
-                jQuery("input[name='project_status']").val(5);
-                jQuery("input[name='project_verdict']").val(1);
-                document.getElementById('form-client').submit();
+                if(empty(jQuery("#mount").val())){
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "alert",
+                        text: "Не указана дата монтажа. Продолжить?",
+                        buttons:[
+                            {addClass: 'btn btn-primary', text: 'Да', onClick: function(modal) {
+                                    jQuery("input[name='project_status']").val(5);
+                                    jQuery("input[name='project_verdict']").val(1);
+                                    jQuery('#form-client').submit();
+                                    modal.close();
+                                }
+                            },
+                            {addClass: 'btn btn-primary', text: 'Нет', onClick: function(modal) {
+                                    modal.close();
+                                }
+                            }
+                        ]
+                    });
+                }
+                else {
+                    jQuery("input[name='project_status']").val(5);
+                    jQuery("input[name='project_verdict']").val(1);
+                    jQuery('#form-client').submit();
+                }
+
             });
+
 
             jQuery("#accept_project").click(function(){
                 jQuery("#project_activation").toggle();

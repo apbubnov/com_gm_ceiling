@@ -14,115 +14,186 @@
         $canEdit = JFactory::getUser()->id == $this->item->created_by;
     }
 
-    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
     $user = JFactory::getUser();
     $dealer = JFactory::getUser($user->dealer_id);
     $project_id = $this->item->id;
 
-/*_____________блок для всех моделей/models block________________*/ 
-$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-/*________________________________________________________________*/
-$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-$client_sum_transport = $transport['client_sum'];
-$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
-$self_calc_data = [];
-$self_canvases_sum = 0;
-$self_components_sum = 0;
-$self_mounting_sum = 0;
-$project_self_total = 0;
-$project_total = 0;
-$project_total_discount = 0;
-$total_square = 0;
-$total_perimeter = 0;
-$calculation_total_discount = 0;
-$calculations = $calculationsModel->new_getProjectItems($this->item->id);
-if (!empty($this->item->calcs_mounting_sum)) {
-    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
-}
-if(!empty($service_mount)){
-    $self_sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id,"service")['mounter_sum'];
-}
 
-$del_flag = 0;
-$project_total = $project_total + $client_sum_transport;
-$project_total_discount = $project_total_discount  + $client_sum_transport;
-    if (!empty($this->item->sb_order_id))
-        $sb_project_id = $this->item->sb_order_id;
-    else  $sb_project_id = 0;
+    $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 
-    $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-    $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
-if(!empty($this->item->api_phone_id))
-    $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
-else
-    $reklama = "";
-$all_advt = $model_api_phones->getAdvt();
+    if(!empty($this->item->api_phone_id)){
+        $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
+    }
+    else{
+        $reklama = "";
+    }
+    $all_advt = $model_api_phones->getAdvt();
+    $this->item->mount_data = json_decode(htmlspecialchars_decode($this->item->mount_data));
+    foreach ($this->item->mount_data as $key=>$value) {
+        if(empty($value->mounter)){
+            $wasDelete = true;
+            unset($this->item->mount_data[$key]);
+        }
+    }
+    if($wasDelete){
+        if(!empty($this->item->mount_data)) {
+            $json_mount = json_encode(htmlspecialchars($this->item->mount_data));
+        }
+        else{
+            $json_mount = [];
+        }
+    }
+
+    /**КОНЕЦ КОСТЫЛЯ
+     ***/
+    $stages = [];
+    if(!empty($this->item->mount_data)){
+        $mount_types = $projects_mounts_model->get_mount_types();
+        foreach ($this->item->mount_data as $value) {
+            $value->stage_name = $mount_types[$value->stage];
+            if(!array_key_exists($value->mounter,$stages)){
+                $stages[$value->mounter] = array((object)array("stage"=>$value->stage,"time"=>$value->time));
+            }
+            else{
+                array_push($stages[$value->mounter],(object)array("stage"=>$value->stage,"time"=>$value->time));
+            }
+        }
+        foreach ($calculations as $calc) {
+            foreach ($stages as $key => $value) {
+                foreach ($value as $val) {
+                    Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($calc->id,$key,$val->stage,$val->time);
+                }
+
+            }
+        }
+
+}
 ?>
-
+<style>
+   .row{
+       margin-bottom: 15px;
+   }
+</style>
 <?= parent::getButtonBack(); ?>
 <input name="url" value="" type="hidden">
 <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
 <div class="row">
     <div class="col-xs-12 col-md-6 no_padding">
-        <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <h4>Информация о клиенте</h4>
-            <table class="table_info" style="margin-bottom: 25px;">
-                <tr>
-                    <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                    <td><?php echo $this->item->client_id; ?></td>
-                </tr>
-                <tr>
-                    <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                    <td>
+            <div class="container"  style="margin-bottom: 25px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <b>
+                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                        </b>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo $this->item->client_id; ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <b>
+                            <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                        </b>
+                    </div>
+                    <div class="col-md-6">
                         <?php
                             foreach ($phones AS $contact) {
                                 echo $contact->phone;
                                 echo "<br>";
                             } 
                         ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                    <td><?php echo $this->item->project_info; ?></td>
-                </tr>
-                <tr>
-                    <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                    <td><?php if ($this->item->project_mounting_date == '0000-00-00 00:00:00') echo "-"; else echo $this->item->project_mounting_date; ?></td>
-                </tr>
-                <tr>
-                    <th>
-                        Реклама
-                    </th>
-                    <td>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <b>
+                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                        </b>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo $this->item->project_info; ?>
+                    </div>
+                </div>
+                <?php if(!empty($this->item->mount_data)):?>
+                    <div class="row center" style="margin-bottom: 5px">
+                        <div class="col-md-12">
+                            <b>Монтаж</b>
+                        </div>
+                    </div>
+                    <?php foreach ($this->item->mount_data as $value) { ?>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-4">
+                                <b>
+                                    <?php echo $value->time;?>
+                                </b>
+                            </div>
+                            <div class="col-md-4">
+                                <?php echo $value->stage_name;?>
+                            </div>
+                            <div class="col-md-4">
+                                <?php echo JFactory::getUser($value->mounter)->name;?>
+                            </div>
+                        </div>
+                    <?php }?>
+                <?php endif;?>
+                <div class="row">
+                    <div class="col-md-4">
+                        <b>
+                            Реклама
+                        </b>
+                    </div>
+                    <div class="col-md-6">
                         <?php echo $reklama;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="btn btn-primary" type="button" id="change_rek">Изменить рекламу</button>
-                    </td>
-                </tr>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" type="button" id="change_rek"> <i class="fas fa-edit"></i> </button>
+                    </div>
+                </div>
                 <?php if(!empty($this->item->project_calculator)):?>
-                    <tr>
-                        <th>Замерщик</th>
-                        <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                    </tr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Замерщик</b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php echo JFactory::getUser($this->item->project_calculator)->name;?>
+                        </div>
+                    </div>
                 <?php endif;?>
-                <?php if(!empty($this->item->project_mounter)):?>
-                    <tr>
-                        <th>Монтажная бригада</th>
-                        <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
-                    </tr>
-                <?php endif;?>
-            </table>
-        </form>
-        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-4">
+                        <b>
+                            <?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?>
+                        </b>
+                    </div>
+                    <div class="col-md-8">
+                        <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                            -
+                        <?php } else { ?>
+                            <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                            <?php echo $jdate->format('d.m.Y H:i'); ?>
+                        <?php } ?>
+                    </div>
 
+                </div>
+            </div>
+        <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+    </div>
+    <div class="col-xs-12 col-md-6 comment">
+        <label> История клиента: </label>
+        <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+        <table>
+            <tr>
+                <td><label> Добавить комментарий: </label></td>
+            </tr>
+            <tr>
+                <td width = 100%><textarea  class = "inputactive" id="new_comment"></textarea></td>
+                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </button></td>
+            </tr>
+        </table>
     </div>
 </div>
 <div class="modal_window_container" id="mw_container">
@@ -190,6 +261,52 @@ $all_advt = $model_api_phones->getAdvt();
                     $(".section_comsumables").hide();
                 }
                 e.val(!e.val());
+            });
+
+            if (document.getElementById('comments'))
+            {
+                show_comments();
+            }
+
+            jQuery("#add_comment").click(function () {
+                var comment = jQuery("#new_comment").val();
+                var reg_comment = /[\\\<\>\/\'\"\#]/;
+                if (reg_comment.test(comment) || comment === "") {
+                    alert('Неверный формат примечания!');
+                    return;
+                }
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: client_id
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Комментарий добавлен"
+                        });
+                        show_comments();
+
+                        jQuery("#new_comment").val("");
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
             });
 
             var id = "<?php echo $sb_project_id; ?>";
@@ -355,6 +472,61 @@ $all_advt = $model_api_phones->getAdvt();
                     });
                 }
             });
+        }
+
+        function show_comments() {
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=selectComments",
+                data: {
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var comments_area = document.getElementById('comments');
+                    comments_area.innerHTML = "";
+                    var date_t;
+                    for (var i = 0; i < data.length; i++) {
+                        date_t = new Date(data[i].date_time);
+                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+                    }
+                    comments_area.scrollTop = comments_area.scrollHeight;
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода примечаний"
+                    });
+                }
+            });
+        }
+
+        function formatDate(date) {
+
+            var dd = date.getDate();
+            if (dd < 10) dd = '0' + dd;
+
+            var mm = date.getMonth() + 1;
+            if (mm < 10) mm = '0' + mm;
+
+            var yy = date.getFullYear();
+            if (yy < 10) yy = '0' + yy;
+
+            var hh = date.getHours();
+            if (hh < 10) hh = '0' + hh;
+
+            var ii = date.getMinutes();
+            if (ii < 10) ii = '0' + ii;
+
+            var ss = date.getSeconds();
+            if (ss < 10) ss = '0' + ss;
+
+            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
         }
     </script>
 

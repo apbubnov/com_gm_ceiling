@@ -27,7 +27,7 @@
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
     /*________________________________________________________________*/
-
+    $stages = [];
     $json_mount = $this->item->mount_data;
     if(!empty($this->item->mount_data)){
         $mount_types = $projects_mounts_model->get_mount_types(); 
@@ -42,58 +42,6 @@
             }
         }
     }
-    // календарь
-    /*$month1 = date("n");
-    $year1 = date("Y");
-    if ($month1 == 12) {
-        $month2 = 1;
-        $year2 = $year1;
-        $year2++;
-    } else {
-        $month2 = $month1;
-        $month2++;
-        $year2 = $year1;
-    }
-    if ($this->item->project_status == 1) {
-        $whatCalendar = 0;
-        $FlagCalendar = [3, $user->dealer_id];
-    } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
-        $whatCalendar = 1;
-        $FlagCalendar = [2, $user->dealer_id];
-    }*/
-    //----------------------------------------------------------------------------------
-
-    // все бригады
-    /*$Allbrigades = $calculationsModel->FindAllbrigades($user->dealer_id);
-    $AllMounters = [];
-    if (count($Allbrigades) == 0) {
-        array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
-        array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
-    } else {
-        // все монтажники
-        $masid = [];
-        foreach ($Allbrigades as $value) {
-            array_push($masid, $value->id);
-        }
-        foreach ($masid as $value) {
-            if (strlen($where) == 0) {
-                $where = "'".$value."'";
-            } else {
-                $where .= ", '".$value."'";                
-            }
-        }
-        $AllMounters = $calculationsModel->FindAllMounters($where);
-    }*/
-    //----------------------------------------------------------------------------------
-
-    // все замерщики
-    /*if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
-        $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
-    } else {
-        $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 21);
-    }*/
-    //----------------------------------------------------------------------------------
-
     $mount_sum = 0;
 
     echo parent::getPreloader();
@@ -113,12 +61,12 @@
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/projectform/tmpl/css/style.css" type="text/css" />
 
 <style>
-    #jform_project_mounter-lbl {
-        display: none;
+    .row{
+        margin-bottom: 15px;
     }
 </style>
 
-<h2>Просмотр проекта</h2>
+<h3>Просмотр проекта №<?= $this->item->id?></h3>
 <form id="form-client">
 <?php if ($this->item) { ?>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
@@ -159,14 +107,20 @@
                     <input type="hidden" name="task" value="project.approve"/>
                     <input id="mount" name="mount" type='hidden' value='<?php echo $json_mount ?>'>
                     <?php echo JHtml::_('form.token'); ?>
-                    <table class="table">
-                        <tr>
-                            <th>Номер договора</th>
-                            <td><?php echo $this->item->id; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Статус проекта</th>
-                            <td>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Номер договора</b>
+                            </div>
+                            <div class="col-md-6">
+                                <?php echo $this->item->id; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <dic class="col-md-6">
+                                <b>Статус проекта</b>
+                            </dic>
+                            <div class="col-md-6">
                                 <?php 
                                     if ($this->item->project_status == 1) {
                                         $status = "Ждет замера";
@@ -205,68 +159,87 @@
                                     }
                                     echo $status; 
                                 ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <?php if ($this->item->project_status == 1) { ?>
-                                <th>Дата замера</th>
-                                <td>
-                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                        <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                    <?php } ?>
-                                </td>
-                            <?php } /*else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
-                                <th>Дата монтажа</th>
-                                <td>
-                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Дата замера</b>
+                            </div>
+                            <div class="col-md-6">
+                                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                    -
+                                <?php } else { ?>
+                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
                                     <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                </td>
-                            <?php } else { ?>
-                                <th>Удобная дата монтажа для клиента</th>
-                                <td>
-                                    <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                                        <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                    <?php } ?>
-                                </td>
-                            <?php }*/ ?>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->_client_id?>"><?php echo $this->item->client_id; ?></a></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>
+                                    Замерщик
+                                </b>
+                            </div>
+                            <?php
+                            $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                            $gauger = $gauger_model->getGauger($this->item->id);
+                            ?>
+                            <div class="col-md-6">
+                                <?php echo $gauger->name; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>
+                                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?php echo $this->item->_client_id?>">
+                                    <?php echo $this->item->client_id; ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>
+                                    <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                                </b>
+                            </div>
                             <?php 
                                 $mod = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
                                 $contact = $mod->getData($this->item->id);
                             ?>
-                            <td><?php echo $contact->client_contacts; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
+                            <div class="col-md-6">
+                                <?php echo $contact->client_contacts; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>
+                                    <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <?php echo $this->item->project_info; ?>
+                            </div>
+                        </div>
 
-                        <tr>
-                            <th>Примечание к монтажу</th>
-                            <td><textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" aria-invalid="false"><?=$mount_note;?></textarea></td>
-                        </tr>
-                        <tr>
-                            <th>Замерщик</th>
-                            <?php 
-                                $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                $gauger = $gauger_model->getGauger($this->item->id); 
-                            ?>
-                            <td><?php echo $gauger->name; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Дилер</th>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>Примечание к монтажу</b>
+                            </div>
+                            <div class="col-md-6">
+                                <textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" class="input-gm" aria-invalid="false"><?=$mount_note;?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <b>
+                                    Дилер
+                                </b>
+                            </div>
                             <?php
                                 $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
                                 if(empty($this->item->id_client)){
@@ -277,37 +250,62 @@
                                 }
                                 $dealer_name = $clientModel->getDealer($client_id);
                             ?>
-                            <td><?php echo $dealer_name; ?></td>
-                        </tr>
+                            <div class="col-md-6">
+                                <?php echo $dealer_name; ?>
+                            </div>
+                        </div>
                        <?php if(!empty($this->item->mount_data)):?>
-                            <tr>
-                                <th colspan="3" style="text-align: center;">Монтаж</th>
-                            </tr>
+                            <div class="row center">
+                                <div class="col-md-12">Монтаж</div>
+                            </div>
                             <?php foreach ($this->item->mount_data as $value) { ?>                          
-                                <tr>
-                                    <th><?php echo $value->time;?></th>
-                                    <td><?php echo $value->stage_name;?></td>
-                                    <td><?php echo JFactory::getUser($value->mounter)->name;?></td>
-                                </tr>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <b>
+                                            <?php echo $value->time;?>
+                                        </b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <?php echo $value->stage_name;?>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <?php echo JFactory::getUser($value->mounter)->name;?>
+                                    </div>
+                                </div>
                             <?php }?>
                         <?php endif;?>
-                    </table>
-                    <?php if ($this->item->project_status == 1) { ?>
-                        <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
-                            <div>
-                                <label><strong>Время замера</strong></label>
-                                <div id="measures_calendar"></div>
-                                <input id="measure_info" readonly>
+
+                        <?php if ($this->item->project_status == 1) { ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <b>
+                                        Изменить замерщика, время и дату замера
+                                    </b>
+                                </div>
                             </div>
-                    <?php } else  { ?>
-                        <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
-                        <div id="calendar_mount" align="center"></div>
+                            <div class="row center">
+                                <div id="measures_calendar" align="center"></div>
+                                <input id="measure_info" readonly style="display:none;">
+                            </div>
+
+                        <?php } else  { ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <b>
+                                        Назначить/изменить монтажную бригаду, время и дату
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="row center">
+                                <div id="calendar_mount" align="center"></div>
+                            </div>
                     <?php } ?>
                     <?php if ($userId == $user->dealer_id) { ?>
                         <input name="type" value="chief" type="hidden">
                     <?php } else { ?>
                         <input name="type" value="gmchief" type="hidden">
                     <?php } ?>
+                    </div>
                     <div class="control-group">
                         <div class="controls">
                             <button type="submit" class="validate btn btn-primary">Сохранить</button>
@@ -366,18 +364,17 @@
 
     //скрыть модальное окно
     jQuery(document).mouseup(function (e) {
-        var div = jQuery("#mw_mounts_calendar");
-        if (!div.is(e.target)
-            && div.has(e.target).length === 0) {
+        var div = jQuery("#mw_mounts_calendar"),
+            div1 = jQuery("#mw_measures_calendar");
+        if (!div.is(e.target)&& div.has(e.target).length === 0
+            && !div1.is(e.target)&&div1.has(e.target).length === 0) {
             jQuery("#close_mw").hide();
             jQuery("#mw_container").hide();
             div.hide();
+            div1.hide();
         }
     });
     //--------------------------------------------------
-
-    // функция подсвета сегоднешней даты
-    
 
     // показать историю
     function show_comments() {

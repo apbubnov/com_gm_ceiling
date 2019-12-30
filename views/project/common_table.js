@@ -931,14 +931,14 @@ jQuery('.save_final_btn').click(function () {
             final_sum: final_sum
         },
         success: function (data) {
-            jQuery("#project_sum").val(final_sum);
-            if(jQuery("#project_total_discount span").length){
-                jQuery("#project_total_discount span").text(final_sum);
-
-            }
-            else{
-                jQuery("#project_total span").text(final_sum);
-            }
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "success",
+                text: "Сохранено!"
+            });
         },
         dataType: "json",
         timeout: 20000,
@@ -955,3 +955,12 @@ jQuery('.save_final_btn').click(function () {
         }
     });
 });
+
+function fillProjectSum(){
+    if(jQuery('#project_total_discount span.sum')){
+        jQuery('#project_sum').val(jQuery('#project_total_discount span.sum').text());
+    }
+    else{
+        jQuery('#project_sum').val(jQuery('#project_total span.sum').text());
+    }
+}

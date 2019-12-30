@@ -258,56 +258,44 @@ if (!empty($_SESSION["project_card_$project_id"]))
                                 </tr>
                                 <?php 
                                 
-                                $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
-                                preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
-                                $house = $house[1];
-                                preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-                                $bdq = $bdq[1];
-                                preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
-                                $apartment = $apartment[1];
-                                preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
-                                $porch = $porch[1];
-                                preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-                                $floor = $floor[1];
-                                preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-                                $code = $code[1];
+                                $address = Gm_ceilingHelpersGm_ceiling::parseProjectInfo($this->item->project_info);
                                 ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><input name="new_address" id="jform_address" class="inputactive"
                                                value="<?php if (isset($_SESSION['address'])) {
                                                    echo $_SESSION['address'];
-                                               } else echo $street ?>" placeholder="Адрес"
+                                               } else echo $address->street ?>" placeholder="Адрес"
                                                type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">
                                 <td>Дом / Корпус</td>
                                 <td>
                                     <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                               } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
+                                               } else echo $address->house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
                                
                                     <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
-                                               } else echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                                               } else echo $address->bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                </td>
                                 </tr>
                                 <tr class="controls">
                                 <td> Квартира / Подъезд</td>
                                 <td>
                                     <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
-                                               } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
+                                               } else echo $address->apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
                                
                                     <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
-                                               } else echo $porch ?>" class="inputactive"   style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
+                                               } else echo $address->porch ?>" class="inputactive"   style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
                                 </td>
                                 </tr>
                                 <tr class="controls">
                                 <td> Этаж / Код домофона</td>
                                 <td>
                                     <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
-                                               } else echo $floor ?>" class="inputactive"  style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
+                                               } else echo $address->floor ?>" class="inputactive"  style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
                                
                                     <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code'];
-                                               } else echo $code ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
+                                               } else echo $address->code ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
                                 </td>
                                 </tr>
                                 <tr>

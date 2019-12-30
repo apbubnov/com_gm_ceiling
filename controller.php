@@ -1197,7 +1197,7 @@ public function register_mnfctr(){
                                         'id' => 17,
                                         'title' => 'Профиль LED',
                                     );
-                                    $items->n29_type[] = array(
+                    $items->n29_type[] = array(
                                         'id' => 18,
                                         'title' => 'Профиль КП',
                                     );
@@ -2899,12 +2899,19 @@ public function register_mnfctr(){
             $answer6 = $model->getDataByStatus("MissedCalls");
             $missAnswer1 = [];
             $missAnswer2 = [];
-            foreach ($answer5 as $value) {
-                array_push($missAnswer1, $value->id);
+
+            if(!empty($answer5)){
+                foreach ($answer5 as $value) {
+                    array_push($missAnswer1, $value->id);
+                }
             }
-            foreach ($answer6 as $value) {
-                array_push($missAnswer2, $value->call_id);
+
+            if(!empty($answer6)){
+                foreach ($answer6 as $value) {
+                    array_push($missAnswer2, $value->call_id);
+                }
             }
+
             $answer7 = array_diff($missAnswer1, $missAnswer2);
             die(json_encode(count($answer7)));
         }
@@ -3527,6 +3534,94 @@ public function register_mnfctr(){
 
             }
             die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function registerBySMS(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $fio = $jinput->get('fio','','STRING');
+            $phone = $jinput->get('phone','','STRING');
+            $phone = mb_ereg_replace('[^\d]', '', $phone);
+            $isDealer = $jinput->getInt('isDealer');
+            $email = $jinput->get('email', '', 'STRING');
+            $city = $jinput->get('city', '', 'STRING');
+            if(!empty($phone)) {
+                $chars = "qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP";
+                $max = 6;
+                $size = StrLen($chars) - 1;
+                $password = '';
+                while ($max--) {
+                    $password .= $chars[rand(0, $size)];
+                }
+
+                $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $user = $userModel->getUserByUsername($phone);
+                if (!empty($user)) {
+
+                    if ($user->dealer_type == 2) {
+                        /*Пользователь с таким номером существует, меняем пароль и отправляем в смс*/
+                        $userModel->change_user_pass($user->id, $password);
+                        /*здесь должна быть отправка в смс*/
+                    }
+                    if ($user->dealer_type == 1) {
+                        /*Дилер, перегенерировать пароль и отправить и пусть входит*/
+                        $userModel->change_user_pass($user->id, $password);
+                        /*здесь должна быть отправка в смс*/
+                    }
+                } else {
+                    /*Пользователя с таким номером не существует пробуем регистрировать, генерируем пароль и отправляем в смс*/
+                    $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                    $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                    $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+                    $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
+                    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+
+                    $client_data['client_name'] = $fio;
+                    $client_data['client_contacts'] = $phone;
+                    $client_id = $clientform_model->save($client_data);
+
+                    if (mb_ereg('[\d]', $client_id)) {
+                        $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации на calc.gm-vrn');
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
+                    } else {
+                        $client_id = $client->id;
+                    }
+
+                    if (mb_ereg('[\d]', $client_id)) {
+                            //создание user'а
+                        if(!$isDealer){
+                            $email = "$client_id@$client_id";
+                            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($fio, $phone, $email, $client_id, 2);
+                            $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый клиент с личным кабинетом', $client_id, 1);
+                        }
+                        else{
+                            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($fio, $phone, $email, $client_id, 1);
+                            $client_model->updateClient($client_id, null, $dealer_id);
+                            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+                            $dealer_info_model->update_city($dealer_id, $city);
+                            $clients_dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                            $clients_dop_contacts->save($client_id, 1, $email);
+                            $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый дилер', $client->id, 1);
+                        }
+                        /*меняем и отправляем пароль*/
+                        $userModel->change_user_pass($dealer_id, $password);
+
+                    } else {
+                        $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент пытался зарегистрироваться как дилер или получить ЛК но что-то пошло не так ', $client->id, 1);
+                    }
+
+                }
+                die(json_encode($password));
+            }
+            else{
+                /*Пустой телефон вернуть ошибосик*/
+            }
+
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

@@ -16,6 +16,7 @@ $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform')
 $dealer = JFactory::getUser($this->item->dealer_id);
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 $json_mount = $this->item->mount_data;
+$stages = [];
 if(!empty($this->item->mount_data)){
 
     $mount_types = $projects_mounts_model->get_mount_types();

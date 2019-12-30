@@ -30,7 +30,7 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 			$phone = $jinput->get('phone', '', 'STRING');
 			$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
 			$email = $jinput->get('email', '', 'STRING');
-
+			$city = $jinput->get('chosen_city','','INT');
 			//генератор пароля
 			$chars="qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP";  
 			$max=6; 
@@ -62,6 +62,8 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 
 				$id_brigade = $user->id;
 
+				$userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+				$userModel->saveUserCity($city,$id_brigade);
 				// письмо
 				$mailer = JFactory::getMailer();
 				$config = JFactory::getConfig();

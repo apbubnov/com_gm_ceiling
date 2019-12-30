@@ -27,20 +27,62 @@ $dealerId   = $user->dealer_id;
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teamform/tmpl/css/style.css" type="text/css" />
-
+<link rel="stylesheet" href="templates/gantry/js/chosen/chosen.min.css">
+<script src="templates/gantry/js/chosen/chosen.jquery.min.js"></script>
+<style>
+    .row{
+        margin-bottom: 15px;
+    }
+</style>
 <?=parent::getButtonBack();?>
 
 <form id = "mounter_form" enctype="multipart/form-data" action="/index.php?option=com_gm_ceiling&task=teamform.RegisterBrigade" method="post">
-	<div id="content-tar">
-		<p><h3> Добавление бригады</h3></p>
-		<div id="text-container">
-			<p class="margin-bottom-tar">Название бригады:</p>
-			<p class="margin-top-tar"><input type="text" name="name" id="name" class="input-tar"></p>
-			<p class="margin-bottom-tar">Телефон (логин):</p>
-			<p class="margin-top-tar"><input type="text" name="phone" id="phone" class="input-tar"></p>
-			<p class="margin-bottom-tar">Адрес электронной почты:</p>
-			<p class="margin-top-tar"><input type="text" name="email" id="email" class="input-tar"></p>
-		</div>
+    <h3> Добавление бригады</h3>
+    <div class="container">
+        <div class="row center">
+            <div class="col-md-12">
+                Название бригады
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <input type="text" name="name" id="name" class="input-tar">
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                Телефон (логин)
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <input type="text" name="phone" id="phone" class="input-tar">
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                Адрес электронной почты
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <input type="text" name="email" id="email" class="input-tar">
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                Город
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <input type="hidden" id="chosen_city" name="chosen_city">
+                <select type="text" id="select_city" class="input-tar"></select>
+            </div>
+        </div>
+    </div>
+    <div id="content-tar">
+
 		<div id="add-mounter-container">
 			<div id="add-mounter">
 				<p><button type ="button" id="add-mounter-btn" class="btn btn-primary">Добавить монтажника</button></p>
@@ -62,9 +104,32 @@ $dealerId   = $user->dealer_id;
 	}
 
 	jQuery(document).ready( function() {
-		
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=city.getData",
+            data:{
+            },
+            type: "POST",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+               jQuery.each(data,function(index,elem){
+                   jQuery("#select_city").append('<option value="'+elem.id+'">'+elem.name+' ('+elem.region_name+')</option>')
+                });
+            },
+            error: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке удалить!"
+                });
+            }
+        });
+        jQuery( "#select_city" ).chosen();
 		// проверка на пустые поля
 		jQuery("#add-brigade").click(function() {
+		    jQuery("#chosen_city").val(jQuery("#select_city").val())
 			if (jQuery("#name").val() == "" || jQuery("#phone").val() == "" || jQuery("#email").val() == "") {
 				jQuery("#wrong").text("Все поля монтажной бригады должны быть заполнены");
 				if (jQuery("#name").val() == "") {

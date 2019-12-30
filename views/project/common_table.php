@@ -116,12 +116,6 @@
 
     $project_total = $project_total + $client_sum_transport;
     $project_total_discount = $project_total_discount  + $client_sum_transport;
-    if(!empty(floatval($this->item->project_sum))){
-        if($project_total == $project_total_discount){
-            $project_total = $this->item->project_sum;
-        }
-        $project_total_discount = $this->item->project_sum;
-    }
 
 ?>
 <style>
@@ -269,6 +263,7 @@
     <div class="modal_window" id="modal_window_img" style="border: 2px solid black; border-radius: 4px;"></div>
 </div>
 
+
 <div class="row" style="margin-bottom: 5px;">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
@@ -292,6 +287,7 @@
                 </li>
             <?php }?>
         </ul>
+
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { ?>
             <p>У Вас еще нет потолков</p>
         <?php } else { ?>
@@ -300,21 +296,30 @@
                 <div class="tab-pane active" id="summary" role="tabpanel">
                     <table id="table1">
                         <tr style="background-color: rgba(0,0,0,0.15);">
-                            <th colspan="3"111 class="section_header" id="sh_ceilings">
+                            <th colspan="3" class="section_header" id="sh_ceilings">
                                 Потолки <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i>
                             </th>
                         </tr>
                         <?php 
                             foreach ($calculations as $calculation) {
+                                $colspan = ($is_gmmanager) ? 2 :3;
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
-                                <td  class="include_calculation" >
-                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $displayNone;?> style="cursor: pointer;">
+                                <td  class="include_calculation" colspan="<?=$colspan?>" >
+                                    <input name='include_calculation[]' value='<?php echo "$calculation->id"; ?>' id="<?php echo "incl_$calculation->id"?>" style="display: none" type='checkbox' class="inp-cbx dup" checked <?php echo $displayNone;?> style="cursor: pointer;">
+                                    <label for="<?php echo "incl_$calculation->id"?>" class="cbx" <?=$displayNone?>>
+                                                    <span>
+                                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                        </svg>
+                                                    </span>
+                                        <span><i><b><?php echo $calculation->calculation_title;?></b></i></span>
+                                    </label>
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
                                     <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
                                     <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>      
-                                    <span><i><b><?php echo $calculation->calculation_title; ?></b></i></span>
+                                   <!-- <span><i><b><?php /*echo $calculation->calculation_title; */?></b></i></span>-->
                                 </td>
                                 <?php if($is_gmmanager){ ?>
                                     <td>
@@ -436,7 +441,6 @@
                                     <?php echo round($project_total, 0); ?></span> р. /
                                 </th>
                                 <th id="project_total_discount">
-                                    <div class="col-md-6" style="padding-top: 10px;">
                                         <?php
                                             //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                                             $old_price = $project_total_discount;
@@ -452,20 +456,10 @@
                                         <?php if($old_price != $project_total_discount): ?>
                                             <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                         <?php endif; ?>
-                                    </div>
-                                    <?php if(!isClient){ ?>
-                                        <div class="col-md-6">
-                                            <div class="row" style="padding-top: 10px;">
-                                                <div class="col-xs-5 col-md-5" style="padding:0;"><span style="font-size: 10pt">Финальная сумма</span></div>
-                                                <div class="col-xs-4 col-md-4"><input class="input-gm final_sum" style="width: 100px !important;"></div>
-                                                <div class="col-xs-3 col-md-3"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
                                 </th>
                             <?php } else { ?>
                                 <th>Итого</th>
-                                <th id="project_total">
+                                <td colspan="2" id="project_total">
                                     <?php
                                         //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                                         $old_price = $project_total;
@@ -477,22 +471,25 @@
                                             $project_total =  $min_project_sum;
                                         }
                                     ?>
-                                    <span class="sum"><?= round($project_total, 0);?> </span>р.
+                                    <b><span class="sum"><?= round($project_total, 0);?> </span>р.</b>
                                     <?php if($old_price != $project_total): ?>
                                         <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                     <?endif;?>
-                                </th>
-                                <th>
-                                    <?php if(!$isClient){?>
-                                    <div class="row" style="padding-top: 10px;">
-                                        <div class="col-md-5">Финальная сумма</div>
-                                        <div class="col-md-5"><input class="input-gm final_sum"></div>
-                                        <div class="col-md-2"><button type="button" class="btn btn-primary save_final_btn"><i class="far fa-save"></i></button></div>
-                                    </div>
-                                    <?php }?>
-                                </th>
+                                </td>
                             <?php } ?>
                         </tr>
+                        <?php if(!$isClient){?>
+                            <tr>
+                                <td>
+                                    Ввод суммы вручную
+                                </td>
+                                <td colspan="2">
+                                    <input class="input-gm final_sum" value="<?=$this->item->new_project_sum?>">
+                                    <button type="button" class="btn btn-primary btn-sm save_final_btn"><i class="far fa-save"></i></button>
+                                </td>
+
+                            </tr>
+                        <?php }?>
                         <?php if(!$isClient){ ?>
                         <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="3">
@@ -610,7 +607,7 @@
                                     <?php } ?>
                                     <?php echo $calculation->calculation_title; ?>
                                 </td>
-                                <td colspan="2">
+                                <td colspan="2" align="right">
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                     <?php } else { ?>
@@ -649,7 +646,7 @@
                                         <?php } ?>
                                         <?php echo $calculation->calculation_title; ?>
                                     </td>
-                                    <td colspan="2">
+                                    <td colspan="2" align="right">
                                     <?php
                                     if (count($mount_data) === 0 || (count($mount_data) === 1 && $mount_data[0]->stage == 1)) {
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
@@ -1063,3 +1060,5 @@
     </div>
 
 </div>
+
+

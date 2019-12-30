@@ -26,11 +26,21 @@ class Gm_ceilingModelTeams extends JModelItem {
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			
-			$query->select('users.id, users.name')
+			$namesSubquery = $db->getQuery(true);
+
+			$namesSubquery
+                ->select('map.id_brigade,GROUP_CONCAT(m.name SEPARATOR \',\') AS `names`')
+                ->from('`rgzbn_gm_ceiling_mounters_map` AS map')
+                ->innerJoin('`rgzbn_gm_ceiling_mounters` AS m ON m.id = map.id_mounter')
+                ->group('map.id_brigade');
+			$query->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
 				->from('#__users as users')
 				->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
-				->where("users.dealer_id = '$dealerId' and usergroup.group_id = '11'");
+                ->leftJoin('`rgzbn_user_info` as ui on ui.user_id = users.id')
+                ->leftJoin('`rgzbn_city` AS c ON c.id = ui.city_id')
+                ->leftJoin("($namesSubquery) AS mn ON mn.id_brigade = users.id")
+				->where("users.dealer_id = '$dealerId' and usergroup.group_id = '11'")
+                ->group('city_id');
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();

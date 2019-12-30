@@ -15,113 +15,135 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 }
 
 ?>
-
+<style>
+    .row{
+        margin-bottom: 15px;
+    }
+</style>
 <?= parent::getButtonBack(); ?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
     <?php $calculations = $model->getProjectItems($this->item->id); ?>
-
+    <h4>Проект № <?php echo $this->item->id ?></h4>
     <div class="container">
         <div class="row">
-            <div class="col-xl item_fields">
-                <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.save_mount"
-                      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <table class="table">
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <? $contacts = $model->getClientPhone($this->item->client_id); ?>
-                            <td><?php foreach ($contacts as $phone) echo $phone->client_contacts; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
+            <div class="col-xlьв-6 item_fields">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php echo $this->item->client_id; ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                            </b>
+                        </div>
+                        <?php $contacts = $model->getClientPhone($this->item->client_id); ?>
+                        <div class="col-md-6">
+                            <?php foreach ($contacts as $phone){?>
+                                 <div class="row">
+                                     <div class="col-md-12">
+                                         <?php echo $phone->client_contacts; ?>
+                                     </div>
+                                 </div>
+                            <?php }?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php echo $this->item->project_info; ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                <?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?>
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php if(!empty($this->item->project_calculation_date) && $this->item->project_calculation_date != '0000-00-00 00:00:00'){
+                                $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date));
+                                echo $jdate->format('d.m.Y H:i');
+                            }
+                            else{
+                                echo '-';
+                            }
+                             ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>
+                                Замерщик
+                            </b>
+                        </div>
+                        <div class="col-md-6">
+                            <?php if(!empty($this->item->project_calculator)){
+                                echo JFactory::getUser($this->item->project_calculator)->name;
+                            }
+                            else{
+                                echo '-';
+                            }?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>
+                                Монтаж
+                            </b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
 
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td> <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                <?php if ($jdate->format('d.m.Y') == "00.00.0000" || $jdate->format('d.m.Y') == '30.11.-0001') { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('d.m.Y'); ?>
-                                <?php } ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                            <td><?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                <?php if ($jdate->format('H:i') == "00:00") { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('H:i'); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Дата и время монтажа</th>
-                            <td><?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                                <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
-                                    -
-                                <?php } else { ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Монтажная бригада</th>
-                            <?php $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project'); ?>
-                            <?php $mount = $mount_model->getMount($this->item->id); ?>
-                            <td><?php echo $mount->name; ?></td>
-                        </tr>
-                    </table>
-                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                    <input name="id" value="<?php echo $this->item->id; ?>" type="hidden">
-                    <input name="type" value="chief" type="hidden">
-                    <input id="jform_project_mounting_from" type="hidden" name="jform[project_mounting_from]"
-                           value="<?php echo $jdate->format('H:i'); ?>"/>
-                    <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]"
-                           value="<?php echo $jdate->format('d.m.Y H:i'); ?>"/>
-                    <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]"
-                           value="<?php echo ($mount->project_mounter) ? $mount->project_mounter : '1'; ?>"/>
-                    <?php if ($this->item->project_status == 10) { ?>
-                        <a class="btn btn btn-primary"
-                           id="change_data">Изменить дату и время монтажа
-                        </a>
-                        <?php
-                    } ?>
-                    <div class="calendar_wrapper" style="display: none;">
-                        <table>
-                            <tr>
-                                <td>
-                                    <button id="calendar_prev" type="button" class="btn btn-secondary"> <<</button>
-                                </td>
-                                <td>
-                                    <div id="calendar">
-                                        <?php echo $calendar; ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button id="calendar_next" type="button" class="btn btn-secondary"> >></button>
-                                </td>
-                            </tr>
+                        </div>
+                        <div class="col-md-4">
 
-                        </table>
-                        <div class="control-group" id="save">
-                            <div class="controls">
-                                <button type="submit" class="validate btn btn-primary">
-                                    Сохранить
-                                </button>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <input name="id" value="<?php echo $this->item->id; ?>" type="hidden">
+                <input name="type" value="chief" type="hidden">
+
+                <?php if ($this->item->project_status == 10) { ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" id="change_mount">
+                                    Изменить дату и время монтажа
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row center" id="mount_container">
+                        <div class="col-md-12">
+                            <div id="mw_mount_calendar">
+
                             </div>
                         </div>
                     </div>
-                    <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
-            </form>
+                    <a class="btn btn btn-primary"
+                       id="change_data">Изменить дату и время монтажа
+                    </a>
+                    <?php
+                } ?>
+                <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
         </div>
     </div>
     </div>

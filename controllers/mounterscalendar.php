@@ -20,16 +20,15 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 	// смена статуса на прочитанный, отправка письма НМС
 	public function ChangeStatus() {
 		try {
+		    $user = JFactory::getUser();
 			$jinput = JFactory::getApplication()->input;
 			$id = $jinput->get("id_calculation",null,'INT');
 			
  			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
 			$model_request = $model->ChangeStatusOfRead($id);
-
 			// письмо
 			$emails = $model->AllNMSEmails();
-			$DataOrder = $model->DataOrder($id);	
-			$NamesMounters = $model->NamesMounters($DataOrder[0]->project_mounter);
+			$DataOrder = $model->DataOrder($id);
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
 			$sender = array(
@@ -41,20 +40,18 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			foreach ($emails as $value) {
 				$mailer->addRecipient($value->email);
 			}
+
 			$body = "Здравствуйте.\n";
-			$body .= "Проект №$id был прочитан Монтажной Бригадой.\n";
+			$body .= "Проект №$id был прочитан Монтажной Бригадой $user->name.\n";
 			$body .= "\n";
-			$body .= "Монтажная Бригада: ".$DataOrder[0]->project_mounter_name." (";
-			foreach ($NamesMounters as $value) {
-				$names .= "$value->name, ";
-			}
-			$body .= substr($names, 0, -2);
-			$body .= ").\n";
-			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
-			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
-			if (strlen($note) != 0) {
-				$body .= "Примечание монтажника: ".$note."\n";			
-			}		
+			if(!empty($DataOrder)){
+			    $project_info = $DataOrder[0]->project_info;
+                $body .= "Адреc: $project_info \n";
+			    foreach($DataOrder as $mountData){
+			        $mountDateTime = date('d.m.Y H:i',strtotime($mountData->project_mounting_date));
+                    $body .= "Этап: $mountData->stage_name Бригада: $mountData->project_mounter_name Дата/Время: $mountDateTime \n";
+                }
+            }
 			$mailer->setSubject('Новый статус монтажа');
 			$mailer->setBody($body);
 			$send = $mailer->Send();

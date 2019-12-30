@@ -252,13 +252,16 @@ let niche_src = {
         {id:'jform_niche_open',value:1,text:"Открытая ниша",selected:true}
     ]
 }
-let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
-
+let n16 = '<div id="jform_cornice_block"><div id="jform_cornice_html">';
+n16 += create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
 n16 += create_radios_group(cornice_src);
-n16+='<div id = "niches" style="display:none;">';
+n16 +='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
 n16 +=  create_radios_group(niche_src);
-n16+='</div>';
+n16 +='</div>';
+n16 += '</div>';
+n16 += '<button class="btn btn-primary" type="button" id="copy_cornice">Добавить</button>';
+n16 += '</div>';
 
 let need_mount_src = {
     name : 'need_mount',
@@ -589,6 +592,7 @@ function create_captions(columns){
 }
 function create_body(columns){
     result = `<div class="form-group" style="margin-bottom: 0em;">`;
+    if(!empty(columns))
     for(let i =0;i<columns.length;i++){
         if(columns[i].input_type){
             result+= `<div class = "${columns[i].div_class}">${create_single_input(columns[i].input_type,columns[i].input_id,columns[i].input_name,"",columns[i].text,"")}</div>`;
@@ -660,6 +664,20 @@ jQuery(".component-content").on("click", ".add_fields", function () {
            this.value = 0;
        }
     });
+});
+
+jQuery('body').on('click','#copy_cornice',function(){
+    var html = jQuery("#jform_cornice_html").clone(),
+        childrens = html.children(),
+        cornice_count = jQuery('[name="jform[n27]"]').length;
+    for(var i=0,children,n27_el,n16_el,niche;i<childrens.length;i++){
+        children = jQuery(childrens[i]);
+        var n27_el = children.find('[name="jform[n27]"]');
+        n27_el.attr('id','jform_n27_'+cornice_count);
+
+    }
+    jQuery(this).before(html);
+
 });
 
 jQuery(".component-content").on("click", ".btn_calc", function () {

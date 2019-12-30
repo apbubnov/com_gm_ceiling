@@ -24,8 +24,8 @@ class Gm_ceilingControllerAnalytic extends Gm_ceilingController
             }
             $date1 = $jinput->get('c_date_from', '', 'STRING');
             $date2 = $jinput->get('c_date_to', '', 'STRING');
-            $date1_d = $jinput->get('d_date_from', date(), 'STRING');
-            $date2_d = $jinput->get('d_date_to', date(), 'STRING');
+            $date1_d = $jinput->get('d_date_from', date('Y-m-d'), 'STRING');
+            $date2_d = $jinput->get('d_date_to', date('Y-m-d'), 'STRING');
             $commonAnalyticModel = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
             $detailedAnalyticModel = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_detailed_new');
             $commonData = $commonAnalyticModel->getData($dealer_id,$date1,$date2);

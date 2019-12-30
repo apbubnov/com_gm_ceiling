@@ -32,6 +32,7 @@ $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 /*________________________________________________________________*/
 
+$stages = [];
 $json_mount = $this->item->mount_data;
 if(!empty($this->item->mount_data)){
     $mount_types = $projects_mounts_model->get_mount_types();
@@ -65,24 +66,13 @@ if ($this->item->project_status == 1) {
     $whatCalendar = 1;
 }
 //address
-$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
-preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
-$house = $house[1];
-preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-$bdq = $bdq[1];
-preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
-$apartment = $apartment[1];
-preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
-$porch = $porch[1];
-preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-$floor = $floor[1];
-preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-$code = $code[1];
+$address = Gm_ceilingHelpersGm_ceiling::parseProjectInfo($this->item->project_info);
 
-if(!empty($street)&&!empty($house)) {
-    $addressForMap = "$street,$house";
+
+if(!empty($address->street)&&!empty($address->house)) {
+    $addressForMap = "$address->street,$address->house";
     if (!empty($porch)) {
-        $addressForMap .= ",$porch";
+        $addressForMap .= ",$address->porch";
     }
 }
 echo parent::getPreloader();

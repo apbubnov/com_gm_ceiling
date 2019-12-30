@@ -614,26 +614,6 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
-    public function activate_mount($id,$data)
-    {
-    	try
-    	{
-	        $db = $this->getDbo();
-	        $query = $db->getQuery(true);
-	        $query->update('`#__gm_ceiling_projects` AS p')
-	            ->set('p.project_mounting_date = ' . $db->quote($data['project_mounting_from']))
-	            ->set('p.project_mounter = ' . $db->quote($data['project_mounting']))
-	            ->where('p.id = ' . $id);
-	        $db->setQuery($query);
-	        $result = $db->execute();
-
-	        return $result;
-	    }
-	    catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-    }
 	public function change_status($id, $project_status)
 	{
 		try
@@ -1978,7 +1958,7 @@ class Gm_ceilingModelProject extends JModelItem
             $query = $db->getQuery(true);
             $query
                 ->update('#__gm_ceiling_projects')
-                ->set("project_sum = $project_sum")
+                ->set("new_project_sum = $project_sum")
                 ->where("id = $id");
             $db->setQuery($query);
             $db->execute();

@@ -181,9 +181,10 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			->from('#__users as users')
 			->where("users.id = m.mounter_id");
 
-			$query->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
+			$query->select("p.project_info, mt.title AS stage_name, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
 			->from('#__gm_ceiling_projects as p')
 			->leftJoin('#__gm_ceiling_projects_mounts as m ON p.id = m.project_id')
+            ->InnerJoin('`rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = m.type')
 			->where("p.id = $id");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
@@ -327,10 +328,12 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$was_break = false;
             //поиск индекса для вставки и замена даты на просто время
             for ($i=0; $i < count($items); $i++) {
-                if (strtotime($items[$i]->project_mounting_date) >= strtotime($items4->date_from)) {
-					$index = $i;
-					$was_break = true;
-                    break;
+                if(!empty($items4)) {
+                    if (strtotime($items[$i]->project_mounting_date) >= strtotime($items4->date_from)) {
+                        $index = $i;
+                        $was_break = true;
+                        break;
+                    }
                 }
 			}
 			($index == 0 && !$was_break) ? $index = count($items) : 0;

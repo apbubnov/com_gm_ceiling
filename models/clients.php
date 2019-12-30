@@ -675,7 +675,7 @@ if (empty($list['direction']))
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
                 ->leftJoin("`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id AND cm.stage_id = $stage")
-                ->where("c.dealer_id = $dealer_id")
+                ->where("c.dealer_id = $dealer_id and p.deleted_by_user != 1")
                 ->group("p.id");
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -684,14 +684,16 @@ if (empty($list['direction']))
             foreach ($items as $value){
                 $calcsData = [];
                 $calcsMounts = json_decode($value->calcs);
-                foreach ($calcsMounts as $calc){
-                    $calcsData[$calc->calc_id]['id'] = $calc->calc_id;
-                    $calcsData[$calc->calc_id]['title'] = $calc->title;
-                    $calcsData[$calc->calc_id]['sum'] = $calc->sum;
-                    $calcsData[$calc->calc_id]['defect_status'] = $calc->defect_status;
-                    $calcsData[$calc->calc_id]['calc_status'] = $calc->calc_status;
-                    if(!empty($calc->mounter)) {
-                        $calcsData[$calc->calc_id]['mounters'][] =  JFactory::getUser($calc->mounter);
+                if(!empty($calcsMounts)){
+                    foreach ($calcsMounts as $calc){
+                        $calcsData[$calc->calc_id]['id'] = $calc->calc_id;
+                        $calcsData[$calc->calc_id]['title'] = $calc->title;
+                        $calcsData[$calc->calc_id]['sum'] = $calc->sum;
+                        $calcsData[$calc->calc_id]['defect_status'] = $calc->defect_status;
+                        $calcsData[$calc->calc_id]['calc_status'] = $calc->calc_status;
+                        if(!empty($calc->mounter)) {
+                            $calcsData[$calc->calc_id]['mounters'][] =  JFactory::getUser($calc->mounter);
+                        }
                     }
                 }
                 $result[$value->client_id]['id'] = $value->client_id;
@@ -725,7 +727,7 @@ if (empty($list['direction']))
                 ->innerjoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = calc.project_id')
                 ->leftJoin('`rgzbn_gm_ceiling_calcs_mount` AS cm ON cm.calculation_id = calc.id')
                 ->innerjoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
-                ->where("c.dealer_id = $dealer_id")
+                ->where("c.dealer_id = $dealer_id and p.deleted_by_user != 1")
                 ->group("calc.id");
             $db->setQuery($query);
             $items = $db->loadObjectList();

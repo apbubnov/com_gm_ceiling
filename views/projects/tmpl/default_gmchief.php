@@ -32,7 +32,7 @@ foreach ($this->items as $i => $item){
     }
     $item->project_info = addslashes($item->project_info);
 }
-$projects = json_encode($this->items);
+$projects = quotemeta(json_encode($this->items));
 ?>
 <?=parent::getButtonBack();?>
 <form action="">

@@ -10,11 +10,8 @@
     defined('_JEXEC') or die;
 
     $user = JFactory::getUser();
-
-
     $userId = $user->get('id');
     $userName = $user->get('username');
-
 
     /*_____________блок для всех моделей/models block________________*/ 
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -92,7 +89,6 @@
         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-        <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
         <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
         <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'> 
     </div>
@@ -144,10 +140,12 @@
                         </div>
                         <div class="col-md-8">
                             <?php
+                            if(!empty($contact_email)){
                                 foreach ($contact_email AS $contact) {
                                     echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
                                     echo "<br>";
                                 }
+                            }
                             ?>
                         </div>
                     </div>
@@ -346,22 +344,7 @@
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
-                <div id="new_call" style="display:none;">
-                    <label>Введите дату и время звонка</label>
-                    <input type="date" class="" name ="calldate_without_mounter" id="calldate_without_mounter" >
-                    <select name="calltime_without_mounter" class="" id="calltime_without_mounter" >
-                        <option value="9:00">9:00</option>
-                        <option value="10:00">10:00</option>
-                        <option value="11:00">11:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="13:00">13:00</option>
-                        <option value="14:00">14:00</option>
-                        <option value="15:00">15:00</option>
-                        <option value="16:00">16:00</option>
-                        <option value="17:00">17:00</option>
-                    </select>
-                    <button class="btn btn-primary" id="ok_btn" type="button"><i class="fa fa-check" aria-hidden="true"></i></button>
-                </div>
+
             <?php } ?>
         </div>
 
@@ -417,16 +400,18 @@
                         </th>
                     </thead>
                     <tbody>
-                        <?php foreach ($contact_email as $value) { ?>
-                            <tr>
-                                <td>
-                                     <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                        <?php   if(!empty($contact_email)){
+                            foreach ($contact_email as $value) { ?>
+                                <tr>
+                                    <td>
+                                         <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                        <?php }
+                            }?>
                     </tbody>
                 </table>
             </form>
@@ -874,11 +859,30 @@
         });
 
         jQuery("#save").click(function(){
-            if(jQuery("#mount").val()==''){
-                jQuery("#new_call").show();
+            if(empty(jQuery("#mount").val())){
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "alert",
+                    text: "Не указана дата монтажа. Продолжить?",
+                    buttons:[
+                        {addClass: 'btn btn-primary', text: 'Да', onClick: function(modal) {
+                                jQuery('#project_status').val(5)
+                                jQuery("#form-client").submit();
+                                modal.close();
+                            }
+                        },
+                        {addClass: 'btn btn-primary', text: 'Нет', onClick: function(modal) {
+                                modal.close();
+                            }
+                        }
+                    ]
+                });
             }
             else {
-                jQuery('#project_status').val(5)
+                jQuery('#project_status').val(5);
+
                 jQuery("#form-client").submit();
             }
         });

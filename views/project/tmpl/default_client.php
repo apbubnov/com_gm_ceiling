@@ -9,18 +9,7 @@ $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts'
 
 $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
 
-preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
-$house = $house[1];
-preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-$bdq = $bdq[1];
-preg_match("/,.квартира:.([\d\s]{1,4})/", $this->item->project_info,$apartment);
-$apartment = $apartment[1];
-preg_match("/,.подъезд:.([\d\s]{1,4})/", $this->item->project_info,$porch);
-$porch = $porch[1];
-preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-$floor = $floor[1];
-preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-$code = $code[1];
+$address = Gm_ceilingHelpersGm_ceiling::parseProjectInfo($this->item->project_info);
 
 $json_mount = $this->item->mount_data;
 $wasDelete = false;
@@ -88,7 +77,7 @@ if(!empty($this->item->mount_data)){
                         <b><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></b>
                     </div>
                     <div class="col-xs-8 col-md-8">
-                        <input name="new_address" id="jform_address" class="inputactive" value="<?php echo $street ?>" placeholder="Адрес" type="text" >
+                        <input name="new_address" id="jform_address" class="inputactive" value="<?php echo $address->street ?>" placeholder="Адрес" type="text" >
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
@@ -96,10 +85,10 @@ if(!empty($this->item->mount_data)){
                         <b>Дом / Корпус</b>
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_house" id="jform_house" value="<?php echo $house ?>" class="inputactive" placeholder="Дом"  aria-required="true" type="text">
+                        <input name="new_house" id="jform_house" value="<?php echo $address->house ?>" class="inputactive" placeholder="Дом"  aria-required="true" type="text">
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_bdq" id="jform_bdq"  value="<?php echo $bdq ?>" class="inputactive"   placeholder="Корпус" aria-required="true" type="text">
+                        <input name="new_bdq" id="jform_bdq"  value="<?php echo $address->bdq ?>" class="inputactive"   placeholder="Корпус" aria-required="true" type="text">
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
@@ -107,10 +96,10 @@ if(!empty($this->item->mount_data)){
                         <b>Квартира / Подъезд</b>
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_apartment" id="jform_apartment" value="<?php echo $apartment ?>" class="inputactive" placeholder="Квартира"  aria-required="true" type="text">
+                        <input name="new_apartment" id="jform_apartment" value="<?php echo $address->apartment ?>" class="inputactive" placeholder="Квартира"  aria-required="true" type="text">
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_porch" id="jform_porch"  value="<?php echo $porch ?>" class="inputactive"    placeholder="Подъезд"  aria-required="true" type="text">
+                        <input name="new_porch" id="jform_porch"  value="<?php echo $address->porch ?>" class="inputactive"    placeholder="Подъезд"  aria-required="true" type="text">
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:15px;">
@@ -118,10 +107,10 @@ if(!empty($this->item->mount_data)){
                         <b>Этаж / Код домофона</b>
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_floor" id="jform_floor"  value="<?php echo $floor ?>" class="inputactive"  placeholder="Этаж" aria-required="true" type="text">
+                        <input name="new_floor" id="jform_floor"  value="<?php echo $address->floor ?>" class="inputactive"  placeholder="Этаж" aria-required="true" type="text">
                     </div>
                     <div class="col-xs-4 col-md-4">
-                        <input name="new_code" id="jform_code"  value="<?php echo $code ?>" class="inputactive"   placeholder="Код" aria-required="true" type="text">
+                        <input name="new_code" id="jform_code"  value="<?php echo $address->code ?>" class="inputactive"   placeholder="Код" aria-required="true" type="text">
                     </div>
                 </div>
                 <div class="row center" style="margin-bottom: 15px;">
@@ -311,7 +300,7 @@ if(!empty($this->item->mount_data)){
                         layout: 'center',
                         maxVisible: 5,
                         type: "error",
-                        text: "Ошибка изменения скидки"
+                        text: "Ошибка сохранения адреса!"
                     });
                 }
             });

@@ -10,15 +10,11 @@ JHtml::_('behavior.multiselect');
 $user       = JFactory::getUser();
 $userId     = $user->id;
 
-$teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+$teamsModel = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 if ($user->dealer_id == 1) {
-	$brigade_id = $teams_model->getDatas($userId);
+	$brigadesData = $teamsModel->getDatas($user->id);
 } else {
-	$brigade_id = $teams_model->getDatas($user->dealer_id);
-}
-
-if (!empty($brigade_id)) {
-	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
+	$brigadesData = $teamsModel->getDatas($user->dealer_id);
 }
 
 // календарь
@@ -39,50 +35,58 @@ if ($user->dealer_id == 1) {
 	$FlagCalendar = [1, $user->dealer_id];
 }
 
-if (!empty($brigade_id)) {
-	foreach ($brigade_id as $value) {
-	    $groups = JFactory::getUser($value->id)->groups;
-	    $checked = (in_array('32',$groups)) ? "checked" : "";
-	    $checkboxIsService ='<input type="checkbox" name="isInService" id="'.$value->id.'" data-mounter_id ="'.$value->id.'" '.$checked.' class="inp-cbx" style="display: none">
-                                <label for="'.$value->id.'" class="cbx">
-                                      <span>
-                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                        </svg>
-                                      </span>
-                                    <span>В Монтажной службе</span>
-                                </label>';
-		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
-		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name</a>".' <button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
-		$calendars .= $checkboxIsService;
-		$calendars .= "</p>";
-		$names = null;
-		foreach ($brigade_mounter as $val) {
-			if ($val->id_brigade == $value->id) {
-				$name = stristr($val->name, ' ', true);			
-			} else {
-				$name = "&nbsp;";
-			}
-			if ($names == null) {
-				$names = $name;
-			} else if ($names == "&nbsp;") {
-				$names = null;
-			} else {
-				if ($name != "&nbsp;") {
-					$names .= ", ".$name;				
-				}
-			}
-		}
-		$calendars .= "<table id=\"name\"><tr><td nowrap>$names</tr></td></table>";
-		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
-		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
-		$calendars .= "</div>";
-	}
+if (!empty($brigadesData)) {
+    $allBrigades = [];
+    foreach ($brigadesData as $value){
+        $brigades = json_decode($value->mounters);
+        $allBrigades = array_merge($allBrigades,$brigades);
+        $city = (!empty($value->name) ? $value->name : 'Город не указан');
+       /* $calendars .= "<div class='row brigade_city' data-id='$value->city_id' style='text-align: left'>";
+        $calendars .= "<div class='col-md-10' style='font-size: 22pt'>$city <i class=\"fas fa-angle-down\"></i></div>";
+        $calendars .= '</div>';*/
+        $calendars .= '<div class="city_brigades" data-city_id="'.$value->city_id.'">';
+        for($i=0;$i<count($brigades);$i++){
+            if($i % 3 == 0){
+                $calendars.= '<div class="row" style="margin-bottom: 15px;">';
+            }
+            $calendars .= '<div class="col-md-4" >';
+            $calendars .= '<div class="row center" style="width: 98%">';
+            $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
+            $calendars .= '</div>';
+            $calendars .= '<div class="row" style="width: 98%">';
+            $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
+            $calendars .= '</div>';
+            $calendars .= '<div class="row center firstMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+            $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($brigades[$i]->id, $month1, $year1, $FlagCalendar);
+            $calendars .= '</div>';
+            $calendars .= '<div class="row center secondMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+            $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($brigades[$i]->id, $month2, $year2, $FlagCalendar);
+            $calendars .= '</div>';
+            $calendars .= '</div>';
+            if(($i+1) % 3 == 0 || $i+1 == count($brigades)){
+                $calendars .= '</div>';
+            }
+
+        }
+        $calendars .= '</div>';
+    }
 } else {
-	$calendars .= '<div class="calendars-brigade"><p class="brigade-name"></p>';
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
-	$calendars .= "</div>";
+    $calendars.= '<div class="row center" style="margin-bottom: 15px;">';
+    $calendars .= '<div class="col-md-12" >';
+    $calendars .= '<div class="row center" style="width: 98%">';
+    $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
+    $calendars .= '</div>';
+    $calendars .= '<div class="row" style="width: 98%">';
+    $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
+    $calendars .= '</div>';
+    $calendars .= '<div class="row center firstMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+    $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+    $calendars .= '</div>';
+    $calendars .= '<div class="row center secondMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
+    $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
+    $calendars .= '</div>';
+    $calendars .= '</div>';
+    $calendars .= '</div>';
 }
 //----------------------------------------------------------------------------------------------------------
 
@@ -97,9 +101,87 @@ if (!empty($brigade_id)) {
 	<div id="btn-container">
 		<button id="add-brigade" class="btn btn-success btn-small" onClick='location.href="/index.php?option=com_gm_ceiling&view=teamform"'>Добавить бригаду</button>
 	</div>
-	<div id="legenda-container">
-		<table id="legenda"></table>
-	</div>
+    <div  id="legenda-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный">
+                    </div>
+                    <div class="col-md-8">
+                        Новый монтаж. Не просмотрен монтажником
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый">
+                    </div>
+                    <div class="col-md-8">
+                        Новый монтаж. Просмотрен монтажником
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий">
+                    </div>
+                    <div class="col-md-8">
+                        Монтаж в работе
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый">
+                    </div>
+                    <div class="col-md-8">
+                        Монтаж недовыполнен
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый">
+                    </div>
+
+                    <div class="col-md-8">
+                        Монтаж выполнен
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый">
+                    </div>
+                    <div class="col-md-8">
+                        Заказ закрыт
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной">
+                    </div>
+                    <div class="col-md-8">
+                        Выходные часы
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 	<div id="prev-button-container">
 		<button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
 	</div>
@@ -175,12 +257,34 @@ if (!empty($brigade_id)) {
 </div>
 
 <script>
+    var notes=[],
+        month_old1 = 0,
+        year_old1 = 0,
+        month_old2 = 0,
+        year_old2 = 0,
+        brigades = JSON.parse('<?= json_encode($allBrigades)?>'),
+        calendar,
+        today = new Date(),
+        NowYear = today.getFullYear(),
+        NowMonth = today.getMonth(),
+        day = today.getDate();
 
-	// листание календаря
-    month_old1 = 0;
-    year_old1 = 0;
-    month_old2 = 0;
-    year_old2 = 0;
+    jQuery(document).mouseup(function (e) { // событие клика по веб-документу
+        var div = jQuery("#window-with-table"); // тут указываем ID элемента
+        if (!div.is(e.target) && div.has(e.target).length == 0) { // не по элементу и не по его дочерним элементам
+            jQuery("#window-with-table").hide();
+            jQuery("#close-modal-window").hide();
+            jQuery("#modal-window-with-table").hide();
+            jQuery("#table-mounting").empty();
+        }
+        var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+        if (!div2.is(e.target) && div2.has(e.target).length == 0) { // и не по его дочерним элементам
+            jQuery("#modal-window-1-tar").hide();
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+        }
+    });
+
     jQuery("#button-next").click(function () {
         month1 = <?php echo $month1; ?>;
         year1 = <?php echo $year1; ?>;
@@ -532,25 +636,7 @@ if (!empty($brigade_id)) {
         process.handler= this;
         return process;
     }
-    //------------------------------------------
 
-	// закрытие модального окна, при нажатии вне модального окна
-    jQuery(document).mouseup(function (e) { // событие клика по веб-документу
-        var div = jQuery("#window-with-table"); // тут указываем ID элемента
-        if (!div.is(e.target) && div.has(e.target).length == 0) { // не по элементу и не по его дочерним элементам
-            jQuery("#window-with-table").hide();
-            jQuery("#close-modal-window").hide();
-            jQuery("#modal-window-with-table").hide();
-			jQuery("#table-mounting").empty();
-        }
-		var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-        if (!div2.is(e.target) && div2.has(e.target).length == 0) { // и не по его дочерним элементам
-            jQuery("#modal-window-1-tar").hide();
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-        }
-    });
-	// ----------------------------------------------
 
 	// перенаправление на страницу заказа
 	function ReplaceToOrder(project) {
@@ -561,46 +647,25 @@ if (!empty($brigade_id)) {
 
 	jQuery(document).ready(function () {
 
-		// легенда
 		if (screen.width < 768) {
-			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
-			legenda += '<td>Новый монтаж. Не просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый"></td>';	
-			legenda += '<td>Новый монтаж. Просмотрен монтажником</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий"></td>';
-			legenda += '<td>Монтаж в работе</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
-			legenda += '<td>Монтаж недовыполнен</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
-			legenda += '<td>Монтаж выполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
-			legenda += '<td>Заказ закрыт</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
-			legenda += '<td>Выходные часы</td></tr>';
 			jQuery("#button-prev").css({"width":"25px"});
 			jQuery("#prev-button-container").css({"left":"0px"});
 			jQuery("#button-next").css({"width":"25px"});
 			jQuery("#next-button-container").css({"right":"0px"});
 			jQuery("#legenda").append(legenda);
-		} else {
-			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
-			legenda += '<td>Новый монтаж. Не просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/fff23d.png" alt="Желтый"></td>';	
-			legenda += '<td>Новый монтаж. Просмотрен монтажником</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/414099.png" alt="Синий"></td>';
-			legenda += '<td>Монтаж в работе</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
-			legenda += '<td>Монтаж недовыполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
-			legenda += '<td>Монтаж выполнен</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
-			legenda += '<td>Заказ закрыт</td></tr>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
-			legenda += '<td>Выходные часы</td>';
-			jQuery("#legenda").append(legenda);
 		}
-		// -------------------------------
-		
+        jQuery('.brigade_city').click(function(){
+            var city_id = jQuery(this).data('id');
+            jQuery('.city_brigades[data-city_id="'+city_id+'"]').toggle();
+            var i = jQuery(this).find('i');
+
+            if(i.hasClass('fa-angle-down')){
+                i.removeClass("fa-angle-down").addClass("fa-angle-up");
+            }
+            else if(i.hasClass('fa-angle-up')){
+                i.removeClass("fa-angle-up").addClass("fa-angle-down");
+            }
+        });
 		// подсвет сегоднешней даты
         window.today = new Date();
         window.NowYear = today.getFullYear();

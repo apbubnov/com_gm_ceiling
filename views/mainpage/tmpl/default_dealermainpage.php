@@ -205,8 +205,8 @@ $rest = -($total_sum) - $contributed;
         <?php if($userId = 2 || $userId = 1 || $userId == 827 ){?>
             <p class="center">
                 <a class="btn btn-large btn-primary"
-                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i
-                            class="fa fa-list-alt" aria-hidden="true"></i> Аналитика</a>
+                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>">
+                    <i class="fas fa-chart-line"></i> Аналитика</a>
             </p>
             <p>
                 <a class="btn btn-large btn-primary"
@@ -248,7 +248,7 @@ $rest = -($total_sum) - $contributed;
             </div>
         </div>
          <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fa fa-bar-chart" aria-hidden="true"></i> Аналитика</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fas fa-chart-line"></i> Аналитика</a>
         </p>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>

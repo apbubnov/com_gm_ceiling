@@ -44,7 +44,11 @@ if (!empty($subtype))
 {
     $subtype_url = "&subtype=$subtype";
 }
-$service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
+$service_mount = [];
+if(!empty($this->item->calcs_mounting_sum)){
+    $service_mount = get_object_vars(json_decode($this->item->calcs_mounting_sum));
+}
+
 $need_service =(!empty($service_mount)) ? true : false;
 
 
@@ -88,7 +92,20 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
 }
 
 ?>
+<style>
+    .preview_img{
+         max-width: 250px;
+         cursor: pointer;
+     }
+    .original_img{
+        width: 100%;
+        cursor: pointer;
 
+    }
+    .row{
+        margin-bottom: 15px;
+    }
+</style>
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
@@ -101,9 +118,6 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
             <div class="col-md-6">
                 <div class="item_fields">
                     <h4>Информация по проекту № <?= $this->item->id; ?></h4>
-                    <form id="form-client"
-                          action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
-                          method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                         <table class="table">
                             <tr>
                                 <th>Дилер</th>
@@ -158,7 +172,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                     } ?></td>
                             </tr>
                         </table>
-                    </form>
+
                 </div>
                 <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
@@ -187,6 +201,9 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                 Стоимость
                             </th>
                             <th>
+                                Фото
+                            </th>
+                            <th>
                                 Смета
                             </th>
                             <th>
@@ -203,11 +220,10 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     <tbody>
                     <?php
                     $calc_data = [];
+                    $calcImages = [];
                         foreach ($calculations as $calculation) {
                             $common_canvases_sum += $calculation->canvases_sum;
                             $total_components_sum += $calculation->components_sum;
-
-
                             $canvas = array_filter(
                                 $calculation->goods,
                                 function ($e) {
@@ -251,11 +267,57 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                                 $color = $detailed_canvas[0]->color;
                                 $hex = $detailed_canvas[0]->hex;
                             }
+                            /*Изображения*/
+
+                            $dir_before = 'uploaded_calc_images/'.$calculation->id.'/before';
+                            $dir_after = 'uploaded_calc_images/'.$calculation->id.'/after';
+                            $dir_defect = 'uploaded_calc_images/'.$calculation->id.'/defect';
+
+                            $files = [];
+                            $temp = [];
+                            if (is_dir($dir_before)) {
+                                $temp = scandir($dir_before);
+                                foreach ($temp as $key => $value) {
+                                    if (strlen($value) === 32) {
+                                        $temp[$key] = $dir_before.'/'.$value;
+                                    } else {
+                                        unset($temp[$key]);
+                                    }
+                                }
+                                $files = array_merge($files, $temp);
+                            }
+                            if (is_dir($dir_after)) {
+                                $temp = scandir($dir_after);
+                                foreach ($temp as $key => $value) {
+                                    if (strlen($value) === 32) {
+                                        $temp[$key] = $dir_after.'/'.$value;
+                                    } else {
+                                        unset($temp[$key]);
+                                    }
+                                }
+                                $files = array_merge($files, $temp);
+                            }
+                            if (is_dir($dir_defect)) {
+                                $temp = scandir($dir_defect);
+                                foreach ($temp as $key => $value) {
+                                    if (strlen($value) === 32) {
+                                        $temp[$key] = $dir_defect.'/'.$value;
+                                    } else {
+                                        unset($temp[$key]);
+                                    }
+                                }
+                                $files = array_merge($files, $temp);
+                            }
+                            $calcImages[$calculation->id] = $files;
+                            /************/
                     ?>
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                             <td>
                                 <?php echo $canvases_sum[$calculation->id]?> руб.
+                            </td>
+                            <td>
+                                <button class="btn btn-primary show_img" data-id="<?=$calculation->id?>" ><i class="fas fa-image"></i></button>
                             </td>
                             <td>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
@@ -294,6 +356,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     <tr>
                         <td><b>Общая информация</b></td>
                         <td><?=$common_canvases_sum;?> руб.</td>
+                        <td></td>
                         <td>
                             <?php $path = "/costsheets/".md5($this->item->id."common_manager").".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -556,6 +619,13 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     </div>
                 </div>
                 <div id = "mw_mounts_calendar" class = "modal_window"></div>
+                <div id = "mw_images" class="modal_window">
+                    <div id="calculation_images">
+                        <div class="container" id="images_container">
+                            <h4> Фотографии отсутствуют</h4>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     <?php } else { ?>
@@ -631,18 +701,23 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
     <script type="text/javascript">
 
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
-        var project_id = "<?php echo $this->item->id; ?>";
+        var project_id = "<?php echo $this->item->id; ?>",
+            calcImages = JSON.parse('<?=json_encode($calcImages);?>');
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var div1 = jQuery("#mw_date"); // тут указываем ID элемента
-            var div2 = jQuery("#mw_mounts_calendar");
+            var div1 = jQuery("#mw_date"), // тут указываем ID элемента
+                div2 = jQuery("#mw_mounts_calendar"),
+                div3 = jQuery("#mw_images");
             if (!div1.is(e.target) // если клик был не по нашему блоку
                 && div1.has(e.target).length === 0
-                &&!div2.is(e.target) // если клик был не по нашему блоку
-                && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+                &&!div2.is(e.target)
+                && div2.has(e.target).length === 0
+                &&!div3.is(e.target)
+                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
                 jQuery("#close_mw").hide();
                 jQuery("#mw_container").hide();
                 div1.hide();
                 div2.hide();
+                div3.hide();
             }
         });
         jQuery(document).ready(function () {
@@ -690,6 +765,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     });
                 }
             });
+
             jQuery("[name = 'change_cut']").click(function(){
 
                 let id = jQuery(this).data('calc_id');
@@ -708,7 +784,6 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 jQuery("#form_url").submit();
             });
 
-
             jQuery("[name = 'change_calc']").click(function(){
                 let id = jQuery(this).data('calc_id');
                 location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&calc_id='+id;
@@ -720,6 +795,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 l = l.replace(/&id=\d+/,'');
                 location.href = l;
             });
+
             jQuery('#create_pdfs').click(function(){
                 jQuery.ajax({
                     type: 'POST',
@@ -741,6 +817,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 jQuery("#mw_date").show("slow");
                 jQuery("#close_mw").show();
             });
+
             jQuery('[name = "runByCall"]').change(function () {
                 var checkBox = this;
                 if(checkBox.checked){
@@ -758,6 +835,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     day = (date.getDate()<10) ?"0"+date.getDate() : date.getDate();
                 this.value = date.getFullYear()+"-"+month+"-"+day+"T09:00";
             });
+
             jQuery('[name = "date_canvas_ready"]').change(function () {
                 var date_time = this;
                 jQuery("#all_by_call").attr("checked",false);
@@ -767,6 +845,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     };
                 });
             });
+
             jQuery("#save").click(function(){
                 var readyDates = jQuery('[name = "date_canvas_ready"]').filter(function () {
                         if(this.value){
@@ -784,6 +863,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 jQuery("#ready_dates").val(JSON.stringify(result));
                 jQuery("#form-project").submit();
             });
+
             //готовность на все потолки
             jQuery("#all_by_call").change(function () {
                 var checkBox = this,attr;
@@ -801,6 +881,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                     jQuery(elem).attr("checked",attr);
                 });
             });
+
             jQuery('[name = "all_canvas_ready"]').focus(function () {
                 var date = new Date,
                     month  = (date.getMonth()<10) ?"0"+(date.getMonth()+1) : (date.getMonth()+1),
@@ -811,12 +892,14 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 });
                 jQuery("#all_by_call").attr("checked",false);
             });
+
             jQuery('[name = "all_canvas_ready"]').change(function () {
                 var date_time = this;
                 jQuery('[name = "date_canvas_ready"]').each(function(index,elem){
                     elem.value = date_time.value;
                 });
             });
+
             jQuery("input[name^='include_calculation']").click(function () {
                 if (jQuery(this).prop("checked")) {
                     jQuery(this).closest("tr").removeClass("not-checked");
@@ -836,6 +919,43 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                 jQuery("input[name='project_verdict']").val(0);
                 jQuery(".project_activation").show();
                 jQuery("#mounting_date_control").hide();
+            });
+
+            jQuery('.show_img').click(function () {
+                var calc_id = jQuery(this).data('id'),
+                    images = calcImages[calc_id],
+                    html = '';
+                if(images.length == 0){
+                    html = '<h4>Изображения отсутствуют</h4>';
+                }
+                jQuery('#images_container').empty();
+                for(var i = 0;i < images.length;i++){
+                        if(i%3 == 0){
+                            html += '<div class="row">';
+                        }
+                        html += '<div class="col-md-4">';
+                        html += '<div class=row><img class="preview_img" src="'+images[i]+'"></div>';
+                        html += '</div>';
+                        if((i+1) % 3 == 0 || i+1 == images.length){
+                            html += '</div>';
+                        }
+                    }
+                jQuery('#images_container').append(html);
+
+                jQuery('#mw_container').show();
+                jQuery('#close_mw').show();
+                jQuery('#mw_images').show('slow');
+            });
+
+            jQuery(document).on("click", ".preview_img", function () {
+               jQuery(this).addClass('original_img');
+               jQuery(this).removeClass('preview_img');
+
+            });
+
+            jQuery(document).on("click", ".original_img", function () {
+                jQuery(this).addClass('preview_img');
+                jQuery(this).removeClass('original_img ');
             });
         });
 

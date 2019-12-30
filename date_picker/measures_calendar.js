@@ -33,7 +33,7 @@ function init_measure_calendar(elem_id, input_time, input_calculator, modal_wind
 		            
 		            elem.classList.remove('nice-busy');
 		            if (elem.classList.contains('nice-busy-all')) {
-		            	setTimeout(function(){elem.classList.remove('nice-select');}, 500);
+		            	setTimeout(function(){elem.classList.remove('nice-selected');}, 500);
 		            }
 		            else {
 		            	if (Array.isArray(dop_mw)) {

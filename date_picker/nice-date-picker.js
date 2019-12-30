@@ -78,7 +78,7 @@
                 if (showDate === today.getDate() && thisMonth === today.getMonth() + 1 && thisYear == today.getFullYear()) {
                     styleCls = 'nice-normal nice-current';
                 } else if (showDate == this.selectDate.day && thisMonth == this.selectDate.month && thisYear == this.selectDate.year) {
-                    styleCls = 'nice-normal nice-select';
+                    styleCls = 'nice-normal nice-selected';
                 } else {
                     styleCls = 'nice-normal';
                 }
@@ -214,9 +214,9 @@
                 $params.onClickDate($target.getAttribute('data-date'));
                 var tds = _this.$warpper.getElementsByClassName('nice-normal');
                 for(var i = tds.length; i--;) {
-                    tds[i].classList.remove('nice-select');
+                    tds[i].classList.remove('nice-selected');
                 }
-                $target.classList.add('nice-select');
+                $target.classList.add('nice-selected');
                 var arr_str_date = $target.getAttribute('data-date').split('-');
                 _this.selectDate = {year: arr_str_date[0], month: arr_str_date[1], day: arr_str_date[2]};
             }
