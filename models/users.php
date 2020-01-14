@@ -793,4 +793,28 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function setVerificationCode($userId,$code){
+	    try{
+            $date = date('Y-m-d H:i:s');
+	        if(empty($code)){
+	            $code = '(NULL)';
+	            $date = '(NULL)';
+            }
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`rgzbn_users`')
+                ->set("`verification_code`= $code")
+                ->set("code_creation_time = '$date'")
+                ->where("id = $userId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
 }

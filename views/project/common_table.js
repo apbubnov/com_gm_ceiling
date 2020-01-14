@@ -921,39 +921,8 @@ jQuery(document).on('click','.additional_goods',function(){
     }
 });
 
-jQuery('.save_final_btn').click(function () {
-    var final_sum = jQuery('.final_sum').val();
-    jQuery.ajax({
-        type: 'POST',
-        url: "index.php?option=com_gm_ceiling&task=project.saveSum",
-        data: {
-            project_id: project_id,
-            final_sum: final_sum
-        },
-        success: function (data) {
-            var n = noty({
-                theme: 'relax',
-                timeout: 2000,
-                layout: 'center',
-                maxVisible: 5,
-                type: "success",
-                text: "Сохранено!"
-            });
-        },
-        dataType: "json",
-        timeout: 20000,
-        error: function (data) {
-            console.log(data);
-            var n = noty({
-                theme: 'relax',
-                timeout: 2000,
-                layout: 'center',
-                maxVisible: 5,
-                type: "error",
-                text: "Ошибка сохранения!"
-            });
-        }
-    });
+jQuery(document).on('click',"#add_calc",function(){
+    create_calculation(project_id);
 });
 
 function fillProjectSum(){

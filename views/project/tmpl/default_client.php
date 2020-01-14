@@ -143,7 +143,7 @@ if(!empty($this->item->mount_data)){
                 </div>
             </div>
             <div class="col-md-4">
-                <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+                <?php /*include_once('components/com_gm_ceiling/views/project/project_notes.php'); */?>
             </div>
         </div>
         <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>

@@ -1224,7 +1224,7 @@ public function register_mnfctr(){
             $id = $jinput->get('id', '0', 'INT');
             $save = $jinput->get('save', '0', 'INT');
             $pdf = $jinput->get('pdf', '0', 'INT');
-            $need_mount = $jinput->get('need_mount', '0', 'INT');
+            $need_mount = $jinput->get('need_mount', '2', 'INT');
             $gm_mounters = $jinput->get('gm_mounters',"",'STRING');
             $del_flag = $jinput->get('del_flag', '0', 'INT');
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount,$gm_mounters);
@@ -3550,28 +3550,20 @@ public function register_mnfctr(){
             $email = $jinput->get('email', '', 'STRING');
             $city = $jinput->get('city', '', 'STRING');
             if(!empty($phone)) {
-                $chars = "qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP";
+
+                $chars = "1234567890";
                 $max = 6;
                 $size = StrLen($chars) - 1;
-                $password = '';
+                $code = '';
                 while ($max--) {
-                    $password .= $chars[rand(0, $size)];
+                    $code .= $chars[rand(0, $size)];
                 }
 
                 $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $user = $userModel->getUserByUsername($phone);
                 if (!empty($user)) {
-
-                    if ($user->dealer_type == 2) {
-                        /*Пользователь с таким номером существует, меняем пароль и отправляем в смс*/
-                        $userModel->change_user_pass($user->id, $password);
-                        /*здесь должна быть отправка в смс*/
-                    }
-                    if ($user->dealer_type == 1) {
-                        /*Дилер, перегенерировать пароль и отправить и пусть входит*/
-                        $userModel->change_user_pass($user->id, $password);
-                        /*здесь должна быть отправка в смс*/
-                    }
+                    $userModel->setVerificationCode($user->id, $code);
+                    $this->sendSMS($code,$phone);
                 } else {
                     /*Пользователя с таким номером не существует пробуем регистрировать, генерируем пароль и отправляем в смс*/
                     $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
@@ -3608,7 +3600,8 @@ public function register_mnfctr(){
                             $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый дилер', $client->id, 1);
                         }
                         /*меняем и отправляем пароль*/
-                        $userModel->change_user_pass($dealer_id, $password);
+                        $userModel->setVerificationCode($dealer_id, $code);
+                        $this->sendSMS($code,$phone);
 
                     } else {
                         $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
@@ -3616,7 +3609,7 @@ public function register_mnfctr(){
                     }
 
                 }
-                die(json_encode($password));
+                die(json_encode($code));
             }
             else{
                 /*Пустой телефон вернуть ошибосик*/
@@ -3627,6 +3620,34 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function sendSMS($code,$phone){
+        try{
+            $apiKey = "w7wt3IiHHFtxzlkPsPargPciMBrY";
+            $credentials = base64_encode("it.gmvrn@gmail.com:$apiKey");
+            if( $curl = curl_init() ) {
+                $url = "https://gate.smsaero.ru/v2/sms/send?numbers[]=$phone&text=Код+для+входа:$code&sign=G_MASTEROV&channel=DIRECT";
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_HTTPHEADER => array(
+                        "Accept: */*",
+                        "Authorization: Basic $credentials"
+                    ),
+                ));
+                $result = curl_exec($curl);
+
+                curl_close($curl);
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+
 }
 
 ?>

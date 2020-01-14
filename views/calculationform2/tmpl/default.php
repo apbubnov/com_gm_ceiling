@@ -1103,7 +1103,7 @@
             let id = jQuery('#jform_id').val();
             let need_mount = jQuery("input[name = 'need_mount']").val();
             if(need_mount == undefined && api==1){
-                need_mount = 1;
+                need_mount = 2;
             }
             gm_mounters = "<?php echo $gm_mounters_url;?>"
             if (!calculate_button.hasClass("loading")) {

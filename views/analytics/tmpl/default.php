@@ -29,11 +29,37 @@ echo parent::getButtonBack();
 </div>
 <div class="container">
     <div class="row right">
-        <label for="c_date_from">Выбрать с:</label>
-        <input type="date" name="c_date_from" id = "c_date_from" class="input-gm">
-        <label for="c_date_to">до:</label>
-        <input type="date" name="c_date_to" id = "c_date_to" class="input-gm">
-        <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
+        <div class="col-md-7">
+        </div>
+        <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="c_date_from">Выбрать с:</label>
+            </div>
+            <div class="col-md-8">
+               <input type="date" name="c_date_from" id = "c_date_from" class="input-gm">
+            </div>
+        </div>
+    </div>
+    <div class="row right">
+        <div class="col-md-7">
+        </div>
+        <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="c_date_to">до:</label>
+            </div>
+            <div class="col-md-8">
+                <input type="date" name="c_date_to" id = "c_date_to" class="input-gm">
+            </div>
+        </div>
+    </div>
+    <div class="row right">
+        <div class="col-md-7">
+        </div>
+        <div class="col-md-5">
+            <div class="col-md-12">
+                <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
+            </div>
+        </div>
     </div>
     <div class="row" style="margin-top: 10px">  
         <div class="col-md-12">
@@ -47,11 +73,35 @@ echo parent::getButtonBack();
     </div>
 
     <div class="row right">
-        <label for="d_date_from">Выбрать с:</label>
-        <input type="date" name="d_date_from" id = "d_date_from" class="input-gm" value="<?php echo $today?>">
-        <label for="d_date_to">до:</label>
-        <input type="date" name="d_date_to" id = "d_date_to" class="input-gm" value="<?php echo $today?>">
-        <button type="button" class = "btn btn-primary" id = "d_show_all">Показать всё</button>
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="d_date_from">Выбрать с:</label>
+            </div>
+            <div class="col-md-8">
+                <input type="date" name="d_date_from" id = "d_date_from" class="input-gm" value="<?php echo $today?>">
+            </div>
+        </div>
+
+    </div>
+    <div class="row right">
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="d_date_to">до:</label>
+            </div>
+            <div class="col-md-8">
+                <input type="date" name="d_date_to" id = "d_date_to" class="input-gm" value="<?php echo $today?>">
+            </div>
+        </div>
+    </div>
+    <div class="row right">
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+            <div class="col-md-12">
+                <button type="button" class = "btn btn-primary" id = "d_show_all">Показать всё</button>
+            </div>
+        </div>
     </div>
     <div class="row" style="margin-top: 10px">  
         <div class="col-md-12">

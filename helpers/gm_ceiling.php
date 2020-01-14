@@ -413,7 +413,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'discount' => 'int',
                         'need_metiz' => 'int',
                         'need_cuts' => 'int',
-                        'scaffolding'=>'int'
+                        'scaffolding'=>'int',
+                        'n12_cancel_install' =>'int'
                         // 'rek' => 'int',
                         // 'proizv' => 'string'
                     )
@@ -2824,15 +2825,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary_total" => $data['n12'] * $results->mp2,                         //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage"=>2
                     );
-                    $mounting_data[] = array(
-                        "title" => "Установка люстры ",                                   //Название
-                        "quantity" => $data['n12'],//$count_lust,                                      //Кол-во
-                        "gm_salary" => $gm_mount->mp2_2,//max($gm->mp4, $gm->mp5),                     //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $gm_mount->mp2_2 * $data['n12'],                          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp2_2,//max($dealer->mp4, $dealer->mp5),          //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n12'] * $results->mp2_2,                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>3
-                    );
+                    if(!$data['n12_cancel_install']) {
+                        $mounting_data[] = array(
+                            "title" => "Установка люстры ",                                   //Название
+                            "quantity" => $data['n12'],//$count_lust,                                      //Кол-во
+                            "gm_salary" => $gm_mount->mp2_2,//max($gm->mp4, $gm->mp5),                     //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $gm_mount->mp2_2 * $data['n12'],                          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp2_2,//max($dealer->mp4, $dealer->mp5),          //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $data['n12'] * $results->mp2_2,                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "stage" => 3
+                        );
+                    }
                 }
                 if($data['n16']){
                     $cornice = "Закладная под шторный карниз / Скрытый ";

@@ -194,6 +194,7 @@ let n41=  create_radios_group(n41_src);
 let remove_n28 = create_single_input(1,"jform_remove_n28","jform[remove_n28]","Введите кол-во старого профиля,м.:","Кол-во,м.","tel");
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
+n12 += createCheckBox('jform[n12_cancel_install]','jform_n12_cancel_install','Без установки');
 //let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
 let n19_src = {
     id : 'jform_n19',
@@ -664,6 +665,14 @@ jQuery(".component-content").on("click", ".add_fields", function () {
            this.value = 0;
        }
     });
+    jQuery("#jform_n12_cancel_install").click(function () {
+        if(jQuery(this).attr("checked") == "checked"){
+            this.value = 1;
+        }
+        else{
+            this.value = 0;
+        }
+    });
 });
 
 jQuery('body').on('click','#copy_cornice',function(){
@@ -795,6 +804,9 @@ function get_parent(n) {
         case 'scaffolding':
             n = 'height';
             break;
+        case 'n12_cancell_install':
+            n = 'n12';
+            break;
         case 'n20_1':
             n = 'n20';
             break;
@@ -824,8 +836,10 @@ function open_blocks(props){
                 jQuery('#btn_n16').trigger("click")
                 break;
             case 'scaffolding':
-                alert("123");
                 jQuery('#btn_height').trigger("click")
+                break;
+            case 'n12_cancel_install':
+                jQuery('#btn_n12').trigger("click");
                 break;
             case 'need_mount':
                 jQuery(`#btn_need_mount`).trigger("click");
@@ -916,6 +930,11 @@ function fill_calc_data(){
                         jQuery("#jform_scaffolding").attr("checked","checked");
                         jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
                     break;
+               case 'n12_cancel_install':
+                   if(calculation[Object.keys(calculation)[i]])
+                       jQuery("#jform_n12_cancel_install").attr("checked","checked");
+                   jQuery("#jform_n12_cancel_install").val(calculation[Object.keys(calculation)[i]]);
+                   break;
                 case 'n41':
                 case 'n28':
                 case 'height':

@@ -258,5 +258,39 @@ class Gm_ceilingControllerUsers extends JControllerForm
         }
     }
 
+    function checkCode(){
+	    try{
+            $result = (object)array("type"=>"","data"=>"");
+            $jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone','','STRING');
+            $code = $jinput->getInt('code');
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $userModel->getUserByUsername($phone);
+            $now = date('Y-m-d H:i:s');
+            $codeCreationTime = $user->code_creation_time;
+            $diff = mktime($now) - mktime($codeCreationTime);
+            if($diff >=3600){
+                $result->type = 'error';
+                $result->data = 'Код устарел!';
+            }
+            else{
+                if($user->verification_code == $code){
+                    $result->type = 'success';
+                    $result->data = 'true';
+                    $userModel->setVerificationCode($user->id,null);
+                    Gm_ceilingHelpersGm_ceiling::forceLogin($user->id);
+                }
+                else{
+                    $result->type = 'error';
+                    $result->data = 'Введен неверный код!';
+                }
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

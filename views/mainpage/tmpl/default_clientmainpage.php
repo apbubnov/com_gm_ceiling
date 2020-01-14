@@ -8,13 +8,28 @@
 $user = JFactory::getUser();
 $client_id = $user->associated_client;
 ?>
+<style type="text/css">
+    .row{
+        margin-bottom: 15px;
+    }
+</style>
 <div class="start_page">
-    <p class="center">
-        <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-calculator"></i> Рассчитать</button>
-    </p>
-    <p class="center">
-        <button class="btn btn-large btn-primary" id="my_orders" ><i class="fas fa-list"></i> Мои заказы</button>
-    </p>
+    <div class="row center">
+        <div class="col-md-12">
+            <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-calculator" aria-hidden="true"></i> Рассчитать</button>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col-md-12">
+            <button class="btn btn-large btn-primary" id="my_orders" ><i class="fa fa-list" aria-hidden="true"></i> Мои заказы</button>
+        </div>
+    </div>
+    <div class="row center">
+        <h6>Краткий обзор программы по построению и заказу натяжных потолков</h6>
+        <div class="col-md-12">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/QADSjJMys8U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
