@@ -7,7 +7,15 @@
  */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mounterscommon');
 $items = $model->getData();
+$mountersdebtModel = Gm_ceilingHelpersGm_ceiling::getModel('mountersdebt');
+$types = $mountersdebtModel->getTypes();
 ?>
+<style>
+    .debt_type{
+        width: 100%;
+        vertical-align: middle;
+    }
+</style>
 <h3>Сводная таблица по монтажным бригадам </h3>
 <table class="table table_cashbox">
     <thead>
@@ -90,14 +98,50 @@ $items = $model->getData();
                     ?>
                 </td>
                 <td>
-                    <input class="input-gm close_sum">
-                    <button class="btn btn-primary btn-sm save_sum"><i class="far fa-save"></i></button>
+                    <div class="row">
+                        <div class="col-xs-10 col-md-10">
+                            <input class="input-gm close_sum" style="max-width: 100%;">
+                        </div>
+                        <div class="col-xs-2 col-md-2" style="padding-left: 0;">
+                            <button class="btn btn-primary btn-sm save_sum"><i class="far fa-save"></i></button>
+                        </div>
+                    </div>
+                    <?php if(!empty($item['mounter_debt'])){ ?>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <input type="checkbox" id="auto_<?=$value->builder_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
+                            <label for="auto_<?=$value->builder_id?>" class="cbx">
+                                                    <span>
+                                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                        </svg>
+                                                    </span>
+                                <span>Автосписание долга</span>
+                            </label>
+                        </div>
+                    </div>
+                    <?php }?>
+
                 </td>
                 <?php if($key == 0){?>
                     <td rowspan="<?php echo count($item['builder_data'])+1?>">
+
+                        <div class="row" style="margin-bottom: 5px;">
+                            <div class="col-md-12">
+                                <input class="input-gm debt_sum">
+                            </div>
+                        </div>
                         <div class="row">
-                            <input class="input-gm debt_sum">
-                            <button class="btn btn-primary btn-sm save_debt_sum"><i class="far fa-save"></i></button>
+                            <div class="col-xs-9 col-md-9" style="padding-right: 2px;">
+                                <select class="input-gm debt_type">
+                                    <?php foreach ($types as $type){
+                                        echo "<option value='$type->id'>$type->title</option>";
+                                    }?>
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-md-3" style="padding-left: 0;">
+                                <button class="btn btn-primary btn-sm save_debt_sum"><i class="far fa-save"></i></button>
+                            </div>
                         </div>
                         <?php if(!empty($item['mounter_debt'])) {?>
                             <div class="row">
@@ -176,6 +220,7 @@ $items = $model->getData();
 </div>
 <script>
     var data = JSON.parse('<?php echo json_encode($items)?>');
+    console.log(data);
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#one_mounter_salary"),
             div1 = jQuery("#detailed_debt"); // тут указываем ID элемента
@@ -195,11 +240,12 @@ $items = $model->getData();
                 mounter_id = tr.data('mounter_id'),
                 builder_id = tr.find('.builder').data('builder_id'),
                 rest = parseFloat(tr.find('.rest')[0].innerText),
-                close_sum = parseFloat(tr.find('.close_sum').val());
+                close_sum = parseFloat(tr.find('.close_sum').val()),
+                debt_auto_relief = jQuery(this).closest('td').find('.auto_debt_relief').is(':checked');
             if(close_sum>0){
                 close_sum = -close_sum;
             }
-            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'),tr.find('.close_sum'));
+            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'),tr.find('.close_sum'),debt_auto_relief);
         });
 
         jQuery('.builder').click(function () {
@@ -283,9 +329,23 @@ $items = $model->getData();
         jQuery('.save_debt_sum').click(function () {
             var tr = jQuery(this).closest('tr'),
                 mounter_id = tr.data('mounter_id'),
-                sum = parseFloat(tr.find('.debt_sum').val());
-            console.log(tr);
-            saveDebtSum(mounter_id, sum, tr,1);
+                mounter_debt = data[mounter_id]['mounter_debt'],
+                sum = parseFloat(tr.find('.debt_sum').val()),
+                type = tr.find('.debt_type').val();
+            console.log(empty(mounter_debt)&&type == 2);
+            if(empty(mounter_debt)&&type == 2){
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Долг отсутствует, нельзя провести его списание!"
+                });
+                return false;
+            }
+
+            saveDebtSum(mounter_id, sum, tr,type);
         });
     });
 
@@ -300,12 +360,19 @@ $items = $model->getData();
         }
         else return false;
     }
-    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td,input) {
+    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td,input,debt_auto_relied) {
         var mounter_data = data[mounter_id],
             percent_sum = 0,
-            tr = rest_td.closest('tr');
-        if(!empty(mounter_data['mounter_debt'])){
-            percent_sum = Math.abs(close_sum)*0.25;
+            tr = rest_td.closest('tr'),
+            debt_relief_sum = 0;
+        if(!empty(mounter_data['mounter_debt']) && debt_auto_relied){
+            debt_relief_sum = Math.abs(close_sum)*0.25;
+            if(mounter_data['mounter_debt'] >= debt_relief_sum){
+                percent_sum = Math.abs(close_sum)*0.25;
+            }
+            else{
+                percent_sum = mounter_data['mounter_debt'];
+            }
         }
         close_sum -= percent_sum;
         if(mounter_data['builder_data'].length == 1){

@@ -51,5 +51,22 @@ class Gm_ceilingModelMountersDebt extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getTypes(){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_ceiling_debt_type`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

@@ -194,7 +194,7 @@ if (empty($list['direction']))
             else {
                 $query
                     ->leftJoin('`#__users` as `u` ON `client`.`id` = `u`.`associated_client`')
-                    ->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
+                    ->where("((`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL ) OR (u.dealer_type = 2 AND `u`.`associated_client` IS NOT NULL)) AND `client`.`deleted_by_user` <> 1");
                 }
             $query
                 ->where('`client`.`deleted_by_user` <> 1')

@@ -167,9 +167,9 @@ class Gm_ceilingModelProjects extends JModelList
                             ) AS `calculation_time`,
                             `p`.`project_calculator`,
                             GROUP_CONCAT(DISTINCT `pm`.`mounter_id` SEPARATOR \', \') AS `project_mounter`,
-                            GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
+                            (SELECT @project_mounting_date := GROUP_CONCAT(DISTINCT DATE_FORMAT(`pm`.`date_time`, \'%d.%m.%Y %H:%i\')
                                             ORDER BY `pm`.`date_time` ASC SEPARATOR \', \'
-                            ) AS `project_mounting_date`,
+                            )) AS `project_mounting_date`,
                             MIN(`pm`.`date_time`) as `last_mount_date`,
                             `u2`.`dealer_id` AS `mounter_dealer_id`,
                             GROUP_CONCAT(DISTINCT CONCAT(DATE_FORMAT(`pm`.`mount_start`, \'%d.%m.%Y %H:%i\'), \'-\',
@@ -278,11 +278,11 @@ class Gm_ceilingModelProjects extends JModelList
                 //     break;
                 case 'chiefprojects':
                     $query->where("((`project_status` = 4
-                                    AND `project_mounting_date` IS NOT NULL
-                                    AND `project_mounting_date` <> '00.00.0000 00:00')
+                                    AND @project_mounting_date IS NOT NULL
+                                    AND @project_mounting_date <> '00.00.0000 00:00')
                                     OR (`project_status` IN (5, 10)
-                                        AND (`project_mounting_date` IS NULL
-                                            OR `project_mounting_date` = '00.00.0000 00:00')))
+                                        AND (@project_mounting_date IS NULL
+                                            OR @project_mounting_date = '00.00.0000 00:00')))
                                     AND `cl`.`dealer_id` = $user->dealer_id
                                 ");
                     break;

@@ -3577,10 +3577,15 @@ public function register_mnfctr(){
                     $client_id = $clientform_model->save($client_data);
 
                     if (mb_ereg('[\d]', $client_id)) {
+                        /*Новый клиент*/
                         $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации на calc.gm-vrn');
-                        $callback_model->save(date("Y-m-d H:i:s"), 'Клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Новый клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
                     } else {
+                        /*такой клиент уже есть в базе*/
+                        $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
                         $client_id = $client->id;
+                        $clienthistory_model->save($client_id, 'Существующий клиент получил кабинет на calc.gm-vrn');
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент получил кабинет на calc.gm-vrn.ru', $client_id, 1);
                     }
 
                     if (mb_ereg('[\d]', $client_id)) {
@@ -3588,7 +3593,7 @@ public function register_mnfctr(){
                         if(!$isDealer){
                             $email = "$client_id@$client_id";
                             $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($fio, $phone, $email, $client_id, 2);
-                            $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый клиент с личным кабинетом', $client_id, 1);
+                            //$callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый клиент с личным кабинетом', $client_id, 1);
                         }
                         else{
                             $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($fio, $phone, $email, $client_id, 1);
