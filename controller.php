@@ -3493,6 +3493,7 @@ public function register_mnfctr(){
             $phone = $jinput->get('phone','','STRING');
             $isDealer = $jinput->getInt('isDealer');
 
+
             $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
@@ -3505,6 +3506,7 @@ public function register_mnfctr(){
                 if (mb_ereg('[\d]', $client_id)) {
                     $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации на calc.gm-vrn');
                     $callback_model->save(date("Y-m-d H:i:s"), 'Клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
+
                 } else {
                     $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
                     $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент пытался зарегистрироваться на calc.gm-vrn', $client->id, 1);
@@ -3549,8 +3551,8 @@ public function register_mnfctr(){
             $isDealer = $jinput->getInt('isDealer');
             $email = $jinput->get('email', '', 'STRING');
             $city = $jinput->get('city', '', 'STRING');
+            $advt = $jinput->get('advt','','STRING');
             if(!empty($phone)) {
-
                 $chars = "1234567890";
                 $max = 6;
                 $size = StrLen($chars) - 1;
@@ -3562,8 +3564,20 @@ public function register_mnfctr(){
                 $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $user = $userModel->getUserByUsername($phone);
                 if (!empty($user)) {
+                    if(!empty($user->verification_code)){
+                        $now = date('Y-m-d H:i:s');
+                        $diff = strtotime($now) - strtotime($user->code_creation_time);
+                        if($diff<300){
+                            $error = (object)array(
+                                'type'=>'error',
+                                'text'=>'Время ожидание еще не вышло!',
+                                'value'=>$diff,
+                                'sendtime'=>$user->code_creation_time);
+                            die(json_encode($error));
+                        }
+                    }
                     $userModel->setVerificationCode($user->id, $code);
-                    $this->sendSMS($code,$phone);
+                   //$this->sendSMS($code,$phone);
                 } else {
                     /*Пользователя с таким номером не существует пробуем регистрировать, генерируем пароль и отправляем в смс*/
                     $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
@@ -3574,12 +3588,36 @@ public function register_mnfctr(){
 
                     $client_data['client_name'] = $fio;
                     $client_data['client_contacts'] = $phone;
+                    $client_data['dealer_id'] = 1;
                     $client_id = $clientform_model->save($client_data);
 
                     if (mb_ereg('[\d]', $client_id)) {
                         /*Новый клиент*/
                         $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации на calc.gm-vrn');
                         $callback_model->save(date("Y-m-d H:i:s"), 'Новый клиент c формы захвата calc.gm-vrn.ru', $client_id, 1);
+                        if(!empty($advt)){
+                            $dealer_id = 1;
+                            $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+                            /*$gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $dealer_id);
+                            $gm_components_margin = $info_model->getMargin('gm_components_margin', $dealer_id);
+                            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $dealer_id);*/
+                            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $dealer_id);
+                            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $dealer_id);
+                            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $dealer_id);
+                            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+                            $project_data['state'] = 1;
+                            $project_data['client_id'] = $client_id;
+                            $project_data['api_phone_id'] = $advt;
+                            $project_data['created'] = date("Y-m-d");
+                            /*$project_data['gm_canvases_margin'] = $gm_canvases_margin;
+                            $project_data['gm_components_margin'] = $gm_components_margin;
+                            $project_data['gm_mounting_margin'] = $gm_mounting_margin;*/
+                            $project_data['project_status'] = 1;
+                            $project_data['dealer_canvases_margin'] = $dealer_canvases_margin;
+                            $project_data['dealer_components_margin'] = $dealer_components_margin;
+                            $project_data['dealer_mounting_margin'] = $dealer_mounting_margin;
+                            $project_model->save($project_data);
+                        }
                     } else {
                         /*такой клиент уже есть в базе*/
                         $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
@@ -3606,7 +3644,7 @@ public function register_mnfctr(){
                         }
                         /*меняем и отправляем пароль*/
                         $userModel->setVerificationCode($dealer_id, $code);
-                        $this->sendSMS($code,$phone);
+                        //$this->sendSMS($code,$phone);
 
                     } else {
                         $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);

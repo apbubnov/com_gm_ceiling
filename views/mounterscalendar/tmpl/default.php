@@ -98,7 +98,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
             <table id="table-mounting" class="rwd-table">
                 <thead>
                 <tr>
-                    <th id="selected_data" colspan="8"></th>
+                    <th id="selected_data" colspan="9"></th>
                 </tr>
                 <tr id="caption-tr" style="font-size: 9pt;">
                     <th>Время</th>
@@ -106,6 +106,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     <th>Телефоны</th>
                     <th>Периметр</th>
                     <th>З/П</th>
+                    <th>Остаток</th>
                     <th>Примечание</th>
                     <th>Статус</th>
                     <th>Этап</th>
@@ -332,7 +333,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             }
                             console.log(typeParam);
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+',\''+typeParam+'\');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны"><a href="tel:+'+element.client_phones+'">'+element.client_phones+'</a></td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+',\''+typeParam+'\');"><td data-th="Дата мотажа">'+outputDate+' '+element.project_mounting_date+'</td><td data-th="Адрес">'+adress+'</td><td data-th="Телефоны"><a href="tel:+'+element.client_phones+'">'+element.client_phones+'</a></td><td data-th="Периметр">'+perimeter+'</td><td data-th="Зарплата">'+salary+'</td><td data-th="Остаток">'+element.project_rest+'</td><td data-th="Комментарий" id="comment_calc'+element.id+'">'+note+'</td><td data-th="Статус">'+status+'</td><td data-th="Этап">'+type+'</td></tr>';
                             jQuery("#table-mounting > tbody").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';

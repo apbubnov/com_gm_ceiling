@@ -858,33 +858,53 @@
             });
         });
 
-        jQuery("#save").click(function(){
-            if(empty(jQuery("#mount").val())){
+        jQuery("#save").click(function() {
+            var prepayment_taken = jQuery("#prepayment_taken").val(),
+                prepayment_sum = jQuery('#prepayment').val();
+            if((prepayment_sum != "" && prepayment_sum >= 0) || prepayment_taken != 0){
+                if (empty(jQuery("#mount").val())) {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "alert",
+                        text: "Не указана дата монтажа. Продолжить?",
+                        buttons: [
+                            {
+                                addClass: 'btn btn-primary', text: 'Да', onClick: function (modal) {
+                                    jQuery("input[name='project_status']").val(5);
+                                    jQuery("input[name='project_verdict']").val(1);
+                                    jQuery('#form-client').submit();
+                                    modal.close();
+                                }
+                            },
+                            {
+                                addClass: 'btn btn-primary', text: 'Нет', onClick: function (modal) {
+                                    modal.close();
+                                }
+                            }
+                        ]
+                    });
+                }
+                else {
+                    jQuery("input[name='project_status']").val(5);
+                    jQuery("input[name='project_verdict']").val(1);
+                    jQuery('#form-client').submit();
+                }
+            }
+            else {
                 noty({
+                    timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
-                    type: "alert",
-                    text: "Не указана дата монтажа. Продолжить?",
-                    buttons:[
-                        {addClass: 'btn btn-primary', text: 'Да', onClick: function(modal) {
-                                jQuery('#project_status').val(5)
-                                jQuery("#form-client").submit();
-                                modal.close();
-                            }
-                        },
-                        {addClass: 'btn btn-primary', text: 'Нет', onClick: function(modal) {
-                                modal.close();
-                            }
-                        }
-                    ]
+                    type: "error",
+                    text: "Не введена предоплата!"
                 });
-            }
-            else {
-                jQuery('#project_status').val(5);
+                jQuery('html,body').animate({ scrollTop: jQuery('#prepayment').offset().top }, 1000);
 
-                jQuery("#form-client").submit();
             }
+
         });
 
         jQuery("#save_by_call_btn").click(function(){

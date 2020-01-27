@@ -795,8 +795,23 @@ jQuery("#prepayment_save").click(function () {
                     type: "success",
                     text: "Cохранено!"
                 });
+                jQuery('#prepayment_taken').val(1);
                 jQuery("#prepayment_total")[0].innerText = +jQuery("#prepayment_total")[0].innerText+ +prepayment_sum;
                 jQuery("#prepayment").val("");
+                var final_sum;
+                if(!empty(jQuery('.final_sum').val())){
+                    final_sum = jQuery('.final_sum').val();
+                }
+                else{
+                    if(jQuery('#project_total_discount span.sum')){
+                        final_sum = jQuery('#project_total_discount span.sum').text();
+                    }
+                    else{
+                        final_sum =jQuery('#project_total span.sum').text();
+                    }
+                }
+                jQuery('span.project_rest').text(final_sum - jQuery("#prepayment_total").text())
+
             },
             dataType: "json",
             timeout: 20000,
@@ -919,6 +934,42 @@ jQuery(document).on('click','.additional_goods',function(){
     else if(i.hasClass('fa-angle-up')){
         i.removeClass("fa-angle-up").addClass("fa-angle-down");
     }
+});
+
+jQuery('.save_final_btn').click(function () {
+    var final_sum = jQuery('.final_sum').val();
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=project.saveSum",
+        data: {
+            project_id: project_id,
+            final_sum: final_sum
+        },
+        success: function (data) {
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "success",
+                text: "Сохранено!"
+            });
+            jQuery('span.project_rest').text(final_sum-jQuery("#prepayment_total").text() );
+        },
+        dataType: "json",
+        timeout: 20000,
+        error: function (data) {
+            console.log(data);
+            var n = noty({
+                theme: 'relax',
+                timeout: 2000,
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка сохранения!"
+            });
+        }
+    });
 });
 
 jQuery(document).on('click',"#add_calc",function(){

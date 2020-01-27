@@ -49,7 +49,7 @@ foreach ($brigadesData as $value){
         }
         $calendars .= '<div class="col-md-4" >';
         $calendars .= '<div class="row center" style="width: 98%">';
-        $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$value->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
+        $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$brigades[$i]->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
         $calendars .= '</div>';
         $calendars .= '<div class="row" style="width: 98%">';
         $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
@@ -71,7 +71,10 @@ foreach ($brigadesData as $value){
 
 ?>
 <?=parent::getButtonBack();?>
-
+<div id="preloader" style="display: none;" class="PRELOADER_GM PRELOADER_GM_OPACITY">
+    <div class="PRELOADER_BLOCK"></div>
+    <img src="/images/GM_R_HD.png" class="PRELOADER_IMG">
+</div>
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teams/tmpl/css/style.css" type="text/css" />
 <style>
     #legenda-container img{
@@ -272,7 +275,6 @@ foreach ($brigadesData as $value){
     });
 
 	jQuery(document).ready(function () {
-
 	    jQuery('.brigade_city').click(function(){
 	        var city_id = jQuery(this).data('id');
             jQuery('.city_brigades[data-city_id="'+city_id+'"]').toggle();
@@ -365,6 +367,7 @@ foreach ($brigadesData as $value){
             year_old1 = year1;
             month_old2 = month2;
             year_old2 = year2;
+            jQuery("#preloader").show();
             jQuery.each(brigades,function (index,elem) {
                 updateCalendar(elem.id,month1,year1);
                 jQuery('.firstMonth[data-brigade_id='+elem.id+']').empty();
@@ -504,7 +507,7 @@ foreach ($brigadesData as $value){
 					}
 				});
 			} else {
-				table += '<tr id="caption-data"><td colspan="6">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
+				table += '<tr id="caption-data"><td colspan="7">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Остаток</td><td>Примечание</td><td>Статус</td></tr>';
 				jQuery.ajax({
 					type: 'POST',
 					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
@@ -566,7 +569,7 @@ foreach ($brigadesData as $value){
                                     note +=elem.description+": "+elem.value;
                                 });
 								perimeter = +element.perimeter;
-								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+element.project_rest+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {
 								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
 							}
@@ -761,6 +764,7 @@ foreach ($brigadesData as $value){
 		jQuery('.btn_del_brigade').click(function()
         {
             var user_id = jQuery(this).data('id');
+            alert(user_id);
             noty({
                 layout: 'topCenter',
                 type: 'default',
@@ -840,11 +844,13 @@ foreach ($brigadesData as $value){
                 year: year,
             },
             success: function (msg) {
+                jQuery("#preloader").hide();
                 calendar = msg;
             },
             dataType: "text",
             timeout: 10000,
             error: function () {
+                jQuery("#preloader").hide();
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',

@@ -144,6 +144,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$query2 = $db->getQuery(true);
 			$query3 = $db->getQuery(true);
 			$query4 = $db->getQuery(true);
+            $prepaymentSubquery = $db->getQuery(true);
 
 			$query2->select("SUM(calculations.n5)")
 				->from("#__gm_ceiling_calculations as calculations")
@@ -152,8 +153,13 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$query3->select("SUM(calculations.mounting_sum)")
 				->from("#__gm_ceiling_calculations as calculations")
 				->where("calculations.project_id = projects.id");
-
-		 	$query->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary,projects.read_by_mounter, projects.project_status")
+            $prepaymentSubquery
+                ->select('IFNULL(SUM(prepayment_sum),0)')
+                ->from('`rgzbn_gm_ceiling_projects_prepayment`')
+                ->where('project_id = projects.id');
+		 	$query
+                ->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary,projects.read_by_mounter, projects.project_status")
+                ->select("projects.project_sum,projects.new_project_sum,($prepaymentSubquery) as prepayment")
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = projects.id')
 				->where("m.mounter_id = '$id' and m.date_time between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 12, 17, 19,24,25,26,27,28,29)")
@@ -171,6 +177,12 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$was_break = false;
             //поиск индекса для вставки и замена даты на просто время
 			for($i=0;$i<count($items);$i++){
+			    if(!empty(floatval($items[$i]->new_project_sum))){
+                    $items[$i]->project_rest = $items[$i]->new_project_sum - $items[$i]->prepayment;
+                }
+                else{
+                    $items[$i]->project_rest = $items[$i]->project_sum - $items[$i]->prepayment;
+                }
                 if(strtotime($items[$i]->project_mounting_date)>=strtotime($day_off->date_from)){
 					$index = $i;
 					$was_break = true;

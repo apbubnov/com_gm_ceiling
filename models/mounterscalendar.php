@@ -226,28 +226,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $contactsSubquery = $db->getQuery(true);
             $mountSumSubquery = $db->getQuery(true);
             $perimeterSubquery = $db->getQuery(true);
-            /*
-             * оставил на всякий если будет косячить новый код*/
-            /*$query
- 	           ->select('p.id, pm.date_time as project_mounting_date, p.read_by_mounter, s.title as project_status, p.project_info, p.gm_chief_note, p.dealer_chief_note, p.gm_calculator_note, p.dealer_calculator_note, pm.type,p.calcs_mounting_sum')
-                ->from('`#__gm_ceiling_projects_mounts` as pm')
-				->innerJoin('`#__gm_ceiling_projects` as p on p.id = pm.project_id')
-				->innerJoin('`#__gm_ceiling_status` as s on p.project_status = s.id')
-                ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'")
-                ->order('pm.date_time');
-
-            $db->setQuery($query);
-            $items = $db->loadObjectList();
-            $query->clear();
-            $query->select('calculations.id, calculations.project_id, calculations.n5, calculations.mounting_sum , calculations.details')
-                ->from('#__gm_ceiling_calculations as calculations')
-                ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
-                ->innerJoin('#__gm_ceiling_projects_mounts as pm on calculations.project_id = pm.project_id')
-                ->where("pm.mounter_id = '$id' and projects.`project_status` > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'");
-            $db->setQuery($query);
-            $items2 = $db->loadObjectList();
-            $query->clear();*/
-
+            $prepaymentSubquery = $db->getQuery(true);
             $contactsSubquery
                 ->select('GROUP_CONCAT(cp.phone SEPARATOR \';\n\')')
                 ->from('`rgzbn_gm_ceiling_clients_contacts` AS cp')
@@ -261,11 +240,16 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 ->select('SUM(n5)')
                 ->from('`rgzbn_gm_ceiling_calculations`')
                 ->where('project_id = p.id');
+            $prepaymentSubquery
+                ->select('IFNULL(SUM(prepayment_sum),0)')
+                ->from('`rgzbn_gm_ceiling_projects_prepayment`')
+                ->where('project_id = p.id');
             $query
-                ->select('p.id, pm.date_time AS project_mounting_date, p.read_by_mounter, s.title AS project_status, p.project_info, pm.type,p.calcs_mounting_sum')
+                ->select('p.id, pm.date_time AS project_mounting_date,p.project_sum,p.new_project_sum,p.read_by_mounter, s.title AS project_status, p.project_info, pm.type,p.calcs_mounting_sum')
                 ->select("($contactsSubquery) as client_phones")
                 ->select("($mountSumSubquery) as m_sum")
                 ->select("($perimeterSubquery) as n5")
+                ->select("($prepaymentSubquery) as prepayment")
                 ->from('`rgzbn_gm_ceiling_projects_mounts` AS pm')
                 ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = pm.project_id')
                 ->innerJoin('`rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id')
@@ -277,6 +261,12 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             }
             $summed = [];$result = [];
             for($i=0;$i<count($items);$i++){
+                if(!empty(floatval($items[$i]->new_project_sum))){
+                    $items[$i]->project_rest = $items[$i]->new_project_sum - $items[$i]->prepayment;
+                }
+                else{
+                    $items[$i]->project_rest = $items[$i]->project_sum - $items[$i]->prepayment;
+                }
                 for($j=$i+1;$j<count($items);$j++){
                     if($items[$i]->id == $items[$j]->id){
                         $clone_object = clone $items[$i];
@@ -359,7 +349,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
             }
-
+            //throw new Exception(print_r($items,true));
             return $items;
         }
         catch(Exception $e)

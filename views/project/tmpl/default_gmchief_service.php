@@ -40,6 +40,7 @@ if(!empty($this->item->mount_data)){
     }*/
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 }
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
 $self_calc_data = [];
@@ -145,7 +146,8 @@ foreach ($mount_notes as $m_note) {
         $mount_note = $m_note->value;
     }
 }
-
+$final_sum = (!empty(floatval($this->item->new_project_sum))) ? $this->item->new_project_sum : $project_total_discount;
+$kol = 0;
 /*________________________________________________________________*/
 ?>
 <style>
@@ -469,7 +471,7 @@ foreach ($mount_notes as $m_note) {
                             <tr>
                                 <td>
                                     <?php if($this->item->transport == 1){
-                                        echo "<b>Траноспорт по городу</b>";
+                                        echo "<b>Транспорт по городу</b>";
                                     }
                                     elseif ($this->item->transport == 2){
                                         echo "Выезд за город";
@@ -510,6 +512,59 @@ foreach ($mount_notes as $m_note) {
                                 <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                             </tr>
                             <tr style="background-color: rgba(0,0,0,0.15);">
+                                <?php if ($kol > 0) { ?>
+                                    <th>Итого/ - %:</th>
+                                    <th id="project_total"><span class="sum">
+                                    <?php echo round($project_total, 0); ?></span> р. /
+                                    </th>
+                                    <th id="project_total_discount">
+                                        <?php
+                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                        $old_price = $project_total_discount;
+                                        if ($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) {
+                                            $project_total_discount = $min_components_sum;
+                                        } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                                            $project_total_discount = $min_components_sum;
+                                        } elseif ($project_total_discount <  $min_project_sum && $project_total_discount > 0) {
+                                            $project_total_discount =  $min_project_sum;
+                                        }
+                                        ?>
+                                        <span class="sum"><?= round($project_total_discount, 0);?></span> р.
+                                        <?php if($old_price != $project_total_discount): ?>
+                                            <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                                        <?php endif; ?>
+                                    </th>
+                                <?php } else { ?>
+                                    <th>Итого</th>
+                                    <td colspan="2" id="project_total">
+                                        <?php
+                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                        $old_price = $project_total;
+                                        if ($dealer_canvases_sum == 0 && $project_total < $min_components_sum) {
+                                            $project_total = $min_components_sum;
+                                        } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total < $min_components_sum) {
+                                            $project_total = $min_components_sum;
+                                        } elseif ($project_total <  $min_project_sum && $project_total > 0) {
+                                            $project_total =  $min_project_sum;
+                                        }
+                                        ?>
+                                        <b><span class="sum"><?= round($project_total, 0);?> </span>р.</b>
+                                        <?php if($old_price != $project_total): ?>
+                                            <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                                        <?endif;?>
+                                    </td>
+                                <?php } ?>
+                            </tr>
+                            <tr style="background-color: rgba(0,0,0,0.15);">
+                                <th>
+                                    Финальная сумма
+                                </th>
+                                <td colspan="2">
+                                    <input class="input-gm final_sum" value="<?=$this->item->new_project_sum?>">
+                                </td>
+
+                            </tr>
+                            <tr style="background-color: rgba(0,0,0,0.15);">
                                 <th colspan="4">
                                     Предоплата
                                 </th>
@@ -531,6 +586,10 @@ foreach ($mount_notes as $m_note) {
                             </tr>
                             <tr id="detailed_tr" style="display: none;">
                                 <td id="detailed_td" colspan="4"></td>
+                            </tr>
+                            <tr>
+                                <th>Остаток</th>
+                                <td colspan="2"><b><span class="project_rest"><?=round($final_sum-$this->item->prepayment_total,0);?></span></b></td>
                             </tr>
                             <tr style="background-color: rgba(0,0,0,0.15);">
                                 <th colspan="2" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
@@ -844,7 +903,7 @@ foreach ($mount_notes as $m_note) {
                                                 </table>
                                                 <?php if(!empty($calculation->jobs)){?>
                                                     <h4 style="margin: 10px 0;cursor: pointer;" id="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
-                                                    <table class="table_info2" id="table_goods" style="display:none;">
+                                                    <table class="table_info2 table_goods" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
                                                         <th>Количество</th>
@@ -862,7 +921,7 @@ foreach ($mount_notes as $m_note) {
                                                 <?php }?>
                                                 <?php if(!empty($calculation->jobs)){?>
                                                     <h4 style="margin: 10px 0;cursor: pointer;" id="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
-                                                    <table class="table_info2" id="table_jobs" style="display:none;">
+                                                    <table class="table_info2 table_jobs" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
                                                         <th>Количество</th>

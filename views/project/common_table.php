@@ -116,6 +116,7 @@
 
     $project_total = $project_total + $client_sum_transport;
     $project_total_discount = $project_total_discount  + $client_sum_transport;
+    $final_sum = (!empty(floatval($this->item->new_project_sum))) ? $this->item->new_project_sum : $project_total_discount;
 
 ?>
 <style>
@@ -479,56 +480,63 @@
                             <?php } ?>
                         </tr>
                         <?php if(!$isClient){?>
-                            <tr>
-                                <td>
-                                    Ввод суммы вручную
-                                </td>
+                            <tr style="background-color: rgba(0,0,0,0.15);">
+                                <th>
+                                    Финальная сумма
+                                </th>
                                 <td colspan="2">
                                     <input class="input-gm final_sum" value="<?=$this->item->new_project_sum?>">
                                     <button type="button" class="btn btn-primary btn-sm save_final_btn"><i class="far fa-save"></i></button>
                                 </td>
 
                             </tr>
-                        <?php }?>
-                        <?php if(!$isClient){ ?>
-                        <tr style="background-color: rgba(0,0,0,0.15);">
-                            <th colspan="3">
-                                Предоплата
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                Всего внесено
-                            </td>
-                            <td colspan="2">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span id="prepayment_total" style="vertical-align: middle;"><?php echo !empty($this->item->prepayment_total) ? $this->item->prepayment_total : 0 ;?></span>руб.
+                            <tr style="background-color: rgba(0,0,0,0.15);">
+                                <th colspan="3">
+                                    Предоплата
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Всего внесено
+                                </td>
+                                <td colspan="2">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <span id="prepayment_total" style="vertical-align: middle;"><?php echo !empty($this->item->prepayment_total) ? $this->item->prepayment_total : 0 ;?></span>руб.
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>
+                                </td>
+                            </tr>
+                            <tr id="detailed_tr" style="display: none;">
+                                <td id="detailed_td" colspan="3"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Внесение
+                                </td>
+                                <td colspan="2">
+                                    <div class="row">
+                                        <div class="col-md-3 col-xs-9" style="padding-left: 0;padding-right: 0;">
+                                            <input class="input-gm" id="prepayment" name="prepayment" style="vertical-align: middle;">
+                                            <input type="hidden" id="prepayment_taken" value="<?=!empty($this->item->prepayment_total) ? 1 :0;?>">
+                                        </div>
+                                        <div class="col-md-3 col-xs-3" style="padding-left: 0;padding-right: 0;">
+                                            <button id="prepayment_save" type="button" class="btn btn-primary btn-sm"><i class="far fa-save"></i></button>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr id="detailed_tr" style="display: none;">
-                            <td id="detailed_td" colspan="3"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Внесение
-                            </td>
-                            <td colspan="2">
-                                <div class="row">
-                                    <div class="col-md-3 col-xs-9" style="padding-left: 0;padding-right: 0;">
-                                        <input class="input-gm" id="prepayment" style="vertical-align: middle;">
+                                    <div class="row">
+                                        <span style="font-size: 25px;color:red;">*</span><span style="font-size: 14px;">Поле обязательно для заполнения. Если предоплата не взимается, вводится 0.</span>
                                     </div>
-                                    <div class="col-md-3 col-xs-3" style="padding-left: 0;padding-right: 0;">
-                                        <button id="prepayment_save" class="btn btn-primary btn-sm" type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Остаток</th>
+                                <td colspan="2"><b><span class="project_rest"><?=$final_sum-$this->item->prepayment_total;?></span></b></td>
+                            </tr>
                         <?php }?>
 
                         <?php if ($user->dealer_type != 2) { ?>

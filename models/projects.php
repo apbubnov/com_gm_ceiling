@@ -149,6 +149,11 @@ class Gm_ceilingModelProjects extends JModelList
                            MAX(`run_by_call`) AS `run_by_call`")
                 ->from("`rgzbn_gm_ceiling_calculations`")
                 ->group("`project_id`");
+            $prepaymentSubquery = $db->getQuery(true);
+            $prepaymentSubquery
+                ->select('IFNULL(SUM(prepayment_sum),0)')
+                ->from('`rgzbn_gm_ceiling_projects_prepayment`')
+                ->where("project_id = p.id");
             $query = $db->getQuery(true);
             $query->select('`p`.`id`,
                             `p`.`created_by`,
@@ -234,6 +239,7 @@ class Gm_ceilingModelProjects extends JModelList
                                         WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
                                         ELSE 0
                                     END,0) AS transport_cost');
+            $query->select("($prepaymentSubquery) as prepayment");
             $query->from('`#__gm_ceiling_projects` AS `p`');
             $query->leftJoin('`#__gm_ceiling_status` AS `st` ON `st`.`id` = `p`.`project_status`');
             $query->leftJoin('`#__gm_ceiling_clients` AS `cl` ON `cl`.`id` = `p`.`client_id`');
@@ -794,7 +800,6 @@ class Gm_ceilingModelProjects extends JModelList
                                                                     ->innerJoin("`#__gm_ceiling_projects` as p on p.id = pm.project_id")
                                                                     ->where("umap.group_id = 26 and p.deleted_by_user = 0 and `p`.`project_status` IN (5, 10, 19) ");
                                                             }
-
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;

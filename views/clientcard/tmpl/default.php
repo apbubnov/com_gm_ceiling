@@ -765,14 +765,26 @@
                 dataType: "json",
                 async: true,
                 success: function(data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'topCenter',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Доступ предоставлен!Логин и пароль совпадают с первым номером телефона клиента!"
-                    });
+                    if (data.type != 'error') {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Доступ предоставлен!Логин и пароль совпадают с первым номером телефона клиента!"
+                        });
+                    }
+                    else{
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "error",
+                            text: data.text
+                        });
+                    }
                 },
                 error: function(data) {
                     console.log(data);

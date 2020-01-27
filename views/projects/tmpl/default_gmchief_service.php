@@ -46,7 +46,7 @@ usort($service_projects,function ($project1,$project2){
         <th class='center' width=20%>
             Желаемая дата монтажа
         </th>
-        <th class='center' width=40%>
+        <th class='center' width=30%>
             Адрес
         </th>
         <th class='center' width=10%>
@@ -57,6 +57,9 @@ usort($service_projects,function ($project1,$project2){
         </th>
         <th class='center' width=14%>
             Статус
+        </th>
+        <th class='center' width=10%>
+            Остаток
         </th>
         <th>
             <i class="fas fa-trash-alt" aria-hidden="true"></i>
@@ -104,6 +107,19 @@ usort($service_projects,function ($project1,$project2){
                 </td>
                 <td class='center one-touch'  <?= $style; ?>>
                     <?php echo $item->status; ?>
+                </td>
+                <td class='center one-touch'>
+                    <?php if(!empty(floatval($item->new_project_sum))){
+                        $project_rest = $item->new_project_sum - $item->prepayment;
+                    }
+                    elseif(!empty(floatval($item->project_sum))){
+                        $project_rest = $item->project_sum - $item->prepayment;
+                    }
+                    else{
+                        $project_rest = ($item->canvases_margin_sum + $item->components_margin_sum + $item->mounting_margin_sum + $item->transport_cost)-$item->prepayment;
+                    }
+                    echo round($project_rest,0);
+                    ?>
                 </td>
                 <td>
                     <button class="btn btn-danger delete"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>

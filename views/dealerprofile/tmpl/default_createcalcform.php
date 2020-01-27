@@ -10,7 +10,12 @@ $calcFormModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
 $data = $calcFormModel->getNainGroupsData();
 //throw new Exception(print_r(json_decode($data[0]->data),true));
 ?>
-
+<style>
+    .movable{
+        border: 2px solid red;
+        margin-left: 15px;
+    }
+</style>
 <div class="container">
     <div class="row">
     <h6>
@@ -38,7 +43,8 @@ $data = $calcFormModel->getNainGroupsData();
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
-       var data = JSON.parse('<?php echo quotemeta(json_encode($data)); ?>');
+        let movableDiv,
+            data = JSON.parse('<?php echo quotemeta(json_encode($data)); ?>');
 
        jQuery.each(data,function(index,elem){
           elem.fields = JSON.parse(elem.data);
@@ -46,56 +52,67 @@ $data = $calcFormModel->getNainGroupsData();
         createBlocks(data);
 
         jQuery("body").on('mousedown','.add_fields',function(event){
-            var ball = jQuery(this).closest('.row')[0];
-                let shiftX = event.clientX - ball.getBoundingClientRect().left;
-                let shiftY = event.clientY - ball.getBoundingClientRect().top;
-                // (2) подготовить к перемещению:
-                // разместить поверх остального содержимого и в абсолютных координатах
-                ball.style.position = 'absolute';
-                ball.style.zIndex = 1000;
-                // переместим в body, чтобы мяч был точно не внутри position:relative
-                document.body.append(ball);
-                // и установим абсолютно спозиционированный мяч под курсор
+            movableDiv = jQuery(this).closest('.row');
+            movableDiv.css('zIndex', 1000);
+            movableDiv.addClass('movable');
+            document.addEventListener('mousemove', function(event){
+                moveAt(event.pageX, event.pageY,movableDiv);
+            });
+        });
 
-                moveAt(event.pageX, event.pageY);
-
-                // передвинуть мяч под координаты курсора
-                // и сдвинуть на половину ширины/высоты для центрирования
-                function moveAt(pageX, pageY) {
-                    var elem = document.elementFromPoint(pageX,pageY);
-                    jQuery(elem).closest('.group').before(ball);
-                    console.log(jQuery(elem).closest('.row'));
-                    ball.style.position = 'relative';
-                    //ball.style.left = pageX - ball.offsetWidth / 2 + 'px';
-                    //ball.style.top = pageY - ball.offsetHeight / 2 + 'px';
-
+        jQuery("body").on('touchstart','.add_fields',function(event){
+            movableDiv = jQuery(this).closest('.row');
+            movableDiv.css('zIndex', 1000);
+            movableDiv.addClass('movable');
+            document.addEventListener('touchmove', function(event){
+                event.preventDefault();
+                if ((event.clientX)&&(event.clientY)) {
+                    moveAt(event.clientX, event.clientY,movableDiv);
+                } else if (event.targetTouches) {
+                    moveAt( event.targetTouches[0].clientX,event.targetTouches[0].clientY,movableDiv);
                 }
+            });
+        });
 
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
-                }
-
-                // (3) перемещать по экрану
-                document.addEventListener('mousemove', onMouseMove);
-
-                // (4) положить мяч, удалить более ненужные обработчики событий
-                ball.onmouseup = function() {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    ball.onmouseup = null;
-                };
-
-
+        function onMouseMove(event) {
+            moveAt(event.pageX, event.pageY,movableDiv);
+        }
+        jQuery('body').on('mouseup',function() {
+            movableDiv.css('left','0px');
+            document.removeEventListener('mousemove', onMouseMove);
+            movableDiv.onmouseup = null;
+            movableDiv.removeClass('movable');
+        });
+        jQuery('body').on('touchend',function() {
+            movableDiv.css('left','0px');
+            document.removeEventListener('mousemove', onMouseMove);
+            movableDiv.onmouseup = null;
+            movableDiv.removeClass('movable');
         });
     });
+    function moveAt(pageX, pageY,movableDiv) {
+        console.log(pageX,pageY);
+        var elem = document.elementFromPoint(pageX,pageY),
+            heightHalf = jQuery(elem).outerHeight()/2,
+            closestDiv = jQuery(elem).closest('.group'),
+            divY = !empty(closestDiv[0]) ? closestDiv[0].getBoundingClientRect().y : 0;
+        if(pageY < divY+heightHalf){
+            closestDiv.before(movableDiv);
+        }
+        if(pageY > divY+heightHalf){
+            closestDiv.after(movableDiv);
+        }
+    }
     function createBlocks(data) {
         var div, containerDiv = jQuery("#edit_page");
         jQuery.each(data, function (index, elem) {
             var buttonTitle = '<div class="col-xs-11"><b>' + elem.title + '</b></div><div class="col-xs-1"><i class="fa fa-angle-down" style="color: #414099;"></i></div>';
+            var btnDiv = jQuery(document.createElement('div')),
+                button = jQuery(document.createElement('button'));
             div = jQuery(document.createElement('div'));
             div.addClass('row');
             div.append('<div class="col-sm-3"></div>');
-            var btnDiv = jQuery(document.createElement('div')),
-                button = jQuery(document.createElement('button'));
+
             button.addClass('btn btn_calc');
             button.prop('type', 'button');
             button.html(buttonTitle);

@@ -238,9 +238,24 @@ class Gm_ceilingControllerUsers extends JControllerForm
             $email = $jinput->get('email','','STRING');
             $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $clientModel->getClientById($clientId);
-            Gm_ceilingHelpersGm_ceiling::registerUser($client->client_name,$phone,$email,$clientId,2,0);
-            die(json_encode(true));
-	    }
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $userModel->getUserByUsername($phone);
+            $text = '';
+            if(empty($user)){
+                Gm_ceilingHelpersGm_ceiling::registerUser($client->client_name,$phone,$email,$clientId,2,0);
+                die(json_encode(true));
+            }
+            else{
+                if($user->dealer_type == 2){
+                    $text ='Кабинет клиента уже создан!';
+                }
+                if($user->dealer_type == 3 || $user->dealer_type == 8){
+                    $text ='Пользователь с таким логином является отделочником или оконщиком!';
+                }
+            }
+            $error = (object)array('type'=>'error','text'=>$text);
+            die(json_encode($error));
+        }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

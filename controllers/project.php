@@ -663,7 +663,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
             }
 			$data->project_sum =  $jinput->get('project_sum',1000, 'INT');
-            throw new Exception($data->project_sum);
             //получение примечаний
 			$mount_note = $jinput->get('mount_note','','STRING');
             $production_note = $jinput->get('production_note', '', 'STRING');
@@ -683,7 +682,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $smeta = $jinput->get('smeta', '0', 'INT');
             $project_verdict = $jinput->get('project_verdict', '0', 'INT');
             $project_status = $jinput->get('project_status', '0', 'INT');
-
+            $prepayment = $jinput->get('prepayment','','STRING');
             // перимерт и зп бригаде
 			$project_info_for_mail = $calculationsModel->InfoForMail($project_id);
 			$perimeter = 0;
@@ -714,6 +713,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
             }
             if($project_verdict == 1){
+                if(!empty(floatval($prepayment))){
+                    $prepaymentModel = Gm_ceilingHelpersGm_ceiling::getModel('project_prepayment');
+                    $prepaymentModel->save($project_id,$prepayment);
+                }
                 if(empty($mount_data)){
                     $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
                     $call_datetime = date('Y-m-d hh:ii:ss');
