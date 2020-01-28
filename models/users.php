@@ -652,7 +652,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select('`u`.`id`, `u`.`name`, `u`.`email`')
+				->select('`u`.`id`, `u`.`name`,`u`.`username` as `phone`, `u`.`email`')
 				->from('`#__users` AS `u`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
 				->where("`g`.`group_id` = $group_id")

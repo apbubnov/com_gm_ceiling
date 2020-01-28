@@ -300,9 +300,9 @@ foreach($all_builders as $builder){
     <button class="btn btn-primary" id="create_mounter">Cоздать</button>
 </div>
 <div class="row center">
-    <p class="caption-tar">Удалить бригаду</p>
+    <p class="caption-tar">Бригады</p>
     <div class="col-md-12">
-        <button class="btn btn-primary" type="button" id="btn_delete_mounter">Удалить </button>
+        <button class="btn btn-primary" type="button" id="btn_show_mounters">Просмотреть </button>
     </div>
 </div>
 <hr>
@@ -557,6 +557,7 @@ foreach($all_builders as $builder){
             <thead>
             <tr class="caption_table">
                 <td>Монтажники</td>
+                <td>Номер</td>
                 <td><i class="fa fa-trash" aria-hidden="true"></i></td>
             </tr>
             </thead>
@@ -888,7 +889,7 @@ foreach($all_builders as $builder){
             jQuery("#close").show();
         });
 
-        jQuery("#btn_delete_mounter").click(function (){
+        jQuery("#btn_show_mounters").click(function (){
             jQuery("#mv_container").show();
             jQuery("#delete_mounter_window").show("slow");
             jQuery("#close").show();
@@ -898,6 +899,7 @@ foreach($all_builders as $builder){
                 mountersForDelete.forEach(function(mounter){
                     jQuery("#mountersTbl > tbody").append('<tr></tr>');
                     jQuery("#mountersTbl > tbody > tr:last").append('<td>'+mounter.name+'</td>' +
+                                                                    '<td><a href="tel:\'+'+mounter.phone+'\'">'+mounter.phone+'</a></td>'+
                                                                     '<td><button class="btn btn-danger btn-sm" name="btn_delete_mounter" data-id='+mounter.id+'><i class="fa fa-trash" aria-hidden="true"></i></button></td>');
                 });
             }

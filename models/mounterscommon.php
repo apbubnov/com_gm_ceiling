@@ -91,7 +91,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->group(' ms.mounter_id,ms.builder_id');
 
             $query
-                ->select('u.id AS mounter_id,u.name AS mounter_name,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed')
+                ->select('u.id AS mounter_id,u.name AS mounter_name,u.username as phone,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed')
                 ->select('md.debt-md.decrease_debt AS debt_rest')
                 ->from('`rgzbn_users` AS u')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS um ON u.id = um.user_id')
@@ -112,6 +112,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
             $result = [];
             foreach ($items as $item){
                 $result[$item->mounter_id]['mounter_name'] = $item->mounter_name;
+                $result[$item->mounter_id]['phone'] = $item->phone;
                 $object = clone $item;
                 $object->rest = $object->closed+$object->payed;
                 unset($object->mounter_name);

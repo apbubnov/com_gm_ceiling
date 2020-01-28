@@ -52,7 +52,17 @@ $types = $mountersdebtModel->getTypes();
         ?>
         <tr data-mounter_id="<?php echo $mounter_id;?>">
             <td rowspan="<?php echo count($item['builder_data'])?>">
-                <?php echo $item['mounter_name'];?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo $item['mounter_name'];?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo "<a href='tel:+".$item['phone']."'>".$item['phone']."</a>";?>
+                    </div>
+                </div>
+
             </td>
             <?php foreach ($item['builder_data'] as $key=>$value){?>
                 <?php if($rowspan) echo '<tr data-mounter_id="'.$mounter_id.'">'?>
