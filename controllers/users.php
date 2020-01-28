@@ -307,5 +307,20 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getVisitors(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $date_from = $jinput->get('date_from',date(),'STRING');
+	        $date_to = $jinput->get('date_to',date(),'STRING');
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $result = $usersModel->getVisitors($date_from,$date_to);
+	        die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

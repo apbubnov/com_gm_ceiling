@@ -123,14 +123,17 @@ echo parent::getButtonBack();
     </div>
 <?php if($user->dealer_id == 1 && ($user->dealer_type == 0 || $user->dealer_type == 1)){?>
     <div class="row" style="margin-top: 5px;">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика звонков</a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytic_dealers">Аналитика дилеров</a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytics&type=gaugers">Аналитика по замерщикам</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytics&type=visitors">Посетители сайта</a>
         </div>
     </div>
 <?php }?>
