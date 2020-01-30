@@ -1157,20 +1157,20 @@ public function register_mnfctr(){
                     }
                     $items->n22_type[] = array(
                                                 'id' => 5,
-                                                'title' => 'Круглая вентиляция',
+                                                'title' => 'Круглая электровытяжка',
                                             );
                     $items->n22_type[] = array(
                                                 'id' => 6,
-                                                'title' => 'Квадратная вентиляция',
+                                                'title' => 'Квадратная электровытяжка',
                                             );
-                    $items->n22_type[] = array(
+                    /*$items->n22_type[] = array(
                                                 'id' => 7,
                                                 'title' => 'Круглая электровытяжка',
                                             );
                     $items->n22_type[] = array(
                                                 'id' => 8,
                                                 'title' => 'Квадратная электровытяжка',
-                                            );
+                                            );*/
                     break;
                 case 'n23':
                     $filter = "`component_id` = 22";

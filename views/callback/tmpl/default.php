@@ -77,18 +77,17 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
 </form>
 
 <script>
-    var del_click_bool = false;
-
-    var arr_calls = [];
-    var table_body_elem = document.getElementById('table_body');
-    var user_id = <?php echo $userId; ?>;
-    var timeouts = [];
-
+    var del_click_bool = false,
+        arr_calls = [],
+        table_body_elem = document.getElementById('table_body'),
+        user_id = <?php echo $userId; ?>,
+        timeouts = [],
+        savedData;
     function show_calls() {
         timeouts = [];
         var calendar_elem_value = document.getElementById('calendar').value;
         table_body_elem.innerHTML = '';
-        var scrollTrIndex = localStorage.getItem('viewCallbackTrIndex');
+        var scrollTrIndex = !empty(savedData) ? savedData.trIndex : 0;
         if (!scrollTrIndex) {
             scrollTrIndex = 0;
         }
@@ -171,9 +170,18 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
     function clickTr(e) {
         if (this.getAttribute('data-clientId') && !del_click_bool) {
             var prevTrIndex = jQuery(this)[0].rowIndex - 2;
-            if (prevTrIndex > 0) {
-                localStorage.setItem('viewCallbackTrIndex', prevTrIndex);
+            console.log(prevTrIndex);
+            if(prevTrIndex<0){
+                prevTrIndex = 0;
             }
+           // if (prevTrIndex > 0) {
+            localStorage.setItem('savedData',JSON.stringify({
+                trIndex: prevTrIndex,
+                selectedDate: jQuery('#calendar').val(),
+                label: jQuery('#select_label').val(),
+                type: jQuery('#select_type').val()
+            }));
+          //  }
             
             var type = this.getAttribute('data-dealerType')-0;
             var url;
@@ -192,20 +200,42 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
     }
 
     function scrollToSavedTrIndex() {
-        var scrollTrIndex = localStorage.getItem('viewCallbackTrIndex');
-        if (scrollTrIndex) {
-            var need_row = jQuery(table_body_elem).find('tr').eq(scrollTrIndex);
-            jQuery('html, body').animate({
-                scrollTop: jQuery(need_row).offset().top
-            }, 500);
-            localStorage.removeItem('viewCallbackTrIndex');
-
+        if(!empty(savedData)) {
+            var scrollTrIndex = savedData.trIndex;
+            if (scrollTrIndex) {
+                var need_row = jQuery(table_body_elem).find('tr').eq(scrollTrIndex);
+                jQuery('html, body').animate({
+                    scrollTop: jQuery(need_row).offset().top
+                }, 500);
+            }
         }
+        savedData = [];
     }
 
     jQuery(document).ready(function() {
+        savedData = JSON.parse(localStorage.getItem('savedData'));
+        localStorage.removeItem('savedData');
+        if(!empty(savedData)) {
+            if(!empty(savedData.selectedDate)){
+                jQuery('#calendar').val(savedData.selectedDate);
+            }
+            if(!empty(savedData.label)) {
+                jQuery('#select_label').val(savedData.label);
+                jQuery.each(jQuery('li.option'),function(index,option){
+                    if(jQuery(option).data('value') == savedData.label){
+                        jQuery(option).addClass('selected');
+                        var color = (jQuery(".option.selected").data("color"));
+                        jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+                        jQuery('.current').text(option.innerText);
+                        return;
+                    }
+                });
+            }
+            if(!empty(savedData.type)){
+                jQuery('#select_type').val(savedData.type);
+            }
+        }
         getData();
-        
         document.getElementById('calendar').onchange = function(){
             getData();
         };

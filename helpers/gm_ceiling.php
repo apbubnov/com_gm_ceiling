@@ -2238,7 +2238,6 @@ class Gm_ceilingHelpersGm_ceiling
             $count_round_lamp = 0;
             $count_square_lamp = 0;
             $count_ventilation = 0;
-            $count_ventilation_1 = 0;
             $count_diffuzor = 0;
             $count_pipe = 0;
             $count_big_pipe = 0;
@@ -2321,17 +2320,11 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 5 || $ventilation->n22_type == 6)) {
                                     $count_ventilation += $ventilation->n22_count;
                                 }
-                                if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 7 || $ventilation->n22_type == 8)) {
-                                    $count_ventilation_1 += $ventilation->n22_count;
-                                }
                                 break;
 
                             default:
                                if ($ventilation[0] > 0 && ($ventilation[1] == 5 || $ventilation[1] == 6)) {
                                     $count_ventilation += $ventilation[0];
-                                }
-                                if ($ventilation[0] > 0 && ($ventilation[1] == 7 || $ventilation[1] == 8)) {
-                                    $count_ventilation_1 += $ventilation[0];
                                 }
                                 break;
                         }
@@ -2886,7 +2879,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (count($n22) > 0) {
                     if ($count_ventilation > 0) {
                         $mounting_data[] = array(
-                            "title" => "Установка вентиляции ",                             //Название
+                            "title" => "Установка электровытяжки ",                             //Название
                             "quantity" => $count_ventilation,                                            //Кол-во
                             "gm_salary" => $gm_mount->mp16,                                              //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $count_ventilation * $gm_mount->mp16,                   //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
@@ -2895,17 +2888,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "stage"=>3
                         );
                     }
-                    if ($count_ventilation_1 > 0) {
-                        $mounting_data[] = array(
-                            "title" => "Установка электровытяжки ",                         //Название
-                            "quantity" => $count_ventilation_1,                                          //Кол-во
-                            "gm_salary" => $gm_mount->mp12,                                              //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_ventilation_1 * $gm_mount->mp12,                 //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp12,                                           //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_ventilation_1 * $results->mp12,              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>3
-                        );
-                    }
+
                 }
                 // установка диффузора
                 if (count($n23) > 0) {
