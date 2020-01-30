@@ -521,9 +521,11 @@ if (empty($list['direction']))
 			$db    = JFactory::getDbo();
 			$search = $db->escape($search);
 			$query = $db->getQuery(true);
-			$query
+			$userQuery = $db->getQuery(true);
+            $query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`created`, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`, GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ', ') AS `projects_ids`, GROUP_CONCAT(DISTINCT `d`.`contact` SEPARATOR ', ') AS `client_dop_contacts`")
                 ->select('`s`.`title` as `status`')
+                ->select('NULL as groups')
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->leftJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
@@ -539,6 +541,14 @@ if (empty($list['direction']))
 				if(!empty($dealer_id)){
 				    $query->where("`c`.`dealer_id` = $dealer_id");
                 }
+            $userQuery
+                ->select('IFNULL(`u`.associated_client,`u`.`id`) as `id`,`u`.`name`,`u`.`registerDate` AS `created`, `u`.`username` COLLATE utf8_general_ci,NULL,`u`.`dealer_type`,NULL,`u`.`email` COLLATE utf8_general_ci,NULL,GROUP_CONCAT(`g`.`title`) AS `groups`')
+                ->from('`rgzbn_users` AS `u`')
+                ->leftJoin('`rgzbn_user_usergroup_map` AS `map` ON `map`.`user_id` = `u`.`id` AND `map`.`group_id` NOT IN (1,2,3,4,5,6,7,8,9,10)')
+                ->leftJoin('`rgzbn_usergroups` AS `g` ON `map`.`group_id` = `g`.`id`')
+                ->where("`u`.`username` LIKE '%$search%'")
+                ->group('`u`.`id`');
+            $query->union($userQuery);
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

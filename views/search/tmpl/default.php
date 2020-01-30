@@ -134,8 +134,14 @@ if ((!in_array("16", $user_group)) && (!$isDealer)){
                                d_type = 'Оконщик';
                            }
                            else if (d_i.dealer_type == 1 || d_i.dealer_type == 0) {
+
                                html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + d_i.id + '">';
-                               d_type = 'Дилер';
+                               if(!empty(d_i.groups)){
+                                   d_type = d_i.groups;
+                               }
+                               else{
+                                   d_type = 'Дилер';
+                               }
                            }
                            else if (d_i.dealer_type == null || d_i.dealer_type == 2) {
                                html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&id=' + d_i.id + '">';
