@@ -589,7 +589,8 @@ $kol = 0;
                             </tr>
                             <tr>
                                 <th>Остаток</th>
-                                <td colspan="2"><b><span class="project_rest"><?=round($final_sum-$this->item->prepayment_total,0);?></span></b></td>
+                                <td><b><span class="project_rest"><?=round($final_sum-$this->item->prepayment_total,0);?></span></b></td>
+                                <td><b>за минусом з\п бригады: <?=round(($final_sum-$this->item->prepayment_total)-($self_mounting_sum+$self_sum_transport),0)  ?></b></td>
                             </tr>
                             <tr style="background-color: rgba(0,0,0,0.15);">
                                 <th colspan="2" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>

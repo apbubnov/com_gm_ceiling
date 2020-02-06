@@ -283,13 +283,13 @@ class Gm_ceilingModelProjects extends JModelList
                 //     $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                 //     break;
                 case 'chiefprojects':
-                    $query->where("((`project_status` = 4
-                                    AND @project_mounting_date IS NOT NULL
-                                    AND @project_mounting_date <> '00.00.0000 00:00')
-                                    OR (`project_status` IN (5, 10)
-                                        AND (@project_mounting_date IS NULL
-                                            OR @project_mounting_date = '00.00.0000 00:00')))
-                                    AND `cl`.`dealer_id` = $user->dealer_id
+                    $query->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS m ON p.id = m.project_id');
+                    $query->where("(
+                                    (p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
+                                    OR
+                                    (p.project_status IN (5) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00'))
+                                   )
+                                   AND `cl`.`dealer_id` = $user->dealer_id
                                 ");
                     break;
 
@@ -390,7 +390,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->group("p.id");
 
                     } else {
-                        $query->where('`project_status` IN (10, 5, 11, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
+                        $query->where('`project_status` IN (10, 5, 11,12, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
                         $query->where("`u2`.`dealer_id` = $user->dealer_id");
                     }
                     $query->order('`last_mount_date` DESC');
@@ -409,7 +409,7 @@ class Gm_ceilingModelProjects extends JModelList
                                     `count_ceilings`
                                 ');*/
 
-                    $query->where('`u2`.`dealer_id` = '.$user->dealer_id);
+                    $query->where('`cl`.`dealer_id` = '.$user->dealer_id);
 
                     if ($subtype == 'run') {
                         $query->select('`closed`');
@@ -463,7 +463,6 @@ class Gm_ceilingModelProjects extends JModelList
             //     $query->order('a.calculation_date DESC');
 
             $query->order('`id` DESC');
-            //throw new Exception($query);
             return $query;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -731,7 +730,7 @@ class Gm_ceilingModelProjects extends JModelList
                                     ->innerJoin("#__gm_ceiling_clients as c ON p.client_id = c.id")
                                     ->leftJoin("#__gm_ceiling_projects_mounts as m ON p.id = m.project_id")
                                     ->where("((p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
-                    OR (p.project_status in (5,10) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00')))
+                    OR (p.project_status in (5) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00')))
                     AND c.dealer_id = $user->dealer_id AND p.deleted_by_user <> 1");
                             } else
                                 // менеджер (в производстве)

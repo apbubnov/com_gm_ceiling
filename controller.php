@@ -3690,6 +3690,68 @@ public function register_mnfctr(){
         }
     }
 
+    function acceprFromQuiz(){
+        try{
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            $answers = $data['answers'];
+            $phone = $data['contacts']['phone'];
+            $email = $data['contacts']['email'];
+            $name = $data['contacts']['name'];
+            $createdDate = strtotime($data['created']);
+            $utm = $data['extra']['utm'];
+            $rawAnswers = $data['raw'];
+            $answerStr = '';
+            foreach ($answers as $key=>$value){
+                $answerStr .= $value['q'].' : ';
+                $answerStr .= $value['a'].'; <br>';
+            }
+            /*Форматируем номер телефона*/
+            $phone = mb_ereg_replace('[^\d]', '', $phone);
+            if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
+            {
+                $phone = '7'.$phone;
+            }
+            if (strlen($phone) != 11)
+            {
+                throw new Exception('Неверный формат номера телефона.');
+            }
+            if (mb_substr($phone, 0, 1) != '7')
+            {
+                $phone = substr_replace($phone, '7', 0, 1);
+            }
+            /*-------*/
+
+            $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+            $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $clientsDopContactsModel = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $clientData['client_name'] = $name;
+            $clientData['client_contacts'] = $phone;
+            $clientData['dealer_id'] = 1;
+            $clientData['manager_id'] = 1;
+            $result = $clientform_model->save($clientData);
+
+            if (mb_ereg('[\d]', $result)) {
+                $clienthistory_model->save($result, 'Клиент создан автоматически после прохождения теста');
+            } else {
+                $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                $clienthistory_model->save($client->id, 'Существующий клиент прошел тест');
+                $result = $client->id;
+            }
+            $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прошел тест', $result, 1);
+            if(!empty($email)){
+                $clientsDopContactsModel->save($result,1,$email);
+            }
+            $clienthistory_model->save($result, $answerStr);
+            http_response_code(200);
+            exit;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
 }
 

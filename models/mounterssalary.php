@@ -83,7 +83,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($id)){
-                $query->select("u.id,u.name,ms.sum,IFNULL(CONCAT(p.project_info,' ',ms.note),ms.note) AS note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
+                $query->select("ms.id as sId,u.id,u.name,ms.sum,IFNULL(CONCAT(p.project_info,' ',ms.note),ms.note) AS note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
                     ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                     ->innerJoin('`rgzbn_users` as u on u.id = ms.mounter_id')
                     ->leftJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
@@ -303,6 +303,22 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                 ->values($insertArr);
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function deletePay($id,$builder,$mounter,$sum){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`rgzbn_gm_ceiling_mounters_salary`')
+                ->where("`id`=$id and `mounter_id` = $mounter and `builder_id` = $builder and `sum` = $sum ");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

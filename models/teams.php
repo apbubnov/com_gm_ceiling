@@ -150,7 +150,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->from("#__gm_ceiling_calculations as calculations")
 				->where("calculations.project_id = projects.id");
 
-			$query3->select("SUM(calculations.mounting_sum)")
+			$query3->select("GROUP_CONCAT(calculations.id)")
 				->from("#__gm_ceiling_calculations as calculations")
 				->where("calculations.project_id = projects.id");
             $prepaymentSubquery
@@ -158,7 +158,7 @@ class Gm_ceilingModelTeams extends JModelItem {
                 ->from('`rgzbn_gm_ceiling_projects_prepayment`')
                 ->where('project_id = projects.id');
 		 	$query
-                ->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary,projects.read_by_mounter, projects.project_status")
+                ->select("DISTINCT projects.id, m.date_time AS project_mounting_date, projects.project_info, ($query2) as perimeter,($query3) as ids,projects.calcs_mounting_sum,projects.read_by_mounter, projects.project_status")
                 ->select("projects.project_sum,projects.new_project_sum,($prepaymentSubquery) as prepayment")
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = projects.id')
@@ -177,6 +177,17 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$was_break = false;
             //поиск индекса для вставки и замена даты на просто время
 			for($i=0;$i<count($items);$i++){
+                $items[$i]->salary = 0;
+                $ids = explode(',', $items[$i]->ids);
+                foreach ($ids as $id){
+                    if(!empty($items[$i]->calcs_mounting_sum)){
+                        $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,'serviceSelf')['total_gm_mounting'];
+                    }
+                    else{
+                        $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id)['total_dealer_mounting'];
+                    }
+                }
+                $items[$i]->salary+= Gm_ceilingHelpersGm_ceiling::calculate_transport($items[$i]->id)['mounter_sum'];
 			    if(!empty(floatval($items[$i]->new_project_sum))){
                     $items[$i]->project_rest = $items[$i]->new_project_sum - $items[$i]->prepayment;
                 }
@@ -193,7 +204,6 @@ class Gm_ceilingModelTeams extends JModelItem {
             for($i=0;$i<count($items);$i++){
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date,11,5);
 			}
-			
 			//создание нового массива
 			if (!empty($day_off)) {
 				$day = array(

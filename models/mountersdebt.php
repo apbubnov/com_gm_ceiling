@@ -18,7 +18,7 @@ class Gm_ceilingModelMountersDebt extends JModelItem
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('md.sum,DATE_FORMAT(md.date_time, \'%d.%m.%Y\') as date_time,u.name,dt.title')
+                ->select('md.id,md.sum,DATE_FORMAT(md.date_time, \'%d.%m.%Y\') as date_time,u.name,md.type,dt.title')
                 ->from('`rgzbn_gm_ceiling_mounters_debt` as md')
                 ->innerJoin('`rgzbn_users` as u on u.id = md.created_by')
                 ->innerJoin('`rgzbn_gm_ceiling_debt_type` as dt on dt.id = md.type')
@@ -65,6 +65,22 @@ class Gm_ceilingModelMountersDebt extends JModelItem
         }
         catch(Exception $e)
         {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function deleteDebt($id,$mounter){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`rgzbn_gm_ceiling_mounters_debt`')
+                ->where("id = $id and mounter_id = $mounter");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

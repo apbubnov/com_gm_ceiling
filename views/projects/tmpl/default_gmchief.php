@@ -190,7 +190,8 @@ $projects = quotemeta(json_encode($this->items));
 		    var search_str = jQuery("#search_text").val().toLowerCase(),
                 regExp = new RegExp(search_str);
 		    jQuery.each(projects,function (index,project) {
-                if(regExp.test(project.client_name.toLowerCase()) ||
+                if(regExp.test(project.id.toLowerCase())||
+                    regExp.test(project.client_name.toLowerCase()) ||
                     regExp.test(project.project_info.toLowerCase()) ||
                     regExp.test(project.dealer_name.toLowerCase())){
                     if(project.project_status == 30){

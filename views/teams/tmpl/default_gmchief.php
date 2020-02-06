@@ -507,7 +507,7 @@ foreach ($brigadesData as $value){
 					}
 				});
 			} else {
-				table += '<tr id="caption-data"><td colspan="7">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Остаток</td><td>Примечание</td><td>Статус</td></tr>';
+				table += '<tr id="caption-data"><td colspan="8">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>№</td><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Остаток</td><td>Примечание</td><td>Статус</td></tr>';
 				jQuery.ajax({
 					type: 'POST',
 					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
@@ -569,7 +569,7 @@ foreach ($brigadesData as $value){
                                     note +=elem.description+": "+elem.value;
                                 });
 								perimeter = +element.perimeter;
-								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+element.project_rest+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.id+'</td><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+element.project_rest+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {
 								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
 							}

@@ -17,7 +17,7 @@ $types = $mountersdebtModel->getTypes();
     }
 </style>
 <h3>Сводная таблица по монтажным бригадам </h3>
-<table class="table table_cashbox">
+<table class="table table_cashbox" id="common_table">
     <thead>
         <tr>
             <th class="center">
@@ -119,8 +119,8 @@ $types = $mountersdebtModel->getTypes();
                     <?php if(!empty($item['mounter_debt'])){ ?>
                     <div class="row">
                         <div class="col-xs-12 col-md-12">
-                            <input type="checkbox" id="auto_<?=$value->builder_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
-                            <label for="auto_<?=$value->builder_id?>" class="cbx">
+                            <input type="checkbox" id="auto_<?=$value->builder_id.$mounter_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
+                            <label for="auto_<?=$value->builder_id. $mounter_id?>" class="cbx">
                                                     <span>
                                                         <svg width="12px" height="10px" viewBox="0 0 12 10">
                                                             <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
@@ -197,7 +197,7 @@ $types = $mountersdebtModel->getTypes();
                 <td>
                     Объект
                 </td>
-                <td>
+                <td colspan="2">
                     Время
                 </td>
             </tr>
@@ -219,6 +219,9 @@ $types = $mountersdebtModel->getTypes();
                     </th>
                     <th class="center">
                         Дата
+                    </th>
+                    <th class="center">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
                     </th>
                 </tr>
             </thead>
@@ -279,10 +282,18 @@ $types = $mountersdebtModel->getTypes();
                         total += +el.sum;
                         note = (!empty(el.note)) ? el.note : "Выплата";
                         jQuery("#detailed_salary > tbody").append('<tr/>');
-                        jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td>')
+                        jQuery("#detailed_salary > tbody").attr('data-mounter', mounter_id);
+                        jQuery("#detailed_salary > tbody").attr('data-builder', builder_id);
+                        jQuery("#detailed_salary > tbody > tr:last").attr('data-id',el.sId);
+                        if(el.sum < 0){
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td class="salary_sum">'+el.sum+'</td><td>'+note+'</td><td class="date">'+el.datetime+'</td><td><button class="btn btn-danger del_salary"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>')
+                        }
+                        else{
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td colspan="2">'+el.datetime+'</td>')
+                        }
                     });
                     jQuery("#detailed_salary > tbody").append('<tr/>');
-                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td></td>');
+                    jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td colspan="2"></td>');
                 },
                 error: function(data) {
                     var n = noty({
@@ -300,6 +311,47 @@ $types = $mountersdebtModel->getTypes();
             jQuery("#close").show();
         });
 
+        jQuery('body').on('click','.del_salary',function(){
+           var builder_id = jQuery("#detailed_salary > tbody").data('builder'),
+               mounter_id = jQuery("#detailed_salary > tbody").data('mounter'),
+               tr = jQuery(this).closest('tr'),
+               id = tr.data('id'),
+               sum = tr.find('.salary_sum').text();
+           console.log(sum,id);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=mounterssalary.deletePay",
+                data: {
+                    mounterId: mounter_id,
+                    builderId: builder_id,
+                    sum: sum,
+                    id: id
+                },
+                dataType: "json",
+                async: false,
+                success: function (responseData) {
+                    console.log(tr);
+
+                    //tr.remove();
+                    var row = jQuery('#common_table > tbody').find('[data-builder_id="'+builder_id+'"]').closest('[data-mounter_id="'+mounter_id+'"]'),
+                        payed = row.find('.payed'),
+                        rest = row.find('.rest');
+                    console.log(row);
+                    payed.text(payed.text()-sum);
+                    rest.text(rest.text()-sum);
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
         jQuery('body').on('click','.debt_detailed',function(){
             var tr = jQuery(this).closest('tr'),
                 mounter_id = tr.data('mounter_id');
@@ -312,17 +364,57 @@ $types = $mountersdebtModel->getTypes();
                 async: false,
                 success: function (responseData) {
                     jQuery("#mounter_debt_detailed > tbody").empty();
+                    jQuery('#mounter_debt_detailed > tbody').attr('data-mounter',mounter_id);
                     jQuery.each(responseData,function(index,elem){
-                        jQuery("#mounter_debt_detailed > tbody").append('<tr>' +
-                                                                            '<td>'+elem.sum+'</td>'+
+                        jQuery('#mounter_debt_detailed > tbody').append('<tr data-type="'+elem.type+'">' +
+                                                                            '<td class="sum">'+elem.sum+'</td>'+
                                                                             '<td>'+elem.title+'</td>'+
                                                                             '<td>'+elem.date_time+'</td>'+
+                                                                            '<td><button class="btn btn-danger del_debt" data-id="'+elem.id+'"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>'+
                                                                         '</tr>');
                     });
                     console.log(responseData);
                     jQuery("#mw_container").show();
                     jQuery("#detailed_debt").show('slow');
                     jQuery("#close").show();
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery('body').on('click','.del_debt',function(){
+           var id = jQuery(this).data('id'),
+               mounter = jQuery('#mounter_debt_detailed > tbody').data('mounter'),
+               tr = jQuery(this).closest('tr'),
+               type = tr.data('type'),
+               sum = tr.find('.sum').text();
+           console.log(id,mounter);
+           jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=users.delMounterDebtData",
+                data: {
+                    id: id,
+                    mounter:mounter
+                },
+                dataType: "json",
+                async: false,
+                success: function (responseData) {
+                    var span = jQuery('#common_table > tbody').find('[data-mounter_id="'+mounter+'"]').find('span.debt_rest');
+                    if(type == 1){
+                        span.text(+span.text()-sum);
+                    }
+                    if(type == 2){
+                        span.text(+span.text()+ +sum);
+                    }
+                    tr.remove();
                 },
                 error: function (data) {
                     var n = noty({
@@ -375,6 +467,7 @@ $types = $mountersdebtModel->getTypes();
             percent_sum = 0,
             tr = rest_td.closest('tr'),
             debt_relief_sum = 0;
+        /*проверка есть ли долг и автосписание вклчюено*/
         if(!empty(mounter_data['mounter_debt']) && debt_auto_relied){
             debt_relief_sum = Math.abs(close_sum)*0.25;
             if(mounter_data['mounter_debt'] >= debt_relief_sum){
@@ -385,6 +478,7 @@ $types = $mountersdebtModel->getTypes();
             }
         }
         close_sum -= percent_sum;
+        /*если пока только один объект */
         if(mounter_data['builder_data'].length == 1){
             if(check_pay_possibility(mounter_data['builder_data'][0],close_sum)){
                 savePay(mounter_id,close_sum,mounter_data['builder_data'][0].builder_id,payed_td,rest_td,mounter_data['builder_data'][0]);

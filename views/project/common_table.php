@@ -535,7 +535,10 @@
                             </tr>
                             <tr>
                                 <th>Остаток</th>
-                                <td colspan="2"><b><span class="project_rest"><?=$final_sum-$this->item->prepayment_total;?></span></b></td>
+                                <td <?= !$isNMS ? 'colspan="2"':'' ?>><b><span class="project_rest"><?=round($final_sum-$this->item->prepayment_total,0);?></span></b></td>
+                                <?php if($isNMS){ ?>
+                                     <td><b>за минусом з\п бригады: <?=round(($final_sum-$this->item->prepayment_total)-($self_mounting_sum+$self_sum_transport),0)  ?></b></td>
+                                <?php } ?>
                             </tr>
                         <?php }?>
 

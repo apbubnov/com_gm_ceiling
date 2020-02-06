@@ -106,7 +106,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->leftJoin("($payedSubQuery) AS ps ON ps.mounter_id = u.id AND ps.builder_id = builder.id")
                 ->where('um.group_id = 34')
                 ->group('cm.mounter_id,builder.id')
-                ->order('mounter_name ASC');
+                ->order('mounter_name,builder.id ASC');
             $db->setQuery($query);
             $items = $db->loadObjectList();
             $result = [];

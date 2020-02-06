@@ -148,4 +148,20 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function deletePay(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $mounterId = $jinput->getInt('mounterId');
+            $builderId = $jinput->getInt('builderId');
+            $sum = $jinput->get('sum','','STRING');
+            $id = $jinput->getInt('id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('mounterssalary');
+            $result = $model->deletePay($id,$builderId,$mounterId,$sum);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

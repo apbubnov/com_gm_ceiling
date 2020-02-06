@@ -164,6 +164,16 @@ class Gm_ceilingModelProjectForm extends JModelForm
 				
 				$mount_array = $db->loadObjectList();
 				$this->item->mount_data = htmlspecialchars(json_encode((!empty($mount_array)) ? $mount_array : array()),ENT_QUOTES);
+                $query = $db->getQuery(true);
+                $query
+                    ->select("SUM(prepayment_sum) as total")
+                    ->from('`rgzbn_gm_ceiling_projects_prepayment`')
+                    ->where("project_id =". $this->item->id);
+                $db->setQuery($query);
+                $prepayment_total = $db->loadObject();
+                if(!empty($prepayment_total)){
+                    $this->item->prepayment_total = $prepayment_total->total;
+                }
 				$this->item->dealer_id = !empty($dealer_id) ? implode(', ', $textValue1) : $this->_item->dealer_id;
 					if (!empty($textValue)) $this->item->client_id = implode(', ', $textValue);
 					if (!empty($textValue3)) $this->item->id_client = implode(', ', $textValue3);

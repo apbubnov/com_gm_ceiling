@@ -322,5 +322,19 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function delMounterDebtData(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $id = $jinput->getInt('id');
+	        $mounter = $jinput->getInt('mounter');
+	        $debtModel = Gm_ceilingHelpersGm_ceiling::getModel('mountersDebt');
+	        $debtModel->deleteDebt($id,$mounter);
+	        die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>
