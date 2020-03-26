@@ -2765,61 +2765,99 @@ public function register_mnfctr(){
             $dealer_id = $project->dealer_id;
             $mount_data = json_decode(htmlspecialchars_decode($project->mount_data));
             foreach ($calculations as $calculation) {
-                $data_for_manager_estimate = [];
-                /*Генерируем сметы и наряды попотолочно/поэтапно*/
-                $all_goods = $model_calcform->getGoodsPricesInCalculation($calculation->id, $dealer_id);
-                if (!empty($calculation->cancel_metiz)) {
-                    $all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
-                }
-                if (!empty($calculation->need_mount)) {
-                    if ($calculation->need_mount == 1) {
-                        $all_jobs = $model_calcform->getJobsPricesInCalculation($calculation->id, $dealer_id); // Получение работ по прайсу дилера
-                    } elseif ($calculation->need_mount == 2) {
-                        $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calculation->id, $dealer_id); // Получение работ по прайсу монажной службы
+                if(!empty($calculation->n3)){
+                    $calculation_data["extra_mounting_array"] = [];
+                    foreach (json_decode($calculation->extra_mounting) as $extra_mounting){
+                        $calculation_data["extra_mounting_array"][] = $extra_mounting;
                     }
-                }
-                $factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calculation->id);
-                foreach ($all_goods as $value) {
-                    if ($value->category_id == 1) { // если полотно
-                        $data_for_manager_estimate['canvas'] = $value;
-                        $canvas_price = $value->dealer_price;
-                        break;
-                    }
-                }
-                if (empty($calculation->cancel_cuts) && !empty($calculation->offcuts) ) {
-                    $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$calculation->offcuts,"price"=>$canvas_price * 0.5);
-                }
-                $data_for_manager_estimate['photoprint'] = json_decode($calculation->photo_print);
-                $data_for_manager_estimate['factory_jobs'] = $factory_jobs;
-                $data_for_manager_estimate['calculation'] = $calculation;
-                Gm_ceilingHelpersGm_ceiling::create_cut_pdf($data_for_manager_estimate);
-                //для менеджера
-                Gm_ceilingHelpersGm_ceiling::create_manager_estimate($data_for_manager_estimate);
-                //клиентская смета
-                $data_for_client_estimate = $data_for_manager_estimate;
-                $data_for_client_estimate['dealer_id'] = $dealer_id;
-                $data_for_client_estimate['jobs'] = $all_jobs;
-                $data_for_client_estimate['goods'] = $all_goods;
-                Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
-                $data_for_mount_estimate = [];
-                $data_for_mount_estimate['calculation'] = $calculation;
-                $data_for_mount_estimate['jobs'] = $all_jobs;
-                if($calculation->need_mount == 1){
-                    $data_for_mount_estimate['gm_jobs'] = [];
-                }
-                if($calculation->need_mount == 2){
-                    $data_for_mount_estimate['gm_jobs'] = $model_calcform->getJobsPricesInCalculation($calculation->id, 1);
-                }
-                Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
 
-                if (!empty($mount_data)) {
-                    foreach ($mount_data as $value) {
-                        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate, $value->mounter, $value->stage);
+                    $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
 
+                    if (floatval($calculation->mounting_sum) == 0)
+                        $need_mount = 0;
+                    else if (!$calculation_data["need_mount_extra"])
+                        $need_mount = 1;
+                    else {
+                        $need_mount = 0;
+                        $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $calculation->id);
+                        $first = round($first["total_gm_mounting"], 0);
+
+                        if ($first == floatval($calculation->mounting_sum))
+                            $need_mount = 0;
+                        else
+                            $need_mount = 1;
                     }
-                } else {
+                        Gm_ceilingHelpersGm_ceiling::create_cut_pdf_old($calculation->id);
+                        Gm_ceilingHelpersGm_ceiling::create_client_single_estimate_old($need_mount,$calculation->id);
+                        Gm_ceilingHelpersGm_ceiling::create_manager_estimate_old(1,$calculation->id);
+                        if(!empty($mount_data)){
+                            foreach ($mount_data as $value) {
+                                Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage_old($calculation->id,$value->mounter,$value->stage,$value->time);
+                            }
+                        }
+                        else{
+                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage_old($calculation->id,null,1,null);
+                        }
+
+                }
+                else{
+                    $data_for_manager_estimate = [];
+                    /*Генерируем сметы и наряды попотолочно/поэтапно*/
+                    $all_goods = $model_calcform->getGoodsPricesInCalculation($calculation->id, $dealer_id);
+                    if (!empty($calculation->cancel_metiz)) {
+                        $all_goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($all_goods);
+                    }
+                    if (!empty($calculation->need_mount)) {
+                        if ($calculation->need_mount == 1) {
+                            $all_jobs = $model_calcform->getJobsPricesInCalculation($calculation->id, $dealer_id); // Получение работ по прайсу дилера
+                        } elseif ($calculation->need_mount == 2) {
+                            $all_jobs = $model_calcform->getMountingServicePricesInCalculation($calculation->id, $dealer_id); // Получение работ по прайсу монажной службы
+                        }
+                    }
+                    $factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calculation->id);
+                    foreach ($all_goods as $value) {
+                        if ($value->category_id == 1) { // если полотно
+                            $data_for_manager_estimate['canvas'] = $value;
+                            $canvas_price = $value->dealer_price;
+                            break;
+                        }
+                    }
+                    if (empty($calculation->cancel_cuts) && !empty($calculation->offcuts) ) {
+                        $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$calculation->offcuts,"price"=>$canvas_price * 0.5);
+                    }
+                    $data_for_manager_estimate['photoprint'] = json_decode($calculation->photo_print);
+                    $data_for_manager_estimate['factory_jobs'] = $factory_jobs;
+                    $data_for_manager_estimate['calculation'] = $calculation;
+                    Gm_ceilingHelpersGm_ceiling::create_cut_pdf($data_for_manager_estimate);
+                    //для менеджера
+                    Gm_ceilingHelpersGm_ceiling::create_manager_estimate($data_for_manager_estimate);
+                    //клиентская смета
+                    $data_for_client_estimate = $data_for_manager_estimate;
+                    $data_for_client_estimate['dealer_id'] = $dealer_id;
+                    $data_for_client_estimate['jobs'] = $all_jobs;
+                    $data_for_client_estimate['goods'] = $all_goods;
+                    Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($data_for_client_estimate);
+                    $data_for_mount_estimate = [];
+                    $data_for_mount_estimate['calculation'] = $calculation;
+                    $data_for_mount_estimate['jobs'] = $all_jobs;
+                    if($calculation->need_mount == 1){
+                        $data_for_mount_estimate['gm_jobs'] = [];
+                    }
+                    if($calculation->need_mount == 2){
+                        $data_for_mount_estimate['gm_jobs'] = $model_calcform->getJobsPricesInCalculation($calculation->id, 1);
+                    }
                     Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
+
+                    if (!empty($mount_data)) {
+                        foreach ($mount_data as $value) {
+                            Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate, $value->mounter, $value->stage);
+
+                        }
+                    } else {
+                        Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);
+                    }
                 }
+
             }
 
             /*Генерируем общие сметы и наряды*/

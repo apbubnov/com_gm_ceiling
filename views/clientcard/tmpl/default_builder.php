@@ -8,13 +8,15 @@ $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+$projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+
 $mountTypes = $projectsMountsModel->get_mount_types();
 unset($mountTypes[1]);
 foreach ($mountTypes as $key=>$value){
     $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
 }
 $history = $historyModel->getDataByClientId($this->item->id);
-$projects = $clientcardModel->getProjects($this->item->id);
+
 $app = JFactory::getApplication();
 $jinput = $app->input;
 $phoneto = $jinput->get('phoneto', '', 'STRING');
@@ -22,9 +24,8 @@ $phonefrom = $jinput->get('phonefrom', '', 'STRING');
 $call_id = $jinput->get('call_id', 0, 'INT');
 $client = $client_model->getClientById($this->item->id);
 $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
-
-
-
+/*для дублирования отдельного потолка*/
+$projectsWithCalcIds = $projectsModel->getProjectsWithCalcIds($client->dealer_id);
 $dealer = JFactory::getUser($client->dealer_id);
 if ($dealer->associated_client != $this->item->id)
 {
@@ -285,24 +286,59 @@ foreach($all_builders as $builder){
         </div>
     </form>
 </div>
+<div class="row">
+    <p class="caption-tar">Дублировать отдельные помещения</p>
+    <form>
+        <div class="col-md-3">
+            <fieldset>
+                <legend>Откуда</legend>
+                <select id="copy_select" class="input-gm">
+                    <option value="">Выбрать этаж</option>
+                    <?php
+                    foreach ($projectsWithCalcIds as $p){?>
+                        <option value="<?= $p['project_id']?>"><?= $p['client_name'].' '.$p['project_info']?></option>
+                    <?php }?>
+                </select>
+            </fieldset>
+        </div>
+        <div class="col-md-3">
+            <fieldset>
+                <legend>Что</legend>
+                <div id="what_duplicate">
+
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset >
+                <legend>Куда</legend>
+                <div id="where_duplicate_calcs">
+
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</div>
 <div class="row center">
     <div class="col-md-12">
-        <button class="btn btn-primary" id="duplicate">Дублировать</button>
+        <button class="btn btn-primary" id="duplicate_selected">Дублировать</button>
     </div>
 </div>
 <hr>
-<div class="row center">
-    <p class="caption-tar">Добавить бригаду</p>
-    <label for="new_mounter_name">ФИО/Название</label>
-    <input type="text" id="new_mounter_name" class="input-gm">
-    <label for="new_mounter_phone">Телефон</label>
-    <input type="text" id="new_mounter_phone" class="input-gm">
-    <button class="btn btn-primary" id="create_mounter">Cоздать</button>
-</div>
+
 <div class="row center">
     <p class="caption-tar">Бригады</p>
-    <div class="col-md-12">
-        <button class="btn btn-primary" type="button" id="btn_show_mounters">Просмотреть </button>
+
+    <div class="col-md-6">
+        <p><b>Добавить бригаду</b></p>
+        <label for="new_mounter_name">ФИО/Название</label>
+        <input type="text" id="new_mounter_name" class="input-gm">
+        <label for="new_mounter_phone">Телефон</label>
+        <input type="text" id="new_mounter_phone" class="input-gm">
+        <button class="btn btn-primary" id="create_mounter">Cоздать</button>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" type="button" id="btn_show_mounters">Просмотреть список бригад </button>
     </div>
 </div>
 <hr>
@@ -620,7 +656,8 @@ foreach($all_builders as $builder){
         var progressData = [],
             mountersOption = "<option>Выберите</option>",
             mountersForDelete = [],
-            checks;
+            checks,
+            projectsWithCalcsIds = JSON.parse('<?=addslashes(json_encode($projectsWithCalcIds))?>');
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
@@ -2136,6 +2173,116 @@ foreach($all_builders as $builder){
                     });
                 }
             }
+
+            jQuery('#copy_select').change(function(){
+                var proj_id = this.value,
+                    calcs = JSON.parse(projectsWithCalcsIds[proj_id].calcs);
+                console.log(this.value);
+                jQuery("#what_duplicate").empty();
+                jQuery.each(calcs,function(index,elem){
+                    var checkbox = "<input name = \"what_duplicate\"type=\"checkbox\" id=\"" + elem.calc_id + "\" class=\"inp-cbx\" value = \"" + elem.calc_id + "\" style=\"display: none\">\n" +
+                        "<label for=\"" + elem.calc_id + "\" class=\"cbx\">\n" +
+                        "<span>\n" +
+                        "<svg width=\"12px\" height=\"10px\" viewBox=\"0 0 12 10\">\n" +
+                        "<polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\n" +
+                        "</svg>\n" +
+                        "</span>\n" +
+                        "<span>" + elem.name + "</span>\n" +
+                        "</label>";
+                    jQuery("#what_duplicate").append(checkbox);
+                });
+                jQuery("#where_duplicate_calcs").empty();
+                var html = '',
+                    row='';
+                for(var i=0,index,nextIndex;i<Object.keys(projectsWithCalcsIds).length;i++){
+                   index = Object.keys(projectsWithCalcsIds)[i];
+                   nextIndex = Object.keys(projectsWithCalcsIds)[i+1];
+                    if(empty(row)){
+                        row = '<div class="row" style="margin-left:5px;"><p><b>'+projectsWithCalcsIds[index].client_name+'</b></p>';
+                    }
+                   if(projectsWithCalcsIds[index].project_id != proj_id){
+                       var checkbox = "<input name = \"where_duplicate\"type=\"checkbox\" id=\"" + projectsWithCalcsIds[index].project_id + "\" class=\"inp-cbx\" value = \"" + projectsWithCalcsIds[index].project_id + "\" style=\"display: none\">\n" +
+                           "<label for=\"" + projectsWithCalcsIds[index].project_id + "\" class=\"cbx\">\n" +
+                           "<span>\n" +
+                           "<svg width=\"12px\" height=\"10px\" viewBox=\"0 0 12 10\">\n" +
+                           "<polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\n" +
+                           "</svg>\n" +
+                           "</span>\n" +
+                           "<span>" +projectsWithCalcsIds[index].project_info + "</span>\n" +
+                           "</label>";
+                       if( !empty(projectsWithCalcsIds[nextIndex]) && projectsWithCalcsIds[nextIndex].client_id == projectsWithCalcsIds[index].client_id){
+                           row += checkbox;
+                       }
+                       else{
+                           row += checkbox +'</div>';
+                           html += row;
+                           row = '';
+                       }
+
+                   }
+                }
+
+                jQuery('#where_duplicate_calcs').append(html);
+            });
+
+            jQuery('#duplicate_selected').click(function(){
+                var whatDuplicate = jQuery('[name="what_duplicate"]:checked'),
+                    whereDuplicate = jQuery('[name="where_duplicate"]:checked'),
+                    calcsIds = [],
+                    projectsIds = [];
+                jQuery.each(whatDuplicate,function(index,elem){
+                    calcsIds.push(elem.value);
+                });
+                jQuery.each(whereDuplicate,function(index,elem){
+                    projectsIds.push(elem.value);
+                });
+                if(empty(calcsIds)){
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Не выбраны потолки для дублирования"
+                    });
+                    return;
+                }
+                if(empty(projectsIds)){
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Не выбраны квартиры для дублирвоания!"
+                    });
+                    return;
+                }
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=calculations.duplicate",
+                    data: {
+                        projects: projectsIds,
+                        calcs: calcsIds
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    dataType: "json",
+                    timeout: 10000,
+                    error: function(data) {
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при дублировании!"
+                        });
+                    }
+                });
+            });
+
         });
 
 
@@ -2191,7 +2338,7 @@ foreach($all_builders as $builder){
                 async: true,
                 success: function (data) {
                     add_history(client_id,"Звонок перенесен");
-                    var n = noty({
+                    noty({
                         timeout: 2000,
                         theme: 'relax',
                         layout: 'center',

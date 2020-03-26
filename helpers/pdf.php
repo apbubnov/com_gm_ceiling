@@ -610,4 +610,100 @@ class Gm_ceilingHelpersPDF {
 
         return (object) array("href" => "http://".$_SERVER['SERVER_NAME'].$dir.$filename, "name" => $super_dir . $filename);
     }
+
+    public static function createContract($project_id,$clientBirthDay = null,$document=null,$mountData=null){
+       try{
+           $user = JFactory::getUser();
+           $username = $user->name;
+           $time=strtotime(date('Y-m-d'));
+           $day = date("d",$time);
+           $month = date("m",$time);
+           $year = date("Y",$time);
+
+           $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+           $clientContactsModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+           $clientDopContactsModel = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+
+           $projectData = $projectModel->getData($project_id);
+           $contactsData = $clientContactsModel->getItemsByClientId($projectData->id_client);
+           $emailsData = $clientDopContactsModel->getEmailByClientID($projectData->id_client);
+           $clientPhones = '';
+           if(!empty($contactsData)){
+               foreach ($contactsData as $contact){
+                   $clientPhones .= $contact->phone.' ';
+               }
+           }
+           $clientEmails = '';
+           if(!empty($emailsData)){
+               foreach ($emailsData as $email){
+                   $clientEmails .= $email->contact.' ';
+               }
+           }
+           $clientSignPath = '/images/client_signatures/'.md5('client_'.$projectData->id_client.'_sign').'.svg';
+           $projectSum = !empty(floatval($projectData->new_project_sum)) ? $projectData->new_project_sum : $projectData->project_sum;
+           $projectSum = $projectSum.' ('.self::NumToStr($projectSum, 2).')';
+           $prepaymentSum = !empty(floatval($projectData->prepayment_total)) ? $projectData->prepayment_total : 0;
+           $prepaymentSum = $prepaymentSum.' ('.self::NumToStr($prepaymentSum, 2).')';
+           $restSum = $projectSum-$prepaymentSum;
+           $restSum = $restSum.' ('.self::NumToStr($restSum, 2).')';
+           $html = '';
+           $page1 = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/page1.html");
+           $page2 = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/page2.html");
+           $page3 = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/page3.html");
+           $act = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/act.html");
+           $annex = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/annex.html");
+           //$footer = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/footer.html");
+           $style = file_get_contents("http://".$_SERVER['SERVER_NAME']."/components/com_gm_ceiling/views/pdf/templates/Contract/style.css");
+           $body = $page1.'<pagebreak>'.$page2.'<pagebreak>'.$page3;
+           $body = str_replace("@DATE@", $day." ".self::MonthStr($month)." ".$year." г.", $body);
+           $mpdf = new mPDF('utf-8', "A4", '10.5', 'Times New Roman', 15, 15, 10, 3, 0, 0,"");
+           //$mpdf->setAutoTopMargin='stretch';
+           $mpdf->setAutoBottomMargin = 'stretch';
+           //$mpdf->SetHTMLFooter($footer);
+           $mpdf->SetWatermarkImage("http://".$_SERVER['SERVER_NAME']."/images/contract/watergm.png",0.7);
+           $mpdf->showWatermarkImage = true;
+           $mpdf->watermarkImgBehind = true;
+           $html .= $body;
+           $html .= '<pagebreak>';
+           $html .= $annex;
+
+           $html .= '<pagebreak>';
+           $html .= $act;
+           $html = str_replace('@project_id@',$project_id,$html);
+           $html = str_replace('@client_name@',$projectData->client_id,$html);
+           $html = str_replace('@project_sum@',$projectSum,$html);
+           $html = str_replace('@prepayment@',$prepaymentSum,$html);
+           $html = str_replace('@rest@',$restSum,$html);
+           $html = str_replace('@project_info@',$projectData->project_info,$html);
+           $html = str_replace('@client_contact@',$clientPhones,$html);
+           $html = str_replace('@client_email@',$clientEmails,$html);
+           $html = str_replace('@mount_start@',$mountData,$html);
+           $html = str_replace('@gauger@',$username,$html);
+           if(!empty($clientBirthDay)){
+               $html = str_replace('@birthday@',$clientBirthDay,$html);
+           }
+           else{
+               $html = str_replace('@birthday@','',$html);
+           }
+           if(!empty($document)){
+               $html = str_replace('@document@',$document,$html);
+           }
+           else{
+               $html = str_replace('@document@','',$html);
+           }
+           $html = str_replace('@client_sign@',$clientSignPath,$html);
+
+           //$mpdf->SetDisplayMode('fullpage');
+           $mpdf->WriteHTML($style,1);
+           $mpdf->WriteHTML($html,2);
+           $filename = md5($project_id).'.pdf';
+           $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/contracts/'.$filename, 'F');
+           //Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+           return 1;
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+
+    }
 }

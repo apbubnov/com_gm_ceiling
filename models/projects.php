@@ -442,6 +442,9 @@ class Gm_ceilingModelProjects extends JModelList
                 case 'client':
                     $query->where("p.client_id = $user->associated_client");
                     break;
+                case 'rest':
+                    $query->where("`p`.`project_status` IN (10, 11, 16, 17, 24, 25, 26, 27, 28, 29,30) and cl.dealer_id = $user->dealer_id");
+                    break;
                 default:
                     break;
             }
@@ -826,6 +829,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('p.id')
                 ->select('s.title as `status`')
                 ->select('p.project_info')
+                ->select('u.name AS created,u1.name AS read_by_manager')
                 ->select('cl.title,cl.color_code')
                 ->select('COALESCE(p.project_sum,0) as project_sum')
                 ->select('COALESCE(p.new_project_sum,0) as new_project_sum')
@@ -841,6 +845,8 @@ class Gm_ceilingModelProjects extends JModelList
                 ->InnerJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
                 ->LeftJoin('`rgzbn_gm_ceiling_clients_labels` AS cl ON c.label_id = cl.id')
                 ->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `c`.`dealer_id`")
+                ->leftJoin ('`rgzbn_users` AS u ON u.id = p.created_by')
+                ->leftJoin('`rgzbn_users` AS u1 ON u1.id = p.read_by_manager')
                 ->where("p.id in $projects");
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -1369,6 +1375,27 @@ class Gm_ceilingModelProjects extends JModelList
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getProjectsWithCalcIds($dealer_id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('p.id AS project_id,c.id AS client_id,c.client_name,p.project_info,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"calc_id":"\',calc.id,\'","name":"\',calc.calculation_title,\'"}\') ORDER by calc.id asc),\']\') AS calcs')
+                ->from('`rgzbn_gm_ceiling_projects` AS p ')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
+                ->leftJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.project_id = p.id')
+                ->where("c.dealer_id = $dealer_id")
+                ->group('p.id');
+            $db->setQuery($query);
+            $result = $db->loadAssocList('project_id');
+            return $result;
+
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

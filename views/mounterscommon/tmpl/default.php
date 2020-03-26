@@ -164,7 +164,7 @@ $types = $mountersdebtModel->getTypes();
                         <?php }?>
                     </td>
                 <?php }?>
-            <?php if(count($item > 1)){
+            <?php if(count($item) > 1){
                 $rowspan = true;
                 echo '</tr>';
              } ?>
@@ -537,17 +537,23 @@ $types = $mountersdebtModel->getTypes();
                 }
                 if(total_available_sum>Math.abs(close_sum)) {
                     /*списать часть*/
-                    var available_sum = current_builder.taken-current_builder.closed + current_builder.rest;
-                    savePay(mounter_id,0-available_sum,current_builder.builder_id,payed_td,rest_td,current_builder);
-                    close_sum += available_sum;
+                    var available_sum = current_builder.taken - current_builder.closed + current_builder.rest;
+                    if(available_sum > 0){
+                        savePay(mounter_id, 0 - available_sum, current_builder.builder_id, payed_td, rest_td, current_builder);
+                        close_sum += available_sum;
+                    }
                     jQuery.each(mounter_data['builder_data'], function (index, builder) {
                         if (builder.builder_id != current_builder.builder_id && close_sum != 0) {
                             if(check_pay_possibility(builder,close_sum)){
                                 savePay(mounter_id,close_sum,builder.builder_id,payed_td,rest_td,builder);
+                                close_sum = 0;
                             }
                             else{
                                 available_sum = builder.taken-builder.closed + builder.rest;
-                                savePay(mounter_id,0-available_sum,builder.builder_id,payed_td,rest_td,current_builder);
+                                if(available_sum > 0) {
+                                    savePay(mounter_id, 0 - available_sum, builder.builder_id, payed_td, rest_td, current_builder);
+                                    close_sum += available_sum;
+                                }
                             }
                         }
                     });

@@ -405,7 +405,48 @@ class Gm_ceilingControllerClient extends JControllerLegacy
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function saveSign(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $clientId = $jinput->getInt('client_id');
+	        $projectId = $jinput->getInt('project_id');
+	        $birthday = $jinput->get('birthday', '', 'string');
+	        $document = $jinput->get('document', '', 'string');
+            $signImg = $jinput->get('sign_image', '', 'string');
+            $mount = $jinput->get('mount', '', 'string');
+            $filename = md5('client_'.$clientId.'_sign').'.svg';
+            $mount_start = '';
+            if(!empty($mount)){
+                $mount = json_decode($mount);
+                $mount_start = strtotime($mount[0]->time);
+                if(count($mount) > 1){
+                    foreach ($mount as $stage){
+                        if(strtotime($stage->time) < $mount_start){
+                            //throw new Exception("$stage->time < $mount_start");
+                            $mount_start = strtotime($stage->time);
+                        }
+                    }
+                }
+                $mount_start = date('d.m.Y',$mount_start);
+            }
+            if(!empty($birthday)){
+                $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                $clientModel->addBirthday($clientId,$birthday);
+            }
+            if(!empty($document)){
+                $clientDataModel = Gm_ceilingHelpersGm_ceiling::getModel('Client_data');
+                $clientDataModel->saveDocument($clientId,$document);
+            }
+            file_put_contents($_SERVER['DOCUMENT_ROOT']."/images/client_signatures/$filename", base64_decode($signImg));
+            Gm_ceilingHelpersPDF::createContract($projectId,$birthday,$document,$mount_start);
+            die(json_encode(true));
+	    }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

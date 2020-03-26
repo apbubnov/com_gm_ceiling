@@ -108,13 +108,6 @@ echo parent::getPreloaderNotJS();
                     <i class="fas fa-trash-alt" aria-hidden="true"></i>
                 </th>
 			</tr>
-            <tr class="row" id="TrClone" data-href="" style="display: none">
-                <td class="one-touch created"></td>
-                <td class="one-touch name"></td>
-                <td class="one-touch address"></td>
-                <td class="one-touch status"></td>
-                <td class="one-touch delete"></td>
-            </tr>
 		</thead>
 		<tbody>
 		</tbody>
@@ -124,11 +117,37 @@ echo parent::getPreloaderNotJS();
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
-    var clients_data = JSON.parse('<?php echo quotemeta(json_encode($clients)); ?>');
-    var elem_select_status = document.getElementById('select_status');
-    var elem_select_label = document.getElementById('select_label');
-    var elem_search = document.getElementById('search_text');
-
+    var clients_data = JSON.parse('<?php echo quotemeta(json_encode($clients)); ?>'),
+        elem_select_status = document.getElementById('select_status'),
+        elem_select_label = document.getElementById('select_label'),
+        elem_search = document.getElementById('search_text'),
+        savedData = JSON.parse(localStorage.getItem('savedData')),
+        wheel_count_clients = null, last_tr = null,
+        $ = jQuery,
+        list = $("#clientList tbody"),
+        elem_show = document.getElementById('show_btn');
+    localStorage.removeItem('savedData');
+    console.log(savedData);
+    if(!empty(savedData)){
+        if(!empty(savedData.status)){
+            elem_select_status.value = savedData.status;
+        }
+        if(!empty(savedData.label)){
+            jQuery('#select_label').val(savedData.label);
+            jQuery.each(jQuery('li.option'),function(index,option){
+                if(jQuery(option).data('value') == savedData.label){
+                    jQuery(option).addClass('selected');
+                    var color = (jQuery(".option.selected").data("color"));
+                    jQuery('.nice-select.wide')[0].style.setProperty('--rcolor', color);
+                    jQuery('.current').text(option.innerText);
+                    return;
+                }
+            });
+        }
+        if(!empty(savedData.search)){
+            jQuery('#search_text').val(savedData.search);
+        }
+    }
     jQuery('#select_label').niceSelect();
     jQuery("#select_label").change(function() {
         var color = (jQuery(".option.selected").data("color"));
@@ -136,11 +155,12 @@ jQuery(document).ready(function(){
         show_clients();
     });
 
-    //console.log(clients_data);
-    var wheel_count_clients = null, last_tr = null;
-
-    var $ = jQuery;
-    var list = $("#clientList tbody");
+    function scrollToTr(trIndex){
+        var need_row = jQuery('#clientList > tbody').find('tr').eq(trIndex);
+        jQuery('html, body').animate({
+            scrollTop: jQuery(need_row).offset().top
+        }, 500);
+    }
 
     $(window).resize();
 
@@ -165,7 +185,7 @@ jQuery(document).ready(function(){
     //document.body.onmousemove = check_bottom_tr;
     //document.body.ontouchmove = check_bottom_tr;
 
-    var elem_show = document.getElementById('show_btn');
+
 
     elem_show.onclick = function(){
         if (clients_data.length > wheel_count_clients + 1)
@@ -173,29 +193,24 @@ jQuery(document).ready(function(){
             print_clients(wheel_count_clients + 1, clients_data.length);
         }
     }
-
-    /*function check_bottom_tr(){
-        if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
-        {
-            print_clients(wheel_count_clients + 1, clients_data.length);
+    show_clients();
+    if(!empty(savedData)){
+        if(savedData.trIndex > 0){
+            if(savedData.trIndex <=jQuery('#clientList > tbody > tr').length){
+                scrollToTr(savedData.trIndex);
+            }
+            else{
+                var tableLength = jQuery('#clientList > tbody > tr').length;
+                console.log(tableLength);
+                while(savedData.trIndex >=tableLength){
+                    console.log(tableLength);
+                    jQuery('#show_btn').trigger('click');
+                    tableLength = jQuery('#clientList > tbody > tr').length;
+                }
+                scrollToTr(savedData.trIndex);
+            }
         }
     }
-    
-    function inWindow(s){
-        var scrollTop = $(window).scrollTop();
-        var windowHeight = $(window).height();
-        var currentEls = $(s);
-        var result = [];
-        currentEls.each(function(){
-            var el = $(this);
-            var offset = el.offset();
-            if(scrollTop <= offset.top && (el.height() + offset.top) < (scrollTop + windowHeight))
-                result.push(this);
-        });
-        return $(result);
-    }*/
-
-    show_clients();
 
     function show_clients()
     {
@@ -214,40 +229,29 @@ jQuery(document).ready(function(){
         for (var i = begin, cl_i, iter = 0; i < clients_data.length; i++)
         {
             cl_i = clients_data[i];
+            var cl_info = !empty(cl_i.client_contacts)? cl_i.client_contacts+' '+cl_i.client_name : cl_i.client_name,
+                cl_address = !empty(cl_i.address) ? cl_i.address : '-',
+                cl_status = !empty(cl_i.status) ? cl_i.status : '-';
+
             if ((search_reg.test(cl_i.client_name) || search_reg.test(cl_i.address) ||
                 search_reg.test(cl_i.client_contacts) || search_reg.test(cl_i.id)) && 
                 (status === '' || status === cl_i.status_id) &&
-                (label === '' || label === cl_i.label_id))
-            {
-                var tr = $("#TrClone").clone();
+                (label === '' || label === cl_i.label_id)){
 
-                tr.show();
-                tr.find(".created").text(cl_i.created);
-                if (cl_i.client_contacts != null) {
-                    tr.find(".name").text(cl_i.client_contacts + ' ' + cl_i.client_name);
-                } else {
-                    tr.find(".name").text(cl_i.client_name);
-                }
+                jQuery('#clientList > tbody').append('<tr data-client_id='+cl_i.client_id+'></tr>');
+                jQuery('#clientList > tbody > tr:last').append( '<td>'+cl_i.created+'</td>' +
+                                                                '<td>'+cl_info+'</td>' +
+                                                                '<td>'+cl_address+'</td>' +
+                                                                '<td>'+cl_status+'</td>' +
+                                                                '<td><button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>'
+                );
+                var tr = jQuery('#clientList > tbody > tr:last');
 
-                if (clients_data[i].address != null) {
-                    tr.find(".address").text(cl_i.address);
-                } else {
-                    tr.find(".address").text('-');
-                }
-
-                if (cl_i.status != null) {
-                    tr.find(".status").text(cl_i.status);
-                } else {
-                    tr.find(".status").text('-');
-                }
-
-                tr.find(".delete").append('<button class = "btn btn-danger btn-sm" data-cl_id =' + cl_i.client_id +' type = "button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>');
-                tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
                 if (cl_i.label_color_code !== null) {
                     tr.css('outline', '#'+cl_i.label_color_code+' solid 2px');
                 }
                 tr.css('margin-top', '10px');
-                list.append(tr);
+                //list.append(tr);
                 wheel_count_clients = i;
                 iter++;
                 if (iter === 20)
@@ -266,17 +270,24 @@ jQuery(document).ready(function(){
             var elems_tr = list[0].getElementsByTagName('tr');
             last_tr = elems_tr[elems_tr.length - 1];
         }
-        OpenPage();
+
     }
-    
-    function OpenPage() {
-        var e = jQuery("[data-href]");
-        jQuery.each(e, function (i, v) {
-            jQuery(v).click(function () {
-                document.location.href = this.dataset.href;
-            });
-        });
-    }
+
+    jQuery('#clientList').on('click','tr',function(){
+        var rowIndex = jQuery(this)[0].rowIndex - 2,
+            clientId = jQuery(this).data('client_id'),
+            statusFilter = jQuery('#select_status').val(),
+            labelFilter = jQuery('#select_label').val(),
+            textFilter = jQuery('#search_text').val();
+        localStorage.setItem('savedData',JSON.stringify({
+            trIndex: rowIndex,
+            status: statusFilter,
+            label: labelFilter,
+            search: textFilter
+        }));
+        location.href ='/index.php?option=com_gm_ceiling&view=clientcard&id='+clientId;
+    });
+
     jQuery(".btn-danger").click(function(e){
         var id = jQuery(this).data('cl_id');
         noty({
@@ -296,7 +307,7 @@ jQuery(document).ready(function(){
                                 client_id: id
                             },
                             success: function(data){
-                                jQuery('.btn-danger[data-cl_id ='+id+']').closest('.row').remove();
+                                jQuery('.btn-danger[data-cl_id ='+id+']').closest('tr').remove();
                                 let remove_id = clients_data.findIndex(function(el,index,arr){return el.client_id == id });
                                 clients_data.splice(remove_id,1);
                             },

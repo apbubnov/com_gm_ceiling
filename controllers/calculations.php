@@ -96,13 +96,11 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
 	    try{
             $jinput = JFactory::getApplication()->input;
             $projectId = $jinput->get('project_id',null,'INT');
-            $calcs = $jinput->get('calcs',array(),'ARRAY');
+            $projectsIds = $jinput->get('projects',[],'ARRAY');
+            $calcs = $jinput->get('calcs',[],'ARRAY');
             $need_new = $jinput->get('need_new',0,'INT');
             if(!empty($calcs)){
                 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-                $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-                $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
                 if($need_new){
                     $project_data = get_object_vars($projectModel->new_getProjectItems($projectId));
                     unset($project_data['id']);
@@ -111,30 +109,15 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
                     $projectFormModel = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
                     $projectId = $projectFormModel->save($project_data);
                 }
-
-                foreach ($calcs as $calcId){
-                    $calcData = $calculationModel->new_getData($calcId);
-                    unset($calcData->id);
-                    $calcData = get_object_vars($calcData);
-                    $mountData = $calcsMountModel->getData($calcId);
-                    $calcData['mountData'] = $mountData;
-                    $calcData['project_id'] = $projectId;
-                    $calcData['canvas_area'] = $canvasesModel->getCutsData($calcId);
-                    //throw new Exception(print_r($calcData['canvas_area'],true));
-                    $newCalcId = $calculationModel->duplicate($calcData);
-                    $oldFileName = md5('calculation_sketch'.$calcId);
-                    $oldImage = $_SERVER['DOCUMENT_ROOT']."/calculation_images/$oldFileName.svg";
-                    $newFileName = md5('calculation_sketch'.$newCalcId);
-                    $newImage =  $_SERVER['DOCUMENT_ROOT']."/calculation_images/$newFileName.svg";
-                    copy($oldImage, $newImage);
-                    //раскрой
-                    $oldCutFileName = md5('cut_sketch'.$calcId);
-                    $oldCutImage = $_SERVER['DOCUMENT_ROOT']."/cut_images/$oldCutFileName.svg";
-                    $newCutFileName = md5('cut_sketch'.$newCalcId);
-                    $newCutImage =  $_SERVER['DOCUMENT_ROOT']."/cut_images/$newCutFileName.svg";
-                    copy($oldCutImage, $newCutImage);
+                if(!empty($projectId)) {
+                    $this->dupCalcs($calcs,$projectId);
                 }
-
+                if(!empty($projectsIds)){
+                    foreach($projectsIds as $id){
+                        $this->dupCalcs($calcs,$id);
+                    }
+                    $projectId = true;
+                }
             }
             die(json_encode($projectId));
         }
@@ -143,6 +126,38 @@ class Gm_ceilingControllerCalculations extends Gm_ceilingController
         }
     }
 
+    function dupCalcs($calcs,$projectId){
+	    try{
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
+            foreach ($calcs as $calcId) {
+                $calcData = $calculationModel->new_getData($calcId);
+                unset($calcData->id);
+                $calcData = get_object_vars($calcData);
+                $mountData = $calcsMountModel->getData($calcId);
+                $calcData['mountData'] = $mountData;
+                $calcData['project_id'] = $projectId;
+                $calcData['canvas_area'] = $canvasesModel->getCutsData($calcId);
+                //throw new Exception(print_r($calcData['canvas_area'],true));
+                $newCalcId = $calculationModel->duplicate($calcData);
+                $oldFileName = md5('calculation_sketch' . $calcId);
+                $oldImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$oldFileName.svg";
+                $newFileName = md5('calculation_sketch' . $newCalcId);
+                $newImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$newFileName.svg";
+                copy($oldImage, $newImage);
+                //раскрой
+                $oldCutFileName = md5('cut_sketch' . $calcId);
+                $oldCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$oldCutFileName.svg";
+                $newCutFileName = md5('cut_sketch' . $newCalcId);
+                $newCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$newCutFileName.svg";
+                copy($oldCutImage, $newCutImage);
+            }
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     function saveInHistory(){
 	    try{
             $jinput = JFactory::getApplication()->input;

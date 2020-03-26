@@ -25,11 +25,20 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $n4 = $jinput->get('n4', '', 'FLOAT'); //площадь
             $n5 = $jinput->get('n5', '', 'FLOAT'); //периметр
             $n9 = $jinput->get('n9', '', 'int'); //углы
+            /*_________параметры от старой версии(временно для плавного перехода на новую структуру)_______________*/
+            $n5_shrink = $jinput->get('n5_shrink', '', 'string'); //периметр с усадкой
+            $n10 = $jinput->get('curvilinear_length', '', 'string'); //криволинейный участок
+            $n31 = $jinput->get('inner_cutout_length', '', 'string'); //внутренний вырез
+            $texture = $jinput->get('texture', 0, 'int');
+            $color = $jinput->get('color', 0, 'int');
+            $manufacturer = $jinput->get('manufacturer', 0, 'int');
+            $width = $jinput->get('width', 0, 'INT'); //ширина полотна
+            /*__________________________*/
             $calc_id = $jinput->get('calc_id', 0, 'int');
             $length_arr = json_decode($jinput->get('arr_length','', 'STRING')); //длины сторон
             $arr_points = $jinput->get('arr_points', null, 'array'); //координаты раскроя
-            $goods = $jinput->get('goods', array(), 'array'); //полотна
-            $jobs = $jinput->get('jobs', array(), 'array'); //работы
+            $goods = $jinput->get('goods', [], 'array'); //полотна
+            $jobs = $jinput->get('jobs', [], 'array'); //работы
             $offcut_square = $jinput->get('offcut_square', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             $canvas_area = $jinput->get('sq_polo', 0, 'FLOAT');
@@ -101,9 +110,35 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $canv_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
+            $n3 = '';
+            if(!empty($texture) && !empty($manufacturer) && !empty($width)){
 
-            $model_calcform->addGoodsInCalculation($calc_id, $goods, true);
-            $model_calcform->addJobsInCalculation($calc_id, $jobs, true);
+                $width = (string)($width / 100);
+                if (strpos($width, '.') === false) {
+                    $width .= '.0';
+                }
+
+                $filter = "`texture_id` = $texture AND `manufacturer_id` = $manufacturer AND `width` = '$width' AND `count` > 0";
+                if (!empty($color)) {
+                    $filter .= " AND `color_id` = $color";
+                }
+                $result  = $canv_model->getFilteredItemsCanvas($filter,'old');
+                $n3 = $result[0]->id;
+                $data['n3'] = $n3;
+                if (!empty($n5_shrink)) {
+                    $data['n5_shrink'] = $n5_shrink;
+                }
+                if (isset($n10)) {
+                    $data['n10'] = $n10;
+                }
+                if (isset($n31)) {
+                    $data['n31'] = $n31;
+                }
+            }
+            else{
+                $model_calcform->addGoodsInCalculation($calc_id, $goods, true);
+                $model_calcform->addJobsInCalculation($calc_id, $jobs, true);
+            }
 
             $data['id'] = $calc_id;
             if (!empty($n4)) {
@@ -112,7 +147,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             if (!empty($n5)) {
                 $data['n5'] = $n5;
             }
-            if (isset($n9)) {
+            if (!empty($n9)) {
                 $data['n9'] = $n9;
             }
             if (!empty($p_usadki)) {
@@ -124,8 +159,14 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $data['offcut_square'] = $offcut_square;
             $result  = $calculation_model->update_calculation($data);
             $canv_model->saveCuts($calc_id, $cuts, $canvas_area);
-            $calculationController = Gm_ceilingHelpersGm_ceiling::getController('calculationForm');
-            $calculationController->reCalculate($calc_id);
+            if(!empty($n3)){
+               Gm_ceilingHelpersGm_ceiling::calculate(1,$data['id'],2,1,0,1);
+            }
+            else{
+                $calculationController = Gm_ceilingHelpersGm_ceiling::getController('calculationForm');
+                $calculationController->reCalculate($calc_id);
+            }
+
             //die(print_r($_POST));
             die(true);
         } catch(Exception $e) {
@@ -138,11 +179,17 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $textureId = $jinput->get('textureId', 0, 'int');
             $manufacturerId = $jinput->get('manufacturerId', 0, 'int');
-
+            $old = $jinput->getInt('old');
             $canv_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            if($old){
+                $filter = "`texture_id` = $textureId AND `manufacturer_id` = $manufacturerId AND `count` > 0";
+                $result  = $canv_model->getFilteredItemsCanvas($filter,'old');
+            }
+            else{
+                $filter = "`texture_id` = $textureId AND `manufacturer_id` = $manufacturerId AND `visibility` = 1";
+                $result  = $canv_model->getFilteredItemsCanvas($filter);
+            }
 
-            $filter = "`texture_id` = $textureId AND `manufacturer_id` = $manufacturerId AND `visibility` = 1";
-            $result  = $canv_model->getFilteredItemsCanvas($filter);
             die(json_encode($result));
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

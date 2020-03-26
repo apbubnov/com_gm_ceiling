@@ -551,7 +551,22 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
                 </div>
                 <div class="row">
-                    <button class = "btn btn-primary" id="runByEmail" type="button">Запустить в выбранное производтсво</button>
+                    <button class = "btn btn-primary runByEmail" type="button">Запустить в выбранное производтсво</button>
+                </div>
+                <h4>или введите email для отправки</h4>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control" id="directly_email">
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary runByEmail" type="button"> Отправить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
                 </div>
             </div>
             <div id="mw_rec_to_msr" class="modal_window">
@@ -797,46 +812,62 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
                 jQuery(this).addClass('selected');
             });
 
-            jQuery('#runByEmail').click(function(){
+            jQuery('#directly_email').focus(function(){
+                jQuery('.manuf_div').removeClass('selected');
+            });
+
+            jQuery('.runByEmail').click(function(){
                 var div = jQuery('.manuf_div.selected'),
-                    email = div.data('email'),
+                    email = div.length ? div.data('email') : jQuery('#directly_email').val(),
                     include_calculations = get_selected_calcs();
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=project.activateByEmail",
-                    data: {
-                        project_id: project_id,
-                        email: email,
-                        include_calcs: include_calculations,
-                        mount_data: jQuery('#mount').val(),
-                        production_note: jQuery('#jform_production_note').val(),
-                        mount_note: jQuery('#jform_mount_note').val(),
-                        ref_note: jQuery('#jform_refuse_note').val()
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Проект запущен в производство!"
-                        });
-                        setTimeout(function(){location.reload();},3000);
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка!Попробуйте позднее!"
-                        });
-                    }
-                });
+                if(!empty(email)){
+                    jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=project.activateByEmail",
+                        data: {
+                            project_id: project_id,
+                            email: email,
+                            include_calcs: include_calculations,
+                            mount_data: jQuery('#mount').val(),
+                            production_note: jQuery('#jform_production_note').val(),
+                            mount_note: jQuery('#jform_mount_note').val(),
+                            ref_note: jQuery('#jform_refuse_note').val()
+                        },
+                        dataType: "json",
+                        async: true,
+                        success: function (data) {
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Проект запущен в производство!"
+                            });
+                            setTimeout(function(){location.reload();},3000);
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка!Попробуйте позднее!"
+                            });
+                        }
+                    });
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Не указан email!"
+                    });
+                }
             });
             /*--------*/
 

@@ -14,7 +14,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
     function getData(){
         try {
             /*
-             * SELECT u.id AS mounter_id,u.name AS mounter_name,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed
+             * SELECT u.id AS mounter_id,u.name AS mounter_name,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed + movs.moved
                 FROM `rgzbn_users` AS u
                 LEFT JOIN `rgzbn_user_usergroup_map` AS um ON u.id = um.user_id
                 LEFT JOIN `rgzbn_gm_ceiling_calcs_mount` AS cm ON u.id = cm.mounter_id
@@ -40,7 +40,13 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                         INNER JOIN `rgzbn_users` AS u ON u.id = ms.mounter_id
                         GROUP BY c.dealer_id,ms.mounter_id
                 ) AS cs ON cs.mounter_id = u.id AND cs.dealer_id = builder.id
-
+		LEFT JOIN (
+                        SELECT ms.mounter_id,ms.builder_id,ms.note,IFNULL(SUM(ms.sum),0) AS moved
+                        FROM `rgzbn_gm_ceiling_mounters_salary` AS ms
+                        INNER JOIN `rgzbn_users` AS u ON u.id = ms.mounter_id
+                        WHERE ms.sum > 0 AND ms.note IS NOT NULL AND builder_id IS NOT NULL
+                        GROUP BY ms.builder_id,ms.mounter_id
+                ) AS movs ON movs.mounter_id = u.id AND movs.builder_id = builder.id
                 LEFT JOIN (
                         SELECT ms.mounter_id,ms.builder_id,SUM(LEAST(0.00,ms.sum)) AS payed
                         FROM `rgzbn_gm_ceiling_mounters_salary` AS ms
@@ -59,6 +65,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
             $closedSubquery = $db->getQuery(true);
             $payedSubQuery = $db->getQuery(true);
             $debtSubQuery = $db->getQuery(true);
+            $movesSubQuery = $db->getQuery(true);
 
             $debtSubQuery
                 ->select('mounter_id,SUM(IF(`type`= 1,`sum`,0)) AS debt,SUM(IF(`type`= 2,`sum`,0)) AS decrease_debt')
@@ -90,8 +97,14 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->innerJoin('`rgzbn_users` AS u ON u.id = ms.mounter_id')
                 ->group(' ms.mounter_id,ms.builder_id');
 
+            $movesSubQuery
+                ->select('ms.mounter_id,ms.builder_id,IFNULL(SUM(ms.sum),0) AS moved')
+                ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
+                ->innerJoin('`rgzbn_users` AS u ON u.id = ms.mounter_id')
+                ->where('ms.sum > 0 AND ms.note IS NOT NULL AND ms.builder_id IS NOT NULL')
+                ->group(' ms.builder_id,ms.mounter_id');
             $query
-                ->select('u.id AS mounter_id,u.name AS mounter_name,u.username as phone,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed')
+                ->select('u.id AS mounter_id,u.name AS mounter_name,u.username as phone,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed,movs.moved')
                 ->select('md.debt-md.decrease_debt AS debt_rest')
                 ->from('`rgzbn_users` AS u')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS um ON u.id = um.user_id')
@@ -104,6 +117,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->leftJoin("($takenSubquery) AS t ON t.dealer_id = builder.id AND t.mounter_id = u.id")
                 ->leftJoin("($closedSubquery) AS cs ON cs.mounter_id = u.id AND cs.dealer_id = builder.id")
                 ->leftJoin("($payedSubQuery) AS ps ON ps.mounter_id = u.id AND ps.builder_id = builder.id")
+                ->leftJoin("($movesSubQuery) AS movs ON movs.mounter_id = u.id AND movs.builder_id = builder.id")
                 ->where('um.group_id = 34')
                 ->group('cm.mounter_id,builder.id')
                 ->order('mounter_name,builder.id ASC');
@@ -114,7 +128,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 $result[$item->mounter_id]['mounter_name'] = $item->mounter_name;
                 $result[$item->mounter_id]['phone'] = $item->phone;
                 $object = clone $item;
-                $object->rest = $object->closed+$object->payed;
+                $object->rest = $object->closed+$object->payed + $object->moved;
                 unset($object->mounter_name);
                 unset($object->mounter_id);
                 $result[$item->mounter_id]['mounter_debt'] = $item->debt_rest;

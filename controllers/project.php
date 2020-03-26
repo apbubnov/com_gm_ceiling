@@ -923,7 +923,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$jinput = JFactory::getApplication()->input;
 			$projectId = $jinput->getInt('project_id');
 			$email = $jinput->getString('email');
-			$includeCalculations = $jinput->get('include_calcs',array(),'ARRAY');
+			$includeCalculations = $jinput->get('include_calcs',[],'ARRAY');
 			$projectMount = $jinput->getString('mount_data');
 			$projectMount = json_decode($projectMount);
 			$productionNote = $jinput->getString('production_note');
@@ -938,7 +938,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
             $project = $projectModel->getData($projectId);
             $calculations = $calculationsModel->new_getProjectItems($projectId);
-            $all_calculations = array();
+            $all_calculations = [];
             foreach($calculations as $calculation){
                 $all_calculations[] = $calculation->id;
                 /*перегенерировать pdf-раскроя*/
@@ -1037,37 +1037,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($projectId . "common_cutpdf") . ".pdf");
             $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.md5($projectId . "consumablesnone") . ".pdf");
             $send = $mailer->Send();
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'runByEmail.txt', "$user->id, $user->name,$email", FILE_APPEND);
 
-			/*$project_id = $jinput->get('id', null, 'INT');
-			$email = $jinput->get('email', null, 'STRING');
-			$calculations_model = self::getModel('calculations');
-			$calculations = $calculations_model->new_getProjectItems($project_id);
-			$array = [];
-			foreach($calculations as $calc){
-				Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
-				$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
-			}
-			print_r($array);
-			Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
-			$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
-			$filename = "project№".$project_id. ".pdf";
-			$sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
-			Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
-			$mailer = JFactory::getMailer();
-            $config = JFactory::getConfig();
-            $sender = array(
-                $config->get('mailfrom'),
-                $config->get('fromname')
-            );
-
-            $mailer->setSender($sender);
-            $mailer->addRecipient($email);
-            $body = "Запуск в производство";
-            $mailer->setSubject('Запуск в производство');
-            $mailer->setBody($body);
-            $mailer->addAttachment($sheets_dir.$filename);
-            $send = $mailer->Send();
-            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);*/
             die($send);
 		}
 		catch(Exception $e)
@@ -1455,12 +1427,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$data->new_project_sum = $new_value;
 			$data->dealer_id = $user->dealer_id;
 			$check_done = $model->new_getProjectItems($project_id);
-			if($check_done->check_mount_done == 0 && $check == 1) {
+			/*if($check_done->check_mount_done == 0 && $check == 1) {
+			    throw new Exception('check');
 				$new_value = $check_done->new_project_sum + $new_value;
 				//$mouting_sum_itog = $mouting_sum + $check_done->new_project_mounting;
 				$mouting_sum = $mouting_sum + $check_done->new_project_mounting;
 				$material_sum = $material_sum + $check_done->new_material_sum;
-			}
+			}*/
 			// Attempt to save the data.
             $return = $model->done($project_id, $new_value, $mouting_sum, $material_sum, $check, $mouting_sum_itog );
 			//Gm_ceilingHelpersGm_ceiling::notify($data, 2);

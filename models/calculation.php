@@ -174,9 +174,17 @@ class Gm_ceilingModelCalculation extends JModelItem
 					->join('LEFT','`#__gm_ceiling_calculations` AS calc ON calc.project_id = proj.id')
 					->where('calc.id  = ' . $this->_item->id);
 				$db->setQuery($query);
-
+				$calcFormModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
 				$this->_item->dealer_id = $db->loadObject()->dealer_id;
-
+                $this->_item->n13 = $calcFormModel->n13_load($this->_item->id);
+                $this->_item->n14 = $calcFormModel->n14_load($this->_item->id);
+                $this->_item->n15 = $calcFormModel->n15_load($this->_item->id);
+                $this->_item->n22 = $calcFormModel->n22_load($this->_item->id);
+                $this->_item->n23 = $calcFormModel->n23_load($this->_item->id);
+                $this->_item->n26 = $calcFormModel->n26_load($this->_item->id);
+                $this->_item->n29 = $calcFormModel->n29_load($this->_item->id);
+                $this->_item->n45 = $calcFormModel->n45_load($this->_item->id);
+                $this->_item->n19 = $calcFormModel->n19_load($this->_item->id);
 				//throw new Exception("Error Processing Request", 1);
 			return $this->_item;
 		}
@@ -585,6 +593,27 @@ class Gm_ceilingModelCalculation extends JModelItem
     {
         try
         {
+            $table = $this->getTable();
+            //по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
+            if ($table->save($data) === true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function duplicate_calculation($data)
+    {
+        try
+        {
             //throw new Exception(print_r($data,true));
 			$table = $this->getTable();
 			//по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
@@ -632,7 +661,13 @@ class Gm_ceilingModelCalculation extends JModelItem
             unset($data['goods']);
             unset($data['jobs']);
 
+            foreach($data as $key=>$value){
+                if(empty($value) && $value !== 0){
+                    unset($data[$key]);
+                }
+            }
 
+            //throw new Exception(print_r($data,true));
             $columns = array_keys($data);
             $values = array_values($data);
             foreach ($values as $key=>$value){

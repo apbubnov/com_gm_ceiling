@@ -111,7 +111,7 @@ $user_group = $user->groups;
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-md-6 no_padding">
+            <div class="col-md-6 no_padding">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                 <input name="advt_id" id ="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">

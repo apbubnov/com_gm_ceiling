@@ -202,7 +202,7 @@ $rest = -($total_sum) - $contributed;
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=accountant&subtype=close', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Договоры</a>
         </p>
-        <?php if($userId = 2 || $userId = 1 || $userId == 827 ){?>
+        <?php if($userId == 2 || $userId == 1 || $userId == 827 ){?>
             <p class="center">
                 <a class="btn btn-large btn-primary"
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>">
@@ -225,9 +225,9 @@ $rest = -($total_sum) - $contributed;
                 <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
             </div>
         </div>
-        <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=incoming_calls', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Входящие звонки</a>
-        </p>
+        <!--<p class="center">
+            <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=incoming_calls', false); */?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Входящие звонки</a>
+        </p>-->
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
@@ -250,9 +250,9 @@ $rest = -($total_sum) - $contributed;
          <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fas fa-chart-line"></i> Аналитика</a>
         </p>
-        <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
-        </p>
+        <!--<p class="center">
+            <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); */?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
+        </p>-->
         <p>
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
         </p>

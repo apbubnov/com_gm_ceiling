@@ -122,31 +122,18 @@ class Gm_ceilingModelProject extends JModelItem
 					if (is_object($this->_item->client_id)){
 						$this->_item->client_id = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->client_id);
 					}
-					$values = (is_array($this->_item->client_id)) ? $this->_item->client_id : explode(',',$this->_item->client_id);
 
-					$textValue = array();
-					foreach ($values as $value)
-					{
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$query
-							->select('`#__gm_ceiling_clients`.`id`')
-							->select('`#__gm_ceiling_clients`.`client_name`')
-							->select('`#__gm_ceiling_clients`.`dealer_id`')
-							->from($db->quoteName('#__gm_ceiling_clients'))
-							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->client_name;
-							$textValue2[] = $results->dealer_id;
-							$textValue3[] = $results->id;
-						}
-					}
-					$this->_item->id_client_num = !empty(intval($this->_item->_client_id))?$this->_item->_client_id:$this->_item->id_client;
-                    $this->_item->client_id = !empty($textValue) ? implode(', ', $textValue) : $this->_item->client_id;
-                    $this->_item->dealer_id = !empty($textValue2) ? implode(', ', $textValue2) : $this->_item->dealer_id;
-                    $this->_item->id_client = !empty($textValue3) ? implode(', ',$textValue3) : $this->_item->client_id;
+					$clientId = $this->_item->client_id;
+
+					$clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+					$client = $clientModel->getClientById($clientId);
+
+                    if (!empty($client)) {
+                        $this->_item->id_client_num = $client->id;
+                        $this->_item->client_id = $client->client_name;
+                        $this->_item->dealer_id = $client->dealer_id;
+                        $this->_item->id_client = $client->id;
+                    }
 				}
 
 				$db = JFactory::getDbo();
@@ -170,32 +157,8 @@ class Gm_ceilingModelProject extends JModelItem
                 if(!empty($prepayment_total)){
                     $this->_item->prepayment_total = $prepayment_total->total;
                 }
-/*				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
-					if (is_object($this->_item->project_mounter)){
-						$this->_item->project_mounter = \Joomla\Utilities\ArrayHelper::fromObject($this->_item->project_mounter);
-					}
-					$values = (is_array($this->_item->project_mounter)) ? $this->_item->project_mounter : explode(',',$this->_item->project_mounter);
 
-					$textValue = array();
-					foreach ($values as $value)
-					{
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$query
-							->select('`#__gm_ceiling_groups_2483036`.`name`')
-							->from($db->quoteName('#__gm_ceiling_groups', '#__gm_ceiling_groups_2483036'))
-							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->team_title;
-						}
-					}
-
-					$this->_item->project_mounter = !empty($textValue) ? implode(', ', $textValue) : $this->_item->project_mounter;
-
-				}*/
-				
+				//throw new Exception(print_r($this->_item,true));
 			return $this->_item;
 		}
 		catch(Exception $e)

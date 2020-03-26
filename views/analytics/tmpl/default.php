@@ -136,6 +136,16 @@ echo parent::getButtonBack();
             <a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytics&type=visitors">Посетители сайта</a>
         </div>
     </div>
+<?php }
+    else{ ?>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-3">
+                <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=calls_analitic">Аналитика менеджеров</a>
+            </div>
+            <div class="col-md-3">
+                <a class = "btn btn-primary" href="/index.php?option=com_gm_ceiling&view=analytics&type=gaugers">Аналитика по замерщикам</a>
+            </div>
+        </div>
 <?php }?>
 <script type="text/javascript">
     var data = [],total = [];

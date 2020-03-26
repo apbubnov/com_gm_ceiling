@@ -138,7 +138,7 @@ let arr_blocks = [
             {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_oter_mount_cptn",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n35",btn_cont_id:"btn_cont_n35",prev_id:"block_oter_mount_cptn",btn_id:"btn_n35",btn_text:"Контурный профиль",need_ajax : 0,kind_btn:"0", img: "paryashii.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_oter_mount_cptn",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n45",btn_cont_id:"btn_cont_n45",prev_id:"block_oter_mount_cptn",btn_id:"btn_n45",btn_text:"Световые линии",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n45",btn_cont_id:"btn_cont_n45",prev_id:"block_oter_mount_cptn",btn_id:"btn_n45",btn_text:"Световые линии",need_ajax : 1,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34",btn_cont_id:"btn_cont_n34",prev_id:"block_oter_mount_cptn",btn_id:"btn_n34",btn_text:"Диодная лента",need_ajax : 0,kind_btn:"0", img: "diod.png", parent: "oter_mount_cptn"},
             {block_id:"block_n34_2",btn_cont_id:"btn_cont_n34",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
             {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_oter_mount_cptn",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png", parent: "oter_mount_cptn"},
@@ -166,11 +166,12 @@ let n_data = {};
 let n28_src = {
     name : 'jform[n28]',
     values : [
-        {id:'jform_n28_4',value:4,text:"KRAAB"},
+        {id:'jform_n28_5',value:5,text:"EuroKRAAB"},
+        {id:'jform_n28_4',value:4,text:"KRAAB 3.0"},
         {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
         {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
-        {id:'jform_n28',value:3,text:"Стеновой багет ПВХ"},
-        {id:'jform_n28_3',value:0,text:"Без багета",selected:true}
+        {id:'jform_n28',value:3,text:"Стеновой багет ПВХ",selected:true},
+        {id:'jform_n28_3',value:0,text:"Без багета"}
     ]
 };
 let n28 =  create_radios_group(n28_src);
@@ -229,6 +230,8 @@ let height_src = {
     values : [
         {id:'max_height',value:2,text:"больше 5 метров"},
         {id:'middle_height',value:1,text:"от 4 до 5 метров"},
+        {id:'middle_height4',value:4,text:"от 3,5 до 4 метров"},
+        {id:'middle_height3',value:3,text:"от 3 до 3,5 метров"},
         {id:'min_height',value:0,text:"меньше 3х метров",selected:true}
     ]
 }
@@ -253,20 +256,18 @@ let niche_src = {
         {id:'jform_niche_open',value:1,text:"Открытая ниша",selected:true}
     ]
 }
-let n16 = '<div id="jform_cornice_block"><div id="jform_cornice_html">';
-n16 += create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
+let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
+
 n16 += create_radios_group(cornice_src);
-n16 +='<div id = "niches" style="display:none;">';
+n16+='<div id = "niches" style="display:none;">';
 n16 += '<h4>Выберите тип ниши:</h4>';
 n16 +=  create_radios_group(niche_src);
-n16 +='</div>';
-n16 += '</div>';
-n16 += '<button class="btn btn-primary" type="button" id="copy_cornice">Добавить</button>';
-n16 += '</div>';
+n16+='</div>';
 
 let need_mount_src = {
     name : 'need_mount',
     values : [
+        {id:'mountMsk',value:3,text:"Москва"},
         {id:'with_mount',value:1,text:"Нужен(свой прайс)"},
         {id:'with_service',value:2,text:"Нужен(Монтажная служба)",selected:true},
         {id:'without',value:0,text:"Не нужен",selected:true}
@@ -317,6 +318,12 @@ let ecola_src = {
         {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
     ]
 }
+
+n13 += '<h6>Вклейка кольца внутрь</h6>'
+n13 += create_single_input(1,"jform_n13_inside_ring","jform[n13_inside_ring]","Введите количество","Кол-во, шт.","tel");
+
+n13 += '<h6>Двойное подключение</h6>'
+n13 += create_single_input(1,"jform_n13_double","jform[n13_double]","Введите количество","Кол-во, шт.","tel");
 
 n13 +='<h4>Вы можете приобрести светильники у нас:</h4>';
 n13 += create_block_with_divs(ecola_src);
@@ -373,8 +380,8 @@ let n23_src = {
 }
 let n23 =  create_block_with_divs(n23_src);
 
-let n33 = create_single_input(1,"jform_n33","jform[n33]","Лючок:","Кол-во,м.","tel");
-n33 += create_single_input(1,"jform_n33_2","jform[n33_2]","Обход люка:","Кол-во,м.","tel");
+let n33 = create_single_input(1,"jform_n33","jform[n33]","Лючок:","Кол-во,шт.","tel");
+n33 += create_single_input(1,"jform_n33_2","jform[n33_2]","Большой Люк:","Кол-во,шт.","tel");
 
 
 let n29_src = {
@@ -386,6 +393,7 @@ let n29_src = {
         {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
     ]
 }
+
 let corner_src = {
     name : 'jform[corner]',
     values : [
@@ -395,6 +403,7 @@ let corner_src = {
 }
 
 let n29 =  create_block_with_divs(n29_src);
+n29 += create_single_input(1,"jform_n46","jform[n46]","Острые углы:","Кол-во,шт.","tel");
 //n29 += '<h4>Выберите тип уголков</h4>';
 //n29 += create_radios_group(corner_src);
 let extra_components_src = {
@@ -427,8 +436,17 @@ let extra_mounting_src = {
 }
 let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
-let n45 = create_single_input(1,"jform_n45","jform[n45]","Световые линии,м","Кол-во,м.","tel");
-
+//let n45 = create_single_input(1,"jform_n45","jform[n45]","Световые линии,м","Кол-во,м.","tel");
+let n45_src = {
+    id : 'jform_n45',
+    name : 'jform[n45]',
+    columns:[
+        {div_class:'advanced_col1',text:'Кол-во',input_name:"n45_count[]",input_id:"n45_count",input_type:1},
+        {div_class:'advanced_col5',text:'Тип',input_name:"n45_type[]",input_id:"n45",input_type:2},
+        {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
+    ]
+}
+let n45 =  create_block_with_divs(n45_src);
 let n34 = create_single_input(1,"jform_n34","jform[n34]","Диодная лента,м","Кол-во,м.","tel");
 n34 += create_single_input(1,"jform_n34_2","jform[n34_2]","Блок питания,шт","Кол-во,шт.","tel");
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
@@ -593,7 +611,6 @@ function create_captions(columns){
 }
 function create_body(columns){
     result = `<div class="form-group" style="margin-bottom: 0em;">`;
-    if(!empty(columns))
     for(let i =0;i<columns.length;i++){
         if(columns[i].input_type){
             result+= `<div class = "${columns[i].div_class}">${create_single_input(columns[i].input_type,columns[i].input_id,columns[i].input_name,"",columns[i].text,"")}</div>`;
@@ -631,7 +648,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         }
     }
     if(var_name == 'n13' || var_name == 'n22' ){
-       jQuery(`[name = '${var_name}_type[]']`).change(change_select_event);
+        jQuery(`[name = '${var_name}_type[]']`).change(change_select_event);
     }
     let radios = jQuery('.radio');
     for(let i = radios.length;i--;){
@@ -658,12 +675,12 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         }
     });
     jQuery("#jform_scaffolding").click(function () {
-       if(jQuery(this).attr("checked") == "checked"){
-           this.value = 1;
-       }
-       else{
-           this.value = 0;
-       }
+        if(jQuery(this).attr("checked") == "checked"){
+            this.value = 1;
+        }
+        else{
+            this.value = 0;
+        }
     });
     jQuery("#jform_n12_cancel_install").click(function () {
         if(jQuery(this).attr("checked") == "checked"){
@@ -673,20 +690,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
             this.value = 0;
         }
     });
-});
-
-jQuery('body').on('click','#copy_cornice',function(){
-    var html = jQuery("#jform_cornice_html").clone(),
-        childrens = html.children(),
-        cornice_count = jQuery('[name="jform[n27]"]').length;
-    for(var i=0,children,n27_el,n16_el,niche;i<childrens.length;i++){
-        children = jQuery(childrens[i]);
-        var n27_el = children.find('[name="jform[n27]"]');
-        n27_el.attr('id','jform_n27_'+cornice_count);
-
-    }
-    jQuery(this).before(html);
-
 });
 
 jQuery(".component-content").on("click", ".btn_calc", function () {
@@ -710,7 +713,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 jQuery(this).attr('fix', true);
             });
             if (jQuery("#without").attr("fix") != "true") {
-                jQuery("#with_mount").attr("checked", true);
+                jQuery("#with_service").attr("checked", true);
             }
         }
     } else {
@@ -727,7 +730,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
             arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
-                       let id = item2.block_id.replace("block_","");
+                        let id = item2.block_id.replace("block_","");
                         if (jQuery(`#jform_${id}_inside`).closest('.col-sm-4').css("display") != "none") {
                             jQuery(`#jform_${id}_inside`).closest('.col-sm-4').hide();
                             toggle_color(jQuery(`#btn_${id}`));
@@ -768,12 +771,12 @@ function open_general_blocks() {
         if (!empty(calculation[Object.keys(calculation)[i]]) ){
             obj = get_parent(Object.keys(calculation)[i]);
             if(obj){
-                 btn_name = obj.btn_id;
+                btn_name = obj.btn_id;
                 prop_name = obj.key;
             }
 
             if (btn_name && !in_array(arr_parent,btn_name)){
-               arr_parent.push(btn_name);
+                arr_parent.push(btn_name);
             }
             if(prop_name && !in_array(calc_props,prop_name)){
                 calc_props.push(prop_name);
@@ -801,15 +804,17 @@ function get_parent(n) {
         case 'n27':
             n = 'n16';
             break;
+        case 'n46':
+            n = 'n29';
+            break;
         case 'scaffolding':
             n = 'height';
-            break;
-        case 'n12_cancell_install':
-            n = 'n12';
             break;
         case 'n20_1':
             n = 'n20';
             break;
+        case 'n13_inside':
+        case 'n13_double':
         case 'n26':
             n = 'n13';
             break;
@@ -846,11 +851,15 @@ function open_blocks(props){
                 break;
             case 'n8':
             case 'n7':
-                jQuery('#btn_n7').trigger("click")
+                if(!jQuery("#jform_n7_inside").length){
+                    jQuery('#btn_n7').trigger("click")
+                }
                 break;
             case 'n33_2':
             case 'n33':
-                jQuery('#btn_n33').trigger("click")
+                if(!jQuery("#jform_n33_inside").length){
+                    jQuery('#btn_n33').trigger("click");
+                }
                 break;
             case 'n22':
             case 'n22_1':
@@ -859,7 +868,12 @@ function open_blocks(props){
                 break;
             case 'n34_2':
             case 'n34':
-                jQuery('#btn_n34').trigger("click")
+                if(!jQuery("#jform_n34_inside").length){
+                    jQuery('#btn_n34').trigger("click");
+                }
+                break;
+            case 'n46':
+                jQuery('#btn_n29').trigger("click")
                 break;
             default:
                 if(!empty(jQuery(`#btn_${props[i]}`)[0])){
@@ -875,7 +889,7 @@ let change_event_radio = function(){
 
     if(this.name == 'jform[n28]' && this.value !=0){
         if(jQuery('[name = "need_mount"]').length){
-            jQuery("#jform_need_mount_inside").show();
+            //jQuery("#jform_need_mount_inside").show();
         }
         else{
             jQuery("#btn_need_mount").trigger("click");
@@ -883,19 +897,19 @@ let change_event_radio = function(){
         }
         if(jQuery('#without').attr("fix")!="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
-            jQuery('#with_mount').attr("checked",true);
+            jQuery('#with_service').attr("checked",true);
         }
 
 
     }
-   if(this.name == 'jform[n28]' && this.value ==0){
-         if( jQuery('#with_mount').attr("fix") !="true"){
+    if(this.name == 'jform[n28]' && this.value ==0){
+        if( jQuery('#with_service').attr("fix") !="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
             jQuery('#without').attr("checked",true);
-            jQuery("#jform_need_mount_inside").hide();
+            //jQuery("#jform_need_mount_inside").hide();
         }
 
-   }
+    }
 };
 let change_radio = function(){
     if(this.id == "jform_n6_1"){
@@ -910,31 +924,31 @@ let change_radio = function(){
         }
     }
     else{
-            jQuery("#n6_color_img").hide();
-            jQuery("#jform_n1").val("");
-            jQuery("#n6_color_img").prop("src","");
-            jQuery("#n6_color_cnt").hide();
-        }
+        jQuery("#n6_color_img").hide();
+        jQuery("#jform_n1").val("");
+        jQuery("#n6_color_img").prop("src","");
+        jQuery("#n6_color_cnt").hide();
+    }
 };
 function fill_calc_data(){
- var time_end,time_start = performance.now();
+    var time_end,time_start = performance.now();
     let values;
     let value;
     let count;
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
-       if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
-           switch(Object.keys(calculation)[i]){
+        if(!empty(calculation[Object.keys(calculation)[i]]) || Object.keys(calculation)[i] =="need_metiz" || Object.keys(calculation)[i] =="need_cuts"){
+            switch(Object.keys(calculation)[i]){
                 case 'scaffolding':
                     if(calculation[Object.keys(calculation)[i]])
                         jQuery("#jform_scaffolding").attr("checked","checked");
-                        jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
+                    jQuery("#jform_scaffolding").val(calculation[Object.keys(calculation)[i]]);
                     break;
-               case 'n12_cancel_install':
-                   if(calculation[Object.keys(calculation)[i]])
-                       jQuery("#jform_n12_cancel_install").attr("checked","checked");
-                   jQuery("#jform_n12_cancel_install").val(calculation[Object.keys(calculation)[i]]);
-                   break;
+                case 'n12_cancel_install':
+                    if(calculation[Object.keys(calculation)[i]])
+                        jQuery("#jform_n12_cancel_install").attr("checked","checked");
+                    jQuery("#jform_n12_cancel_install").val(calculation[Object.keys(calculation)[i]]);
+                    break;
                 case 'n41':
                 case 'n28':
                 case 'height':
@@ -1023,16 +1037,16 @@ function fill_calc_data(){
                         check_select_option('n15_size[]',j,n15_objs[j]['n15_size']);
                     }
                     break;
-               case 'n19':
-                   let n19_objs = calculation[Object.keys(calculation)[i]];
-                   for(let j = 1;j<n19_objs.length;j++){
-                       jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                   }
-                   for(let j = 0;j<n19_objs.length;j++){
-                       jQuery("[name = 'n19_count[]']")[j].value = n19_objs[j]['count'];
-                       check_select_option('n19_type[]',j,n19_objs[j]['wire_id']);
-                   }
-                   break;
+                case 'n19':
+                    let n19_objs = calculation[Object.keys(calculation)[i]];
+                    for(let j = 1;j<n19_objs.length;j++){
+                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
+                    }
+                    for(let j = 0;j<n19_objs.length;j++){
+                        jQuery("[name = 'n19_count[]']")[j].value = n19_objs[j]['count'];
+                        check_select_option('n19_type[]',j,n19_objs[j]['wire_id']);
+                    }
+                    break;
                 case 'n22':
                     let n22_objs = calculation[Object.keys(calculation)[i]];
                     for(let j = 1;j<n22_objs.length;j++){
@@ -1064,6 +1078,16 @@ function fill_calc_data(){
                         check_select_option('n29_type[]',j,n29_objs[j]['n29_type']);
                     }
                     break;
+                case 'n45':
+                    let n45_objs = calculation[Object.keys(calculation)[i]];
+                    for(let j = 1;j<n45_objs.length;j++){
+                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
+                    }
+                    for(let j = 0;j<n45_objs.length;j++){
+                        jQuery("[name = 'n45_count[]']")[j].value = n45_objs[j]['n45_count'];
+                        check_select_option('n45_type[]',j,n45_objs[j]['n45_type']);
+                    }
+                    break;
                 case 'extra_components':
                     let extra_comp_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
                     for(let j = 1;j<Object.keys(extra_comp_data).length;j++){
@@ -1074,115 +1098,115 @@ function fill_calc_data(){
                         jQuery("[name = 'extra_components_value[]']")[j].value = extra_comp_data[Object.keys(extra_comp_data)[j]]['value'];
 
                     }
-                break;
+                    break;
                 case 'extra_mounting':
                     let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                        for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
-                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                        }
-                        for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
-                            jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
-                            jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
+                    for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
+                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                    }
+                    for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
+                        jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
+                        jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
 
-                        }
+                    }
                     break;
-               case 'n37':
-                   let n37 = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                   jQuery("#n37_square").val(n37.square);
-                   jQuery("#n37_cost").val(n37.cost);
-                   break;
+                case 'n37':
+                    let n37 = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                    jQuery("#n37_square").val(n37.square);
+                    jQuery("#n37_cost").val(n37.cost);
+                    break;
                 case 'components_stock':
                     let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
 
-                         for(let j = 1;j<Object.keys(stock_data).length;j++){
-                            jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                        }
-                         for(let j = 0;j<Object.keys(stock_data).length;j++){
-                            jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
-                            jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
-                            jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
+                    for(let j = 1;j<Object.keys(stock_data).length;j++){
+                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                    }
+                    for(let j = 0;j<Object.keys(stock_data).length;j++){
+                        jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
+                        jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
+                        jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
 
-                        }
+                    }
                     break;
-               case 'need_mount':
-                   if(calculation['need_mount'] == 2){
-                       jQuery("#with_service").attr("checked",true);
-                   }
-                   if(calculation.need_mount == 1){
-                       jQuery("#with_mount").attr("checked",true);
-                   }
-                   break;
-               case 'need_metiz':
-                   if(calculation['need_metiz'] == 0){
-                       jQuery("#without_metiz").attr("checked",true);
-                   }
-                   else{
-                       jQuery("#with_metiz").attr("checked",true);
-                   }
-                   break;
-               case 'need_cuts':
-                   if(calculation['need_cuts'] == 0){
-                       jQuery("#without_cuts").attr("checked",true);
-                   }
-                   else{
-                       jQuery("#with_cuts").attr("checked",true);
-                   }
-                   break;
+                case 'need_mount':
+                    if(calculation['need_mount'] == 2){
+                        jQuery("#with_service").attr("checked",true);
+                    }
+                    if(calculation.need_mount == 1){
+                        jQuery("#with_mount").attr("checked",true);
+                    }
+                    break;
+                case 'need_metiz':
+                    if(calculation['need_metiz'] == 0){
+                        jQuery("#without_metiz").attr("checked",true);
+                    }
+                    else{
+                        jQuery("#with_metiz").attr("checked",true);
+                    }
+                    break;
+                case 'need_cuts':
+                    if(calculation['need_cuts'] == 0){
+                        jQuery("#without_cuts").attr("checked",true);
+                    }
+                    else{
+                        jQuery("#with_cuts").attr("checked",true);
+                    }
+                    break;
                 default:
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
-           }
-       }
+            }
+        }
     }
     time_end = performance.now()-time_start;
 }
 let show_color_switch = function(){
-        data = n6_colors;
-        var items = "<div class='center'>";
-        jQuery.each( data, function( key, val ) {
-            items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
+    data = n6_colors;
+    var items = "<div class='center'>";
+    jQuery.each( data, function( key, val ) {
+        items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
 
-        });
-        items += "</div>";
-        modal({
-            type: 'info',
-            title: 'Выберите цвет',
-            text: items,
-            size: 'large',
-            onShow: function() {
-                jQuery(".click_color_1").click(function(){
-                    jQuery("#n6_color_img").prop( "src", jQuery( this ).data("color_img_1"));
-                    jQuery("#jform_n6_1").val(jQuery( this ).data("color_id_1"));
-                    jQuery("#n6_color_img").show();
-
-
-                });
-            },
-            callback: function(result) {
+    });
+    items += "</div>";
+    modal({
+        type: 'info',
+        title: 'Выберите цвет',
+        text: items,
+        size: 'large',
+        onShow: function() {
+            jQuery(".click_color_1").click(function(){
+                jQuery("#n6_color_img").prop( "src", jQuery( this ).data("color_img_1"));
+                jQuery("#jform_n6_1").val(jQuery( this ).data("color_id_1"));
+                jQuery("#n6_color_img").show();
 
 
-            },
-            autoclose: false,
-            center: true,
-            closeClick: true,
-            closable: true,
-            theme: 'xenon',
-            animate: true,
-            background: 'rgba(0,0,0,0.35)',
-            zIndex: 1050,
-            buttonText: {
-                ok: 'Позвоните мне',
-                cancel: 'Закрыть'
-            },
-            template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
-            _classes: {
-                box: '.modal-box',
-                boxInner: ".modal-inner",
-                title: '.modal-title',
-                content: '.modal-text',
-                buttons: '.modal-buttons',
-                closebtn: '.click_color_1'
-            }
-        });
+            });
+        },
+        callback: function(result) {
+
+
+        },
+        autoclose: false,
+        center: true,
+        closeClick: true,
+        closable: true,
+        theme: 'xenon',
+        animate: true,
+        background: 'rgba(0,0,0,0.35)',
+        zIndex: 1050,
+        buttonText: {
+            ok: 'Позвоните мне',
+            cancel: 'Закрыть'
+        },
+        template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
+        _classes: {
+            box: '.modal-box',
+            boxInner: ".modal-inner",
+            title: '.modal-title',
+            content: '.modal-text',
+            buttons: '.modal-buttons',
+            closebtn: '.click_color_1'
+        }
+    });
 
 
 };
@@ -1490,3 +1514,49 @@ function ClearSelect(e) {
 
 open_general_blocks();
 fill_calc_data();
+
+if(isGmManager == 0 && empty(calculation.n28)){
+    let id_block = 'block_basic_work';
+    let parent = id_block.replace("block_", "");
+    if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
+        arr_blocks.forEach(function(item) {
+            if (item.block_id == id_block && item.parent) {
+                item.children.forEach(function(item2){
+                    generate_block(item2,1);
+                });
+            }
+        });
+        event_help();
+    } else {
+        arr_blocks.forEach(function(item) {
+            if (item.block_id == id_block && item.parent) {
+                item.children.forEach(function(item2){
+                    let id = item2.block_id.replace("block_","");
+                    if (jQuery(`#jform_${id}_inside`).closest('.col-sm-4').css("display") != "none") {
+                        jQuery(`#jform_${id}_inside`).closest('.col-sm-4').hide();
+                        toggle_color(jQuery(`#btn_${id}`));
+                    }
+                });
+            }
+        });
+        jQuery(`[data-parent = "${parent}"]`).toggle();
+    }
+    let cont_id = 'block_n28';
+    let var_name = cont_id.replace('block_','');
+    let col_id = `jform_${var_name}_inside`;
+    let cont =  create_container("",col_id, var_name);
+    let element = eval(var_name);
+
+    if (!document.getElementById(col_id)) {
+        jQuery(`#${cont_id}`).after(cont);
+        jQuery(`#${col_id}`).append(element);
+    } else {
+        jQuery(`#${col_id}`).toggle();
+    }
+    toggle_color(jQuery('#btn_n28'));
+    let radios = jQuery('.radio');
+    for(let i = radios.length;i--;){
+        radios[i].onclick = change_event_radio;
+    }
+    jQuery('#jform_n28').trigger('click');
+}

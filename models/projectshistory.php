@@ -227,6 +227,39 @@ class Gm_ceilingModelProjectshistory extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getManagersProjects($date1,$date2){
+	    try{
+	        $user = JFactory::getUser();
+	        $dealerId = $user->dealer_id;
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $subquery = $db->getQuery(true);
+	        $subquery
+                ->select('p.created_by,p.read_by_manager,ph.new_status,COUNT(ph.project_id) AS `count`')
+                ->select('GROUP_CONCAT(distinct CONCAT(\'{"id":"\',ph.project_id,\'","created":"\',p.created_by,\'","read":"\',p.read_by_manager,\'"}\') SEPARATOR \',\') AS projects/* p.created_by,p.read_by_manager,*/')
+                ->from('`rgzbn_gm_ceiling_projects_history` as ph')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` as p ON p.id = ph.project_id')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` as c on c.id = p.client_id')
+                ->where("ph.date_of_change between '$date1' and '$date2' and ph.new_status in (1,3,4,5) and c.dealer_id = $dealerId")
+                ->group('ph.new_status,p.created_by,p.read_by_manager');
+	        $query
+                ->select('u.id,u.name')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"status":"\',pr.new_status,\'","projects":[\',pr.projects,\']}\')),\']\') AS `data`')
+                ->from('`rgzbn_users` as u')
+                ->innerJoin('`rgzbn_user_usergroup_map` as map on u.id = map.user_id')
+                ->innerJoin("($subquery) as pr on pr.created_by = u.id OR pr.read_by_manager = u.id")
+                ->where('map.group_id = 16')
+                ->group('u.id');
+	        $db->setQuery($query);
+            //throw new Exception($query);
+	        $result = $db->loadObjectList();
+	        return $result;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	
 }
 ?>

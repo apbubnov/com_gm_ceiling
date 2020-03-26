@@ -182,4 +182,18 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getManagersProjects(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dateFrom = $jinput->get('dateFrom','','STRING');
+            $dateTo = $jinput->get('dateTo','','STRING');
+            $projectsHistoryModel = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            $result = $projectsHistoryModel->getManagersProjects($dateFrom,$dateTo);
+            die(json_encode($result));
+
+        }catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

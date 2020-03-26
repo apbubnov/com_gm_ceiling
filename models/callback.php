@@ -342,21 +342,21 @@ class Gm_ceilingModelCallback extends JModelList
                 ->where('`us`.`dealer_type` = 3')
                 ->group('`c`.`manager_id`');
             if(!empty($date1)&&!empty($date2)){
-                $designerQuery->where("`u`.`registerDate` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+                $designerQuery->where("`us`.`registerDate` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
             }
             elseif(!empty($date1)&&empty($date2)){
-                $designerQuery->where("`u`.`registerDate` > '$date1 00:00:00'");
+                $designerQuery->where("`us`.`registerDate` > '$date1 00:00:00'");
             }
             elseif(empty($date1)&&!empty($date2)){
-                $designerQuery->where("`u`.`registerDate` < '$date2 23:59:59'");
+                $designerQuery->where("`us`.`registerDate` < '$date2 23:59:59'");
             }
 
             $subquery
                 ->select('`h`.`manager_id`,`h`.`status`,`u`.`name` AS `manager`,`h`.`change_time`,`u`.`dealer_id`,IFNULL(`au`.`added_users`,\'-\') AS `added_users`,COUNT( DISTINCT `h`.`id`)  AS `count`')
-                ->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',IFNULL(pr.new_status,"-"),\'","count":"\',IFNULL(pr.count,"-"),\'","ids":"\',IFNULL(pr.ids,"-"),\'"}\')) AS projects_count')
+                //->select('GROUP_CONCAT( DISTINCT CONCAT(\'{"status":"\',IFNULL(pr.new_status,"-"),\'","count":"\',IFNULL(pr.count,"-"),\'","ids":"\',IFNULL(pr.ids,"-"),\'"}\')) AS projects_count')
                 ->from('`rgzbn_gm_ceiling_calls_status_history` AS h ')
                 ->innerJoin('`rgzbn_users` AS u ON u.id = h.manager_id')
-                ->leftJoin("($measureQuery) as pr ON pr.created_by = h.manager_id")
+                //->leftJoin("($measureQuery) as pr ON pr.created_by = h.manager_id")
                 ->leftJoin("($designerQuery) AS au ON au.manager_id = h.manager_id")
                 ->where("`u`.`dealer_id` = $dealerId")
                 ->group('`h`.`manager_id`,`h`.`status`');
@@ -371,14 +371,17 @@ class Gm_ceilingModelCallback extends JModelList
             }
             $query = $db->getQuery(true);
             $query
-                ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","added_users":"\',cnt.added_users,\'","count":"\',cnt.count,\'","measures_count":[\',cnt.projects_count,\']}\')),\']\') AS manager_count')
+                ->select('cs.id,cs.title,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"manager":"\',cnt.manager,\'","added_users":"\',cnt.added_users,\'","count":"\',cnt.count,\'"}\')),\']\') AS manager_count')
                 ->from('`rgzbn_gm_ceiling_calls_status` AS cs')
                 ->leftJoin("($subquery) AS `cnt` ON `cs`.`id` = `cnt`.`status`")
                 ->group('cs.id');
             $db->setQuery($query);
            // throw new Exception($query);
             $items = $db->loadObjectList();
-            return $items;
+            $projectsHistoryModel = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            $projectsData = $projectsHistoryModel->getManagersProjects($date1,$date2);
+            $result = (object)['calls'=>$items,'projects'=>$projectsData];
+            return $result;
         }
         catch(Exception $e)
         {

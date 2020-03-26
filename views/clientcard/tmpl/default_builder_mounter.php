@@ -215,7 +215,7 @@ $rest_sum = $closedSums->sum - $total_pay;
             html += '<div class="col-md-11">';
 
             for (var j = 0, td, val, sum,mounter; j < elem.projects.length; j++) {
-                var colIndex = (elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
+                var colIndex = 12;//(elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
                 var style;
                 jQuery.each(elem.projects[j].calcs,function(index,elem){
                    if(elem.mounters && elem.mounters[0].id == user_id){

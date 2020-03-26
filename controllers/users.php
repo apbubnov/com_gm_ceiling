@@ -336,5 +336,77 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function registerNewUser(){
+	    try {
+            $user = JFactory::getUser();
+            $userId = $user->get('id');
+            $dealerId = $user->dealer_id;
+
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('fio', '', 'STRING');
+            $phone = $jinput->get('phone', '', 'STRING');
+            $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+            $email = $jinput->get('email', '', 'STRING');
+
+            //генератор пароля
+            $chars = "qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP";
+            $max = 6;
+            $size = StrLen($chars) - 1;
+            $password = null;
+            while ($max--) {
+                $password .= $chars[rand(0, $size)];
+            }
+            //-----------------------------------
+            jimport('joomla.user.helper');
+
+            if ($dealerId == 1) {
+                $groups = [2, 16];
+            } else {
+                $groups = [2, 13];
+            }
+
+            $data = [
+                "name" => $name,
+                "username" => $phone,
+                "password" => $password,
+                "email" => $email,
+                "groups" => $groups,
+                "dealer_id" => $dealerId,
+                "requireReset" => 0
+            ];
+
+            $user = new JUser;
+            if (!$user->bind($data)) {
+               //throw new Exception($user->getError());
+                $result = ["type"=>'error','text'=>$user->getError()];
+                die(json_encode($result));
+            }
+            if (!$user->save()) {
+                //throw new Exception($user->getError());
+                $result = ["type"=>'error','text'=>$user->getError()];
+                die(json_encode($result));
+            }
+
+            // письмо
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = [
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            ];
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = "Здравствуйте. Вас зарегистрировали в системе \"CRM Master \" . Данные учетной записи: \n Логин: " . $phone . " \n Пароль: " . $password;
+            $mailer->setSubject('Регистрация в CRM Master');
+            $mailer->setBody($body);
+            $send = $mailer->Send();
+            $result = ["type"=>'success','text'=>'Пользователь зарегистрирован, данные для входа отправлены на указанный email.'];
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

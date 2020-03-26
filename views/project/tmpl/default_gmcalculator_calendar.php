@@ -39,6 +39,7 @@
     //----------------------------------------------------------------------------------
     $server_name = $_SERVER['SERVER_NAME'];
     $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($this->item->id);
+
 ?>
 
 <style>
@@ -55,6 +56,7 @@
     }
     .save_bnt{
         width:250px;
+        height: 52px;
     }
     .btn_edit{
         position: absolute;
@@ -334,13 +336,16 @@
                 </div>
             </div>
             <div class="row center">
-                <div class="col-xs-12 col-md-6" style="margin-top: 15px">
+                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
+                    <button class="validate btn btn-primary save_bnt" id="sign_project" type="button">Подписать договор</button>
+                </div>
+                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
                     <button class="validate btn btn-primary save_bnt" id="save" type="button">Сохранить и запустить <br> в производство</button>
                 </div>
-                <div class="col-xs-12 col-md-6" style="margin-top: 15px">
+                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
                     <button class="validate btn btn-primary save_bnt" id="save_by_call_btn" type="button">Сохранить и запустить <br> монтаж по звонку</button>
                 </div>
-                <div class="col-xs-12 col-md-6" style="margin-top: 15px">
+                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
@@ -353,186 +358,219 @@
 </form>
 
 <div class="modal_window_container" id="mw_container">
-        <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div class="modal_window" id="modal_window_measures_calendar" style="border: 2px solid black; border-radius: 4px;"></div>
-        <div class="modal_window" id="modal_window_mounts_calendar"></div>
-        <div id="modal_window_by_email" class = "modal_window">
-            <p><strong>Введите адрес эл.почты:</strong></p>
-            <p>
-                <input id = "email_to_send" name = "email_to_send" class = "input-gm">
-            </p>
-            <p><button class = "btn btn-primary">Запустить</button></p>
-        </div>
-        <div id="mw_cl_info" class="modal_window">
-            <h4>Изменение данных клиента</h4>
-            <form id = "new_cl_info">
-                <label> ФИО клиента: </label>
-                <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
-                <table align="center" id="client_phones">
-                    <thead>
-                        <th>
-                            Телефоны клиента
-                        </th>
-                        <th>
-                            <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($phone as $value) { ?>
+    <button type="button" class="close_btn" id="close_mw"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_measures_calendar" style="border: 2px solid black; border-radius: 4px;"></div>
+    <div class="modal_window" id="modal_window_mounts_calendar"></div>
+    <div id="modal_window_by_email" class = "modal_window">
+        <p><strong>Введите адрес эл.почты:</strong></p>
+        <p>
+            <input id = "email_to_send" name = "email_to_send" class = "input-gm">
+        </p>
+        <p><button class = "btn btn-primary">Запустить</button></p>
+    </div>
+    <div id="mw_cl_info" class="modal_window">
+        <h4>Изменение данных клиента</h4>
+        <form id = "new_cl_info">
+            <label> ФИО клиента: </label>
+            <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
+            <table align="center" id="client_phones">
+                <thead>
+                    <th>
+                        Телефоны клиента
+                    </th>
+                    <th>
+                        <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                    </th>
+                </thead>
+                <tbody>
+                    <?php foreach ($phone as $value) { ?>
+                        <tr>
+                            <td>
+                                 <input name="new_client_contacts[]" id="jform_client_contacts[]" data-old = "<?php echo $value->client_contacts;?>" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <table align="center" id="client_emails">
+                <thead>
+                    <th>
+                        Эл.почта клиента
+                    </th>
+                    <th>
+                        <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                    </th>
+                </thead>
+                <tbody>
+                    <?php   if(!empty($contact_email)){
+                        foreach ($contact_email as $value) { ?>
                             <tr>
                                 <td>
-                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" data-old = "<?php echo $value->client_contacts;?>" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
+                                     <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                    <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>    
-                <table align="center" id="client_emails">
-                    <thead>
-                        <th>
-                            Эл.почта клиента
-                        </th>
-                        <th>
-                            <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <?php   if(!empty($contact_email)){
-                            foreach ($contact_email as $value) { ?>
-                                <tr>
-                                    <td>
-                                         <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                        <?php }
-                            }?>
-                    </tbody>
+                    <?php }
+                        }?>
+                </tbody>
+            </table>
+        </form>
+        <button id = "update_cl_info" class="btn btn-primary" type="button">Сохранить</button>
+    </div>
+    <div id="mw_rec_to_msr" class="modal_window">
+        <div class="row">
+            <div class="col-md-6">
+                <label><strong>Адрес замера</strong></label>
+                <table align="center">
+                    <tr>
+                        <td>Улица:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Дом:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Корпус:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Квартира:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_apartment" id="rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Подъезд:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Этаж:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Код:</td>
+                        <td style="padding-bottom: 10px;">
+                            <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
+                        </td>
+                    </tr>
                 </table>
-            </form>
-            <button id = "update_cl_info" class="btn btn-primary" type="button">Сохранить</button>
+            </div>
+            <div class="col-md-6">
+                <label><strong>Время замера</strong></label>
+                <div id = "measures_calendar" align="center"></div>
+                <input  id="measure_info" readonly>
+            </div>
         </div>
-        <div id="mw_rec_to_msr" class="modal_window">
-            <div class="row">
+        <button  id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
+    </div>
+    <div id="mw_measures_calendar" class="modal-window1"></div>
+    <div id="mw_mounts_calendar" class="modal_window"></div>
+    <div id="mw_add_call" class="modal_window" >
+        <h4>Добавить звонок</h4>
+        <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
+        <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
+        <label><b>Дата: </b></label><br>
+        <div id="calendar-wrapper" align="center"></div>
+        <script>
+            new niceDatePicker({
+                dom:document.getElementById('calendar-wrapper'),
+                mode:'en',
+                onClickDate:function(date){
+                    document.getElementById('call_date').value = date;
+                }
+            });
+        </script>
+        <p><label><b>Время: </b></label><br><input type="time" id="call_time"></p>
+        <p><input name="call_date" id="call_date" type="hidden"></p>
+        <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+        <P><button class="btn btn-primary" id="add_call" type="button">Сохранить</button></p>
+    </div>
+    <div id="mw_discount" class="modal_window">
+        <p>
+            <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
+            <input name="new_discount" id="jform_new_discount" placeholder="%" min="0" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
+        </p>
+        <p>
+            <button type="button" id="update_discount" class="btn btn-primary">Сохранить</button>
+        </p>
+    </div>
+    <div id ="mw_signature" class="modal_window">
+        <div class="row" style="width: 100%;height:40%;">
+            <div class="col-md-6">
+                <canvas id="signCanvas" style="border: #414099 2px solid;"></canvas>
+            </div>
+            <div class="col-md-6">
                 <div class="col-md-6">
-                    <label><strong>Адрес замера</strong></label>
-                    <table align="center">
-                        <tr>
-                            <td>Улица:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_address" id="jform_rec_address"  placeholder="Улица" type="text">                            
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Дом:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_house" id="jform_rec_house"  placeholder="Дом"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Корпус:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_bdq" id="jform_rec_bdq"  placeholder="Корпус" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Квартира:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_apartment" id="rec_apartment" placeholder="Квартира"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Подъезд:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_porch" id="jform_rec_porch" placeholder="Подъезд"  aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Этаж:</td>
-                            <td style="padding-bottom: 10px;">
-                                <input name="rec_floor" id="jform_rec_floor" placeholder="Этаж" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Код:</td>
-                            <td style="padding-bottom: 10px;">                
-                                <input name="rec_code" id="jform_rec_code" placeholder="Код" aria-required="true" type="text">
-                            </td>
-                        </tr>
-                    </table>
+                    Дата рождения
+                    <input type="date" id="client_birthday" class="form-control">
                 </div>
                 <div class="col-md-6">
-                    <label><strong>Время замера</strong></label>
-                    <div id = "measures_calendar" align="center"></div>
-                    <input  id="measure_info" readonly>
+                    Документ
+                    <textarea id="client_doc" class="input-gm" rows="3" ></textarea>
                 </div>
             </div>
-            <button  id = "save_rec" class="btn btn-primary" type="button">Сохранить</button>
-        </div>
-        <div id="mw_measures_calendar" class="modal-window1"></div>
-        <div id="mw_mounts_calendar" class="modal_window"></div>
-        <div id="mw_add_call" class="modal_window" >
-            <h4>Добавить звонок</h4>
-            <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
-            <script src="/components/com_gm_ceiling/date_picker/nice-date-picker.js"></script>
-            <label><b>Дата: </b></label><br>
-            <div id="calendar-wrapper" align="center"></div>
-            <script>
-                new niceDatePicker({
-                    dom:document.getElementById('calendar-wrapper'),
-                    mode:'en',
-                    onClickDate:function(date){
-                        document.getElementById('call_date').value = date;
-                    }
-                });
-            </script>
-            <p><label><b>Время: </b></label><br><input type="time" id="call_time"></p>
-            <p><input name="call_date" id="call_date" type="hidden"></p>
-            <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
-            <P><button class="btn btn-primary" id="add_call" type="button">Сохранить</button></p>
-        </div>
-        <div id="mw_discount" class="modal_window">
-            <p>
-                <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
-                <input name="new_discount" id="jform_new_discount" placeholder="%" min="0" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
-            </p>
-            <p>
-                <button type="button" id="update_discount" class="btn btn-primary">Сохранить</button>
-            </p>
         </div>
 
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" id="reset_sign">Очистить подпись</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" id="save_sign">Сохранить</button>
+            </div>
+            <div class="col-md-3"></div>
+
+        </div>
+    </div>
+</div>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 
-<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
-<script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
+    <script type="text/javascript" src="/sketch/libs/paper-full.js"></script>
+    <script type="text/javascript" src="/signature/signature.js"></script>
+
 <script type="text/javascript">
     init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
 
-     var $ = jQuery;
-        var min_project_sum = <?php echo  $min_project_sum;?>;
-        var min_components_sum = <?php echo $min_components_sum;?>;
-        var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-        var project_id = "<?php echo $this->item->id; ?>";
-        var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-        var deleted_phones = [], deleted_emails = [];
+    var $ = jQuery;
+    var min_project_sum = <?php echo  $min_project_sum;?>;
+    var min_components_sum = <?php echo $min_components_sum;?>;
+    var self_data = JSON.parse('<?php echo $self_calc_data;?>');
+    var project_id = "<?php echo $this->item->id; ?>";
+    var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
+    var deleted_phones = [], deleted_emails = [];
 
         // закрытие окон модальных
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var div1 = jQuery("#modal_window_by_email");
-            var div2 = jQuery("#mw_rec_to_msr");
-            var div3 = jQuery("#mw_discount");
-            var div4 = jQuery("#mw_add_call");
-            var div5 = jQuery("#mw_address");
-            var div6 = jQuery("#mw_cl_info");
-            var div7 = jQuery("#mw_mounts_calendar");
-            var div8 = jQuery("#mw_measures_calendar");
+            var div1 = jQuery("#modal_window_by_email"),
+                div2 = jQuery("#mw_rec_to_msr"),
+                div3 = jQuery("#mw_discount"),
+                div4 = jQuery("#mw_add_call"),
+                div5 = jQuery("#mw_address"),
+                div6 = jQuery("#mw_cl_info"),
+                div7 = jQuery("#mw_mounts_calendar"),
+                div8 = jQuery("#mw_measures_calendar"),
+                div9 = jQuery('#mw_signature');
             if (!div1.is(e.target) // если клик был не по нашему блоку
                 && div1.has(e.target).length === 0
                 && !div2.is(e.target)
@@ -548,7 +586,9 @@
                 && !div7.is(e.target)
                 && div7.has(e.target).length === 0
                 && !div8.is(e.target)
-                && div8.has(e.target).length === 0){ // и не по его дочерним элементам
+                && div8.has(e.target).length === 0
+                && !div9.is(e.target)
+                && div9.has(e.target).length === 0){ // и не по его дочерним элементам
                 jQuery("#close_mw").hide();
                 jQuery("#mw_container").hide();
                 div1.hide();
@@ -559,6 +599,7 @@
                 div6.hide();
                 div7.hide();
                 div8.hide();
+                div9.hide()
             }
         });
     //--------------------------------------------------
@@ -571,6 +612,12 @@
         {
             create_calculation(<?php echo $this->item->id; ?>);
         };
+
+        jQuery('#sign_project').click(function(){
+            jQuery("#close_mw").show();
+            jQuery('#mw_container').show();
+            jQuery('#mw_signature').show();
+        });
 
         jQuery("#change_data").click(function(){
             jQuery("#close_mw").show();

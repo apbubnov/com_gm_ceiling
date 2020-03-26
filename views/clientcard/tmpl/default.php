@@ -16,13 +16,20 @@
     $client = $client_model->getClientById($this->item->id);
     $dealer_type = JFactory::getUser($client->dealer_id)->dealer_type;
 
+    $userClient = Gm_ceilingHelpersGm_ceiling::getModel('users')->getUserByAssociatedClient($client->id);
+    if(!empty($userClient)){
+        $clientDealerId = $userClient->dealer_id;
+    }
+    else{
+        $clientDealerId = $client->dealer_id;
+    }
     if (!empty($client->manager_id)) {
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
     else {
         $manager_name = "-";
     }
-    if ($client->dealer_id == 1)
+    if ($clientDealerId == 1)
     {
         $subtype = 'calendar';
     }
