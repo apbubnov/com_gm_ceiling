@@ -639,6 +639,14 @@ class Gm_ceilingHelpersPDF {
                    $clientEmails .= $email->contact.' ';
                }
            }
+           $fio = explode(' ',$projectData->client_id);
+
+
+           $clientSurname = $fio[0];
+           $clientName = mb_substr($fio[1], 0, 1, "UTF-8");
+           $clientPatronymic = mb_substr($fio[1], 0, 1, "UTF-8");
+           $clientInitials = $clientSurname.' '.$clientName.'.'.$clientPatronymic.'.';
+        
            $clientSignPath = '/images/client_signatures/'.md5('client_'.$projectData->id_client.'_sign').'.svg';
            $projectSum = !empty(floatval($projectData->new_project_sum)) ? $projectData->new_project_sum : $projectData->project_sum;
            $projectSum = $projectSum.' ('.self::NumToStr($projectSum, 2).')';
@@ -678,7 +686,8 @@ class Gm_ceilingHelpersPDF {
            $html = str_replace('@client_contact@',$clientPhones,$html);
            $html = str_replace('@client_email@',$clientEmails,$html);
            $html = str_replace('@mount_start@',$mountData,$html);
-           $html = str_replace('@gauger@',$username,$html);
+           $html = str_replace('@gauger@',$username,$html); 
+           $html = str_replace('@client_initials@',$clientInitials,$html);
            if(!empty($clientBirthDay)){
                $html = str_replace('@birthday@',$clientBirthDay,$html);
            }
