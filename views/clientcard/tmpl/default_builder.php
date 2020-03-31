@@ -549,7 +549,10 @@ foreach($all_builders as $builder){
             <thead>
             <tr class="caption_table">
                 <td>ФИО</td>
-                <td>Сумма в работе,руб.</td>
+                <td>В работе обагечивание,руб.</td>
+                <td>В работе натяжка,руб.</td>
+                <td>В работе вставка,руб.</td>
+                <td>Итого в работе,руб.</td>
                 <td>Сумма закрытых,руб.</td>
                 <td>Выплачено,руб.</td>
                 <td>Остаток,руб.</td>
@@ -1001,14 +1004,33 @@ foreach($all_builders as $builder){
                 dataType: "json",
                 async: false,
                 success: function(data) {
+                    var total_obag = 0,
+                        total_natyazh = 0,
+                        total_vstav = 0,
+                        total_taken= 0,
+                        total_closed = 0,
+                        total_payed = 0,
+                        total_rest = 0;;
+                    console.log(data);
                     jQuery("#salary > tbody").empty();
                     jQuery.each(data,function (index,el) {
+                        total_obag += +el.obag;
+                        total_natyazh += +el.natyazh;
+                        total_vstav += +el.vstav;
+                        total_taken += +el.taken;
+                        total_closed += +el.closed;
+                        total_payed += +el.payed;
+
                         var rest = (+el.closed + +el.payed).toFixed(2),
                             rest_td = (rest < 0)? '<td name ="rest"><div class="row click_tr">'+rest +'</div><div class="row">'+ BUILDERS_SELECT + MOVE_SUM_BTN + '</div></td>' : '<td class="click_tr" name ="rest" >'+rest+'</td>';
+                        total_rest += +rest;
                         jQuery("#salary > tbody").append('<tr/>');
                         jQuery("#salary > tbody > tr:last").attr('data-id',el.mounter_id);
                         jQuery("#salary > tbody > tr:last").append(
                             '<td class="click_tr">'+el.name+'</td>' +
+                            '<td class="click_tr">'+el.obag+'</td>' +
+                            '<td class="click_tr">'+el.natyazh+'</td>' +
+                            '<td class="click_tr">'+el.vstav+'</td>' +
                             '<td class="click_tr" name ="taken">'+(+el.taken).toFixed(2)+'</td>' +
                             '<td class="click_tr">'+(+el.closed).toFixed(2)+'</td>' +
                             '<td class="click_tr" name ="paid">'+(+el.payed).toFixed(2)+'</td>' +
@@ -1018,6 +1040,7 @@ foreach($all_builders as $builder){
 
                         );
                     });
+                    jQuery('#salary > tbody').append('<tr><td><b>Итого</b></td><td>'+total_obag.toFixed(2)+'</td><td>'+total_natyazh.toFixed(2)+'</td><td>'+total_vstav.toFixed(2)+'</td><td>'+total_taken.toFixed(2)+'</td><td>'+total_closed.toFixed(2)+'</td><td>'+total_payed.toFixed(2)+'</td><td>'+total_rest.toFixed(2)+'</td><td>-</td></tr>');
                 },
                 error: function(data) {
                     var n = noty({
