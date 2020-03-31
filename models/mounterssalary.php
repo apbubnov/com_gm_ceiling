@@ -33,7 +33,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $query = $db->getQuery(true);
             $taken_query = $db->getQuery(true);
             $taken_query
-                ->select("cm.mounter_id AS mounter_id,u.name,SUM(cm.sum) AS `taken`")
+                ->select("cm.mounter_id AS mounter_id,u.name,SUM(cm.sum) AS `taken`,SUM(IF(stage_id=2,cm.sum,0)) AS obag,SUM(IF(stage_id=3,cm.sum,0)) AS natyazh,SUM(IF(stage_id=4,cm.sum,0)) AS vstav")
                 ->from("`rgzbn_gm_ceiling_calcs_mount` AS cm")
                 ->leftJoin("`rgzbn_gm_ceiling_calculations` AS cl ON cl.id = cm.calculation_id")
                 ->leftJoin("`rgzbn_gm_ceiling_projects` AS pr ON cl.project_id = pr.id")
@@ -56,7 +56,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $items = $db->loadObjectList();
             $result = [];
             foreach ($taken_items as $taken_item){
-                $object = (object)array("mounter_id"=>$taken_item->mounter_id,"name"=>$taken_item->name,"taken"=>$taken_item->taken,"closed"=>0,"payed"=>0);
+                $object = (object)array("mounter_id"=>$taken_item->mounter_id,"name"=>$taken_item->name,"taken"=>$taken_item->taken,"obag"=>$taken_item->obag,"natyazh"=>$taken_item->natyazh,"vstav"=>$taken_item->vstav,"closed"=>0,"payed"=>0);
                 $result[$taken_item->mounter_id] = $object;
             }
             foreach ($items as $item){
@@ -66,7 +66,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
                     $result[$item->mounter_id]->payed = $item->payed;
                 }
                 else{
-                    $object = (object)array("mounter_id"=>$item->mounter_id,"name"=>$item->name,"taken"=>0,"closed"=> $item->closed,"payed"=> $item->payed);
+                    $object = (object)array("mounter_id"=>$item->mounter_id,"name"=>$item->name,"taken"=>0,"obag"=>0,"natyazh"=>0,"vstav"=>0,"closed"=> $item->closed,"payed"=> $item->payed);
                     $result[$item->mounter_id] = $object;
                 }
             }
