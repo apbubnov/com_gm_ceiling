@@ -357,8 +357,37 @@
 <div class="modal_window_container" id="mw_container">
     <button type="button" id="btn_close" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="mw_call" class="modal_window">
-        <p style="margin-top: 1em !important;">Введите новое ФИО клиента</p>
-        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <div class="row center" style="margin-bottom: 15px;">
+            Изменение ФИО клиента
+        </div>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="new_surname">Фамилия</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" id="new_surname">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="new_name">Имя</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" id="new_name">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="new_patronymic">Отчество</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" id="new_patronymic">
+                </div>
+            </div>
+                
+        </div>
+
         <p>
             <button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>
             <button type="button" id="cancel_fio" class="btn btn-primary">Отмена</button>
@@ -414,42 +443,80 @@
 
 
     jQuery("#update_fio").click(function(){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
-            data: {	
-                client_id:client_id,
-                fio: jQuery("#new_fio").val()
-            },
-            success: function(data){
-                jQuery("#FIO").text(data);
-                jQuery("#new_fio").val("");
-                jQuery("#btn_close").hide();
-                jQuery("#mw_container").hide();
-                jQuery("#mw_call").hide();
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'topCenter',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "ФИО обновлено!"
+        var surname = jQuery('#new_surname').val(),
+            name = jQuery('#new_name').val(),
+            patronymic = jQuery('#new_patronymic').val(),
+            fio = '';
+            if(!empty(new_surname)){
+                fio += surname;
+            }
+            if(!empty(name)){
+                if(!empty(fio)){
+                    fio += ' ' + name;
+                }
+                else{
+                    fio += name;
+                }
+            }
+            if(!empty(patronymic)){
+                if(!empty(fio)){
+                    fio += ' ' + patronymic;
+                }
+                else{
+                    fio += patronymic;
+                }
+            }
+            if(!empty(fio)){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
+                    data: { 
+                        client_id:client_id,
+                        fio: fio
+                    },
+                    success: function(data){
+                        jQuery("#FIO").text(data);
+                        jQuery('#new_surname').val('');
+                        jQuery('#new_patronymic').val('');
+                        jQuery('#new_name').val('');
+                        jQuery("#btn_close").hide();
+                        jQuery("#mw_container").hide();
+                        jQuery("#mw_call").hide();
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "ФИО обновлено!"
+                        });
+                    },
+                    dataType: "text",
+                    timeout: 10000,
+                    error: function(data){
+                        console.log(data);
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'topCenter',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка!"
+                        });
+                    }               
                 });
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function(data){
-                console.log(data);
-                var n = noty({
+            }
+            else{
+                noty({
                     theme: 'relax',
                     timeout: 2000,
                     layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
-                    text: "Ошибка!"
+                    text: "Не введено имя клиента!"
                 });
-            }				
-        });
+    }
+        
     });
     jQuery("#save_new_manager").click(function () {
         console.log(jQuery("#new_manager").val());

@@ -544,52 +544,81 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
         <div id="mw_cl_info" class="modal_window">
             <h4>Изменение данных клиента</h4>
             <form id = "new_cl_info">
-                <label> ФИО клиента: </label>
-                <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
-                <table align="center" id="client_phones">
-                    <thead>
-                        <th>
-                            Телефоны клиента
-                        </th>
-                        <th>
-                            <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($phone as $value) { ?>
-                            <tr>
-                                <td>
-                                     <input name="new_client_contacts[]" id="jform_client_contacts[]" data-old = "<?php echo $value->client_contacts;?>" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>    
-                <table align="center" id="client_emails">
-                    <thead>
-                        <th>
-                            Эл.почта клиента
-                        </th>
-                        <th>
-                            <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($contact_email as $value) { ?>
-                            <tr>
-                                <td>
-                                     <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="new_surname"> Фамилия </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_surname'>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="new_name" > Имя </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_name'>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="new_patronymic"> Отчество </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_patronymic'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <table align="center" id="client_phones">
+                            <thead>
+                                <th>
+                                    Телефоны клиента
+                                </th>
+                                <th>
+                                    <button id="add_phone" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                </th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($phone as $value) { ?>
+                                    <tr>
+                                        <td>
+                                             <input name="new_client_contacts[]" id="jform_client_contacts[]" data-old = "<?php echo $value->client_contacts;?>" placeholder="Телефон клиента" type="text" value=<?php echo $value->client_contacts;?>>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger phone" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>    
+                        <table align="center" id="client_emails">
+                            <thead>
+                                <th>
+                                    Эл.почта клиента
+                                </th>
+                                <th>
+                                    <button id="add_email" class="btn btn-primary" type="button"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                </th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($contact_email as $value) { ?>
+                                    <tr>
+                                        <td>
+                                             <input name="new_client_emails[]" id="jform_client_emails[]" placeholder="Email клиента" type="text" data-old="<?php echo $value->contact;?>" value=<?php echo $value->contact;?>>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger email"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <input name="new_client_name" id="jform_client_name" value="" type="hidden">    
             </form>
             <button id = "update_cl_info" class="btn btn-primary" type="button">Сохранить</button>
         </div>
@@ -951,17 +980,42 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
 
             jQuery("#update_cl_info").click(function(){
                 var phones = jQuery.map(jQuery('[name = "new_client_contacts[]"]'),function(value){
-                    if(value.value != jQuery(value).data("old"))
-                        return {phone: value.value,old_phone:jQuery(value).data("old")};
-                });
-                var emails = jQuery.map(jQuery('[name = "new_client_emails[]'),function(value){
-                    if(value.value != jQuery(value).data("old"))
-                        return {email: value.value,old_email:jQuery(value).data("old")};
-                });
-                var new_name = ""; 
-                if(jQuery("#jform_client_name").val() && jQuery("#jform_client_name").val() != client_name){
-                    new_name = jQuery("#jform_client_name").val();
+                        if(value.value != jQuery(value).data("old"))
+                            return {phone: value.value,old_phone:jQuery(value).data("old")};
+                    }),
+                    emails = jQuery.map(jQuery('[name = "new_client_emails[]'),function(value){
+                        if(value.value != jQuery(value).data("old"))
+                            return {email: value.value,old_email:jQuery(value).data("old")};
+                    }),
+                    new_surname = jQuery('#new_surname').val(),
+                    new_cl_name = jQuery('#new_name').val(),
+                    new_patronymic = jQuery('#new_patronymic').val(),
+                    fio = '',
+                    new_name = ''; 
+                if(!empty(new_surname)){
+                    fio += new_surname;
                 }
+                if(!empty(new_cl_name)){
+                    if(!empty(fio)){
+                        fio += ' ' + new_cl_name;
+                    }
+                    else{
+                        fio += new_cl_name;
+                    }
+                }
+                if(!empty(new_patronymic)){
+                    if(!empty(fio)){
+                        fio += ' ' + new_patronymic;
+                    }
+                    else{
+                        fio += new_patronymic;
+                    }
+                }
+            
+                if(!empty(fio) && fio != client_name){
+                    new_name = fio;
+                }
+                
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=client.update_info",
                     data: {

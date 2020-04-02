@@ -99,6 +99,16 @@
             }
         }
     }
+    $partialFIO = false;
+    $fioArr = explode(' ',$this->item->client_id);
+    if(count($fioArr) === 3){
+        $clientSurname = $fioArr[0];
+        $clientName = $fioArr[1];
+        $clientPatronymic = $fioArr[2];
+    }
+    else{
+        $partialFIO = true;
+    }
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -119,7 +129,7 @@
 </style>
 <?= parent::getButtonBack(); ?>
 
-<form id="form-client" action="index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
+<form id="form-client" action="eindex.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
     <div>
         <input name="project_id" id = "project_id"  value="<?php echo $project_id; ?>" type="hidden">
         <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -139,6 +149,7 @@
         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
         <input type="text" id="measure_info" class="inputactive" readonly style="display: none;">
+        <input type="hidden" id="new_client_name" name="new_client_name" value=''> 
     </div>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
     <div class="container">
@@ -181,16 +192,50 @@
                 <div class="row" style="margin-bottom:15px;">
                     <div class="col-xs-4 col-md-4">
                          <b><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></b>
-                             
                     </div>
-                    <div class="col-xs-6 col-md-6">
-                        <input name="new_client_name" class="inputactive"
-                            id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="ФИО клиента" type="text">
-                    </div>
-                    <div class="col-xs-2 col-md-2" align="right">
-                        <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    <div class="col-xs-8 col-md-8" style="text-align: right;">
+                        <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Найти и объеденить</button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-3">
+                                <label for="new_surname"> Фамилия </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_surname' value='<?=$clientSurname;?>'>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-3">
+                                <label for="new_name" > Имя </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_name' value='<?=$clientName;?>'>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 5px">
+                            <div class="col-md-3">
+                                <label for="new_patronymic"> Отчество </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id='new_patronymic' value='<?=$clientPatronymic;?>'>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <?php if($partialFIO){?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type='text' class="form-control" disabled="true" value='<?=$this->item->client_id;?>'>
+                        </div>
+                        <div class="col-md-12">
+                            <label style="font-size:10pt;color: red;" >ФИО клиента неполное. <br>Пожалуйста введите Фамилию Имя и Отчество Клиента</label>
+                        </div>
+                    </div>
+                <?php }?>
                 <div class="row" style="margin-bottom:15px;">
                     <div class="col-xs-4 col-md-4">
                          <b>Пол клиента</b>
@@ -494,24 +539,33 @@
     <div class="modal_window" id="mw_measures_calendar"></div>
     <div id="mw_mounts_calendar" class="modal_window"></div>
     <div class="modal_window" id="mw_find_client">
-        <h4>Поиск для объединения</h4>
-        <label> Ищем:</label><br>
-        <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-        <label for='radio_clients'>Клиентов</label><br>
-        
-        <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-        <label for='radio_dealers'>Дилеров</label><br>
-            
-        <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-        <label for='radio_designers'>Отделочников</label><br>
-        <div id="search" style="display : none;">
-            <label>
-                <b>Выберите из списка:</b>
-            </label>
-            <br>
-            <select id="found_clients" class="input-gm"></select>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h4>Поиск для объединения</h4>
+            <div class="row center">
+                <label>Введите Имя, номер телефона или адрес</label>
+                <input class="form-control" id="search_text">
+            </div>
+            <div class="row" style="text-align: left;">
+                <label> Ищем:</label><br>
+                <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+                <label for='radio_clients'>Клиентов</label><br>
+                
+                <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+                <label for='radio_dealers'>Дилеров</label><br>
+                    
+                <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+                <label for='radio_designers'>Отделочников</label><br>
+                <div id="search" style="display : none;">
+                    <label>
+                        <b>Выберите из списка:</b>
+                    </label>
+                    <br>
+                    <select id="found_clients" class="input-gm"></select>
+                </div>
+            </div>
         </div>
-      
+        <div class="col-md-4"></div>
     </div>
     <div class="modal_window" id="mw_call_up">
         <h4>Перенос звонка</h4>
@@ -1052,6 +1106,7 @@
         });
 
         jQuery("#refuse_partnership").click(function () {
+            writeClientName();
             jQuery("#project_status").val(15);
             if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
 
@@ -1088,8 +1143,35 @@
         jQuery("#accept_changes").click(function () {
             jQuery("input[name='data_change']").val(1);
         });
+        function writeClientName(){
+            var new_surname = jQuery('#new_surname').val(),
+                new_name = jQuery('#new_name').val(),
+                new_patronymic = jQuery('#new_patronymic').val(),
+                fio = '';
+                if(!empty(new_surname)){
+                fio += new_surname;
+                }
+                if(!empty(new_name)){
+                    if(!empty(fio)){
+                        fio += ' ' + new_name;
+                    }
+                    else{
+                        fio += new_name;
+                    }
+                }
+                if(!empty(new_patronymic)){
+                    if(!empty(fio)){
+                        fio += ' ' + new_patronymic;
+                    }
+                    else{
+                        fio += new_patronymic;
+                    }
+                }
 
+            jQuery('#new_client_name').val(fio);
+        }
         jQuery("#add_call_and_submit").click(function () {
+            writeClientName();
             if (jQuery("#project_status").val() == 1) {
                 if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
                     var n = noty({
@@ -1228,7 +1310,7 @@
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
-                    fio: jQuery("#jform_client_name").val(),
+                    fio: jQuery("#search_text").val(),
                     flag: jQuery('input:radio[name=slider-search]:checked').val()
                 },
                 dataType: "json",
@@ -1256,7 +1338,6 @@
         }
 
         jQuery("#found_clients").change(function () {
-            var arr = [<?php echo $phonefrom;?>];
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addPhoneToClient",
                 data: {
