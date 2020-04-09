@@ -20,6 +20,7 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelDealer_info extends JModelList
 {
+
 	/**
 	 * Constructor.
 	 *
@@ -178,7 +179,10 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
-
+			/*обновить прайс в старой структуре (врменно)*/
+			$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+			$mountModel->updateOldStructurePrice($array,$dealer_id,$data);
+			/*-------*/
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
