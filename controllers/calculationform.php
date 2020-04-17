@@ -921,4 +921,42 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function calculateMount($calcId,$dealerId){
+	    try{
+	        $result = [];
+            $model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+            $all_jobs = $model_calcform->getJobsPricesInCalculation($calcId, $dealerId); // Получение работ по прайсу дилера
+            $all_jobs_service = $model_calcform->getMountingServicePricesInCalculation($calcId, $dealerId); // Получение работ по прайсу монажной службы
+            if(!empty($all_jobs) && !empty($all_jobs_service)){
+                $result = ["mount_sum"=>0,
+                            "margin_mount_sum"=>0,
+                            "sum_by_stage" => [],
+                            "service_mount_sum"=>0,
+                            "margin_service_mount_sum"=>0,
+                            "service_sum_by_stage" =>[]
+                ];
+                $stages = [];
+                foreach($all_jobs as $job){
+                    $stages[$job->mount_type_id] += $job->price_sum;
+                    $result["mount_sum"] += $job->price_sum;
+                    $result["margin_mount_sum"] += $job->price_sum_with_margin;
+                }
+                $stages[1] = $result["mount_sum"];
+                $result["sum_by_stage"] = $stages;
+                $stages = [];
+                foreach($all_jobs_service as $service_job){
+                    $stages[$service_job->mount_type_id] += $service_job->price_sum;
+                    $result["service_mount_sum"] += $service_job->price_sum;
+                    $result["margin_service_mount_sum"] += $service_job->price_sum_with_margin;
+                }
+                $stages[1] = $result["service_mount_sum"];
+                $result["service_sum_by_stage"] = $stages;
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

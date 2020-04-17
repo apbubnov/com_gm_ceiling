@@ -1044,7 +1044,7 @@
                                                         </tr>
                                                     <?php } ?>
                                                 </table>
-                                                <?php if(!empty($calculation->jobs)){?>
+                                                <?php if(!empty($calculation->goods)){?>
                                                     <h4 style="margin: 10px 0;cursor: pointer;" class="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
                                                     <table class="table_info2 table_goods" style="display:none;">
                                                         <thead>

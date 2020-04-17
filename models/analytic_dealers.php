@@ -20,13 +20,17 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelAnalytic_Dealers extends JModelList
 {
-    public function getData($date_from,$date_to,$status)
+    public function getData($date_from,$date_to,$status,$new)
     {
         try {
             if(empty($status)){
                 $status = 5;
             }
-            $data = $this->getAllDataByperiod($date_from,$date_to,$status);
+
+            $data = $this->getAllDataByperiod($date_from,$date_to,$status,$new);
+
+
+
             /*$result = []; $proizvs = [];
             $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -63,11 +67,14 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             $headers = array("name"=>"Дилер","project_count"=>"Кол-во проектов","calcs_count"=>"Кол-во потолков","quadr"=>"Квад-ра");
             $headers['squares_manf'] = "Квадратура по произв-м";
             $headers['price'] = "Стоимость";
-            //$headers['cost_price'] = "Себестоимость";
-            //$headers['delta_price'] = "Разница";
-            //$headers['price_comp'] = "Стоимость компл-х";
-            //$headers['cost_price_comp'] = "Себестоимость компл-х";
-            //$headers['delta_price_comp'] = "Разница по компл.";
+            if(!$new){
+                $headers['cost_price'] = "Себестоимость";
+                $headers['delta_price'] = "Разница";
+                $headers['price_comp'] = "Стоимость компл-х";
+                $headers['cost_price_comp'] = "Себестоимость компл-х";
+                $headers['delta_price_comp'] = "Разница по компл.";
+            }
+
             $headers['rest'] = 'Сост.счета';
             array_unshift($data , $headers);
             return $data;
@@ -77,7 +84,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         }
     }
 
-    function getAllDataByperiod($date1,$date2,$status){
+    function getAllDataByperiod($date1,$date2,$status,$new){
         try{
             $db = $this->getDbo();
             /* $query="SELECT c.id AS calc_id,p.id AS project_id,u.id AS user_id,u.name AS user_name,p.date_of_change,MAX(canv.self_price) AS self_price,canv.manuf_id AS manufacturer_id,canv.name,
@@ -106,8 +113,76 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                         );";
             $db->setQuery($query);
             $db->execute();
-
-            /*$query = "SELECT	`u`.`id` as `dealer_id`,
+          if($new){
+              $query = "
+            SELECT	`u`.`id` AS `dealer_id`,
+                    `u`.`name`,
+                    COUNT(DISTINCT `p`.`id`) AS `project_count`,
+                    COUNT(`calc`.`id`) AS `calcs_count`,
+                    SUM(`calc`.`n4`) AS `quadr`,
+                    `manf_sq_group`.`squares_manf`,	
+                    SUM(`calc`.`canvases_sum` + `calc`.`components_sum`) AS `price`,
+                    `rec_sum`.`sum` AS `rest`,
+                    GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ',') AS `projects`
+                FROM	`rgzbn_gm_ceiling_calculations` AS `calc`
+                    INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
+                    `calc`.`project_id` = `p`.`id`
+                    INNER JOIN 
+                    (SELECT DISTINCT `project_id`,
+                            `new_status`,
+                            `date_of_change`
+                        FROM	`rgzbn_gm_ceiling_projects_history`
+                        WHERE	`new_status` = $status AND `date_of_change` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'
+                        GROUP BY	`project_id`
+                    ) AS `ph` ON
+                    `p`.`id` = `ph`.`project_id`
+                    INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON
+                    `p`.`client_id` = `cl`.`id`
+                    INNER JOIN `rgzbn_users` AS `u` ON
+                    `cl`.`dealer_id` = `u`.`id`
+                    LEFT JOIN	`rgzbn_gm_ceiling_cuttings` AS `cut` ON
+                    `calc`.`id` = `cut`.`id`
+                    LEFT JOIN(
+                        SELECT `id`,
+                        GROUP_CONCAT(
+                            CONCAT(`name`, ': ', `square`)
+                            ORDER BY `manf_id`
+                            SEPARATOR '<br>'
+                        ) AS `squares_manf`
+                    FROM	(
+                        SELECT  `u`.`id`,SUM(calc.n4) AS square,m.manufacturer AS `name`,m.id AS manf_id
+                        FROM `rgzbn_gm_ceiling_calculations` AS calc 
+                        INNER JOIN `rgzbn_gm_ceiling_calcs_goods_map` AS cg ON cg.calc_id = calc.id
+                        INNER JOIN `rgzbn_gm_stock_goods` AS g ON cg.goods_id = g.id
+                        INNER JOIN `rgzbn_gm_stock_map_prop_manufacturers` AS mm ON mm.good_id = cg.goods_id
+                        INNER JOIN `rgzbn_gm_stock_prop_manufacturers` AS m ON m.id = mm.manufacturer_id
+                        INNER JOIN `rgzbn_gm_ceiling_projects` AS p ON calc.project_id = p.id
+                        INNER JOIN `rgzbn_gm_ceiling_projects_history` 
+                                AS `ph` ON `p`.`id` = `ph`.`project_id`
+                        INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON `p`.`client_id` = `cl`.`id`
+                        INNER JOIN `rgzbn_users` AS `u` ON `cl`.`dealer_id` = `u`.`id`
+                        WHERE g.category_id = 1 AND  `ph`.`new_status` =  $status AND `ph`.`date_of_change` BETWEEN '$date1' AND '$date2'
+                        GROUP BY `u`.`id`,`m`.`id`
+                    ) AS `manf_sq`
+                     GROUP BY	`id`    
+                    ) AS `manf_sq_group` ON `u`.`id` = `manf_sq_group`.`id`
+                    INNER JOIN `rgzbn_gm_ceiling_mount` AS `m` ON
+                    `m`.`user_id` = 1
+                    LEFT JOIN `rgzbn_comp_self` AS `comp_self` ON
+                    `calc`.`id` = `comp_self`.`calc_id`
+                    LEFT JOIN 
+                    (SELECT	`recoil_id`,
+                            SUM(`sum`) AS `sum`
+                        FROM	`rgzbn_gm_ceiling_recoil_map_project`
+                        GROUP BY	`recoil_id`
+                    ) AS `rec_sum` ON
+                    `u`.`id` = `rec_sum`.`recoil_id`
+                GROUP BY	`u`.`id`
+                ORDER BY	`u`.`id`
+            ";
+          }
+          else{
+              $query = "SELECT	`u`.`id` as `dealer_id`,
                                 `u`.`name`,
                                 COUNT(DISTINCT `p`.`id`) AS `project_count`,
                                 COUNT(`calc`.`id`) AS `calcs_count`,
@@ -222,73 +297,9 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                         GROUP BY	`u`.`id`
                         ORDER BY	`u`.`id`
                 ;
-            ";*/
-            $query = "
-            SELECT	`u`.`id` AS `dealer_id`,
-                    `u`.`name`,
-                    COUNT(DISTINCT `p`.`id`) AS `project_count`,
-                    COUNT(`calc`.`id`) AS `calcs_count`,
-                    SUM(`calc`.`n4`) AS `quadr`,
-                    `manf_sq_group`.`squares_manf`,	
-                    SUM(`calc`.`canvases_sum` + `calc`.`components_sum`) AS `price`,
-                    `rec_sum`.`sum` AS `rest`,
-                    GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ',') AS `projects`
-                FROM	`rgzbn_gm_ceiling_calculations` AS `calc`
-                    INNER JOIN `rgzbn_gm_ceiling_projects` AS `p` ON
-                    `calc`.`project_id` = `p`.`id`
-                    INNER JOIN 
-                    (SELECT DISTINCT `project_id`,
-                            `new_status`,
-                            `date_of_change`
-                        FROM	`rgzbn_gm_ceiling_projects_history`
-                        WHERE	`new_status` = $status AND `date_of_change` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'
-                        GROUP BY	`project_id`
-                    ) AS `ph` ON
-                    `p`.`id` = `ph`.`project_id`
-                    INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON
-                    `p`.`client_id` = `cl`.`id`
-                    INNER JOIN `rgzbn_users` AS `u` ON
-                    `cl`.`dealer_id` = `u`.`id`
-                    LEFT JOIN	`rgzbn_gm_ceiling_cuttings` AS `cut` ON
-                    `calc`.`id` = `cut`.`id`
-                    LEFT JOIN(
-                        SELECT `id`,
-                        GROUP_CONCAT(
-                            CONCAT(`name`, ': ', `square`)
-                            ORDER BY `manf_id`
-                            SEPARATOR '<br>'
-                        ) AS `squares_manf`
-                    FROM	(
-                        SELECT  `u`.`id`,SUM(calc.n4) AS square,m.manufacturer AS `name`,m.id AS manf_id
-                        FROM `rgzbn_gm_ceiling_calculations` AS calc 
-                        INNER JOIN `rgzbn_gm_ceiling_calcs_goods_map` AS cg ON cg.calc_id = calc.id
-                        INNER JOIN `rgzbn_gm_stock_goods` AS g ON cg.goods_id = g.id
-                        INNER JOIN `rgzbn_gm_stock_map_prop_manufacturers` AS mm ON mm.good_id = cg.goods_id
-                        INNER JOIN `rgzbn_gm_stock_prop_manufacturers` AS m ON m.id = mm.manufacturer_id
-                        INNER JOIN `rgzbn_gm_ceiling_projects` AS p ON calc.project_id = p.id
-                        INNER JOIN `rgzbn_gm_ceiling_projects_history` 
-                                AS `ph` ON `p`.`id` = `ph`.`project_id`
-                        INNER JOIN `rgzbn_gm_ceiling_clients` AS `cl` ON `p`.`client_id` = `cl`.`id`
-                        INNER JOIN `rgzbn_users` AS `u` ON `cl`.`dealer_id` = `u`.`id`
-                        WHERE g.category_id = 1 AND  `ph`.`new_status` =  $status AND `ph`.`date_of_change` BETWEEN '$date1' AND '$date2'
-                        GROUP BY `u`.`id`,`m`.`id`
-                    ) AS `manf_sq`
-                     GROUP BY	`id`    
-                    ) AS `manf_sq_group` ON `u`.`id` = `manf_sq_group`.`id`
-                    INNER JOIN `rgzbn_gm_ceiling_mount` AS `m` ON
-                    `m`.`user_id` = 1
-                    LEFT JOIN `rgzbn_comp_self` AS `comp_self` ON
-                    `calc`.`id` = `comp_self`.`calc_id`
-                    LEFT JOIN 
-                    (SELECT	`recoil_id`,
-                            SUM(`sum`) AS `sum`
-                        FROM	`rgzbn_gm_ceiling_recoil_map_project`
-                        GROUP BY	`recoil_id`
-                    ) AS `rec_sum` ON
-                    `u`.`id` = `rec_sum`.`recoil_id`
-                GROUP BY	`u`.`id`
-                ORDER BY	`u`.`id`
             ";
+          }
+
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
@@ -298,6 +309,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
 
     function getIssuedData($date1,$date2){
         try{

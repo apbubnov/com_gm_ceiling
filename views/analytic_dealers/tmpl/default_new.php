@@ -12,9 +12,10 @@ $date_from = date('Y-m-d');
 $date_to = date('Y-m-d');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
 $data = json_encode($model->getData($date_from,$date_to));
-$model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
 $month_begin_date = date('Y-m-01');
 $today = date('Y-m-d');
+$jinput = JFactory::getApplication()->input;
+$new_analytic = $jinput->get('new',0,'INT');
 ?>
 <style>
     .container{
@@ -25,13 +26,13 @@ $today = date('Y-m-d');
 </style>
 <div class="container center">
     <div class="row" >
+        <h4>Данные по запущенным проектам</h4>
         <div class="col-md-6" align="left">
-
             <input type="radio" name="selection_type" value="5" class="radio" id ="run" checked="true"><label for="run">Выборка по запущенным в производство</label><br>
             <input type="radio" name="selection_type" value="10" class="radio" id ="in_work"><label for="in_work">Выборка по запущенным в цех</label>
         </div>
         <div class="col-md-3">
-            <button class="btn btn-primary" id="go_to_new">Посмотреть новую аналитику</button>
+            <button class="btn btn-primary" id="go_to_old">Просмотреть cтарую аналитику</button>
         </div>
         <div class="col-md-3" align="right">
             <div>
@@ -54,6 +55,53 @@ $today = date('Y-m-d');
             <thead id = "thead" class = "caption-style-tar">
             </thead>
             <tbody>
+            </tbody>
+        </table>
+    </div>
+    <hr style="border: none; color: #414099; background-color: #414099; height: 2px;">
+    <div class="row">
+        <h4>Данные по выданным проектам</h4>
+        <div class="col-md-6"></div>
+        <div class="col-md-6" align="right">
+            <div>
+                <label for="date_from">Выбрать с: </label>
+                <input type="date" name="issued_date_from" id = "issued_date_from" class="input-gm" value="<?php echo $date_from;?>">
+            </div>
+            <div>
+                <label for ="date_to">по:</label>
+                <input type="date" name="issued_date_to" id = "issued_date_to" class="input-gm" value="<?php echo $date_to;?>">
+            </div>
+        </div>
+
+        <table id="table_issued" class="analitic-table">
+            <thead class = "caption-style-tar">
+            <th>
+                Дилер
+            </th>
+            <th>
+                Стоимость
+            </th>
+            <th>
+                Себетоимость
+            </th>
+            <th>
+                Разница
+            </th>
+            <th>
+                Стоимость полотен
+            </th>
+            <th>
+                Себестоимость полотен
+            </th>
+            <th>
+                Стоимость компонентов
+            </th>
+            <th>
+                Себестоимость компонентов
+            </th>
+            </thead>
+            <tbody>
+
             </tbody>
         </table>
     </div>
@@ -307,7 +355,7 @@ $today = date('Y-m-d');
         fill_table(data);
         jQuery("#year1").mask("9999");
         jQuery("#year2").mask("9999");
-
+        getIssuedData(jQuery("#issued_date_from").val(),jQuery("#issued_date_to").val());
         getDataChart();
         getData(jQuery('#date_from').val(),jQuery("#date_to").val());
         jQuery('input[name="interval_radio"]').click(function(){
@@ -323,8 +371,8 @@ $today = date('Y-m-d');
             }
         });
 
-        jQuery('#go_to_new').click(function () {
-           location.href = '/index.php?option=com_gm_ceiling&view=analytic_dealers&type=new'
+        jQuery("#go_to_old").click(function(){
+            location.href='/index.php?option=com_gm_ceiling&view=analytic_dealers';
         });
 
         jQuery('.show').click(function(){
@@ -389,13 +437,52 @@ $today = date('Y-m-d');
         }
     });
 
+    jQuery("#issued_date_from").change(function(){
+        var date_from = jQuery('#issued_date_from').val(),
+            date_to = jQuery("#issued_date_to").val()
+
+        if(date_from <= date_to){
+            getIssuedData(date_from,date_to);
+        }
+        else{
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Начальная дата не может быть больше конечной!"
+            });
+        }
+    });
+
+    jQuery("#issued_date_to").change(function(){
+        var date_from = jQuery('#issued_date_from').val(),
+            date_to = jQuery("#issued_date_to").val()
+
+        if(date_from <= date_to){
+            getIssuedData(date_from,date_to);
+        }
+        else{
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Начальная дата не может быть больше конечной!"
+            });
+        }
+    });
+
     function getData(date_from,date_to){
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=getDealersAnalyticData",
             data: {
                 date_from:date_from,
                 date_to:date_to,
-                status:jQuery('[name = "selection_type"]:checked').val()
+                status:jQuery('[name = "selection_type"]:checked').val(),
+                new:1
             },
             dataType: "json",
             async: true,
@@ -419,6 +506,66 @@ $today = date('Y-m-d');
         });
     }
 
+    function getIssuedData(date_from,date_to){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=analytic.getIssuedData",
+            data: {
+                date_from:date_from,
+                date_to:date_to
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                console.log(data);
+                if(!empty(data)){
+                    jQuery("#table_issued > tbody").empty();
+                    var total_arr = {name:'Итого',sum:0,cost_sum:0,diff:0,canv_sum:0,canv_cost:0,comp_sum:0,comp_cost:0};
+                    jQuery.each(data,function(index,elem){
+                        total_arr.sum += +elem.sum;
+                        total_arr.cost_sum += +elem.cost_sum;
+                        total_arr.diff += (elem.sum-elem.cost_sum);
+                        total_arr.canv_sum += +elem.canvases_sum;
+                        total_arr.canv_cost += +elem.canvases_cost_sum;
+                        total_arr.comp_sum += +elem.components_sum;
+                        total_arr.comp_cost += +elem.components_cost_sum;
+
+                        jQuery("#table_issued > tbody").append('<tr data-dealer_id = "'+elem.id+'"></tr>');
+                        jQuery("#table_issued > tbody > tr:last").append(   '<td>'+elem.name+'</td>'+
+                            '<td>'+parseFloat(elem.sum).toFixed(2)+'</td>'+
+                            '<td>'+parseFloat(elem.cost_sum).toFixed(2)+'</td>'+
+                            '<td>'+(elem.sum-elem.cost_sum)+'</td>'+
+                            '<td>'+parseFloat(elem.canvases_sum).toFixed(2)+'</td>'+
+                            '<td>'+parseFloat(elem.canvases_cost_sum).toFixed(2)+'</td>'+
+                            '<td>'+parseFloat(elem.components_sum).toFixed(2)+'</td>'+
+                            '<td>'+parseFloat(elem.components_cost_sum).toFixed(2)+'</td>'
+                        );
+
+                    });
+                    jQuery("#table_issued > tbody").append('<tr>' +
+                        '<td>'+total_arr.name+'</td>'+
+                        '<td>'+total_arr.sum+'</td>'+
+                        '<td>'+total_arr.cost_sum+'</td>'+
+                        '<td>'+total_arr.diff+'</td>'+
+                        '<td>'+total_arr.canv_sum+'</td>'+
+                        '<td>'+total_arr.canv_cost+'</td>'+
+                        '<td>'+total_arr.comp_sum+'</td>'+
+                        '<td>'+total_arr.comp_cost+'</td>'+
+                        '</tr>')
+                }
+            },
+            error: function (data) {
+                console.log(data.responseText);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Произошла ошибка, попробуйте позднее!"
+                });
+            }
+        });
+    }
     function makeTh(container, data) {
         var row = jQuery("<tr/>");
         container.empty();
@@ -445,7 +592,9 @@ $today = date('Y-m-d');
                 }
 
                 if(key == 'rest') {
+                    console.log('rest');
                     total[key] = '-';
+                    console.log(total[key]);
                 } else if (key == 'name') {
                     total[key] = '<b>Итого</b>';
                 } else if (key == 'squares_manf') {
@@ -468,17 +617,23 @@ $today = date('Y-m-d');
             });
 
         }
-        total['squares_manf'] = '';
+
         for (var k in total_manf) {
-            total['squares_manf'] += k+': '+total_manf[k].toFixed(2)+'<br>';
+            if(empty(total['squares_manf'])){
+                total['squares_manf'] = k+': '+total_manf[k].toFixed(2)+'<br>';
+            }
+            else{
+                total['squares_manf'] += k+': '+total_manf[k].toFixed(2)+'<br>';
+            }
         }
 
         if(Object.keys(total).length){
+            console.log('total',total);
             jQuery('#analytic').append('<tr></tr>');
             jQuery.each(ths,function(index,item){
                 key = jQuery(item).data('value');
 
-                var value = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count') ? parseFloat(total[key]).toFixed(2) : total[key];
+                var value = (key!='name' && key!='squares_manf' && key!='project_count' && key!='calcs_count' && key!= "rest") ? parseFloat(total[key]).toFixed(2) : total[key];
                 //console.log(value);
 
                 if (key == 'squares_manf' || key == 'name') {

@@ -138,7 +138,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 	function GetMountingBrigadeDay($id, $date) {
 		try
 		{
-			$user       = JFactory::getUser();
+			$user = JFactory::getUser();
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
@@ -175,17 +175,25 @@ class Gm_ceilingModelTeams extends JModelItem {
 			
 			$index = 0;
 			$was_break = false;
+			$controllerCalcForm = Gm_ceilingHelpersGm_ceiling::getController('calculationform');
             //поиск индекса для вставки и замена даты на просто время
 			for($i=0;$i<count($items);$i++){
                 $items[$i]->salary = 0;
                 $ids = explode(',', $items[$i]->ids);
                 foreach ($ids as $id){
-                    if(!empty($items[$i]->calcs_mounting_sum)){
-                        $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,'serviceSelf')['total_gm_mounting'];
+                    $newMount = $controllerCalcForm->calculateMount($id,$user->dealer_id);//просчет суммы монтажа по новой структуре
+                    if(!empty($newMount)){
+                        $items[$i]->salary += $newMount['mount_sum'];
                     }
                     else{
-                        $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id)['total_dealer_mounting'];
+                        if(!empty($items[$i]->calcs_mounting_sum)){
+                            $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,'serviceSelf')['total_gm_mounting'];
+                        }
+                        else{
+                            $items[$i]->salary += Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id)['total_dealer_mounting'];
+                        }
                     }
+
                 }
                 $items[$i]->salary+= Gm_ceilingHelpersGm_ceiling::calculate_transport($items[$i]->id)['mounter_sum'];
 			    if(!empty(floatval($items[$i]->new_project_sum))){

@@ -886,7 +886,7 @@ class Gm_ceilingModelCanvases extends JModelList
                                 ']}'
                         ) AS `textures_data`")
                   ->from("`rgzbn_goods_canvases` AS `c`")
-                  /*  ->where('`c`.`count` > 0')*/
+                  ->where('`c`.`visibility` = 1')
                   ->group("`c`.`texture_id`")
                   ->order("`c`.`texture_id`");
           }

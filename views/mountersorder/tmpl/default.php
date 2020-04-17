@@ -40,28 +40,52 @@ if (!empty($calculation_ids)) {
 
 if (!empty($calculation_ids)) {
     $AllCalc = [];
+    $modelCalcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
     foreach ($calculation_ids as $value) {
-        if(!$service){
-            $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
+        $all_jobs = $modelCalcform->getJobsPricesInCalculation($value->id, $user->dealer_id); // Получение работ по прайсу дилера
+        if(!empty($all_jobs)){
+            $DataOfProject[$value->id] = $all_jobs;
         }
         else{
-            $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null,null,"mount");
+            if(!$service){
+                $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);
+            }
+            else{
+                $DataOfProject[$value->id] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null,null,"mount");
+            }
         }
         foreach ($stages as $stage) {
-            foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
-                if($val['stage']==$stage || $stage == 1){
-                    if (!array_key_exists($val["title"], $AllCalc)) {
-                        $AllCalc[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
-                    } else {
-                        $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
-                        $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
-                        $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+            if(isset($DataOfProject[$value->id]["mounting_data"])) {
+                foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
+                    if ($val['stage'] == $stage || $stage == 1) {
+                        if (!array_key_exists($val["title"], $AllCalc)) {
+                            $AllCalc[$val["title"]] = ["title" => $val["title"], "gm_salary" => $val["gm_salary"], "dealer_salary" => $val["dealer_salary"], "quantity" => $val["quantity"], "gm_salary_total" => $val["gm_salary_total"], "dealer_salary_total" => $val["dealer_salary_total"]];
+                        } else {
+                            $AllCalc[$val["title"]]["quantity"] += $val["quantity"];
+                            $AllCalc[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                            $AllCalc[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                        }
+                    }
+                }
+            }
+            else{
+                foreach ($DataOfProject[$value->id] as $val) {
+                    if ($val->mount_type_id == $stage || $stage == 1) {
+                        if (!array_key_exists($val->name, $AllCalc)) {
+                            $AllCalc[$val->name] = ["title" => $val->name, "gm_salary" => $val->price, "dealer_salary" => $val->price, "quantity" => $val->final_count, "gm_salary_total" => $val->price_sum, "dealer_salary_total" => $val->price_sum];
+                        } else {
+                            $AllCalc[$val->name]["quantity"] += $val->final_count;
+                            $AllCalc[$val->name]["gm_salary_total"] += $val->price_sum;
+                            $AllCalc[$val->name]["dealer_salary_total"] += $val->price_sum;
+                        }
                     }
                 }
             }
         }
     }
 }
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
+$components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
 ?>
 <style>
 
@@ -199,6 +223,26 @@ if (!empty($calculation_ids)) {
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
                 <?php
                 $calculation = $calculationModel->getDataById($value->id);
+                $calculation->n13 = $modelCalcform->n13_load($calculation->id);
+                $calculation->n14 = $modelCalcform->n14_load($calculation->id);
+                $calculation->n15 = $modelCalcform->n15_load($calculation->id);
+                $calculation->n22 = $modelCalcform->n22_load($calculation->id);
+                $calculation->n23 = $modelCalcform->n23_load($calculation->id);
+                $calculation->n26 = $modelCalcform->n26_load($calculation->id);
+                $calculation->n29 = $modelCalcform->n29_load($calculation->id);
+                $calculation->n19 = $modelCalcform->n19_load($calculation->id);
+                $calculation->n45 = $modelCalcform->n45_load($calculation->id);
+                /*----new-----*/
+                $allGoods = $modelCalcform->getGoodsPricesInCalculation($calculation->id,$user->dealer_id);
+                if(!empty($calculation->cancel_metiz)){
+                    $calculation->goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($allGoods);
+                }
+                else{
+                    $calculation->goods = $allGoods;
+                }
+
+
+                /*------------*/
                 $dir_before = 'uploaded_calc_images/'.$value->id.'/before';
                 $dir_after = 'uploaded_calc_images/'.$value->id.'/after';
                 $dir_defect = 'uploaded_calc_images/'.$value->id.'/defect';
@@ -266,9 +310,481 @@ if (!empty($calculation_ids)) {
                         Примечание к потолку: <?php echo $value->details; ?>
                     </div>
                 <?php } ?>
-                <div class="ceiling">
-                    <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.svg" class="image-ceiling">
+                <div class="col-md-8">
+                    <div class="ceiling">
+                        <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.svg" class="image-ceiling">
+                    </div>
                 </div>
+                <div class="col-md-4">
+                    <?php if (!empty($calculation->n3)){
+                        $canvas = $canvas_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3");?>
+                        <h4>Материал</h4>
+                        <table class="table_info2">
+                            <tr>
+                                <td>
+                                    <?php echo $canvas[0]->texture_title.' '.$canvas[0]->name.' '.$canvas[0]->width;?>
+                                </td>
+                            </tr>
+                            <?php
+                            if (!empty($canvas[0]->color_id)) {
+                                ?>
+                                <tr>
+                                    <td>Цвет:</td>
+                                    <td>
+                                        <?php echo $canvas[0]->color_title; ?>
+                                        <img src="/<?php echo $canvas[0]->color_file; ?>" alt=""/>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    <?php }
+                    else{
+                        $canvas = array_filter(
+                            $calculation->goods,
+                            function ($e) {
+                                return $e->category_id == 1;
+                            }
+                        );
+                        $detailed_canvas = '';
+                        if (!empty($canvas)) {
+                            $filter = "id = " . $canvas[0]->goods_id;
+                            $detailed_canvas = $canvas_model->getFilteredItemsCanvas($filter);
+                        }
+                        $color = $detailed_canvas[0]->color;
+                        $hex = $detailed_canvas[0]->hex;
+                       if (!empty($detailed_canvas)){?>
+                        <h4>Материал</h4>
+                        <table class="table_info2">
+                            <tr>
+                                <td colspan="2">
+                                    <?php echo $detailed_canvas[0]->name?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style='width:20%'>Цвет:</td>
+                                <td style='width:80%'>
+                                    <div class="col-md-3"><?=$color;?></div>
+                                    <div class="col-md-9" style="background-color:<?="#".$hex;?>;color:<?="#".$hex;?>"><?=$color;?></div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    <?php }
+                    }?>
+                    <h4 style="margin: 10px 0;">Размеры помещения</h4>
+                    <table class="table_info2">
+                        <tr>
+                            <td>Площадь, м<sup>2</sup>:</td>
+                            <td><?php echo $calculation->n4; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Периметр, м:</td>
+                            <td><?php echo $calculation->n5; ?></td>
+                        </tr>
+                    </table>
+                    <?php if(empty($allGoods)) { ?>
+                        <h4 style="margin: 10px 0;">Профиль</h4>
+                        <?php switch ($calculation->n28) {
+                            case 0:
+                                $profil = "Отсутствует";
+                                break;
+                            case 1:
+                                $profil = "Потолочный Al";
+                                break;
+                            case 2:
+                                $profil = "Стеновой Al";
+                                break;
+                            case 3:
+                                $profil = "Стеновой ПВХ";
+                                break;
+                            case 4:
+                                $profil = "KRAAB";
+                                break;
+                        } ?>
+                        <table class="table_info2">
+                            <tr>
+                                <td><?php echo $profil; ?></td>
+                            </tr>
+                        </table>
+                        <?php if (!empty(floatval($calculation->remove_n28)) || !empty(floatval($calculation->n41))) { ?>
+                            <h4 style="margin: 10px 0;">Демонтаж</h4>
+                            <table class="table_info2">
+                                <?php if (!empty(floatval($calculation->remove_n28))) { ?>
+                                    <tr>
+                                        <th>Демонтаж профиля, м:</th>
+                                        <td><?php echo $calculation->remove_n28; ?></td>
+                                    </tr>
+                                <?php } ?>
+                                <?php if (!empty(floatval($calculation->n41))) { ?>
+                                    <tr>
+                                        <th>Демонтаж потолка:</th>
+                                        <td>нужен</td>
+                                    </tr>
+                                <?php } ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n6 > 0) { ?>
+                            <h4 style="margin: 10px 0;">Вставка</h4>
+                            <table class="table_info2">
+                                <tr>
+                                    <?php if ($calculation->n6 == 314) { ?>
+                                        <td>Белая</td>
+                                        <td></td>
+                                        <?php
+                                    } else {
+                                        $color = $components_model->getColorId($calculation->n6);
+                                        ?>
+                                        <td>Цветная:</td>
+                                        <td>
+                                            <?php echo $color->title; ?> <img style='width: 50px; height: 30px;'
+                                                                              src="/<?php echo $color->file; ?>"/>
+                                        </td>
+                                    <?php } ?>
+                                </tr>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n12) { ?>
+                            <h4 style="margin: 10px 0;">Установка люстры</h4>
+                            <table class="table_info2">
+                                <tr>
+                                    <td><?php echo $calculation->n12; ?> шт.</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        <?php }
+                        ?>
+                        <?php if ($calculation->n13) { ?>
+                            <h4 style="margin: 10px 0;">Установка светильников</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n13 as $key => $n13_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n26) { ?>
+                            <h4 style="margin: 10px 0;">Светильники Гильдии Мастеров</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n26 as $key => $n26_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illum . " -  <b>Лампа:</b> " . $n26_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n14) { ?>
+                            <h4 style="margin: 10px 0;">Обвод трубы</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n14 as $key => $n14_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n27 > 0) { ?>
+                            <h4 style="margin: 10px 0;">Шторный карниз</h4>
+                            <?php if ($calculation->n16) {
+                                switch ($calculation->niche) {
+                                    case 1:
+                                        $niche_title = "Открытая ниша";
+                                        break;
+                                    case 2:
+                                        $niche_title = "Закрытая ниша";
+                                        break;
+                                    case 3:
+                                        $niche_title = "Ниша с пластиком 100мм";
+                                        break;
+                                    case 4:
+                                        $niche_title = "Ниша с пластиком 150мм";
+                                        break;
+                                    case 5:
+                                        $niche_title = "Ниша с пластиком 200мм";
+                                        break;
+                                }
+                                ?>
+                                <table class="table_info2">
+                                    <tr>
+                                        <td><?php echo $niche_title ?></td>
+                                        <td><?php echo $calculation->n27; ?> м.</td>
+                                    </tr>
+                                </table>
+                            <?php } else { ?>
+                                <table class="table_info2">
+                                    <tr>
+                                        <td><?php echo "Обычный шторный карниз" ?></td>
+                                        <td><?php echo $calculation->n27; ?> м.</td>
+                                    </tr>
+                                </table>
+                                <?php
+                            }
+                        } ?>
+
+                        <?php if ($calculation->n15) { ?>
+                            <h4 style="margin: 10px 0;">Шторный карниз Гильдии мастеров</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n15 as $key => $n15_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+
+                        <?php if ($calculation->n22 || $calculation->n22 || $calculation->n42) { ?>
+                            <h4 style="margin: 10px 0;">Вентиляция</h4>
+                            <?php if ($calculation->n22) { ?>
+                                <table class="table_info2">
+                                    <?php
+                                    foreach ($calculation->n22 as $key => $n22_item) {
+                                        echo "<tr><td><b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "</td></tr>";
+                                    }
+                                    ?>
+                                </table>
+                            <?php } ?>
+                            <?php if ($calculation->n22_1) { ?>
+                                <table class="table_info2">
+                                    <tr>
+                                        <th>Пластиковый короб, м</th>
+                                        <td><?php echo $calculation->n22_1; ?></td>
+                                    </tr>
+                                </table>
+                            <?php } ?>
+                            <?php if ($calculation->n42) { ?>
+                                <table class="table_info2">
+                                    <tr>
+                                        <th>Вытяжка(наклейка кольца), шт</th>
+                                        <td><?php echo $calculation->n42; ?></td>
+                                    </tr>
+                                </table>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if ($calculation->n23) { ?>
+                            <h4 style="margin: 10px 0;">Диффузор</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n23 as $key => $n23_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n29) { ?>
+                            <h4 style="margin: 10px 0;">Переход уровня</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n29 as $key => $n29_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if (!empty($calculation->n45)) { ?>
+                            <h4 style="margin: 10px 0;">Световые линии</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n45 as $key => $n45_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n45_item->n45_count . " м - <b>Тип:</b>  " . $n45_item->component_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <?php if ($calculation->n19) { ?>
+                            <h4 style="margin: 10px 0;">Провода</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($calculation->n19 as $key => $n19_item) {
+                                    echo "<tr><td><b>Количество:</b> " . $n19_item->count . " м - <b>Тип:</b>   " . $n19_item->wire_title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php } ?>
+                        <h4 style="margin: 10px 0;">Прочее</h4>
+                        <table class="table_info2">
+                            <?php if ($calculation->n9 > 0) { ?>
+                                <tr>
+                                    <td>Углы, шт.:</td>
+                                    <td><?php echo $calculation->n9; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n10 > 0) { ?>
+                                <tr>
+                                    <td> Криволинейный участок, м:</td>
+                                    <td><?php echo $calculation->n10; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n11 > 0) { ?>
+                                <tr>
+                                    <td>Внутренний вырез, м:</td>
+                                    <td><?php echo $calculation->n11; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n7 > 0) { ?>
+                                <tr>
+                                    <td>Крепление в плитку, м:</td>
+                                    <td><?php echo $calculation->n7; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n8 > 0) { ?>
+                                <tr>
+                                    <td>Крепление в керамогранит, м:</td>
+                                    <td><?php echo $calculation->n8; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n17 > 0) { ?>
+                                <tr>
+                                    <td>Закладная брусом, м:</td>
+                                    <td><?php echo $calculation->n17; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n18 > 0) { ?>
+                                <tr>
+                                    <td> Усиление стен, м:</td>
+                                    <td><?php echo $calculation->n18; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n20 > 0) { ?>
+                                <tr>
+                                    <td>Разделитель, м:</td>
+                                    <td><?php echo $calculation->n20; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n20_1 > 0) { ?>
+                                <tr>
+                                    <td>Отбойник, м:</td>
+                                    <td><?php echo $calculation->n20_1; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n21 > 0) { ?>
+                                <tr>
+                                    <td>Пожарная сигнализация, шт:</td>
+                                    <td><?php echo $calculation->n21; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->dop_krepezh > 0) { ?>
+                                <tr>
+                                    <td>Дополнительный крепеж:</td>
+                                    <td><?php echo $calculation->dop_krepezh; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n24 > 0) { ?>
+                                <tr>
+                                    <td>Сложность доступа к месту монтажа, м:</td>
+                                    <td><?php echo $calculation->n24; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n30 > 0) { ?>
+                                <tr>
+                                    <td>Парящий потолок, м:</td>
+                                    <td><?php echo $calculation->n30; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n32 > 0) { ?>
+                                <tr>
+                                    <td>Слив воды, кол-во комнат:</td>
+                                    <td><?php echo $calculation->n32; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n22_1 > 0) { ?>
+                                <tr>
+                                    <td>Пластиковый короб:</td>
+                                    <td><?php echo $calculation->n22_1; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n33 > 0) { ?>
+                                <tr>
+                                    <td>Лючок:</td>
+                                    <td><?php echo $calculation->n33; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n33_2 > 0) { ?>
+                                <tr>
+                                    <td>Большой люк:</td>
+                                    <td><?php echo $calculation->n33_2; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n34 > 0) { ?>
+                                <tr>
+                                    <td>Диодная лента:</td>
+                                    <td><?php echo $calculation->n34; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n34_2 > 0) { ?>
+                                <tr>
+                                    <td>Блок питания диод.ленты:</td>
+                                    <td><?php echo $calculation->n34_2; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n35 > 0) { ?>
+                                <tr>
+                                    <td>Контурный профиль:</td>
+                                    <td><?php echo $calculation->n35; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n36 > 0) { ?>
+                                <tr>
+                                    <td>Перегарпунка, м:</td>
+                                    <td><?php echo $calculation->n36; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n37) { ?>
+                                <tr>
+                                    <td>Фотопечать, м<sup>2</sup>:</td>
+                                    <td><?php echo json_decode($calculation->n37)->square; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n38) { ?>
+                                <tr>
+                                    <td>Ремонт потолка, шт:</td>
+                                    <td><?php echo $calculation->n38; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if (!empty(floatval($calculation->n39))) { ?>
+                                <tr>
+                                    <td>Лента на шторный карниз, м:</td>
+                                    <td><?php echo $calculation->n39; ?></td>
+                                </tr>
+                            <?php } ?>
+                            <?php if ($calculation->n40) { ?>
+                                <tr>
+                                    <td>Закругления на шторный карниз, шт:</td>
+                                    <td><?php echo $calculation->n40; ?></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                        <?php $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                        <?php if (!empty($extra_mounting)) { ?>
+                            <h4 style="margin: 10px 0;">Дополнительные работы</h4>
+                            <table class="table_info2">
+                                <?php
+                                foreach ($extra_mounting as $dop) {
+                                    echo "<tr><td><b>Название:</b></td><td>" . $dop->title . "</td></tr>";
+                                }
+                                ?>
+                            </table>
+                        <?php }
+                    }?>
+                    <?php if(!empty($calculation->goods)){?>
+                        <h4 style="margin: 10px 0;cursor: pointer;" class="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
+                        <table class="table_info2 table_goods" style="display:none;">
+                            <thead>
+                            <th>Название</th>
+                            <th>Количество</th>
+                            </thead>
+                            <tbody>
+                            <?php
+                            foreach ($calculation->goods as $goods){
+                                if($goods->category_id != 1){
+                                    echo "<tr><td>$goods->name</td><td>$goods->final_count</td></tr>";
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    <?php }?>
+                </div>
+
                 <div class = "overflow">
                     <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
                         <tr class="caption">
@@ -281,42 +797,69 @@ if (!empty($calculation_ids)) {
                         $calc_sum_stage = 0;
                         if (!empty($DataOfProject[$value->id])) {
                             foreach ($stages as $stage) {
-                                foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
-                                    if($val['stage'] == $stage || $stage == 1){ ?>
-                                        <tr>
-                                            <td class="left">
-                                                <?php echo $val["title"]; ?>
-                                            </td>
-                                            <?php if ($user->dealer_id == 1) { ?>
-                                                <td>
-                                                    <?php echo $val["gm_salary"]; ?>
+                                if (isset($DataOfProject[$value->id]["mounting_data"])){
+                                    foreach ($DataOfProject[$value->id]["mounting_data"] as $val) {
+                                        if ($val['stage'] == $stage || $stage == 1) { ?>
+                                            <tr>
+                                                <td class="left">
+                                                    <?php echo $val["title"]; ?>
                                                 </td>
-                                            <?php } else { ?>
+                                                <?php if ($user->dealer_id == 1) { ?>
+                                                    <td>
+                                                        <?php echo $val["gm_salary"]; ?>
+                                                    </td>
+                                                <?php } else { ?>
+                                                    <td>
+                                                        <?php echo $val["dealer_salary"]; ?>
+                                                    </td>
+                                                <?php } ?>
                                                 <td>
-                                                    <?php echo $val["dealer_salary"]; ?>
+                                                    <?php echo $val["quantity"]; ?>
                                                 </td>
-                                            <?php } ?>
-                                            <td>
-                                                <?php echo $val["quantity"]; ?>
-                                            </td>
-                                            <?php if ($user->dealer_id == 1) { ?>
-                                                <td>
+                                                <?php if ($user->dealer_id == 1) { ?>
+                                                    <td>
 
-                                                    <?php
-                                                    $calc_sum_stage +=  $val["gm_salary_total"];
-                                                    echo $val["gm_salary_total"];
-                                                    ?>
+                                                        <?php
+                                                        $calc_sum_stage += $val["gm_salary_total"];
+                                                        echo $val["gm_salary_total"];
+                                                        ?>
+                                                    </td>
+                                                <?php } else { ?>
+                                                    <td>
+                                                        <?php
+                                                        $calc_sum_stage += $val["dealer_salary_total"];
+                                                        echo $val["dealer_salary_total"];
+                                                        ?>
+                                                    </td>
+                                                <?php } ?>
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                }
+                                else{
+                                    foreach ($DataOfProject[$value->id] as $val) {
+                                        if ($val->moount_type_id == $stage || $stage == 1) { ?>
+                                            <tr>
+                                                <td class="left">
+                                                    <?php echo $val->name; ?>
                                                 </td>
-                                            <?php } else { ?>
+                                                <td>
+                                                    <?php echo $val->price; ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo $val->final_count; ?>
+                                                </td>
                                                 <td>
                                                     <?php
-                                                    $calc_sum_stage +=  $val["dealer_salary_total"];
-                                                    echo $val["dealer_salary_total"];
+                                                    $calc_sum_stage += $val->price_sum;
+                                                    echo $val->price_sum;
                                                     ?>
                                                 </td>
-                                            <?php } ?>
-                                        </tr>
-                                        <?php
+
+                                            </tr>
+                                            <?php
+                                        }
                                     }
                                 }
                             }
@@ -492,6 +1035,17 @@ if (!empty($calculation_ids)) {
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-1-tar").hide();
+        });
+
+        jQuery(document).on('click','.calc_goods',function(){
+            jQuery(".table_goods").toggle();
+            var i = jQuery(this).find('i');
+            if(i.hasClass('fa-angle-down')){
+                i.removeClass("fa-angle-down").addClass("fa-angle-up");
+            }
+            else if(i.hasClass('fa-angle-up')){
+                i.removeClass("fa-angle-up").addClass("fa-angle-down");
+            }
         });
 
         //  кнопка "монтаж начат"

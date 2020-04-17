@@ -3422,8 +3422,9 @@ public function register_mnfctr(){
             $date1 = $jinput->get('date_from','','STRING');
             $date2 = $jinput->get('date_to','','STRING');
             $status = $jinput->getInt('status');
+            $newAnalytic = $jinput->getInt('new');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
-            $data = $model->getData($date1,$date2,$status);
+            $data = $model->getData($date1,$date2,$status,$newAnalytic);
             die(json_encode($data));
         }
         catch(Exception $e) {

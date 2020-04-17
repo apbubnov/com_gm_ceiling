@@ -500,6 +500,7 @@ foreach ($brigadesData as $value){
 						id: idBrigade,
 					},
 					success: function(data) {
+					    console.log(data);
 						Array.from(data).forEach(function(element) {
 							table += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 						});

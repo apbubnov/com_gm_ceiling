@@ -29,7 +29,8 @@ $user_groups = $user->groups;
 $triangulator_pro = 0;
 if (in_array('16', $user_groups)) {
     $triangulator_pro = 1;
-    $min_sum = 100;
+    $gmManager = true;
+    $min_sum = 200;
 }
 
 $type = $jinput->get('type', '', 'STRING');
@@ -480,41 +481,43 @@ if (!empty($calculation_id)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-bottom: 5px; margin-top: 5px;">
-                            <div class="col-sm-11 col-xs-11" style="padding-right: 5px;">
-                                <button type="button" data-group_id="cancel_offcut" data-maingroup_id="cancel"
-                                        class="btn add_fields">
-                                    <div class="col-xs-2 col-sm-2"><img src="/images/offcut.png " class="img_calcform">
-                                    </div>
-                                    <div class="col-xs-10 col-sm-10" style="text-align: left;">Отменить обрезки</div>
-                                </button>
-                            </div>
-                            <div class="col-sm-1 col-xs-1" style="padding-left: 0px;">
-                                <div class="btn-primary help"
-                                     style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px;">
-                                    <div class="help_question center" style="padding-top:2px;">?</div>
-                                    <span class="airhelp" style="display: none;">При выборе данной опции отменяются обрезки</span>
+                        <?php if($gmManager){?>
+                            <div class="row" style="margin-bottom: 5px; margin-top: 5px;">
+                                <div class="col-sm-11 col-xs-11" style="padding-right: 5px;">
+                                    <button type="button" data-group_id="cancel_offcut" data-maingroup_id="cancel"
+                                            class="btn add_fields">
+                                        <div class="col-xs-2 col-sm-2"><img src="/images/offcut.png " class="img_calcform">
+                                        </div>
+                                        <div class="col-xs-10 col-sm-10" style="text-align: left;">Отменить обрезки</div>
+                                    </button>
                                 </div>
-                            </div>
-                            <div class="div-fields" style="display: none;">
-                                <div>
-                                    <div class="col-sm-12 row-fields center" data-id="is_cancel_offcut"
-                                         data-group_id="cancel_offcut" style="margin-bottom: 5px;">
-                                        <div class="countDiv">
-                                            <input type="checkbox" id="fieldis_cancel_offcut" class="inp-cbx" style="display: none;">
-                                            <label for="fieldis_cancel_offcut" class="cbx">
-                                                <span>
-                                                    <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                                    </svg>
-                                                </span>
-                                                <span> Отменить обрезки</span>
-                                            </label>
+                                <div class="col-sm-1 col-xs-1" style="padding-left: 0px;">
+                                    <div class="btn-primary help"
+                                         style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px;">
+                                        <div class="help_question center" style="padding-top:2px;">?</div>
+                                        <span class="airhelp" style="display: none;">При выборе данной опции отменяются обрезки</span>
+                                    </div>
+                                </div>
+                                <div class="div-fields" style="display: none;">
+                                    <div>
+                                        <div class="col-sm-12 row-fields center" data-id="is_cancel_offcut"
+                                             data-group_id="cancel_offcut" style="margin-bottom: 5px;">
+                                            <div class="countDiv">
+                                                <input type="checkbox" id="fieldis_cancel_offcut" class="inp-cbx" style="display: none;">
+                                                <label for="fieldis_cancel_offcut" class="cbx">
+                                                    <span>
+                                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                        </svg>
+                                                    </span>
+                                                    <span> Отменить обрезки</span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php }?>
                     </div>
                 </div>
                 <div class="col-sm-3"></div>
@@ -684,7 +687,8 @@ if (!empty($calculation_id)) {
     var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
         dealerId = '<?php echo $dealerId;?>',
         texturesData = '<?php echo $texturesData?>',
-        precalculation = '<?php echo $precalculation; ?>';
+        precalculation = '<?php echo $precalculation; ?>',
+        gmManager = '<?= $gmManager?>';
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -721,7 +725,7 @@ if (!empty($calculation_id)) {
                         }
                     ]
                 },
-               /* {
+                {
                     title: "Обработка углов",
                     description: "В расчет включается стоимость обработки углов",
                     id: "angle_processing",
@@ -740,7 +744,7 @@ if (!empty($calculation_id)) {
                             title: "Обработка углов"
                         }
                     ]
-                },*/
+                },
                 {
                     title: "Перегарпунка",
                     description: "В расчет включается стоимость перегарпунки",
@@ -856,6 +860,9 @@ if (!empty($calculation_id)) {
 
         var data = JSON.parse('<?php echo $data?>');
         componentsInCategories = JSON.parse('<?php echo $componentsInCategories?>');
+        if(!gmManager){
+            DEFAULT_MAINGROUPS.shift();
+        }
         data = data.concat(DEFAULT_MAINGROUPS);
         console.log("data", data);
         console.log('componentsInCategories', componentsInCategories);
@@ -961,7 +968,7 @@ if (!empty($calculation_id)) {
                 duplicateDiv = jQuery(document.createElement('div')),
                 deleteDiv = jQuery(document.createElement('div'));
 
-            divRow.addClass('col-sm-12 row-fields');
+            divRow.addClass('col-xs-12 col-md-12 row-fields');
             divRow.attr('data-group_id','dop_goods');
             divRow.attr('data-field_id','dopgoods');
             divRow.attr('data-category',this.value);
@@ -969,8 +976,8 @@ if (!empty($calculation_id)) {
             countDiv.addClass('col-sm-2 col-xs-2');
             countDiv.addClass('countDiv');
             countDiv.css({"padding-right": "0"});
-            selectDiv.addClass('col-sm-6 col-xs-6 selectDiv');
-            duplicateDiv.addClass('col-sm-2 col-xs-2');
+            selectDiv.addClass('col-md-6 col-xs-6 selectDiv');
+            duplicateDiv.addClass('col-md-2 col-xs-2');
             duplicateDiv.css({'text-align': 'right'}, {'padding': 0});
             deleteDiv.addClass('col-sm-2 col-xs-2');
             duplicateDiv.css({'padding': 0});
@@ -1264,7 +1271,7 @@ if (!empty($calculation_id)) {
             titleDiv.addClass('row title');
             titleDiv.css({"margin-left": "15px", "color": "#414099"})
             label.css({"margin-left": "15px", "margin-bottom": "2px", "color": "#414099"})
-            divRow.addClass('col-sm-12 row-fields');
+            divRow.addClass('col-md-12 col-xs-12 row-fields');
             divRow.css({"margin-bottom": "5px"});
             divRow.attr('data-id', elem.id);
             divRow.attr('data-group_id', elem.group_id);
@@ -1277,11 +1284,13 @@ if (!empty($calculation_id)) {
                     var input = createInput();
                     input.addClass('quantity_input');
                     countDiv.append(input);
-                    countDiv.addClass('col-md-10')
+                    countDiv.addClass('col-md-12');
                     divRow.append(countDiv);
                     if(elem.duplicate == 1){
+                        countDiv.removeClass('col-md-12');
+                        countDiv.addClass('col-md-10 col-xs-10');
                         var deleteDiv = jQuery(document.createElement('div'));
-                        deleteDiv.addClass('col-md-2');
+                        deleteDiv.addClass('col-md-2 col-xs-2');
                         deleteDiv.append(createDeleteBtn());
                         divRow.append(deleteDiv);
                     }
@@ -1305,7 +1314,7 @@ if (!empty($calculation_id)) {
                         deleteDiv = jQuery(document.createElement('div')),
                         categories = getCategories(componentsInCategories)
                     select = createSelect(categories);
-                    categoryDiv.addClass('category col-xs-12 col-sm-12 countDiv');
+                    categoryDiv.addClass('category col-xs-12 col-md-12 countDiv');
                     //deleteDiv.addClass('col-sm-2 col-xs-2');
                     select.prop('name', 'choose_category');
                     categoryDiv.append(select);
@@ -1330,12 +1339,12 @@ if (!empty($calculation_id)) {
                         var div = jQuery(document.createElement('div')),
                             title = jQuery(document.createElement('div'));
                         if(elem.duplicate == 1){
-                            div.addClass('col-sm-5 col-xs-5 countDiv');
+                            div.addClass('col-md-5 col-xs-5 countDiv');
                         }
                         else{
-                            div.addClass('col-sm-6 col-xs-6 countDiv');
+                            div.addClass('col-md-6 col-xs-6 countDiv');
                         }
-                        title.addClass('col-sm-6 col-xs-6');
+                        title.addClass('col-md-6 col-xs-6');
                         title.append('<label>' + elem.subfields[i].title + '</label>');
                         titlesDiv.append(title);
                         var input = createInput();
@@ -1345,7 +1354,7 @@ if (!empty($calculation_id)) {
                         fieldsDiv.append(div);
                     }
                     if(elem.duplicate == 1){
-                        deleteDiv.addClass('col-sm-2 col-md-2');
+                        deleteDiv.addClass('col-xs-2 col-md-2');
                         deleteDiv.append(createDeleteBtn());
                         fieldsDiv.append(deleteDiv);
                     }
@@ -1358,14 +1367,14 @@ if (!empty($calculation_id)) {
                     resultDiv.append(titleDiv);
                     var selectDiv = jQuery(document.createElement('div')),
                         deleteDiv = jQuery(document.createElement('div'));
-                    countDiv.addClass('col-sm-2 col-xs-2');
+                    countDiv.addClass('col-md-2 col-xs-2');
                     countDiv.css({"padding-right": "0"});
                     if (elem.duplicate == 1) {
-                        selectDiv.addClass('col-sm-8 col-xs-8 selectDiv');
-                        deleteDiv.addClass('col-sm-2 col-xs-2');
+                        selectDiv.addClass('col-md-8 col-xs-8 selectDiv');
+                        deleteDiv.addClass('col-md-2 col-xs-2');
                     }
                     else {
-                        selectDiv.addClass('col-sm-10 col-xs-10 selectDiv');
+                        selectDiv.addClass('col-md-10 col-xs-10 selectDiv');
 
                     }
                     var input = createInput();
@@ -1390,8 +1399,8 @@ if (!empty($calculation_id)) {
                         selectDiv = jQuery(document.createElement('div')),
                         radioBtn = createRadioBtns(elem),
                         select = createSelect(elem.goods);
-                    radioDiv.addClass('col-sm-6 col-xs-6 div-radio');
-                    selectDiv.addClass('col-sm-6 col-xs-6 div-goods_select');
+                    radioDiv.addClass('col-xs-6 div-radio');
+                    selectDiv.addClass('col-xs-6 div-goods_select');
                     selectDiv.css({"display": "none"});
                     radioDiv.append(radioBtn.radioBtn);
                     radioDiv.append(radioBtn.label);

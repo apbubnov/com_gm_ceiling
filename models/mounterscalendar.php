@@ -221,45 +221,75 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 	function GetDayMountingOfBrigade($id, $date) {
         try
         {
+            $user = JFactory::getUser();
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $contactsSubquery = $db->getQuery(true);
-            $mountSumSubquery = $db->getQuery(true);
-            $perimeterSubquery = $db->getQuery(true);
+            $calcsSubquery = $db->getQuery(true);
             $prepaymentSubquery = $db->getQuery(true);
             $contactsSubquery
                 ->select('GROUP_CONCAT(cp.phone SEPARATOR \';\n\')')
                 ->from('`rgzbn_gm_ceiling_clients_contacts` AS cp')
                 ->where('cp.client_id = p.client_id');
-            $mountSumSubquery
-                ->select('SUM(`sum`)')
-                ->from('`rgzbn_gm_ceiling_calcs_mount` AS cm')
-                ->innerJoin('`rgzbn_gm_ceiling_calculations` AS c ON c.id = cm.calculation_id')
-                ->where('c.project_id = p.id AND cm.stage_id = pm.type');
-            $perimeterSubquery
-                ->select('SUM(n5)')
-                ->from('`rgzbn_gm_ceiling_calculations`')
-                ->where('project_id = p.id');
+
+            $calcsSubquery
+                ->select('c.project_id,GROUP_CONCAT(c.id SEPARATOR \',\') AS calc_ids,SUM(c.n5) AS n5')
+                ->from('`rgzbn_gm_ceiling_calculations` as c')
+                ->group('c.project_id');
             $prepaymentSubquery
                 ->select('IFNULL(SUM(prepayment_sum),0)')
                 ->from('`rgzbn_gm_ceiling_projects_prepayment`')
                 ->where('project_id = p.id');
             $query
-                ->select('p.id, pm.date_time AS project_mounting_date,p.project_sum,p.new_project_sum,p.read_by_mounter, s.title AS project_status, p.project_info, pm.type,p.calcs_mounting_sum')
+                ->select('p.id, pm.date_time AS project_mounting_date,p.project_sum,p.new_project_sum,p.read_by_mounter, s.title AS project_status, p.project_info, pm.type,calcs_info.calc_ids,calcs_info.n5,p.calcs_mounting_sum')
                 ->select("($contactsSubquery) as client_phones")
-                ->select("($mountSumSubquery) as m_sum")
-                ->select("($perimeterSubquery) as n5")
                 ->select("($prepaymentSubquery) as prepayment")
                 ->from('`rgzbn_gm_ceiling_projects_mounts` AS pm')
                 ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = pm.project_id')
                 ->innerJoin('`rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id')
+                ->innerJoin("($calcsSubquery) AS calcs_info ON calcs_info.project_id = p.id")
                 ->where("pm.mounter_id = '$id' and p.project_status > 3 and pm.date_time between '$date 00:00:00' and '$date 23:59:59'");
             $db->setQuery($query);
+            //throw new Exception($query);
             $items = $db->loadObjectList();
-            if(count($items == 1) && empty($items[0]->id)){
+            if(count($items) == 1 && empty($items[0]->id)){
                 $items = [];
             }
             $summed = [];$result = [];
+            $calcfromController = Gm_ceilingHelpersGm_ceiling::getController('calculationform');
+            /*просчет зп*/
+            for($i=0;$i<count($items);$i++) {
+                $calcIds = explode(',', $items[$i]->calc_ids);
+                foreach ($calcIds as $id) {
+                    $mountSum = $calcfromController->calculateMount($id,$user->dealer_id);
+                    if(!empty($mountSum)){
+                        /*по новой структуре*/
+                        $items[$i]->m_sum += $mountSum["sum_by_stage"][$items[$i]->type];
+                    }
+                    else{
+                        /*по старой структуре*/
+                        if(!empty($items[$i]->calcs_mounting_sum)){
+                            $mount = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,'serviceSelf');
+                            if($items[$i]->type == 1){
+                                $items[$i]->m_sum += $mount['total_gm_mounting'];
+                            }
+                            else{
+                                $items[$i]->m_sum += $mount['stages'][$items[$i]->type];
+                            }
+
+                        }
+                        else{
+                            $mount = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id);
+                            if($items[$i]->type == 1){
+                                $items[$i]->m_sum = $mount['total_dealer_mounting'];
+                            }
+                            else{
+                                $items[$i]->m_sum = $mount['stages'][$items[$i]->type];
+                            }
+                        }
+                    }
+                }
+            }
             for($i=0;$i<count($items);$i++){
                 if(!empty(floatval($items[$i]->new_project_sum))){
                     $items[$i]->project_rest = $items[$i]->new_project_sum - $items[$i]->prepayment;
