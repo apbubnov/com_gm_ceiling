@@ -623,4 +623,9 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
 
         }
     }
+
+    function moveMount(){
+       $model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+       $model->transferAllDealerprices();
+    }
 }

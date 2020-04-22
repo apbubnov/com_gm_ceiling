@@ -295,6 +295,8 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             }
             $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
             foreach ($calcsId as $id){
+                Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
+
                 $all_jobs = $model_calcform->getJobsPricesInCalculation($id, $dealer_id); // Получение работ по прайсу дилера
                 $stages = [];
                 foreach ($all_jobs as $value) {

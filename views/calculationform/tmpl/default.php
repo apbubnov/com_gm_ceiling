@@ -120,6 +120,8 @@ $calculation_id = $jinput->get('calc_id', 0, 'INT');
 if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
     $dealerId = $calculation->dealer_id;
+    $dealer = JFactory::getUser($dealerId);
+    $stretchCount = ($dealer->type == 7) ? $calculation->n4 : $calculation->n5;
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
@@ -356,15 +358,11 @@ if (!empty($calculation_id)) {
                         <label>Площадь обрезков:</label> <input name="jform[offcut_square]" id="jform_offcut_square" type="text" readonly><br>
                         <label>Координаты:</label> <textarea id="input_cut_data" style="width: 600px; height: 200px;" readonly resize></textarea><br>
                         <img id="cut_image" style="width: 100%;">
-                    </div>
-                    <div id="div_for_test" style="display: none;">
                         <label>Усаженный периметр:</label> <input id="input_n5_shrink" type="text" readonly><br>
                         <label>Площадь обрезков:</label> <input name="jform[offcut_square]" id="jform_offcut_square"
                                                                 type="text" readonly><br>
                         <label>Процент усадки:</label> <input id="input_shrink_percent" type="text" readonly><br>
-                        <label>Координаты:</label> <textarea id="input_cut_data" style="width: 600px; height: 200px;"
-                                                             readonly resize></textarea><br>
-                        <img id="cut_image" style="width: 100%;">
+                        <label>Координаты:</label> <textarea id="input_cut_data" style="width: 600px; height: 200px;"readonly resize></textarea><br>
                     </div>
                 </div>
                 <div class="col-sm-3"></div>
@@ -477,6 +475,19 @@ if (!empty($calculation_id)) {
                                                                      name="cancel_mount" class="radio" data-count="1"
                                                                      value="1"><label
                                                     for="self_mount">Свой прайс</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--поле для учета работ по натяжке(т.к площадь полотна не подходит)-->
+                            <div  style="display: none;">
+                                <div>
+                                    <div class="row title">
+                                        <label>Натяжка</label>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12 row-fields" data-id="stretch"  data-jobs='["26"]'>
+                                        <div class="countDiv col-md-12">
+                                            <input class="form-control quantity_input" value="<?=$stretchCount?>">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -870,7 +881,7 @@ if (!empty($calculation_id)) {
         document.body.onload = function () {
             jQuery('.PRELOADER_GM').hide();
         };
-
+        console.log(data);
         createBlocks(data);
 
 
@@ -1297,8 +1308,21 @@ if (!empty($calculation_id)) {
                 }
                 if (elem.input_type == 1) {
                     var checkBox = createCheckBox(elem);
-                    countDiv.append(checkBox.input);
-                    countDiv.append(checkBox.label);
+                    console.log("el",elem);
+                    console.log(!empty(elem.parent));
+                    if(!empty(elem.parent)){
+                        var checkboxDiv = jQuery(document.createElement('div'));
+                        checkboxDiv.append(checkBox.input);
+                        checkboxDiv .append(checkBox.label);
+                        divRow.append(checkboxDiv);
+                        divRow.attr('data-parent',elem.parent);
+                    }
+                    else{
+                        countDiv.append(checkBox.input);
+                        countDiv.append(checkBox.label);
+                        divRow.append(countDiv);
+                    }
+
                     divRow.append(countDiv);
                     divRow.addClass('center');
                 }
@@ -1590,6 +1614,10 @@ if (!empty($calculation_id)) {
                                                 radioBtn.closest('.row-fields').find('.div-goods_select').children().val(savedInput.related[k].assoc.value);
                                             }
                                         }
+                                        if (savedInput.related[k].type == 'checkbox') {
+                                            var checkbox = jQuery('#' + savedInput.related[k].id);
+                                            checkbox.attr('checked', true);
+                                        }
                                     }
                                 }
                             }
@@ -1646,7 +1674,7 @@ if (!empty($calculation_id)) {
 
         jQuery.each(fieldsDiv, function (index, div) {
             var currentJobs = jQuery(div).data('jobs'),
-                countDiv, input, goodSelect, radio;
+                countDiv, input, goodSelect, radio,checkbox;
             if (empty(currentJobs)) {
                 currentJobs = [];
             }
@@ -1670,7 +1698,7 @@ if (!empty($calculation_id)) {
                             currentJobs = JSON.parse(radio.val());
                         }
                         else {
-                            currentJobs.concat(JSON.parse(radio.val()));
+                            currentJobs = currentJobs.concat(JSON.parse(radio.val()));
                         }
                         if (radioGoodSelect.length != 0) {
                             var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
@@ -1699,6 +1727,14 @@ if (!empty($calculation_id)) {
                     }
                     components.push({id: goodSelect.val(), count: input.val()});
                 }
+
+                //поиск связанных checkbox
+                var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
+                if(checkbox.length > 0){
+                    var jbs = checkbox.closest('.row-fields').data('jobs');
+                    currentJobs = currentJobs.concat(jbs);
+                }
+
                 //добавляем работы если количество не пустое
                 if (!empty(input.val())) {
                     for (var i = currentJobs.length; i--;) {
@@ -1784,7 +1820,7 @@ if (!empty($calculation_id)) {
                     input = jQuery(countDiv).children(),
                     fieldObj = {},
                     related = [],
-                    goodSelect, radio;
+                    goodSelect, radio,checkbox;
                 if (input.prop('type') == "checkbox") {
                     if (input.is(':checked')) {
                         fieldObj = {id: input.prop('id'), type: input.prop('type'), value: 1, related: []};
@@ -1837,6 +1873,14 @@ if (!empty($calculation_id)) {
                                     type: goodSelect.prop('type'),
                                     value: goodSelect.val()
                                 });
+                            }
+                            checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
+                            if(checkbox.length > 0){
+                                related.push({
+                                    id: checkbox.prop('id'),
+                                    type: checkbox.prop('type'),
+                                    value: checkbox.val()
+                                })
                             }
                             fieldObj = {
                                 id: input.prop('id'),

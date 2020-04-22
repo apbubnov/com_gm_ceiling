@@ -224,48 +224,78 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         foreach ($calculations as $calculation) {
                             $common_canvases_sum += $calculation->canvases_sum;
                             $total_components_sum += $calculation->components_sum;
-                            $canvas = array_filter(
-                                $calculation->goods,
-                                function ($e) {
-                                    return $e->category_id == 1;
+                            if(!empty($calculation->n3)){
+                                $color_filter = "";
+                                $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3",'old')[0];
+                                if(!empty($canvas->color_id)){
+                                    $color_filter = "and color_id = $canvas->color_id";
                                 }
-                            );
-                            if (!empty($canvas)) {
-
-                                $filter = "id = ".$canvas[0]->id;
-                                $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
-                                $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
-                                $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);
-                                $arr_widths = [];
+                                $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0 $color_filter",'old');
                                 $widths = [];
-                                foreach ($selected_canvases as $value) {
-                                    if (!in_array($value->width, $arr_widths)) {
-                                        array_push($arr_widths, $value->width);
-                                        array_push($widths, (object)array("id"=>$value->id,"width" => $value->width, "price" => $value->price));
-                                    }
+                                foreach ($canvases as $item) {
+                                    $widths[] = (object)array("width" =>$item->width*100,"price" => $item->price);
                                 }
-                                usort($widths, function ($a, $b) {
-                                    if ($a->width < $b->width) {
-                                        return 1;
-                                    }
-                                    if ($a->width > $b->width) {
-                                        return -1;
-                                    }
-                                    return 0;
+
+                                usort($widths, function($obj_a,$obj_b){
+                                    return ($obj_a > $obj_b) ? -1 : 1;
+
                                 });
                                 $calc_data[$calculation->id] = array(
+                                    "n3" => $calculation->n3,
                                     "n4" => $calculation->n4,
                                     "n5" => $calculation->n5,
                                     "n9" => $calculation->n9,
                                     "widths" => $widths,
-                                    "texture" => $detailed_canvas[0]->texture_id,
-                                    "manufacturer" => $detailed_canvas[0]->manufacturer_id,
-                                    "color" => $detailed_canvas[0]->color,
+                                    "texture" => $canvas->texture_id,
+                                    "manufacturer" => $canvas->manufacturer_id,
+                                    "color" => $canvas->color_id,
                                     "walls" => $calculation->original_sketch
                                 );
-                                $widths = json_encode($widths);
-                                $color = $detailed_canvas[0]->color;
-                                $hex = $detailed_canvas[0]->hex;
+
+                            }
+                            else{
+                                $canvas = array_filter(
+                                    $calculation->goods,
+                                    function ($e) {
+                                        return $e->category_id == 1;
+                                    }
+                                );
+                                if (!empty($canvas)) {
+                                    $filter = "id = ".$canvas[0]->id;
+                                    $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
+                                    $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
+                                    $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);
+                                    $arr_widths = [];
+                                    $widths = [];
+                                    foreach ($selected_canvases as $value) {
+                                        if (!in_array($value->width, $arr_widths)) {
+                                            array_push($arr_widths, $value->width);
+                                            array_push($widths, (object)array("id"=>$value->id,"width" => $value->width, "price" => $value->price));
+                                        }
+                                    }
+                                    usort($widths, function ($a, $b) {
+                                        if ($a->width < $b->width) {
+                                            return 1;
+                                        }
+                                        if ($a->width > $b->width) {
+                                            return -1;
+                                        }
+                                        return 0;
+                                    });
+                                    $calc_data[$calculation->id] = array(
+                                        "n4" => $calculation->n4,
+                                        "n5" => $calculation->n5,
+                                        "n9" => $calculation->n9,
+                                        "widths" => $widths,
+                                        "texture" => $detailed_canvas[0]->texture_id,
+                                        "manufacturer" => $detailed_canvas[0]->manufacturer_id,
+                                        "color" => $detailed_canvas[0]->color,
+                                        "walls" => $calculation->original_sketch
+                                    );
+                                    $widths = json_encode($widths);
+                                    $color = $detailed_canvas[0]->color;
+                                    $hex = $detailed_canvas[0]->hex;
+                                }
                             }
                             /*Изображения*/
 
@@ -314,7 +344,8 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                             <td>
-                                <?php echo $canvases_sum[$calculation->id]?> руб.
+                                <?php /*echo $canvases_sum[$calculation->id]*/
+                                echo $calculation->canvases_sum?> руб.
                             </td>
                             <td>
                                 <button class="btn btn-primary show_img" data-id="<?=$calculation->id?>" ><i class="fas fa-image"></i></button>
@@ -426,7 +457,8 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($calculations as $calculation) {?>
+                        <?php $total_mount = 0;
+                        foreach ($calculations as $calculation) {?>
                         <tr>
                             <td><?php echo $calculation->calculation_title; ?></td>
                                 <td>
@@ -685,7 +717,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
         <input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
         <input name = "auto" id = "auto" value="" type = "hidden">
         <input name = "walls" id = "walls" value="" type= "hidden">
-        <input name = "calc_id" id = "calc_id" value="<?php echo $calculation_id;?>" type = "hidden">
+        <input name = "calc_id" id = "calc_id" value="" type = "hidden">
         <input name = "n4" id="n4" value="" type ="hidden">
         <input name = "n5" id="n5" value="" type ="hidden">
         <input name = "n9" id="n9" value="" type ="hidden">
@@ -768,10 +800,12 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
 
             jQuery("[name = 'change_cut']").click(function(){
 
-                let id = jQuery(this).data('calc_id');
-                console.log("id",id);
-                let data = calc_data[id];
+                let id = jQuery(this).data('calc_id'),
+                    data = calc_data[id];
                 console.log(calc_data);
+                if(data.n3){
+                    jQuery("#form_url").attr('action','/sketch_old/cut_redactor_2/index.php')
+                }
                 jQuery("#calc_id").val(id);
                 jQuery('#texture').val(data.texture);
                 jQuery("#color").val(data.color);
@@ -785,8 +819,14 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
             });
 
             jQuery("[name = 'change_calc']").click(function(){
-                let id = jQuery(this).data('calc_id');
-                location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&calc_id='+id;
+                let id = jQuery(this).data('calc_id'),
+                    data = calc_data[id];
+                if(data.n3){
+                    location.href = '/index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&calc_id='+id;
+                }
+                else{
+                    location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&calc_id='+id;
+                }
             });
 
             jQuery('#btn_back').click(function(){

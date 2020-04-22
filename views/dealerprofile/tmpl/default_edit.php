@@ -75,7 +75,7 @@ if($userType == 7){
     <a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
   </div>
 <?php } ?>
-<div class="row">
+<!--<div class="row">
     <h5 class="caption2">Настройка просчетной страницы</h5>
     <div class="row">
         <div class="col-md-3">
@@ -85,11 +85,11 @@ if($userType == 7){
             <button class="btn btn-primary" id="edit_calc_form">Дублировать существующую и внести изменения</button>
         </div>
     </div>
-</div>
+</div>-->
 <div id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
     <input type="hidden" name="jform[dealer_id]" id="jform_dealer_id" value="<?php echo $userId?>">
     <div <?=$style?>
-        <h3 class="caption1">Редактирование маржинальности</h3>
+        <h1 class="center">Редактирование маржинальности</h1>
         <h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
         <div class="row">
             <div class="col-md-4">

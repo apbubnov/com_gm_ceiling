@@ -124,7 +124,7 @@ $result_clients = $clients_model->getBuilders();
 
     jQuery(document).ready(function()
     {
-        var builders = JSON.parse('<?=json_encode($result_clients)?>');
+        var builders = JSON.parse('<?=quotemeta(json_encode($result_clients))?>');
         console.log(builders);
         jQuery('#builder_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)

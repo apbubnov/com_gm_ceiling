@@ -712,7 +712,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$user = JFactory::getUser($dealer_id);
 			$userType = $user->dealer_type;
 
-			$data = array();
+			$data = [];
 			$data['id'] = $calc_id;
 			$data['extra_components'] = strlen($extra_components) < 10 ? '' : $extra_components;
 			$data['extra_mounting'] = strlen($extra_mounting) < 10 ? '' : $extra_mounting;
@@ -808,7 +808,14 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				} else {
                     $canvas_exist = true;
                     $data_for_manager_estimate['canvas'] = $value;
-					$canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
+                    if($value->dealer_price * $calculation->n4 < MIN_SUM){
+                        $canvases_sum += MIN_SUM;
+                        $value->price_sum = MIN_SUM;
+                        $value->price_sum_with_margin = MIN_SUM *100/(100-$canvases_margin);
+                    }
+                    else{
+                        $canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
+                    }
 					$canvas_price = $value->dealer_price;
 				}
 			}
@@ -829,8 +836,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             	$canvases_sum_with_margin += $value->price_sum;
             }
 
-            if ($canvas_exist && $canvases_sum < 200) {
-            	$canvases_sum = 200;
+            if ($canvas_exist && $canvases_sum < MIN_SUM) {
+            	$canvases_sum = MIN_SUM;
             	$canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
             }
 
@@ -857,7 +864,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$common_sum_with_margin = $canvases_sum_with_margin + $components_sum_with_margin + $mounting_sum_with_margin;
 			$final_sum = $common_sum_with_margin - ($common_sum_with_margin * $discount / 100);
 
-			$data2 = array();
+			$data2 = [];
 			$data2['id'] = $calc_id;
 			$data2['canvases_sum'] = $canvases_sum;
 			$data2['components_sum'] = $components_sum;
@@ -867,7 +874,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data2['mounting_sum_with_margin'] = $mounting_sum_with_margin;
 			$model_calculation->update_calculation($data2);
 
-			$result = (object)array(
+			$result = (object)[
 				'all_goods' => $all_goods,
 				'all_jobs' => $all_jobs,
 				'factory_jobs' => $factory_jobs,
@@ -888,7 +895,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'mounting_margin' => $mounting_margin,
 				'discount' => $discount,
 				'offcut_square' => $offcut_square
-			);
+			];
             $calculation = $model_calculation->getBaseCalculationDataById($calc_id);
 			$data_for_manager_estimate['photoprint'] = $photo_print;
 			$data_for_manager_estimate['factory_jobs'] = $factory_jobs;

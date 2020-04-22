@@ -833,4 +833,23 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getProjectMargin($calcId){
+	    try{
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`p`.`dealer_canvases_margin`,`p`.`dealer_components_margin`,`p`.`dealer_mounting_margin`')
+                ->from('`rgzbn_gm_ceiling_calculations` as c')
+                ->leftJoin('`rgzbn_gm_ceiling_projects` as p on c.project_id = p.id')
+                ->where("c.id = $calcId");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        }
+
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

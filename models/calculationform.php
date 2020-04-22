@@ -1683,15 +1683,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
     public function getGoodsPricesInCalculation($calc_id, $dealer_id) {
         try {
-            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            /*$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
             if (empty($dealer_info)) {
                 $canvases_margin = 0;
                 $components_margin = 0;
             } else {
                 $canvases_margin = $dealer_info->dealer_canvases_margin;
                 $components_margin = $dealer_info->dealer_components_margin;
-            }
-            
+            }*/
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $margin = $calculationModel->getProjectMargin($calc_id);
+            $canvases_margin = $margin->dealer_canvases_margin;
+            $components_margin = $margin->dealer_components_margin;
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query = "
@@ -1699,8 +1702,20 @@ SELECT  `gf`.`goods_id`,
         `g`.`name`,
         `g`.`category_id`,
         `g`.`original_price`,
+        CASE
+          WHEN `g`.`category_id` = 1 THEN
+            ROUND(`g`.`original_price`* 100 / (100 - $canvases_margin), 2)
+          ELSE
+            ROUND(`g`.`original_price`* 100 / (100 - $components_margin), 2)
+        END AS `original_price_with_margin`,
         `g`.`multiplicity`,
         `g`.`dealer_price`,
+        CASE
+          WHEN `g`.`category_id` = 1 THEN
+            ROUND(`g`.`dealer_price`* 100 / (100 - $canvases_margin), 2)
+          ELSE
+            ROUND(`g`.`dealer_price`* 100 / (100 - $components_margin), 2)
+        END AS `dealer_price_with_margin`,
         `g`.`unit_id`,
         CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` AS `final_count`,
         ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price`, 2) AS `price_sum`,
@@ -1819,12 +1834,15 @@ ORDER BY `goods_id`
 
     public function getMountingServicePricesInCalculation($calc_id, $dealer_id) {
         try {
-            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $margin = $calculationModel->getProjectMargin($calc_id);
+            $mounting_margin = $margin->dealer_mounting_margin;
+            /*$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
             if (empty($dealer_info)) {
                 $mounting_margin = 0;
             } else {
                 $mounting_margin = $dealer_info->dealer_mounting_margin;
-            }
+            }*/
             
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -1834,6 +1852,7 @@ ORDER BY `goods_id`
                 `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 `j`.`price`,
+                ROUND(`j`.`price` * 100 / (100-$mounting_margin),2) as `price_with_margin`,
                 ROUND(SUM(`jf`.`job_count_all`) * `j`.`price`, 2) AS `price_sum`,
                 ROUND(SUM(`jf`.`job_count_all`) * `j`.`price` * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
     FROM    (
@@ -1889,13 +1908,16 @@ ORDER BY `goods_id`
 
     public function getJobsPricesInCalculation($calc_id, $dealer_id) {
         try {
-            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $margin = $calculationModel->getProjectMargin($calc_id);
+            $mounting_margin = $margin->dealer_mounting_margin;
+            /*$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
             if (empty($dealer_info)) {
                 $mounting_margin = 0;
             } else {
                 $mounting_margin = $dealer_info->dealer_mounting_margin;
             }
-            
+*/
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query = "SELECT    `jf`.`job_id`,
@@ -1903,6 +1925,7 @@ ORDER BY `goods_id`
                 `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
                 IFNULL(`jdp`.`price`, 0) AS `price`,
+                ROUND(`jdp`.`price` * 100 / (100-$mounting_margin),2) as `price_with_margin`,
                 ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0), 2) AS `price_sum`,
                 ROUND(SUM(`jf`.`job_count_all`) * IFNULL(`jdp`.`price`, 0) * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
     FROM    (

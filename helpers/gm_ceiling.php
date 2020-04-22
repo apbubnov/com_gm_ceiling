@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 /* включаем библиотеку для формирования PDF */
 include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 const VERDICT_STATUSES = [4,5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
+const MIN_SUM = 250;
 /* функция для применения маржи */
 function margin($value, $margin) {
     try {
@@ -696,7 +697,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
             //Итоговая сумма компонентов
-            $min_sum = 200;
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
             $gm_components_sum = 0;
@@ -715,7 +715,7 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return = [];
             /*если минимальный заказ,то полотно 200 рублей, обрезки и работу цеха не считаем*/
             if($canvases_data['min_self_dealer_total']){
-                $data['canvases_sum'] = $min_sum;
+                $data['canvases_sum'] = MIN_SUM;
                 $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
                 $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
                 $offcut_square_data['dealer_total'] = 0;
@@ -814,7 +814,12 @@ class Gm_ceilingHelpersGm_ceiling
             $goods = !empty($calculation->cancel_netiz) ? self::deleteMetizFromGoods($data['goods']) : $data['goods'];
             $dealer = JFactory::getUser($data['dealer_id']);
             $dealer_info = self::getDealerInfo($dealer->id);
-            if (empty($dealer_info)) {
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $margin = $calculationModel->getProjectMargin($calculation->id);
+            $canvases_margin = $margin->dealer_canvases_margin;
+            $components_margin = $margin->dealer_components_margin;
+            $mounting_margin = $margin->dealer_mounting_margin;
+            /*if (empty($dealer_info)) {
                 $canvases_margin = 0;
                 $components_margin = 0;
                 $mounting_margin = 0;
@@ -822,7 +827,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases_margin = $dealer_info->dealer_canvases_margin-0;
                 $components_margin = $dealer_info->dealer_components_margin-0;
                 $mounting_margin = $dealer_info->dealer_mounting_margin-0;
-            }
+            }*/
+
             $total_goods_sum = 0;$total_mount_sum = 0;
             $html = '<h1>Смета по материалам и комплектующим</h1>';
             $html .= "<h1>Название: " . $calculation->calculation_title . "</h1>";
@@ -857,19 +863,20 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Стоимость, руб.</th></tr>';
             foreach ($goods as $item){
                 if($item->category_id == 1){
-                    $canvases_margin_price = round(self::margin($item->dealer_price,$canvases_margin),2);
+                    //$canvases_margin_price = round(self::margin($item->dealer_price,$canvases_margin),2);
                     $html .= '<tr>';
                     $html .= '<td>' . $item->name . '</td>';
-                    $html .= '<td class="center">' . $canvases_margin_price . '</td>';
+                    $html .= '<td class="center">' . $item->dealer_price_with_margin . '</td>';
                     $html .= '<td class="center">' . $calculation->n4 . '</td>';
-                    $html .= '<td class="center">' . $calculation->n4*$canvases_margin_price . '</td>';
+                    $canvas_sum = ($calculation->n4*$item->dealer_price_with_margin) < MIN_SUM*100/(100-$canvases_margin) ? MIN_SUM*100/(100-$canvases_margin) : $calculation->n4*$item->dealer_price_with_margin;
+                    $html .= '<td class="center">' . $canvas_sum . '</td>';
                     $html .= '</tr>';
-                    $total_goods_sum += $calculation->n4*$canvases_margin_price;
+                    $total_goods_sum += $canvas_sum;
                     if(!empty($offcuts)){
                         $offcuts_price_with_margin = round(self::margin($offcuts->price,$canvases_margin),2);
                         $offcuts_total = $offcuts_price_with_margin*$offcuts->count;
                         $html .= '<tr>';
-                        $html .= '<td>' . $item->name . '</td>';
+                        $html .= '<td>' . $item->name .'(обрезки)'. '</td>';
                         $html .= '<td class="center">' . $offcuts_price_with_margin . '</td>';
                         $html .= '<td class="center">' . $offcuts->count . '</td>';
                         $html .= '<td class="center">' . $offcuts_total . '</td>';
@@ -933,7 +940,7 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($jobs as $job) {
                     $html .= '<tr>';
                     $html .= '<td>' . $job->name . '</td>';
-                    $html .= '<td class="center">' . round(margin($job->price,$mounting_margin), 2) . '</td>';
+                    $html .= '<td class="center">' . $job->price_with_margin . '</td>';
                     $html .= '<td class="center">' . round($job->final_count,2) . '</td>';
                     $html .= '<td class="center">' . $job->price_sum_with_margin . '</td>';
                     $html .= '</tr>';
@@ -2276,11 +2283,11 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
             $offcut_data = self::calculate_offcut($calc_id);
 
-            $min_sum = 200;//минимальная сумма заказа
+
             $guild_cost = self::calculate_guild_jobs($calc_id)['total_gm_guild'];
-            if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < $min_sum) {
-                $canvases_data['min_self_dealer_total'] = $min_sum;
-                $canvases_data['min_dealer_total'] = margin($min_sum, $dealer_canvases_margin);
+            if ($canvases_data['self_dealer_total'] + $offcut_data['self_dealer_total'] + $guild_cost < MIN_SUM) {
+                $canvases_data['min_self_dealer_total'] = MIN_SUM;
+                $canvases_data['min_dealer_total'] = margin(MIN_SUM, $dealer_canvases_margin);
             }
             return $canvases_data;
         }
@@ -3734,8 +3741,8 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate_transport($project_id,$service=null){
         try {
             $project_model = self::getModel('Project');
-            $mount_model = self::getModel('mount');
-            //$dealer_info_model = self::getModel('Dealer_info');
+            //$mount_model = self::getModel('mount');
+
             if(!empty($project_id)){
                 $project = $project_model->getData($project_id);
                 $transport_type = $project->transport;
@@ -3748,18 +3755,18 @@ class Gm_ceilingHelpersGm_ceiling
                 else{
                     $dealer_id = 1;
                 }
-                $res = $mount_model->getDataAll($dealer_id);
+                $res = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
                 if(empty($res->user_id)) {
                     $res->user_id = 1;
                 }
 
                 if($service == "service"){
-                    $res = $mount_model->getDataAll(1);
+                    $res =  Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
                     //$res->transport +=$res->transport*0.5;
                     //$res->distance +=$res->distance*0.5;
                 }
                 else{
-                    $res = $mount_model->getDataAll(1);
+                    $res =  Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
                 if($res) {

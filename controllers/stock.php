@@ -921,7 +921,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                             //goods_map_width
                             $stockModel->addProps('rgzbn_gm_stock_map_prop_canvas_widths','width',$goodsId,$width);
                             //привязываем натяжку за каждым полотном
-                            $stockModel->addJobToGoods($goodsId,26);
+                            //$stockModel->addJobToGoods($goodsId,26);
                         }
                         else{
                             throw new Exception("Empty data!");

@@ -310,7 +310,9 @@ class Gm_ceilingModelMount extends JModelList
 			$newPrice = [];
 			foreach ($mountArr as $key => $value) {
 				if(in_array($key,array_keys(MOUNT_MAP))){
-					array_push($newPrice,MOUNT_MAP["$key"].",$value,$userId");
+				    $val = floatval($value);
+				    $val = !empty($val) ? $val : 0;
+					array_push($newPrice,MOUNT_MAP["$key"].",$val,$userId");
 				}
 			}
 			$oldPrice = $this->getDealerPrice($userId);
@@ -339,20 +341,23 @@ class Gm_ceilingModelMount extends JModelList
 			foreach($dealersPrices as $dealerPrice){
 				$empty = true;
 				foreach ($dealerPrice as $key => $value) {
-					if(!empty($value)){
+					if(!empty($value)&&!empty(floatval($value))){
 						$empty = false;
 						break;
 					}
 				}
-				$transport = $dealerPrice->transport;
-				$minSum = $dealerPrice->minSum;
-				$distance = $dealerPrice->distance;
+				$transport = !empty($dealerPrice->transport) ? $dealerPrice->transport : 0;
+				$minSum = (!empty(floatval($dealerPrice->min_sum))) ? $dealerPrice->min_sum : 0;
+				$distance = !empty($dealerPrice->distance) ? $dealerPrice->distance : 0;
+                $query = $db->getQuery(true);
 				$query
 					->update('`rgzbn_gm_ceiling_dealer_info`')
-					->set("`min_sum` =  $min_sum")
+					->set("`min_sum` =  $minSum")
 					->set("`transport` =  $transport")
 					->set("`distance` =  $distance")
 					->where("`dealer_id` = $dealerPrice->user_id");
+				$db->setQuery($query);
+				$db->execute();
 				if(!$empty){
 					$this->transferMountPrice($dealerPrice->user_id);
 				}
