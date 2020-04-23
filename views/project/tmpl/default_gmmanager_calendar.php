@@ -644,9 +644,7 @@
         jQuery(".client_phones").each(function(index,element){
             jQuery(element).mask("+7 (999) 999-99-99");
         });
-        jQuery(document).on("click", "#add_calc", function(){
-            create_calculation(<?php echo $this->item->id; ?>);
-        });
+
         jQuery(".remove_email").click(remove_email);
         var project_card = '<?php echo $project_card; ?>';
         if (project_card != '')

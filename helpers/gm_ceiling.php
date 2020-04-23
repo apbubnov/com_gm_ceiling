@@ -4868,6 +4868,9 @@ class Gm_ceilingHelpersGm_ceiling
 
     public static function create_cut_pdf_old($calc_id=null,$data = null){
         try{
+            $us_walls = '';
+            $html = '';
+            $html_cut = '';
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
                 $data = $calculation_model->getData($calc_id);
@@ -4882,15 +4885,12 @@ class Gm_ceilingHelpersGm_ceiling
             $client_model = self::getModel('client');
             $client = $client_model->getClientById($project->id_client);
             $dealer_name = JFactory::getUser($client->dealer_id)->name;
-            if(!empty($data['shrink_percent'])) {
-                $cut_data = $data['cut_data'];
-                $p_usadki = $data['shrink_percent'];
-            }
-            else{
-                $array_cut = explode('||',$data['cut_data']);
-                $cut_data = $array_cut[0];
-                $p_usadki = $array_cut[1];
-            }
+            $cut_data = $data['cut_data'];
+            $p_usadki = $data['shrink_percent'];
+            $calc_data = explode('||',$data['calc_data']);
+            $walls = $calc_data[0];
+            $diags = $calc_data[1];
+            $p_usadki = $data['shrink_percent'];
             $usadka = (1-$p_usadki)*100;
             $array1 = array();
             $array2 = explode(';', $data['calc_data']);
@@ -4934,7 +4934,10 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<table>';
             $html .= '<tbody>';
             $html .= '<tr>';
-            $html .= '<th>Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
+            $html .= '<th>Стороны: </th><td>' . str_replace(';', '; ', $walls) . '</td>';
+            $html .= '</tr>';
+            $html .= '<tr>';
+            $html .= '<th>Диагонали: </th><td>' . str_replace(';', '; ', $diags) . '</td>';
             $html .= '</tr>';
             $html .= '</tbody>';
             $html .= '</table>';

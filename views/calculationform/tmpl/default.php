@@ -1673,83 +1673,91 @@ if (!empty($calculation_id)) {
         var fieldsDiv = jQuery('.row-fields');
 
         jQuery.each(fieldsDiv, function (index, div) {
-            var currentJobs = jQuery(div).data('jobs'),
-                countDiv, input, goodSelect, radio,checkbox;
-            if (empty(currentJobs)) {
-                currentJobs = [];
-            }
-            countDiv = jQuery(div).find('.countDiv');
-            input = jQuery(countDiv).children();
-            if (input.prop('type') == "checkbox") {
-                if (input.is(':checked')) {
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: 1});
+            console.log(jQuery(div).data('field_id'));
+            //if(jQuery(div).data('field_id') != 'dopgoods'){
+                var currentJobs = jQuery(div).data('jobs'),
+                    countDiv, input, goodSelect, radio,checkbox;
+                if (empty(currentJobs)) {
+                    currentJobs = [];
+                }
+                countDiv = jQuery(div).find('.countDiv');
+                input = jQuery(countDiv).children();
+                if (input.prop('type') == "checkbox") {
+                    if (input.is(':checked')) {
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: 1});
+                        }
                     }
                 }
-            }
-            if (input.prop('type') == "text") {
-                //поиск связанных radio
-                var id = countDiv.parent().data('id'),
-                    radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
-                    radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
-                if (!empty(radio.val())) {
-                    if (!empty(input.val())) {
-                        if (currentJobs.length == 0) {
-                            currentJobs = JSON.parse(radio.val());
-                        }
-                        else {
-                            currentJobs = currentJobs.concat(JSON.parse(radio.val()));
-                        }
-                        if (radioGoodSelect.length != 0) {
-                            var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
-                            if (!empty(childGoods)) {
-                                if (childGoods.length) {
-                                    for (var i = 0; i < childGoods.length; i++) {
-                                        components.push({id: childGoods[i], count: input.val()});
+                if (input.prop('type') == "text") {
+                    //поиск связанных radio
+                    var id = countDiv.parent().data('id'),
+                        radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
+                        radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                    if (!empty(radio.val())) {
+                        if (!empty(input.val())) {
+                            if (currentJobs.length == 0) {
+                                currentJobs = JSON.parse(radio.val());
+                            }
+                            else {
+                                currentJobs = currentJobs.concat(JSON.parse(radio.val()));
+                            }
+                            if (radioGoodSelect.length != 0) {
+                                var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
+                                if (!empty(childGoods)) {
+                                    if (childGoods.length) {
+                                        for (var i = 0; i < childGoods.length; i++) {
+                                            components.push({id: childGoods[i], count: input.val()});
+                                        }
                                     }
                                 }
-                            }
-                            components.push({id: radioGoodSelect.val(), count: input.val()});
-                        }
-                    }
-                }
-                //поиск связанных селектов
-                goodSelect = countDiv.parent().find('.selectDiv').children();
-                //если есть селект и введеное количество не пустое добавляем компоненты
-                if (goodSelect.length != 0 && !empty(input.val())) {
-                    var childGoods = goodSelect.children("option:selected").data('child_goods');
-                    if (!empty(childGoods)) {
-                        if (childGoods.length) {
-                            for (var i = 0; i < childGoods.length; i++) {
-                                components.push({id: childGoods[i], count: input.val()});
+                                components.push({id: radioGoodSelect.val(), count: input.val()});
                             }
                         }
                     }
-                    components.push({id: goodSelect.val(), count: input.val()});
-                }
+                    //поиск связанных селектов
+                    goodSelect = countDiv.parent().find('.selectDiv').children();
+                    //если есть селект и введеное количество не пустое добавляем компоненты
+                    if (goodSelect.length != 0 && !empty(input.val())) {
+                        var childGoods = goodSelect.children("option:selected").data('child_goods');
+                        if (!empty(childGoods)) {
+                            if (childGoods.length) {
+                                for (var i = 0; i < childGoods.length; i++) {
+                                    components.push({id: childGoods[i], count: input.val()});
+                                }
+                            }
+                        }
+                        components.push({id: goodSelect.val(), count: input.val()});
+                    }
 
-                //поиск связанных checkbox
-                var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
-                if(checkbox.length > 0){
-                    var jbs = checkbox.closest('.row-fields').data('jobs');
-                    currentJobs = currentJobs.concat(jbs);
-                }
+                    //поиск связанных checkbox
+                    var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
+                    if(checkbox.length > 0){
+                        var jbs = checkbox.closest('.row-fields').data('jobs');
+                        currentJobs = currentJobs.concat(jbs);
+                    }
 
-                //добавляем работы если количество не пустое
-                if (!empty(input.val())) {
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: input.val()});
+                    //добавляем работы если количество не пустое
+                    if (!empty(input.val())) {
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: input.val()});
+                        }
                     }
                 }
-            }
-            if (input.prop('type') == "radio" && empty(input.data('parent'))) {
-                if (input.is(':checked')) {
-                    currentJobs = JSON.parse(input.val());
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: 1});
+                if (input.prop('type') == "radio" && empty(input.data('parent'))) {
+                    if (input.is(':checked')) {
+                        currentJobs = JSON.parse(input.val());
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: 1});
+                        }
                     }
                 }
-            }
+          /*  }
+            else{
+
+            }*/
+
+
         });
 
 

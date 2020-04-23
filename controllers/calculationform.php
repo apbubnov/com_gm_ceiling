@@ -697,6 +697,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $dealer_id = $jinput->get('dealer_id', 1, 'INT');
             $jobs = $jinput->get('jobs', null, 'ARRAY');
             $goods = $jinput->get('goods', null, 'ARRAY');
+            $stock_goods = $jinput->get('stock_goods', null, 'ARRAY');
             $extra_components = $jinput->get('extra_components', '', 'STRING');
             $extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
             $photo_print = $jinput->get('photo_print', '', 'STRING');
@@ -745,7 +746,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу монажной службы
 				}
 			}
-
+            //$model_calcform->addDopGoodsInCalculation($calc_id, $goods, false); // Добавление доп компонентов, со склада, чтобы не учитывать работу
 			$all_goods = $model_calcform->getGoodsPricesInCalculation($calc_id, $dealer_id); // Получение компонентов
 			$factory_jobs = $model_calcform->getFactoryWorksPricesInCalculation($calc_id); // Получение цеховских работ
 

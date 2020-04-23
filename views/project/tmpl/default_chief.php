@@ -163,13 +163,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                 jQuery("#calendar_wrapper").show();
             });
 
-            document.getElementById('add_calc').onclick = function()
-            {
-                create_calculation(<?php echo $this->item->id; ?>);
-            };
-
-
-
             var calendar_toggle = 0,
                 month = <?php echo date("n"); ?>,
                 year = <?php echo date("Y"); ?>;

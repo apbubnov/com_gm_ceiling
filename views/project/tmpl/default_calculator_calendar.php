@@ -809,11 +809,7 @@ $advt_str = $reklama->number.' '.$reklama->name.' '.$reklama->description;
             var client_name = "<?php echo $this->item->client_id;?>";
             jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
             fillProjectSum();
-            if(document.getElementById('add_calc')) {
-                document.getElementById('add_calc').onclick = function () {
-                    create_calculation(<?php echo $this->item->id; ?>);
-                };
-            }
+
 
             if (document.getElementById('comments'))
             {

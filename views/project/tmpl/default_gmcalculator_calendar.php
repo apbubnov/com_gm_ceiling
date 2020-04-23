@@ -336,16 +336,16 @@
                 </div>
             </div>
             <div class="row center">
-                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
+               <!-- <div class="col-xs-12 col-md-3" style="margin-top: 15px">
                     <button class="validate btn btn-primary save_bnt" id="sign_project" type="button">Подписать договор</button>
-                </div>
-                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
+                </div>-->
+                <div class="col-xs-12 col-md-4" style="margin-top: 15px">
                     <button class="validate btn btn-primary save_bnt" id="save" type="button">Сохранить и запустить <br> в производство</button>
                 </div>
-                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
+                <div class="col-xs-12 col-md-4" style="margin-top: 15px">
                     <button class="validate btn btn-primary save_bnt" id="save_by_call_btn" type="button">Сохранить и запустить <br> монтаж по звонку</button>
                 </div>
-                <div class="col-xs-12 col-md-3" style="margin-top: 15px">
+                <div class="col-xs-12 col-md-4" style="margin-top: 15px">
                     <a class="btn btn-primary save_bnt" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
                 </div>
             </div>
@@ -639,16 +639,13 @@
         var client_id = "<?php echo $this->item->id_client;?>";
         var client_name = "<?php echo $this->item->client_id;?>";
         jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
-        document.getElementById('add_calc').onclick = function()
-        {
-            create_calculation(<?php echo $this->item->id; ?>);
-        };
 
-        jQuery('#sign_project').click(function(){
+
+        /*jQuery('#sign_project').click(function(){
             jQuery("#close_mw").show();
             jQuery('#mw_container').show();
             jQuery('#mw_signature').show();
-        });
+        });*/
 
         jQuery("#change_data").click(function(){
             jQuery("#close_mw").show();
