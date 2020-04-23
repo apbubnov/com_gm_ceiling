@@ -72,7 +72,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
     {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
- }
+}
 
 function delete_string_characters($string)
 {
@@ -317,8 +317,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $gm_mount = $mount_model->getDataAll(0);
                 $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
             }
-                $gm_mount->user_id = $userID;
-                $mount_model->insert($gm_mount);
+            $gm_mount->user_id = $userID;
+            $mount_model->insert($gm_mount);
 
             return $userID;
         }
@@ -978,7 +978,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     public static function create_client_single_estimate_old($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
-                                                         $mounting_data = null){
+                                                             $mounting_data = null){
         try {
             $html = self::create_client_single_estimate_html($need_mount,$calc_id,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             if(empty($calc_id)){
@@ -3818,11 +3818,11 @@ class Gm_ceilingHelpersGm_ceiling
                         );
                     }
                 }
-               if($transport_type == 1) {
-                   /*  $discount = $project_model->getDiscount($project_id);
-                    $max = 0;
-                    foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
-                    $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100); */
+                if($transport_type == 1) {
+                    /*  $discount = $project_model->getDiscount($project_id);
+                     $max = 0;
+                     foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
+                     $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100); */
                 }
                 return $result;
             }
@@ -3879,6 +3879,11 @@ class Gm_ceilingHelpersGm_ceiling
                     break;
                 }
             }
+            /*old*/
+            $exist_insert_stage = array_filter($mount_data,function($stage){
+                return $stage->stage == 4;
+            });
+            /**/
             foreach ($calculations as $calc) {
                 if ($service ) {
                     $calc->dealer_mount = $model_calcform->getMountingServicePricesInCalculation($calc->id, $dealerId);
@@ -3899,27 +3904,59 @@ class Gm_ceilingHelpersGm_ceiling
                     array_push($mount_data,$stage_insert);
                     break;
                 }
+
+                /*old*/
+                if(!empty($calc->n6) && count($exist_insert_stage) == 0 && !$full){
+                    $stage_insert = (object)array(stage => 4,time => "","mounter" => "","stage_name" => "Вставка");
+                    array_push($mount_data,$stage_insert);
+                    break;
+                }
+                /**/
             }
             foreach ($calculations as $calc) {
-                $stage_sum = [];$gm_stage_sum = [];
-                $total_dealer_sum = 0;$total_gm_sum =0;
-                foreach ($calc->dealer_mount as $job){
-                    $stage_sum[$job->stage] += $job->price_sum;
-                    $total_dealer_sum += $job->price_sum;
-                }
-                if(!empty($calc->gm_mount)){
-                    foreach ($calc->gm_mount as $job){
-                        $gm_stage_sum[$job->stage] += $job->price_sum;
-                        $total_gm_sum += $job->price_sum;
+                if(empty($calc->n3)){
+                    $stage_sum = [];$gm_stage_sum = [];
+                    $total_dealer_sum = 0;$total_gm_sum =0;
+                    foreach ($calc->dealer_mount as $job){
+                        $stage_sum[$job->stage] += $job->price_sum;
+                        $total_dealer_sum += $job->price_sum;
+                    }
+                    if(!empty($calc->gm_mount)){
+                        foreach ($calc->gm_mount as $job){
+                            $gm_stage_sum[$job->stage] += $job->price_sum;
+                            $total_gm_sum += $job->price_sum;
+                        }
+                    }
+                    if(!$full){
+                        $calc->mount_sum = $stage_sum;
+                        $calc->gm_mount_sum = $gm_stage_sum;
+                    }
+                    else{
+                        $calc->mount_sum[1] = $total_dealer_sum;
+                        $calc->gm_mount_sum[1] = $total_gm_sum;
                     }
                 }
-                if(!$full){
-                    $calc->mount_sum = $stage_sum;
-                    $calc->gm_mount_sum = $gm_stage_sum;
-                }
                 else{
-                    $calc->mount_sum[1] = $total_dealer_sum;
-                    $calc->gm_mount_sum[1] = $total_gm_sum;
+                    $calc_mount = self::calculate_mount(0,$calc->id,null,$service);
+                    if(!$full){
+                        foreach ($mount_data as $stage) {
+                            $s_sum = 0;$gm_s_sum = 0;
+                            foreach ($calc_mount['mounting_data'] as $value) {
+                                if($value['stage'] == $stage->stage){
+                                    $s_sum += $value['dealer_salary_total'];
+                                    $gm_s_sum += $value['gm_salary_total'];
+                                }
+                            }
+                            $stage_sum[$stage->stage] = $s_sum;
+                            $gm_stage_sum[$stage->stage] = $gm_s_sum;
+                        }
+                        $calc->mount_sum = $stage_sum;
+                        $calc->gm_mount_sum = $gm_stage_sum;
+                    }
+                    else{
+                        $calc->mount_sum[1] = $calc_mount['total_dealer_mounting'];
+                        $calc->gm_mount_sum[1] = $calc_mount['total_gm_mounting'];
+                    }
                 }
             }
             /*если монтаж еще не назначен ставим полный монтаж*/
@@ -3995,8 +4032,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .="<tr>
                             <td>$value->stage_name</td>
                             <td class=\"center\"> ";
-                                $html .= $stage_date;
-                                $html .="</td>
+                $html .= $stage_date;
+                $html .="</td>
                             <td class=\"center\">$mount_brigade</td>
                         </tr>";
             }
@@ -4616,7 +4653,7 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($all_goods as $key => $goods) {
                 $html .= '<tr>';
                 $html .= '<td>' . $goods->name . '</td>';
-               /* $html .= '<td class="center">' . $item['unit'] . '</td>';*/
+                /* $html .= '<td class="center">' . $item['unit'] . '</td>';*/
                 $html .= '<td class="center">' . $goods->final_count . '</td>';
                 if($need_price == 1){
                     $html .= '<td class="center">' . round($goods->price_sum, 2) . '</td>';
@@ -5602,7 +5639,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function getClassPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation)
@@ -5953,7 +5990,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Адрес: " . $data->project_info . "\n";
                 $jdate1 = new JDate(JFactory::getDate($data->old_date));
                 if ($data->old_date != "0000-00-00 00:00:00") {
-                $body .= "Старая дата и время монтажа: " . $jdate1->format('d.m.Y H:i') . "\n";
+                    $body .= "Старая дата и время монтажа: " . $jdate1->format('d.m.Y H:i') . "\n";
                 }
                 $jdate = new JDate(JFactory::getDate($data->project_calculation_date));
                 if ($data->project_calculation_date != "0000-00-00 00:00:00") {
@@ -5964,17 +6001,17 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setBody($body);
                 $mailer->addRecipient($user->email);
             } elseif ($type == 13) {
-            // уведомление дилера, что потолок запушен в производство
-            $dopinfo = $client->getInfo($data->client_id);
-            $dealer = JFactory::getUser($dopinfo->dealer_id);
-            $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . " запущен в производство\n\n";
-            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-            $body .= "Адрес: " . $data->project_info . "\n";
-            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-            $mailer->setSubject('Договор запущен в производство');
-            $mailer->setBody($body);
-            $mailer->addRecipient($dealer->email);
+                // уведомление дилера, что потолок запушен в производство
+                $dopinfo = $client->getInfo($data->client_id);
+                $dealer = JFactory::getUser($dopinfo->dealer_id);
+                $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . " запущен в производство\n\n";
+                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+                $body .= "Адрес: " . $data->project_info . "\n";
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Договор запущен в производство');
+                $mailer->setBody($body);
+                $mailer->addRecipient($dealer->email);
             }
             elseif($type == 14){
                 $user_model = self::getModel('users');
@@ -6049,8 +6086,8 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             $mailer = JFactory::getMailer();
             $em = '';
-                //'popowa.alinochka@gmail.co';
-                ////'kostikkuzmenko@mail.ru';
+            //'popowa.alinochka@gmail.co';
+            ////'kostikkuzmenko@mail.ru';
             $config = JFactory::getConfig();
             $sender = array(
                 $config->get('mailfrom'),
@@ -6255,11 +6292,11 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         //$masID = [];
                         //if (!empty($gaugers_id)) {
-                            //foreach ($gaugers_id as $value) {
-                                //array_push($masID, $value->id);
-                            //}
+                        //foreach ($gaugers_id as $value) {
+                        //array_push($masID, $value->id);
+                        //}
                         //} else {
-                            //$masID = [$id];
+                        //$masID = [$id];
                         //}
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
@@ -6273,9 +6310,9 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             foreach ($AllGaugingOfGaugers as $value) {
                                 //if ($value->project_calculator == $id) {
-                                    if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
-                                        $Dates[$y] += 1;
-                                    }
+                                if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
+                                    $Dates[$y] += 1;
+                                }
                                 //}
                             }
                         }
@@ -6453,10 +6490,10 @@ class Gm_ceilingHelpersGm_ceiling
                                 $value->read_by_mounter = "0";
                             }
                             $arr = array("mount_date" =>substr($value->project_mounting_date, 0, 10),
-                                         "read_by_mounter" => $value->read_by_mounter,
-                                         "project_status" => $value->project_status,
-                                         "perimeter" => $value->n5,
-                                         "id"=>$value->id);
+                                "read_by_mounter" => $value->read_by_mounter,
+                                "project_status" => $value->project_status,
+                                "perimeter" => $value->n5,
+                                "id"=>$value->id);
                             array_push($DateStatys, $arr);
 
 
@@ -6994,7 +7031,7 @@ class Gm_ceilingHelpersGm_ceiling
             $code = $code[1];
 
             $result = (object)array("street"=>$street,"house"=>$house,"bdq"=>$bdq,"apartment"=>$apartment,
-                                     "porch"=>$porch,"floor"=>$floor,"code"=>$code);
+                "porch"=>$porch,"floor"=>$floor,"code"=>$code);
             return $result;
         }
         catch(Exception $e) {

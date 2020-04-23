@@ -12,7 +12,7 @@ $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-
+$user = JFactory::getUser();
 $dealer = JFactory::getUser($this->item->dealer_id);
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 $json_mount = $this->item->mount_data;
@@ -127,8 +127,7 @@ $project_self_total = $self_sum_transport + $self_components_sum + $self_canvase
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
 $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
-
-$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
+$project_total_discount_transport = $project_total_discount + $client_sum_transport;
 
 $project_total = $project_total + $client_sum_transport;
 $project_total_discount = $project_total_discount  + $client_sum_transport;
@@ -389,9 +388,9 @@ $kol = 0;
                             </tr>
                         <?php }?>
                         <tr>
-                           <td colspan="3">
+                            <td colspan="3">
 
-                           </td>
+                            </td>
                         </tr>
                     <?php endif;?>
                 </table>
@@ -903,7 +902,8 @@ $kol = 0;
                                                     <?php } ?>
                                                 </table>
                                                 <?php if(!empty($calculation->jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="calc_goods"><i class="fas fa-angle-down"></i> Комплектующие</h4>
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="calc_goods">
+                                                        <i class="fas fa-angle-down"></i> Комплектующие</h4>
                                                     <table class="table_info2 table_goods" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
@@ -921,7 +921,7 @@ $kol = 0;
                                                     </table>
                                                 <?php }?>
                                                 <?php if(!empty($calculation->jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
                                                     <table class="table_info2 table_jobs" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
@@ -938,7 +938,7 @@ $kol = 0;
                                                     </table>
                                                 <?php }?>
                                                 <?php if(!empty($calculation->factory_jobs)){?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="factory_jobs"><i class="fas fa-angle-down"></i> Работы цеха</h4>
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="factory_jobs"><i class="fas fa-angle-down"></i> Работы цеха</h4>
                                                     <table class="table_info2" id="table_factory_jobs" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
@@ -953,7 +953,7 @@ $kol = 0;
                                                 <?php }?>
                                                 <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                                                 <?php if (!empty($extra_mounting) ) { ?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="additional_jobs" s><i class="fas fa-angle-down"></i> Дополнительные работы</h4>
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="additional_jobs" s><i class="fas fa-angle-down"></i> Дополнительные работы</h4>
                                                     <table class="table_info2" id="additional_jobs_table" width="100%" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
@@ -971,7 +971,7 @@ $kol = 0;
                                                 <?php } ?>
                                                 <?php $extra_components = (array) json_decode($calculation->extra_components);?>
                                                 <?php if (!empty($extra_components) ) { ?>
-                                                    <h4 style="margin: 10px 0;cursor: pointer;" id="additional_goods"><i class="fas fa-angle-down"></i> Дополнительные комплектующие</h4>
+                                                    <h4 style="margin: 10px 0;cursor: pointer;" class="additional_goods"><i class="fas fa-angle-down"></i> Дополнительные комплектующие</h4>
                                                     <table class="table_info2"id="additional_goods_table" width="100%" style="display:none;">
                                                         <thead>
                                                         <th>Название</th>
@@ -1049,7 +1049,7 @@ $kol = 0;
             });
 
             jQuery("#save_changes").click(function () {
-               console.log(project_id,jQuery("#change_mount").val());
+                console.log(project_id,jQuery("#change_mount").val());
                 jQuery.ajax({
                     type: 'POST',
                     url: "index.php?option=com_gm_ceiling&task=project.updateMountDate",
@@ -1058,7 +1058,7 @@ $kol = 0;
                         mount_data:jQuery("#change_mount").val(),
                     },
                     success: function(data) {
-                       location.reload();
+                        location.reload();
                     },
                     dataType: "json",
                     timeout: 10000,

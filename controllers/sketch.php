@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
  */
 class Gm_ceilingControllerSketch extends JControllerLegacy
 {
-	public function save_data_from_sketch() {
+    public function save_data_from_sketch() {
         try {
             $jinput = JFactory::getApplication()->input;
             $calc_img = $jinput->get('calc_img', '', 'string');
@@ -40,6 +40,9 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $goods = $jinput->get('goods', [], 'array'); //полотна
             $jobs = $jinput->get('jobs', [], 'array'); //работы
             $offcut_square = $jinput->get('offcut_square', 0, 'FLOAT');
+            if(empty(floatval($offcut_square))){
+                $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
+            }
             $cuts = $jinput->get('cuts', '', 'string');
             $canvas_area = $jinput->get('sq_polo', 0, 'FLOAT');
             $p_usadki = $jinput->get('p_usadki', 1, 'FLOAT');
@@ -160,7 +163,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $result  = $calculation_model->update_calculation($data);
             $canv_model->saveCuts($calc_id, $cuts, $canvas_area);
             if(!empty($n3)){
-               Gm_ceilingHelpersGm_ceiling::calculate(1,$data['id'],2,1,0,1);
+                Gm_ceilingHelpersGm_ceiling::calculate(1,$data['id'],2,1,0,1);
             }
             else{
                 $calculationController = Gm_ceilingHelpersGm_ceiling::getController('calculationForm');

@@ -1250,9 +1250,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
 
-    jQuery("#add_calc").click(function () {
-        save_data_to_session(1);
-    });
 
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();

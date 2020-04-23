@@ -456,7 +456,7 @@ if (!empty($calculation_id)) {
                                 <div>
                                     <div class="col-sm-12 row-fields" data-id="without_mount" data-group_id="cancel_mount" data-jobs="[]" style="margin-bottom: 5px;">
                                         <div class="countDiv">
-                                            <input type="radio" data-id="without_mount" id="without_mount" name="cancel_mount" class="radio" value="0">
+                                            <input type="radio" data-id="without_mount" id="without_mount" name="cancel_mount" class="radio" value="0" <?= $gmManager ? 'checked' : '' ?>>
                                             <label for="without_mount">Без монтажа</label>
                                         </div>
                                     </div>
@@ -465,16 +465,18 @@ if (!empty($calculation_id)) {
                                          style="margin-bottom: 5px;">
                                         <div class="countDiv"><input type="radio" data-id="mount_service"
                                                                      id="mount_service" name="cancel_mount"
-                                                                     class="radio" data-count="2" checked
+                                                                     class="radio" data-count="2" <?= !$gmManager ? 'checked' : '' ?>
                                                                      value="2">
                                             <label for="mount_service">Монтажная служба</label></div>
                                     </div>
                                     <div class="col-sm-12 row-fields" data-id="self_mount" data-group_id="cancel_mount"
                                          data-jobs="['need_mount']" style="margin-bottom: 5px;" checked>
-                                        <div class="countDiv"><input type="radio" data-id="self_mount" id="self_mount"
-                                                                     name="cancel_mount" class="radio" data-count="1"
-                                                                     value="1"><label
-                                                    for="self_mount">Свой прайс</label></div>
+                                        <div class="countDiv">
+                                            <input type="radio" data-id="self_mount" id="self_mount"
+                                                   name="cancel_mount" class="radio" data-count="1"
+                                                   value="1">
+                                            <label for="self_mount">Свой прайс</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -691,6 +693,14 @@ if (!empty($calculation_id)) {
                 </div>
             </div>
         </div>
+        <div class="modal_window_container" id="mv_container">
+            <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+            <div class="modal_window" id="modal_window_seam">
+                <p>Потолок со швом. Изменить раскрой вручную?</p>
+                <p><button type="button" id="hide_redactor" class="btn btn-primary">Нет</button>
+                    <button type="button" id="show_redactor" class="btn btn-primary to_redactor">Да</button></p>
+            </div>
+        </div>
 
 </form>
 
@@ -699,7 +709,10 @@ if (!empty($calculation_id)) {
         dealerId = '<?php echo $dealerId;?>',
         texturesData = '<?php echo $texturesData?>',
         precalculation = '<?php echo $precalculation; ?>',
-        gmManager = '<?= $gmManager?>';
+        gmManager = '<?= $gmManager?>',
+        seam = '<?php echo $seam; ?>';
+
+
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -868,6 +881,19 @@ if (!empty($calculation_id)) {
     ];
     var componentsInCategories;
     jQuery(document).ready(function () {
+
+        if (seam == '1')
+        {
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_seam").show("slow");
+        }
+
+        jQuery('#hide_redactor').click(function(){
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            jQuery("#modal_window_kp").hide();
+        });
 
         var data = JSON.parse('<?php echo $data?>');
         componentsInCategories = JSON.parse('<?php echo $componentsInCategories?>');
@@ -1675,87 +1701,87 @@ if (!empty($calculation_id)) {
         jQuery.each(fieldsDiv, function (index, div) {
             console.log(jQuery(div).data('field_id'));
             //if(jQuery(div).data('field_id') != 'dopgoods'){
-                var currentJobs = jQuery(div).data('jobs'),
-                    countDiv, input, goodSelect, radio,checkbox;
-                if (empty(currentJobs)) {
-                    currentJobs = [];
-                }
-                countDiv = jQuery(div).find('.countDiv');
-                input = jQuery(countDiv).children();
-                if (input.prop('type') == "checkbox") {
-                    if (input.is(':checked')) {
-                        for (var i = currentJobs.length; i--;) {
-                            jobs.push({id: currentJobs[i], count: 1});
-                        }
+            var currentJobs = jQuery(div).data('jobs'),
+                countDiv, input, goodSelect, radio,checkbox;
+            if (empty(currentJobs)) {
+                currentJobs = [];
+            }
+            countDiv = jQuery(div).find('.countDiv');
+            input = jQuery(countDiv).children();
+            if (input.prop('type') == "checkbox") {
+                if (input.is(':checked')) {
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({id: currentJobs[i], count: 1});
                     }
                 }
-                if (input.prop('type') == "text") {
-                    //поиск связанных radio
-                    var id = countDiv.parent().data('id'),
-                        radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
-                        radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
-                    if (!empty(radio.val())) {
-                        if (!empty(input.val())) {
-                            if (currentJobs.length == 0) {
-                                currentJobs = JSON.parse(radio.val());
-                            }
-                            else {
-                                currentJobs = currentJobs.concat(JSON.parse(radio.val()));
-                            }
-                            if (radioGoodSelect.length != 0) {
-                                var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
-                                if (!empty(childGoods)) {
-                                    if (childGoods.length) {
-                                        for (var i = 0; i < childGoods.length; i++) {
-                                            components.push({id: childGoods[i], count: input.val()});
-                                        }
+            }
+            if (input.prop('type') == "text") {
+                //поиск связанных radio
+                var id = countDiv.parent().data('id'),
+                    radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
+                    radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                if (!empty(radio.val())) {
+                    if (!empty(input.val())) {
+                        if (currentJobs.length == 0) {
+                            currentJobs = JSON.parse(radio.val());
+                        }
+                        else {
+                            currentJobs = currentJobs.concat(JSON.parse(radio.val()));
+                        }
+                        if (radioGoodSelect.length != 0) {
+                            var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
+                            if (!empty(childGoods)) {
+                                if (childGoods.length) {
+                                    for (var i = 0; i < childGoods.length; i++) {
+                                        components.push({id: childGoods[i], count: input.val()});
                                     }
                                 }
-                                components.push({id: radioGoodSelect.val(), count: input.val()});
                             }
-                        }
-                    }
-                    //поиск связанных селектов
-                    goodSelect = countDiv.parent().find('.selectDiv').children();
-                    //если есть селект и введеное количество не пустое добавляем компоненты
-                    if (goodSelect.length != 0 && !empty(input.val())) {
-                        var childGoods = goodSelect.children("option:selected").data('child_goods');
-                        if (!empty(childGoods)) {
-                            if (childGoods.length) {
-                                for (var i = 0; i < childGoods.length; i++) {
-                                    components.push({id: childGoods[i], count: input.val()});
-                                }
-                            }
-                        }
-                        components.push({id: goodSelect.val(), count: input.val()});
-                    }
-
-                    //поиск связанных checkbox
-                    var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
-                    if(checkbox.length > 0){
-                        var jbs = checkbox.closest('.row-fields').data('jobs');
-                        currentJobs = currentJobs.concat(jbs);
-                    }
-
-                    //добавляем работы если количество не пустое
-                    if (!empty(input.val())) {
-                        for (var i = currentJobs.length; i--;) {
-                            jobs.push({id: currentJobs[i], count: input.val()});
+                            components.push({id: radioGoodSelect.val(), count: input.val()});
                         }
                     }
                 }
-                if (input.prop('type') == "radio" && empty(input.data('parent'))) {
-                    if (input.is(':checked')) {
-                        currentJobs = JSON.parse(input.val());
-                        for (var i = currentJobs.length; i--;) {
-                            jobs.push({id: currentJobs[i], count: 1});
+                //поиск связанных селектов
+                goodSelect = countDiv.parent().find('.selectDiv').children();
+                //если есть селект и введеное количество не пустое добавляем компоненты
+                if (goodSelect.length != 0 && !empty(input.val())) {
+                    var childGoods = goodSelect.children("option:selected").data('child_goods');
+                    if (!empty(childGoods)) {
+                        if (childGoods.length) {
+                            for (var i = 0; i < childGoods.length; i++) {
+                                components.push({id: childGoods[i], count: input.val()});
+                            }
                         }
                     }
+                    components.push({id: goodSelect.val(), count: input.val()});
                 }
-          /*  }
-            else{
 
-            }*/
+                //поиск связанных checkbox
+                var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
+                if(checkbox.length > 0){
+                    var jbs = checkbox.closest('.row-fields').data('jobs');
+                    currentJobs = currentJobs.concat(jbs);
+                }
+
+                //добавляем работы если количество не пустое
+                if (!empty(input.val())) {
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({id: currentJobs[i], count: input.val()});
+                    }
+                }
+            }
+            if (input.prop('type') == "radio" && empty(input.data('parent'))) {
+                if (input.is(':checked')) {
+                    currentJobs = JSON.parse(input.val());
+                    for (var i = currentJobs.length; i--;) {
+                        jobs.push({id: currentJobs[i], count: 1});
+                    }
+                }
+            }
+            /*  }
+              else{
+
+              }*/
 
 
         });
@@ -1836,7 +1862,7 @@ if (!empty($calculation_id)) {
                 }
                 if (input.prop('type') == "text") {
                     if(input.hasClass('additional')){
-                       var parent = input.closest('.field');
+                        var parent = input.closest('.field');
                         fieldObj = {
                             field_id : parent.data('field_id'),
                             type: "additional",
@@ -1848,7 +1874,7 @@ if (!empty($calculation_id)) {
                             if(!empty(elem.value)) {
                                 fieldObj.data.push({name: jQuery(elem).prop('name'), value: elem.value});
                             }
-                       });
+                        });
                     }
                     else{
                         if (input.val() > 0) {
@@ -1912,9 +1938,9 @@ if (!empty($calculation_id)) {
                     }
                     var relatedRows = input.siblings('.row-fields[data-category]');
                     jQuery.each(relatedRows,function (index,relRow) {
-                       var count = jQuery(relRow).find('.countDiv').children().val(),
-                           goods_id = jQuery(relRow).find('.goods_select').val();
-                       fieldObj.fields_data.push({count:count,category:jQuery(relRow).data('category'),goods:goods_id});
+                        var count = jQuery(relRow).find('.countDiv').children().val(),
+                            goods_id = jQuery(relRow).find('.goods_select').val();
+                        fieldObj.fields_data.push({count:count,category:jQuery(relRow).data('category'),goods:goods_id});
                     });
                 }
                 if(!jQuery.isEmptyObject(fieldObj)){

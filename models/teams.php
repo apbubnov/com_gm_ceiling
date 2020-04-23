@@ -25,6 +25,10 @@ class Gm_ceilingModelTeams extends JModelItem {
 		try
 		{
 			$db = JFactory::getDbo();
+            $query = "SET SESSION group_concat_max_len = 10485760;";
+            $db->setQuery($query);
+            $db->execute();
+            $query = $db->getQuery(true);
 			$query = $db->getQuery(true);
 			$namesSubquery = $db->getQuery(true);
 

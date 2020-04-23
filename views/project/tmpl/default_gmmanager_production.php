@@ -1118,11 +1118,7 @@ $dealerType = $dealer->dealer_type;
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
-
-    jQuery("#add_calc").click(function () {
-        save_data_to_session(1);
-    });
-
+    
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();
         var id_client = <?php echo $this->item->id_client;?>;
