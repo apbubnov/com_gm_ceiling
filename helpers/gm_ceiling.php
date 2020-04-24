@@ -1262,7 +1262,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $data['n3'] = $calculation_data->n3_id;
                 if (!empty($data['n3'])) {
-                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3']);
+                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3'],'old');
                     $data['n1'] = $canvasData[0]->texture_id;
                 }
 
@@ -2561,7 +2561,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if(!empty($data['n3_id'])){
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id'],'old');
                 $data['n1'] = $canvasData[0]->texture_id;
             }
             $count_round_lamp = 0;
@@ -3895,7 +3895,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             foreach($calculations as $calc){
                 $insert_jobs = array_filter($calculation->dealer_mount,function($index,$job){
-                    if($job->stage == 4){
+                    if($job->mount_type_id == 4){
                         return $job;
                     }
                 });
@@ -3918,12 +3918,12 @@ class Gm_ceilingHelpersGm_ceiling
                     $stage_sum = [];$gm_stage_sum = [];
                     $total_dealer_sum = 0;$total_gm_sum =0;
                     foreach ($calc->dealer_mount as $job){
-                        $stage_sum[$job->stage] += $job->price_sum;
+                        $stage_sum[$job->mount_type_id] += $job->price_sum;
                         $total_dealer_sum += $job->price_sum;
                     }
                     if(!empty($calc->gm_mount)){
                         foreach ($calc->gm_mount as $job){
-                            $gm_stage_sum[$job->stage] += $job->price_sum;
+                            $gm_stage_sum[$job->mount_type_id] += $job->price_sum;
                             $total_gm_sum += $job->price_sum;
                         }
                     }
@@ -4008,8 +4008,6 @@ class Gm_ceilingHelpersGm_ceiling
                                     <th class="center">Дата</th>
                                     <th class="center">Бригада</th>
                                 </tr>';
-
-            //throw new Exception(print_r($mount_data,true));
             foreach ($mount_data as $value) {
                 $split_mount[$value->time][] = $value;
                 $brigade_names = "";
@@ -4280,7 +4278,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if(!empty($gm_jobs)){
                     foreach ($gm_jobs as $gm_job) {
                         if(!$full) {
-                            if ($gm_job->stage == $stage) {
+                            if ($gm_job->mount_type_id == $stage) {
                                 $html_gm .= '<tr>';
                                 $html_gm .= '<td>' . $gm_job->name . '</td>';
                                 $html_gm .= '<td class="center">' . round($gm_job->price, 2) . '</td>';
@@ -4304,7 +4302,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 foreach ($jobs as $job) {
                     if(!$full){
-                        if($job->stage == $stage){
+                        if($job->mount_type_id == $stage){
                             $html_dealer .= '<tr>';
                             $html_dealer .= '<td>' . $job->name . '</td>';
                             $html_dealer .= '<td class="center">' . round($job->price, 2) . '</td>';
@@ -5150,6 +5148,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Потолок: </b>" . $calculation->calculation_title . "<br>";
                 }
             }
+
             $total_sum = 0;
             $html .= '<p>&nbsp;</p>
                     <h1>Для менеджера</h1>';
@@ -5176,10 +5175,10 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<tr>';
             $html .= '<td>' . $canvas->name . '</td>';
             $html .= '<td>' . round($canvas->dealer_price, 2) . '</td>';
-            $html .= '<td class="center">' . $canvas->final_count . '</td>';
-            $html .= '<td>' . $canvas->price_sum . '</td>';
+            $html .= '<td class="center">' . $calculation->n4 . '</td>';
+            $html .= '<td>' . round($canvas->dealer_price*$calculation->n4,2). '</td>';
             $html .= '</tr>';
-            $total_sum += $canvas->price_sum;
+            $total_sum += round($canvas->dealer_price*$calculation->n4,2);
             if(!empty($offcuts)){
                 $offcuts_total = $offcuts->count*$offcuts->price;
                 $html .= '<tr>';
@@ -5218,7 +5217,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td></td>';
                 $html .= '</tr>';
             }
-
+            if($total_sum<MIN_SUM){
+                $total_sum = MIN_SUM;
+            }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum, 2) . '</th></tr>';
 
             $html .= '</tbody></table><p>&nbsp;</p>';

@@ -85,8 +85,8 @@ JHtml::_('formbehavior.chosen', 'select');
         <td class = "td-right">
         <select class="SelectPrice" autocomplete="off">
             <option disabled selected>Прайс:</option>
-            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?= $this->item->dealer_id?>">Компонентов</option>
-            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$this->item->dealer_id?>">Полотен</option>
+            <option value="/index.php?option=com_gm_ceiling&view=price&type=goods&subtype=dealer&dealer_id=<?= $this->item->dealer_id?>">Компонентов</option>
+            <option value="/index.php?option=com_gm_ceiling&view=price&type=goods&subtype=dealer&dealer_id=<?=$this->item->dealer_id?>">Полотен</option>
         </select>
         </td>
     </tr>

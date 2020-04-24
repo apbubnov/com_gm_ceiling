@@ -2004,7 +2004,7 @@ foreach($all_builders as $builder){
                     }
                 });
             });
-            jQuery('.project_href').click(function(){
+            jQuery(document).on('click','.project_href',function(){
                 var projectId = jQuery(this).data('project_id');
                 document.location.href = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=precalc&id='+projectId;
             });

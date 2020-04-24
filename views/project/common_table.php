@@ -61,12 +61,14 @@ if(!empty($service_mount)){
 foreach ($calculations as $calculation) {
     if(!empty($calculation->n3)){
         /*если калькуляция со старой структурой*/
-        if (!empty($service_mount)) {
-            $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id);
+        $calculation->dealer_self_mounting_sum = $mount_data['total_dealer_mounting'];
+        /*if (!empty($service_mount)) {
+            $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: margin($calculation->mounting_sum, 0);
         }
         else{
-            $calculation->dealer_self_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-        }
+            $calculation->dealer_self_mounting_sum = margin($calculation->mounting_sum, 0);
+        }*/
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
         $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
         $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
@@ -89,6 +91,7 @@ foreach ($calculations as $calculation) {
         if($isNMS){
             $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"serviceSelf");
             $calculation->gm_self_mounting_sum = $mount_data['total_gm_mounting'];
+            $calculation->dealer_self_mounting_sum = $mount_data['total_dealer_mounting'];
         }
     }
     else{
@@ -105,12 +108,13 @@ foreach ($calculations as $calculation) {
                 $total_gm_sum += $job->price_sum;
             }
         }
-        if (!empty($service_mount)) {
+        /*if (!empty($service_mount)) {
             $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: $total_dealer_sum;
         }
         else{
             $calculation->dealer_self_mounting_sum = $calculation->mounting_sum;
-        }
+        }*/
+        $calculation->dealer_self_mounting_sum = $total_dealer_sum;
         $calculation->gm_self_mounting_sum = $total_gm_sum;
         $calculation->dealer_canvases_sum = $calculation->canvases_sum_with_margin;
         $calculation->dealer_components_sum = $calculation->components_sum_with_margin;
@@ -294,6 +298,7 @@ $pdf_names = [];
         }
     }
 </style>
+<input type="hidden" id="proj_save_sum" value="<?=$final_sum?>">
 <div id="preloader" style="display: none;" class="PRELOADER_GM PRELOADER_GM_OPACITY">
     <div class="PRELOADER_BLOCK"></div>
     <img src="/images/GM_R_HD.png"  alt = 'preloader' class="PRELOADER_IMG">

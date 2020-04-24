@@ -71,7 +71,7 @@ $result_clients = $clients_model->getBuilders();
 </table>
 <script>
     jQuery(document).ready(function() {
-        var builders = JSON.parse('<?=json_encode($result_clients)?>');
+        var builders = JSON.parse('<?=quotemeta(json_encode($result_clients));?>');
         console.log(builders);
         jQuery('body').on('click', 'tr', function (e) {
             if (jQuery(this).data('href') != "") {

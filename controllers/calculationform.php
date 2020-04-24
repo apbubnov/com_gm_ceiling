@@ -809,14 +809,14 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				} else {
                     $canvas_exist = true;
                     $data_for_manager_estimate['canvas'] = $value;
-                    if($value->dealer_price * $calculation->n4 < MIN_SUM){
+                   /* if($value->dealer_price * $calculation->n4 < MIN_SUM){
                         $canvases_sum += MIN_SUM;
                         $value->price_sum = MIN_SUM;
                         $value->price_sum_with_margin = MIN_SUM *100/(100-$canvases_margin);
                     }
-                    else{
+                    else{*/
                         $canvases_sum += $value->dealer_price * $calculation->n4; // цена полотна * площадь помещения
-                    }
+                    /*}*/
 					$canvas_price = $value->dealer_price;
 				}
 			}
@@ -862,9 +862,11 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$mounting_sum_with_margin += $extra_mounting_sum * 100 / (100 - $mounting_margin);
 
 			$common_sum = $canvases_sum + $components_sum + $mounting_sum;
+			if($common_sum < MIN_SUM){
+			    $common_sum = MIN_SUM;
+            }
 			$common_sum_with_margin = $canvases_sum_with_margin + $components_sum_with_margin + $mounting_sum_with_margin;
 			$final_sum = $common_sum_with_margin - ($common_sum_with_margin * $discount / 100);
-
 			$data2 = [];
 			$data2['id'] = $calc_id;
 			$data2['canvases_sum'] = $canvases_sum;

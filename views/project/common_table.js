@@ -1,3 +1,4 @@
+saveProjectSum();
 jQuery("[name = click_transport]").click(function () {
     calculate_transport();
 });
@@ -40,7 +41,7 @@ jQuery("[name = 'include_calculation[]']").change(function(){
        jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
        jQuery("#total_square span.sum").text(parseFloat(old_n4) + parseFloat(n4));
        jQuery("#total_perimeter span.sum").text(parseFloat(old_n5) + parseFloat(n5));
-      
+       jQuery("#proj_save_sum").val(parseFloat(jQuery("#proj_save_sum").val())+ +calc_sum);
     }
     else{
         jQuery("#calcs_self_canvases_total span.sum").text(old_canv-canv_data);
@@ -58,7 +59,8 @@ jQuery("[name = 'include_calculation[]']").change(function(){
         if(!more_one){
             jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());
         }
-       
+        jQuery("#proj_save_sum").val(parseFloat(jQuery("#proj_save_sum").val())-calc_sum);
+
     }
     if(jQuery("#project_total_discount span.sum").text()){
          jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
@@ -68,6 +70,8 @@ jQuery("[name = 'include_calculation[]']").change(function(){
     }
     jQuery("#calcs_self_components_total span.sum").data('oldval',jQuery("#calcs_self_components_total span.sum").text());
     check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
+
+    saveProjectSum();
 });
 
 jQuery(".delete_calc").click(function(){
@@ -983,4 +987,26 @@ function fillProjectSum(){
     else{
         jQuery('#project_sum').val(jQuery('#project_total span.sum').text());
     }
+}
+
+function saveProjectSum(){
+    var sendData = {project_sum :jQuery("#proj_save_sum").val()},
+        id = project_id.value;
+    console.log(sendData);
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=project.updateProjectData",
+        data: {
+            project_id: id,
+            project_data: sendData
+        },
+        success: function (data) {
+            console.log('success');
+        },
+        dataType: "json",
+        timeout: 20000,
+        error: function (data) {
+            console.log('error');
+        }
+    });
 }

@@ -591,7 +591,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					if(count($ignored_calculations) > 0) {
 
 						$client_id = $data->id_client;
-						$project_data = $model->getData($project_id);
+						$project_data = clone $data;
 						$project_data->project_status = 3;
 						$this->addNote($project_id, "Не вошедшие в договор №".$data->id,3);
 						//$project_data->project_verdict = 0;

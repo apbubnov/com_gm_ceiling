@@ -27,8 +27,6 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
         <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases' . (!empty($dealer) ? "&dealer=$dealer->id" : "")); ?>"
               method="post"
               name="adminForm" id="adminForm" hidden>
-            <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
-            <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
             <?= JHtml::_('form.token'); ?>
         </form>
         <table class="Body">

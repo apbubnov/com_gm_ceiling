@@ -14,7 +14,7 @@
         $canEdit = JFactory::getUser()->id == $this->item->created_by;
     }
 
-
+    $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
     $user = JFactory::getUser();
     $dealer = JFactory::getUser($user->dealer_id);
     $project_id = $this->item->id;

@@ -295,22 +295,27 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             }
             $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
             foreach ($calcsId as $id){
-                Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
-
-                $all_jobs = $model_calcform->getJobsPricesInCalculation($id, $dealer_id); // Получение работ по прайсу дилера
-                $stages = [];
-                foreach ($all_jobs as $value) {
-                    $stages[$value->mount_type_id] += $value->price_sum;
+                $calcModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $calculation = $calcModel->getBaseCalculationDataById($id);
+                if(!empty($calculation->n3)){
+                    Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$id,null,null);
                 }
-                if(empty($stages)){
-                    $stages[2] = 0;
-                    $stages[3] = 0;
-                    $stages[4] = 0;
+                else{
+                    $all_jobs = $model_calcform->getJobsPricesInCalculation($id, $dealer_id); // Получение работ по прайсу дилера
+                    $stages = [];
+                    foreach ($all_jobs as $value) {
+                        $stages[$value->mount_type_id] += $value->price_sum;
+                    }
+                    if(empty($stages)){
+                        $stages[2] = 0;
+                        $stages[3] = 0;
+                        $stages[4] = 0;
+                    }
+                    $calcMountData['id'] = $id;
+                    $calcMountData['stages'] = $stages;
+                    $calcsMountModel = self::getModel('calcs_mount');
+                    $calcsMountModel->save($calcMountData);
                 }
-                $calcMountData['id'] = $id;
-                $calcMountData['stages'] = $stages;
-                $calcsMountModel = self::getModel('calcs_mount');
-                $calcsMountModel->save($calcMountData);
             }
             die(json_encode(true));
         }
