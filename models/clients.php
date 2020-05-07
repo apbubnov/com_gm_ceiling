@@ -677,6 +677,9 @@ if (empty($list['direction']))
 	function getClientsAndprojectsData($dealer_id,$stage){
 	    try{
             $db    = JFactory::getDbo();
+            $query = 'SET SESSION group_concat_max_len = 1000000';
+            $db->setQuery($query);
+            $db->execute();
             $query = $db->getQuery(true);
             $query
                 ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"calc_status\":\"',IFNULL(cm.status_id,'-'),'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,

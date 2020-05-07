@@ -11,12 +11,13 @@ $dealerId = $jinput->get('dealer_id',null,'INT');
 $user = JFactory::getUser();
 $user->groups = $user->get('groups');
 
-$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
+$managerGM = in_array(16, $user->groups);
 $dealer = JFactory::getUser($dealerId);
 $pricesModel = Gm_ceilingHelpersGm_ceiling::getModel('prices');
 $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
 $operations = json_encode($stockModel->getOperations());
-$goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
+$goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer($dealerId));
+
 ?>
 <link rel="stylesheet" type="text/css"
       href="/components/com_gm_ceiling/views/price/css/style.css?date=<?= date("H.i.s"); ?>">
@@ -36,11 +37,9 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
                 <td><i class="fa fa-hashtag" aria-hidden="true"></i></td>
                 <td>Наименование</td>
                 <td>Цвет</td>
-                <? if ($managerGM && empty($dealer)): ?>
+                <? if (!empty($dealer) && !$managerGM): ?>
                     <td>Цена</td>
-                    <td>Цена для дилера</td>
                     <td>Цена для клиента</td>
-                    <td>Изменить</td>
                 <? elseif ($managerGM): ?>
                     <td>Цена</td>
                     <td>Изменение</td>
@@ -73,23 +72,35 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
                                 '<input type="text" name="operation_value" class="form-control non_click" placeholder="0" size="5" required>' +
                             '</div>'+
                             '<div class="col-md-2 col-xs-2">' +
-                                '<button type="button" class="btn btn-primary change_price"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>'+
+                                '<button type="button" class="btn btn-primary change_price non_click"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>'+
                             '</div>'+
                             '<div class="col-md-2 col-xs-2" >' +
-                                '<button type="button" class="btn btn-primary clear_price"><i class="fas fa-eraser"></i></button>'+
+                                '<button type="button" class="btn btn-primary clear_price non_click"><i class="fas fa-eraser"></i></button>'+
                             '</div>'+
-                        '</div>';
+                        '</div>',
+        isGMManager = '<?=$managerGM?>';
 
     jQuery(document).ready(function () {
        console.log(goodsPrices);
        console.log(operations);
        jQuery.each(goodsPrices,function(index,good){
+           var tr;
            if(good.category_id == 1){
-               jQuery("#goods_tbody").append('<tr class="TBody Level1 Action" data-level="1"> <td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+good.category+'</td><td>'+CHANGE_FIELDS+'</td></tr>');
-              addCanvasesToTable(good.textures);
+               tr = '<tr class="TBody Level1 Action" data-level="1"> <td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+good.category+'</td>';
+               if(isGMManager){
+                   tr += '<td>'+CHANGE_FIELDS+'</td>';
+               }
+               tr += '</tr>';
+               jQuery("#goods_tbody").append(tr);
+               addCanvasesToTable(good.textures);
            }
            else{
-               jQuery("#goods_tbody").append('<tr class="TBody Level1 Action" data-level="1"> <td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+good.category+'</td><td>'+CHANGE_FIELDS+'</td></tr>');
+               tr = '<tr class="TBody Level1 Action" data-level="1"> <td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+good.category+'</td>';
+               if(isGMManager){
+                   tr +='<td>'+CHANGE_FIELDS+'</td>';
+               }
+               tr+= '</tr>';
+               jQuery("#goods_tbody").append(tr);
                addComponentsToTable(good.goods);
            }
        });
@@ -130,9 +141,10 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
        });
 
        jQuery('.change_price').click(function () {
-           var goods = collectGoods(this);
-           console.log(goods);
-           if(goods.length) {
+           var goods = collectGoods(this),
+               thisBtn = jQuery(this),
+               change = thisBtn.closest('tr').find('[name="operation_value"]').val();
+           if(goods.length && !empty(change)) {
                jQuery.ajax({
                    type: 'POST',
                    url: '/index.php?option=com_gm_ceiling&task=prices.dealerPriceGoods',
@@ -143,11 +155,42 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
                    dataType: "json",
                    timeout: 5000,
                    success: function (data) {
-                       location.reload();
+                       noty({
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "success",
+                           text: "Успешно изменено!"
+                       });
+                       var tr,oldPrice,operation = thisBtn.closest('tr').find('[name="operation_select"]').val(),
+                           newPrice;
+                       console.log(operation,change);
+                       jQuery.each(goods,function(index,elem){
+                          tr = jQuery('#goods_tbody').find('[data-good_id='+elem.goods_id+']');
+                          oldPrice = tr.find('.old_price').text();
+                          newPrice = getNewPrice(operation,oldPrice,change);
+                          tr.find('.operation').text(newPrice.operation);
+                          tr.find('.dealer_price').text(newPrice.final_price);
+                       });
                    },
                    error: function (error) {
-                       console.log(error);
+                       noty({
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "error",
+                           text: "Ошибка при попытке изменить"
+                       });
                    }
+               });
+           }
+           else{
+               noty({
+                   theme: 'relax',
+                   layout: 'center',
+                   maxVisible: 5,
+                   type: "error",
+                   text: "Пустое значение!"
                });
            }
        });
@@ -167,16 +210,61 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
                    dataType: "json",
                    timeout: 5000,
                    success: function (data) {
-                       location.reload();
+                       noty({
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "success",
+                           text: "Успешно изменено!"
+                       });
+                       var tr,oldPrice;
+                      jQuery.each(goods,function(index,elem){
+                          tr = jQuery('#goods_tbody').find('[data-good_id='+elem.goods_id+']');
+                          oldPrice = tr.find('.old_price').text();
+                          tr.find('.operation').text('');
+                          tr.find('.dealer_price').text(oldPrice);
+                      });
                    },
                    error: function (error) {
-                       console.log(error);
+                       noty({
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "error",
+                           text: "Ошибка при попытке изменить"
+                       });
                    }
                });
            }
        });
     });
 
+    function getNewPrice(operation,oldPrice,change) {
+        var newPrice = {operation:null,final_price:null};
+        switch(operation){
+            case '1':
+                newPrice.operation = change;
+                newPrice.final_price = change;
+                break;
+            case '2':
+                newPrice.operation = '+'+change;
+                newPrice.final_price = +oldPrice + +change;
+                break;
+            case '3':
+                newPrice.operation = '-'+change;
+                newPrice.final_price = +oldPrice - +change;
+                break;
+            case '4':
+                newPrice.operation = '+'+change+'%';
+                newPrice.final_price = +oldPrice + (oldPrice*change*0.01);
+                break;
+            case '5':
+                newPrice.operation = '-'+change+'%';
+                newPrice.final_price = +oldPrice - (oldPrice*change*0.01);
+                break;
+        }
+        return newPrice;
+    }
     function collectGoods(elem) {
         var row = jQuery(elem).closest('.row'),
             operation_type = row.find('[name="operation_select"]').val(),
@@ -184,13 +272,13 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
             tr = row.closest('tr'),
             trn = tr.next(),
             goods = [];
-        if(tr.hasClass('goods')){
+        if (tr.hasClass('goods')) {
             goods.push({
                 goods_id: tr.data('good_id'),
                 operation_id: operation_type,
                 value: operation_value
             });
-        }else {
+        } else {
             while (trn.length !== 0 && trn.data("level") > tr.data('level')) {
                 console.log(trn.length !== 0);
                 console.log(trn.data("level") > tr.data('level'));
@@ -208,13 +296,27 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
     }
     function addCanvasesToTable(canvasesData){
         jQuery.each(canvasesData,function(index,texture){
-            jQuery("#goods_tbody").append('<tr class="TBody Level2 Action" style="display:none;" data-level="2" ><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+texture.texture+'</td><td>'+CHANGE_FIELDS+'</td></tr>');
+            if(isGMManager){
+                jQuery("#goods_tbody").append('<tr class="TBody Level2 Action" style="display:none;" data-level="2" ><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+texture.texture+'</td><td>'+CHANGE_FIELDS+'</td></tr>');
+            }
+            else{
+                jQuery("#goods_tbody").append('<tr class="TBody Level2 Action" style="display:none;" data-level="2" ><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+texture.texture+'</td></tr>');
+            }
             jQuery.each(texture.manufacturers,function(index1,manufacturer){
-                jQuery("#goods_tbody").append('<tr class="TBody Level3 Action" style="display:none;" data-level="3"><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">'+manufacturer.manufacturer+'</td><td>'+CHANGE_FIELDS+'</td></tr>');
+                if(isGMManager) {
+                    jQuery("#goods_tbody").append('<tr class="TBody Level3 Action" style="display:none;" data-level="3"><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">' + manufacturer.manufacturer + '</td><td>' + CHANGE_FIELDS + '</td></tr>');
+                }
+                else{
+                    jQuery("#goods_tbody").append('<tr class="TBody Level3 Action" style="display:none;" data-level="3"><td><i class="fa fa-caret-down" aria-hidden="true"></i></td><td colspan="6">' + manufacturer.manufacturer + '</td></tr>');
+                }
                 jQuery.each(manufacturer.goods,function(index2,goods){
                     jQuery("#goods_tbody").append('<tr class="TBody Level4 goods"  data-level="4" data-good_id ='+goods.id+' style="display:none;"></tr>');
-                    jQuery("#goods_tbody > tr:last").append('<td>#</td><td>'+goods.id+'</td><td>'+goods.name+'</td><td>'+goods.color+'</td><td>'+goods.price+'</td><td>'+goods.operation+'</td><td>'+goods.final_price+'</td><td>'+CHANGE_FIELDS+'</td>')
-
+                    if(isGMManager){
+                        jQuery("#goods_tbody > tr:last").append('<td>#</td><td>'+goods.id+'</td><td>'+goods.name+'</td><td>'+goods.color+'</td><td class="old_price">'+goods.price+'</td><td class="operation">'+goods.operation+'</td><td class="dealer_price">'+goods.final_price+'</td><td>'+CHANGE_FIELDS+'</td>');
+                    }
+                    else{
+                        jQuery("#goods_tbody > tr:last").append('<td>#</td><td>'+goods.id+'</td><td>'+goods.name+'</td><td>'+goods.color+'</td><td>'+goods.price+'</td><td>'+goods.final_price+'</td>');
+                    }
                 });
             });
         });
@@ -222,8 +324,17 @@ $goodsPrices = json_encode($pricesModel->getGoodsPriceForDealer(2));
 
     function addComponentsToTable(goods) {
         jQuery.each(goods,function (index,elem) {
+            var color = !empty(elem.color) ? elem.color : '-';
             jQuery("#goods_tbody").append('<tr class="TBody Level2 goods" data-level="2" data-good_id ='+elem.id+' style="display:none;"></tr>');
-            jQuery("#goods_tbody > tr:last").append('<td></td><td>'+elem.id+'</td><td>'+elem.name+'</td><td>'+elem.color+'</td><td>'+elem.price+'</td><td>'+elem.operation+'</td><td>'+elem.final_price+'</td><td>'+CHANGE_FIELDS+'</td>')
+            if(isGMManager) {
+                jQuery("#goods_tbody > tr:last").append('<td></td><td>' + elem.id + '</td><td>' + elem.name + '</td><td>' + color + '</td><td class="old_price">' + elem.price + '</td><td class="operation">' + elem.operation + '</td><td class="dealer_price">' + parseFloat(elem.final_price).toFixed(2) + '</td><td>' + CHANGE_FIELDS + '</td>')
+            }
+            else{
+                if(empty(elem.color)){
+                    elem.color = '-';
+                }
+                jQuery("#goods_tbody > tr:last").append('<td></td><td>' + elem.id + '</td><td>' + elem.name + '</td><td>' + elem.color + '</td><td>' + elem.price + '</td><td>' + parseFloat(elem.final_price).toFixed(2) + '</td>');
+            }
         });
 
     }

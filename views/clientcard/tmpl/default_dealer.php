@@ -83,11 +83,7 @@ JHtml::_('formbehavior.chosen', 'select');
             <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
         </td>
         <td class = "td-right">
-        <select class="SelectPrice" autocomplete="off">
-            <option disabled selected>Прайс:</option>
-            <option value="/index.php?option=com_gm_ceiling&view=price&type=goods&subtype=dealer&dealer_id=<?= $this->item->dealer_id?>">Компонентов</option>
-            <option value="/index.php?option=com_gm_ceiling&view=price&type=goods&subtype=dealer&dealer_id=<?=$this->item->dealer_id?>">Полотен</option>
-        </select>
+            <a class="btn btn-primary" style="width: 100%;" href="/index.php?option=com_gm_ceiling&view=price&type=goods&subtype=dealer&dealer_id=<?= $this->item->dealer_id?>">Прайс</a>
         </td>
     </tr>
     <tr>
@@ -473,10 +469,6 @@ JHtml::_('formbehavior.chosen', 'select');
             jQuery("#modal_window_city").hide();
         }
     });
-    function ChangeSelectPrice() {
-        location.href = this.value;
-        jQuery(".SelectPrice option:first-child").prop("selected", true);
-    }
 
     function add_history(id_client, comment)
     {
@@ -703,7 +695,6 @@ JHtml::_('formbehavior.chosen', 'select');
             });
         });
 
-        jQuery(".SelectPrice").change(ChangeSelectPrice);
 
         jQuery("#new_client").click(function(){
             jQuery("#close").show();

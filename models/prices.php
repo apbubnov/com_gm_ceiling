@@ -317,9 +317,9 @@ class Gm_ceilingModelPrices extends JModelList
 				END as `final_price`
 			');
 			$query->from('`#__goods_canvases` as `vc`');
-			$query->leftJoin('`#__gm_ceiling_goods_dealer_price` as `gdp`
-				on `vc`.`id` = `gdp`.`goods_id`
-			');
+            $query->leftJoin("`#__gm_ceiling_goods_dealer_price` as `gdp`
+				on `vc`.`id` = `gdp`.`goods_id` and `gdp`.`dealer_id` = $dealer_id"
+            );
 			$query->innerJoin('`#__gm_stock_goods_categories` as `gc`
 				on `vc`.`category_id` = `gc`.`id`
 			');
@@ -387,9 +387,9 @@ class Gm_ceilingModelPrices extends JModelList
 				END as `final_price`
 			');
 			$query->from('`#__goods_components` as `vc`');
-			$query->leftJoin('`#__gm_ceiling_goods_dealer_price` as `gdp`
-				on `vc`.`id` = `gdp`.`goods_id`
-			');
+            $query->leftJoin("`#__gm_ceiling_goods_dealer_price` as `gdp`
+				on `vc`.`id` = `gdp`.`goods_id` and `gdp`.`dealer_id` = $dealer_id
+			");
 			$query->innerJoin('`#__gm_stock_goods_categories` as `gc`
 				on `vc`.`category_id` = `gc`.`id`
 			');
@@ -436,14 +436,12 @@ class Gm_ceilingModelPrices extends JModelList
             	throw new Exception("Empty dealer_id", 1);	
             }
 
-			foreach ($dealer_prices as $value) {
-				if ( empty((float)$value['goods_id']) || empty((float)$value['operation_id']) || empty((float)$value['value'])) {
-					continue;
-				}
-
-				$goods_ids .= $value['goods_id'].',';
-				$values[] = $value['goods_id'].','. $value['operation_id'] .','. $value['value'].','. $dealer_id;
-			}
+            foreach ($dealer_prices as $value) {
+                $goods_ids .= $value['goods_id'].',';
+                if (!empty($value['goods_id']) || !empty($value['operation_id']) || !empty($value['value'])) {
+                    $values[] = $value['goods_id'].','. $value['operation_id'] .','. $value['value'].','. $dealer_id;
+                }
+            }
 
 			if (empty($goods_ids)) {
 				return false;

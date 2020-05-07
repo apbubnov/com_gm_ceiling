@@ -3873,9 +3873,10 @@ class Gm_ceilingHelpersGm_ceiling
             if(empty($service) && !empty($project->calcs_mounting_sum)){
                 $service = "service";
             }
+            $newService = false;
             foreach ($calculations as $calc) {
                 if($calc->need_mount == 2){
-                    $service = true;
+                    $newService = true;
                     break;
                 }
             }
@@ -3885,7 +3886,7 @@ class Gm_ceilingHelpersGm_ceiling
             });
             /**/
             foreach ($calculations as $calc) {
-                if ($service ) {
+                if ($newService ) {
                     $calc->dealer_mount = $model_calcform->getMountingServicePricesInCalculation($calc->id, $dealerId);
                     $calc->gm_mount = $model_calcform->getJobsPricesInCalculation($calc->id, 1);
                 }

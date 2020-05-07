@@ -293,7 +293,6 @@ foreach ($brigadesData as $value){
 			jQuery("#prev-button-container").css({"left":"0px"});
 			jQuery("#button-next").css({"width":"25px"});
 			jQuery("#next-button-container").css({"right":"0px"});
-			jQuery("#legenda").append(legenda);
 		}
 
 		jQuery.each(brigades,function (index,elem) {

@@ -286,6 +286,11 @@ foreach($all_builders as $builder){
         </div>
     </form>
 </div>
+<div class="row center">
+    <div class="col-md-12">
+        <button class="btn btn-primary" id="duplicate">Дублировать</button>
+    </div>
+</div>
 <div class="row">
     <p class="caption-tar">Дублировать отдельные помещения</p>
     <form>

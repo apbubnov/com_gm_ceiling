@@ -110,8 +110,10 @@ $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
 /*____________________end_______________________  */
-
-$data = quotemeta(json_encode($calculationformModel->getFields(1), JSON_HEX_QUOT));
+$fields = $calculationformModel->getFields(1);
+$goods_jobs_map = json_encode($fields['goods_jobs_map']);
+unset($fields['goods_jobs_map']);
+$data = quotemeta(json_encode($fields, JSON_HEX_QUOT));
 $componentsInCategories = quotemeta(json_encode($calculationformModel->getcomponentsInCategories(), JSON_HEX_QUOT));
 
 
@@ -121,7 +123,7 @@ if (!empty($calculation_id)) {
     $calculation = $calculation_model->new_getData($calculation_id);
     $dealerId = $calculation->dealer_id;
     $dealer = JFactory::getUser($dealerId);
-    $stretchCount = ($dealer->type == 7) ? $calculation->n4 : $calculation->n5;
+    $stretchCount = ($dealer->dealer_type == 7) ? $calculation->n4 : $calculation->n5;
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
@@ -710,9 +712,10 @@ if (!empty($calculation_id)) {
         texturesData = '<?php echo $texturesData?>',
         precalculation = '<?php echo $precalculation; ?>',
         gmManager = '<?= $gmManager?>',
-        seam = '<?php echo $seam; ?>';
+        seam = '<?php echo $seam; ?>',
+        goodsJobsMap = JSON.parse('<?=$goods_jobs_map?>');
 
-
+    console.log('g-j MAP', goodsJobsMap);
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
         {
@@ -901,13 +904,13 @@ if (!empty($calculation_id)) {
             DEFAULT_MAINGROUPS.shift();
         }
         data = data.concat(DEFAULT_MAINGROUPS);
-        console.log("data", data);
-        console.log('componentsInCategories', componentsInCategories);
+      /*  console.log("data", data);
+        console.log('componentsInCategories', componentsInCategories);*/
 
         document.body.onload = function () {
             jQuery('.PRELOADER_GM').hide();
         };
-        console.log(data);
+        /*console.log(data);*/
         createBlocks(data);
 
 
@@ -955,8 +958,16 @@ if (!empty($calculation_id)) {
 
         jQuery('body').on('input','.quantity_input',function () {
             jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
-            jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))|([^\.\d])|(^\D)/gi, '$1'));
+            var value = jQuery(this).val(),
+                newValue = value.replace(/((\d+)(\.\d{1,2})?)(\-(\d+)(\.\d{1,2})?)*/g,'$1');
+            console.log(newValue);
+            //jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))/gi, '$1'));
+        })
+        jQuery('body').on('blur','.quantity_input',function () {
+            var value = eval(jQuery(this).val());
+            jQuery(this).val(value);
         });
+
         jQuery('body').on('click', '.delete_goods', function () {
             var parent = jQuery(this).closest('.row-fields'),
                 prevRow = parent.prev(),
@@ -1067,9 +1078,9 @@ if (!empty($calculation_id)) {
                 cancel_offcuts = jQuery("#fieldis_cancel_offcut").is(':checked') ? 1 : 0;
 
             console.log("collected_data",collected_data);
-            console.log("need_mount",need_mount);
+            /*console.log("need_mount",need_mount);
             console.log("cancel_metiz",cancel_metiz);
-            console.log("cancel_offcuts",cancel_offcuts);
+            console.log("cancel_offcuts",cancel_offcuts);*/
             //localStorage.setItem('dataToSave', dataToSave);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
@@ -1099,7 +1110,7 @@ if (!empty($calculation_id)) {
                             sum += data.all_goods[c].price_sum - 0;
                         }
                     }
-                    console.log("SUM",sum+data.extra_components_sum);
+                    //console.log("SUM",sum+data.extra_components_sum);
                     jQuery("#under_calculate").show();
                     jQuery("#final_price").text( data.final_sum.toFixed(0) );
                     calculate_button.removeClass("loading");
@@ -1123,7 +1134,7 @@ if (!empty($calculation_id)) {
         });
 
         jQuery('body').on('click','#save_new_sum',function(){
-            console.log(calculation.id,jQuery("#new_sum").val());
+            // throw new Exception(print_r($goods_jobs_map,true));console.log(calculation.id,jQuery("#new_sum").val());
             jQuery.ajax({
                 type: 'POST',
                 url: '/index.php?option=com_gm_ceiling&task=calculation.updateSum',
@@ -1219,8 +1230,8 @@ if (!empty($calculation_id)) {
             document.getElementById('walls').value = calculation.original_sketch;
         }
         document.getElementById('texturesData').value = texturesData;
-        console.log(jQuery("#texturesData").val());
-        console.log("W",jQuery("#width").val());
+/*        console.log(jQuery("#texturesData").val());
+        console.log("W",jQuery("#width").val());*/
         document.getElementById('form_url').submit();
 
     }
@@ -1334,10 +1345,11 @@ if (!empty($calculation_id)) {
                 }
                 if (elem.input_type == 1) {
                     var checkBox = createCheckBox(elem);
-                    console.log("el",elem);
-                    console.log(!empty(elem.parent));
+                  /*  console.log("el",elem);
+                    console.log(!empty(elem.parent));*/
                     if(!empty(elem.parent)){
                         var checkboxDiv = jQuery(document.createElement('div'));
+                        checkBox.input.attr('checked',true);
                         checkboxDiv.append(checkBox.input);
                         checkboxDiv .append(checkBox.label);
                         divRow.append(checkboxDiv);
@@ -1568,7 +1580,7 @@ if (!empty($calculation_id)) {
             factory_works = calculation.jobs.filter(function (job) {
                 return job.is_factory_work == 1 && job.guild_only == 0;
             });
-        console.log('factory_works',factory_works);
+        //console.log('factory_works',factory_works);
         if(factory_works.length){
             for(var i = 0;i<factory_works.length;i++){
                 var tr = jQuery(document.createElement('tr'));
@@ -1598,7 +1610,7 @@ if (!empty($calculation_id)) {
         }
         var json_savedData = '<?php echo $calculation->fields_data;?>';
         var savedData = !empty(json_savedData) ? JSON.parse(json_savedData) : '';
-        console.log('retrievedObject: ', savedData);
+        //console.log('retrievedObject: ', savedData);
         if (!empty(savedData)) {
             jQuery.each(savedData, function (index, elem) {
                 jQuery('#params_block').find('.btn_calc[data-maingroup_id="' + elem.maingroup_id + '"]').trigger('click');
@@ -1695,95 +1707,110 @@ if (!empty($calculation_id)) {
 
     function collectData() {
         var jobs = [],
-            components = [];
+            components = [],
+            stock_goods = [];
         var fieldsDiv = jQuery('.row-fields');
 
         jQuery.each(fieldsDiv, function (index, div) {
-            console.log(jQuery(div).data('field_id'));
-            //if(jQuery(div).data('field_id') != 'dopgoods'){
-            var currentJobs = jQuery(div).data('jobs'),
-                countDiv, input, goodSelect, radio,checkbox;
-            if (empty(currentJobs)) {
-                currentJobs = [];
-            }
-            countDiv = jQuery(div).find('.countDiv');
-            input = jQuery(countDiv).children();
-            if (input.prop('type') == "checkbox") {
-                if (input.is(':checked')) {
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: 1});
+            if(jQuery(div).data('field_id') != 'dopgoods'){
+                var currentJobs = jQuery(div).data('jobs'),
+                    countDiv, input, goodSelect, radio,checkbox;
+                if (empty(currentJobs)) {
+                    currentJobs = [];
+                }
+                countDiv = jQuery(div).find('.countDiv');
+                input = jQuery(countDiv).children();
+                if (input.prop('type') == "checkbox") {
+                    if (input.is(':checked')) {
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: 1});
+                        }
                     }
                 }
-            }
-            if (input.prop('type') == "text") {
-                //поиск связанных radio
-                var id = countDiv.parent().data('id'),
-                    radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
-                    radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
-                if (!empty(radio.val())) {
-                    if (!empty(input.val())) {
-                        if (currentJobs.length == 0) {
-                            currentJobs = JSON.parse(radio.val());
-                        }
-                        else {
-                            currentJobs = currentJobs.concat(JSON.parse(radio.val()));
-                        }
-                        if (radioGoodSelect.length != 0) {
-                            var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
-                            if (!empty(childGoods)) {
-                                if (childGoods.length) {
-                                    for (var i = 0; i < childGoods.length; i++) {
-                                        components.push({id: childGoods[i], count: input.val()});
+                if (input.prop('type') == "text") {
+                    //поиск связанных radio
+                    var id = countDiv.parent().data('id'),
+                        radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
+                        radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                    if (!empty(radio.val())) {
+                        if (!empty(input.val())) {
+                            if (currentJobs.length == 0) {
+                                currentJobs = JSON.parse(radio.val());
+                            }
+                            else {
+                                currentJobs = currentJobs.concat(JSON.parse(radio.val()));
+                            }
+                            if (radioGoodSelect.length != 0) {
+                                var childGoods = radioGoodSelect.children("option:selected").data('child_goods');
+                                if (!empty(childGoods)) {
+                                    if (childGoods.length) {
+                                        for (var i = 0; i < childGoods.length; i++) {
+                                            components.push({id: childGoods[i], count: input.val()});
+                                        }
                                     }
                                 }
-                            }
-                            components.push({id: radioGoodSelect.val(), count: input.val()});
-                        }
-                    }
-                }
-                //поиск связанных селектов
-                goodSelect = countDiv.parent().find('.selectDiv').children();
-                //если есть селект и введеное количество не пустое добавляем компоненты
-                if (goodSelect.length != 0 && !empty(input.val())) {
-                    var childGoods = goodSelect.children("option:selected").data('child_goods');
-                    if (!empty(childGoods)) {
-                        if (childGoods.length) {
-                            for (var i = 0; i < childGoods.length; i++) {
-                                components.push({id: childGoods[i], count: input.val()});
+                                components.push({id: radioGoodSelect.val(), count: input.val()});
                             }
                         }
                     }
-                    components.push({id: goodSelect.val(), count: input.val()});
-                }
+                    //поиск связанных селектов
+                    goodSelect = countDiv.parent().find('.selectDiv').children();
+                    //если есть селект и введеное количество не пустое добавляем компоненты
+                    if (goodSelect.length != 0 && !empty(input.val())) {
+                        var childGoods = goodSelect.children("option:selected").data('child_goods');
+                        if (!empty(childGoods)) {
+                            if (childGoods.length) {
+                                for (var i = 0; i < childGoods.length; i++) {
+                                    components.push({id: childGoods[i], count: input.val()});
+                                }
+                            }
+                        }
+                        components.push({id: goodSelect.val(), count: input.val()});
+                    }
 
-                //поиск связанных checkbox
-                var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
-                if(checkbox.length > 0){
-                    var jbs = checkbox.closest('.row-fields').data('jobs');
-                    currentJobs = currentJobs.concat(jbs);
-                }
+                    //поиск связанных checkbox
+                    var checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
+                    if(checkbox.length > 0){
+                        var jbs = checkbox.closest('.row-fields').data('jobs');
+                        currentJobs = currentJobs.concat(jbs);
+                    }
 
-                //добавляем работы если количество не пустое
-                if (!empty(input.val())) {
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: input.val()});
+                    //добавляем работы если количество не пустое
+                    if (!empty(input.val())) {
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: input.val()});
+                        }
+                    }
+                }
+                if (input.prop('type') == "radio" && empty(input.data('parent'))) {
+                    if (input.is(':checked')) {
+                        currentJobs = JSON.parse(input.val());
+                        for (var i = currentJobs.length; i--;) {
+                            jobs.push({id: currentJobs[i], count: 1});
+                        }
                     }
                 }
             }
-            if (input.prop('type') == "radio" && empty(input.data('parent'))) {
-                if (input.is(':checked')) {
-                    currentJobs = JSON.parse(input.val());
-                    for (var i = currentJobs.length; i--;) {
-                        jobs.push({id: currentJobs[i], count: 1});
+            else{
+                countDiv = jQuery(div).find('.countDiv');
+                input = jQuery(countDiv).children();
+                if (input.prop('type') == "text") {
+                    //поиск связанных селектов
+                    goodSelect = countDiv.parent().find('.selectDiv').children();
+                    //если есть селект и введеное количество не пустое добавляем компоненты
+                    if (goodSelect.length != 0 && !empty(input.val())) {
+                        var childGoods = goodSelect.children("option:selected").data('child_goods');
+                        if (!empty(childGoods)) {
+                            if (childGoods.length) {
+                                for (var i = 0; i < childGoods.length; i++) {
+                                    components.push({id: childGoods[i], count: input.val()});
+                                }
+                            }
+                        }
+                        stock_goods.push({id: goodSelect.val(), count: input.val()});
                     }
                 }
             }
-            /*  }
-              else{
-
-              }*/
-
-
         });
 
 
@@ -1811,8 +1838,21 @@ if (!empty($calculation_id)) {
                 additional_components.push({title: elem.value, price: cost});
             }
         });
-        jobs = sumSameValues(jobs);
+
         components = sumSameValues(components);
+        jQuery.each(components,function (index,component) {
+            if(goodsJobsMap[component.id]){
+               var goodsJobsMapArr = goodsJobsMap[component.id];
+                for(let i = 0;i<goodsJobsMapArr.length;i++){
+                    jobs.push({id:goodsJobsMapArr[i].job_id,count:component.count*goodsJobsMapArr[i].count});
+                }
+            }
+        });
+        console.log(stock_goods);
+        jobs = sumSameValues(jobs);
+        components = components.concat(stock_goods);
+        components = sumSameValues(components);
+
         return {
             jobs: jobs,
             goods: components,
@@ -1995,7 +2035,7 @@ if (!empty($calculation_id)) {
                 dataToSave.splice(i, 1);
             }
         }
-        console.log("dataToSave",dataToSave);
+        //console.log("dataToSave",dataToSave);
         return JSON.stringify(dataToSave);
     }
 

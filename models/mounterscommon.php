@@ -60,6 +60,9 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 GROUP BY cm.mounter_id,builder.id;
             */
             $db = JFactory::getDbo();
+            $query = "SET SQL_BIG_SELECTS=1";
+            $db->setQuery($query);
+            $db->execute();
             $query = $db->getQuery(true);
             $takenSubquery = $db->getQuery(true);
             $closedSubquery = $db->getQuery(true);

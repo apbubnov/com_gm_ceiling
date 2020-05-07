@@ -129,7 +129,7 @@
 </style>
 <?= parent::getButtonBack(); ?>
 
-<form id="form-client" action="eindex.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
+<form id="form-client" action="index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post"  enctype="multipart/form-data">
     <div>
         <input name="project_id" id = "project_id"  value="<?php echo $project_id; ?>" type="hidden">
         <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
