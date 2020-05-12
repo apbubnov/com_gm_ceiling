@@ -958,14 +958,33 @@ if (!empty($calculation_id)) {
 
         jQuery('body').on('input','.quantity_input',function () {
             jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
-            var value = jQuery(this).val(),
-                newValue = value.replace(/((\d+)(\.\d{1,2})?)(\-(\d+)(\.\d{1,2})?)*/g,'$1');
-            console.log(newValue);
+            /*var value = jQuery(this).val(),
+                newValue = value.replace(/^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g,'$1'),
+                regExp = /^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g;;
+            console.log(regExp.test(value));
+            console.log(newValue);*/
             //jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))/gi, '$1'));
         })
         jQuery('body').on('blur','.quantity_input',function () {
-            var value = eval(jQuery(this).val());
-            jQuery(this).val(value);
+            var value = jQuery(this).val(),
+                regExp = /^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g,
+                newValue;
+            if(regExp.test(value)){
+                jQuery(this).css('border-color','');
+                newValue = eval(value).toFixed(2);
+                jQuery(this).val(newValue);
+            }
+            else{
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Проверьте введенные данные! Допустимый формат для ввода X.XX - X.XX - X.XX "
+                });
+                jQuery(this).css('border-color','red');
+            }
         });
 
         jQuery('body').on('click', '.delete_goods', function () {

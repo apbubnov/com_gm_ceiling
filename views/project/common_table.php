@@ -100,14 +100,18 @@ foreach ($calculations as $calculation) {
         $total_dealer_sum = 0;
         if($use_service){
             $all_jobs = $calculationformModel->getMountingServicePricesInCalculation($calculation->id, $this->item->dealer_id);
-            foreach ($all_jobs as $job){
-                $total_dealer_sum += $job->price_sum;
-            }
-            $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
-            foreach ($all_gm_jobs as $job){
-                $total_gm_sum += $job->price_sum;
-            }
         }
+        else{
+            $all_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, $this->item->dealer_id);
+        }
+        foreach ($all_jobs as $job){
+            $total_dealer_sum += $job->price_sum;
+        }
+        $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
+        foreach ($all_gm_jobs as $job){
+            $total_gm_sum += $job->price_sum;
+        }
+
         /*if (!empty($service_mount)) {
             $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: $total_dealer_sum;
         }

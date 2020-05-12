@@ -823,7 +823,7 @@ class Gm_ceilingModelUsers extends JModelList
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-                ->select("u.id,u.name,DATE_FORMAT(DATE_ADD(u.lastVisitDate, INTERVAL 3 HOUR),'%d.%m.%Y %H:%i') AS visit_date,u.username,c.name AS city1,di.city,GROUP_CONCAT(g.title) AS groups")
+                ->select("u.id,u.name,u.associated_client,DATE_FORMAT(DATE_ADD(u.lastVisitDate, INTERVAL 3 HOUR),'%d.%m.%Y %H:%i') AS visit_date,u.username,c.name AS city1,di.city,GROUP_CONCAT(g.title) AS groups")
                 ->from('`rgzbn_users` AS u')
                 ->leftJoin('`rgzbn_gm_ceiling_dealer_info` AS di ON u.id = di.dealer_id')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS map ON u.id = map.user_id AND group_id NOT IN (1,2,3,4,5,6,7,8,9,10,25)')
@@ -831,6 +831,7 @@ class Gm_ceilingModelUsers extends JModelList
                 ->leftJoin('`rgzbn_user_info` AS ui ON u.id = ui.user_id')
                 ->leftJoin('`rgzbn_city` AS c ON c.id = ui.city_id')
                 ->where("u.lastVisitDate BETWEEN '$date_from 00:00:00' AND '$date_to 23:59:59'")
+                ->order('u.lastVisitDate DESC')
                 ->group('u.id');
 	        $db->setQuery($query);
 	        $items = $db->loadObjectList();

@@ -33,7 +33,7 @@ $visitors = $usersModel->getVisitors($date_from,$date_to);
             </thead>
             <tbody id="tbody_visitors">
                 <?php foreach ($visitors as $visitor) { ?>
-                    <tr>
+                    <tr class="href_tr" data-id="<?=$visitor->associated_client?>">
                         <td><?=$visitor->name?></td>
                         <td><?=$visitor->username?></td>
                         <td><?=(!empty($visitor->city)?$visitor->city:(!empty($visitor->city1)? $visitor->city1 : '-'))?></td>
@@ -65,7 +65,7 @@ $visitors = $usersModel->getVisitors($date_from,$date_to);
                         jQuery('#tbody_visitors').empty();
                         jQuery.each(data,function(index,elem){
                             var city = !empty(elem.city) ? elem.city : (!empty(elem.city1) ? elem.city1 : '');
-                            jQuery('#tbody_visitors').append('<tr></tr>');
+                            jQuery('#tbody_visitors').append('<tr class="href_tr" data-id="'+elem.associated_client+'"></tr>');
                             jQuery('#tbody_visitors > tr:last').append('<td>'+elem.name+'</td>' +
                                                                         '<td>'+elem.username+'</td>' +
                                                                         '<td>'+city+'</td>'+
@@ -87,13 +87,30 @@ $visitors = $usersModel->getVisitors($date_from,$date_to);
                 });
             }
             else{
-                var n = noty({
+                noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'topCenter',
                     maxVisible: 5,
                     type: "error",
                     text: 'Начальная дата не может быть больше конечной!'
+                });
+            }
+        });
+
+        jQuery('body').on('click','.href_tr',function () {
+            var id = jQuery(this).data('id');
+            if(!empty(id)){
+                location.href='/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='+id;
+            }
+            else{
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'topCenter',
+                    maxVisible: 5,
+                    type: "error",
+                    text: 'Данный пользователь не является дилером!'
                 });
             }
         });
