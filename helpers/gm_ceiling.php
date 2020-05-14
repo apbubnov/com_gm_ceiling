@@ -3915,8 +3915,18 @@ class Gm_ceilingHelpersGm_ceiling
                 /**/
             }
             foreach ($calculations as $calc) {
+                $extra_total = 0;
+                if(!empty($calc->extra_mounting)){
+                    $extra_mounting = json_decode($calc->extra_mounting);
+                    foreach($extra_mounting as $extra_mount){
+                        $extra_total += $extra_mount->price;
+                    }
+                }
                 if(empty($calc->n3)){
                     $stage_sum = [];$gm_stage_sum = [];
+                    if(!empty($extra_total)&&!$full){
+                        $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_total];
+                    }
                     $total_dealer_sum = 0;$total_gm_sum =0;
                     foreach ($calc->dealer_mount as $job){
                         $stage_sum[$job->mount_type_id] += $job->price_sum;
@@ -3933,8 +3943,8 @@ class Gm_ceilingHelpersGm_ceiling
                         $calc->gm_mount_sum = $gm_stage_sum;
                     }
                     else{
-                        $calc->mount_sum[1] = $total_dealer_sum;
-                        $calc->gm_mount_sum[1] = $total_gm_sum;
+                        $calc->mount_sum[1] = $total_dealer_sum+$extra_total;
+                        $calc->gm_mount_sum[1] = $total_gm_sum+$extra_total;
                     }
                 }
                 else{

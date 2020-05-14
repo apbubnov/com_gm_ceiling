@@ -1734,71 +1734,11 @@ SELECT  `gf`.`goods_id`,
             ROUND(CEIL(SUM(`gf`.`goods_count_all`) / `g`.`multiplicity`) * `g`.`multiplicity` * `g`.`dealer_price` * 100 / (100 - $components_margin), 2)
         END AS `price_sum_with_margin`
   FROM  (
-    (
-      SELECT  `cjm`.`job_id`,
-              `cjm`.`count` AS `jobs_count`,
-              `gfjm`.`child_goods_id` AS `goods_id`,
-              `gfjm`.`count` AS `goods_count_per_unit`,
-              `gfjm`.`count` * `cjm`.`count` AS `goods_count_all`
-        FROM  (
-          SELECT  DISTINCT
-                  `gj`.*,
-                  `gjd`.`dealer_id` AS `temp_dealer_id`
-            FROM  `rgzbn_gm_ceiling_goods_from_jobs_map` AS `gj`
-                  LEFT  JOIN (
-                    SELECT  *
-                      FROM  `rgzbn_gm_ceiling_goods_from_jobs_map`
-                      WHERE `dealer_id` = $dealer_id
-                  ) AS `gjd`
-                          ON `gj`.`parent_job_id` = `gjd`.`parent_job_id`    
-            WHERE (`gj`.`dealer_id` = 1 AND `gjd`.`dealer_id` IS NULL) OR
-                  (`gj`.`dealer_id` = $dealer_id AND `gjd`.`dealer_id` = $dealer_id)
-        ) AS `gfjm`
-              INNER JOIN (
-                (
-                  SELECT  `job_id`,
-                          `count`,
-                          `calc_id`
-                    FROM  `rgzbn_gm_ceiling_calcs_jobs_map`
-                    WHERE `calc_id` = $calc_id
-                )
-                UNION ALL
-                (
-                  SELECT  `child_job_id`,
-                          `cg`.`count` * `jb`.`count` AS `count`,
-                          `cg`.`calc_id`
-                    FROM  `rgzbn_gm_ceiling_calcs_goods_map` AS `cg`
-                          INNER JOIN (
-                            SELECT  DISTINCT
-                                    `jg`.*,
-                                    `jgd`.`dealer_id` AS `temp_dealer_id`
-                              FROM  `rgzbn_gm_ceiling_jobs_from_goods_map` AS `jg`
-                                    LEFT  JOIN  (
-                                      SELECT  *
-                                        FROM  `rgzbn_gm_ceiling_jobs_from_goods_map`
-                                        WHERE `dealer_id` = $dealer_id
-                              ) AS `jgd`
-                                    ON  `jg`.`parent_goods_id` = `jgd`.`parent_goods_id`    
-                              WHERE (`jg`.`dealer_id` = 1 AND `jgd`.`dealer_id` IS NULL) OR
-                                    (`jg`.`dealer_id` = $dealer_id AND `jgd`.`dealer_id` = $dealer_id)
-                              ) AS `jb`
-                                  ON `cg`.`goods_id` = `jb`.`parent_goods_id`
-                    WHERE `cg`.`calc_id` = $calc_id
-                )
-              ) AS `cjm`
-                      ON `gfjm`.`parent_job_id` = `cjm`.`job_id`
-      WHERE   `cjm`.`calc_id` = $calc_id
-    )
-    UNION ALL
-    (
-      SELECT  NULL,
-              NULL,
-              `cgm`.`goods_id`,
-              NULL,
-              `cgm`.`count`
+      SELECT  `cgm`.`goods_id`,
+              `cgm`.`count` AS `goods_count_all`
         FROM  `rgzbn_gm_ceiling_calcs_goods_map` AS `cgm`
         WHERE `cgm`.`calc_id` = $calc_id
-    )
+    
   ) AS `gf`
         INNER JOIN  (
           SELECT  `g`.`id`,
@@ -1985,6 +1925,37 @@ ORDER BY `goods_id`
             //throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getGoodsFromJobs($jobs){
+        try{
+            $jobs_ids = implode(',',array_keys($jobs));
+            $goods = [];
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('gfj.parent_job_id AS job_id,gfj.child_goods_id AS goods_id,gfj.count')
+                ->from('`rgzbn_gm_ceiling_goods_from_jobs_map` AS gfj')
+                ->leftJoin('`rgzbn_gm_stock_goods` AS g ON g.id = gfj.child_goods_id')
+                ->where("parent_job_id in ($jobs_ids)");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            if(!empty($items)){
+                foreach ($items as $item){
+                    if(array_key_exists($item->goods_id,$goods)){
+                        $goods[$item->goods_id]->count += $jobs[$item->job_id]*$item->count;
+                    }
+                    else{
+                        $goods[$item->goods_id] = (object)["id"=>$item->goods_id,"count"=>$jobs[$item->job_id]*$item->count];
+                    }
+                }
+            }
+            return $goods;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

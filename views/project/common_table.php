@@ -875,15 +875,16 @@ $pdf_names = [];
                     $calculation->factory_jobs = $calculationformModel->getFactoryWorksPricesInCalculation($calculation->id);
                     $mounters = json_decode($calculation->mounting_sum);
                     $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
-                    $canvas = array_filter(
-                        $calculation->goods,
-                        function ($e) {
-                            return $e->category_id == 1;
+                    $canvas = null;
+                    foreach($calculation->goods as $goods){
+                        if($goods->category_id == 1){
+                            $canvas = $goods;
+                            break;
                         }
-                    );
+                    }
                     $detailed_canvas = '';
                     if (!empty($canvas)) {
-                        $filter = "id = " . $canvas[0]->goods_id;
+                        $filter = "id = " . $canvas->goods_id;
                         $detailed_canvas = $canvas_model->getFilteredItemsCanvas($filter);
                     }
                     $color = $detailed_canvas[0]->color;

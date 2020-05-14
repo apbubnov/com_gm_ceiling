@@ -339,15 +339,16 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                         </table>
                     <?php }
                     else{
-                        $canvas = array_filter(
-                            $calculation->goods,
-                            function ($e) {
-                                return $e->category_id == 1;
+                        $canvas = null;
+                        foreach($calculation->goods as $goods){
+                            if($goods->category_id == 1){
+                                $canvas = $goods;
+                                break;
                             }
-                        );
+                        }
                         $detailed_canvas = '';
                         if (!empty($canvas)) {
-                            $filter = "id = " . $canvas[0]->goods_id;
+                            $filter = "id = " . $canvas->goods_id;
                             $detailed_canvas = $canvas_model->getFilteredItemsCanvas($filter);
                         }
                         $color = $detailed_canvas[0]->color;

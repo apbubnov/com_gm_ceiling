@@ -697,7 +697,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $dealer_id = $jinput->get('dealer_id', 1, 'INT');
             $jobs = $jinput->get('jobs', null, 'ARRAY');
             $goods = $jinput->get('goods', null, 'ARRAY');
-            $stock_goods = $jinput->get('stock_goods', null, 'ARRAY');
+            //$stock_goods = $jinput->get('stock_goods', null, 'ARRAY');
             $extra_components = $jinput->get('extra_components', '', 'STRING');
             $extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
             $photo_print = $jinput->get('photo_print', '', 'STRING');
@@ -729,8 +729,29 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
-
 			$model_calculation->update_calculation($data);
+
+
+
+			if(!empty($jobs)){
+			    $assocJobs = array_column($jobs,'count','id');
+			    $goodsFromJobs = $model_calcform->getGoodsFromJobs($assocJobs);
+			    $existGoods = array_column($goods,'id');
+			    foreach($goodsFromJobs as $key=>$value){
+			        if(in_array($key,$existGoods)){
+			            foreach ($goods as $index=>$goods_item){
+			                if($goods_item->id == $key){
+			                    $goods_item->count += $value->count;
+			                    break;
+                            }
+                        }
+                    }
+			        else{
+			            array_push($goods,$value);
+                    }
+                }
+
+            }
 			$model_calcform->addGoodsInCalculation($calc_id, $goods, false); // Добавление компонентов
 
 			$all_jobs = [];
@@ -791,7 +812,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				throw new Exception('Empty calculation!');
 			}
 
-			$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
+			/*$dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
             if (empty($dealer_info)) {
                 $canvases_margin = 0;
                 $components_margin = 0;
@@ -800,8 +821,11 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                 $canvases_margin = $dealer_info->dealer_canvases_margin-0;
                 $components_margin = $dealer_info->dealer_components_margin-0;
                 $mounting_margin = $dealer_info->dealer_mounting_margin-0;
-            }
-
+            }*/
+            $margin = $model_calculation->getProjectMargin($calc_id);
+            $mounting_margin = $margin->dealer_mounting_margin - 0;
+            $canvases_margin = $margin->dealer_canvases_margin - 0;
+            $components_margin = $margin->dealer_components_margin - 0;
 			foreach ($all_goods as $value) {
 				if ($value->category_id != 1) { // если не полотно
 					$components_sum += $value->price_sum;

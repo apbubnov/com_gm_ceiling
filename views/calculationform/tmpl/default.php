@@ -127,14 +127,21 @@ if (!empty($calculation_id)) {
     if (empty($calculation)) {
         throw new Exception("Расчет не найден", 1);
     }
-    $canvas = array_filter(
+    $canvas = null;
+    foreach($calculation->goods as $goods){
+        if($goods->category_id == 1){
+            $canvas = $goods;
+            break;
+        }
+    }
+    /*$canvas = array_filter(
         $calculation->goods,
         function ($e) {
             return $e->category_id == 1;
         }
-    );
+    );*/
     if (!empty($canvas)) {
-        $filter = "id = ".$canvas[0]->id;
+        $filter = "id = ".$canvas->id;
         $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
         $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
         $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);
@@ -969,21 +976,26 @@ if (!empty($calculation_id)) {
             var value = jQuery(this).val(),
                 regExp = /^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g,
                 newValue;
-            if(regExp.test(value)){
-                jQuery(this).css('border-color','');
-                newValue = eval(value).toFixed(2);
-                jQuery(this).val(newValue);
+            if(!empty(value)){
+                if(regExp.test(value)){
+                    jQuery(this).css('border-color','');
+                    newValue = eval(value).toFixed(2);
+                    jQuery(this).val(newValue);
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Проверьте введенные данные! Допустимый формат для ввода X.XX - X.XX - X.XX "
+                    });
+                    jQuery(this).css('border-color','red');
+                }
             }
             else{
-                noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Проверьте введенные данные! Допустимый формат для ввода X.XX - X.XX - X.XX "
-                });
-                jQuery(this).css('border-color','red');
+                jQuery(this).css('border-color','');
             }
         });
 

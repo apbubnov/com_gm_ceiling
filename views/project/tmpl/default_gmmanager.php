@@ -254,14 +254,15 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
 
                             }
                             else{
-                                $canvas = array_filter(
-                                    $calculation->goods,
-                                    function ($e) {
-                                        return $e->category_id == 1;
+                                $canvas = null;
+                                foreach($calculation->goods as $goods){
+                                    if($goods->category_id == 1){
+                                        $canvas = $goods;
+                                        break;
                                     }
-                                );
+                                }
                                 if (!empty($canvas)) {
-                                    $filter = "id = ".$canvas[0]->id;
+                                    $filter = "id = ".$canvas->id;
                                     $detailed_canvas = $canvases_model->getFilteredItemsCanvas($filter);
                                     $filter = "texture_id = ".$detailed_canvas[0]->texture_id." and manufacturer_id = ".$detailed_canvas[0]->manufacturer_id." and color = ".$detailed_canvas[0]->color."  and visibility = 1";
                                     $selected_canvases = $canvases_model->getFilteredItemsCanvas($filter);

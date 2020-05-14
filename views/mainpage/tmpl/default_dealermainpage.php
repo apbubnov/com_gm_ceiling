@@ -213,6 +213,11 @@ $rest = -($total_sum) - $contributed;
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=api_phones', false); ?>"><i
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
+            <p>
+                <a class="btn btn-large btn-primary"
+                   href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock', false); ?>"><i
+                            class="fa fa-mobile" aria-hidden="true"></i> Склад</a>
+            </p>
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
