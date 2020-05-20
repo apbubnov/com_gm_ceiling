@@ -3873,11 +3873,13 @@ class Gm_ceilingHelpersGm_ceiling
             if(empty($service) && !empty($project->calcs_mounting_sum)){
                 $service = "service";
             }
-            $newService = false;
-            foreach ($calculations as $calc) {
-                if($calc->need_mount == 2){
-                    $newService = true;
-                    break;
+            $newService = !empty($project->calcs_mounting_sum)  ? true : false;
+            if(!$newService){
+                foreach ($calculations as $calc) {
+                    if($calc->need_mount == 2){
+                        $newService = true;
+                        break;
+                    }
                 }
             }
             /*old*/

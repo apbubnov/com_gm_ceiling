@@ -1201,6 +1201,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         {
 			$jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', '0', 'INT');
+            $stockId = $jinput->get('stock_id','1','INT');
             $ready_date = json_decode($jinput->get('ready_dates','','STRING'));
             $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             if(!empty($ready_date)){
@@ -1210,7 +1211,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             }
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
-			$data = $model->approvemanager($id,$ready_date_time,$quickly);
+			//$data = $model->approvemanager($id,$ready_date_time,$quickly);
 			$res = $model->getNewData($id);
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -1236,10 +1237,47 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if(!empty($mount_data)){
                     $projects_mounts_model->save($id,$mount_data);
                 }
-				Gm_ceilingHelpersGm_ceiling::notify($data, 1);
-				Gm_ceilingHelpersGm_ceiling::notify($data, 13);
+				//Gm_ceilingHelpersGm_ceiling::notify($data, 1);
+				//Gm_ceilingHelpersGm_ceiling::notify($data, 13);
 			}
-			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false));
+			/*списание полотна и гарпуна*/
+            $projectForStock = $model->getProjectForStock($id);
+            $canvasGoods = (object)[
+                'ids'=> '',
+                'goods'=> [],
+                'goods_count' => 0];
+            $goodsCount = 0;
+            $ids = [];
+            foreach ($projectForStock->goods as $goods){
+                if($goods->category_id == 1 || $goods->category_id == 10 ){
+                    $goods->count = $goods->final_count;
+                    array_push($canvasGoods->goods,$goods);
+                    $goodsCount++;
+                    array_push($ids,$goods->goods_id);
+                }
+            }
+            $canvasGoods->goods_count = $goodsCount;
+            $canvasGoods->ids = implode(',',$ids);
+            //throw new Exception(print_r($canvasGoods,true));
+            $projectForStock->goods = $canvasGoods;
+            $controllerStock = Gm_ceilingHelpersGm_ceiling::getController('stock');
+            $realisationResult = $controllerStock->makeRealisation($id,$projectForStock,$stockId,1);
+            if($realisationResult->type == 'error'){
+
+                $text = $realisationResult->text;
+                if(!empty($realisationResult->goods)){
+                    foreach ($realisationResult->goods as $goods){
+                        $text .= "\n $goods->name;";
+                    }
+                }
+                $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id='.$id, false),$text,'error');
+            }
+            else{
+                $this->setRedirect($realisationResult->href['MergeFiles']);
+                //throw new Exception(print_r($realisationResult,true));
+            }
+            /**/
+			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id='.$id, false),$text,'error');
 		}
 		catch(Exception $e)
         {

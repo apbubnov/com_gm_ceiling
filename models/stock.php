@@ -1105,7 +1105,7 @@ class Gm_ceilingModelStock extends JModelList
             $query
                 ->insert('`rgzbn_gm_stock_goods`')
                 ->columns('`name`,`category_id`,`unit_id`,`multiplicity`,`price`,`created_by`')
-                ->values("'$goodsName',$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->id);
+                ->values("'$goodsName',$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->dealer_id);
             $db->setQuery($query);
             $db->execute();
             $result = $db->insertId();
@@ -1448,6 +1448,24 @@ class Gm_ceilingModelStock extends JModelList
             }
         }
 
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function getGoodsByCategory($category){
+        try{
+            $user = JFactory::getUser();
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_stock_goods`')
+                ->where("category_id = $category and (created_by=$user->id OR created_by=$user->dealer_id or created_by=1)");
+            $db->setQuery($query);
+            $goods = $db->loadObjectList();
+            return $goods;
+        }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

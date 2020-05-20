@@ -1482,7 +1482,7 @@ class Gm_ceilingModelProject extends JModelItem
 				//throw new Exception(print_r($calc_goods,true));
 				foreach ($calc_goods as $goods_array){
 		            foreach($goods_array as $goods){
-		                if(array_key_exists($goods->goods_id)){
+		                if(array_key_exists($goods->goods_id,$all_goods)){
                             $all_goods[$goods->goods_id]->final_count += $goods->final_count;
                             $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
                             $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;

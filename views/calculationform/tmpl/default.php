@@ -109,13 +109,14 @@ $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+$stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
 /*____________________end_______________________  */
 $fields = $calculationformModel->getFields(1);
 $goods_jobs_map = json_encode($fields['goods_jobs_map']);
 unset($fields['goods_jobs_map']);
 $data = quotemeta(json_encode($fields, JSON_HEX_QUOT));
 $componentsInCategories = quotemeta(json_encode($calculationformModel->getcomponentsInCategories(), JSON_HEX_QUOT));
-
+$harpoon = $stockModel->getGoodsByCategory(10);
 
 $texturesData = json_encode($canvases_model->getCanvasesTextures());
 $calculation_id = $jinput->get('calc_id', 0, 'INT');
@@ -195,7 +196,66 @@ if (!empty($calculation_id)) {
     /* сгенерировать ошибку или создать калькуляцию? */
     throw new Exception("Пустой id калькуляции", 1);
 }
-
+$harpoon_option = '';
+foreach ($harpoon as $item){
+    $harpoon_option .= "<option value='$item->id'>$item->name</option>";
+}
+$ceiling_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
+                    <div class="col-sm-11 col-xs-11" style="padding-right: 5px;">
+                        <button type="button"  class="btn add_fields">
+                            <div class="col-xs-2 col-sm-2">
+                                <img src="/images/stretch.png " class="img_calcform"></div>
+                                <div class="col-xs-10 col-sm-10" style="text-align: left;">Натяжка полотна</div>
+                        </button>
+                    </div>
+                    <div class="col-sm-1 col-xs-1" style="padding-left: 0px;">
+                        <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px;">
+                            <div class="help_question center" style="padding-top:2px;">?</div>
+                            <span class="airhelp" style="display: none;">Количество работ по натяжке полотна</span>
+                        </div>
+                    </div>
+                    <div class="div-fields" style="display: none;">
+                        <div>
+                            <div class="row title" style="margin-left: 15px; color: rgb(65, 64, 153);">
+                                <label style="margin-left: 15px; margin-bottom: 2px; color: rgb(65, 64, 153);">Введите кол-во натяжки полотна</label>
+                            </div>
+                            <div class="col-md-12 col-xs-12 row-fields" data-id="stretch"  data-jobs=\'["26"]\'>
+                                <div class="countDiv col-md-12">
+                                    <input class="form-control quantity_input" value="'.$stretchCount.'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>';
+$n5_shrink = $calculation->n5*$calculation->shrink_percent;
+$harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
+                    <div class="col-sm-11 col-xs-11" style="padding-right: 5px;">
+                        <button type="button"  class="btn add_fields">
+                            <div class="col-xs-2 col-sm-2">
+                                <img src="/images/garpun.png " class="img_calcform"></div>
+                                <div class="col-xs-10 col-sm-10" style="text-align: left;">Тип гарпуна</div>
+                        </button>
+                    </div>
+                    <div class="col-sm-1 col-xs-1" style="padding-left: 0px;">
+                        <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 42px; width: 42px;">
+                            <div class="help_question center" style="padding-top:2px;">?</div>
+                            <span class="airhelp" style="display: none;">Выбор типа гарпуна, который будет использован на данном полотне</span>
+                        </div>
+                    </div>
+                    <div class="div-fields" style="display: none;">
+                        <div>
+                            <div class="row title" style="margin-left: 15px; color: rgb(65, 64, 153);">
+                                <label style="margin-left: 15px; margin-bottom: 2px; color: rgb(65, 64, 153);">Выберите тип гарпуна</label>
+                            </div>
+                            <div class="col-md-12 col-xs-12 row-fields" data-id="harpoon"  data-jobs=\'[]\'>
+                                <div class="countDiv col-md-2" style="display:none">
+                                    <input class="form-control quantity_input" value="'.$n5_shrink.'">
+                                </div>
+                                <div class="col-md-12 col-xs-12 selectDiv"><select class="form-control goods_select">'.$harpoon_option.'</select></div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>';
 ?>
 <style>
     .container {
@@ -489,19 +549,8 @@ if (!empty($calculation_id)) {
                                     </div>
                                 </div>
                             </div>
-                            <!--поле для учета работ по натяжке(т.к площадь полотна не подходит)-->
-                            <div  style="display: none;">
-                                <div>
-                                    <div class="row title">
-                                        <label>Натяжка</label>
-                                    </div>
-                                    <div class="col-md-12 col-xs-12 row-fields" data-id="stretch"  data-jobs='["26"]'>
-                                        <div class="countDiv col-md-12">
-                                            <input class="form-control quantity_input" value="<?=$stretchCount?>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+
                         </div>
                         <?php if($gmManager){?>
                             <div class="row" style="margin-bottom: 5px; margin-top: 5px;">
@@ -714,7 +763,7 @@ if (!empty($calculation_id)) {
 </form>
 
 <script type="text/javascript">
-    var calculation = JSON.parse('<?php echo json_encode($calculation);?>'),
+    var calculation = JSON.parse('<?php echo quotemeta(json_encode($calculation));?>'),
         dealerId = '<?php echo $dealerId;?>',
         texturesData = '<?php echo $texturesData?>',
         precalculation = '<?php echo $precalculation; ?>',
@@ -888,7 +937,9 @@ if (!empty($calculation_id)) {
                 }
             ]
         }
-    ];
+    ],
+    harpoon_field = `<?= $harpoon_html;?>`,
+    ceiling_field = `<?= $ceiling_html;?>`;
     var componentsInCategories;
     jQuery(document).ready(function () {
 
@@ -917,8 +968,11 @@ if (!empty($calculation_id)) {
         document.body.onload = function () {
             jQuery('.PRELOADER_GM').hide();
         };
-        /*console.log(data);*/
+        //console.log(data);
         createBlocks(data);
+        //console.log(jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container'));
+        jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container').prepend(ceiling_field);
+        jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container').prepend(harpoon_field);
 
 
         jQuery('.col-sm-6').on('mouseenter', '.help', function () {

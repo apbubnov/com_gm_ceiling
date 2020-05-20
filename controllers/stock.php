@@ -957,13 +957,30 @@ class Gm_ceilingControllerStock extends JControllerLegacy
         }
     }
 
-    function makeRealisation(){
+    function makeRealisation($projectId = null,$data = null,$stockId = null,$noneAjax = null){
         try{
+            $realiseArrays = [];
             $jinput = JFactory::getApplication()->input;
-            $projectId = $jinput->getInt('project_id');
-            $stockId = $jinput->getInt('stock');
+            if(empty($projectId)){
+                $projectId = $jinput->getInt('project_id');
+            }
+            if(empty($stockId)){
+                $stockId = $jinput->getInt('stock');
+            }
             $input_data = $jinput->get('goods','','STRING');
-            $goods = json_decode($input_data);
+            if(!empty($input_data)){
+                $goods = json_decode($input_data);
+            }
+            if(!empty($data)) {
+                $goods = $data->goods;
+                $customer = $data->customer;
+            }
+
+            if(empty($customer)){
+                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                $customer = $projectModel->getProjectForStock($projectId)->customer;
+            }
+
             $stockModel = $this->getModel('Stock','Gm_ceilingModel');
             $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('Project');
             $goodsInventory = $stockModel->getGoodsFromInvetory($goods->ids);
@@ -984,7 +1001,13 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 }
             }
             if(count($diff)){
-                die(json_encode((object)array("type"=>"error","text"=>"Реализация невозможна, некоторые товары отсутствуют на складе!","goods"=>$diff),JSON_UNESCAPED_UNICODE ));
+                $response = (object)array("type"=>"error","text"=>"Реализация невозможна, некоторые товары отсутствуют на складе!","goods"=>$diff);
+                if($noneAjax){
+                    return $response;
+                }
+                else{
+                    die(json_encode($response,JSON_UNESCAPED_UNICODE ));
+                }
             }
             else{
                 foreach($goods->goods as $key => $value){
@@ -1007,11 +1030,18 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         if ($value->category_id != 1) { //реализация для компонентов, берем то что раньше приняли и списываем частями если не хватает целиком
                             if ($gTotalCountOnStocks[$stockId] >= $realiseCount) {
                                 //если общее количество компонента на выбранном складе достаточно, то списываем
-                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                if(empty($realiseArrays)){
+                                    $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                }
+                                else{
+                                    $goodsToRealisationArray = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                    $realiseArrays['realisation'] = array_merge($realiseArrays['realisation'],$goodsToRealisationArray['realisation']);
+                                    $realiseArrays['inventory'] = array_merge($realiseArrays['inventory'],$goodsToRealisationArray['inventory']);
+                                }
 
                             } else {
                                 //если не хватает общего количества на выбранном складе
-                                $lackOfQuantity = $realiseCount - $gTotalCountOnStock[$stockId];
+                                $lackOfQuantity = $realiseCount - $gTotalCountOnStocks[$stockId];
                                 $moveArray = [];
                                 $updateInvetory = [];
                                 foreach ($goodsExistanceOnStocks as $stock_id=>$goodsArrayOnStock) {
@@ -1046,7 +1076,14 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                 $newGoodsOnStock = $stockModel->makeGoodsMovement($moveArray,$updateInvetory);
 
                                 $goodsExistanceOnStocks[$stockId] = array_merge($goodsExistanceOnStocks[$stockId],$newGoodsOnStock);
-                                $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                if(empty($realiseArrays)){
+                                    $realiseArrays = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                }
+                                else{
+                                    $goodsToRealisationArray = $this->makeArrayForRealisation($goodsExistanceOnStocks[$stockId],$realiseCount,$value->dealer_price,$projectId,$userId);
+                                    $realiseArrays['realisation'] = array_merge($realiseArrays['realisation'],$goodsToRealisationArray['realisation']);
+                                    $realiseArrays['inventory'] = array_merge($realiseArrays['inventory'],$goodsToRealisationArray['inventory']);
+                                }
                             }
                         }
                         else{
@@ -1082,9 +1119,16 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                 }
                                 if($realiseCount!= 0){
                                     //если не нашли подходящее, то возвращаем ошиьбку
-                                    die(json_encode((object)array("type"=>"error","text"=>"Реализация невозможна, товара не хватает на складе!","goods"=>[$value]),JSON_UNESCAPED_UNICODE ));
+                                    $response = (object)array("type"=>"error","text"=>"Реализация невозможна, товара не хватает на складе!","goods"=>[$value]);
+                                    if($noneAjax){
+                                        return $response;
+                                    }
+                                    else{
+                                        die(json_encode($response,JSON_UNESCAPED_UNICODE ));
+                                    }
                                 }
                             }
+
                             if($realiseCount == 0 && !empty($rCanvObject)&&!empty($uCanvObject)){
                                 //если найдено и объекты созданы добавляем их в массив для реализации
                                 $realiseArrays['realisation'][] = $rCanvObject;
@@ -1096,8 +1140,11 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                         throw new Exception("EMPTY!!!");
                     }
                 }
+                //throw new Exception(print_r($realiseArrays,true));
                 $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
-                $projectModel->change_status($projectId,8);//переводим в статус "Выдан"
+                if(!$noneAjax){
+                    $projectModel->change_status($projectId,8);//переводим в статус "Выдан", только если со страницы кладовщика(пришло через ajax)
+                }
 
                 $date = date("Y-m-d H:i:s");
                 $dateFormat = (object)[];
@@ -1122,7 +1169,13 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 $href['RetailCashOrder'] = Gm_ceilingHelpersPDF::RetailCashOrder($info);
                 $href['SalesInvoice'] = Gm_ceilingHelpersPDF::SalesInvoice($info, $out->SalesInvoice);
                 $href['MergeFiles'] = Gm_ceilingHelpersPDF::MergeFiles($href);
-                die(json_encode((object)array("status"=>"ok","href" =>$href)));
+                $response = (object)array("status"=>"ok","href" =>$href);
+                if($noneAjax){
+                    return $response;
+                }
+                else{
+                    die(json_encode($response));
+                }
             }
 
         }
