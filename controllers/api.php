@@ -923,4 +923,26 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }*/
 
+    public function getGoodsCategories(){
+
+    }
+    public function getGoodsByCategory($category){
+
+    }
+
+    public function getGoodsInCategories(){
+
+    }
+
+    public function getProjectByDealerId($dealerId){
+
+    }
+
+    public function getClientsByDealerId($dealerId){
+
+    }
+    public function getJobs(){
+
+    }
+
 }

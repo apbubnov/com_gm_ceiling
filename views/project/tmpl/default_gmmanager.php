@@ -20,8 +20,9 @@ $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+$stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
 /*______________*/
-
+$stocks = $stockModel->getStocks();
 $project_id = $this->item->id;
 $calculations = $model_calculations->new_getProjectItems($this->item->id);
 foreach ($calculations as $calculation){
@@ -647,6 +648,20 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
                             </div>
                         </div>
                     <?php }?>
+                    <div class="row center">
+                        <div class="col-md-12">Выберите склад, для списания полотна и гарпуна</div>
+                    </div>
+                    <div class="row center">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <select id="stock_id" name="stock_id" class="form-control">
+                                <?php foreach ($stocks as $stock){ ?>
+                                    <option value="<?=$stock->id;?>"><?=$stock->name?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
                     <div class="row">
                         <button type="button" id="save" class="btn btn-primary">Сохранить</button>
                     </div>
