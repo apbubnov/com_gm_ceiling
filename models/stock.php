@@ -1456,6 +1456,9 @@ class Gm_ceilingModelStock extends JModelList
      function getGoodsByCategory($category){
         try{
             $user = JFactory::getUser();
+            if($user->id == 0){
+                $user = JFactory::getUser(1);
+            }
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query

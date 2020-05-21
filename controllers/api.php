@@ -924,14 +924,24 @@ class Gm_ceilingControllerApi extends JControllerLegacy
     }*/
 
     public function getGoodsCategories(){
-
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+        $result = $model->getGoodsCategories();
+        die(quotemeta(json_encode($result,JSON_UNESCAPED_UNICODE )));
     }
-    public function getGoodsByCategory($category){
-
+    public function getGoodsByCategory(){
+        $result = null;
+        $category = $_POST['category'];
+        if(!empty($category)) {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $result = $model->getGoodsByCategory($category);
+        }
+        die(quotemeta(json_encode($result,JSON_UNESCAPED_UNICODE)));
     }
 
     public function getGoodsInCategories(){
-
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+        $result = $model->getGoodsInCategories();
+        die(quotemeta(json_encode($result,JSON_UNESCAPED_UNICODE)));
     }
 
     public function getProjectByDealerId($dealerId){
@@ -942,7 +952,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     }
     public function getJobs(){
-
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+        $result = $model->getJobs();
+        die(json_encode($result,JSON_UNESCAPED_UNICODE));
     }
 
 }

@@ -465,5 +465,21 @@ class Gm_ceilingModelMount extends JModelList
         }
 	}
 
+	function getJobs(){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id,name')
+                ->from('`rgzbn_gm_ceiling_jobs`')
+                ->where('guild_only <>1');
+            $db->setQuery($query);
+            $jobs = $db->loadObjectList();
+            return $jobs;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
 }
