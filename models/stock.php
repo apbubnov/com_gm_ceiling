@@ -655,7 +655,7 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('g.id AS goods_id,g.category_id,g.unit_id,g.name,s.sale_price AS dealer_price,SUM(s.count) AS final_count,s.sale_price*s.count AS price_sum')
+                ->select('g.id AS goods_id,g.category_id,g.unit_id,g.name,s.sale_price AS dealer_price,SUM(s.count) AS final_count,s.sale_price*s.count AS price_sum,1 as realised')
                 ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"inventory_id":"\',s.inventory_id,\'","i_count":"\',i.count,\'","r_count":"\',s.count,\'"}\') ORDER BY s.inventory_id DESC SEPARATOR \',\'),\']\') AS inventories')
                 ->from('`rgzbn_gm_stock_sales` AS s ')
                 ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = s.inventory_id')

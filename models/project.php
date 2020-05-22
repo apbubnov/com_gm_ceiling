@@ -1466,88 +1466,44 @@ class Gm_ceilingModelProject extends JModelItem
             if (empty($discount)) */$discount = 0;
             $customer->discount = $discount;
             $customer->status = $project->status;
-            //получение списаных компонентов если есть
+
             $stock_model = Gm_ceilingHelpersGm_ceiling::getModel("stock");
             $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $all_goods = [];
-            $all_goods = $stock_model->getRealisedComponents($id);
-        	//если нет, то считаем
-			if(empty($all_goods)){
-                $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
-                $calculations = $calculationsModel->new_getProjectItems($id);
-                $calc_goods = [];
-		        foreach ($calculations as $calculation) {
-                    $calc_goods[$calculation->id] = $model_calcform->getGoodsPricesInCalculation($calculation->id,  $customer->dealer->id); // Получение компонентов
-				}
-				//throw new Exception(print_r($calc_goods,true));
-				foreach ($calc_goods as $goods_array){
-		            foreach($goods_array as $goods){
-		                if(array_key_exists($goods->goods_id,$all_goods)){
-                            $all_goods[$goods->goods_id]->final_count += $goods->final_count;
-                            $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
-                            $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
+            //получаем списанные товары
+            $realisedComponents =  $stock_model->getRealisedComponents($id);
+            //$all_goods = $stock_model->getRealisedComponents($id);
+            //считаем все компоненты
 
-                        }
-                        else{
-                            $all_goods[$goods->goods_id] = $goods;
-                        }
+            $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
+            $calculations = $calculationsModel->new_getProjectItems($id);
+            $calc_goods = [];
+            foreach ($calculations as $calculation) {
+                $calc_goods[$calculation->id] = $model_calcform->getGoodsPricesInCalculation($calculation->id,  $customer->dealer->id); // Получение компонентов
+            }
+            //throw new Exception(print_r($calc_goods,true));
+            foreach ($calc_goods as $goods_array){
+                foreach($goods_array as $goods){
+                    if(array_key_exists($goods->goods_id,$all_goods)){
+                        $all_goods[$goods->goods_id]->final_count += $goods->final_count;
+                        $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
+                        $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
+
+                    }
+                    else{
+                        $all_goods[$goods->goods_id] = $goods;
                     }
                 }
-			}
+            }
+			foreach ($realisedComponents as $key=>$value){
+			    if(!empty($all_goods[$key])){
+			        if($value->final_count == $all_goods[$key]->final_count){
+			            $all_goods[$key] = $value;
+                    }
+                }
+            }
 
-	       /* $componentsTemp = array();
-	        foreach ($components as $component) {
-
-	            $query = $db->getQuery(true);
-	            $query->select('c.title AS Type, o.title AS Name, c.unit AS Unit, o.count_sale AS CountUnit, o.price AS Price')
-	                ->from("`#__gm_ceiling_components_option` as o")
-	                ->join("LEFT", "`#__gm_ceiling_components` as c ON c.id = o.component_id")
-	                ->where("o.id = " . $db->quote($component->id));
-	            $db->setQuery($query);
-	            $CT = $db->loadObject();
-
-	            $CT->id = $component->id;
-	            $CT->page = "Component";
-	            $CT->Price = floatval($CT->Price) * ((100 - intval($discount)) / 100);
-	            $CT->PriceM = (($CT->Price * 100)/(100 - floatval($margin->component)));
-	            $CT->Count = floatval($component->count);
-	            $CT->CountUnit = floatval($CT->CountUnit);
-                if ((($CT->Count*100) % ($CT->CountUnit*100)) != 0)
-                    $CT->Count = (floor($CT->Count / $CT->CountUnit) + 1) * $CT->CountUnit;
-                $CT->Itog = $CT->PriceM * $CT->Count;
-
-                $CT->page = "Component";
-
-                $componentsTemp[] = $CT;
-	        }
-	        $components = $componentsTemp;
-
-	        $canvasesTemp = array();
-	        foreach ($canvases as $canvas) {
-	            $query = $db->getQuery(true);
-	            $query->select('c.id as id, c.name as Name, c.country as Country, c.width as Width, c.price as Price')
-	                ->select('t.texture_title as Texture, cc.title as Color')
-	                ->from("`#__canvases` as c")
-	                ->join("LEFT", "`#__gm_ceiling_textures` as t on c.texture_id = t.id")
-	                ->join("LEFT", "`#__gm_ceiling_colors` as cc on c.color_id = cc.id")
-	                ->where("c.id = " . $db->quote($canvas->id));
-	            $db->setQuery($query);
-	            $CT = $db->loadObject();
-
-	            if ($CT->Color == "") $CT->Color = "Нет";
-                $CT->id = $canvas->id;
-	            $CT->Quad = floatval($canvas->quad);
-	            $CT->Price = floatval($CT->Price) * ((100 - intval($canvas->discount)) / 100);
-	            $CT->PriceM = ((floatval($CT->Price) * 100)/(100 - floatval($margin->canvas)));
-	            $CT->Itog = $CT->PriceM * $CT->Quad;
-                $CT->page = "Canvas";
-                $CT->discount = $canvas->discount;
-                $CT->square = $canvas->square;
-
-                $canvasesTemp[] = $CT;
-	        }
-	        $canvases = $canvasesTemp;*/
-
+			//throw new Exception(print_r($all_goods,true));
 	        $data = (object) array("goods" => $all_goods, "customer" => $customer);
 
 	        return $data;

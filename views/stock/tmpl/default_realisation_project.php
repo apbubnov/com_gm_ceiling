@@ -890,12 +890,17 @@ echo parent::getPreloaderNotJS();
         });
 
         jQuery(".make_realisation").click(function () {
-            console.log(Object.keys);
-            var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length};
-            jQuery.each(Goods,function(index,elem){
+            var notRealisedGoods = {};
+            jQuery.each(Goods, function(index,goods){
+                if(empty(goods.realised)){
+                    notRealisedGoods[index] = goods;
+                }
+            });
+            var goodsToRealisation = {ids:Object.keys(notRealisedGoods).join(','),goods:[],goods_count:Object.keys(notRealisedGoods).length};
+            jQuery.each(notRealisedGoods,function(index,elem){
                 goodsToRealisation.goods.push({goods_id:elem.goods_id,name:elem.name,dealer_price:elem.dealer_price,count:elem.final_count});
             });
-            console.log(goodsToRealisation);
+
             jQuery.ajax({
                 url: "/index.php?option=com_gm_ceiling&task=stock.makeRealisation",
                 async: false,
@@ -1034,7 +1039,8 @@ echo parent::getPreloaderNotJS();
         var total_sum = 0,
             goods_name,
             td_edit = (status !=8) ? '<td>'+EDIT_BUTTON+'</td>' : '',
-            td_delete = (status !=8) ?  '<td>'+DELETE_BUTTON+'</td>' : '';
+            td_delete = (status !=8) ?  '<td>'+DELETE_BUTTON+'</td>' : '',
+            td_no_action = '<td colspan="2">-</td>';
         jQuery.each(goods,function(eindex,elem){
             jQuery('#goods_table > tbody').append('<tr data-id="'+elem.goods_id+'"></tr>');
             if(elem.category_id == 1){
@@ -1043,12 +1049,18 @@ echo parent::getPreloaderNotJS();
             else{
                 goods_name = 'Компонент: '+elem.name;
             }
-            jQuery('#goods_table > tbody > tr:last').append('<td>'+goods_name+'</td>' +
-                                                            '<td>'+elem.dealer_price+'</td>' +
-                                                            '<td class="goods_count">'+parseFloat(elem.final_count).toFixed(2)+'</td>' +
-                                                            '<td class="goods_sum">'+parseFloat(elem.price_sum).toFixed(2)+'</td>' +
-                                                            td_edit +
-                                                            td_delete)
+            var tr ='<td>'+goods_name+'</td>' +
+                    '<td>'+elem.dealer_price+'</td>' +
+                    '<td class="goods_count">'+parseFloat(elem.final_count).toFixed(2)+'</td>' +
+                    '<td class="goods_sum">'+parseFloat(elem.price_sum).toFixed(2)+'</td>';
+            if(elem.realised){
+                tr += td_no_action;
+            }
+            else{
+                tr += td_edit + td_delete;
+            }
+
+            jQuery('#goods_table > tbody > tr:last').append(tr);
             total_sum += +elem.price_sum;
         });
         jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td colspan="3" class="total_sum_td"><b>'+total_sum+'</b></td></tr>');

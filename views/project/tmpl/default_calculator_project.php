@@ -21,7 +21,7 @@
 
 
     $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-
+    $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
     if(!empty($this->item->api_phone_id)){
         $reklama = $model_api_phones->getDataById($this->item->api_phone_id)->name;
     }

@@ -1211,7 +1211,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             }
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
             $projects_mounts_model = $this->getModel('projects_mounts','Gm_ceilingModel');
-			//$data = $model->approvemanager($id,$ready_date_time,$quickly);
+			$data = $model->approvemanager($id,$ready_date_time,$quickly);
 			$res = $model->getNewData($id);
             $mount_data = json_decode($jinput->get('mount','',"STRING"));
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -1237,11 +1237,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if(!empty($mount_data)){
                     $projects_mounts_model->save($id,$mount_data);
                 }
-				//Gm_ceilingHelpersGm_ceiling::notify($data, 1);
-				//Gm_ceilingHelpersGm_ceiling::notify($data, 13);
+				Gm_ceilingHelpersGm_ceiling::notify($data, 1);
+				Gm_ceilingHelpersGm_ceiling::notify($data, 13);
 			}
 			/*списание полотна и гарпуна*/
-            $projectForStock = $model->getProjectForStock($id);
+           /* $projectForStock = $model->getProjectForStock($id);
             $canvasGoods = (object)[
                 'ids'=> '',
                 'goods'=> [],
@@ -1275,9 +1275,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             else{
                 $this->setRedirect($realisationResult->href['MergeFiles']);
                 //throw new Exception(print_r($realisationResult,true));
-            }
+            }*/
             /**/
-			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id='.$id, false),$text,'error');
+			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false));
 		}
 		catch(Exception $e)
         {
