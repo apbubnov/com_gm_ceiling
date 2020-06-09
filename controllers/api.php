@@ -159,7 +159,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
     }
 
-    public function Authorization_FromAndroid() {
+    public function Authorization_FromAndroid () {
         try {
             header('Content-type:application/json');
             if (empty($_POST['data'])) {

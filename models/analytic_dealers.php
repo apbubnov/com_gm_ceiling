@@ -315,9 +315,23 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
+            $projectSumQuery = $db->getQuery(true);
+
+            $projectSumQuery
+                ->select('SUM(calc.canvases_sum)+SUM(calc.components_sum)')
+                ->from('`rgzbn_gm_ceiling_calculations` AS calc')
+                ->where('calc.project_id = s.project_id');
+
+            $inventoryCostQuery = '(SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
+                                    FROM `rgzbn_gm_stock_moving` AS mov
+                                    INNER JOIN `rgzbn_gm_stock_inventory` AS i ON i.id = mov.to_inventory_id
+                                    INNER JOIN `rgzbn_gm_stock_reception` AS rec ON rec.inventory_id = mov.from_inventory_id)
+                                    UNION ALL
+                                    (SELECT inventory_id,cost_price
+                                    FROM `rgzbn_gm_stock_reception`)';
             $query
                 ->select('u.id,u.name')
-                ->select('SUM(s.sale_price*s.count) AS `sum`')
+                ->select("($projectSumQuery) AS `sum`")
                 ->select('SUM(CASE WHEN g.category_id = 1 THEN s.sale_price*s.count ELSE 0 END) AS canvases_sum')
                 ->select('SUM(CASE WHEN g.category_id <> 1 THEN s.sale_price*s.count ELSE 0 END) AS components_sum')
                 ->select('SUM(CASE WHEN g.category_id = 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS canvases_cost_sum')
@@ -328,7 +342,7 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = s.project_id')
                 ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
                 ->innerJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
-                ->leftJoin('`rgzbn_gm_stock_reception` AS r ON r.inventory_id = s.inventory_id')
+                ->leftJoin("($inventoryCostQuery) AS r ON r.inventory_id = s.inventory_id")
                 ->innerJoin('`rgzbn_gm_stock_inventory` AS i ON s.inventory_id = i.id')
                 ->innerJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
                 ->where("s.date_time between '$date1 00:00:00' and '$date2 23:59:59'")

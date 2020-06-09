@@ -1249,5 +1249,95 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getReceivedGoods(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dateFrom = $jinput->get('date_from','','STRING');
+            $dateTo = $jinput->get('date_to','','STRING');
+            $search = $jinput->get('search','','STRING');
+            $stockModel = $this->getModel('Stock','Gm_ceilingModel');
+            $data = $stockModel->getReceivedGoods($search,$dateFrom,$dateTo);
+            die(json_encode($data));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsByCategory(){
+        try{
+            $result = [];
+            $jinput = JFactory::getApplication()->input;
+            $category = $jinput->getInt('category');
+            if(!empty($category)){
+                $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+                $result = $stockModel->getGoodsByCategory($category);
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateReceived(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $newGoods = $jinput->get('goods_id',null,'STRING');
+            $newCost = $jinput->get('cost',null,'STRING');
+            $newCount = $jinput->get('count',null,'STRING');
+            $newStock = $jinput->get('stock',null,'STRING');
+            $id = $jinput->get('id',null,'STRING');
+            $inventoryId = $jinput->get('inventory',null,'STRING');
+            $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $receptionInfo = $stockModel->getReceivedInfo($id);
+            if($receptionInfo->received_count == $receptionInfo->count){
+                /*если ничего не списывалось с этой приемки*/
+                $stockModel->updateReceived($newGoods,$newCost,$newCount,$newCount,$newStock,$inventoryId,$id);
+            }
+            else{
+                $count = null;
+                /*если что-то уже было списано*/
+                if($receptionInfo->count > 0 && !empty($newCount)){
+                    /*если списан не весь товар и пришло новое количество*/
+                    $diff = $receptionInfo->received_count -$newCount;
+                    if($diff<0){
+                        /*если количество увеличивается, то в inventory к количеству добавляем разницу*/
+                        $count = $receptionInfo->count+abs($diff);
+                    }
+                    if($diff>0){
+                        /*если количество уменьшается, то если количество минус разница больше нуля то обновляем*/
+                        if($receptionInfo->count-$diff >= 0){
+                            $count = $receptionInfo->count-$diff;
+                        }
+                    }
+                }
+                else{
+                    die(json_encode('Весь товар списан, изменение количества невозможно'));
+                }
+                $stockModel->updateReceived($newGoods,$newCost,$newCount,$count,$newStock,$inventoryId,$id);
+            }
+            $result = $stockModel->getReceivedInfo($id);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getRests(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dateTo = $jinput->get('date_to','','STRING');
+            $search = $jinput->get('search','','STRING');
+            $modelStock = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $result = $modelStock->getRests($dateTo,$search);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 

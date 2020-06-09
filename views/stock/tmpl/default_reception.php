@@ -173,9 +173,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 <input type="checkbox" id="RetailCashOrder" name="page">
             </div>
             <div class="Right">
-                <button type="button"><i class="fa fa-print" aria-hidden="true"></i></button>
-                <button type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
-                <button type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <button type="button" id="print_doc"><i class="fa fa-print" aria-hidden="true"></i></button>
+                <button type="button" id="save_doc"><i class="fas fa-save" aria-hidden="true"></i></button>
+                <button type="button" id="close_doc"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
@@ -204,7 +204,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 		});
 		showCounterparty();
 		showStocks();
+		jQuery('body').on('click','.close',function () {
 
+        });
         jQuery("#print_doc").click(function() {
             (jQuery(".iFrame")[0].contentWindow || jQuery('.iFrame')[0]).print();
         });

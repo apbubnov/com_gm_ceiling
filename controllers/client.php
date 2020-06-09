@@ -449,4 +449,39 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function addRecToStateOfAccount(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $id = $jinput->getInt('id');
+	        $operation = $jinput->getInt('operation');
+	        $sum = $jinput->get('sum','','STRING');
+	        $comment = $jinput->get('comment','','STRING');
+	        $stateModel = Gm_ceilingHelpersGm_ceiling::getModel('client_state_of_account');
+	        $stateModel->save($id,$operation,$sum,$comment,null);
+	        die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getAccountStateDataByPeriod(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $dateFrom = $jinput->get('date_from',null,'STRING');
+            $dateTo = $jinput->get('date_to',null,'STRING');
+            $stateModel = Gm_ceilingHelpersGm_ceiling::getModel('client_state_of_account');
+            $result = ["sum"=>0,"detailed_data"=>[]];
+            if(!empty($dateFrom)){
+                $result['sum']= $stateModel->getStateOfAccountBeforeDate($id,$dateFrom)->sum;
+            }
+            $result['detailed_data'] = $stateModel->getData($id,$dateFrom,$dateTo);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

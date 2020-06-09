@@ -37,7 +37,8 @@ $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform')
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
             Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($item->id);
         }
-        $mountSalary = 0;
+        $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($item->id);
+        $mountSalary = $mount['mounter_sum'];
         $calculations = $calculationsModel->new_getProjectItems($item->id);
         foreach ($calculations as $calculation) {
             if (!empty($calculation->n3)) {

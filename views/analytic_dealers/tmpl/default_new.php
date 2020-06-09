@@ -533,7 +533,7 @@ $new_analytic = $jinput->get('new',0,'INT');
                         jQuery("#table_issued > tbody > tr:last").append(   '<td>'+elem.name+'</td>'+
                             '<td>'+parseFloat(elem.sum).toFixed(2)+'</td>'+
                             '<td>'+parseFloat(elem.cost_sum).toFixed(2)+'</td>'+
-                            '<td>'+(elem.sum-elem.cost_sum)+'</td>'+
+                            '<td>'+((elem.sum-elem.cost_sum)).toFixed(2)+'</td>'+
                             '<td>'+parseFloat(elem.canvases_sum).toFixed(2)+'</td>'+
                             '<td>'+parseFloat(elem.canvases_cost_sum).toFixed(2)+'</td>'+
                             '<td>'+parseFloat(elem.components_sum).toFixed(2)+'</td>'+
@@ -542,15 +542,15 @@ $new_analytic = $jinput->get('new',0,'INT');
 
                     });
                     jQuery("#table_issued > tbody").append('<tr>' +
-                        '<td>'+total_arr.name+'</td>'+
-                        '<td>'+total_arr.sum+'</td>'+
-                        '<td>'+total_arr.cost_sum+'</td>'+
-                        '<td>'+total_arr.diff+'</td>'+
-                        '<td>'+total_arr.canv_sum+'</td>'+
-                        '<td>'+total_arr.canv_cost+'</td>'+
-                        '<td>'+total_arr.comp_sum+'</td>'+
-                        '<td>'+total_arr.comp_cost+'</td>'+
-                        '</tr>')
+                        '<td><b>'+total_arr.name+'</b></td>'+
+                        '<td><b>'+total_arr.sum.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.cost_sum.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.diff.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.canv_sum.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.canv_cost.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.comp_sum.toFixed(2)+'</b></td>'+
+                        '<td><b>'+total_arr.comp_cost.toFixed(2)+'</b></td>'+
+                        '</tr>');
                 }
             },
             error: function (data) {

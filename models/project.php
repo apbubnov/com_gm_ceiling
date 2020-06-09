@@ -907,7 +907,7 @@ class Gm_ceilingModelProject extends JModelItem
             $query->where('projects.id = ' . $id);
             
 	        $db->setQuery($query);
-	        $return = $db->execute();
+	        $db->execute();
 
 			$query = $db->getQuery(true);
 			$query ->select("p.id, p.client_id, p.project_info, GROUP_CONCAT(distinct mp.date_time SEPARATOR ';') as project_mounting_date")

@@ -237,7 +237,7 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select('id, name')
-                ->from("`#__gm_ceiling_stocks`");
+                ->from("`#__gm_stock_stocks`");
             $db->setQuery($query);
             return $db->loadObjectList();
         }
@@ -1468,6 +1468,136 @@ class Gm_ceilingModelStock extends JModelList
             $db->setQuery($query);
             $goods = $db->loadObjectList();
             return $goods;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function getReceivedGoods($search = null ,$dateFrom = null,$dateTo = null){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('r.id,r.count AS received_count,r.cost_price,r.inventory_id,g.id as goods_id,g.category_id,g.name,i.count,s.id as stock_id,s.name AS stock_name,r.date_time')
+                ->from('`rgzbn_gm_stock_reception` AS r')
+                ->innerJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = r.inventory_id')
+                ->innerJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
+                ->innerJoin('`rgzbn_gm_stock_stocks` AS s ON s.id = i.stock_id')
+                ->order('r.date_time DESC');
+            if(!empty($search)){
+                $query->where("g.id = '$search' OR g.name LIKE '%$search%'");
+            }
+            if(!empty($dateFrom)&&!empty($dateTo)){
+                $query->where("r.date_time between '$dateFrom 00:00:00' and '$dateTo 23:59:59'");
+            }
+            if(!empty($dateFrom)&&empty($dateTo)){
+                $query->where("r.date_time >= '$dateFrom 00:00:00' ");
+
+            }
+            if(empty($dateFrom)&&!empty($dateTo)){
+                $query->where("r.date_time <= '$dateTo 23:59:59'");
+
+            }
+            $db->setQuery($query);
+            $result = $db->loadObjectList('id');
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function updateReceived($newGoods,$newCost,$newCountReceived,$newCountInventory,$newStock,$inventoryId,$receptionId){
+        try{
+            //throw new Exception("nG:$newGoods,nC:$newCost,cR:$newCountReceived,cI:$newCountInventory,nS:$newStock,ii:$inventoryId,ri:$receptionId");
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            if(!empty($newCountReceived) || !empty($newPrice)){
+                $query
+                    ->update('`rgzbn_gm_stock_reception`')
+                    ->where("`id` = $receptionId");
+                if(!empty($newCost)){
+                    $query->set("`cost_price` = $newCost");
+                }
+                if(!empty($newCountReceived)){
+                    $query->set("`count` = $newCountReceived");
+                }
+                //throw new Exception($query);
+                $db->setQuery($query);
+                $db->execute();
+            }
+            if(!empty($newCountInventory)||!empty($newGoods)||!empty($newStock)){
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_stock_inventory`')
+                    ->where("`id` = $inventoryId");
+                if(!empty($newGoods)){
+                    $query->set("`goods_id` = $newGoods");
+                }
+                if(!empty($newCountInventory)){
+                    $query->set("`count` = $newCountInventory");
+                }
+                if(!empty($newStock)){
+                    $query->set("`stock_id` = $newStock");
+                }
+                //throw new Exception($query);
+                $db->setQuery($query);
+                $db->execute();
+            }
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function getReceivedInfo($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('r.id,r.count AS received_count,r.cost_price,r.inventory_id,g.id as goods_id,g.category_id,g.name')
+                ->select('i.count,s.id as stock_id,s.name AS stock_name,r.date_time')
+                ->from('`rgzbn_gm_stock_reception` AS r')
+                ->innerJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = r.inventory_id')
+                ->innerJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
+                ->innerJoin('`rgzbn_gm_stock_stocks` AS s ON s.id = i.stock_id')
+                ->where("r.id = $id");
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
+
+     function getRests($date,$search){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $saleQuery = $db->getQuery(true);
+            $saleQuery
+                ->select('inv.goods_id,SUM(s.count) AS sale_count')
+                ->from('`rgzbn_gm_stock_sales` AS s')
+                ->innerJoin('`rgzbn_gm_stock_inventory` AS inv ON s.inventory_id = inv.id')
+                ->where("s.date_time < '$date'")
+                ->order('inv.goods_id');
+            $query
+                ->select('g.id,g.name,IFNULL(SUM(r.count),0) AS received_count,IFNULL(sales.sale_count,0) AS sale_count')
+                ->from('`rgzbn_gm_stock_goods` AS g')
+                ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.goods_id = g.id')
+                ->leftJoin('`rgzbn_gm_stock_reception` AS r ON r.inventory_id = i.id')
+                ->leftJoin("($saleQuery) as sales ON sales.goods_id = g.id")
+                ->where("(r.date_time <'$date' OR r.date_time IS  NULL)")
+                ->group('g.id');
+            if(!empty($search)){
+                $query->where("g.name like '%$search%'");
+            }
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

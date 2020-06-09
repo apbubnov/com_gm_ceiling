@@ -134,31 +134,49 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     var $ = jQuery;
     jQuery(".btn-danger").click(function(){
         var project_id = jQuery(this).data('id');
-        console.log(project_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
-            data: {
-                project_id: project_id
-            },
-            dataType: "json",
-            async: true,
-            success: function(data) {
-               jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
-            },
-            error: function(data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: false,
+            type: "info",
+            text: "Вы действительно хотите перевести проект в статус отказ от замера?",
+            buttons:[
+                {
+                    addClass: 'btn btn-primary', text: 'Перевести в отказы', onClick: function($noty) {
+                        jQuery.ajax({
+                            url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
+                            data: {
+                                project_id: project_id,
+                                status: 3
+                            },
+                            dataType: "json",
+                            async: true,
+                            success: function(data) {
+                                jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'topCenter',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка сервера"
+                                });
+                            }
+                        });
+                        $noty.close();
+                    }
+                },
+                {
+                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                        $noty.close();
+                    }
+                }
+            ]
         });
         return false;
-
     });
 
     jQuery("#projectList tr").click(function(){

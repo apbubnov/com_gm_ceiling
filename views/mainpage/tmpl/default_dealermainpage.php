@@ -57,78 +57,48 @@ $countMounting = $model->getDataByStatus("Mountings");
 $answer1 = $model->getDataByStatus("UnComplitedMountings");
 $allMount = $countMounting[0]->count + $answer1[0]->count;
 //--------------------------------------
-$recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-$data = $recoil_map_model->getData($userId);
-$total_sum = 0;// общая сумма потолка
-$contributed = 0;//Внесенная сумма
-$rest = 0;//Сумма долга или Остаток
-foreach ($data as $item) {
-    if($item->sum < 0) $total_sum+=$item->sum;
-    else $contributed+=$item->sum;
+$stateOfAccountModel =  Gm_ceilingHelpersGm_ceiling::getModel('client_state_of_account');
+$rest = $stateOfAccountModel->getStateOfAccount($user->associated_client)->sum;
+if(empty($rest)){
+    $rest = 0;
 }
-$rest = -($total_sum) - $contributed;
-
 ?>
-
-<?php if(!$dealerInfo->update_check):?>
-<!-- <style>
-    #toProfile {
-        position: relative;
-        width: 52px;
-        height: 38px;
-        display: inline-block;
+<style>
+    .margin_bottom{
+        margin-bottom: 15px;
     }
-    #toProfile .pix {
-        position: absolute;
-        right: -6px;
-        top: -6px;
-        width: 12px;
-        height: 12px;
-        border-radius: 6px;
-        background-color: rgb(255,0,0);
-        box-shadow: 1px 1px 1px 0 rgba(0,0,0,.5), inset 1px 1px 1px 0 rgba(255,255,255,.5), inset -.5px -.5px 1px 0 rgba(0,0,0,.5);
+    .btn_width{
+        width: 300px !important;
     }
-    #toProfile .message {
-        position: absolute;
-        left: 58px;
-        top: 0;
-        border-radius: .25rem;
-        height: 38px;
-        line-height: 38px;
-        width: auto;
-        padding: 0 10px;
-        background-color: rgb(65,64,153);
-        color: rgb(255,255,255);
-        display: none;
-    }
-    #toProfile:hover .message {
-        display: inline-block;
-    }
-    #toProfile .message:before {
-        position: absolute;
-        left: -8px;
-        content: "◀";
-        font-size: 12px;
-        color: rgb(65,64,153);
-    }
-</style> -->
-<?endif;?>
-
+</style>
 <div class="form-group" style = "text-align: center;">
-    <h2 style = "display:inline-block; text-align: center;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
-        if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
-        </br><a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest?-round($rest, 2):0;?> руб. </a>
-        <div id="modal_window_container" class="modal_window_container" >
+    <h2 style = "display:inline-block; text-align: center;"><?php echo $user->name; ?></h2>
+    <?php if($user->dealer_type!=2 ){ ?>
+        </br><a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest;?> руб. </a>
+        <div id="mw_container" class="modal_window_container" >
             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
             </button>
-            <div id="modal_window_acct" class="modal_window" style="padding-top: 2em; border: 2px solid #414099;">
-                <p>Общая сумма за комплектующие и материалы: <?php echo $total_sum?-$total_sum:0;?></p>
-                <p>Внесенная сумма: <?php echo $contributed?$contributed:0;?></p>
-                <p>Сумма долга: <?php echo ($rest>0)?$rest:0;?></p>
-                <p>На счете: <?php echo $rest?-$rest:0;?></p>
+            <div id="mw_analytic" class="modal_window">
+                <div class="row margin_bottom">
+                    <a class="btn btn-primary btn_width"  href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Основная и дневная аналитика</a>
+                </div>
+                <div class="row margin_bottom">
+                    <a class="btn btn-primary btn_width"  href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=gaugers', false); ?>"><i class="fas fa-chart-line"></i> Аналитика замерщиков</a>
+                </div>
+                <div class="row margin_bottom">
+                    <a class = "btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=calls_analitic',false);?>">Аналитика менеджеров</a>
+                </div>
+                <?php if($user->dealer_id == 1 && ($user->dealer_type == 0 || $user->dealer_type == 1)){ ?>
+                    <div class="row margin_bottom">
+                        <a class = "btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytic_dealers',false)?>"><i class="fas fa-chart-area"></i> Аналитика дилеров</a>
+                    </div>
+                    <div class="row margin_bottom">
+                        <a class="btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=visitors',false)?>">Посетители сайта</a>
+                    </div>
+                <?php }?>
             </div>
         </div>
-        <?php } ?>
+
   <?php  }?>
 </div>
 
@@ -253,7 +223,7 @@ $rest = -($total_sum) - $contributed;
             </div>
         </div>
          <p class="center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fas fa-chart-line"></i> Аналитика</a>
+            <button class="btn btn-large btn-primary" id="show_analytic"><i class="fas fa-chart-line"></i> Аналитика</button>
         </p>
         <!--<p class="center">
             <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); */?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
@@ -439,8 +409,15 @@ $rest = -($total_sum) - $contributed;
         jQuery("#mounting_price_btn").click(function () {
             location.href = "<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=mount', false, 2); ?>";
         });
+
         jQuery("#prev_orders_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>";
+        });
+
+        jQuery('#show_analytic').click(function () {
+            jQuery('#mw_container').show();
+            jQuery('#close').show();
+            jQuery("#mw_analytic").show();
         });
     })
     jQuery("#create_order_btn").click(function () {
@@ -472,11 +449,11 @@ $rest = -($total_sum) - $contributed;
     });
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery(".modal_window"); // тут указываем ID элемента
+        var div = jQuery("#mw_analytic"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery(".close_btn").hide();
-            jQuery(".modal_window_container").hide();
+            jQuery("#mw_container").hide();
             jQuery(".modal_window").hide();
         }
     });

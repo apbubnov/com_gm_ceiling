@@ -2843,7 +2843,7 @@ public function register_mnfctr(){
                     if($calculation->need_mount == 1){
                         $data_for_mount_estimate['gm_jobs'] = [];
                     }
-                    if($calculation->need_mount == 2){
+                    if($calculation->need_mount == 2 || !empty($project->calcs_mounting_sum)){
                         $data_for_mount_estimate['gm_jobs'] = $model_calcform->getJobsPricesInCalculation($calculation->id, 1);
                     }
                     Gm_ceilingHelpersGm_ceiling::create_mount_estimate_by_stage($data_for_mount_estimate,null,1);

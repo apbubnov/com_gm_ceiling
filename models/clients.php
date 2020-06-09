@@ -425,23 +425,19 @@ if (empty($list['direction']))
 				$label_filter = " AND `c`.`label_id` = $label_id";
 			}
 
-			$manager_query
-				->select('`name`')
-				->from('`#__users`')
-				->where('id = c.manager_id');
-
             $query
 				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`, `lbs`.`color_code`")
-                ->select("IFNULL(ROUND(SUM( DISTINCT `rmp`.`sum`),2),0) AS `rest`")
+                ->select("SUM(IF(score.operation_type = 1,score.sum,0)) - SUM(IF(score.operation_type = 2,score.sum,0)) AS rest")
 				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
-				->select("GROUP_CONCAT(`#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
-				->select("($manager_query) as manager_name")
+				->select("GROUP_CONCAT(DISTINCT `#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
+				->select("u1.name AS manager_name")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->innerjoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
-				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
+				->innerJoin(' `rgzbn_users` AS `u1` ON `c`.`manager_id` = `u1`.`id`')
+                ->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
+				->leftJoin('`#__gm_ceiling_client_state_of_account` AS score ON score.client_id = c.id')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
-                ->leftJoin("`#__gm_ceiling_recoil_map_project` AS `rmp` ON `rmp`.`recoil_id` = `u`.`id`")
                 ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` on `c`.`label_id` = `lbs`.`id`')
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop  $label_filter");
             if((!empty($limit) || $limit == 0)&&!empty($select_size)){
@@ -465,7 +461,6 @@ if (empty($list['direction']))
             else{
                 $query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
             }
-
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			/*if(count($items)){

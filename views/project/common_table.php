@@ -98,6 +98,12 @@ foreach ($calculations as $calculation) {
         /*иначе она с новой структурой*/
         $total_gm_sum = 0;
         $total_dealer_sum = 0;
+        $extraMount = (array) json_decode($calculation->extra_mounting);
+        foreach ($extraMount as $key => $value) {
+            $total_gm_sum += $value->price;
+            $total_dealer_sum += $value->price;
+        }
+
         if($use_service){
             $all_jobs = $calculationformModel->getMountingServicePricesInCalculation($calculation->id, $this->item->dealer_id);
         }

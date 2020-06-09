@@ -77,35 +77,35 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
     <div class="col-md-12">
         <table class="small_table table-striped table_cashbox one-touch-view" id="projects_anallytic_table">
             <thead>
-                <tr>
-                    <th rowspan="2" class="center">
-                        Менеджер
-                    </th>
-                    <th colspan="3" class="center">Замеры</th>
-                    <th colspan="3" class="center">Договоры</th>
-                    <th colspan="3" class="center">Отказы</th>
-                </tr>
-                <tr>
-                    <td>Всего</td>
-                    <td>
-                      <!--  <div class="col-xs-6 col-md-6">-->
-                            Свои
-                        <!--</div>
-                        <div class="col-xs-6 col-md-6">
-                            <i class="fas fa-question question" style="vertical-align: middle;font-size: 10pt;cursor:help;"></i>
-                            <div class="help">
-                                <span class="airhelp">Проекты, созданные и записанные на замер одним и тем жу менеджером</span>
-                            </div>
-                        </div>-->
-                    </td>
-                    <td>Др.менеджеров</td>
-                    <td>Всего</td>
-                    <td>Свои</td>
-                    <td>Др.менеджеров</td>
-                    <td>Всего</td>
-                    <td>Свои</td>
-                    <td>Др.менеджеров</td>
-                </tr>
+            <tr>
+                <th rowspan="2" class="center">
+                    Менеджер
+                </th>
+                <th colspan="3" class="center">Замеры</th>
+                <th colspan="3" class="center">Договоры</th>
+                <th colspan="3" class="center">Отказы</th>
+            </tr>
+            <tr>
+                <td>Всего</td>
+                <td>
+                    <!--  <div class="col-xs-6 col-md-6">-->
+                    Свои
+                    <!--</div>
+                    <div class="col-xs-6 col-md-6">
+                        <i class="fas fa-question question" style="vertical-align: middle;font-size: 10pt;cursor:help;"></i>
+                        <div class="help">
+                            <span class="airhelp">Проекты, созданные и записанные на замер одним и тем жу менеджером</span>
+                        </div>
+                    </div>-->
+                </td>
+                <td>Др.менеджеров</td>
+                <td>Всего</td>
+                <td>Свои</td>
+                <td>Др.менеджеров</td>
+                <td>Всего</td>
+                <td>Свои</td>
+                <td>Др.менеджеров</td>
+            </tr>
             </thead>
             <tbody>
 
@@ -119,9 +119,9 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
     <div class="modal_window" id="mw_calls">
         <table class="small_table table-striped table_cashbox one-touch-view">
             <thead>
-                <th>Дата</th>
-                <th>Клиент</th>
-                <th>Менеджер</th>
+            <th>Дата</th>
+            <th>Клиент</th>
+            <th>Менеджер</th>
             </thead>
             <tbody id="info">
             </tbody>
@@ -130,21 +130,21 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
     <div class="modal_window" id = "mw_projects">
         <table id="projects_table"  class = "table_project_analitic">
             <thead>
-                <th>
-                    №
-                </th>
-                <th>
-                    Создан
-                </th>
-                <th>
-                    Обновлен
-                </th>
-                <th>
-                    Адрес
-                </th>
-                <th>
-                    Сумма
-                </th>
+            <th>
+                №
+            </th>
+            <th>
+                Создан
+            </th>
+            <th>
+                Обновлен
+            </th>
+            <th>
+                Адрес
+            </th>
+            <th>
+                Сумма
+            </th>
             </thead>
             <tbody>
 
@@ -258,7 +258,6 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                     async: false,
                     timeout: 10000,
                     error: function(data){
-                        console.log(data)
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
@@ -327,7 +326,6 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                 async: false,
                 timeout: 10000,
                 error: function(data){
-                    console.log(data)
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -355,14 +353,13 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                         dateTo: dateTo,
                         dealerId: '<?php echo $dealerId;?>'
                     },
-                    success: function (data) {
-                        showProjects(data);
+                    success: function (res) {
+                        showProjects(res);
                     },
                     dataType: "json",
                     async: false,
                     timeout: 10000,
                     error: function (data) {
-                        console.log(data)
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
@@ -392,7 +389,6 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                 manager = jQuery(this).closest('tr').data('manager'),
                 ids = quantityData[manager][type][subtype].ids;
             ids = ids.join(',');
-            console.log(ids);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
                 data: {
@@ -401,7 +397,6 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    console.log(data);
                     fillModalTable(data);
 
                 },
@@ -445,15 +440,13 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                 dealerId: '<?php echo $dealerId;?>'
             },
             success: function(data){
-                console.log(data);
-               showTableData(data.calls);
-               showProjects(data.projects);
+                showTableData(data.calls);
+                //showProjects(data.projects);
             },
             dataType:"json",
             async: false,
             timeout: 10000,
             error: function(data){
-                console.log(data)
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -481,40 +474,10 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                     }
                 }
                 for(var j=0;j<manager_info.length;j++){
-                    /*var projects =  manager_info[j].measures_count,
-                        measures_count = 0,
-                        deals_count = 0,
-                        refuse_count = 0,
-                        m_ids = [],
-                        d_ids = [],
-                        r_ids = [];
-                    for (var p = projects.length - 1; p >= 0; p--) {
-                        if(projects[p].status == 1){
-                            measures_count += +projects[p].count;
-                            m_ids.push(projects[p].ids);
-                        }
-                        if(projects[p].status == 4 || projects[p].status == 5){
-                            deals_count += +projects[p].count;
-                            d_ids.push(projects[p].ids);
 
-                        }
-                        if(projects[p].status == 3){
-                            refuse_count += +projects[p].count;
-                            r_ids.push(projects[p].ids);
-                        }
-                    }*/
                     common_count_data[manager_info[j].manager].calls += +manager_info[j].count;
                     common_count_data[manager_info[j].manager].users = +manager_info[j].added_users;
-                    //common_count_data[manager_info[j].manager].measures = measures_count;
-                    //common_count_data[manager_info[j].manager].deals = deals_count;
-                    //common_count_data[manager_info[j].manager].refs = refuse_count;
-                    //common_count_data[manager_info[j].manager].m_ids = m_ids;
-                    //common_count_data[manager_info[j].manager].d_ids = d_ids
-                    //common_count_data[manager_info[j].manager].r_ids = r_ids
 
-                    /*m_ids = m_ids.join(',');
-                    d_ids = d_ids.join(',');
-                    r_ids = r_ids.join(',');*/
 
                     table.append('<tr class="click_tr" data-id="'+data[i].id+'"></tr>');
                     var tr = jQuery('#common_table > tbody > tr:last');
@@ -530,24 +493,12 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
             }
         }
         var j = 0,
-            common_calls = 0;/*,
-            common_measures = 0,
-            common_deals = 0,
-            common_refs = 0,
-            common_m_ids = [],
-            common_d_ids = [],
-            common_r_ids = [];*/
+            common_calls = 0;
+
         for( var key in common_count_data)
         {
-            console.log(key);
             table.append('<tr></tr>');
             common_calls += common_count_data[key].calls;
-            /*common_measures += common_count_data[key].measures;
-            common_deals += common_count_data[key].deals;
-            common_refs += common_count_data[key].refs;
-            common_m_ids.push(common_count_data[key].m_ids);
-            common_d_ids.push(common_count_data[key].d_ids);
-            common_r_ids.push(common_count_data[key].r_ids);*/
 
             var tr = jQuery('#common_table > tbody > tr:last');
             if(j == 0){
@@ -563,58 +514,58 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
         }
     }
 
-    function showProjects(projects) {
-
+    function showProjects(projects_data) {
         jQuery('#projects_anallytic_table > tbody').empty();
-        jQuery.each(projects,function(index,elem){
+        quantityData = {};
+        jQuery.each(projects_data,function(index,elem){
+
             var dataByStatus = JSON.parse(elem.data);
             quantityData[elem.id] = {
-                                        name: elem.name,
-                                        measures:{
-                                            total:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            own:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            other:{
-                                                count:0,
-                                                ids: []
-                                            }
-                                        },
-                                        deals:{
-                                            total:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            own:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            other:{
-                                                count:0,
-                                                ids: []
-                                            }
-                                        },
-                                        refuse:{
-                                            total:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            own:{
-                                                count: 0,
-                                                ids: []
-                                            },
-                                            other:{
-                                                count:0,
-                                                ids: []
-                                            }
-                                        }
-                                    };
+                name: elem.name,
+                measures:{
+                    total:{
+                        count: 0,
+                        ids: []
+                    },
+                    own:{
+                        count: 0,
+                        ids: []
+                    },
+                    other:{
+                        count:0,
+                        ids: []
+                    }
+                },
+                deals:{
+                    total:{
+                        count: 0,
+                        ids: []
+                    },
+                    own:{
+                        count: 0,
+                        ids: []
+                    },
+                    other:{
+                        count:0,
+                        ids: []
+                    }
+                },
+                refuse:{
+                    total:{
+                        count: 0,
+                        ids: []
+                    },
+                    own:{
+                        count: 0,
+                        ids: []
+                    },
+                    other:{
+                        count:0,
+                        ids: []
+                    }
+                }
+            };
             jQuery.each(dataByStatus,function(n,data){
-                console.log(data);
                 for(var i=0;i<data.projects.length;i++){
                     switch(data.status){
                         case "1":
@@ -649,7 +600,7 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                         case "4":
                         case "5":
                             quantityData[elem.id].deals.total.count++;
-                            quantityData[elem.id].refuse.total.ids.push(data.projects[i].id);
+                            quantityData[elem.id].deals.total.ids.push(data.projects[i].id);
                             if(data.projects[i].created == data.projects[i].read){
                                 quantityData[elem.id].deals.own.count++;
                                 quantityData[elem.id].deals.own.ids.push(data.projects[i].id);
@@ -667,7 +618,6 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
                 }
             });
         });
-        console.log(quantityData);
         var totalMeasures = 0,
             totalMeasuresOwn = 0,
             totalMeasuresOther = 0,
@@ -702,16 +652,16 @@ $lid = json_encode($model_calls->selectCallHistoryByStatus(5, $user->dealer_id))
             );
         });
         jQuery('#projects_anallytic_table > tbody').append('<tr><td><b>Итого</b></td>' +
-                                                 '<td>'+totalMeasures+'</td>'+
-                                                 '<td>'+totalMeasuresOwn+'</td>'+
-                                                 '<td>'+totalMeasuresOther+'</td>'+
-                                                 '<td>'+totalDeals+'</td>'+
-                                                 '<td>'+totalDealsOwn+'</td>'+
-                                                 '<td>'+totalDealsOther+'</td>'+
-                                                 '<td>'+totalRefuse+'</td>'+
-                                                 '<td>'+totalRefuseOwn+'</td>'+
-                                                 '<td>'+totalRefuseOther+'</td>'+
-                                                 '</tr>');
+            '<td>'+totalMeasures+'</td>'+
+            '<td>'+totalMeasuresOwn+'</td>'+
+            '<td>'+totalMeasuresOther+'</td>'+
+            '<td>'+totalDeals+'</td>'+
+            '<td>'+totalDealsOwn+'</td>'+
+            '<td>'+totalDealsOther+'</td>'+
+            '<td>'+totalRefuse+'</td>'+
+            '<td>'+totalRefuseOwn+'</td>'+
+            '<td>'+totalRefuseOther+'</td>'+
+            '</tr>');
 
     }
     function fillDetailedTable(data) {

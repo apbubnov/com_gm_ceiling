@@ -308,98 +308,6 @@ JHtml::_('formbehavior.chosen', 'select');
             <?php endforeach;?>
         </select>
     </div>
-    <style>
-        fieldset {
-            margin: 10px;
-            border: 2px solid #414099;
-            padding: 4px;
-            border-radius: 4px;
-        }
-        legend{
-            width: auto;
-        }
-    </style>
-    <div class="modal_window" id="modal_window_sum">
-        <form>
-            <div class="container">
-                <div class="row center">
-                    <div class="col-md-12">
-                        <label style="font-size: 18pt;color:#414099"><?=$this->item->client_name;?></label>
-                    </div>
-                </div>
-                <div class="row right">
-                    <div class="col-md-12">
-                        <div style="color:#414099;font-size:13pt;">на счету: <b><span ><?=$dealer_history_sum;?></span></b></div>
-                    </div>
-                </div>
-                <fieldset>
-                    <legend align="left"><label style="padding-left: auto">Внесение оплаты</label></legend>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="col-md-4">
-                                    <label for="pay_sum">Сумма</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input  class="inputactive" type="text" id="pay_sum"  name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
-                                            title="Введи количество денег, которые вносит дилер" required>
-                                </div>
-                                <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="col-md-5">
-                                    <label for="slct_project">Проект</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <select class="inputactive" id="slct_project">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="col-md-5">
-                                    <label for="pay_comment">Комментарий</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <input type="text" id="pay_comment"class="inputactive" name="pay_comment" placeholder="Комментарий"
-                                           title="Введите комментарий об внесении средств" required>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-primary" type="button" id="savePayment"><i class="fa fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-                </fieldset>
-                <div class="row">
-                    <table class="table table-striped table_cashbox">
-                        <thead class="caption-style-tar">
-                        <tr>
-                            <th class="center">Дата</th>
-                            <th class="center">Проект</th>
-                            <th class="center">Сумма</th>
-                            <th class="center">Комментарий</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?foreach ($dealer_history as $item):?>
-                            <tr class="<?=($item->project_id != "-")?"project":"";?>" data-project="<?=$item->project_id;?>">
-                                <td><?=$item->data;?></td>
-                                <td><?=$item->project_id;?></td>
-                                <td><?=$item->sum;?></td>
-                                <td><?=$item->comment;?></td>
-                            </tr>
-                        <?endforeach;?>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th colspan="2" style="text-align: right;">Итого:</th>
-                            <th><?=$dealer_history_sum;?></th>
-                            <th></th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </form>
-    </div>
     <div id="call" class="modal_window">
         <p>Перенести звонок</p>
         <p>Дата звонка:</p>
@@ -438,7 +346,8 @@ JHtml::_('formbehavior.chosen', 'select');
 </div>
 
 <script>
-    var $ = jQuery;
+    var $ = jQuery,
+        client_id = <?php echo $this->item->id;?>;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
         var div2 = jQuery("#modal_window_client");
@@ -446,14 +355,13 @@ JHtml::_('formbehavior.chosen', 'select');
         var div4 = jQuery("#modal_window_login");
         var div5 = jQuery("#modal_window_call");
         var div6 = jQuery("#modal_window_select_number");
-        var div7 = jQuery("#modal_window_sum");
         var div8 = jQuery("#call");
         var div9 = jQuery("#modal_window_send_email");
         var div10 = jQuery("#modal_window_city");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
-            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
+            && !div5.is(e.target)&& !div6.is(e.target) && !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
-            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0
+            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0 && div8.has(e.target).length === 0
             && div9.has(e.target).length === 0 && div10.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
@@ -463,7 +371,6 @@ JHtml::_('formbehavior.chosen', 'select');
             jQuery("#modal_window_call").hide();
             jQuery("#modal_window_login").hide();
             jQuery("#modal_window_select_number").hide();
-            jQuery("#modal_window_sum").hide();
             jQuery("#call").hide();
             jQuery("#modal_window_send_email").hide();
             jQuery("#modal_window_city").hide();
@@ -659,7 +566,6 @@ JHtml::_('formbehavior.chosen', 'select');
         });
 
         jQuery("#add_call").click(function(){
-            client_id = <?php echo $this->item->id;?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addCall",
                 data: {
@@ -704,7 +610,6 @@ JHtml::_('formbehavior.chosen', 'select');
 
         jQuery("[name = rm_email]").click(function(){
             var email = jQuery(this).attr("email");
-            var client_id = <?php echo $this->item->id;?>;
 
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
@@ -796,7 +701,6 @@ JHtml::_('formbehavior.chosen', 'select');
         });
 
         jQuery("#send_email").click(function(){
-            var client_id = <?php echo $this->item->id;?>;
             var email = jQuery("#email").val();
             var subj = jQuery("#email_subj").val();
             var text = jQuery("#email_text").val();
@@ -840,7 +744,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=updateClientFIO",
                 data: {
-                    client_id: "<?php echo $this->item->id;?>",
+                    client_id: client_id,
                     fio: jQuery("#new_fio").val()
                 },
                 success: function(data){
@@ -879,7 +783,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=create_empty_project",
                 data: {
-                    client_id:<?php echo $this->item->id;?>
+                    client_id: client_id
 
                 },
                 success: function(data){
@@ -1082,7 +986,6 @@ JHtml::_('formbehavior.chosen', 'select');
             {
                 return;
             }
-            var client_id = <?php echo $client->id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
                 data: {
@@ -1110,7 +1013,6 @@ JHtml::_('formbehavior.chosen', 'select');
 
         document.getElementById('add_phone').onclick = function()
         {
-            var client_id = <?php echo $client->id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=client.addPhone",
                 data: {
@@ -1144,7 +1046,7 @@ JHtml::_('formbehavior.chosen', 'select');
         {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id; ?>;
+
 
             if (reg_comment.test(comment) || comment === "")
             {
@@ -1152,7 +1054,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 return;
             }
 
-            add_history(id_client, comment);
+            add_history(client_id, comment);
         });
 
         jQuery("#but_call").click(function ()
@@ -1162,44 +1064,12 @@ JHtml::_('formbehavior.chosen', 'select');
             jQuery("#modal_window_select_number").show("slow");
         });
         jQuery("#add_pay").click(function(){
-            jQuery("#close").show();
-            jQuery("#mv_container").show();
-            jQuery("#modal_window_sum").show("slow");
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=projects.getUnpaidProjects",
-                data: {
-                    dealer_id: jQuery("#jform_dealer_id").val()
-                },
-                success: function(data){
-                    data = JSON.parse(data);
-                    jQuery.each(data,function(index,element){
-                        jQuery('#slct_project')
-                            .append(jQuery("<option></option>")
-                                .attr("value",element.id)
-                                .text(element.id));
-                    });
-                },
-                dataType: "text",
-                async: false,
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }
-            });
+            location.href = '/index.php?option=com_gm_ceiling&view=clientaccount&id='+client_id
         });
         jQuery("#select_phones").change(function ()
         {
-            var id_client = <?php echo $this->item->id; ?>;
             call(jQuery("#select_phones").val());
-            add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
+            add_history(client_id, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
         });
         jQuery("#but_callback").click(function (){
             jQuery("#mv_container").show();
@@ -1213,7 +1083,6 @@ JHtml::_('formbehavior.chosen', 'select');
 
         })
         jQuery("#add_call_and_submit").click(function(){
-            client_id = <?php echo $this->item->id;?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=changeCallTime",
                 data: {

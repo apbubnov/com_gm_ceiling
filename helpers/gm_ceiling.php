@@ -4615,13 +4615,15 @@ class Gm_ceilingHelpersGm_ceiling
 
             foreach ($calcs_goods as $goods_array) {
                 foreach ($goods_array as $goods) {
-                    if($goods->category_id != 1) {
-                        if (array_key_exists($goods->goods_id, $all_goods)) {
-                            $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
-                            $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
-                            $all_goods[$goods->goods_id]->final_count += $goods->final_count;
-                        } else {
-                            $all_goods[$goods->goods_id] = $goods;
+                    if($goods->category_id != 10){
+                        if ($goods->category_id != 1) {
+                            if (array_key_exists($goods->goods_id, $all_goods)) {
+                                $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
+                                $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
+                                $all_goods[$goods->goods_id]->final_count += $goods->final_count;
+                            } else {
+                                $all_goods[$goods->goods_id] = $goods;
+                            }
                         }
                     }
                 }

@@ -81,6 +81,7 @@
                     <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>"/>
                     <input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>"/>
                     <input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>"/>
+                    <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                     <?php if ($this->item->project_status == 3) { ?>
                         <input type="hidden" name="jform[project_status]" value="4"/>
                     <?php } ?>

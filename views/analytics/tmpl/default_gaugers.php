@@ -11,10 +11,14 @@ $data = $analyticModel->getGaugersAnalytic($today,$today);
 ?>
 <h4>Аналитика по замерщикам</h4>
 <div class="row" style="margin-bottom: 15px;">
-    <div class="right">
-        <input type="date" id="date_from" value="<?=$today?>" class="input-gm date_selector">
-        <input type="date" id="date_to" value="<?=$today?>" class="input-gm date_selector" >
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
+        <input type="date" id="date_from" value="<?=$today?>" class="form-control date_selector">
     </div>
+    <div class="col-md-3">
+        <input type="date" id="date_to" value="<?=$today?>" class="form-control date_selector" >
+    </div>
+
 </div>
 <table class="table table_cashbox" id="gaugers_analytic">
     <thead>
@@ -22,26 +26,51 @@ $data = $analyticModel->getGaugersAnalytic($today,$today);
             Замерщик
         </th>
         <th>
-            Кол-во проектов
+            Кол-во замеров
         </th>
         <th>
-            Сумма
+            Кол-во договоров
+        </th>
+        <th>
+            Конверсия
+        </th>
+        <th>
+            Кол-во отказов
+        </th>
+        <th>
+            Сумма договоров
         </th>
         <th>
             Прибыль
         </th>
     </thead>
     <tbody>
-        <?php foreach($data as $item){?>
+        <?php foreach($data as $item){
+            if(!empty($item->deals_count)&&!empty($item->measures_count)){
+                $conversion = round(($item->deals_count*100)/$item->measures_count,2);
+            }
+            else{
+                $conversion = '-';
+            }
+           ?>
             <tr data-id = "<?= $item->id?>" class="tr_click">
                 <td>
                     <?=$item->name?>
                 </td>
-                <td>
-                    <?=$item->projects_count?>
+                <td data-pr_type="measures_projects">
+                    <?= !empty($item->measures_count) ? $item->measures_count : '-'?>
+                </td>
+                <td data-pr_type="deals_projects">
+                    <?= !empty($item->deals_count) ? $item->deals_count : '-'?>
+                </td>
+                <td >
+                    <?=$conversion;?>
+                </td>
+                <td data-pr_type="refused_projects">
+                    <?=!empty($item->refused_count) ? $item->refused_count : '-';?>
                 </td>
                 <td>
-                    <?=$item->total_sum?>
+                    <?=!empty($item->total_sum) ? $item->total_sum : '-';?>
                 </td>
                 <td>
                     <?=$item->total_sum - $item->total_cost;?>
@@ -70,34 +99,38 @@ $data = $analyticModel->getGaugersAnalytic($today,$today);
 
     jQuery(document).ready(function(){
         var data = JSON.parse('<?php echo json_encode($data);?>');
-        jQuery('body').on('click','.tr_click',function(){
-            var gauger_id = jQuery(this).data('id'),
-                projects = data.find(function(elem){
+        jQuery('body').on('click','.tr_click td',function() {
+
+            var pr_type = jQuery(this).data("pr_type"),
+                gauger_id = jQuery(this).closest('tr').data('id'),
+                projects = data.find(function (elem) {
                     return elem.id == gauger_id;
-                }).projects;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
-                data: {
-                    ids : projects
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    console.log(data);
-                    //localStorage.setItem('projectsData',JSON.stringify(data));
-                    fillModalTable(data);
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка получения данных"
-                    });
-                }
-            });
+                })[pr_type];
+            if (!empty(projects)) {
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=getAnaliticProjects",
+                    data: {
+                        ids: projects
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        console.log(data);
+                        //localStorage.setItem('projectsData',JSON.stringify(data));
+                        fillModalTable(data);
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка получения данных"
+                        });
+                    }
+                });
+            }
         });
 
         jQuery('.date_selector').change(function(){
@@ -116,11 +149,18 @@ $data = $analyticModel->getGaugersAnalytic($today,$today);
                         data = result;
                         jQuery("#gaugers_analytic >tbody").empty();
                         jQuery.each(data,function(index,elem){
-                            console.log(elem.total_sum - elem.total_cost);
+                            var measures_count = !empty(elem.measures_count) ? elem.measures_count : '-',
+                                deals_count = !empty(elem.deals_count) ? elem.deals_count : '-',
+                                refused_count = !empty(elem.refused_count) ? elem.refused_count : '-',
+                                conversion = !empty(elem.measures_count) && !empty(elem.deals_count) ? ((elem.deals_count*100)/elem.measures_count).toFixed(2) : '-',
+                                total_sum = !empty(elem.total_sum) ? elem.total_sum : '-';
                             jQuery("#gaugers_analytic > tbody").append('<tr data-id="'+elem.id+'" class="tr_click"></tr>');
                             jQuery("#gaugers_analytic > tbody > tr:last").append('<td>'+ elem.name +'</td>' +
-                                                                                 '<td>'+ elem.projects_count +'</td>' +
-                                                                                 '<td>'+ elem.total_sum +'</td>' +
+                                                                                 '<td data-pr_type="measures_projects">'+ measures_count +'</td>' +
+                                                                                 '<td data-pr_type="deals_projects">'+ deals_count +'</td>' +
+                                                                                 '<td>'+ conversion +'</td>' +
+                                                                                 '<td data-pr_type="refused_projects">'+ refused_count +'</td>' +
+                                                                                 '<td>'+ total_sum +'</td>' +
                                                                                  '<td>'+ (elem.total_sum - elem.total_cost).toFixed(2) +'</td>');
                         });
                     },

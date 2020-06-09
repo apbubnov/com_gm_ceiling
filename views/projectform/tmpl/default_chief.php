@@ -99,6 +99,7 @@ echo parent::getPreloader();
                 <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>"/>
                 <input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>"/>
                 <input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>"/>
+                <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <?php if ($this->item->project_status == 3) { ?>
                     <input type="hidden" name="jform[project_status]" value="4"/>
                 <?php } ?>
@@ -345,12 +346,12 @@ echo parent::getPreloader();
     init_measure_calendar('measures_calendar','jform_project_new_calc_date','jform_project_gauger','mw_measures_calendar',['close_mw','mw_container'], 'measure_info');
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
 
-    var min_project_sum = <?php echo  $min_project_sum;?>;
-    var min_components_sum = <?php echo $min_components_sum;?>;
-    var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-    var project_id = "<?php echo $this->item->id; ?>";
-    var preloader = '<?=parent::getPreloaderNotJS();?>';
-    var client_id = "<?php echo $this->item->id_client;?>";
+    var min_project_sum = <?php echo  $min_project_sum;?>,
+        min_components_sum = <?php echo $min_components_sum;?>,
+        self_data = JSON.parse('<?php echo $self_calc_data;?>'),
+        project_id = "<?php echo $this->item->id; ?>",
+        preloader = '<?=parent::getPreloaderNotJS();?>',
+        client_id = "<?php echo $this->item->id_client;?>";
     jQuery('#mw_container').click(function(e) { // событие клика по веб-документу
         var div = jQuery("#mw_measures_calendar"); // тут указываем ID элемента
         var div1 = jQuery("#mw_mounts_calendar");

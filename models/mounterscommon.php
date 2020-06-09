@@ -82,10 +82,11 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->leftJoin('`rgzbn_gm_ceiling_projects` AS pr ON cl.project_id = pr.id')
                 ->leftJoin('`rgzbn_gm_ceiling_clients` AS cli ON pr.client_id = cli.id')
                 ->leftJoin('`rgzbn_users` AS u ON u.id = cm.mounter_id')
+                ->where('pr.deleted_by_user = 0')
                 ->group(' cli.dealer_id,cm.mounter_id');
 
             $closedSubquery
-                ->select('ms.mounter_id,c.dealer_id,SUM(GREATEST(0.00,ms.sum)) AS  closed')
+                ->select('ms.mounter_id,c.dealer_id,SUM(IF(ms.sum > 0 AND ms.builder_id IS NULL,ms.sum, 0 ))AS  closed')
                 ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                 ->leftJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = ms.project_id')
                 ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')

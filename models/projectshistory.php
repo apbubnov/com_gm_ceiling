@@ -233,6 +233,11 @@ class Gm_ceilingModelProjectshistory extends JModelList
 	        $user = JFactory::getUser();
 	        $dealerId = $user->dealer_id;
 	        $db = JFactory::getDbo();
+
+            $query = 'SET SESSION group_concat_max_len  = 1000000';
+            $db->setQuery($query);
+            $db->execute();
+
 	        $query = $db->getQuery(true);
 	        $subquery = $db->getQuery(true);
 	        $subquery

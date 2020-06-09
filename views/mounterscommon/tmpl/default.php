@@ -19,32 +19,32 @@ $types = $mountersdebtModel->getTypes();
 <h3>Сводная таблица по монтажным бригадам </h3>
 <table class="table table_cashbox" id="common_table">
     <thead>
-        <tr>
-            <th class="center">
-                Монтажник
-            </th>
-            <th class="center">
-                Объект
-            </th>
-            <th class="center">
-                В работе
-            </th>
-            <th class="center">
-                Закрыто
-            </th>
-            <th class="center">
-                Выплачено
-            </th>
-            <th class="center">
-                Остаток
-            </th>
-            <th class="center">
-                Закрыть
-            </th>
-            <th class="center">
-                Долг
-            </th>
-        </tr>
+    <tr>
+        <th class="center">
+            Монтажник
+        </th>
+        <th class="center">
+            Объект
+        </th>
+        <th class="center">
+            В работе
+        </th>
+        <th class="center">
+            Закрыто
+        </th>
+        <th class="center">
+            Выплачено
+        </th>
+        <th class="center">
+            Остаток
+        </th>
+        <th class="center">
+            Закрыть
+        </th>
+        <th class="center">
+            Долг
+        </th>
+    </tr>
     </thead>
     <tbody>
     <?php foreach ($items as $mounter_id => $item) {
@@ -117,19 +117,19 @@ $types = $mountersdebtModel->getTypes();
                         </div>
                     </div>
                     <?php if(!empty($item['mounter_debt'])){ ?>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12">
-                            <input type="checkbox" id="auto_<?=$value->builder_id.$mounter_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
-                            <label for="auto_<?=$value->builder_id. $mounter_id?>" class="cbx">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <input type="checkbox" id="auto_<?=$value->builder_id.$mounter_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
+                                <label for="auto_<?=$value->builder_id. $mounter_id?>" class="cbx">
                                                     <span>
                                                         <svg width="12px" height="10px" viewBox="0 0 12 10">
                                                             <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                                                         </svg>
                                                     </span>
-                                <span>Автосписание долга</span>
-                            </label>
+                                    <span>Автосписание долга</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
                     <?php }?>
 
                 </td>
@@ -164,10 +164,10 @@ $types = $mountersdebtModel->getTypes();
                         <?php }?>
                     </td>
                 <?php }?>
-            <?php if(count($item) > 1){
-                $rowspan = true;
-                echo '</tr>';
-             } ?>
+                <?php if(count($item) > 1){
+                    $rowspan = true;
+                    echo '</tr>';
+                } ?>
             <?php }?>
             <?php $rowspan = false;?>
 
@@ -210,20 +210,20 @@ $types = $mountersdebtModel->getTypes();
     <div id="detailed_debt" class="modal_window">
         <table id="mounter_debt_detailed" class="table_project_analitic">
             <thead>
-                <tr class="caption_table">
-                    <th class="center">
-                        Сумма
-                    </th>
-                    <th class="center">
-                        Тип
-                    </th>
-                    <th class="center">
-                        Дата
-                    </th>
-                    <th class="center">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </th>
-                </tr>
+            <tr class="caption_table">
+                <th class="center">
+                    Сумма
+                </th>
+                <th class="center">
+                    Тип
+                </th>
+                <th class="center">
+                    Дата
+                </th>
+                <th class="center">
+                    <i class="fas fa-trash-alt"></i>
+                </th>
+            </tr>
             </thead>
             <tbody>
 
@@ -286,7 +286,7 @@ $types = $mountersdebtModel->getTypes();
                         jQuery("#detailed_salary > tbody").attr('data-builder', builder_id);
                         jQuery("#detailed_salary > tbody > tr:last").attr('data-id',el.sId);
                         if(el.sum < 0){
-                            jQuery("#detailed_salary > tbody > tr:last").append('<td class="salary_sum">'+el.sum+'</td><td>'+note+'</td><td class="date">'+el.datetime+'</td><td><button class="btn btn-danger del_salary"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>')
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td class="salary_sum">'+el.sum+'</td><td>'+note+'</td><td class="date">'+el.datetime+'</td><td><button class="btn btn-danger del_salary"><i class="fas fa-trash-alt"></i></button></td>')
                         }
                         else{
                             jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td colspan="2">'+el.datetime+'</td>')
@@ -312,12 +312,12 @@ $types = $mountersdebtModel->getTypes();
         });
 
         jQuery('body').on('click','.del_salary',function(){
-           var builder_id = jQuery("#detailed_salary > tbody").data('builder'),
-               mounter_id = jQuery("#detailed_salary > tbody").data('mounter'),
-               tr = jQuery(this).closest('tr'),
-               id = tr.data('id'),
-               sum = tr.find('.salary_sum').text();
-           console.log(sum,id);
+            var builder_id = jQuery("#detailed_salary > tbody").data('builder'),
+                mounter_id = jQuery("#detailed_salary > tbody").data('mounter'),
+                tr = jQuery(this).closest('tr'),
+                id = tr.data('id'),
+                sum = tr.find('.salary_sum').text();
+            console.log(sum,id);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=mounterssalary.deletePay",
                 data: {
@@ -367,11 +367,11 @@ $types = $mountersdebtModel->getTypes();
                     jQuery('#mounter_debt_detailed > tbody').attr('data-mounter',mounter_id);
                     jQuery.each(responseData,function(index,elem){
                         jQuery('#mounter_debt_detailed > tbody').append('<tr data-type="'+elem.type+'">' +
-                                                                            '<td class="sum">'+elem.sum+'</td>'+
-                                                                            '<td>'+elem.title+'</td>'+
-                                                                            '<td>'+elem.date_time+'</td>'+
-                                                                            '<td><button class="btn btn-danger del_debt" data-id="'+elem.id+'"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>'+
-                                                                        '</tr>');
+                            '<td class="sum">'+elem.sum+'</td>'+
+                            '<td>'+elem.title+'</td>'+
+                            '<td>'+elem.date_time+'</td>'+
+                            '<td><button class="btn btn-danger del_debt" data-id="'+elem.id+'"><i class="fas fa-trash-alt"></i></button></td>'+
+                            '</tr>');
                     });
                     console.log(responseData);
                     jQuery("#mw_container").show();
@@ -392,13 +392,13 @@ $types = $mountersdebtModel->getTypes();
         });
 
         jQuery('body').on('click','.del_debt',function(){
-           var id = jQuery(this).data('id'),
-               mounter = jQuery('#mounter_debt_detailed > tbody').data('mounter'),
-               tr = jQuery(this).closest('tr'),
-               type = tr.data('type'),
-               sum = tr.find('.sum').text();
-           console.log(id,mounter);
-           jQuery.ajax({
+            var id = jQuery(this).data('id'),
+                mounter = jQuery('#mounter_debt_detailed > tbody').data('mounter'),
+                tr = jQuery(this).closest('tr'),
+                type = tr.data('type'),
+                sum = tr.find('.sum').text();
+            console.log(id,mounter);
+            jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=users.delMounterDebtData",
                 data: {
                     id: id,
@@ -507,6 +507,7 @@ $types = $mountersdebtModel->getTypes();
             }
         }
         else{
+
             var current_builder = mounter_data['builder_data'].find(function(element,index){
                 var result = null;
                 if(element.builder_id == builder_id){
@@ -514,7 +515,10 @@ $types = $mountersdebtModel->getTypes();
                 }
                 return result;
             });
+            console.log(current_builder);
+            return;
             if(check_pay_possibility(current_builder,close_sum)){
+
                 savePay(mounter_id,close_sum,current_builder.builder_id,payed_td,rest_td,current_builder);
                 var n = noty({
                     timeout: 2000,
@@ -598,10 +602,10 @@ $types = $mountersdebtModel->getTypes();
             dataType: "json",
             async: false,
             success: function (responseData) {
-               /* data[0].payed = +data.payed + paid_sum-0;
-                data[0].rest += +paid_sum;
-                /!*payed_td[0].innerText = data.payed;
-                rest_td[0].innerText = data.rest;*!/*/
+                /* data[0].payed = +data.payed + paid_sum-0;
+                 data[0].rest += +paid_sum;
+                 /!*payed_td[0].innerText = data.payed;
+                 rest_td[0].innerText = data.rest;*!/*/
                 console.log(data);
             },
             error: function (data) {
