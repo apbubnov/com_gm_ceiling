@@ -30,7 +30,7 @@ $userId = $user->get('id');
         min-width: 280px;
     }
 </style>
-<form id="calculate_form" onsubmit="check(this); return false;" action="/index.php?option=com_gm_ceiling&task=reservecalculation.save&type=<?php echo $type; ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+<form id="calculate_form" onsubmit="check(this); return false;" action="/index.php?option=com_gm_ceiling&task=addproject.save" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <h2 class="center">Запись на замер</h2>
     <div class="container">
         <div class="row">

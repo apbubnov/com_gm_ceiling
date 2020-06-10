@@ -61,7 +61,7 @@ $answer3 = $model->getDataByStatus("UnComplitedMountings");
 	<div class="start_page">
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Назначенные <br>на монтаж и<br>запущенные<br>в производство</a>
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>"><i class="far fa-money-bill-alt"></i> Договоры</a>
 				<?php if ($answer2[0]->count != 0) { ?>
 					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
 				<?php } ?>
@@ -69,7 +69,7 @@ $answer3 = $model->getDataByStatus("UnComplitedMountings");
 		</div>
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Не назначенные<br>на монтаж или<br>не запущенные<br>в производство</a>
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fas fa-hammer"></i> Монтажи</a>
 				<?php if ($answer3[0]->count != 0) { ?>
 					<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
 				<?php } ?>

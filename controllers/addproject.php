@@ -60,37 +60,34 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 			$app   = JFactory::getApplication();
 
 			// Get the user data.
-			$data = JFactory::getApplication()->input->get('jform', array(), 'array');
-
-			if(empty($data['calculation_title'])) {
-				$data['calculation_title'] = "Безымянный потолок";
-			}	
-
-			// Checking if the user can remove object
-			
+			$data = JFactory::getApplication()->input->get('jform', [], 'array');
+			// Checking if the user can remove objec
 			$user = JFactory::getUser();
 			$userId = $user->get('id');
 
-			// Checking if the user can remove object
-			//$user = JFactory::getUser();
-			$dealer = JFactory::getUser($user->dealer_id);
+            $dealer_info = Gm_ceilingHelpersGm_ceiling::getDealerInfo($user->dealer_id);
+            if (empty($dealer_info)) {
+                $gm_canvases_margin = 0;
+                $gm_components_margin = 0;
+                $gm_mounting_margin = 0;
+                $dealer_canvases_margin = 0;
+                $dealer_components_margin = 0;
+                $dealer_mounting_margin = 0;
+            } else {
+                $gm_canvases_margin = $dealer_info->gm_canvases_margin;
+                $gm_components_margin = $dealer_info->gm_components_margin;
+                $gm_mounting_margin = $dealer_info->gm_mounting_margin;
+                $dealer_canvases_margin = $dealer_info->dealer_canvases_margin;
+                $dealer_components_margin =$dealer_info->dealer_components_margin;
+                $dealer_mounting_margin = $dealer_info->dealer_mounting_margin;
+            }
+			$project_data = [];
+			$client_data = [];
 
-			$dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
-			$gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
-			$gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
-			$gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
-			$dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
-			$dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
-			$dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
-			$project_model = $this->getModel('ProjectForm', 'Gm_ceilingModel');
-			$project_data = array();
-			$client_data = array();
-			
-			$client_bool = true;
-			if($data['client_id']==0)// если новый клиент создаем нового клиента
+
+			if(empty($data['client_id']))// если новый клиент создаем нового клиента
 			{
 				$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
-				//$client_data['state'] = 1;
 				$client_data['created'] = date("Y-m-d");
 				$client_data['client_name'] = $data['client_name'];
 				$client_data['client_contacts'] = preg_replace('/[\(\)\-\s]/', '', $data['client_contacts']);
@@ -98,8 +95,7 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 				$groups = $user->get('groups');
 				if (in_array("22", $groups) || in_array("21", $groups) || in_array("17", $groups) || in_array("12", $groups)) $client_data['dealer_id'] = $user->dealer_id;
 				else if(in_array("14", $groups)) $client_data['dealer_id'] = $userId;
-				//$client_data['manager_id'] = $user->id;
-				
+
 				$client_id = $client_model->save($client_data);
 				if ($client_id == 'client_found')
 				{
@@ -115,66 +111,56 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 				$dopinfo = $client->getInfo($data['client_id']);
 				$data['client_name'] = $dopinfo->client_name;
 				$data['client_contacts'] = $dopinfo->phone;
-
 			}
 			
-			if ($client_bool)
-			{
-				$project_model = $this->getModel('ProjectForm', 'Gm_ceilingModel');
-				
-				$project_data['state'] = 1;
-				$project_data['checked_out'] = null;
-				$adress = $data['project_info'].", дом: ".$data['project_info_house'];
-				if(!empty($data['project_info_bdq'])) $adress .= ", корпус: ".$data['project_info_bdq'];
-				if(!empty($data['project_apartment'])) $adress .= ", квартира: ".$data['project_apartment'];
-				if(!empty($data['project_info_porch'])) $adress .= ", подъезд: ".$data['project_info_porch'];
-				if(!empty($data['project_info_floor'])) $adress .= ", этаж: ".$data['project_info_floor'];
-				if(!empty($data['project_info_code'])) $adress .= ", код: ".$data['project_info_code'];
-				//$adress = $data['project_info'].", дом: ".$data['project_info_house'].", корпус: ".$data['project_info_bdq'].", квартира: ".$data['project_apartment'].
-				//", подъезд: ".$data['project_info_porch'].", этаж: ".$data['project_info_floor'].", код: ".$data['project_info_code'];
-				$project_data['project_info'] = $adress;
-				$project_data['project_status'] = 1;
-				$project_data['project_calculation_date'] = $data['project_calculation_date'].' '.$data['project_calculation_daypart'];
-				$project_data['project_note'] = $data['project_note'];
-				$project_data['dealer_manager_note'] = $data['dealer_manager_note'];
-				$project_data['dealer_id'] = $user->dealer_id;
-				$project_data['project_calculator'] = $data['project_calculator'];
-				if ($user->dealer_id == 1) {
-					$project_data['who_calculate'] = 1;
-				} else {
-					$project_data['who_calculate'] = 0;
-				}
-				$project_data['created'] = date("Y-m-d");
-				$project_data['read_by_manager'] = $user->dealer_id;
 
-				$dealer = JFactory::getUser($user->dealer_id);
-				
-				$project_data['project_discount'] = $dealer->discount;
-				$project_data['gm_canvases_margin']   = $gm_canvases_margin;
-				$project_data['gm_components_margin'] = $gm_components_margin;
-				$project_data['gm_mounting_margin']   = $gm_mounting_margin;
+            $project_model = $this->getModel('ProjectForm', 'Gm_ceilingModel');
 
-				$project_data['dealer_canvases_margin']   = $dealer_canvases_margin;//$dealer->dealer_canvases_margin;
-				$project_data['dealer_components_margin'] = $dealer_components_margin;
-				$project_data['dealer_mounting_margin']   = $dealer_mounting_margin;
+            $project_data['state'] = 1;
+            $project_data['checked_out'] = null;
+            $adress = $data['new_address'].", дом: ".$data['new_house'];
+            if(!empty($data['new_bdq'])) $adress .= ", корпус: ".$data['new_bdq'];
+            if(!empty($data['new_apartment'])) $adress .= ", квартира: ".$data['new_apartment'];
+            if(!empty($data['new_porch'])) $adress .= ", подъезд: ".$data['new_porch'];
+            if(!empty($data['new_floor'])) $adress .= ", этаж: ".$data['new_floor'];
+            if(!empty($data['new_code'])) $adress .= ", код: ".$data['new_code'];
 
-				Gm_ceilingHelpersGm_ceiling::notify($data, 0);
+            $project_data['project_info'] = $adress;
+            $project_data['project_status'] = 1;
+            $project_data['project_calculation_date'] = $data['project_calculation_date'];
+            $project_data['project_note'] = $data['project_note'];
 
-				$project_id = $project_model->save($project_data);
-				
-				// Redirect to the list screen.
-				//KM_CHANGED START
-				$this->setMessage(JText::_('COM_GM_CEILING_CALCULATION_RESERVED_SUCCESSFULLY'));
-				$menu = JFactory::getApplication()->getMenu();
-				$item = $menu->getActive();
-			}
-			else
-			{
-				$this->setMessage('Клиент с таким номером существует!');
-			}
-			$url  = 'index.php?option=com_gm_ceiling&task=mainpage';
-			$this->setRedirect(JRoute::_($url, false));
-			//KM_CHANGED END
+            $project_data['project_calculator'] = $data['project_calculator'];
+
+            $project_data['created'] = date("Y-m-d");
+            $project_data['read_by_manager'] = $user->id;
+
+            $dealer = JFactory::getUser($user->dealer_id);
+
+            $project_data['project_discount'] = $dealer->discount;
+            $project_data['gm_canvases_margin']   = $gm_canvases_margin;
+            $project_data['gm_components_margin'] = $gm_components_margin;
+            $project_data['gm_mounting_margin']   = $gm_mounting_margin;
+
+            $project_data['dealer_canvases_margin']   = $dealer_canvases_margin;
+            $project_data['dealer_components_margin'] = $dealer_components_margin;
+            $project_data['dealer_mounting_margin'] = $dealer_mounting_margin;
+            if(!empty($data['advt'])){
+                $project_data['api_phone_id'] = $data['advt'];
+            }
+            Gm_ceilingHelpersGm_ceiling::notify($data, 0);
+            $project_id = $project_model->save($project_data);
+            if(!empty($data['measure_note'])){
+               $projectModel  = Gm_ceilingHelpersGm_ceiling::getModel('project');
+               $projectModel->saveNote($project_id,$data['measure_note'],2);
+            }
+            /*Запись в историю проектов*/
+            $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
+            $model_projectshistory->save($project_id, 1);
+
+
+            $this->setMessage(JText::_('COM_GM_CEILING_CALCULATION_RESERVED_SUCCESSFULLY'));
+			$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&task=mainpage', false));
 		}
 		catch(Exception $e)
         {

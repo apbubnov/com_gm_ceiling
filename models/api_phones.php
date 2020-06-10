@@ -112,7 +112,7 @@ class Gm_ceilingModelApi_phones extends JModelList
 			$query->from('#__gm_ceiling_api_phones');
 			$query->where("dealer_id = $dealer_id OR dealer_id IS NULL");
 			$db->setQuery($query);
-			$item = $db->loadAssocList('id');
+			$item = $db->loadObjectList('id');
 			return $item;
 		}
 		catch(Exception $e)

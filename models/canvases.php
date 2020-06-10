@@ -880,7 +880,7 @@ class Gm_ceilingModelCanvases extends JModelList
                                 `c`.`texture`,
                                 '\"}, \"manufacturers\": [',
                                 GROUP_CONCAT(
-                                    DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `c`.`manufacturer`, '\"}') ORDER BY `c`.`manufacturer_id`
+                                    DISTINCT CONCAT('{\"id\": \"', `c`.`manufacturer_id`, '\", \"name\": \"', `c`.`manufacturer`, '\"}') ORDER BY ISNULL(`c`.`order`),`c`.`order` 
                                     SEPARATOR ', '
                                 ),
                                 ']}'
@@ -889,6 +889,7 @@ class Gm_ceilingModelCanvases extends JModelList
                   ->where('`c`.`visibility` = 1')
                   ->group("`c`.`texture_id`")
                   ->order("`c`.`texture_id`");
+              //throw new Exception($query);
           }
 
           $db->setQuery($query);

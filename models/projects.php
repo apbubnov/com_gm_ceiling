@@ -282,17 +282,6 @@ class Gm_ceilingModelProjects extends JModelList
                 //     $query->where('`p`.`project_status` = 3');
                 //     $query->where('`p`.`dealer_id` = '.$user->dealer_id);
                 //     break;
-                case 'chiefprojects':
-                    $query->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS m ON p.id = m.project_id');
-                    $query->where("(
-                                    (p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
-                                    OR
-                                    (p.project_status IN (5) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00'))
-                                   )
-                                   AND `cl`.`dealer_id` = $user->dealer_id
-                                ");
-                    break;
-
                 case 'gmmanager':
                     if ($subtype == 'runprojects') {
                         $query->where("`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30)");
@@ -419,10 +408,21 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`project_status` = 1');
 
                     } else {
-                        $query->where('`project_status` in (10, 5, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29,30)');
+                        $query->where('`project_status` in (5,10, 11, 16, 17, 23, 6, 7, 8, 24, 25, 26, 27, 28, 29,30)');
                     }
                     break;
+                case 'chiefprojects':
+                   /* $query->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS m ON p.id = m.project_id');
+                    $query->where("(
+                                    (p.project_status = 4 AND m.date_time IS NOT NULL AND m.date_time <> '0000-00-00 00:00:00')
+                                    OR
+                                    (p.project_status IN (5) AND (m.date_time IS NULL OR m.date_time = '0000-00-00 00:00:00'))
+                                   )
+                                   AND `cl`.`dealer_id` = $user->dealer_id
+                                ");*/
+                    $query->where('`project_status` in (4)');
 
+                    break;
                 case 'dealer':
                     $query->where('(`cl`.`dealer_id` = '.$user->id.' OR `cl`.`dealer_id` = '.$user->dealer_id.')');
                     break;

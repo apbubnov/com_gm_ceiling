@@ -216,7 +216,7 @@ if(empty($rest)){
         </p>
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Договоры/Монтажи</a>
                 <?php if ($allMount != 0) { ?>
                     <div class="circl-digits"><?php echo $allMount; ?></div>
                 <?php } ?>

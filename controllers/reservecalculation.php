@@ -117,13 +117,6 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 				$project_data['project_note'] = $data['project_note'];
 				$project_data['dealer_id'] = $user->dealer_id;
 				$project_data['project_calculator'] = $data['project_calculator'];
-				$gauger_dealer_id = $project_model->WhatDealerGauger($project_data['project_calculator']);
-				if ($gauger_dealer_id[0]->dealer_id == 1) {
-					$project_data['who_calculate'] = 1;
-				}
-				else  {
-					$project_data['who_calculate'] = 0;
-				}
 				$project_data['created'] = date("Y-m-d");
 				$project_data['project_discount'] = $dealer->discount;
 				$project_data['gm_canvases_margin']   = $gm_canvases_margin;
@@ -137,6 +130,7 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 				$project_id = $project_model->save($project_data);
 				$data = $project_model->getData($project_id);
                 Gm_ceilingHelpersGm_ceiling::notify(get_object_vars($data),0);
+
 				// Redirect to the list screen.
 				$this->setMessage(JText::_('COM_GM_CEILING_CALCULATION_RESERVED_SUCCESSFULLY'));
 				$menu = JFactory::getApplication()->getMenu();

@@ -484,4 +484,18 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getClientByPhoneNumber(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $dealerId = $jinput->getInt('dealer_id');
+            $phone = $jinput->get('phone','','STRING');
+            $clientPhonesModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $result = $clientPhonesModel->getItemsByPhoneNumber($phone,$dealerId);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

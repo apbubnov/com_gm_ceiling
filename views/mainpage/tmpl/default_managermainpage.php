@@ -21,6 +21,9 @@ $userId     = $user->get('id');
 <h2 class="center">Менеджер</h2>
 
 <div class="start_page">
+    <p class="center">
+        <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-edit" aria-hidden="true"></i>Рассчитать</button>
+    </p>
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=manager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
 	</p>	
@@ -34,9 +37,93 @@ $userId     = $user->get('id');
 	    <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
 	</p>
 	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=manager', false); ?>"><i class="fas fa-pen" aria-hidden="true"></i> Запись на замер</a>
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=manager', false); ?>"><i class="fas fa-pen" aria-hidden="true"></i> Запись на замер</a>
 	</p>
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайсы</a>
 	</p>
 </div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("#precalc_btn").click(function () {
+            user_id = "<?php echo $userId;?>";
+            create_new_client(user_id);
+        });
+    });
+
+    function create_precalculation(proj_id)
+    {
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=calculation.create_calculation",
+            data: {
+                proj_id: proj_id
+            },
+            success: function(data){
+                console.log(data);
+                location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=precalc&calc_id='+data+'&precalculation=1';
+            },
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера."
+                });
+            }
+        });
+    }
+
+    function create_project(client_id){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+            data: {
+                client_id: client_id
+            },
+            success: function (data) {
+                create_precalculation(data);
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при создании заказа. Сервер не отвечает"
+                });
+            }
+        });
+    }
+    function create_new_client(id){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=client.create",
+            data: {
+                user_id: id
+            },
+            success: function (data) {
+                create_project(data);
+            },
+            dataType: "text",
+            timeout: 10000,
+            async: false,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при создании. Сервер не отвечает"
+                });
+            }
+        });
+    }
+</script>

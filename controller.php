@@ -3117,15 +3117,20 @@ public function register_mnfctr(){
         {
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'calls.txt', json_encode($_POST)."\n----------\n", FILE_APPEND);
-            // if (!empty($_POST['phone'])) {
-            file_put_contents($files.'calls.txt', json_encode($_POST['phone'])."\n==========\n", FILE_APPEND);
+            $phone = $_POST['phone'];
+            if (empty($_POST['phone'])) {
+                $jinput = JFactory::getApplication()->input;
+                $phone = $jinput->get('phone','','STRING');
+            }
+            $phone = mb_ereg_replace('[^\d]', '', $phone);
+            file_put_contents($files.'calls.txt', json_encode($phone)."\n==========\n", FILE_APPEND);
             $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
             $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 
             $data['client_name'] = 'Клиент с обзвона';
-            $data['client_contacts'] = explode('+', $_POST['phone'])[1];
+            $data['client_contacts'] = $phone;
             $data['dealer_id'] = 697;
             $data['manager_id'] = 697;
             //die($_POST['phone'].' '.$data['client_contacts']);
@@ -3141,7 +3146,7 @@ public function register_mnfctr(){
                 $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 697);
                 $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 697);
             }
-            die(true);
+            die(json_encode(true));
            /* }
             else {
                 die(false);

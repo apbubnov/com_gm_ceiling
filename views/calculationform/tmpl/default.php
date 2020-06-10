@@ -849,95 +849,92 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     ]
                 }
             ]
-        },
-        {
-            id: "additional_works",
-            title: "Дополнительно",
-            groups: [
-                {
-                    title: "Другие работы по монтажу",
-                    description: "В расчет включается допалнительные работы",
-                    id: "dop_mount",
-                    main_group_id: "additional_works",
-                    icon: "/images/hammer.png",
-                    fields: [
-                        {
-                            id: "dop_works",
-                            input_type: "4",
-                            title: "Дополнительные монтажные работы",
-                            goods_category_id: null,
-                            parent: null,
-                            group_id: "dop_mount",
-                            jobs: [],
-                            duplicate: "1",
-                            subfields: [
-                                {
-                                    id: "work_title",
-                                    title: "Название"
-                                },
-                                {
-                                    id: "work_cost",
-                                    title: "Стоимость"
-                                }
-                            ],
-
-
-
-                        }
-                    ]
-                },
-                {
-                    title: "Другие комплектующие",
-                    description: "В расчет включается стоимость дополнительных компонентов",
-                    id: "dop_components",
-                    main_group_id: "additional_works",
-                    icon: "/images/drcomplect.png",
-                    fields: [
-                        {
-                            id:"dop_components",
-                            input_type: "4",
-                            title: "Дополнительные комплектующие",
-                            goods_category_id: null,
-                            parent: null,
-                            group_id: "dop_components",
-                            jobs: [],
-                            duplicate: "1",
-                            subfields: [
-                                {
-                                    id: "component_title",
-                                    title: "Название"
-                                },
-                                {
-                                    id: "component_cost",
-                                    title: "Стоимость"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    title: "Доп.комплектующие со склада",
-                    description: "В расчет включается стоимость дополнительных компонентов со склада",
-                    id: "dop_goods",
-                    main_group_id: "additional_works",
-                    icon: "/images/drcomplect.png",
-                    fields: [
-                        {
-                            id: "dopgoods",
-                            group_id: "dop_goods",
-                            goods_category_id: null,
-                            parent: null,
-                            goods: [],
-                            jobs: [],
-                            duplicate: "0",
-                            input_type: "3",
-                            title: "Выберите категорию"
-                        }
-                    ]
-                }
-            ]
         }
-    ],
+        ],
+        DEFAULT_FIELDS = [
+            {
+                title: "Другие работы по монтажу",
+                description: "В расчет включается допалнительные работы",
+                id: "dop_mount",
+                main_group_id: "4",
+                icon: "/images/hammer.png",
+                fields: [
+                    {
+                        id: "dop_works",
+                        input_type: "4",
+                        title: "Дополнительные монтажные работы",
+                        goods_category_id: null,
+                        parent: null,
+                        group_id: "dop_mount",
+                        jobs: [],
+                        duplicate: "1",
+                        subfields: [
+                            {
+                                id: "work_title",
+                                title: "Название"
+                            },
+                            {
+                                id: "work_cost",
+                                title: "Стоимость"
+                            }
+                        ],
+
+
+
+                    }
+                ]
+            },
+            {
+                title: "Другие комплектующие",
+                description: "В расчет включается стоимость дополнительных компонентов",
+                id: "dop_components",
+                main_group_id: "4",
+                icon: "/images/drcomplect.png",
+                fields: [
+                    {
+                        id:"dop_components",
+                        input_type: "4",
+                        title: "Дополнительные комплектующие",
+                        goods_category_id: null,
+                        parent: null,
+                        group_id: "dop_components",
+                        jobs: [],
+                        duplicate: "1",
+                        subfields: [
+                            {
+                                id: "component_title",
+                                title: "Название"
+                            },
+                            {
+                                id: "component_cost",
+                                title: "Стоимость"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "Доп.комплектующие со склада",
+                description: "В расчет включается стоимость дополнительных компонентов со склада",
+                id: "dop_goods",
+                main_group_id: "4",
+                icon: "/images/drcomplect.png",
+                fields: [
+                    {
+                        id: "dopgoods",
+                        group_id: "dop_goods",
+                        goods_category_id: null,
+                        parent: null,
+                        goods: [],
+                        jobs: [],
+                        duplicate: "0",
+                        input_type: "3",
+                        title: "Выберите категорию"
+                    }
+                ]
+            }
+            ]
+    ,
     harpoon_field = `<?= $harpoon_html;?>`,
     ceiling_field = `<?= $ceiling_html;?>`;
     var componentsInCategories;
@@ -962,7 +959,13 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             DEFAULT_MAINGROUPS.shift();
         }
         data = data.concat(DEFAULT_MAINGROUPS);
-      /*  console.log("data", data);
+        jQuery.each(DEFAULT_FIELDS,function(index,field){
+            var insert_index = data.findIndex(function (elem) {
+                return elem.id == field.main_group_id;
+            });
+            data[insert_index].groups.push(field);
+        });
+        console.log("data", data);/*
         console.log('componentsInCategories', componentsInCategories);*/
 
         document.body.onload = function () {
@@ -971,8 +974,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         //console.log(data);
         createBlocks(data);
         //console.log(jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container'));
-        jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container').prepend(ceiling_field);
-        jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container').prepend(harpoon_field);
+        jQuery('.btn_calc[data-maingroup_id="4"]').parent().find('.inner_container').prepend(ceiling_field);
+        jQuery('.btn_calc[data-maingroup_id="4"]').parent().find('.inner_container').prepend(harpoon_field);
 
 
         jQuery('.col-sm-6').on('mouseenter', '.help', function () {
