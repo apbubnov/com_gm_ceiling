@@ -22,7 +22,11 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 //--------------------------------------
 
 ?>
-
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <h2 class="center">Замерщик</h2>
 <div class="start_page">
 	<?php if ($user->dealer_type == 1){?>
@@ -30,18 +34,22 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
         </p>
 	<?php }?>
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> График замеров</a>
-			<?php if ($answer1[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
-			<?php } ?>
-		</div>
+	<div class="row center">
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fa fa-calendar" aria-hidden="true"></i> График замеров
+                    </div>
+                    <?php if ($answer1[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 	</div>
-	<p class="center">
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="far fa-calendar-check" aria-hidden="true"></i> Запущенные</a>
-	</p>
-	<p class="center">
+	</div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-	</p>
+	</div>
 </div>

@@ -543,7 +543,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                         <div class="countDiv">
                                             <input type="radio" data-id="self_mount" id="self_mount"
                                                    name="cancel_mount" class="radio" data-count="1"
-                                                   value="1">
+                                                   value="1" <?=$dealer->dealer_type == 7 ? 'checked':''?>>
                                             <label for="self_mount">Свой прайс</label>
                                         </div>
                                     </div>
@@ -938,6 +938,38 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
     harpoon_field = `<?= $harpoon_html;?>`,
     ceiling_field = `<?= $ceiling_html;?>`;
     var componentsInCategories;
+
+    function createAdditionalWorkFields(specJobs,select) {
+        console.log('!!!',select.value);
+        if (!empty(specJobs)) {
+            jQuery.each(specJobs, function (n, specJob) {
+                var divRow = jQuery(document.createElement('div')),
+                    titleDiv = jQuery(document.createElement('div')),
+                    countDiv = jQuery(document.createElement('div')),
+                    label = jQuery(document.createElement('label')),
+                    input = createInput();
+                input.addClass('quantity_input');
+
+                titleDiv.addClass('row title');
+                titleDiv.css({"margin-left": "15px", "color": "#414099"})
+                label.css({"margin-left": "15px", "margin-bottom": "2px", "color": "#414099"})
+                label.html(specJob.name);
+                titleDiv.append(label);
+                titleDiv.attr('data-for_value', select.value);
+
+                divRow.addClass('col-xs-12 col-md-12 row-fields');
+                divRow.attr('data-jobs', "[" + specJob.id + "]");
+                divRow.attr('data-for_value', select.value);
+                divRow.attr('data-id','specJob'+specJob.id);
+                countDiv.addClass('col-sm-12 col-xs-12 countDiv');
+                countDiv.append(input);
+                divRow.append(titleDiv);
+                divRow.append(countDiv);
+                jQuery(select).closest('.row-fields').after(divRow);
+            });
+        }
+    }
+
     jQuery(document).ready(function () {
 
         if (seam == '1')
@@ -992,7 +1024,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
 
         jQuery('body').on('click', '.add', function () {
             var parent = jQuery(this).parent(),
-                rowFields = parent.prev().clone(),
+                rowFields = jQuery(this).closest('.div-fields').find('.row-fields[data-id="'+jQuery(this).data('field')+'"]').first().clone(),
                 prev = parent.prev(),
                 count, radioName = '',
                 lastRadioName = jQuery(prev.find('input[type=radio]')[0]).prop('name');
@@ -1060,8 +1092,14 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             var parent = jQuery(this).closest('.row-fields'),
                 prevRow = parent.prev(),
                 nextRow = parent.next();
+            var row = jQuery(this).closest('.row-fields');
             if (prevRow.hasClass('row-fields') || nextRow.hasClass('row-fields')) {
-                jQuery(this).closest('.row-fields').remove();
+                var select = jQuery('.goods_select',row);
+                console.log(select);
+                if(!empty(select)){
+                    jQuery('.row-fields[data-for_value="'+select.val()+'"]').remove();
+                }
+                row.remove();
             }
         });
 
@@ -1131,6 +1169,20 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
 
             jQuery(this).parent().append(divRow);
 
+        });
+
+        jQuery('body').on('click','.goods_select',function () {
+            jQuery(this).data('old_val',this.value);
+        }).on('change','.goods_select',function(){
+            var select = this,
+                oldVal = jQuery(this).data('old_val'),
+                oldOption = jQuery('option[value="'+oldVal+'"]',this),
+                specJobs = jQuery('option:selected',this).data('spec_jobs');
+            /*удаляем старые поля, если они были*/
+            jQuery('.title[data-for_value="'+oldVal+'"]').remove();
+            jQuery('.row-fields[data-for_value="'+oldVal+'"]').remove();
+            /*если есть доп работы добавляем поля для ввода количетсва*/
+            createAdditionalWorkFields(specJobs,select);
         });
 
         jQuery("#sketch_switch").click(function(){
@@ -1398,11 +1450,13 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
     function createFields(fieldsData) {
         var resultDiv = jQuery(document.createElement('div'));
         jQuery.each(fieldsData, function (index, elem) {
+
             var divRow = jQuery(document.createElement('div')),
                 countDiv = jQuery(document.createElement('div')),
                 titleDiv = jQuery(document.createElement('div')),
                 label = jQuery(document.createElement('label')),
-                jobsIds = getJobsIds(elem.jobs);
+                jobsIds = getIds(elem.jobs),
+                goodsIds = (!empty(elem.default_goods)) ? getIds(elem.default_goods) : [];
             countDiv.addClass('countDiv');
             titleDiv.addClass('row title');
             titleDiv.css({"margin-left": "15px", "color": "#414099"})
@@ -1414,6 +1468,9 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             label.html(elem.title);
             titleDiv.append(label);
             divRow.attr('data-jobs', jobsIds);
+            if(!empty(goodsIds)) {
+                divRow.attr('data-goods', goodsIds);
+            }
             if (empty(elem.goods_category_id)) {
                 if (elem.input_type == 0) {
                     resultDiv.append(titleDiv);
@@ -1580,8 +1637,11 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             var option = jQuery(document.createElement('option'));
             option.prop('value', elem.id);
             option.prop('text', elem.name);
+            if(!empty(elem.spec_jobs)){
+                option.attr('data-spec_jobs',JSON.stringify(elem.spec_jobs));
+            }
             if (!empty(elem.child_goods)) {
-                option.attr('data-child_goods', getJobsIds(elem.child_goods));
+                option.attr('data-child_goods', getIds(elem.child_goods));
             }
             select.append(option);
         });
@@ -1604,7 +1664,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         radioBtn.prop('id', field.id);
         radioBtn.prop('name', field.group_id + '_1');
         radioBtn.addClass('radio');
-        radioBtn.prop('value', getJobsIds(field.jobs));
+        radioBtn.prop('value', getIds(field.jobs));
         label.prop('for', field.id);
         label.html(field.title);
         result = {radioBtn: radioBtn, label: label};
@@ -1645,10 +1705,10 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         return div;
     }
 
-    function getJobsIds(jobs) {
+    function getIds(objArr) {
         var result = [];
-        for (var i = jobs.length; i--;) {
-            result.push(jobs[i].id);
+        for (var i = objArr.length; i--;) {
+            result.push(objArr[i].id);
         }
         return JSON.stringify(result);
     }
@@ -1698,7 +1758,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         }
         var json_savedData = '<?php echo $calculation->fields_data;?>';
         var savedData = !empty(json_savedData) ? JSON.parse(json_savedData) : '';
-        //console.log('retrievedObject: ', savedData);
+        console.log('retrievedObject: ', savedData);
         if (!empty(savedData)) {
             jQuery.each(savedData, function (index, elem) {
                 jQuery('#params_block').find('.btn_calc[data-maingroup_id="' + elem.maingroup_id + '"]').trigger('click');
@@ -1730,6 +1790,15 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                         if (savedInput.related[k].type == 'select-one') {
                                             var select = jQuery(rowFields[f]).find('.selectDiv').children();
                                             select.val(savedInput.related[k].value);
+                                            var specJobs = jQuery('option:selected',select).data('spec_jobs');
+                                                createAdditionalWorkFields(specJobs,select[0]);
+                                            if(!empty(savedInput.related[k].additional)){
+                                                console.log(savedInput.related[k]);
+                                                jQuery.each(savedInput.related[k].additional,function(n,field){
+                                                    console.log(jQuery('[data-id="'+field.id+'"]').find('.quantity_input'));
+                                                    jQuery('[data-id="'+field.id+'"]').find('.quantity_input').val(field.value);
+                                                });
+                                            }
                                         }
                                         if (savedInput.related[k].type == 'radio') {
                                             var radioBtn = jQuery('#' + savedInput.related[k].id + '[data-parent = "' + elem.groups[i].fields[j].field_id + '"]');
@@ -1802,9 +1871,13 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         jQuery.each(fieldsDiv, function (index, div) {
             if(jQuery(div).data('field_id') != 'dopgoods'){
                 var currentJobs = jQuery(div).data('jobs'),
+                    currentGoods = jQuery(div).data('goods'),
                     countDiv, input, goodSelect, radio,checkbox;
                 if (empty(currentJobs)) {
                     currentJobs = [];
+                }
+                if(empty(currentGoods)){
+                    currentGoods = [];
                 }
                 countDiv = jQuery(div).find('.countDiv');
                 input = jQuery(countDiv).children();
@@ -1863,10 +1936,13 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                         currentJobs = currentJobs.concat(jbs);
                     }
 
-                    //добавляем работы если количество не пустое
+                    //добавляем работы и компоненты если количество не пустое
                     if (!empty(input.val())) {
                         for (var i = currentJobs.length; i--;) {
                             jobs.push({id: currentJobs[i], count: input.val()});
+                        }
+                        for (var i = currentGoods.length; i--;) {
+                            components.push({id: currentGoods[i], count: input.val()});
                         }
                     }
                 }
@@ -1915,9 +1991,16 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         }
 
         jQuery.each(jQuery('[name = "work_title"]'), function (index, elem) {
-            var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val();
+            var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val(),
+                isService = jQuery('#mount_service').is(':checked');
             if (!empty(cost)) {
-                additional_works.push({title: elem.value, price: cost});
+                if(isService){
+                    additional_works.push({title: elem.value, price: cost,service_price:+cost+ (cost*0.2)});
+
+                }
+                else{
+                    additional_works.push({title: elem.value, price: cost});
+                }
             }
         });
         jQuery.each(jQuery('[name = "component_title"]'), function (index, elem) {
@@ -2030,10 +2113,24 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                             goodSelect = countDiv.parent().find('.selectDiv').children();
                             //если есть селект и введеное количество не пустое добавляем компоненты
                             if (goodSelect.length != 0 && !empty(input.val())) {
+                                var additionalFields = jQuery('.row-fields[data-for_value="'+goodSelect.val()+'"]'),
+                                    additional = [];
+                                if(!empty(additionalFields)){
+                                    jQuery.each(additionalFields,function(n,field){
+                                        var count = jQuery(field).find('.quantity_input').val();
+                                        if(!empty(count)) {
+                                            additional.push({
+                                                id: jQuery(field).data('id'),
+                                                value: count
+                                            });
+                                        }
+                                    });
+                                }
                                 related.push({
                                     id: goodSelect.prop('id'),
                                     type: goodSelect.prop('type'),
-                                    value: goodSelect.val()
+                                    value: goodSelect.val(),
+                                    additional: additional
                                 });
                             }
                             checkbox = jQuery('.row-fields [data-parent="'+id+'"]').find('.inp-cbx:checked');
@@ -2123,7 +2220,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 dataToSave.splice(i, 1);
             }
         }
-        //console.log("dataToSave",dataToSave);
+        console.log("dataToSave",dataToSave);
         return JSON.stringify(dataToSave);
     }
 

@@ -17,35 +17,74 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 ?>
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <?=parent::getButtonBack();?>
 <h2 class="center">Менеджер</h2>
 
 <div class="start_page">
-    <p class="center">
+    <div class="row center">
         <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-edit" aria-hidden="true"></i>Рассчитать</button>
-    </p>
-	<p class="center">
+    </div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=manager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
-	</p>	
-	<p class="center">
+	</div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
-	</p>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
-	</p>
-    <p>      
+	</div>
+	<div class="row center">
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>">
+            <div style="position:relative;">
+                <div>
+                    <i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны
+                </div>
+                <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
+            </div>
+        </a>
+	</div>
+    <div class="row center">
 	    <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
-	</p>
-	<p class="center">
+    </div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=manager', false); ?>"><i class="fas fa-pen" aria-hidden="true"></i> Запись на замер</a>
-	</p>
-	<p class="center">
+	</div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайсы</a>
-	</p>
+	</div>
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
+            async: true,
+            success: function (data) {
+                if (data != null) {
+                    if (data[0].count != 0) {
+                        document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
+                        document.getElementById('ZvonkiDiv').style.display = 'block';
+                    }
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }
+        });
+
         jQuery("#precalc_btn").click(function () {
             user_id = "<?php echo $userId;?>";
             create_new_client(user_id);

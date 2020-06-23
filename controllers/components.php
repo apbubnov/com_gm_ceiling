@@ -179,13 +179,41 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
             die(json_encode($answer));
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
 
+    function saveGoodsToPdf(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $builderId = $jinput->getInt('builder');
+	        $builder = JFactory::getUser($builderId);
+	        $calcsComponentModel = Gm_ceilingHelpersGm_ceiling::getModel('Calcs_components');
+            $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($builderId);
+            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+            $filename = md5('buildergoods'.$builderId).'.pdf';
+            $html = '<h1>Список комплектующих</h1>';
+            $html .= "<h2>Объект: " . $builder->name . "</h2>";
+            $html .= '<table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Наименование</th>
+                                <th class="center">Количество</th>
+                                <th class="center">Единица</th>
+                            </tr>';
+            foreach ($common_goods as $goods){
+                $html .= "<tr><td>$goods->name</td><td>$goods->count</td><td>$goods->unit</td>";
+            }
+            $html .= '</tbody></table>';
+            Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+            die(json_encode('/costsheets/'.$filename));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
     private function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
     private function double_margin($value, $margin1, $margin2) { return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2); }
     private function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }

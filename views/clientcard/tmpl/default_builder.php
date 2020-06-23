@@ -52,6 +52,8 @@ foreach($all_builders as $builder){
 }
 //$mounterSalaryModel = Gm_ceilingHelpersGm_ceiling::getModel('mounterssalary');
 //$mounterSalaryModel->recalcClosedSum($dealer->id);
+$calcsComponentModel = Gm_ceilingHelpersGm_ceiling::getModel('Calcs_components');
+$common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->id);
 ?>
 
 <style>
@@ -92,6 +94,9 @@ foreach($all_builders as $builder){
     .big_img {
         width:100%;
         height:auto;
+    }
+    .btn_width{
+        width: 320px;
     }
 </style>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
@@ -367,12 +372,17 @@ foreach($all_builders as $builder){
         </div>
         <div class="row" style="margin-bottom: 15px;">
             <div class="col-md-12">
-                <button class="btn btn-primary" id="btn_add_dop_costs"> Добавить доп.затраты</button>
+                <button class="btn btn-primary btn_width" id="show_goods"> Просмотреть список комплектующих</button>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-12">
+                <button class="btn btn-primary btn_width" id="btn_add_dop_costs"> Добавить доп.затраты</button>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary" id="btn_show_dop_costs"> Просмотреть доп.затраты</button>
+                <button class="btn btn-primary btn_width" id="btn_show_dop_costs"> Просмотреть доп.затраты</button>
             </div>
         </div>
     </div>
@@ -659,6 +669,36 @@ foreach($all_builders as $builder){
             </tbody>
         </table>
     </div>
+    <div class="modal_window" id="mw_common_goods">
+        <table class="table table-striped one-touch-view">
+            <thead>
+                <th class="center">
+                    Наименование
+                </th>
+                <th class="center">
+                    Количество
+                </th>
+            </thead>
+            <tbody>
+                <?php foreach($common_goods as $goods){ ?>
+                    <tr>
+                        <td class="center">
+                            <?=$goods->name;?>
+                        </td>
+                        <td class="center">
+                            <?=$goods->count.' '.$goods->unit;?>
+                        </td>
+                    </tr>
+                <?php }?>
+
+            </tbody>
+        </table>
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="save_goods_to_pdf">Скачать PDF</button>
+            </div>
+        </div>
+    </div>
 </div>
     <script>
         var progressData = [],
@@ -711,16 +751,17 @@ foreach($all_builders as $builder){
                 div11 = jQuery("#delete_mounter_window"),
                 div12 = jQuery("#noty_center_layout_container"),
                 div13 = jQuery("#mw_dop_costs"),
-                div14 = jQuery("#mw_view_dop_costs");
+                div14 = jQuery("#mw_view_dop_costs"),
+                div15 = jQuery('#mw_common_goods');
             if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
                 && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
                 && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
-                &&!div11.is(e.target)&&!div12.is(e.target) && !div13.is(e.target) &&!div14.is(e.target)
+                &&!div11.is(e.target)&&!div12.is(e.target) && !div13.is(e.target) &&!div14.is(e.target) && !div15.is(e.target)
                 && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
                 && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
                 && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
                 && div10.has(e.target).length === 0 && div11.has(e.target).length === 0&& div12.has(e.target).length === 0
-                && div13.has(e.target).length === 0 && div14.has(e.target).length === 0) {
+                && div13.has(e.target).length === 0 && div14.has(e.target).length === 0 && div15.has(e.target).length === 0 ) {
                 jQuery("#close").hide();
                 jQuery("#mv_container").hide();
                 div.hide();
@@ -737,6 +778,7 @@ foreach($all_builders as $builder){
                 div12.hide();
                 div13.hide();
                 div14.hide();
+                div15.hide();
             }
         });
 
@@ -878,6 +920,31 @@ foreach($all_builders as $builder){
                 async: false,
                 success: function(data) {
                     var win = window.open(data.url, '_blank');
+                    win.focus();
+                },
+                error: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery('#save_goods_to_pdf').click(function () {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=components.saveGoodsToPdf",
+                data: {
+                    builder:'<?php echo $client->dealer_id; ?>'
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var win = window.open(data, '_blank');
                     win.focus();
                 },
                 error: function(data) {
@@ -1926,6 +1993,13 @@ foreach($all_builders as $builder){
                 jQuery("#close").show();
                 jQuery("#mw_view_dop_costs").show('slow');
             });
+
+            jQuery('#show_goods').click(function(){
+                jQuery("#mv_container").show();
+                jQuery("#close").show();
+                jQuery("#mw_common_goods").show('slow');
+            });
+
             // обработка и отправка AJAX запроса при клике на кнопку upload_files
             jQuery('#save_dop_costs').click(function(){
                 if( typeof checks == 'undefined' ) return;

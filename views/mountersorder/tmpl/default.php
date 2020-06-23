@@ -41,7 +41,18 @@ if (!empty($calculation_ids)) {
 if (!empty($calculation_ids)) {
     $AllCalc = [];
     $modelCalcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+    $modelCalculation = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+    $all_extra_mounting = [];
+    $extra_mount_sum = 0;
     foreach ($calculation_ids as $value) {
+        $calculation = $modelCalculation->getBaseCalculationDataById($value->id);
+        $extra_mounting = json_decode($calculation->extra_mounting);
+        if(!empty($extra_mounting)){
+            $all_extra_mounting = array_merge($all_extra_mounting,$extra_mounting);
+            foreach ($extra_mounting as $mount) {
+                $extra_mount_sum += $mount->price;
+            }
+        }
         $all_jobs = $modelCalcform->getJobsPricesInCalculation($value->id, $user->dealer_id); // Получение работ по прайсу дилера
         if(!empty($all_jobs)){
             $DataOfProject[$value->id] = $all_jobs;
@@ -191,9 +202,36 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                         <td colspan=3 style="text-align: right;">Итого, ₽:</td>
                         <td id="sum-all"><?php echo $AllSum; ?></td>
                     </tr>
-                    <?php if (!empty($DataOfTransport)) { ?>
+                    <?php if(!empty($all_extra_mounting)){?>
                         <tr class="caption">
-                            <td colspan="4" style="text-align: center; background-color: #ffffff;">Транспортные расходы</td>
+                            <td colspan="4" style="text-align: center; background-color: #ffffff;">
+                                Дополнительные работы
+                            </td>
+                        </tr>
+                        <tr class="caption">
+                            <td colspan="2">Название</td>
+                            <td colspan="2">Стоимость, ₽</td>
+                        </tr>
+                        <?php foreach ($all_extra_mounting as $mount){?>
+                            <tr>
+                                <td colspan="2">
+                                    <?=$mount->title;?>
+                                </td>
+                                <td colspan="2">
+                                    <?=$mount->price;?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        <tr class="caption">
+                            <td colspan=3 style="text-align: right;">Итого, ₽:</td>
+                            <td id="sum-all"><?=$extra_mount_sum;?></td>
+                        </tr>
+                    <?php }
+                        if (!empty($DataOfTransport)) { ?>
+                        <tr class="caption">
+                            <td colspan="4" style="text-align: center; background-color: #ffffff;">
+                                Транспортные расходы
+                            </td>
                         </tr>
                         <tr class="caption">
                             <td>Вид транспорта</td>

@@ -28,14 +28,15 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <?=parent::getButtonBack();?>
 
-<h4 class="center" style="margin-bottom: 1em;">Не назначенные на монтаж или не запущенные в производство</h4>
+<h4 class="center" style="margin-bottom: 1em;">Договоры</h4>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post" name="adminForm" id="adminForm">
 	<? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
         <table class="table table-striped one-touch-view g_table" id="projectList">
             <thead>
                 <tr>
                     <th class='center'>
-                        <i class="fa fa-check-circle"></i>
+                        <!--<i class="fa fa-check-circle"></i>-->
+                        Статус
                     </th>
                     <th class='center'>
                         №
@@ -65,7 +66,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
                 ?>
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
-                            <td><button class="btn btn-primary btn-sm" type="button" data-id="<?=$item->id;?>" name="btn_done"><i class="fa fa-check-circle"></i></button> </td>
+                           <td>
+                               <?=$item->status;?>
+                               <!-- <button class="btn btn-primary btn-sm" type="button" data-id="<?/*=$item->id;*/?>" name="btn_done"><i class="fa fa-check-circle"></i></button>-->
+                           </td>
                             <td class="center one-touch"><?= $item->id; ?></td>
                             <td class="center one-touch">
                                 <? if ($item->project_calculation_date == '0000-00-00 00:00:00'): ?> -

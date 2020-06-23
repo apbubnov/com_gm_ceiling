@@ -1412,8 +1412,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 } else {
                     $ids .= $field->id;
                 }
-                $field->goods = array();
-                $field->jobs = array();
+                $field->goods = [];
+                $field->jobs = [];
                 foreach ($result as $key2 => $main_group) {
                     foreach ($result[$key2]->groups as $key3 => $group) {
                         if ($group->id === $field->group_id) {
@@ -1428,12 +1428,16 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $query = $db->getQuery(true);
             $query->select('`g`.`id`, `g`.`name`, `g`.`category_id`, `g`.`color`, `g`.`hex`,`g`.`is_default`');
             $query->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"job_id":"\',`jfg`.`child_job_id`,\'","count":"\',`jfg`.`count`,\'"}\') SEPARATOR \',\'),\']\') AS jobs');
+            $query->select('CONCAT(\'[\',GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',`sjm`.`job_id`,\'","name":"\',j.name,\'","count":"\',IFNULL(`sjm`.`count`,0),\'"}\') SEPARATOR \',\'),\']\') AS spec_jobs');
             $query->from('`#__goods_components` as `g`');
             $query->leftJoin('`rgzbn_gm_ceiling_jobs_from_goods_map` AS `jfg` ON `g`.`id` =  `jfg`.`parent_goods_id`');
+            $query->leftJoin('`rgzbn_gm_ceiling_goods_special_jobs_map` AS `sjm` ON `g`.`id` = `sjm`.`parent_goods_id`');
+            $query->leftJoin('`rgzbn_gm_ceiling_jobs` AS j ON j.id = sjm.job_id');
             $query->where("`category_id` in ($categories) AND `visibility` = 1");
             $query->group('`g`.`id`');
             $query->order('`category_id`, `is_default` DESC,`id`');
             $db->setQuery($query);
+            //throw new Exception($query);
             $goods = $db->loadObjectList();
 
             $goods_jobs_map = [];
@@ -1442,6 +1446,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
                 if(!empty($item->jobs)){
                     $goods_jobs_map[$item->id] = json_decode($item->jobs);
+                }
+                if(!empty($item->spec_jobs)){
+                    $item->spec_jobs = json_decode($item->spec_jobs);
+                }
+                else{
+                    unset($item->spec_jobs);
                 }
                 unset($item->jobs);
                 $item->child_goods = [];
@@ -1476,7 +1486,26 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     }
                 }
             }
-
+            $query = $db->getQuery(true);
+            $query
+                ->select('`field_id`,`goods_id` as `id`')
+                ->from('`rgzbn_gm_ceiling_fields_goods_map`')
+                ->where("`field_id` in ($ids)");
+            $db->setQuery($query);
+            $goods = $db->loadObjectList();
+            if(!empty($goods)) {
+                foreach ($goods as $key => $goods_item) {
+                    foreach ($result as $key2 => $main_group) {
+                        foreach ($result[$key2]->groups as $key3 => $group) {
+                            foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
+                                if ($field->id === $goods_item->field_id) {
+                                    $result[$key2]->groups[$key3]->fields[$key4]->default_goods[] = clone $goods_item;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             $query = $db->getQuery(true);
             $query = "
                 SELECT  DISTINCT
@@ -1497,6 +1526,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                   WHERE (`gg`.`dealer_id` = 1 AND `ggd`.`dealer_id` IS NULL) OR
                         (`gg`.`dealer_id` = $dealer_id AND `ggd`.`dealer_id` = $dealer_id)
             ";
+            //throw new Exception($query);
             $db->setQuery($query);
 
             $child_goods = $db->loadObjectList();

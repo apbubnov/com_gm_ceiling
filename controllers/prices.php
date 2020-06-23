@@ -65,5 +65,19 @@ class Gm_ceilingControllerPrices extends Gm_ceilingController
         }
     }
 
+    function updateServicePrice(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $price = json_decode($jinput->getString('price'));
+            $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+            $mountModel->updateServicePrice($price);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 
 }

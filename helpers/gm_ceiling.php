@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  */
 /* включаем библиотеку для формирования PDF */
 include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-const VERDICT_STATUSES = [4,5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
+const VERDICT_STATUSES = [5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
 const MIN_SUM = 250;
 /* функция для применения маржи */
 function margin($value, $margin) {
@@ -3918,18 +3918,39 @@ class Gm_ceilingHelpersGm_ceiling
             }
             foreach ($calculations as $calc) {
                 $extra_total = 0;
+                $extra_service_total = 0;
                 if(!empty($calc->extra_mounting)){
                     $extra_mounting = json_decode($calc->extra_mounting);
                     foreach($extra_mounting as $extra_mount){
-                        $extra_total += $extra_mount->price;
+                        if($newService){
+                            if(!empty($extra_mount->service_price)){
+                                $extra_service_total += $extra_mount->service_price;
+                            }
+                            else{
+                                $extra_service_total += $extra_mount->price+ $extra_mount->price*0.2;
+                            }
+                        }
+                        else{
+                            $extra_total += $extra_mount->price;
+                        }
                     }
                 }
                 if(empty($calc->n3)){
-                    $stage_sum = [];$gm_stage_sum = [];
-                    if(!empty($extra_total)&&!$full){
-                        $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_total];
+                    $stage_sum = [];
+                    $gm_stage_sum = [];
+
+                    if($newService){
+                        if(!empty($extra_service_total)&&!$full){
+                            $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_service_total];
+                        }
                     }
-                    $total_dealer_sum = 0;$total_gm_sum =0;
+                    else{
+                        if(!empty($extra_total)&&!$full){
+                            $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_total];
+                        }
+                    }
+                    $total_dealer_sum = 0;
+                    $total_gm_sum =0;
                     foreach ($calc->dealer_mount as $job){
                         $stage_sum[$job->mount_type_id] += $job->price_sum;
                         $total_dealer_sum += $job->price_sum;
@@ -3945,7 +3966,12 @@ class Gm_ceilingHelpersGm_ceiling
                         $calc->gm_mount_sum = $gm_stage_sum;
                     }
                     else{
-                        $calc->mount_sum[1] = $total_dealer_sum+$extra_total;
+                        if($newService){
+                            $calc->mount_sum[1] = $total_dealer_sum+$extra_service_total;
+                        }
+                        else{
+                            $calc->mount_sum[1] = $total_dealer_sum+$extra_total;
+                        }
                         $calc->gm_mount_sum[1] = $total_gm_sum+$extra_total;
                     }
                 }
@@ -4180,17 +4206,13 @@ class Gm_ceilingHelpersGm_ceiling
                 $extra_mount = json_decode($calculation->extra_mounting);
 
                 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
-                $calculations_model = self::getModel('calculations');
                 $project_model = self::getModel('project');
-                $project = $project_model->getData($calculation->project_id);
-
-                $names = $calculations_model->FindAllMounters($mounter);
-                $mount_types = $projects_mounts_model->get_mount_types();
-                for($i=0;$i<count($names);$i++){
-                    $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
-                }
                 $client_contacts_model = self::getModel('client_phones');
+
+                $project = $project_model->getData($calculation->project_id);
+                $mount_types = $projects_mounts_model->get_mount_types();
                 $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
+                $phones = '';
                 for($i=0;$i<count($client_contacts);$i++){
                     $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
                 }
@@ -4198,24 +4220,48 @@ class Gm_ceilingHelpersGm_ceiling
                 if($stage == 1){
                     $full = true;
                 }
+                $isService = false;
+                if(!empty($project->calcs_mounting_sum)){
+                    $isService = true;
+                }
+                if($calculation->need_mount == 2){
+                    $isService = true;
+                }
                 $extra_sum = 0;
+                $extra_service_sum = 0;
                 $extra_html ='<h1>Дополнительные работы</h1><table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Наименование</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-
                 if(!empty($extra_mount)){
+                    $dealer_extra = $extra_html;
+                    $gm_extra = $extra_html;
                     foreach ($extra_mount as $mount){
-                        $extra_html .= '<tr><td>'.$mount->title.'</td><td>'.$mount->price.'</td></tr>';
+                        $gm_extra .= "<tr><td>$mount->title</td><td>$mount->price</td></tr>";
                         $extra_sum += $mount->price;
+                        if($isService){
+                            if(empty($mount->service_price)){
+                                $mount->service_price = $mount->price + $mount->price*0.2;
+                            }
+                            $dealer_extra .= "<tr><td>$mount->title</td><td>$mount->service_price</td></tr>";
+                            $extra_service_sum += $mount->service_price;
+                        }
+                        else{
+                            $dealer_extra .= "<tr><td>$mount->title</td><td>$mount->price</td></tr>";;
+                        }
                     }
-
                 }
-                $extra_html .= '<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr>';
-                $extra_html .= '</tbody></table>';
-                $html .= '<h1>Информация</h1>';
+                if($isService){
+                    $gm_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
+                    $dealer_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_service_sum.'</td></tr></tbody></table>';
+                }
+                else{
+                    $gm_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
+                    $dealer_extra .='<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
+                }
+                $html = '<h1>Информация</h1>';
                 $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
                 if (isset($project->id)) {
                     if ($project->id) {
@@ -4240,9 +4286,6 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($mounter) {
                         $html .= "<b>Монтажная бригада: </b>" . JFactory::getUser($mounter)->name . "<br>";
                     }
-                }
-                if (isset($brigade_names)) {
-                    $html .= "<b>Состав монтажной бригады: </b>".$brigade_names."<br>";
                 }
                 $html .= "<b>Этап</b>: $mount_types[$stage]<br>";
                 if (isset($project->gm_calculator_note)) {
@@ -4344,10 +4387,10 @@ class Gm_ceilingHelpersGm_ceiling
 
                 if(!empty($gm_jobs)) {
                     $html_gm .= '</tbody></table><p>&nbsp;</p>';
-                    $html_gm .= $extra_html;
+                    $html_gm .= $gm_extra;
                 }
                 $html_dealer .= '</tbody></table><p>&nbsp;</p>';
-                $html_dealer .= $extra_html;
+                $html_dealer .= $dealer_extra;
 
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
                 if(!$full){
@@ -5685,6 +5728,8 @@ class Gm_ceilingHelpersGm_ceiling
                 //Уведомление о записи на замер
                 $gauger = JFactory::getUser($data['project_calculator']);
                 $mailer->addRecipient($gauger->email);
+                $dealer = JFactory::getUser($gauger->dealer_id);
+                $mailer->addRecipient($dealer->email);
                 $body = "Здравствуйте. На сайте произведена новая запись на замер\n\n";
                 if (!empty($data['client_name'])) {
                     $body .= "Имя клиента: " . $data['client_name'] . "\n";

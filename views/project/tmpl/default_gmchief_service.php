@@ -106,16 +106,33 @@ foreach ($calculations as $calculation) {
         /*иначе она с новой структурой*/
         $total_gm_sum = 0;
         $total_dealer_sum = 0;
+        $extraMount = (array) json_decode($calculation->extra_mounting);
+        foreach ($extraMount as $key => $value) {
+            $total_gm_sum += $value->price;
+            if($use_service){
+                if(!empty($value->service_price)){
+                    $total_dealer_sum += $value->service_price;
+                }
+                else{
+                    $total_dealer_sum += $value->price + $value->price*0.2;
+                }
+            }
+        }
 
+        if($use_service){
             $all_jobs = $calculationformModel->getMountingServicePricesInCalculation($calculation->id, $this->item->dealer_id);
-            foreach ($all_jobs as $job){
-                $total_dealer_sum += $job->price_sum;
-            }
-            $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
-            foreach ($all_gm_jobs as $job){
-                $total_gm_sum += $job->price_sum;
-            }
-
+        }
+        else{
+            $all_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, $this->item->dealer_id);
+        }
+        //throw new Exception(print_r($all_jobs,true));
+        foreach ($all_jobs as $job){
+            $total_dealer_sum += $job->price_sum;
+        }
+        $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
+        foreach ($all_gm_jobs as $job){
+            $total_gm_sum += $job->price_sum;
+        }
 
         $calculation->dealer_self_mounting_sum = $total_dealer_sum;
         $calculation->gm_self_mounting_sum = $total_gm_sum;

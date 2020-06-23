@@ -20,63 +20,83 @@ $userId     = $user->get('id');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 // замеры
 $answer1 = $model->getDataByStatus("GaugingsGraph");
-// монтажи
-$answer2 = $model->getDataByStatus("Mountings");
+// договоры
+$answer2 = $model->getDataByStatus("UnComplitedMountings");
 // незапущенные монтажи
-$answer3 = $model->getDataByStatus("UnComplitedMountings");
+$answer3 =  $model->getDataByStatus("Mountings");
 //--------------------------------------
-
 ?>
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <!-- <?=parent::getButtonBack();?> -->
 <h2 class="center">Монтажи</h2>
 <?php if ($user->dealer_type == 0) { ?>
 	<div class="start_page">
-		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> График замеров</a>
-				<?php if ($answer1[0]->count != 0) { ?>
-					<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
-				<?php } ?>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-calculator" aria-hidden="true"></i> График замеров
+                    </div>
+                    <?php if ($answer1[0]->count != 0) { ?>
+                        <div class="circl-digits"><? echo $answer1[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 		</div>
-		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Монтажи</a>
-				<?php if ($answer2[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-				<?php } ?>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-calculator" aria-hidden="true"></i> Монтажи
+                    </div>
+                    <?php if ($answer2[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 		</div>
-		<p class="center">
+		<div class="row center">
 			<a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=run', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные заказы</a>
-		</p>
-		<p class="center">
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
-		</p>
-		<p class="center">
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-		</p>
+		</div>
 	</div>
 <? } else if ($user->dealer_type == 1) { ?>
 	<div class="start_page">
-		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>"><i class="far fa-money-bill-alt"></i> Договоры</a>
-				<?php if ($answer2[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-				<?php } ?>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="far fa-money-bill-alt"></i> Договоры
+                    </div>
+                    <?php if ($answer2[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 		</div>
-		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fas fa-hammer"></i> Монтажи</a>
-				<?php if ($answer3[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
-				<?php } ?>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fas fa-hammer"></i> Монтажи
+                    </div>
+                    <?php if ($answer3[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 		</div>
-		<p class="center">
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
-		</p>
+		</div>
 	</div>
 <? } ?>

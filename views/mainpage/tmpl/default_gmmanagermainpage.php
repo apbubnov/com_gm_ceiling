@@ -31,88 +31,107 @@ $user_group = $user->groups;
 			width: calc(100% / 3 - 5px);
 		}
 	}
+    .row{
+        margin-bottom: 1em !important;
+    }
 </style>
 
 <h2 class="center">Менеджер ГМ</h2>
 
 <div class="start_page">
 	<div class="columns-tar">
-		<p>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>"><i class="fas fa-users" aria-hidden="true"></i> Клиенты</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=dealers', false); ?>"><i class="fas fa-user-tie"></i> Дилеры</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=partners', false); ?>"><i class="fas fa-user-friends"></i> Клиенты партнеров</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fas fa-user-injured"></i></i> Отделочники</a>
-		</p>
+		</div>
         <!-- <p class="center">
             <a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
         </p> -->
-		<p>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-building" aria-hidden="true"></i> Застройщики</a>
-		</p>
-        <p>
+		</div>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fab fa-windows" aria-hidden="true"></i> Оконщики</a>
-        </p>
+        </div>
 	</div>
 	<div class="columns-tar">
-		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fas fa-clock" aria-hidden="true"></i> В производстве </a>
-					<div class="circl-digits" id="InProductionDiv" style="display: none;"></div>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fas fa-clock" aria-hidden="true"></i> В производстве
+                    </div>
+                    <div class="circl-digits" id="InProductionDiv" style="display: none;"></div>
+                </div>
+            </a>
 		</div>
-		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
-					<div class="circl-digits" id="ZapushennieDiv" style="display: none;"></div>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>">
+               <div style="position:relative;">
+                   <div>
+                       <i class="fa fa-cogs" aria-hidden="true"></i> Запущенные
+                   </div>
+                   <div class="circl-digits" id="ZapushennieDiv" style="display: none;"></div>
+               </div>
+            </a>
 		</div>
-		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
-					<div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-phone-square" aria-hidden="true"></i> Звонки
+                    </div>
+                    <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
+                </div>
+            </a>
 		</div>
-		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
-					<div class="circl-digits" id="MissedCallsDiv" style="display: none;"></div>
-			</div>
+		<div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные
+                    </div>
+                    <div class="circl-digits" id="MissedCallsDiv" style="display: none;"></div>
+                </div>
+            </a>
 		</div>
-        <p>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fas fa-dollar-sign"></i> Касса</a>
-        </p>
-        <p>
+        </div>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=gmchief', false); ?>"><i class="fas fa-hammer"></i> Монтажи</a>
-        </p>
-        <p>
+        </div>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=measures', false); ?>"><i class="fas fa-ruler"></i> Замеры</a>
-        </p>
+        </div>
 	</div>
 	<div class="columns-tar">
-		<p>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=archive', false); ?>"><i class="fa fa-archive" aria-hidden="true"></i> Архив</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fas fa-pencil-ruler"></i> Запись на замер</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=price&type=goods', false); ?>"><i class="fas fa-ruble-sign"></i> Прайс</a>
-		</p>
-		<p>
+		</div>
+		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fas fa-eye-dropper"></i> Цвета, фактуры</a>
-		</p>
-        <p>
+		</div>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
-        </p>
+        </div>
 	</div>
 </div>
 

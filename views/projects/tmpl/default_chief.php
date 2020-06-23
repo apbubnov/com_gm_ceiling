@@ -18,13 +18,7 @@ $user = JFactory::getUser();
 $userId = $user->get('id');
 $groups = $user->get('groups');
 
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
-$canCreate = $user->authorise('core.create', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canEdit = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
-$canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
-$canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
+
 foreach ($this->items as $i => $item){
     if(!empty($item->project_mounter)){
         $item->project_mounter = explode(',',$item->project_mounter);
@@ -49,7 +43,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
 </style>
 <?= parent::getButtonBack(); ?>
-<h4 class="center" style="margin-bottom: 1em;">Назначенные на монтаж и запущенные в производство</h4>
+<h4 class="center" style="margin-bottom: 1em;">Запущенные в производство, назначенные на монтаж</h4>
 <div class="container">
     <div class="row ">
         <div class="col-md-1" style="vertical-align:middle"> Заказ: </div>
@@ -62,13 +56,13 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     </div>
 </div>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post" name="adminForm" id="adminForm">
-    <? if (count($this->items) > 0): ?>
+    <?php if (count($this->items) > 0): ?>
         <table class="table table-striped one-touch-view g_table" id="projectList">
-            <? if ($user->dealer_type != 2): ?>
+            <?php if ($user->dealer_type != 2): ?>
                 <thead>
-                <tr>
                     <th class='center'></th>
                     <th class='center'>№</th>
+                    <th class="center">Статус</th>
                     <th class='center'>Дата / время монтажа</th>
                     <th class='center'>Адрес</th>
                     <th class='center'>Клиент</th>
@@ -79,17 +73,11 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                             <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         </th>
                     <?php endif;?>
-                </tr>
                 </thead>
                 <tbody>
                 <?php
                 foreach ($this->items as $i => $item) :
-                    $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-                    if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
-                        $canEdit = JFactory::getUser()->id == $item->created_by;
-                    if ($user->dealer_type == 1 && empty($item->project_mounter)) continue;
-                    ?>
-                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
+                    if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id):
                         $color =  $item->paid ? 'style="outline: green solid 1px; margin-top:15px;"' : 'style="outline: red solid 1px; margin-top:15px;"';?>
                     <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id);?>" <?php echo $color?> data-status= "<?php echo $item->project_status;?>">
                         <td>
@@ -145,24 +133,51 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                             <input id="<?= $item->id; ?>_cost_price" value="<?php echo $cost_price; ?>"  hidden>
                             <input id="<?= $item->id; ?>_new_project_sum" value="<?php echo $item->project_sum; ?>" hidden >
                         </td>
-                        <?php $date = $item->project_mounting_date; ?>
+                        <td><?=$item->status?></td>
                         <td class="center one-touch">
-                            <? if ($date == "00.00.0000 00:00"): ?> -
-                            <? else: ?><?= $date; ?>
-                            <? endif; ?>
+                            <?= !empty($item->project_mounting_date) ? $item->project_mounting_date : '-'?>
                         </td>
                         <td class="center one-touch"><?= $item->project_info; ?></td>
                         <td class="center one-touch"><?= $item->client_contacts; ?> <br> <?= $item->client_name; ?></td>
-                        <?php if ($item->project_mounter) {
-                            $mounter = "";
-                            foreach ($item->project_mounter as $value) {
-                                $mounter .= JFactory::getUser($value)->name."; ";
+
+                        <td class="center one-touch">
+                            <?php
+                            $projectSum = 0;
+                            if(!empty($item->new_project_sum)){
+                                $projectSum = $item->new_project_sum;
                             }
-                        } ?>
-                        <td class="center one-touch"><?php echo round($item->self_price,2);?></td>
-                        <td class="center one-touch"><?php echo $mounter; ?></td>
+                            elseif(!empty($item->project_sum)){
+                                $projectSum = $item->project_sum;
+                            }
+                            else{
+                                $dealerInfoModel = Gm_ceilingHelpersGm_ceiling::getModel('dea;er_info');
+                                $projectSum += margin($item->canvases_sum,$item->dealer_canvases_margin) +
+                                    margin($item->components_sum,$item->dealer_components_margin);
+                                $totalMountSum = $item->mounting_sum;
+                                if(!empty($item->calcs_mounting_sum)){
+                                    $service_sum = json_decode($item->calcs_mounting_sum);
+                                    foreach ($service_sum as $sum){
+                                        $totalMountSum += $sum;
+                                    }
+                                }
+                                $projectSum += margin($totalMountSum,$item->dealer_mounting_margin);
+                            }
+                            echo round($projectSum,2);?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php if ($item->project_mounter) {
+                                $mounter = "";
+                                foreach ($item->project_mounter as $value) {
+                                    $mounter .= JFactory::getUser($value)->name."; ";
+                                }
+                            }
+                            else{
+                                $mounter = '-';
+                            }
+                            echo $mounter; ?>
+                        </td>
                         <?php if(in_array(14, $groups)){ ?>
-                            <td class="center one-touch delete"><button class="btn btn-danger btn-sm" data-id = "<?php echo $item->id;?>" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
+                            <td class="center one-touch delete"><button class="btn btn-danger btn-sm delete_btn" data-id = "<?php echo $item->id;?>" type="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
                         <?php } ?>
                     </tr>
                 <? endif; ?>
@@ -213,8 +228,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         </table>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
-        <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
-        <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
         <?= JHtml::_('form.token'); ?>
     <? else: ?>
         <p class="center">
@@ -345,48 +358,57 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             });
 
         });
-        jQuery('.delete-button').click(deleteItem);
 
-        jQuery("#new_order_btn").click(function () {
-            location.href = "<?=JRoute::_('/index.php?option=com_gm_ceiling&view=calculationform&type=calculator', false); ?>";
-        });
+
 
 
     });
 
-    jQuery(".btn-danger").click(function(){
+    jQuery(".delete_btn").click(function(){
         var project_id = jQuery(this).data('id');
-        console.log(project_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
-            data: {
-                project_id: project_id
-            },
-            dataType: "json",
-            async: true,
-            success: function(data) {
-                jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
-            },
-            error: function(data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: false,
+            type: "info",
+            text: "Вы действительно хотите удалить проект?",
+            buttons:[
+                {
+                    addClass: 'btn btn-primary', text: 'Удалить', onClick: function($noty) {
+                        jQuery.ajax({
+                            url: "index.php?option=com_gm_ceiling&task=project.delete_by_user",
+                            data: {
+                                project_id: project_id
+                            },
+                            dataType: "json",
+                            async: true,
+                            success: function(data) {
+                                jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'topCenter',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка сервера"
+                                });
+                            }
+                        });
+                        $noty.close();
+                    }
+                },
+                {
+                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                        $noty.close();
+                    }
+                }
+            ]
         });
         return false;
 
     });
 
-    function deleteItem() {
-
-        if (!confirm("<?=JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
-            return false;
-        }
-    }
 </script>

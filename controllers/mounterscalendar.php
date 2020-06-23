@@ -70,9 +70,9 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$id = $_POST["id"];
 			
 			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
-			$model_request = $model->GetDayMountingOfBrigade($id, $date);
+			$mount_data = $model->GetDayMountingOfBrigade($id, $date);
 
-			die(json_encode($model_request));
+			die(json_encode($mount_data));
 		}
 		catch(Exception $e)
 		{

@@ -482,4 +482,46 @@ class Gm_ceilingModelMount extends JModelList
         }
     }
 
+    function getServicePrice(){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`id`,`name`,`price`')
+                ->from('`rgzbn_gm_ceiling_jobs`')
+                ->where('is_factory_work = 0 and guild_only = 0');
+            $db->setQuery($query);
+            $price = $db->loadObjectList();
+            return $price;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateServicePrice($price){
+	    try{
+	        $update_case = '';
+	        if(!empty($price)){
+	            $update_case .=  'CASE ';
+	            foreach ($price as $item){
+	                $update_case .= "WHEN id = $item->job_id THEN $item->price ";
+                }
+	            $update_case .= 'END';
+            }
+	        if(!empty($update_case)){
+	            $db = JFactory::getDbo();
+	            $query = $db->getQuery(true);
+	            $query
+                    ->update('`rgzbn_gm_ceiling_jobs`')
+                    ->set("price = $update_case;1");
+	            $db->setQuery($query);
+	            $db->execute();
+            }
+	        return true;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

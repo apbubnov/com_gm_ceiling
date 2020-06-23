@@ -264,7 +264,12 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                     $mountSum = $calcfromController->calculateMount($id,$user->dealer_id);
                     if(!empty($mountSum)){
                         /*по новой структуре*/
-                        $items[$i]->m_sum += $mountSum["sum_by_stage"][$items[$i]->type];
+                        if($items[$i]->type == 1){
+                            $items[$i]->m_sum += $mountSum['mount_sum'];
+                        }
+                        else{
+                            $items[$i]->m_sum += $mountSum["sum_by_stage"][$items[$i]->type];
+                        }
                     }
                     else{
                         /*по старой структуре*/
@@ -290,6 +295,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                     }
                 }
             }
+            //throw new Exception(print_r($items,true));
             for($i=0;$i<count($items);$i++){
                 if(!empty(floatval($items[$i]->new_project_sum))){
                     $items[$i]->project_rest = $items[$i]->new_project_sum - $items[$i]->prepayment;

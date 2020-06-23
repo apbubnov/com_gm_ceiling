@@ -31,59 +31,91 @@ $answer5 = $model->getDataByStatus("MountService");
 //--------------------------------------
 
 ?>
-
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <?=parent::getButtonBack();?>
 
 <h2 class="center">Начальник монтажной службы ГМ</h2>
 
 <div class="start_page">
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+    <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fa fa-calendar" aria-hidden="true"></i> График замеров
+                    </div>
+                    <?php if ($answer1[0]->count != 0) { ?>
+                        <div class="circl-digits" >
+                            <?= $answer1[0]->count; ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            </a>
+    </div>
+	<div class="row center" >
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>">
+            <div style="position: relative">
+                <div>
+                    <i class="fa fa-calendar" aria-hidden="true"></i> Монтажи
+                </div>
+                <?php if ($answer2[0]->count != 0) { ?>
+                    <div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
+                <?php } ?>
+            </div>
+        </a>
+	</div>
+	<div class="row center" >
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> График замеров</a>
-			<?php if ($answer1[0]->count != 0) { ?>
-				<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
-			<?php } ?>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=service', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fa fa-gavel" aria-hidden="true"></i> Запросы на монтаж
+                    </div>
+                    <?php if ($answer5[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer5[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
+
 		</div>
 	</div>
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+	<div class="row center" >
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>"><i class="fa fa-calendar" aria-hidden="true"></i> Монтажи</a>
-			<?php if ($answer2[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-			<?php } ?>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projectfinished', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fa fa-lock" aria-hidden="true"></i> Завершенные монтажи
+                    </div>
+                    <?php if ($answer3[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
+
 		</div>
 	</div>
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=service', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Запросы на монтаж </a>
-			<?php if ($answer5[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer5[0]->count; ?></div>
-			<?php } ?>
-		</div>
-	</div>
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projectfinished', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные монтажи</a>
-			<?php if ($answer3[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
-			<?php } ?>
-		</div>
-	</div>
-    <p class="center">
+    <div class="row center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=run', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные заказы</a>
-    </p>
-	<p class="center">
+    </div>
+	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=gmchief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
-	</p>
-	<p class="center">
+	</div>
+	<div  class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=gmchief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-	</p>
-		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+	</div>
+		<div class="row center">
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти как замерщик</a>
-			<?php if ($answer4[0]->count != 0) { ?>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fas fa-sign-in-alt"></i> Войти как замерщик</a>
+
+            <?php if ($answer4[0]->count != 0) { ?>
 				<div class="circl-digits"><? echo $answer4[0]->count; ?></div>
 			<?php } ?>
 		</div>
-	</div> 
+	</div>
+    <div class="row center">
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=price&type=mount&subtype=service', false); ?>"><i class="fas fa-dollar-sign"></i> Прайс МС</a>
+    </div>
 </div>

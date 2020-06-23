@@ -32,4 +32,27 @@ class Gm_ceilingModelCalcs_components extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getAllComponentsOnBuildersObject($builderId){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('g.name,cgm.goods_id,SUM(cgm.count) AS `count`,`u`.`unit`')
+                ->from('`rgzbn_gm_ceiling_calculations` AS c')
+                ->leftJoin('`rgzbn_gm_ceiling_calcs_goods_map` AS cgm ON c.id = cgm.calc_id')
+                ->leftJoin('`rgzbn_gm_ceiling_projects` AS p ON c.project_id = p.id')
+                ->leftJoin('`rgzbn_gm_ceiling_clients` AS cl ON p.client_id = cl.id')
+                ->innerJoin('`rgzbn_gm_stock_goods` AS g ON cgm.goods_id = g.id')
+                ->innerJoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
+                ->where("cl.dealer_id = $builderId")
+                ->group('cgm.goods_id');
+            $db->setQuery($query);
+            $goods = $db->loadObjectList();
+            return $goods;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

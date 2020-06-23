@@ -695,8 +695,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$jinput = $app->input;
 			$calc_id = $jinput->get('calc_id', null, 'INT');
             $dealer_id = $jinput->get('dealer_id', 1, 'INT');
-            $jobs = $jinput->get('jobs', null, 'ARRAY');
-            $goods = $jinput->get('goods', null, 'ARRAY');
+            $jobs = $jinput->get('jobs', [], 'ARRAY');
+            $goods = $jinput->get('goods', [], 'ARRAY');
             //$stock_goods = $jinput->get('stock_goods', null, 'ARRAY');
             $extra_components = $jinput->get('extra_components', '', 'STRING');
             $extra_mounting = $jinput->get('extra_mounting', '', 'STRING');
@@ -712,7 +712,6 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$user = JFactory::getUser($dealer_id);
 			$userType = $user->dealer_type;
-
 			$data = [];
 			$data['id'] = $calc_id;
 			$data['extra_components'] = strlen($extra_components) < 10 ? '' : $extra_components;
@@ -785,9 +784,13 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$extra_mounting = json_decode($extra_mounting);
 			$extra_mounting_sum = 0;
+			$extra_mounting_service_sum = 0;
 			if (!empty($extra_mounting)) {
 				foreach ($extra_mounting as $value) {
 					$extra_mounting_sum += $value->price;
+					if(isset($value->service_price)){
+                        $extra_mounting_service_sum += $value->service_price;
+                    }
 				}
 			}
 
@@ -882,7 +885,13 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $calcsMountModel = self::getModel('calcs_mount');
             $calcsMountModel->save($calcMountData);
 
-			$mounting_sum += $extra_mounting_sum;
+            if($need_mount == 2){
+                $mounting_sum += $extra_mounting_service_sum;
+            }
+            else{
+                $mounting_sum += $extra_mounting_sum;
+            }
+
 			$mounting_sum_with_margin += $extra_mounting_sum * 100 / (100 - $mounting_margin);
 
 			$common_sum = $canvases_sum + $components_sum + $mounting_sum;
@@ -916,6 +925,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				'mounting_sum_with_margin' => $mounting_sum_with_margin,
 				'extra_components_sum' => $extra_components_sum,
 				'extra_mounting_sum' => $extra_mounting_sum,
+                'extra_mounting_service_sum' => $extra_mounting_service_sum,
 				'photo_print_sum' => $photo_print_sum,
 				'canvases_margin' => $canvases_margin,
 				'components_margin' => $components_margin,
@@ -959,22 +969,47 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 	function calculateMount($calcId,$dealerId){
 	    try{
 	        $result = [];
-            $model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
-            $all_jobs = $model_calcform->getJobsPricesInCalculation($calcId, $dealerId); // Получение работ по прайсу дилера
-            $all_jobs_service = $model_calcform->getMountingServicePricesInCalculation($calcId, $dealerId); // Получение работ по прайсу монажной службы
+            $modelCalcForm = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+            $modelCalculation = $this->getModel('calculation','Gm_ceilingModel');
+            $calculation = $modelCalculation->getDataById($calcId);
+            $extra_mounting = json_decode($calculation->extra_mounting);
+            $extra_mounting_sum = 0;
+            $extra_mounting_service_sum = 0;
+            if (!empty($extra_mounting)) {
+                foreach ($extra_mounting as $value) {
+                    $extra_mounting_sum += $value->price;
+                    if(isset($value->service_price)){
+                        $extra_mounting_service_sum += $value->service_price;
+                    }
+                    else{
+                        if($calculation->need_mount == 2){
+                            $extra_mounting_service_sum += $value->price + $value->price*0.2;
+                        }
+                    }
+                }
+            }
+            $all_jobs = $modelCalcForm->getJobsPricesInCalculation($calcId, $dealerId); // Получение работ по прайсу дилера
+            $all_jobs_service = $modelCalcForm->getMountingServicePricesInCalculation($calcId, $dealerId); // Получение работ по прайсу монажной службы
             if(!empty($all_jobs) && !empty($all_jobs_service)){
-                $result = ["mount_sum"=>0,
-                            "margin_mount_sum"=>0,
-                            "sum_by_stage" => [],
-                            "service_mount_sum"=>0,
-                            "margin_service_mount_sum"=>0,
-                            "service_sum_by_stage" =>[]
+                $result = [
+                    "mount_sum"=> $extra_mounting_sum,
+                    "margin_mount_sum"=>0,
+                    "sum_by_stage" => [],
+                    "service_mount_sum"=>$extra_mounting_service_sum,
+                    "margin_service_mount_sum"=>0,
+                    "service_sum_by_stage" =>[]
                 ];
                 $stages = [];
                 foreach($all_jobs as $job){
                     $stages[$job->mount_type_id] += $job->price_sum;
                     $result["mount_sum"] += $job->price_sum;
                     $result["margin_mount_sum"] += $job->price_sum_with_margin;
+                }
+                if(!empty($stages[2])){
+                    $stages[2] += $extra_mounting_sum;
+                }
+                else{
+                    $stages[3] += $extra_mounting_sum;
                 }
                 $stages[1] = $result["mount_sum"];
                 $result["sum_by_stage"] = $stages;
@@ -983,6 +1018,12 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                     $stages[$service_job->mount_type_id] += $service_job->price_sum;
                     $result["service_mount_sum"] += $service_job->price_sum;
                     $result["margin_service_mount_sum"] += $service_job->price_sum_with_margin;
+                }
+                if(!empty($stages[2])){
+                    $stages[2] += $extra_mounting_service_sum;
+                }
+                else{
+                    $stages[3] += $extra_mounting_service_sum;
                 }
                 $stages[1] = $result["service_mount_sum"];
                 $result["service_sum_by_stage"] = $stages;

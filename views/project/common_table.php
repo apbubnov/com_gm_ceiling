@@ -89,7 +89,7 @@ foreach ($calculations as $calculation) {
         $calculation->n19 = $calculationformModel->n19_load($calculation->id);
         $calculation->n45 = $calculationformModel->n45_load($calculation->id);
         if($isNMS){
-            $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"serviceSelf");
+            $mount_data = Gm_ceilingHelpersGm_ceiling::calculate_mount(0,$calculation->id,null,"service");
             $calculation->gm_self_mounting_sum = $mount_data['total_gm_mounting'];
             $calculation->dealer_self_mounting_sum = $mount_data['total_dealer_mounting'];
         }
@@ -101,7 +101,14 @@ foreach ($calculations as $calculation) {
         $extraMount = (array) json_decode($calculation->extra_mounting);
         foreach ($extraMount as $key => $value) {
             $total_gm_sum += $value->price;
-            $total_dealer_sum += $value->price;
+            if($use_service){
+                if(!empty($value->service_price)){
+                    $total_dealer_sum += $value->service_price;
+                }
+                else{
+                    $total_dealer_sum += $value->price + $value->price*0.2;
+                }
+            }
         }
 
         if($use_service){
@@ -118,12 +125,6 @@ foreach ($calculations as $calculation) {
             $total_gm_sum += $job->price_sum;
         }
 
-        /*if (!empty($service_mount)) {
-            $calculation->dealer_self_mounting_sum = (array_key_exists($calculation->id, $service_mount)) ? $service_mount[$calculation->id]: $total_dealer_sum;
-        }
-        else{
-            $calculation->dealer_self_mounting_sum = $calculation->mounting_sum;
-        }*/
         $calculation->dealer_self_mounting_sum = $total_dealer_sum;
         $calculation->gm_self_mounting_sum = $total_gm_sum;
         $calculation->dealer_canvases_sum = $calculation->canvases_sum_with_margin;
@@ -155,8 +156,7 @@ foreach ($calculations as $calculation) {
         "sum" => $calculation->calculation_total,
         "sum_discount" => $calculation->calculation_total_discount
     ];
-    //$calculation_total = $calculation->calculation_total;
-    //$calculation_total_discount =  $calculation->calculation_total_discount;
+
 }
 $self_calc_data = json_encode($self_calc_data); //массив с себестоимотью по каждой калькуляции
 $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта

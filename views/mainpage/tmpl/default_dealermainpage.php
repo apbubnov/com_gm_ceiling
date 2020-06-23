@@ -62,6 +62,10 @@ $rest = $stateOfAccountModel->getStateOfAccount($user->associated_client)->sum;
 if(empty($rest)){
     $rest = 0;
 }
+
+$managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
+    ? '<i class="far fa-clock" aria-hidden="true"></i> ГМ Менеджер'
+    : '<i class="far fa-clock" aria-hidden="true"></i>Менеджер';
 ?>
 <style>
     .margin_bottom{
@@ -69,6 +73,9 @@ if(empty($rest)){
     }
     .btn_width{
         width: 300px !important;
+    }
+    .row{
+        margin-bottom: 1em !important;
     }
 </style>
 <div class="form-group" style = "text-align: center;">
@@ -109,140 +116,153 @@ if(empty($rest)){
         <h3>Дилер</h3>
     <?php endif; ?>
     <?php if ($user->dealer_type == 0) { ?>
-        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		    <div class="container-for-circl">
-                <a class="btn btn-large btn-warning" href="<?php
+        <div class="row center">
+            <a class="btn btn-large btn-warning" href="<?php
                 if ($userId == 1 || $userId == 2 || $userId == 827)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
-                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
-                    <i class="far fa-clock" aria-hidden="true"></i> ГМ Менеджер</a>
-                <?php else: ?>
-                    <i class="far fa-clock" aria-hidden="true"></i>Менеджер</a>
-                <?php endif; ?>
-                <?php if ($sumManager != 0) { ?>
-                    <div class="circl-digits"><?php echo $sumManager; ?></div>
-                <?php } ?>
-            </div>
+                <div style="position: relative">
+                    <div>
+                        <?=$managerTitle?>
+                    </div>
+                    <?php if ($sumManager != 0) { ?>
+                        <div class="circl-digits"><?php echo $sumManager; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
         </div>
-        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		    <div class="container-for-circl">
-                <a class="btn btn-large btn-success" href="<?php
+
+        <div class="row center">
+            <a class="btn btn-large btn-success" href="<?php
                 if ($userId == 1 || $userId == 2 || $userId == 827 ) {
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); }
                 else { echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); }
                 ?>">
-                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
-                    <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик</a>
-                <?php else: ?>
-                    <i class="fa fa-calculator" aria-hidden="true"></i> Замерщик</a>
-                <?php endif; ?>
-                <?php if ($sumcalculator[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
-                <?php } ?>
-            </div>
+                <div style="position: relative;">
+                    <div>
+                        <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
+                            <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик
+                        <?php else: ?>
+                            <i class="fa fa-calculator" aria-hidden="true"></i> Замерщик
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($sumcalculator[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
         </div>
-        <div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		    <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php
-                if ($userId == 1 || $userId == 2){
-                    echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmchiefmainpage', false);
-                }
-                    
-                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false);
-                ?>">
-                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
-                    <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
-                <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
-                <?php endif; ?>
-                <?php if ($countMounting[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $countMounting[0]->count; ?></div>
-                <?php } ?>
-            </div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php
+            if ($userId == 1 || $userId == 2){
+                echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmchiefmainpage', false);
+            }
+
+            else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false);
+            ?>">
+
+                <div style="position: relative;">
+                    <div>
+                        <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
+                            <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС
+                        <?php else: ?>
+                            <i class="fa fa-user" aria-hidden="true"></i> Начальник МС
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($countMounting[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $countMounting[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
         </div>
-        <p class="center">
+        <div class="row center">
             <a class="btn btn-large btn-danger"
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&&view=projects&type=buh', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Бухгалтерия</a>
-        </p>
-        <p class="center">
+        </div>
+        <div class="row center">
             <a class="btn btn-large btn-danger"
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=accountant&subtype=close', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Договоры</a>
-        </p>
+        </div>
         <?php if($userId == 2 || $userId == 1 || $userId == 827 ){?>
-            <p class="center">
+            <div class="row center">
                 <a class="btn btn-large btn-primary"
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>">
                     <i class="fas fa-chart-line"></i> Аналитика</a>
-            </p>
-            <p>
+            </div>
+            <div class="row center">
                 <a class="btn btn-large btn-primary"
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=api_phones', false); ?>"><i
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
-            </p>
-            <p>
+            </div>
+            <div class="row center">
                 <a class="btn btn-large btn-primary"
                    href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock', false); ?>"><i
                             class="fa fa-mobile" aria-hidden="true"></i> Склад</a>
-            </p>
+            </div>
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
-        <p class="center">
+        <div class="row center">
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-edit" aria-hidden="true"></i>Рассчитать</button>
-        </p>
+        </div>
 
-        <div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-            <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
-                <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
-            </div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны
+                    </div>
+                    <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
+                </div>
+            </a>
         </div>
-        <!--<p class="center">
-            <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=incoming_calls', false); */?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Входящие звонки</a>
-        </p>-->
-        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
-            <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
-                <?php if ($sumcalculator[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
-                <?php } ?>
-            </div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false); ?>">
+                <div style="position:relative;">
+                    <div>
+                        <i class="fa fa-calculator" aria-hidden="true"></i> Замеры
+                    </div>
+                    <?php if ($sumcalculator[0]->count != 0) { ?>
+                        <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
         </div>
-        <p class="center">
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
-        </p>
-        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
-            <div class="container-for-circl">
-                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Договоры/Монтажи</a>
-                <?php if ($allMount != 0) { ?>
-                    <div class="circl-digits"><?php echo $allMount; ?></div>
-                <?php } ?>
-            </div>
         </div>
-         <p class="center">
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fa fa-gavel" aria-hidden="true"></i> Договоры/Монтажи
+                    </div>
+                    <?php if ($allMount != 0) { ?>
+                        <div class="circl-digits"><?php echo $allMount; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
+        </div>
+        <div class="row center">
             <button class="btn btn-large btn-primary" id="show_analytic"><i class="fas fa-chart-line"></i> Аналитика</button>
-        </p>
-        <!--<p class="center">
-            <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); */?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
-        </p>-->
-        <p>
+        </div>
+        <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
-        </p>
+        </div>
          
     <?php } elseif ($user->dealer_type == 2) { ?>
-        <p class="center">
-            <button class="btn btn-large btn-primary" id="create_order_btn"><i class="fa fa-list-alt"
-                                                                               aria-hidden="true"></i> Создать заказ
+        <div class="row center">
+            <button class="btn btn-large btn-primary" id="create_order_btn">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> Создать заказ
             </button>
-        </p>
-        <p class="center">
-            <button class="btn btn-large btn-primary" id="prev_orders_btn"><i class="fa fa-list-alt"
-                                                                              aria-hidden="true"></i> Ранее заказанные
+        </div>
+        <div class="row center">
+            <button class="btn btn-large btn-primary" id="prev_orders_btn">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> Ранее заказанные
             </button>
-        </p>
+        </div>
     <?php } ?>
 </div>
 

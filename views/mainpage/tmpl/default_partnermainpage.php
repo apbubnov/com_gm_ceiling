@@ -6,20 +6,28 @@
  * Time: 9:32
  */
 ?>
-
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <div class = "start_page">
-    <p class="center">
+    <div class="row center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
-    </p>
-    <div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
-        <div class="container-for-circl">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны</a>
-            <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
-        </div>
     </div>
-    <p class="center">
+    <div class="row center">
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>">
+            <div style="position:relative;">
+                <div>
+                    <i class="fa fa-phone-square" aria-hidden="true"></i> Перезвоны
+                </div>
+                <div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
+            </div>
+        </a>
+    </div>
+    <div class="row center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>"><i class="fa fa-bar-chart" aria-hidden="true"></i> Аналитика</a>
-    </p>
+    </div>
 </div>
 
 
