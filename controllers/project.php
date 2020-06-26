@@ -2277,5 +2277,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function removeProjectMountByBrigade(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $brigadeId = $jinput->getInt('brigade_id');
+            $projectMountModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+            $result = $projectMountModel->removeProjectMountByBrigade($projectId,$brigadeId);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
 }
 ?>

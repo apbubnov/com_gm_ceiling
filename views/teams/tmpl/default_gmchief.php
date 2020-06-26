@@ -52,7 +52,9 @@ foreach ($brigadesData as $value){
         $calendars .= '<div class="col-md-10"><a href="/index.php?option=com_gm_ceiling&view=team&id='.$brigades[$i]->id.'class="site-tar">'.$brigades[$i]->name.'</a></div><div class="col-md-2"><button class="btn btn-danger btn-sm btn_del_brigade" type="button" data-id="'.$brigades[$i]->id.'"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></div>';
         $calendars .= '</div>';
         $calendars .= '<div class="row" style="width: 98%">';
-        $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
+        if(count($brigades[$i]->include_mounters) > 1) {
+            $calendars .= '<div class="col-md-12">' . $brigades[$i]->include_mounters . '</div>';
+        }
         $calendars .= '</div>';
         $calendars .= '<div class="row center firstMonth" data-brigade_id="'.$brigades[$i]->id.'" style="width: 98%">';
         $calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($brigades[$i]->id, $month1, $year1, $FlagCalendar);
@@ -84,12 +86,26 @@ foreach ($brigadesData as $value){
         font-size: 10pt;
         text-align: left;
     }
+    .btn_width{
+        width:100%;
+    }
 </style>
 <div id="content-tar">
 	<h2>Бригады</h2>
-	<div id="btn-container">
-		<button id="add-brigade" class="btn btn-success btn-small" onClick='location.href="/index.php?option=com_gm_ceiling&view=teamform"'>Добавить бригаду</button>
-	</div>
+
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-3">
+            <button id="add-brigade" class="btn btn-primary btn_width" onClick='location.href="/index.php?option=com_gm_ceiling&view=teamform"'>
+                <i class="far fa-plus-square"></i> Добавить бригаду
+            </button>
+        </div>
+        <div class="col-md-3">
+            <button id="add-brigade" class="btn btn-primary btn_width" onClick='location.href="/index.php?option=com_gm_ceiling&view=teams&type=removed"'>
+                <i class="fas fa-user-minus"></i> Перейти к удаленным
+            </button>
+        </div>
+    </div>
 	<div  id="legenda-container">
         <div class="row">
             <div class="col-md-3">
@@ -377,6 +393,82 @@ foreach ($brigadesData as $value){
                 Today(day, NowMonth, NowYear, elem.id);
             });
         });
+
+        jQuery('#calendars-container').on('click','.prev', function () {
+            var brigadeId = jQuery(this).closest('div[data-brigade_id]').data('brigade_id'),
+                month1 = <?php echo $month1; ?>,
+                year1 = <?php echo $year1; ?>,
+                month2 = <?php echo $month2; ?>,
+                year2 = <?php echo $year2; ?>;
+            if (month_old1 != 0) {
+                month1 = month_old1;
+                year1 = year_old1;
+                month2 = month_old2;
+                year2 = year_old2;
+            }
+            if (month1 == 1) {
+                month1 = 12;
+                year1--;
+            } else {
+                month1--;
+            }
+            if (month2 == 1) {
+                month2 = 12;
+                year2--;
+            } else {
+                month2--;
+            }
+            month_old1 = month1;
+            year_old1 = year1;
+            month_old2 = month2;
+            year_old2 = year2;
+            jQuery("#preloader").show();
+            updateCalendar(brigadeId,month1,year1);
+            jQuery('.firstMonth[data-brigade_id='+brigadeId+']').empty();
+            jQuery('.firstMonth[data-brigade_id='+brigadeId+']').append(calendar);
+            updateCalendar(brigadeId,month2,year2);
+            jQuery('.secondMonth[data-brigade_id='+brigadeId+']').empty();
+            jQuery('.secondMonth[data-brigade_id='+brigadeId+']').append(calendar);
+        });
+
+        jQuery('#calendars-container').on('click','.next', function () {
+            var brigadeId = jQuery(this).closest('div[data-brigade_id]').data('brigade_id'),
+                month1 = <?php echo $month1; ?>,
+                year1 = <?php echo $year1; ?>,
+                month2 = <?php echo $month2; ?>,
+                year2 = <?php echo $year2; ?>;
+
+            if (month_old1 != 0) {
+                month1 = month_old1;
+                year1 = year_old1;
+                month2 = month_old2;
+                year2 = year_old2;
+            }
+            if (month1 == 12) {
+                month1 = 1;
+                year1++;
+            } else {
+                month1++;
+            }
+            if (month2 == 12) {
+                month2 = 1;
+                year2++;
+            } else {
+                month2++;
+            }
+            month_old1 = month1;
+            year_old1 = year1;
+            month_old2 = month2;
+            year_old2 = year2;
+
+            updateCalendar(brigadeId,month1,year1);
+            jQuery('.firstMonth[data-brigade_id='+brigadeId+']').empty();
+            jQuery('.firstMonth[data-brigade_id='+brigadeId+']').append(calendar);
+            updateCalendar(brigadeId,month2,year2);
+            jQuery('.secondMonth[data-brigade_id='+brigadeId+']').empty();
+            jQuery('.secondMonth[data-brigade_id='+brigadeId+']').append(calendar);
+        });
+
         //------------------------------------------
 
 		// нажатие на день, чтобы посмотреть проекты на день
@@ -764,7 +856,6 @@ foreach ($brigadesData as $value){
 		jQuery('.btn_del_brigade').click(function()
         {
             var user_id = jQuery(this).data('id');
-            alert(user_id);
             noty({
                 layout: 'topCenter',
                 type: 'default',
@@ -775,7 +866,7 @@ foreach ($brigadesData as $value){
                     {
                         addClass: 'btn btn-primary', text: 'Да', onClick: function ($noty) {
                             jQuery.ajax({
-                                url: "index.php?option=com_gm_ceiling&task=users.deleteUser",
+                                url: "index.php?option=com_gm_ceiling&task=teams.deleteBrigade",
                                 data: {
                                     user_id: user_id
                                 },

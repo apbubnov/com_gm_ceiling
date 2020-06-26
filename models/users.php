@@ -602,7 +602,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$query->select('`u`.`id`, `u`.`name`')
 					->from('`#__users` AS `u`')
 					->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-					->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
+                    ->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
 				$db->setQuery($query);
 				$items = $db->loadObjectList();
 
@@ -739,6 +739,23 @@ class Gm_ceilingModelUsers extends JModelList
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    function deleteGroup($group,$userId){
+	    try{
+            $db= JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('rgzbn_user_usergroup_map')
+                ->where("group_id = $group and user_id = $userId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
     }
 
     function getManufacturersInfo(){

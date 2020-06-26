@@ -6261,9 +6261,9 @@ class Gm_ceilingHelpersGm_ceiling
             $table .= '<table class="calendar-table" cellspacing="0" colls="7">';
             // заголовок календаря
             $table .= '<tr>';
-            $table .= '<td><button class="btn btn-primary btn-sm" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></td>';
+            $table .= '<td><button class="btn btn-primary btn-sm prev" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></td>';
             $table .= '<td colspan="5" class="caption-month"><p>' . $ArMonths[$month] . ' ' . $year . 'г.</p></td>';
-            $table .='<td><button class="btn btn-primary btn-sm" id="next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>';
+            $table .='<td><button class="btn btn-primary btn-sm next" id="next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>';
             $table .='</tr>';
             // создание и заполнение ячеек под дни
             $table .= '<tr>';
@@ -6438,11 +6438,12 @@ class Gm_ceilingHelpersGm_ceiling
                     // для вывода монтажника (по одному)
                     if ($flag[0] == 1) {
                         $model = self::getModel('teams');
-                        $brigadesData = $model->getDatas($flag[1]);
+                        //$brigadesData = $model->getDatas($flag[1]);
+                        //throw new Exception(print_r($brigadesData,true));
                         $brigade_id = [];
-                        foreach($brigadesData as $value){
+                        /*foreach($brigadesData as $value){
                             $brigade_id = array_merge($brigade_id,json_decode($value->mounters));
-                        }
+                        }*/
 
                         if (strlen($month) == 1) {
                             $monthfull = "0" . $month;

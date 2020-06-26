@@ -21,34 +21,33 @@ class Gm_ceilingModelTeams extends JModelItem {
 
 	function getData() {}
 
-	function getDatas($dealerId) {
+	function getDatas($dealerId,$group = 11) {
 		try
 		{
 			$db = JFactory::getDbo();
             $query = "SET SESSION group_concat_max_len = 10485760;";
             $db->setQuery($query);
             $db->execute();
-            $query = $db->getQuery(true);
 			$query = $db->getQuery(true);
 			$namesSubquery = $db->getQuery(true);
 
-			$namesSubquery
+            $namesSubquery
                 ->select('map.id_brigade,GROUP_CONCAT(m.name SEPARATOR \',\') AS `names`')
                 ->from('`rgzbn_gm_ceiling_mounters_map` AS map')
                 ->innerJoin('`rgzbn_gm_ceiling_mounters` AS m ON m.id = map.id_mounter')
                 ->group('map.id_brigade');
-			$query->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
-				->from('#__users as users')
-				->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
+            $query->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
+                ->from('#__users as users')
+                ->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
                 ->leftJoin('`rgzbn_user_info` as ui on ui.user_id = users.id')
                 ->leftJoin('`rgzbn_city` AS c ON c.id = ui.city_id')
                 ->leftJoin("($namesSubquery) AS mn ON mn.id_brigade = users.id")
-				->where("users.dealer_id = '$dealerId' and usergroup.group_id = '11'")
+                ->where("users.dealer_id = '$dealerId' and usergroup.group_id = '$group'")
                 ->group('city_id');
-			$db->setQuery($query);
+            $db->setQuery($query);
 
-			$items = $db->loadObjectList();
-			return $items;
+            $items = $db->loadObjectList();
+            return $items;
 		}
 		catch(Exception $e)
         {
@@ -433,5 +432,30 @@ class Gm_ceilingModelTeams extends JModelItem {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+    /*function deleteGroup($group,$userId){
+        try{
+            $db= JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('rgzbn_user_usergroup_map')
+                ->where("group_id = $group and user_id = $userId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }*/
+	function getRemoved($dealerId){
+	    try{
+	        $items = $this->getDatas($dealerId,37);
+	        return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 

@@ -168,4 +168,20 @@ class Gm_ceilingModelProjects_mounts extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function removeProjectMountByBrigade($projectId,$brigadeId){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->delete('`#__gm_ceiling_projects_mounts`');
+            $query->where("project_id = $projectId and mounter_id = $brigadeId");
+            $db->setQuery($query);
+            $db->execute();
+
+            return true;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

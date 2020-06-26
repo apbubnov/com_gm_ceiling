@@ -121,12 +121,32 @@ class Gm_ceilingControllerTeams extends Gm_ceilingController {
 					
 			die($ansver);
 		}
-		catch(Exception $e)
-        {
+		catch(Exception $e) {
           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
+    function deleteBrigade(){
+        $jinput = JFactory::getApplication()->input;
+        $id = $jinput->getInt('user_id');
+        $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+        $userModel->deleteGroup(11,$id);
+        $result = $userModel->addGroup($id,37);
+        die(json_encode($result));
+    }
+
+	function returnBrigade(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $id = $jinput->getInt('user_id');
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $userModel->deleteGroup(37,$id);
+            $result = $userModel->addGroup($id,11);
+	        die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
 	/**
 	 * Proxy for getModel.
