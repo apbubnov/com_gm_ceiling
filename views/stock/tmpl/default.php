@@ -24,6 +24,12 @@ $userGroup = $user->groups;
     body {
         background-color: #E6E6FA;
     }
+    .row{
+        margin-bottom: 1em !important;
+    }
+    .btn-width{
+        width:300px !important;
+    }
 </style>
 
 <?= parent::getPreloader(); ?>
@@ -31,25 +37,45 @@ $userGroup = $user->groups;
 
 <div class="start_page">
     <h3>Склад</h3>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=reception', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Прием</a>
-    </p>
-    <!--<p class="center">
-        <a class="btn btn-large btn-primary" href="<?php /*echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=inventory', false, 2); */?>"><i class="fa fa-bars" aria-hidden="true"></i> Инвентаризация</a>
-    </p>-->
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=goods', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Список товаров</a>
-    </p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=projects', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Реализация</a>
-    </p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=issued&subtype=projects', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Выданные заказы</a>
-    </p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=rest', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Количество оставшихся товаров</a>
-    </p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=dealers', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Дилеры</a>
-    </p>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=reception', false, 2); ?>">
+            <i class="fas fa-file-invoice"></i> Прием
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=received', false, 2); ?>">
+            <i class="far fa-clock"></i> История приемки
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=goods', false, 2); ?>">
+            <i class="fas fa-list"></i> Список товаров
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=projects', false, 2); ?>">
+            <i class="fa fa-bars" aria-hidden="true"></i> Реализация
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=issued&subtype=projects', false, 2); ?>">
+            <i class="fa fa-bars" aria-hidden="true"></i> Выданные заказы
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=rest', false, 2); ?>">
+            <i class="fa fa-bars" aria-hidden="true"></i> Количество оставшихся товаров
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=dealers', false, 2); ?>">
+            <i class="fas fa-users"></i> Дилеры
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=counterparty', false, 2); ?>">
+            <i class="fas fa-users"></i> Поставщики
+        </a>
+    </div>
+
 </div>

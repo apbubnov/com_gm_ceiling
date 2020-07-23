@@ -183,4 +183,38 @@ class Gm_ceilingModelCounterparty extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function addProvider($provider){
+       try{
+           if(!empty($provider)) {
+               $id = $provider->id;
+               unset($provider->id);
+               $db = $this->getDbo();
+               $query = $db->getQuery(true);
+               if (!empty($id)) {
+                   $query->update('`rgzbn_gm_ceiling_counterparty`');
+                   foreach ($provider as $key=>$value){
+                       $query->set("$key = '$value'");
+                   }
+                   $query->where("id = $id");
+               } else {
+                   $provider_arr  = get_object_vars($provider);
+                   $columns = array_keys($provider_arr);
+                   $values = implode(',',$db->quote(array_values($provider_arr)));
+                   $query
+                       ->insert('`rgzbn_gm_ceiling_counterparty`')
+                       ->columns($columns)
+                       ->values($values);
+               }
+               $db->setQuery($query);
+               $db->execute();
+               if(empty($id)){
+                   $id = $db->lastIndex();
+               }
+               return $id;
+           }
+       }
+       catch (Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+    }
 }

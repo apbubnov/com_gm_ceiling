@@ -359,6 +359,19 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function addProvider(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $provider = $jinput->get('provider','','STRING');
+            $counterpartyModel = Gm_ceilingHelpersGm_ceiling::getModel('counterparty');
+            $result = $counterpartyModel->addProvider(json_decode($provider));
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public static function margin($value, $margin) {
         try {
             if($margin == 100){
@@ -1110,7 +1123,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                                                 $updateInvetory[] = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $realiseCount);
                                                 $newGoodsOnStock = $stockModel->makeGoodsMovement($moveArray,$updateInvetory);
                                                 $rCanvObject = (object)array("inventory_id" => $newGoodsOnStock[0]->id, "sale_price" => $value->dealer_price, "count" => $realiseCount, "date_time" => "'" . date('Y-m-d H:i:s') . "'", "project_id" => $projectId, "created_by" => $userId);
-                                                $uCanvObject = (object)array("id" => $stockGoods->id, "count" => $stockGoods->count - $realiseCount);
+                                                $uCanvObject = (object)array("id" => $newGoodsOnStock[0]->id, "count" => $newGoodsOnStock[0]->count - $realiseCount);
                                                 $realiseCount = 0;
                                                 break;
                                             }
