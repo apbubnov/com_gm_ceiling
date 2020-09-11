@@ -30,177 +30,258 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
 		$result = [];
 		$api_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 		$advt = $api_model->getDealersAdvt($dealer_id);
-		$statuses = array("dealers"=>[20],"advt"=>[21],"refuse"=>[15],"ref_measure"=>[2],"measure"=>[1],"ref_deals"=>[3],"deals"=>[4,5],"closed"=>[12],"sum_done"=>[12],"profit"=>[12],"sum_deals"=>[4,5]);
-        if(!$dealer_type) {
-            $advt['otd']['id'] = "otd";
-            $advt['otd']['advt_title'] = 'Отделочники';
-            $advt['win']['id'] = "win";
-            $advt['win']['advt_title'] = 'Оконщики';
+        $db = JFactory::getDbo();
+
+        $query = 'SET SESSION group_concat_max_len  = 1048576';
+        $db->setQuery($query);
+        $db->execute();
+
+        $query = $db->getQuery(true);
+        if($dealer_type){
+            $query
+                ->select('IFNULL(advt.id,0) AS advt_id,IFNULL(advt.name,\'Отсутствует\') AS advt_title');
         }
-		$advt[0]['id'] = "0";
-		$advt[0]['advt_title'] = 'Отсутствует';
-		foreach ($advt as $id => $advt_obj) {
-			foreach ($statuses as $key => $status) {
-				$advt[$id][$key] = 0;
-				$advt[$id]['projects'] = "";
-				$advt[0][$key] = 0;
-			}
-		}
-		$projects = $this->getDataByParameters($dealer_id,$date1,$date2);
-		$this->addData($advt,$projects,$dealer_id,$date1,$date2,$statuses);
-		if(!$dealer_type){
-			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,3);
-			$this->addData($advt,$projects,$dealer_id,$date1,$date2,$statuses);
-			$projects = $this->getDataByParameters($dealer_id,$date1,$date2,8);
-			$this->addData($advt,$ids,$projects,$dealer_id,$date1,$date2,$statuses);
-		}
-		$measures = $this->getCurrentMeasures($dealer_id,$date1,$date2,"(3,8)");
-		$mounts = $this->getCurrentMounts($dealer_id,$date1,$date2,"(3,8)");
-		$this->addCurrentData($measures,$advt,'current_measure');
-		$this->addCurrentData($mounts,$advt,'mounts');
-		
-		foreach ($advt as $id => $advt_obj){
-			foreach ($advt_obj["projects"] as $s => $ps) {
-				$advt_obj["projects"][$s] = implode(";",$ps);
-			}
-			$result[] = $advt_obj;
-		}
+        else{
+            $query
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'otd\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'win\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN 0
+                            ELSE p.api_phone_id END  AS advt_id')
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'Отделочники\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'Оконщики\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN \'Отсутствует\'
+                            ELSE advt.name END AS advt_title')
+                ->select('SUM( CASE WHEN ph.new_status = 20 THEN 1 ELSE 0 END) AS dealers')
+                ->select('GROUP_CONCAT(IF(ph.new_status = 20,p.id,NULL) SEPARATOR \',\') AS dealers_projects')
+                ->select('SUM( CASE WHEN ph.new_status = 21 THEN 1 ELSE 0 END) AS advt')
+                ->select('GROUP_CONCAT(IF(ph.new_status = 21,p.id,NULL) SEPARATOR \',\') AS advt_projects');
+        }
+        $query
+            ->select('COUNT(DISTINCT p.id) AS common')
+            ->select('GROUP_CONCAT(p.id SEPARATOR \',\') AS common_projects')
+            ->select('SUM( CASE WHEN ph.new_status = 15 THEN 1 ELSE 0 END) AS refuse')
+            ->select('GROUP_CONCAT(IF(ph.new_status = 15,p.id,NULL) SEPARATOR \',\') AS refuse_projects')
+            ->select('SUM( CASE WHEN ph.new_status = 2 THEN 1 ELSE 0 END) AS refuse_measure')
+            ->select('GROUP_CONCAT(IF(ph.new_status = 2,p.id,NULL) SEPARATOR \',\') AS ref_measure_projects')
+            ->select('SUM( CASE WHEN ph.new_status = 1 THEN 1 ELSE 0 END) AS measure')
+            ->select('GROUP_CONCAT(IF(ph.new_status = 1,p.id,NULL) SEPARATOR \',\') AS measure_projects')
+            ->select('SUM( CASE WHEN p.project_calculation_date = CURDATE() THEN 1 ELSE 0 END) AS current_measure')
+            ->select('GROUP_CONCAT(IF(p.project_calculation_date = CURDATE(),p.id,NULL) SEPARATOR \',\') AS current_measure_projects')
+            ->select('SUM( CASE WHEN ph.new_status = 3 THEN 1 ELSE 0 END) AS ref_deals')
+            ->select('GROUP_CONCAT(IF(ph.new_status = 3,p.id,NULL) SEPARATOR \',\') AS ref_deals_projects')
+            ->select('SUM( CASE WHEN ph.new_status IN (4,5) THEN 1 ELSE 0 END) AS deals')
+            ->select('GROUP_CONCAT(IF(ph.new_status IN (4,5),p.id,NULL) SEPARATOR \',\') AS deals_projects')
+            ->select('SUM( CASE WHEN ph.new_status IN (4,5) THEN IF(p.new_project_sum <> 0,p.new_project_sum,p.project_sum) ELSE 0 END) AS deals_sum')
+            ->select('SUM( CASE WHEN ph.new_status = 12 THEN 1 ELSE 0 END) AS done')
+            ->select('GROUP_CONCAT(IF(ph.new_status IN (12),p.id,NULL) SEPARATOR \',\' ) AS done_projects')
+            ->select('SUM( CASE WHEN ph.new_status IN (12) THEN IF(p.new_project_sum <> 0,p.new_project_sum,p.project_sum) ELSE 0 END) AS done_sum')
+            ->select('SUM( CASE WHEN ph.new_status IN (12) THEN (p.new_project_sum - (p.new_material_sum+p.new_mount_sum)) ELSE 0 END) AS profit')
+            ->from('`rgzbn_gm_ceiling_projects` AS p')
+            ->leftJoin('`rgzbn_gm_ceiling_projects_history` AS ph  ON ph.project_id = p.id')
+            ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
+            ->leftJoin('`rgzbn_gm_ceiling_api_phones` AS advt ON advt.id = p.api_phone_id')
+            ->where("(ph.date_of_change BETWEEN '$date1' AND '$date2' )")
+            ->group('advt_id');
+         if($dealer_type){
+             $query->where("c.dealer_id = $dealer_id");
+         }
+         else{
+             $query
+                 ->leftJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+                 ->where("(c.dealer_id = $dealer_id OR u.dealer_id = $dealer_id) and u.dealer_type != 7");
+         }
+
+        $db->setQuery($query);
+        $data = $db->loadObjectList('advt_id');
+
+        $diff = array_diff(array_keys($advt),array_keys($data));
+        if(!in_array('0',array_keys($data))){
+            array_push($diff,0);
+        }
+        if(!$dealer_type) {
+            if (!in_array('otd', array_keys($data))) {
+                array_push($diff, 'otd');
+            }
+            if (!in_array('win', array_keys($data))) {
+                array_push($diff, 'win');
+            }
+        }
+        foreach ($diff as $id){
+            $item = $advt[$id];
+            if(empty($item)){
+                $advtTitle = "";
+                switch ($id){
+                    case '0':
+                        $advtTitle = "Отсутсвует";
+                        break;
+                    case 'win':
+                        $advtTitle = "Оконщики";
+                        break;
+                    case 'otd':
+                        $advtTitle = "Отделочники";
+                        break;
+                }
+                $item = ["id"=>$id,"advt_title"=>$advtTitle];
+            }
+            $advtAnalytic = (object)[
+                "id" => $item["id"],
+                "advt_title" => $item["advt_title"],
+                "common"=> 0,
+                "dealers" => 0,
+                "advt" => 0,
+                "refuse" => 0,
+                "ref_measure" => 0,
+                "measure" => 0,
+                "current_measures" => 0,
+                "ref_deals" => 0,
+                "deals" => 0,
+                "sum_deals"=> 0,
+                "current_mounts" => 0,
+                "closed" => 0,
+                "sum_done" => 0,
+                "profit"=> 0,
+                "expenses"=> 0,
+                "projects" => [
+                    "common"=> "",
+                    "dealers" => "",
+                    "advt" => "",
+                    "ref_measure" => "",
+                    "measure" => "",
+                    "current_measure" => "",
+                    "ref_deals" => "",
+                    "deals" => "",
+                    "closed" => "",
+                    "current_mounts" => ""
+                ]
+            ];
+            $result[$item["id"]] = $advtAnalytic;
+        }
+        foreach ($data as $item){
+            $advtAnalytic = (object)[
+                "id" => $item->advt_id,
+                "advt_title" => $item->advt_title,
+                "common"=> $item->common,
+                "dealers" => $item->dealers,
+                "advt" => $item->advt,
+                "refuse" => $item->refuse,
+                "ref_measure" => $item->ref_measure,
+                "measure" => $item->measure,
+                "current_measures" => 0,
+                "ref_deals" => $item->ref_deals,
+                "deals" => $item->deals,
+                "sum_deals"=> $item->deals_sum,
+                "current_mounts" => 0,
+                "closed" =>  $item->done,
+                "sum_done" => $item->done_sum,
+                "profit"=> $item->profit,
+                "expenses"=> $item->expenses,
+                "projects" => [
+                    "common"=> $item->common_projects,
+                    "dealers" => $item->dealers_projects,
+                    "advt" => $item->advt_projects,
+                    "refuse" => $item->refuse_projects,
+                    "ref_measure" => $item->ref_measure_projects,
+                    "measure" => $item->measure_projects,
+                    "current_measures" => $item->current_measure_projects,
+                    "ref_deals" => $item->ref_deals_projects,
+                    "deals" => $item->deals_projects,
+                    "sum_deals" => $item->deals_projects,
+                    "current_mounts" => $item->current_mount_projects,
+                    "closed" => $item->done_projects,
+                    "sum_done" => $item->done_projects,
+                    "profit" => $item->done_projects
+                ]
+            ];
+            $result[$item->advt_id] = $advtAnalytic;
+        }
+		$measures = $this->getCurrentMeasures($dealer_id);
+		if(!empty($measures)){
+		    foreach($measures as $measure){
+		        if(!empty($measure->advt_id)){
+                    $result[$measure->advt_id]->common += $measure->count;
+                    if(!empty($result[$measure->advt_id]->projects["common"])) {
+                        $result[$measure->advt_id]->projects["common"] .= ",";
+                    }
+                    $result[$measure->advt_id]->projects["common"] .= "$measure->projects";
+                    $result[$measure->advt_id]->current_measures = $measure->count;
+                    $result[$measure->advt_id]->projects["current_measures"] = $measure->projects;
+                }
+            }
+        }
+		$mounts = $this->getCurrentMounts($dealer_id);
+        if(!empty($mounts)){
+            foreach($mounts as $mount){
+                if(!empty($mount->advt_id)) {
+                    $result[$mount->advt_id]->common += $mount->count;
+                    if(!empty($result[$mount->advt_id]->projects["common"])){
+                        $result[$mount->advt_id]->projects["common"] .= ",";
+                    }
+                    $result[$mount->advt_id]->projects["common"] .="$mount->projects";
+                    $result[$mount->advt_id]->current_mounts = $mount->count;
+                    $result[$mount->advt_id]->projects["current_mounts"] = $mount->projects;
+                }
+            }
+        }
+        $customAdvtId = ['0','otd','win'];
+        usort($result, function($a, $b) use ($customAdvtId) {
+            if(!in_array($a->id,$customAdvtId)&&!in_array($b->id,$customAdvtId)){
+                return $a->id > $b->id;
+            }
+            else{
+                return 0;
+            }
+        });
 		if(!$dealer_type){
 			$biases = [4,5,6];
 		}
 		else{
 			$biases = [4,3,4];
 		}
-		$header = (object)array(
-			"advt_title" => (object)array("head_name" =>"Реклама","rowspan"=>2), 
-			"common" => (object)array("head_name" =>"Всего","rowspan"=>2),
-			"dealers" => (object)array("head_name" =>"Дилеры","rowspan"=>2),
-			"advt" => (object)array("head_name" =>"Реклама","rowspan"=>2),
-			"refuse" => (object)array("head_name" =>"Отказ от сотрудничества","rowspan"=>2),
-			"measures" => (object)array("head_name"=>"Замеры","bias"=>$biases[1],"columns"=>array("ref_measure" => "Отказ","measure" => "Запись","current_measure" => "Текущие")),
-			"deal" => (object)array("head_name"=>"Договоры","bias"=>$biases[1],"columns"=>array("ref_deals" => "Отказ","deals" => "Договора","sum_deals" => "Сумма")),
-			"mounts" => (object)array("head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]),
-			"close" => (object)array("head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>array("closed" => "Кол-во","sum_done" => "Сумма","profit"=>"Прибыль"))
-			);
-		array_unshift($result, $header);
+		$header = (object)[
+			"advt_title" => (object)["head_name" =>"Реклама","rowspan"=>2],
+			"common" => (object)["head_name" =>"Всего","rowspan"=>2],
+			"dealers" => (object)["head_name" =>"Дилеры","rowspan"=>2],
+			"advt" => (object)["head_name" =>"Реклама","rowspan"=>2],
+			"refuse" => (object)["head_name" =>"Отказ от сотрудничества","rowspan"=>2],
+			"measures" => (object)["head_name"=>"Замеры","bias"=>$biases[1],"columns"=>["ref_measure" => "Отказ","measure" => "Запись","current_measures" => "Текущие"]],
+			"deal" => (object)["head_name"=>"Договоры","bias"=>$biases[1],"columns"=>["ref_deals" => "Отказ","deals" => "Договор","sum_deals" => "Сумма"]],
+			"current_mounts" => (object)["head_name" =>"Монтажи","rowspan"=>2,"bias"=>$biases[0]],
+			"close" => (object)["head_name"=>"Закрытые","bias"=>$biases[2],"columns"=>["closed" => "Кол-во","sum_done" => "Сумма","profit"=>"Прибыль"]]
+			];
 		if($dealer_type){
-			$this->unset_columns($result);
-		}
+		    unset($header->dealers);
+		    unset($header->advt);
+        }
+		array_unshift($result, $header);
 		return $result;
 	}
 
-	function getDataByParameters($dealer_id,$date1,$date2,$dealer_type = null){
+	function getCurrentMeasures($dealer_id){
 		try{
-			if($dealer_type == 3){
-				$advt = 'otd';
-			}
-			if($dealer_type == 8){
-				$advt = 'win';
-			}
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			if(empty($dealer_type)){
-				$query
-					->select('distinct *')
-					->where("client_dealer_id = $dealer_id and (advt_owner = $dealer_id OR advt_owner is NULL)");
-			}
-			else{
-				$query
-					->select("project_id,new_status,'$advt' as api_phone_id,sum,profit")
-					->where("dealer_id = $dealer_id and dealer_type = $dealer_type and (advt_owner = $dealer_id OR advt_owner is NULL)");
-			}
-			$query->from('#__analytic_detailed');
-
-			if(!empty($date1)&&!empty($date2)){
-				$query->where("(date_of_change BETWEEN '$date1' and '$date2' OR created BETWEEN '$date1' and '$date2')");
-			}
-			if(!empty($date1) && empty($date2)){
-				$query->where("(date_of_change >= '$date1' OR created >= '$date1')");
-			}
-			if(empty($date1) && !empty($date2)){
-				$query->where("(date_of_change <= '$date2' OR created <= '$date2')");
-			}
-			//throw new Exception($query);
-			$db->setQuery($query);
-			$result = $db->loadObjectList();
-			return $result;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
-	function addData(&$advt,$projects,$dealer_id,$date1,$date2,$statuses){
-		$date1 = strtotime($date1);
-		$date2 = strtotime($date2);
-		foreach ($projects as $id => $project) {
-			$created = !empty($project->created) ? strtotime($project->created) : null;
-			$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
- 			if($created >= $date1 && $created <= $date2){
- 				if(!in_array($project->project_id,$advt[$advt_id]['projects']['common'])){
-					$advt[$advt_id]['projects']["common"][] = $project->project_id;
-					$advt[$advt_id]["common"]++;
-				}
-			}
-			foreach ($statuses as $key => $statuses_arr) {
-				if($key != "sum_done" && $key != "sum_deals" && $key != "profit"){
-					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
-						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
-							$advt[$advt_id]['projects'][$key][] = $project->project_id;
-							$advt[$advt_id][$key]++;
-						}
-					}
-				}
-				else{
-					if(!is_null($project->new_status) && in_array($project->new_status, $statuses_arr)){
-						if(!in_array($project->project_id,$advt[$advt_id]['projects'][$key])){
-							$advt[$advt_id]['projects'][$key][] = $project->project_id;
-							if($key!="profit"){
-                                $advt[$advt_id][$key] += $project->sum;
-                            }
-                            if($key == "profit"){
-                                $advt[$advt_id][$key] += $project->profit;
-                            }
-
-						}
-					}
-				}
-			}
-		}
-	}
-
-	function addCurrentData($data,&$advt,$field_name){
-		foreach ($data as $key => $project) {
-			if($project->dealer_type != 3 && $project->dealer_type != 8){
-				$advt_id = (empty($project->api_phone_id)) ? 0 : $project->api_phone_id;
-				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
-					$advt[$advt_id]['projects'][$field_name][] = $project->project_id;
-					$advt[$advt_id][$field_name]++;
-				}
-			}
-			elseif($project->dealer_type == 3){
-				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
-					$advt['otd']['projects'][$field_name][] = $project->project_id;
-					$advt['otd'][$field_name]++;
-				}
-			}
-			elseif($project->dealer_type == 8){
-				if(!in_array($project->project_id,$advt[$advt_id]['projects'][$field_name])){
-					$advt['win']['projects'][$field_name][] = $project->project_id;
-					$advt['win'][$field_name]++;
-				}
-			}
-		}
-	}
-	function getCurrentMeasures($dealer_id,$date1,$date2,$dealer_type){
-		try{
+		    $today = date('Y-m-d');
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("Distinct project_id,api_phone_id,dealer_type")
-				->from('`#__analytic_detailed`')
-				->where("calculation_date BETWEEN '$date1' AND '$date2' and (client_dealer_id = $dealer_id OR (dealer_id = $dealer_id and dealer_type in $dealer_type)) and project_status = 1");
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'otd\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'win\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN 0
+                            ELSE p.api_phone_id END  AS advt_id')
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'Отделочники\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'Оконщики\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN \'Отсутствует\'
+                            ELSE advt.name END AS advt_title')
+
+				->select("COUNT(DISTINCT p.id) AS `count`,GROUP_CONCAT(p.id SEPARATOR ',') AS `projects`")
+				->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->leftJoin('`rgzbn_gm_ceiling_api_phones` AS advt ON advt.id = p.api_phone_id')
+                ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
+                ->leftJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+				->where("(c.dealer_id = $dealer_id OR u.dealer_id = $dealer_id) AND p.project_calculation_date BETWEEN '$today 00:00:00' AND '$today 23:59:59' AND (advt.dealer_id = $dealer_id OR advt.dealer_id IS NULL) AND p.project_status = 1")
+                ->group('advt_id');
 			$db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
@@ -210,32 +291,34 @@ class Gm_ceilingModelAnalytic_detailed_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function getCurrentMounts($dealer_id,$date1,$date2,$dealer_type){
+	function getCurrentMounts($dealer_id){
 		try{
+		    $today = date('Y-m-d');
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query
-				->select("distinct project_id,api_phone_id,dealer_type")
-				->from('`#__analytic_detailed`')
-				->where("mount_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and (client_dealer_id = $dealer_id OR ( dealer_id = $dealer_id and dealer_type IN $dealer_type))");
-				
-			$db->setQuery($query);
+            $query
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'otd\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'win\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN 0
+                            ELSE p.api_phone_id END  AS advt_id')
+                ->select('CASE
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 3 THEN \'Отделочники\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type = 8 THEN \'Оконщики\'
+                            WHEN p.api_phone_id IS NULL AND u.dealer_type NOT IN(3,8) THEN \'Отсутствует\'
+                            ELSE advt.name END AS advt_title')
+
+                ->select("COUNT(DISTINCT p.id) AS `count`,GROUP_CONCAT(p.id SEPARATOR ',') AS `projects`")
+                ->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->leftJoin('`rgzbn_gm_ceiling_api_phones` AS advt ON advt.id = p.api_phone_id')
+                ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
+                ->leftJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+                ->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS pm ON pm.project_id = p.id')
+                ->where("(c.dealer_id = $dealer_id OR u.dealer_id = $dealer_id) AND pm.date_time BETWEEN '$today 00:00:00' AND '$today 23:59:59' AND (advt.dealer_id = $dealer_id OR advt.dealer_id IS NULL)")
+                ->group('advt_id');
+            $db->setQuery($query);
 			$result = $db->loadObjectList();
 			return $result;
-		}
-		catch(Exception $e)
-        {
-            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
-	function unset_columns($data){
-		try{
-
-			foreach ($data as $key => $value) {
-				unset($data[$key]->dealers);
-				unset($data[$key]->advt);
-			}
 		}
 		catch(Exception $e)
         {
