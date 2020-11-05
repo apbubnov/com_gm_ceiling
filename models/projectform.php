@@ -105,19 +105,6 @@ class Gm_ceilingModelProjectForm extends JModelForm
 						$canEdit = $user->id == $table->created_by;
 					}
 
-					/*if (!$canEdit)
-					{
-						throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 500);
-					}*/
-
-					// Check published state.
-					if ($published = $this->getState('filter.published'))
-					{
-						if ($table->state != $published)
-						{
-							return $this->item;
-						}
-					}
 
 					// Convert the JTable to a clean JObject.
 					$properties  = $table->getProperties(1);
@@ -183,7 +170,6 @@ class Gm_ceilingModelProjectForm extends JModelForm
 					}
 				}
 			}
-
 			return $this->item;
 		}
 		catch(Exception $e)

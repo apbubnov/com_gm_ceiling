@@ -26,89 +26,99 @@ $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 
-<?=parent::getButtonBack();?>
+<?= parent::getButtonBack(); ?>
 <h2 class="center">График замеров</h2>
-<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>" method="post" name="adminForm" id="adminForm">
-    <div class="container">
-        <div class="row">
-            <div class="span3">
-                <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>" class="btn btn-success">
-                    <i class="icon-plus"></i> Добавить замер
-                </a>
-                <a class="btn btn-large btn-primary" href="/index.php?option=com_gm_ceiling&amp;view=gaugers&amp;type=chief"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-            </div>
-            <?php if (false): ?>
-                <div class="span9">
-                    <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-                </div>
-            <?php endif; ?>
+<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>"
+      method="post" name="adminForm" id="adminForm">
+    <div class="row">
+        <div class="col-md-2 col-xs-6">
+            <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>"
+               class="btn btn-primary">
+                <i class="icon-plus"></i> Добавить замер
+            </a>
         </div>
-        <div class="row">
-            <table class="rwd-table" id="projectList">
-                <thead>
-                    <tr class="row">
-                        <th class='center'>
-                            №
-                        </th>
-                        <th class='center'>
-                            Дата замера
-                        </th>
-                        <th class='center'>
-                            Время
-                        </th>
-                        <th class='center'>
-                            Адрес
-                        </th>
-                        <th class='center'>
-                            Примечание
-                        </th>
-                        <th class="center">
-                            Клиент
-                        </th>
-                        <?php if (in_array("14", $groups)):?>
-                            <th class="center">
-                                <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                            </th>
-                        <?php endif;?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        foreach ($this->items as $i => $item):
-                    ?>
-                        <tr class="row" style = "cursor: pointer;" data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
-                            <td data-th = "Номер договора" class="center one-touch"><?= $item->id; ?></td>
-                            <td data-th = "Дата замера" class="center one-touch">
-                                <? if (empty($item->calculation_date) || $item->calculation_date == '0000-00-00'): ?>-
-                                <? else: ?><?= date('d.m.Y', strtotime($item->calculation_date)); ?>
-                                <? endif; ?>
-                            </td>
-                            <td data-th = "Время замера" class="center one-touch">
-                                <? if (empty($item->calculation_time) || $item->calculation_time == '00:00'): ?>-
-                                <? else: ?><?= $item->calculation_time; ?>
-                                <? endif; ?>
-                            </td>
+        <div class="col-md-2 col-xs-6">
+            <a class="btn btn-large btn-primary"
+               href="/index.php?option=com_gm_ceiling&amp;view=gaugers&amp;type=chief">
+                <i class="fa fa-user" aria-hidden="true"></i> Замерщики
+            </a>
+        </div>
+        <div class="span3">
 
-                            <td data-th = "Адрес" class="center one-touch"><?= $item->project_info; ?></td>
-                            <td data-th = "Примечание" class="center one-touch">
-                            <?php
-                                $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id,2);
-                                foreach ($project_notes as $note){
-                                    echo $note->description.$note->value."<br>";
-                                }
-                            ?>
-                            </td>
-                            <td class="center one-touch"><?= $item->client_name; ?><br><?= $item->client_contacts; ?></td>
-                            <?php if(in_array(14, $groups)){ ?>
-                                <td data-th = "Удалить" class="center one-touch delete"><button class = "btn btn-danger" data-id = "<?php echo $item->id;?>" type = "button"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
-                            <?php } ?>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <input type="hidden" name="task" value=""/>
-            <input type="hidden" name="boxchecked" value="0"/>
+
         </div>
+        <?php if (false): ?>
+            <div class="span9">
+                <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="row">
+        <table class="rwd-table" id="projectList">
+            <thead>
+            <tr class="row">
+                <th class='center'>
+                    №
+                </th>
+                <th class='center'>
+                    Дата замера
+                </th>
+                <th class='center'>
+                    Время
+                </th>
+                <th class='center'>
+                    Адрес
+                </th>
+                <th class='center'>
+                    Примечание
+                </th>
+                <th class="center">
+                    Клиент
+                </th>
+                <th class="center">
+                    <i class="fas fa-ban"></i> Перевсти в отказ
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($this->items as $i => $item):
+                ?>
+                <tr class="row" style="cursor: pointer;"
+                    data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
+                    <td data-th="Номер договора" class="center one-touch"><?= $item->id; ?></td>
+                    <td data-th="Дата замера" class="center one-touch">
+                        <? if (empty($item->calculation_date) || $item->calculation_date == '0000-00-00'): ?>-
+                        <? else: ?><?= date('d.m.Y', strtotime($item->calculation_date)); ?>
+                        <? endif; ?>
+                    </td>
+                    <td data-th="Время замера" class="center one-touch">
+                        <? if (empty($item->calculation_time) || $item->calculation_time == '00:00'): ?>-
+                        <? else: ?><?= $item->calculation_time; ?>
+                        <? endif; ?>
+                    </td>
+
+                    <td data-th="Адрес" class="center one-touch"><?= $item->project_info; ?></td>
+                    <td data-th="Примечание" class="center one-touch">
+                        <?php
+                        $project_notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($item->id, 2);
+                        foreach ($project_notes as $note) {
+                            echo $note->description . $note->value . "<br>";
+                        }
+                        ?>
+                    </td>
+                    <td data-th="Клиент" class="center one-touch"><?= $item->client_name; ?><br><?= $item->client_contacts; ?></td>
+                    <td data-th="Отказ от замера" class="center one-touch delete">
+                        <button class="btn btn-danger" data-id="<?php echo $item->id; ?>" type="button">
+                            <i  class="fas fa-trash-alt" aria-hidden="true"></i> Перевести
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="boxchecked" value="0"/>
     </div>
 
 
@@ -132,7 +142,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <script type="text/javascript">
     var $ = jQuery;
-    jQuery(".btn-danger").click(function(){
+    jQuery(".btn-danger").click(function () {
         var project_id = jQuery(this).data('id');
         noty({
             theme: 'relax',
@@ -140,9 +150,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             timeout: false,
             type: "info",
             text: "Вы действительно хотите перевести проект в статус отказ от замера?",
-            buttons:[
+            buttons: [
                 {
-                    addClass: 'btn btn-primary', text: 'Перевести в отказы', onClick: function($noty) {
+                    addClass: 'btn btn-primary', text: 'Перевести в отказы', onClick: function ($noty) {
                         jQuery.ajax({
                             url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
                             data: {
@@ -151,10 +161,10 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             },
                             dataType: "json",
                             async: true,
-                            success: function(data) {
-                                jQuery('.btn-danger[data-id ='+project_id+']').closest('.row').remove();
+                            success: function (data) {
+                                jQuery('.btn-danger[data-id =' + project_id + ']').closest('.row').remove();
                             },
-                            error: function(data) {
+                            error: function (data) {
                                 console.log(data);
                                 var n = noty({
                                     timeout: 2000,
@@ -170,7 +180,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     }
                 },
                 {
-                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
+                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
                         $noty.close();
                     }
                 }
@@ -179,7 +189,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         return false;
     });
 
-    jQuery("#projectList tr").click(function(){
+    jQuery("#projectList tr").click(function () {
 
         location.href = jQuery(this).data('href');
     })

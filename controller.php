@@ -109,7 +109,9 @@ class Gm_ceilingController extends JControllerLegacy
                             $type = "analyst";
                             //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=analytics', false));//аналитик
                         }
-
+                        elseif(in_array('38', $groups)){
+                            $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=teams&type=storekeeper', false));//аналитик
+                        }
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
                             $app->input->set('type', $type);
@@ -927,6 +929,7 @@ public function register_mnfctr(){
             $jdate = new JDate($jinput->get('date', date('Y-m-d H:i:s'), 'STRING'));
             $id_client = $jinput->get('id_client', null, 'INT');
             $manager_id = $jinput->get('manager_id', 0, 'INT');
+            $important = $jinput->get('important',0,'INT');
             if (empty($manager_id)) {
                 $manager_id = $user->id;
             }
@@ -934,9 +937,9 @@ public function register_mnfctr(){
             $old_call = $jinput->get('old_call', null, 'INT');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             if (empty($old_call)) {
-                $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
+                $result = $callback_model->save($jdate, $comment, $id_client, $manager_id,$important);
             } else {
-                $result = $callback_model->moveTime($old_call, $jdate, $comment);
+                $result = $callback_model->moveTime($old_call, $jdate, $comment,$id_client,$important);
             }
 
             die($result);
@@ -1323,16 +1326,21 @@ public function register_mnfctr(){
             $items = $model->getManager($manager_id);
             $manager_name = $items->manager_name;
             $email = $items->email;
-
-            $data->client_id = $client_id;
+            $data = (object)[
+                "client_id" => $client_id,
+                "date_time" => $date_time,
+                "comment" => $comment,
+                "manager_name" => $manager_name,
+                "email" => $email
+            ];
+            /*$data->client_id = $client_id;
             $data->date_time = $date_time;
             $data->comment = $comment;
             $data->manager_name = $manager_name;
-            $data->email = $email;
-            $result = Gm_ceilingHelpersGm_ceiling::notify($data, $type);
-
+            $data->email = $email;*/
+            Gm_ceilingHelpersGm_ceiling::notify($data, $type);
             $model_call = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            $items = $model_call->updateNotify($id);
+            $model_call->updateNotify($id);
             
             die(true);
         }
@@ -1413,11 +1421,24 @@ public function register_mnfctr(){
             $id = $_POST["id"];
             $month = $_POST["month"];
             $year = $_POST["year"];
+            $month2 = $_POST["month2"];
+            $year2 = $_POST["year2"];
             $flag1 = $_POST["flag"];
             $flag2 = $_POST["id_dealer"];
             $flag = [$flag1, $flag2];
-            $result = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($id, $month, $year, $flag);
-            die($result);
+            if($flag1 == 5) {
+                $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($id, $month, $year, $flag);
+                $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($id, $month2, $year2, $flag);
+                $result = [
+                    "calendar1" => $calendar1,
+                    "calendar2" => $calendar2
+                ];
+                die(json_encode($result));
+            }
+            else{
+                $result = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($id, $month, $year, $flag);
+                die($result);
+            }
         }
        catch(Exception $e)
         {
@@ -1580,7 +1601,7 @@ public function register_mnfctr(){
             $mailer->addRecipient($email);
             $model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             $model->SetEmail($client_id, $email);
-            $body = "Здравствуйте. К этому письму прикрепленны pdf-файлы с информацией по потолкам.";
+            $body = "Здравствуйте. К этому письму прикрепленны pdf-файлы с информацией по потолкам.\n\n Данное письмо сформировано автоматически, отвечать на него не нужно.";
             $mailer->setSubject('Сметы');
             $mailer->setBody($body);
 
@@ -1979,7 +2000,7 @@ public function register_mnfctr(){
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $projects = $project_model->getDataByStatusAndAdvt($ids);
+            $projects = $project_model->getDataByIds($ids);
             die(json_encode($projects));       
             
 
@@ -2577,85 +2598,7 @@ public function register_mnfctr(){
     }
 
 
-    //вызов из урл
-    //не удалять
-    /*public function Send_all_from_url(){
-        try
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,`u`.`refused_to_cooperate`, `u`.`dealer_type`');
-            $query->from('`#__users` AS `u`');
-            $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
-            $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
-            $query->where('`dealer_type` = 1');
-            $query->group('`id`');
-            $query->order('`id` DESC');
-            $db->setQuery($query);
-            $items = $db->loadObjectList();
-
-            $count = 0;
-
-            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-            foreach ($items as $i => $item)
-            {
-                $client_id = $item->associated_client;
-                if (!empty($client_id))
-                {
-                    $emails = $dop_contacts_model->getEmailByClientID($client_id);
-                    foreach ($emails as $j => $email)
-                    {
-                        $this->sendCommercialOffer($item->id, $email->contact, 1, 2);
-                        echo "$item->name $email->contact $item->dealer_type<br>";
-                        $count++;
-                    }
-                }
-            }
-            echo $count;
-            exit();
-        }
-        catch (Exception $e) {
-           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-        }
-    }*/
-
-
     public function RepeatSendCommercialOffer(){
-        /*try
-        {
-            $user = JFactory::getUser();
-            $groups = $user->get('groups');
-            if (in_array("16", $groups))
-            {
-                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                $items = $users_model->findNotViewCommercialOfferAfterWeek();
-                $count = 0;
-
-                $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                foreach ($items as $i => $item)
-                {
-                    $client_id = JFactory::getUser($item->user_id)->associated_client;
-                    $dealer_type = JFactory::getUser($item->user_id)->dealer_type;
-                    $emails = $dop_contacts_model->getEmailByClientID($client_id);
-                    foreach ($emails as $j => $email)
-                    {
-                        $this->sendCommercialOffer($item->user_id, $email->contact, $dealer_type);
-                        $count++;
-                    }
-                }
-
-                die(json_encode($count));
-            }
-            else
-            {
-                throw new Exception('Not GmManager', 403);
-            }
-        }
-        catch (Exception $e) {
-           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
-        }*/
     }
 
 
@@ -3135,11 +3078,12 @@ public function register_mnfctr(){
             $data['manager_id'] = 697;
             //die($_POST['phone'].' '.$data['client_contacts']);
             $result = $clientform_model->save($data);
-            $this->createProject($result,43,null,null);
+
 
             if (mb_ereg('[\d]', $result)) {
                 $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
                 $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
+                $this->createProject($result,43,null,null);
             }
             else
             {
@@ -3678,7 +3622,7 @@ public function register_mnfctr(){
                             $dealer_info_model->update_city($dealer_id, $city);
                             $clients_dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                             $clients_dop_contacts->save($client_id, 1, $email);
-                            $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый дилер', $client->id, 1);
+                            $callback_model->save(date("Y-m-d H:i:s"), 'На calc.gm-vrn зарегистрировался новый дилер', $client_id, 1);
                         }
                         /*меняем и отправляем пароль*/
                         $userModel->setVerificationCode($dealer_id, $code);
@@ -3790,6 +3734,22 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function test(){
+       /* $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('p.id')
+            ->from('`rgzbn_gm_ceiling_projects`')
+            ->where('p.id = 12');
+        $db->setQuery($query);
+        $ids = $db->loadObjectList();
+        foreach ($ids as $project) {
+            Gm_ceilingHelpersGm_ceiling::createImgArchive($project->id);
+        }*/
+        Gm_ceilingHelpersGm_ceiling::createImgArchive(2237);
+    }
+
 
 }
 

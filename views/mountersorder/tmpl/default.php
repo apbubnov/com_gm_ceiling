@@ -26,7 +26,7 @@ $project_data = $project_model->getData($project);
 $service = !empty(json_decode($project_data->calcs_mounting_sum)) ? true : false;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-
+$full = in_array('1',$stages);
 $calculation_ids = $model->GetCalculation($project);
 
 if (!empty($calculation_ids)) {
@@ -154,7 +154,10 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
 <?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/mountersorder/tmpl/CSS/style.css" type="text/css" />
-
+<div id="preloader" style="display: none;" class="PRELOADER_GM PRELOADER_GM_OPACITY">
+    <div class="PRELOADER_BLOCK"></div>
+    <img src="/images/GM_R_HD.png"  alt = 'preloader' class="PRELOADER_IMG">
+</div>
 <div id="content-tar">
     <h2 class="center tar-color-414099">Просмотр проекта №<?php echo $project; ?></h2>
     <ul class="nav nav-tabs" role="tablist" id="tabs">
@@ -227,7 +230,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                             <td id="sum-all"><?=$extra_mount_sum;?></td>
                         </tr>
                     <?php }
-                        if (!empty($DataOfTransport)) { ?>
+                    if (!empty($DataOfTransport)) { ?>
                         <tr class="caption">
                             <td colspan="4" style="text-align: center; background-color: #ffffff;">
                                 Транспортные расходы
@@ -278,7 +281,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 else{
                     $calculation->goods = $allGoods;
                 }
-
+                $calculation->jobs = $modelCalcform->getJobsPricesInCalculation($calculation->id, 1);
 
                 /*------------*/
                 $dir_before = 'uploaded_calc_images/'.$value->id.'/before';
@@ -391,24 +394,24 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                         }
                         $color = $detailed_canvas[0]->color;
                         $hex = $detailed_canvas[0]->hex;
-                       if (!empty($detailed_canvas)){?>
-                        <h4>Материал</h4>
-                        <table class="table_info2">
-                            <tr>
-                                <td colspan="2">
-                                    <?php echo $detailed_canvas[0]->name?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style='width:20%'>Цвет:</td>
-                                <td style='width:80%'>
-                                    <div class="col-md-3"><?=$color;?></div>
-                                    <div class="col-md-9" style="background-color:<?="#".$hex;?>;color:<?="#".$hex;?>"><?=$color;?></div>
-                                </td>
-                            </tr>
+                        if (!empty($detailed_canvas)){?>
+                            <h4>Материал</h4>
+                            <table class="table_info2">
+                                <tr>
+                                    <td colspan="2">
+                                        <?php echo $detailed_canvas[0]->name?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='width:20%'>Цвет:</td>
+                                    <td style='width:80%'>
+                                        <div class="col-md-3"><?=$color;?></div>
+                                        <div class="col-md-9" style="background-color:<?="#".$hex;?>;color:<?="#".$hex;?>"><?=$color;?></div>
+                                    </td>
+                                </tr>
 
-                        </table>
-                    <?php }
+                            </table>
+                        <?php }
                     }?>
                     <h4 style="margin: 10px 0;">Размеры помещения</h4>
                     <table class="table_info2">
@@ -822,6 +825,30 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                             </tbody>
                         </table>
                     <?php }?>
+                    <?php if(!empty($calculation->jobs)){?>
+                        <h4 style="margin: 10px 0;cursor: pointer;" class="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
+                        <table class="table_info2 table_jobs" style="display:none;">
+                            <thead>
+                            <th>Название</th>
+                            <th>Количество</th>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($calculation->jobs as $job){
+                                if($full){
+                                    if(!$job->guild_only && !$job->is_factory_work){
+                                        echo "<tr><td>$job->name</td><td>".round($job->final_count,2)."</td></tr>";
+                                    }
+                                }
+                                else{
+                                    if(!$job->guild_only && !$job->is_factory_work && in_array($job->mount_type_id,$stages)){
+                                        echo "<tr><td>$job->name</td><td>".round($job->final_count,2)."</td></tr>";
+                                    }
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    <?php }?>
                 </div>
 
                 <div class = "overflow">
@@ -1008,7 +1035,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 switch(status_mount){
                     case '10':
                     case '19':
-                        if(stage == 1 || stage == 2){
+                        if(stage == 1 || stages.indexOf("2")>=0){
                             jQuery("#begin").attr("disabled", false);
                         }
                         break;
@@ -1087,6 +1114,17 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
             }
         });
 
+        jQuery(document).on('click','.mount_jobs',function(){
+            jQuery(".table_jobs").toggle();
+            var i = jQuery(this).find('i');
+            if(i.hasClass('fa-angle-down')){
+                i.removeClass("fa-angle-down").addClass("fa-angle-up");
+            }
+            else if(i.hasClass('fa-angle-up')){
+                i.removeClass("fa-angle-up").addClass("fa-angle-down");
+            }
+
+        });
         //  кнопка "монтаж начат"
         jQuery("#begin").click(function() {
             CurrentDateTime();
@@ -1114,7 +1152,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 type: 'alert',
                 layout: 'topCenter',
                 text: '<input type="radio" value="after" name="img_type" style="margin-top: 10px; cursor: pointer;" checked> После<br>'+
-                '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
+                    '<input type="radio" value="defect" name="img_type" style="margin-top: 10px; cursor: pointer;"> Дефект<br>',
                 modal: true,
                 buttons:[
                     {
@@ -1154,51 +1192,76 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
             var note = jQuery("#note").val();
 
             if (whatBtn == "complited") {
+
                 // кнопка "монтаж выполнен"
                 CurrentDateTime();
 
                 var formData = new FormData();
                 var elemsFiles = document.getElementsByClassName('img_file');
                 var arrayCalcImages = [];
-                for (var i = elemsFiles.length; i--;) {
+                for (var obj,i = elemsFiles.length; i--;) {
                     if (elemsFiles[i].files.length < 1) {
                         continue;
                     }
-                    arrayCalcImages.push({
+                    obj = {
                         calc_id: elemsFiles[i].getAttribute('data-calc-id'),
                         type: elemsFiles[i].getAttribute('data-img-type'),
                         images: []
-                    });
+                    }
+
                     jQuery.each(elemsFiles[i].files, function(key, value) {
-                        arrayCalcImages[i].images.push(value.name);
-                        formData.append(key, value);
+                        console.log(key);
+                        obj.images.push(value.name);
+                        formData.append(+elemsFiles[i].getAttribute('data-calc-id')+ +key, value);
                     });
+                    arrayCalcImages.push(obj);
                 }
-                console.log(arrayCalcImages);
                 formData.append('date', date);
                 formData.append('url_proj', url_proj);
                 formData.append('note', note);
                 formData.append('stage', stage);
                 formData.append('arrayCalcImages', JSON.stringify(arrayCalcImages));
-
-                jQuery.ajax({
-                    type: "POST",
-                    url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
-                    dataType: 'json',
-                    cache: false,
-                    processData: false, // Не обрабатываем файлы (Don't process the files)
-                    contentType: false, // Так jQuery скажет серверу что это строковой запрос
-                    data: formData,
-                    success: function(msg) {
-                        console.log(msg);
-                        if (msg[0].project_status == 11 || msg[0].project_status == 24 || msg[0].project_status == 25 || msg[0].project_status == 26) {
-                            window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
+                if(!empty(arrayCalcImages)){
+                    jQuery("#preloader").show();
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "index.php?option=com_gm_ceiling&task=mountersorder.MountingComplited",
+                        dataType: 'json',
+                        cache: false,
+                        processData: false, // Не обрабатываем файлы (Don't process the files)
+                        contentType: false, // Так jQuery скажет серверу что это строковой запрос
+                        data: formData,
+                        success: function(msg) {
+                            jQuery("#preloader").hide();
+                            console.log(msg);
+                            if (msg[0].project_status == 11 || msg[0].project_status == 24 || msg[0].project_status == 25 || msg[0].project_status == 26) {
+                                window.location.href = "/index.php?option=com_gm_ceiling&&view=mounterscalendar"
+                            }
+                        },
+                        error: function(data) {
+                            jQuery("#preloader").hide();
+                            console.log(data);
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка при попытке сохранить!"
+                            });
                         }
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
+                    });
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Пожалуйста, загрузите фотографии!"
+                    });
+                }
             } else if (whatBtn == "underfulfilled") {
                 // кнопка "монтаж недовыполнен"
                 if (note.length != 0) {

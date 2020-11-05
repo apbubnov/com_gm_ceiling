@@ -285,6 +285,21 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
         }
     }
 
+    public function getCanvasesWidth(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $filter = $jinput->get('filter','','STRING');
+            $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $widths = $canvasesModel->getCanvasesWidths($filter);
+            die(json_encode($widths)); 
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
+        }
+    }
+
     private function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
     private function double_margin($value, $margin1, $margin2) { return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2); }
     private function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }

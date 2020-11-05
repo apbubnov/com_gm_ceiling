@@ -13,15 +13,12 @@
     //JHtml::_('behavior.tooltip');
     JHtml::_('behavior.formvalidation');
 
-    // Load admin language file
-    $lang = JFactory::getLanguage();
-    $lang->load('com_gm_ceiling', JPATH_SITE);
-    $doc = JFactory::getDocument();
-    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+
 
     $user = JFactory::getUser();
     $userId = $user->get('id');
-
+    $groups = $user->groups;
+    $storekeeper = in_array('38',$groups);
 
     /*_____________блок для всех моделей/models block________________*/ 
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -56,7 +53,7 @@
     }
 ?>
 
-<?=parent::getButtonBack();?>
+<?= parent::getButtonBack();?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/projectform/tmpl/css/style.css" type="text/css" />
 
@@ -225,16 +222,16 @@
                                 <?php echo $this->item->project_info; ?>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <b>Примечание к монтажу</b>
+                        <?php if(!$storekeeper){?>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>Примечание к монтажу</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" class="input-gm" aria-invalid="false"><?=$mount_note;?></textarea>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <textarea name="jform[mount_note]" id="jform_mount_note" placeholder="Примечание к монтажу" class="input-gm" aria-invalid="false"><?=$mount_note;?></textarea>
-                            </div>
-                        </div>
-
+                        <?php }?>
                         <div class="row">
                             <div class="col-md-6">
                                 <b>
@@ -249,7 +246,9 @@
                                 else{
                                     $client_id = $this->item->id_client;
                                 }
-                                $dealer_name = $clientModel->getDealer($client_id);
+                                if(!empty(intval($client_id))){
+                                    $dealer_name = $clientModel->getDealer($client_id);
+                                }
                             ?>
                             <div class="col-md-6">
                                 <?php echo $dealer_name; ?>
@@ -276,7 +275,7 @@
                             <?php }?>
                         <?php endif;?>
 
-                        <?php if ($this->item->project_status == 1) { ?>
+                        <?php if ($this->item->project_status == 1 && !$storekeeper) { ?>
                             <div class="row">
                                 <div class="col-md-12">
                                     <b>
@@ -289,7 +288,7 @@
                                 <input id="measure_info" readonly style="display:none;">
                             </div>
 
-                        <?php } else  { ?>
+                        <?php } elseif(!$storekeeper)  { ?>
                             <div class="row">
                                 <div class="col-md-12">
                                     <b>
@@ -307,6 +306,7 @@
                         <input name="type" value="gmchief" type="hidden">
                     <?php } ?>
                     </div>
+                    <?php if(!$storekeeper){?>
                     <div class="control-group">
                         <div class="controls">
                             <button type="submit" class="validate btn btn-primary">Сохранить</button>
@@ -318,6 +318,7 @@
                                 </a>
                         </div>
                     </div>
+                    <?php }?>
                 </form>
             </div>
             <div class="col-md-6">

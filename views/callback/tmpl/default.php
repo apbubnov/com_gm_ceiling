@@ -15,6 +15,8 @@ $user_group = $user->groups;
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $labels = $clients_model->getClientsLabels($user->dealer_id);
+$isGauger = in_array('21',$user_group);
+$checked = $isGauger ? 'checked' : '';
 ?>
 
 <style type="text/css">
@@ -32,10 +34,12 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         <div class="col-md-2 col-xs-12" style="margin-bottom: 10px;">
             <?=parent::getButtonBack();?>
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-3 col-xs-6">
             <input class="form-control" type="date" id="calendar" value="<?php echo date('Y-m-d');?>">
         </div>
-        <div class="col-md-4 col-xs-6">
+        <div class="col-md-3 col-xs-6">
             <select class="wide cust-select" id="select_label">
                 <option value="" selected>Ярлыки</option>
                 <?php foreach($labels as $label): ?>
@@ -58,6 +62,19 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
                 <option value="1">Новые</option>
                 <option value="2">Отказы от договора</option>
             </select>
+        </div>
+        <div class="col-md-3 col-xs-6">
+            <div class="form-control">
+                <input type="checkbox" id="only_self" class="inp-cbx dup" <?=$checked?> style="display: none">
+                <label for="only_self" class="cbx">
+                    <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                    </span>
+                    <span>Только свои</span>
+                </label>
+            </div>
         </div>
     </div>
     
@@ -108,7 +125,8 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         }
 
         function printTr(arr_calls_i, i, scrollTrIndex) {
-            var str, tr, td;
+            var str, tr, td,client_name,
+                important = '<i class="fas fa-exclamation-circle" style="color:red;"></i>';
             if (arr_calls_i.dealer_type !== null) {
                 arr_calls_i.dealer_type = arr_calls_i.dealer_type-0;
             }
@@ -118,7 +136,9 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
             tr.setAttribute('data-dealerType', arr_calls_i.dealer_type);
             tr.setAttribute('data-clientId', arr_calls_i.client_id-0);
             td = tr.insertCell();
-            td.innerHTML = arr_calls_i.client_name;
+            console.log(arr_calls_i);
+            client_name = (arr_calls_i.important == 1) ? important + ' ' + arr_calls_i.client_name : arr_calls_i.client_name;
+            td.innerHTML = client_name;
             td = tr.insertCell();
             td.innerHTML = arr_calls_i.date_time;
             td = tr.insertCell();
@@ -140,13 +160,15 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
     }
 
     function getData() {
+        var onlySelf = jQuery('#only_self').is(':checked') ? 1 : 0;
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=callback.getData",
             data: {
                 date: jQuery('#calendar').val(),
                 label_id: jQuery('#select_label').val(),
-                type: jQuery('#select_type').val()
+                type: jQuery('#select_type').val(),
+                only: onlySelf
             },
             success: function(data){
                 arr_calls = data;
@@ -179,7 +201,8 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
                 trIndex: prevTrIndex,
                 selectedDate: jQuery('#calendar').val(),
                 label: jQuery('#select_label').val(),
-                type: jQuery('#select_type').val()
+                type: jQuery('#select_type').val(),
+                self: jQuery('#only_self').is(':checked')
             }));
           //  }
             
@@ -234,6 +257,12 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
             if(!empty(savedData.type)){
                 jQuery('#select_type').val(savedData.type);
             }
+            if(!empty(savedData.self)){
+                jQuery('#only_self').attr('checked','checked');
+            }
+            else{
+                jQuery('#only_self').attr('checked',false);
+            }
         }
         getData();
         document.getElementById('calendar').onchange = function(){
@@ -248,6 +277,10 @@ $labels = $clients_model->getClientsLabels($user->dealer_id);
         });
 
         jQuery("#select_type").change(function() {
+            getData();
+        });
+
+        jQuery('#only_self').change(function (){
             getData();
         });
     });

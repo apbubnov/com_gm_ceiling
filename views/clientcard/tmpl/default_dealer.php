@@ -295,10 +295,42 @@ JHtml::_('formbehavior.chosen', 'select');
         <p><button type="button" id="send_login" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel3" class="btn btn-primary">Отмена</button></p>
     </div>
     <div id="modal_window_call" class="modal_window">
-            <label>Добавить звонок</label><br>
-            <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
-            <input id="call_comment_m" placeholder="Введите примечание"><br>
-            <button class="btn btn-primary" id="add_call" type="button"><i class="fas fa-save" aria-hidden="true"></i></button>
+        <h4>Добавить звонок</h4>
+        <div class="row center" style="margin-bottom: 15px;">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input id="call_date_m" type="datetime-local" placeholder="Дата звонка" class="form-control">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row center" style="margin-bottom: 15px;">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input id="call_comment_m" placeholder="Введите примечание" class="form-control">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row center" style="margin-bottom: 15px;">
+            <div class="col-md-12">
+                <input type="checkbox" id="important_call" class="inp-cbx" style="display: none">
+                <label for="important_call" class="cbx">
+                <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                    <span>Важный звонок</span>
+                </label>
+            </div>
+        </div>
+        <div class="row center" style="margin-bottom: 15px;">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="add_call" type="button">
+                    <i class="fas fa-save" aria-hidden="true"></i> Сохранить
+                </button>
+            </div>
+        </div>
+
     </div>
     <div class="modal_window" id="modal_window_select_number">
         <p>Выберите номер для звонка:</p>

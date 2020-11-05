@@ -21,7 +21,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 
 	function getData() {}
 
-	function getDatas($dealerId,$group = 11) {
+	function getDatas($dealerId,$group = 11,$cityId = null) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -44,6 +44,9 @@ class Gm_ceilingModelTeams extends JModelItem {
                 ->leftJoin("($namesSubquery) AS mn ON mn.id_brigade = users.id")
                 ->where("users.dealer_id = '$dealerId' and usergroup.group_id = '$group'")
                 ->group('city_id');
+            if(!empty($cityId)){
+                $query->where("ui.city_id = $cityId");
+            }
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

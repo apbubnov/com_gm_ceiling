@@ -235,7 +235,7 @@ class Gm_ceilingModelProjects extends JModelList
                             ) AS `project_status_history`
                         ');
             $query->select('ROUND(CASE 
-                                        WHEN p.transport = 1 THEN ((p.distance_col*`um`.`transport`*100)/(100-30))
+                                        WHEN p.transport = 1 THEN (p.distance_col*`um`.`transport`)
                                         WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
                                         ELSE 0
                                     END,0) AS transport_cost');
@@ -249,7 +249,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->leftJoin('`#__users` as `u2` ON `u2`.`id` = `pm`.`mounter_id`');
             $query->leftJoin("($calc_subquery) AS `calcs` ON `calcs`.`project_id` = `p`.`id`");
             $query->leftJoin("`#__gm_ceiling_projects_history` AS `ph` ON `ph`.`project_id` = `p`.`id`");
-            $query->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `cl`.`dealer_id`");
+            $query->leftJoin("`rgzbn_gm_ceiling_dealer_info` AS `um` ON `um`.`dealer_id` = `cl`.`dealer_id`");
             $query->where('`p`.`deleted_by_user` = 0');
             $query->group('`p`.`id`');
             /*$query = $db->getQuery(true);
@@ -264,7 +264,8 @@ class Gm_ceilingModelProjects extends JModelList
                         `p`.`status`,
                         `p`.`project_calculator`,
                         `p`.`project_calculation_date`,
-                        `p`.`calculation_time`,
+                                       $query->where("`ph`.`new_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30) and `ph`.`date_of_change` between DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m-01') and CURDATE() ");
+         `p`.`calculation_time`,
                         (`p`.`components_margin_sum` +
                             `p`.`canvases_margin_sum` +
                             `p`.`mounting_margin_sum`
@@ -344,7 +345,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->order('`calculation_date`,`calculation_time`');
 
                     } elseif ($subtype == 'projects') {
-                        $query->where('`project_status` BETWEEN 5 AND 15');
+                        $query->where('`project_status` in (5,6,7,8,10,11,16,17,23) ');
 
                     } elseif ($subtype == 'refused') {
                         $query->where('`project_status` IN (2, 3, 15)');
@@ -810,17 +811,13 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function getDataByStatusAndAdvt($projects,$date1 = null,$date2 = null){
+    public function getDataByIds($projects){
         try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
             $subquery
-                ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0)) + ROUND(CASE 
-                                        WHEN p.transport = 1 THEN (p.distance_col*`um`.`transport`)
-                                        WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`um`.`distance`)
-                                        ELSE 0
-                                    END,0)")
+                ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0)) ")
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
             $query
@@ -829,20 +826,32 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('p.project_info')
                 ->select('u.name AS created,u1.name AS read_by_manager')
                 ->select('cl.title,cl.color_code')
-                ->select('COALESCE(p.project_sum,0) as project_sum')
-                ->select('COALESCE(p.new_project_sum,0) as new_project_sum')
-                ->select('COALESCE(p.new_mount_sum,0) as new_mount_sum')
-                ->select('COALESCE(p.new_material_sum,0) as new_material_sum')
-                ->select('IF((`p`.`new_project_sum` IS NOT NULL AND `p`.`new_project_sum` > 0),`p`.`new_project_sum`,`p`.`project_sum`) AS `sum`')
-                ->select("(IF((`p`.`new_project_sum` IS NOT NULL AND `p`.`new_project_sum` > 0),`p`.`new_project_sum`,`p`.`project_sum`) - IF((COALESCE((`p`.`new_material_sum` + `p`.`new_mount_sum`),0) = 0),
-                ($subquery),COALESCE((`p`.`new_material_sum` + `p`.`new_mount_sum`),0))) AS `profit`")
-                ->select('p.client_id')
-                ->select("ifnull(($subquery),0) as cost")
+                ->select('@sum := (CASE
+                                WHEN p.new_project_sum != 0 THEN p.new_project_sum
+                                WHEN (p.new_project_sum = 0 OR p.new_project_sum IS NULL) AND p.project_sum != 0 AND p.project_sum IS NOT NULL THEN p.project_sum
+                                ELSE 0
+                            END 
+                            ) AS project_sum')
+                ->select('@cost := (CASE
+                                    WHEN p.new_material_sum != 0 AND p.new_mount_sum != 0 THEN p.new_material_sum+p.new_mount_sum
+                                    ELSE (
+                                        SELECT SUM(c.canvases_sum + c.components_sum + c.mounting_sum) 
+                                        FROM `rgzbn_gm_ceiling_calculations`  AS c 
+                                        WHERE c.project_id = p.id
+                                        )+
+                                        ROUND(CASE 
+                                            WHEN p.transport = 1 THEN (p.distance_col*`di`.`transport`)
+                                            WHEN p.transport = 2 THEN IF(`p`.`distance` < 50,500*`p`.`distance_col`,`p`.`distance_col`*`p`.`distance`*`di`.`distance`)
+                                            ELSE 0
+                                            END,0)
+                                END
+                                ) AS project_cost')
+                ->select('ROUND(@sum - @cost,2) AS profit')
                 ->from('`#__gm_ceiling_projects` as p')
                 ->leftJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
                 ->InnerJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
                 ->LeftJoin('`rgzbn_gm_ceiling_clients_labels` AS cl ON c.label_id = cl.id')
-                ->leftJoin("`rgzbn_gm_ceiling_mount` AS `um` ON `um`.`user_id` = `c`.`dealer_id`")
+                ->leftJoin("`rgzbn_gm_ceiling_dealer_info` AS di ON di.dealer_id = c.dealer_id")
                 ->leftJoin ('`rgzbn_users` AS u ON u.id = p.created_by')
                 ->leftJoin('`rgzbn_users` AS u1 ON u1.id = p.read_by_manager')
                 ->where("p.id in $projects");
@@ -855,6 +864,7 @@ class Gm_ceilingModelProjects extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /**
      * Method to get an array of data items
      *

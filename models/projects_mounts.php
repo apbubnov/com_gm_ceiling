@@ -106,7 +106,7 @@ class Gm_ceilingModelProjects_mounts extends JModelList
 				return true;
 			}
 			else{
-				throw new Exception("Empty project_id or mounts_array");
+				return false;
 			}
 		}
 		catch(Exception $e)

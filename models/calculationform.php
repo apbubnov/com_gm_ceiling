@@ -1621,13 +1621,17 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
     public function addGoodsInCalculation($calc_id, $goods, $from_sketch) {
         try {
-            $values = array();
+            $values = [];
             foreach ($goods as $value) {
                 if(is_array($value)) {
-                    $values[] = $calc_id . ',' . $value['id'] . ',' . $value['count'];
+                    if(!empty($value['id'])){
+                        $values[] = $calc_id . ',' . $value['id'] . ',' . $value['count'];
+                    }
                 }
                 if(is_object($value)){
-                    $values[] = $calc_id . ',' . $value->id . ',' . $value->count;
+                    if(!empty($value->id)) {
+                        $values[] = $calc_id . ',' . $value->id . ',' . $value->count;
+                    }
                 }
             }
 

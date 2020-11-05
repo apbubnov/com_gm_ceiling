@@ -414,7 +414,7 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop, $label_id){
+	public function getDealersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop, $label_id,$date_from,$date_to){
 		try{
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
@@ -431,7 +431,9 @@ if (empty($list['direction']))
 				->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("GROUP_CONCAT(DISTINCT `#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
 				->select("u1.name AS manager_name")
-				->from("`#__gm_ceiling_clients` as `c`")
+                ->select('COUNT(DISTINCT chs.id) as calls_count')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(DISTINCT CONCAT(\'{"type":"\',cs.title,\'","date":"\',DATE_FORMAT(chs.change_time,\'%d.%m.%Y %H:%i\'),\'"}\') ORDER BY chs.change_time DESC SEPARATOR \',\'),\']\') AS calls_history')
+                ->from("`#__gm_ceiling_clients` as `c`")
 				->innerjoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->innerJoin(' `rgzbn_users` AS `u1` ON `c`.`manager_id` = `u1`.`id`')
@@ -439,6 +441,8 @@ if (empty($list['direction']))
 				->leftJoin('`#__gm_ceiling_client_state_of_account` AS score ON score.client_id = c.id')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
                 ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` on `c`.`label_id` = `lbs`.`id`')
+                ->leftJoin('`rgzbn_gm_ceiling_calls_status_history` AS chs ON chs.client_id = c.id')
+                ->leftJoin('`rgzbn_gm_ceiling_calls_status` AS cs ON cs.id = chs.status')
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop  $label_filter");
             if((!empty($limit) || $limit == 0)&&!empty($select_size)){
                 $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
@@ -461,6 +465,16 @@ if (empty($list['direction']))
             else{
                 $query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
             }
+            if(!empty($date_from) && !empty($date_to)){
+                $query->where("chs.change_time BETWEEN '$date_from 00:00:00' AND '$date_to 23:59:59'");
+            }
+            if(!empty($date_from) && empty($date_to)){
+                $query->where("chs.change_time >= '$date_from 00:00:00'");
+            }
+            if(empty($date_from) && !empty($date_to)) {
+                $query->where("chs.change_time <= '$date_to 23:59:59'");
+            }
+            //throw new Exception($query);
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			/*if(count($items)){
@@ -472,8 +486,7 @@ if (empty($list['direction']))
 			}*/
 			return $items;
 		}
-		catch(Exception $e)
-        {
+		catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
@@ -875,6 +888,31 @@ if (empty($list['direction']))
             $items = $db->loadObjectList();
             return $items;
 
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getClientsByIds($ids){
+	    try{
+	        $result = [];
+	        if(!empty($ids)){
+                $db    = JFactory::getDbo();
+                $query = 'SET SESSION group_concat_max_len  = 16384';
+                $db->setQuery($query);
+                $db->execute();
+                $query = $db->getQuery(true);
+                $query
+                    ->select('c.id,c.client_name,GROUP_CONCAT(cc.phone separator \'; \') as contacts')
+                    ->from('`rgzbn_gm_ceiling_clients` as c')
+                    ->leftJoin('`rgzbn_gm_ceiling_clients_contacts` as cc ON c.id = cc.client_id')
+                    ->where("c.id in ($ids)")
+                    ->group('c.id');
+                $db->setQuery($query);
+                $result = $db->loadObjectList();
+	        }
+            return $result;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

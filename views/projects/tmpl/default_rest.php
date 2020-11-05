@@ -35,7 +35,7 @@ $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationform')
         $project_sum = !empty(floatval($item->new_project_sum)) ? $item->new_project_sum : $item->project_sum;
         $path = "/costsheets/" . md5($item->id . "consumables") . ".pdf";
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($item->id);
+           // Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($item->id);
         }
         $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($item->id);
         $mountSalary = $mount['mounter_sum'];

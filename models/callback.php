@@ -41,7 +41,8 @@ class Gm_ceilingModelCallback extends JModelList
 							`us`.`name` AS `manager_name`,
 							`c`.`label_id`,
 							`l`.`color_code` AS `label_color`,
-							`p`.`project_status`')
+							`p`.`project_status`,
+							`a`.`important`')
                 ->from('`#__gm_ceiling_callback` as `a`')
                 ->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
                 ->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
@@ -53,7 +54,7 @@ class Gm_ceilingModelCallback extends JModelList
 							WHERE	`project_status` = 3
 							GROUP BY	`client_id`) AS `p` ON `a`.`client_id` = `p`.`client_id`')
                 ->leftJoin('`#__gm_ceiling_clients_labels` as `l` ON `c`.`label_id` = `l`.`id`')
-                ->order('`a`.`date_time`');
+                ->order('`a`.`important` DESC,`a`.`date_time`');
             if(!empty($filter)){
                 $query->where($filter);
             }
@@ -140,7 +141,7 @@ class Gm_ceilingModelCallback extends JModelList
         }
     }
 
-    function save($jdate, $comment, $id_client, $manager_id)
+    function save($jdate, $comment, $id_client, $manager_id,$important = 0)
     {
         try
         {
@@ -158,8 +159,8 @@ class Gm_ceilingModelCallback extends JModelList
 
             $query = $db->getQuery(true);
             $query->insert('`#__gm_ceiling_callback`');
-            $query->columns('`client_id`, `date_time`, `comment`, `manager_id`');
-            $query->values("$id_client, '$jdate', '$comment', $manager_id");
+            $query->columns('`client_id`, `date_time`, `comment`, `manager_id`,`important`');
+            $query->values("$id_client, '$jdate', '$comment', $manager_id, $important");
 
             $db->setQuery($query);
             $db->execute();
@@ -194,7 +195,7 @@ class Gm_ceilingModelCallback extends JModelList
         }
     }
 
-    function updateCall($id,$time,$comment)
+    function updateCall($id,$time,$comment,$important = 0)
     {
         try
         {
@@ -206,6 +207,7 @@ class Gm_ceilingModelCallback extends JModelList
             {
                 $query->set("comment = '$comment'");
             }
+            $query->set("`important` = $important");
             $query->set("notify = 0");
             $query->where('id = '.$id);
             $db->setQuery($query);
@@ -235,7 +237,7 @@ class Gm_ceilingModelCallback extends JModelList
         }
     }
 
-    function moveTime($id,$date,$comment){
+    function moveTime($id,$date,$comment,$clientId = null,$important = 0){
         try
         {
             $db = JFactory::getDbo();
@@ -261,9 +263,13 @@ class Gm_ceilingModelCallback extends JModelList
                 $db->execute();
             }
             else{
-                $this->updateCall($id,$date,$comment);
-
+                $this->updateCall($id,$date,$comment,$important);
             }
+            if(!empty($clientId)){
+                $history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                $history_model->save($clientId,'Назначен звонок на '.date("d.m.Y H:i:s", strtotime($date)));
+            }
+
         }
         catch(Exception $e)
         {
@@ -427,6 +433,23 @@ class Gm_ceilingModelCallback extends JModelList
         }
         catch(Exception $e)
         {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getClosestCallback($clientId,$date){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('MIN(DATE_FORMAT(date_time,\'%d.%m.%Y %H:%i\')) AS `date`,`comment`')
+                ->from('`rgzbn_gm_ceiling_callback`')
+                ->where("client_id = $clientId AND date_time > '$date 00:00:00'");
+            $db->setQuery($query);
+            $callback = $db->loadObject();
+            return $callback;
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

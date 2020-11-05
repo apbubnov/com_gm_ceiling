@@ -76,15 +76,20 @@ class Gm_ceilingModelClient_State_Of_Account extends JModelList
 
     function getStateOfAccount($clientId){
         try{
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->select('SUM(IF(`soa`.`operation_type` = 1,`soa`.`sum`,0)) - SUM(IF(`soa`.`operation_type` = 2,`soa`.`sum`,0)) as sum')
-                ->from('`rgzbn_gm_ceiling_client_state_of_account` as soa')
-                ->where("client_id = $clientId");
-            $db->setQuery($query);
-            $data = $db->loadObject();
-            return $data;
+            if(!empty($clientId)){
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->select('SUM(IF(`soa`.`operation_type` = 1,`soa`.`sum`,0)) - SUM(IF(`soa`.`operation_type` = 2,`soa`.`sum`,0)) as sum')
+                    ->from('`rgzbn_gm_ceiling_client_state_of_account` as soa')
+                    ->where("client_id = $clientId");
+                $db->setQuery($query);
+                $data = $db->loadObject();
+                return $data;
+            }
+            else{
+                return (object)['sum'=>0];
+            }
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

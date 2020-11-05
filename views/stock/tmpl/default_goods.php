@@ -103,7 +103,6 @@
         propColors = JSON.parse('<?php echo $colors;?>'),
         propManufacturers = JSON.parse('<?php echo $manufacturers;?>'),
         goods = JSON.parse('<?php echo $goods_json;?>');
-
     jQuery(document).ready(function(){
         allGoods(goods);
         jQuery('body').on('input','.formatted',function () {
@@ -266,7 +265,9 @@
     function allGoods(goods){
         var tr, td, tbody_goods = document.getElementById('tbody_goods');
         tbody_goods.innerHTML = '';
+        console.log(goods.length);
         for (var i = 0; i < goods.length; i++) {
+            console.log(goods[i]);
             tr = tbody_goods.insertRow();
             td = tr.insertCell();
             td.innerHTML = goods[i].id;
@@ -274,7 +275,7 @@
             td.innerHTML = goods[i].name;
 
             var stocks = "";
-            if (goods[i].stocks_count != null) {
+            if (!empty(goods[i].stocks_count)) {
                 for (var j = 0; j < goods[i].stocks_count.length; j++) {
                     stocks += goods[i].stocks_count[j].name + ': ' + goods[i].stocks_count[j].count + "<html> <br> </html>";
                 }

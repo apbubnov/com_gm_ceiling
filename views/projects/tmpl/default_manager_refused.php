@@ -31,60 +31,48 @@ $type = $jinput->getString('type', '', 'STRING');
 $subtype = $jinput->getString('subtype', '', 'STRING');
 
 ?>
-<?=parent::getButtonBack();?>
-<h2 class = "center">Отказы</h2>
+<?= parent::getButtonBack(); ?>
+<h2 class="center">Отказы</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=' . $type . '&subtype=' . $subtype); ?>"
       method="post" name="adminForm" id="adminForm">
-    <? if (false): ?>
-        <div class="toolbar"><?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?></div>
-    <? endif; ?>
     <table class="table table-striped one-touch-view" id="projectList">
         <thead>
         <tr>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+                Номер договора
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                Статус
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата замера', 'project_calculation_date', $listDirn, $listOrder); ?>
+                Дата замера
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Время замера', 'calculation_time', $listDirn, $listOrder); ?>
+                Адрес
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                Телефоны
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+                Клиент
             </th>
         </tr>
         </thead>
 
         <tbody>
-        <? foreach ($this->items as $i => $item): ?>
-            <?
-            $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-            if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
-                $canEdit = JFactory::getUser()->id == $item->created_by;
-            ?>
+        <?php foreach ($this->items as $i => $item): ?>
 
-            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&id=' . (int)$item->id); ?>">
+            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=refused&id=' . (int)$item->id); ?>">
                 <td class="center one-touch"><?= $item->id; ?></td>
                 <td class="center one-touch"><?= $item->status; ?></td>
                 <td class="center one-touch">
-                    <? if ($item->project_calculation_date == '00.00.0000'): ?>-
-                    <? else: ?><?= $item->project_calculation_date; ?>
-                    <? endif; ?>
-                </td>
-                <td class="center one-touch">
-                    <? if ($item->calculation_time == '00:00-01:00' || $item->calculation_time == ''): ?>-
-                    <? else: ?><?= $item->calculation_time; ?>
-                    <? endif; ?>
+                    <?php
+                        if ($item->project_calculation_date == '00.00.0000' || empty($item->project_calculation_date)):
+                            echo '-';
+                        else:
+                            echo date('d.m.Y H:i', strtotime($item->project_calculation_date));
+                        endif;
+                    ?>
                 </td>
                 <td class="center one-touch"><?= $item->project_info; ?></td>
                 <td class="center one-touch"><?= $item->client_contacts; ?></td>
@@ -101,18 +89,3 @@ $subtype = $jinput->getString('subtype', '', 'STRING');
     <?= JHtml::_('form.token'); ?>
 </form>
 
-<? if ($canDelete): ?>
-    <script type="text/javascript">
-
-        jQuery(document).ready(function () {
-            jQuery('.delete-button').click(deleteItem);
-        });
-
-        function deleteItem() {
-            if (!confirm("<?=JText::_('COM_GM_CEILING_DELETE_MESSAGE');?>")) {
-                return false;
-            }
-        }
-
-    </script>
-<? endif; ?>

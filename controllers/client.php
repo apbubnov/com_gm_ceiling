@@ -498,4 +498,123 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function createNew(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $clientName = $jinput->get('name','','STRING');
+            $phone = $jinput->get('phone','','STRING');
+            $data = $jinput->get('data','','STRING');
+            if(!empty($data)){
+                $data = json_decode(base64_decode($data));
+            }
+            else{
+                $data = (object)["name"=>$clientName,"phone"=>$phone];
+            }
+            if(empty($data->name)){
+                die('Empty client name!');
+            }
+            if(empty($data->phone)){
+                die('Empty client phone');
+            }
+            $data->phone = mb_ereg_replace('[^\d]', '', $data->phone);
+            if (mb_substr( $data->phone, 0, 1) == '9' && strlen( $data->phone) == 10) {
+                $data->phone = '7' .  $data->phone;
+            }
+            if (strlen($data->phone) != 11) {
+                die('Неверный формат номера телефона.');
+            }
+            if (mb_substr( $data->phone, 0, 1) != '7') {
+                $data->phone = substr_replace( $data->phone, '7', 0, 1);
+            }
+
+            $clientformModel = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
+
+            $client_data['client_name'] = $data->name;
+            $client_data['client_contacts'] = $data->phone;
+            $client_data['dealer_id'] = 1;
+            $client_id = $clientformModel->save($client_data);
+
+            if (!mb_ereg('[\d]', $client_id)) {
+                /*существует*/
+                $clientsphonesModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+                $client = $clientsphonesModel->getItemsByPhoneNumber($data->phone, 1);
+                $client_id = $client->id;
+            }
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $userModel->getUserByUsername($data->phone);
+            if(empty($user)){
+                Gm_ceilingHelpersGm_ceiling::registerUser($data->name,$data->phone,"$client_id@$client_id",$client_id,2,0);
+            }
+            die($client_id);
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getData(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $client = (object)[];
+            if(!empty($id)){
+                $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                $client = $clientModel->get($id);
+            }
+            die(json_encode($client));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function update(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $client = $jinput->get('client','','STRING');
+            if(!empty($client)){
+                $client = json_decode($client);
+                $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                $clientModel->update($client);
+                die(json_encode(true));
+            }
+            else{
+                die(json_encode(false));
+            }
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function delete(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            if(!empty($id)){
+                $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                $clientModel->delete($id);
+                die(json_encode(true));
+            }
+            else{
+                die(json_encode(false));
+            }
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function deletePhone(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $clientId = $jinput->getInt('client_id');
+	        $phone = $jinput->getString('phone');
+	        $clientPhonesModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+	        $clientPhonesModel->deletePhone($clientId,$phone);
+	        die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

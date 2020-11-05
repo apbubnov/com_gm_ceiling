@@ -4,8 +4,8 @@
 ?>
 <div class="row">
     <div class="col-md-2 col-xs-0"></div>
-    <div class="col-md-2 col-xs-4"><label style="font-size: 16pt;">Ярлык: </label></div>
-    <div class="col-md-5 col-xs-5">
+    <div class="col-md-2 col-xs-3"><label style="font-size: 16pt;">Ярлык: </label></div>
+    <div class="col-md-5 col-xs-7">
         <select class="wide cust-select" id="select_client_label">
             <?php if (empty($this->item->label_id)) { ?>
                 <option value="" selected disabled>Выберите ярлык</option>
@@ -33,7 +33,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-3 col-xs-3" style="padding: 0px;">
+    <div class="col-md-3 col-xs-2" style="padding: 0px;">
         <button class="btn btn-primary" id="btn_save_client_label" type="button">Ок</button>
     </div>
 </div>

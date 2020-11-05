@@ -83,7 +83,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
     <?php if($user->dealer_type!=2 ){ ?>
         </br><a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest;?> руб. </a>
         <div id="mw_container" class="modal_window_container" >
-            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+            <button type="button" id="mw_close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
             </button>
             <div id="mw_analytic" class="modal_window">
                 <div class="row margin_bottom">
@@ -103,6 +103,67 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                         <a class="btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=visitors',false)?>">Посетители сайта</a>
                     </div>
                 <?php }?>
+            </div>
+            <div class="modal_window" id="mw_precalc">
+                <h4 class="center">Новый просчет</h4>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <label style="font-size: 12pt;">Добавить просчет в:</label>
+                        <div class="row">
+                            <div class="col-md-4" style="text-align: left">
+                                <input name="precalc_type" class="radio" id ="new_precalc" value="0" type="radio" checked>
+                                <label for="new_precalc">новый проект</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="text-align: left">
+                                <input name="precalc_type" class="radio" id ="exist_project" value="1" type="radio">
+                                <label for="exist_project">сущесвующий проект</label>
+                            </div>
+                            <div id="search_field" class="col-md-8" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-7">
+                                        <b>Поиск проекта</b>
+                                    </div>
+                                    <div class="col-md-1 col-xs-2 help" style="padding: 0 !important;">
+                                        <i class="fas fa-info-circle" style="font-size:17px;color:#414099"></i>
+                                            <span class="airhelp" style=" padding:0 !important;display: none;">
+                                                <i>Введите в поле номер договора, адрес,ФИО клиента или его телефон</i>
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10 col-xs-10">
+                                        <input class="form-control" id ="search_text" placeholder="Поиск договора">
+                                    </div>
+                                    <div class="col-md-2 col-xs-2">
+                                        <button class="btn btn-primary" id="search_projects">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="max-height:300px;overflow-y:auto;">
+                            <table id="projects_table" class="table tabl-stripped" style="display:none;">
+                                <thead>
+                                <th>№</th>
+                                <th>Адрес</th>
+                                <th>Клиент</th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="create_precalc">Создать</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -188,9 +249,8 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
         </div>
         <?php if($userId == 2 || $userId == 1 || $userId == 827 ){?>
             <div class="row center">
-                <a class="btn btn-large btn-primary"
-                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics', false); ?>">
-                    <i class="fas fa-chart-line"></i> Аналитика</a>
+                <a class="btn btn-large btn-primary" id="show_analytic">
+                    <i class="fas fa-chart-line" ></i> Аналитика</a>
             </div>
             <div class="row center">
                 <a class="btn btn-large btn-primary"
@@ -264,12 +324,25 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
             </button>
         </div>
     <?php } ?>
+
 </div>
 
 <script>
-
+    var selected_project;
+    jQuery(document).mouseup(function (e){
+        var div = jQuery("#mw_analytic"),
+            div1 = jQuery("#mw_precalc");
+        if (!div.is(e.target) &&
+            !div1.is(e.target)
+            && div.has(e.target).length === 0
+            && div1.has(e.target).length === 0) {
+            jQuery(".close_btn").hide();
+            jQuery("#mw_container").hide();
+            jQuery(".modal_window").hide();
+        }
+    });
     jQuery(document).ready(function () {
-
+        var dealerType = '<?=$user->dealer_type;?>';
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
@@ -279,8 +352,10 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                 {
                     if (data[0].count != 0)
                     {
-                        document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
-                        document.getElementById('ZvonkiDiv').style.display = 'block';
+                        if(dealerType == 1) {
+                            document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
+                            document.getElementById('ZvonkiDiv').style.display = 'block';
+                        }
                     }
                 }
             },
@@ -299,6 +374,17 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
             }
         });
 
+        jQuery('[name=precalc_type]').change(function () {
+            if(this.value == 1){
+                jQuery('#search_field').show();
+            }
+            else{
+                jQuery('#search_field').hide();
+                jQuery('#projects_table > tbody').empty();
+                jQuery('#projects_table').hide();
+                jQuery('#search_text').val('');
+            }
+        });
         jQuery("#show_additional").click(function () {
             jQuery("#montages_btn").toggle();
             jQuery("#accounting_btn").toggle();
@@ -318,7 +404,93 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
         });
 
 
-        function create_precalculation(proj_id)
+        jQuery('.help').mouseenter(function () {
+            jQuery(this.lastElementChild).show();
+        });
+
+        jQuery('.help').mouseleave(function () {
+            jQuery(this.lastElementChild).hide();
+        });
+
+        jQuery('#search_projects').click(function () {
+            var search = jQuery('#search_text').val(),
+                dealer_id = '<?=$user->dealer_id?>';
+                if(!empty(search)) {
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "index.php?option=com_gm_ceiling&task=clients.searchClients",
+                        data: {
+                            search_text: search,
+                            dealer_id: dealer_id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            jQuery('#projects_table > tbody').empty();
+                            jQuery.each(data, function (i, elem) {
+                                jQuery('#projects_table > tbody').append('<tr data-id="' + elem.projects_ids + '">' +
+                                    '<td>' + elem.projects_ids + '</td>' +
+                                    '<td>' + elem.project_info + '</td>' +
+                                    '<td>' + elem.client_name + ';</br>' + elem.client_contacts + '</td>' +
+                                    '</tr>');
+                            });
+                            jQuery('#projects_table').show();
+                        },
+                        dataType: "json",
+                        async: false,
+                        timeout: 20000,
+                        error: function (data) {
+                            console.log(data);
+                            noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка. Сервер не отвечает"
+                            });
+                        }
+                    });
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Введите номер проекта,адрес, ФИО ккиента или его контакты!"
+                    });
+                }
+        });
+        jQuery('#projects_table').on('click','tr',function () {
+            jQuery('#projects_table > tbody > tr').prop('style','');
+            jQuery(this).css('background','#d3d3f9');
+            selected_project = jQuery(this).data('id');
+        });
+
+        jQuery('#create_precalc').click(function(){
+            var precalc_type = jQuery('[name=precalc_type]:checked').val();
+            if(precalc_type == 0){
+                user_id = "<?php echo $userId;?>";
+                create_new_client(user_id);
+            }
+            else{
+                if(!empty(selected_project)){
+                    create_precalculation(selected_project,1);
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Не выбран проект"
+                    });
+                }
+            }
+        });
+        function create_precalculation(proj_id,old_proj)
         {
             jQuery.ajax({
                 type: 'POST',
@@ -327,8 +499,11 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                     proj_id: proj_id
                 },
                 success: function(data){
-                    console.log(data);
-                    location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=precalc&calc_id='+data+'&precalculation=1';
+                    var addition = '';
+                    if(old_proj == 1){
+                        addition = '&addition=1';
+                    }
+                    location.href = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=precalc&calc_id='+data+'&precalculation=1'+addition;
                 },
                 error: function(data){
                     var n = noty({
@@ -393,8 +568,12 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
             });
         }
         jQuery("#precalc_btn").click(function () {
-            user_id = "<?php echo $userId;?>";
-            create_new_client(user_id);
+            jQuery('#new_precalc').prop('checked',true).trigger('change');
+            selected_project  = null;
+            jQuery('#mw_container').show();
+            jQuery('#mw_precalc').show();
+            jQuery('#mw_close').show();
+
         });
         jQuery("#toProfile").click(function(){
 		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile&type=edit";
@@ -436,7 +615,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
 
         jQuery('#show_analytic').click(function () {
             jQuery('#mw_container').show();
-            jQuery('#close').show();
+            jQuery('#mw_close').show();
             jQuery("#mw_analytic").show();
         });
     })
@@ -468,13 +647,5 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
         });
     });
 
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#mw_analytic"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery(".close_btn").hide();
-            jQuery("#mw_container").hide();
-            jQuery(".modal_window").hide();
-        }
-    });
+
 </script>

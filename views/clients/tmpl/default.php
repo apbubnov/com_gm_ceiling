@@ -57,9 +57,9 @@ echo parent::getPreloaderNotJS();
 	<div class="row" style="margin-bottom: 10px;">
         <div class="col-md-4 col-xs-6">
             <select id="select_status" class="form-control">
-                <option value='' selected>Статусы</option>
+                <option value='' selected>Выберите статус</option>
                 <?php foreach($status as $item): ?>
-                    <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12) { ?>
+                    <?php if(!in_array($item->id,INTERNAL_STATUSES)) { ?>
                         <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
                     <?php } ?>
                 <?php endforeach;?>

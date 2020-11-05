@@ -1352,5 +1352,16 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    function getGoods(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('goods_id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            die(json_encode($model->getGoods($id)));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 

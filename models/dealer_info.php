@@ -95,8 +95,6 @@ class Gm_ceilingModelDealer_info extends JModelList
 			if(empty($user->dealer_id)) $dealerId = 1;
 			else $dealerId = $user->dealer_id;
 			// Create a new query object.
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*');
@@ -236,27 +234,27 @@ class Gm_ceilingModelDealer_info extends JModelList
 				$db->setQuery($query);
 				$db->execute();
 			}
+			if(!empty($data)) {
+                $canvases_margin = $data['canvases_margin'];
+                $components_margin = $data['components_margin'];
+                $mounting_margin = $data['mounting_margin'];
+                $min_sum = $data['min_sum'];
+                $transport = $data['transport'];
+                $distance = $data['distance'];
 
-			$canvases_margin = $data['canvases_margin'];
-			$components_margin = $data['components_margin'];
-			$mounting_margin = $data['mounting_margin'];
-			$min_sum = $data['min_sum'];
-			$transport = $data['transport'];
-			$distance = $data['distance'];
+                $query = $db->getQuery(true);
+                $query->update('`rgzbn_gm_ceiling_dealer_info`')
+                    ->set("`dealer_canvases_margin` = $canvases_margin")
+                    ->set("`dealer_components_margin` = $components_margin")
+                    ->set("`dealer_mounting_margin` =  $mounting_margin")
+                    ->set("`min_sum` =  $min_sum")
+                    ->set("`transport` =  $transport")
+                    ->set("`distance` =  $distance")
+                    ->where("`dealer_id` = $dealer_id");
 
-			$query = $db->getQuery(true);
-			$query->update('`rgzbn_gm_ceiling_dealer_info`')
-			->set("`dealer_canvases_margin` = $canvases_margin")
-			->set("`dealer_components_margin` = $components_margin")
-			->set("`dealer_mounting_margin` =  $mounting_margin")
-			->set("`min_sum` =  $min_sum")
-			->set("`transport` =  $transport")
-			->set("`distance` =  $distance")
-			->where("`dealer_id` = $dealer_id");
-
-			$db->setQuery($query);
-			$db->execute();
-			
+                $db->setQuery($query);
+                $db->execute();
+            }
 			return 1;
 		}
 		catch(Exception $e)

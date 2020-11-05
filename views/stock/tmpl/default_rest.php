@@ -1,7 +1,8 @@
 <?php
 $modelStock = Gm_ceilingHelpersGm_ceiling::getModel('stock');
-$data = $modelStock->getRests();
+
 $today = date('Y-m-d');
+$data = $modelStock->getRests($today);
 ?>
 <h4>Остатки товаров на <span id="date_span"><?= date('d.m.Y')?></span></h4>
 <div class="row" style="margin-bottom: 15px;">
@@ -52,7 +53,7 @@ $today = date('Y-m-d');
                         <?=$item->sale_count;?>
                     </td>
                     <td>
-                        <?=$item->received_count - $item->sale_count;?>
+                        <?=$item->rest_count;?>
                     </td>
                 </tr>
             <?php }?>

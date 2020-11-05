@@ -316,8 +316,10 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$client_name = $jinput->get("client","","STRING");
 			$label_id = $jinput->get("label_id",null,"int");
 			$coop = $jinput->get('coop',0,'INT');
+            $date_from = $jinput->get('date_from','','STRING');
+            $date_to = $jinput->get('date_to','','STRING');
 			$model =  Gm_ceilingHelpersGm_ceiling::getModel('clients');
-			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop, $label_id);
+			$result = $model->getDealersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop, $label_id,$date_from,$date_to);
 			die(json_encode($result));
 		}
 		catch(Exception $e)
@@ -369,4 +371,21 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function saveApiKeys(){
+	    try{
+	        $user = JFactory::getUser();
+	        $dealerId = $user->dealer_id;
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $key = $jinput->getString('key');
+            $secret = $jinput->getString('secret');
+            $keysModel = Gm_ceilingHelpersGm_ceiling::getModel('dealers_key');
+            $keysModel->save($id,$key,$secret,$dealerId);
+            die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

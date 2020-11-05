@@ -171,7 +171,7 @@
                         <select id="advt_choose">
                             <option value="0">Выберите рекламу</option>
                             <?php foreach ($all_advt as $item) { ?>
-                                <option value="<?php echo $item['id'] ?>"><?php echo $item['advt_title'] ?></option>
+                                <option value="<?php echo $item['id']; ?>"><?php echo $item['advt_title']; ?></option>
                             <?php } ?>
                         </select>
                         <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="far fa-plus-square"></i></button>
@@ -598,7 +598,7 @@
 </div>
 </form>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/measures_calendar.js"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>

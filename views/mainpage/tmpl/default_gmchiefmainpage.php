@@ -108,11 +108,16 @@ $answer5 = $model->getDataByStatus("MountService");
 	</div>
 		<div class="row center">
 		<div class="container-for-circl">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fas fa-sign-in-alt"></i> Войти как замерщик</a>
-
-            <?php if ($answer4[0]->count != 0) { ?>
-				<div class="circl-digits"><? echo $answer4[0]->count; ?></div>
-			<?php } ?>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>">
+                <div style="position: relative">
+                    <div>
+                        <i class="fas fa-sign-in-alt"></i> Войти как замерщик
+                    </div>
+                    <?php if ($answer4[0]->count != 0) { ?>
+                        <div class="circl-digits"><? echo $answer4[0]->count; ?></div>
+                    <?php } ?>
+                </div>
+            </a>
 		</div>
 	</div>
     <div class="row center">

@@ -868,6 +868,7 @@ class Gm_ceilingModelProject extends JModelItem
 			$table = $this->getTable();
 			if($data->id > 0) {
 				$table->load($data->id);
+				$table->project_status = $data->project_status;
 				/*if ($data->project_mounting_date != "00-00-0000 00:00:00") {
 					$table->project_mounting_date = $data->project_mounting_date;
 					if ($user->dealer_type == 1 && $data->project_status == 4) {
@@ -1256,7 +1257,7 @@ class Gm_ceilingModelProject extends JModelItem
 	 *
 	 * @return  bool
 	 */
-	public function delete($id)
+/*	public function delete($id)
 	{
 		try
 		{
@@ -1268,7 +1269,7 @@ class Gm_ceilingModelProject extends JModelItem
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-	}
+	}*/
 
 	public function deleteEmptyOrBadProjectsByClientId($client_id)
 	{
@@ -1888,4 +1889,193 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
+    function getDataForNotify($id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $calcSubquery = $db->getQuery(true);
+            $calcSubquery
+                ->select('project_id,sum(n5) as perimeter,Group_CONCAT(id) as calcs_id')
+                ->from('`rgzbn_gm_ceiling_calculations`')
+                ->where("project_id = $id");
+            $query
+                ->select('p.id,p.project_status,p.project_info,p.project_calculator,p.project_sum,p.new_project_sum,c.client_name,c.dealer_id')
+                ->select('DATE_FORMAT(p.project_calculation_date,\'%d.%m.%Y %H:%i\') AS measure_date')
+                ->select('GROUP_CONCAT(cc.phone SEPARATOR \';\') AS client_contacts')
+                ->select('CONCAT(\'[\',GROUP_CONCAT( CONCAT(\'{"mounter":"\',pm.mounter_id,\'","type_id":"\',pm.type,\'","type_name":"\',t.title,\'","date_time":"\',pm.date_time,\'"}\') SEPARATOR \',\'),\']\') AS mount')
+                ->select('calc.calcs_id,calc.perimeter')
+                ->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON p.client_id = c.id')
+                ->leftJoin("($calcSubquery) as calc on calc.project_id = p.id")
+                ->leftJoin('`rgzbn_gm_ceiling_projects_mounts` AS pm ON p.id = pm.project_id')
+                ->leftJoin('`rgzbn_gm_ceiling_clients_contacts` AS cc ON c.id = cc.client_id')
+                ->leftJoin('`rgzbn_gm_ceiling_mounts_types` AS t ON t.id = pm.type')
+                ->where("p.id = $id");
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            $item->notes = Gm_ceilingHelpersGm_ceiling::getProjectNotes($id);
+            return $item;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getBaseData($id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('p.id,p.project_info,p.client_id,c.dealer_id')
+                ->from('`rgzbn_gm_ceiling_projects` as p')
+                ->innerJoin('`rgzbn_gm_ceiling_clients` as c on c.id = p.client_id')
+                ->where("p.id = $id");
+            $db->setQuery($query);
+            $project = $db->loadObject();
+            return $project;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function clearProject($id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`rgzbn_gm_ceiling_calculations`')
+                ->where("project_id = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    /*4API*/
+    public function create($client_id){
+        try{
+            $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $client = $clientModel->get($client_id);
+            $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $margin = $info_model->getDataById($client->dealer_id);
+            $projectData = [
+                "client_id"=> $client_id,
+                "project_status" => 0,
+                "created" => date("Y.m.d"),
+                "project_discount" => 0,
+                "dealer_canvases_margin" => $margin->dealer_canvases_margin,
+                "dealer_components_margin" => $margin->dealer_components_margin,
+                "dealer_mounting_margin" => $margin->dealer_mounting_margin
+            ];
+            $projectForm = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+            $projectId = $projectForm->save($projectData);
+            return $projectId;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function get($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_ceiling_projects`')
+                ->where("id = $id and deleted_by_user <> 1");
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            return $item;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getCalculations($id){
+        try{
+            $project = $this->getBaseData($id);
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id,calculation_title,project_id,n4,n5,n9,canvases_sum,components_sum,mounting_sum,
+                canvases_sum_with_margin,components_sum_with_margin,mounting_sum_with_margin')
+                ->from('`rgzbn_gm_ceiling_calculations`')
+                ->where("project_id = $id");
+            $db->setQuery($query);
+            $calculations = $db->loadObjectList();
+            $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
+            foreach ($calculations as $calculation) {
+                $allGoods = $calculationformModel->getGoodsPricesInCalculation($calculation->id,$project->dealer_id);
+                if(!empty($calculation->cancel_metiz)){
+                    $calculation->goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($allGoods);
+                }
+                else{
+                    $calculation->goods = $allGoods;
+                }
+                $calculation->jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id,$project->dealer_id);
+                $calculation->factory_jobs = $calculationformModel->getFactoryWorksPricesInCalculation($calculation->id);
+            }
+            return $calculations;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function getByClientId($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_ceiling_projects`')
+                ->where("client_id = $id and deleted_by_user <> 1");
+            $db->setQuery($query);
+            $item = $db->loadObjectList();
+            return $item;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function update($project){
+        try{
+            $projectData = [];
+            if(!empty($project)){
+                foreach ($project as $key=>$value){
+                    if(!empty($value)){
+                        $projectData[$key] = $value;
+                    }
+                }
+            }
+            if(!empty($projectData)){
+                $this->save($projectData);
+            }
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function delete($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`rgzbn_gm_ceiling_projects`')
+                ->set('deleted_by_user = 1')
+                ->where("id = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    /*END*/
 }

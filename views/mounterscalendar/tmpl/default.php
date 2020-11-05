@@ -19,11 +19,20 @@ $userId     = $user->get('id');
 $dealerId   = $user->dealer_id;
 
 // календарь
-$month = date("n");
-$year = date("Y");
+$month1 = date("n");
+$year1 = date("Y");
+if ($month1 == 12) {
+    $month2 = 1;
+    $year2 = $year1;
+    $year2++;
+} else {
+    $month2 = $month1;
+    $month2++;
+    $year2 = $year1;
+}
 $FlagCalendar = [5, $dealerId];
-$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
-
+$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+$calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
 ?>
 
 <?=parent::getButtonBack();?>
@@ -33,7 +42,13 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 <div id="content-tar">
     <h2 class="center tar-color-414099">Календарь работ</h2>
     <div id="calendar-container" class="row center" style="padding-bottom: 10px">
-        <?php echo $calendar; ?>
+        <div class="col-md-6 col-xs-12" id="container1">
+            <?php echo $calendar; ?>
+        </div>
+        <div class="col-md-6 col-xs-12" id="container2">
+            <?php echo $calendar1; ?>
+        </div>
+
     </div>
     <div class="col-md-6 col-sm-6 col-xs-6">
         <div class="row">
@@ -121,9 +136,14 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 </div>
 
 <script type='text/javascript'>
-    var notes;
+    var notes,
+        month_old1 = 0,
+        year_old1 = 0,
+        month_old2 = 0,
+        year_old2 = 0;
     // листание календаря
-    function update_calendar(month, year) {
+    function update_calendar(month, year,month2, year2) {
+        console.log(month,year,month2,year2);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
@@ -133,17 +153,16 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                 flag: 5,
                 month: month,
                 year: year,
+                month2: month2,
+                year2: year2
             },
             success: function (msg) {
-                jQuery("#calendar-container").empty();
-                jQuery("#calendar-container").append(msg);
+                var calendars = JSON.parse(msg);
+                jQuery("#container1").empty();
+                jQuery("#container1").append(calendars.calendar1);
+                jQuery("#container2").empty();
+                jQuery("#container2").append(calendars.calendar2);
                 Today(day, NowMonth, NowYear);
-                jQuery("#prev").click(function () {
-                    scrollCalendar(0);
-                });
-                jQuery("#next").click(function () {
-                    scrollCalendar(1);
-                });
             },
             dataType: "text",
             timeout: 10000,
@@ -407,43 +426,62 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
     *type == 1 листание вперед
     */
     function scrollCalendar(type){
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
-        if (month_old != 0) {
-            month = month_old;
-            year = year_old;
-            month = month_old;
-            year = year_old;
+        var month1 = <?php echo $month1; ?>,
+            year1 = <?php echo $year1; ?>,
+            month2 = <?php echo $month2; ?>,
+            year2 = <?php echo $year2; ?>;
+
+        if (month_old1 != 0) {
+            month1 = month_old1;
+            year1 = year_old1;
+            month2 = month_old2;
+            year2 = year_old2;
         }
-        if(type == 0) {
-            if (month == 1) {
-                month = 12;
-                year--;
+        if(type == 1) {
+            if (month1 == 12) {
+                month1 = 1;
+                year1++;
             } else {
-                month--;
+                month1++;
+            }
+            if (month2 == 12) {
+                month2 = 1;
+                year2++;
+            } else {
+                month2++;
             }
         }
-        if(type == 1){
-            if (month == 12) {
-                month = 1;
-                year++;
+        if(type == 0){
+            if (month1 == 1) {
+                month1 = 12;
+                year1--;
             } else {
-                month++;
+                month1--;
+            }
+            if (month2 == 1) {
+                month2 = 12;
+                year2--;
+            } else {
+                month2--;
             }
         }
-        month_old = month;
-        year_old = year;
-        update_calendar(month, year);
+        month_old1 = month1;
+        year_old1 = year1;
+        month_old2 = month2;
+        year_old2 = year2;
+        update_calendar(month1, year1, month2, year2);
     }
     jQuery(document).ready(function () {
         month_old = 0;
         year_old = 0;
-        jQuery("#prev").click(function () {
+        jQuery('body').on('click','.prev', function () {
             scrollCalendar(0);
         });
-        jQuery("#next").click(function () {
+        jQuery('body').on('click','.next', function () {
             scrollCalendar(1);
         });
     });
+
+
 
 </script>

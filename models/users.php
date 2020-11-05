@@ -858,4 +858,64 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getUserCity($userId){
+	    try{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+                ->select('city_id')
+                ->from('`rgzbn_user_info`')
+                ->where("user_id = $userId");
+	        $db->setQuery($query);
+	        $result = $db->loadObject();
+	        return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getDealerUsers($dealerId){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('`u`.`id`,`u`.`name`,`u`.`dop_number`,GROUP_CONCAT(`g`.`title`) as groups,GROUP_CONCAT(`g`.`id`)')
+                ->from('`rgzbn_users` AS `u`')
+                ->leftJoin('`rgzbn_user_usergroup_map` AS `map` ON `map`.`user_id` = `u`.`id`')
+                ->leftJoin('`rgzbn_usergroups` AS `g` ON `g`.`id` = `map`.`group_id`')
+                ->where("`u`.`dealer_id` = $dealerId AND `g`.`id` IN(11,12,13,14,21)")
+                ->group('`u`.`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateDopNumber($userId,$dopNum){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            if(empty($dopNum)){
+                $setStr = 'dop_number = NULL ';
+            }
+            else{
+                $setStr = "dop_number = '$dopNum'";
+            }
+            $query
+               ->update('`rgzbn_users`')
+                ->set($setStr)
+                ->where("id = $userId");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

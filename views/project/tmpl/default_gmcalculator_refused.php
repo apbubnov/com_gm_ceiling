@@ -138,7 +138,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
     <script type="text/javascript">
         var project_id = "<?php echo $this->item->id; ?>",
             client_id = "<?php echo $this->item->id_client;?>";

@@ -45,7 +45,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
 
             $taken_items = $db->loadObjectList();
 
-            $query->select("ms.mounter_id,u.name,SUM(IF(ms.sum > 0 AND ms.builder_id IS NULL,ms.sum, 0 ))AS  closed, SUM(LEAST(0.00,ms.sum)) AS payed")
+            $query->select("ms.mounter_id,u.name,SUM(IF(ms.type = 1,ms.sum, 0 ))AS  closed, SUM(IF(ms.type = 2,ms.sum,0)) AS payed")
                 ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                 ->leftJoin("`rgzbn_gm_ceiling_projects` AS p ON p.id = ms.project_id")
                 ->leftJoin("`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id")
@@ -83,7 +83,7 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($id)){
-                $query->select("ms.id as sId,u.id,u.name,ms.sum,IFNULL(CONCAT(p.project_info,' ',ms.note),ms.note) AS note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
+                $query->select("ms.id as sId,u.id,ms.type as `type`,u.name,ms.sum,IFNULL(CONCAT(p.project_info,' ',ms.note),ms.note) AS note,DATE_FORMAT(`datetime`,'%d.%m.%Y %H:%i:%s') AS `datetime`")
                     ->from('`rgzbn_gm_ceiling_mounters_salary` AS ms')
                     ->innerJoin('`rgzbn_users` as u on u.id = ms.mounter_id')
                     ->leftJoin('`rgzbn_gm_ceiling_projects` as p on p.id = ms.project_id')
@@ -109,8 +109,8 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $query = $db->getQuery(true);
             if(!empty($mounterId)){
                 $query->insert('`#__gm_ceiling_mounters_salary`')
-                    ->columns('`mounter_id`,`project_id`,`sum`,`note`')
-                    ->values("$mounterId,$projectId,$sum,'$note'");
+                    ->columns('`mounter_id`,`project_id`,`sum`,`note`,`type`')
+                    ->values("$mounterId,$projectId,$sum,'$note',1");
                 $db->setQuery($query);
                 $db->execute();
                 return true;
@@ -130,9 +130,10 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($mounterId)&&!empty($builderId)&&!empty($sum)) {
-                $query->insert('`#__gm_ceiling_mounters_salary`')
-                    ->columns('`mounter_id`,`builder_id`,`sum`')
-                    ->values("$mounterId,$builderId,$sum");
+                $query
+                    ->insert('`#__gm_ceiling_mounters_salary`')
+                    ->columns('`mounter_id`,`builder_id`,`sum`,`type`')
+                    ->values("$mounterId,$builderId,$sum,2");
                 $db->setQuery($query);
                 $db->execute();
                 return true;
@@ -247,11 +248,11 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
             $oldBuilder = JFactory::getUser($oldBuilderId);
             $newBuilder = Jfactory::getUser($newBuilderId);
             $values = [];
-            $values[] = "$mounterId,$oldBuilderId,0-$rest,'Перенос остатка в $newBuilder->name'";
-            $values[] = "$mounterId,$newBuilderId,$rest,'Перенос остатка из $oldBuilder->name'";
+            $values[] = "$mounterId,$oldBuilderId,$rest,'Перенос остатка в $newBuilder->name',1";
+            $values[] = "$mounterId,$newBuilderId,$rest,'Перенос остатка из $oldBuilder->name',2";
             if(!empty($mounterId)&&!empty($oldBuilderId)&&!empty($newBuilderId)&&!empty($rest)) {
                 $query->insert('`#__gm_ceiling_mounters_salary`')
-                    ->columns('`mounter_id`,`builder_id`,`sum`,`note`')
+                    ->columns('`mounter_id`,`builder_id`,`sum`,`note`,`type`')
                     ->values($values);
                 $db->setQuery($query);
                 $db->execute();

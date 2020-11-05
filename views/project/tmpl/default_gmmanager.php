@@ -744,7 +744,7 @@ if (((int)$status[0]->project_status == 16) || ((int)$status[0]->project_status 
     </form>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
     <script type="text/javascript">
 

@@ -402,7 +402,18 @@ $kol = 0;
                         }
                         ?>
                     </td>
-
+                </tr>
+                <tr>
+                    <th>Замерщик</th>
+                    <td colspan="2">
+                        <?php
+                            if(!empty($this->item->project_calculator)){
+                                $calculator = JFactory::getUser($this->item->project_calculator);
+                            }
+                            $calculatorName = !empty($calculator) ? $calculator->name : '-';
+                            echo $calculatorName;
+                        ?>
+                    </td>
                 </tr>
             </table>
             <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
@@ -1481,7 +1492,7 @@ $kol = 0;
 
     <?php endif;?>
     <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
-    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
     <script type="text/javascript">
         init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
         init_mount_calendar('change_mount_div','change_mount','mw_mounts_calendar',['close_mw','mw_container']);

@@ -49,7 +49,13 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="far fa-calendar-check" aria-hidden="true"></i> Запущенные</a>
 	</div>
+    <div class="row center">
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=refused', false); ?>"><i class="far fa-window-close"></i> Отказы</a>
+    </div>
 	<div class="row center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
 	</div>
+    <div class="row center">
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone" aria-hidden="true"></i> Перезвоны</a>
+    </div>
 </div>

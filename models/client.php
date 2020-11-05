@@ -144,7 +144,7 @@ class Gm_ceilingModelClient extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
-	function create($dealer_id,$manager_id=null){
+	function create($dealer_id,$manager_id = null,$client_name = null){
 		try{
 			if(empty($manager_id)){
 				$manager_id = $dealer_id;
@@ -154,19 +154,26 @@ class Gm_ceilingModelClient extends JModelItem
 			$query = $db->getQuery(true);
 			$query
 				->insert("`#__gm_ceiling_clients`")
-				->columns('`client_name`, `dealer_id`, `manager_id`, `created`')
-				->values("' ', $dealer_id, $manager_id, '$date'");
+				->columns('`client_name`, `dealer_id`, `manager_id`, `created`');
+			if(empty($client_name)) {
+                $query->values("' ', $dealer_id, $manager_id, '$date'");
+            }
+			else{
+                $query->values("'$client_name', $dealer_id, $manager_id, '$date'");
+            }
 			$db->setQuery($query);
 			$db->execute();
 			$last_id = $db->insertid();
 
-			$query = $db->getQuery(true);
-			$query
-				->update("`#__gm_ceiling_clients`")
-				->set("`client_name` = '$last_id'")
-				->where("`id` = $last_id");
-			$db->setQuery($query);
-			$db->execute();
+			if(empty($client_name)){
+                $query = $db->getQuery(true);
+                $query
+                    ->update("`#__gm_ceiling_clients`")
+                    ->set("`client_name` = '$last_id'")
+                    ->where("`id` = $last_id");
+                $db->setQuery($query);
+                $db->execute();
+            }
 			return $last_id;
 		}
 		catch(Exception $e)
@@ -435,7 +442,7 @@ class Gm_ceilingModelClient extends JModelItem
 	 *
 	 * @return  bool
 	 */
-	public function delete($id)
+	/*public function delete($id)
 	{
 		try
 		{
@@ -444,20 +451,13 @@ class Gm_ceilingModelClient extends JModelItem
 
 			return $table->delete($id);
 			
-			/*$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query
-				->delete('#__gm_ceiling_clients')
-				->where('id = ' . $id);
-			$db->setQuery($query);
-			$db->execute($query);
-			return true;*/
+
 		}
 		catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-	}
+	}*/
 
     public function add_client_timer_spec( $id_client, $rek)
     {
@@ -641,5 +641,67 @@ class Gm_ceilingModelClient extends JModelItem
         }
 
     }
-	
+	/*4API*/
+    public function get($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('c.id,c.client_name,c.manager_id,c.label_id,c.created,c.deleted_by_user,c.dealer_id')
+                ->from('`rgzbn_gm_ceiling_clients` as c')
+                ->where("c.id = $id");
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            return $item;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
+    public function update($client){
+        try{
+            if(!empty($client)) {
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_ceiling_clients`')
+                    ->where("id = $client->id");
+                if(!empty($client->client_name)){
+                    $query->set("client_name = '$client->client_name'");
+                }
+                if(!empty($client->manager_id)){
+                    $query->set("manager_id = $client->manager_id");
+                }
+                if(!empty($client->label_id)){
+                    $query->set("label_id = $client->label_id");
+                }
+
+                if(!empty($client->contacts)){
+                    //обновить номер телефона
+                }
+                $db->setQuery($query);
+                $db->execute();
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function delete($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->update('`rgzbn_gm_ceiling_clients`')
+                ->set('deleted_by_user = 1')
+                ->where("id = $id");
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

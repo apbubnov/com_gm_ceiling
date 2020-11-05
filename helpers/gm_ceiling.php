@@ -14,31 +14,32 @@ defined('_JEXEC') or die;
  */
 /* включаем библиотеку для формирования PDF */
 include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-const VERDICT_STATUSES = [5,6,7,8,10,11,12,13,14,16,17,19,23,24,25,26,27,28,29];
+const VERDICT_STATUSES = [5, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 19, 23, 24, 25, 26, 27, 28, 29];
+const INTERNAL_STATUSES = [6, 7, 8, 9, 13, 14, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33];
 const MIN_SUM = 250;
 /* функция для применения маржи */
-function margin($value, $margin) {
+function margin($value, $margin)
+{
     try {
-        if($margin == 100){
+        if ($margin == 100) {
             $margin = 99;
         }
         return ($value * 100 / (100 - $margin));
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
+
 /* функция для применения сразу двойной маржи */
-function double_margin($value, $margin1, $margin2) {
+function double_margin($value, $margin1, $margin2)
+{
     try {
         return margin(margin($value, $margin1), $margin2);
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
+
 /**
  * @license https://github.com/apbubnov/com_gm_ceiling/wiki/DealerPrice
  * @author CEH4TOP
@@ -47,29 +48,38 @@ function double_margin($value, $margin1, $margin2) {
  * @param $objectDealerPrice
  * @return float|int
  */
-function dealer_margin($price, $margin, $objectDealerPrice) {
+function dealer_margin($price, $margin, $objectDealerPrice)
+{
     try {
         $result = 0;
         if (!empty($objectDealerPrice)) {
             $objectDealerPrice->value = floatval($objectDealerPrice->value);
             $objectDealerPrice->price = floatval($objectDealerPrice->price);
-            switch ($objectDealerPrice->type)
-            {
-                case 0: $result = $price; break;
-                case 1: $result = $objectDealerPrice->price; break;
-                case 2: $result = $price + $objectDealerPrice->value; break;
-                case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
-                case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
-                case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
+            switch ($objectDealerPrice->type) {
+                case 0:
+                    $result = $price;
+                    break;
+                case 1:
+                    $result = $objectDealerPrice->price;
+                    break;
+                case 2:
+                    $result = $price + $objectDealerPrice->value;
+                    break;
+                case 3:
+                    $result = $price + $price * $objectDealerPrice->value / 100;
+                    break;
+                case 4:
+                    $result = $objectDealerPrice->price + $objectDealerPrice->value;
+                    break;
+                case 5:
+                    $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100;
+                    break;
             }
-        }
-        else {
+        } else {
             $result = $price;
         }
         return ($margin > 0) ? margin($result, $margin) : $result;
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
@@ -78,13 +88,11 @@ function delete_string_characters($string)
 {
     try {
         $string = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\_\s]', '', $string);
-        $string = str_replace(array("\r","\n"), '', $string);
+        $string = str_replace(array("\r", "\n"), '', $string);
         $string = mb_ereg_replace('[\s]+', ' ', $string);
         $string = trim($string);
         return $string;
-    }
-    catch(Exception $e)
-    {
+    } catch (Exception $e) {
         Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
@@ -107,7 +115,7 @@ class Gm_ceilingHelpersGm_ceiling
             $file = array_pop(explode('com_gm_ceiling', $file));
             $ip = $_SERVER['REMOTE_ADDR'];
             $user = JFactory::getUser();
-            $user_str = $user->id.' '.$user->name;
+            $user_str = $user->id . ' ' . $user->name;
             $db = JFactory::getDbo();
             $date = $db->escape($date);
             $error = $db->escape($error);
@@ -126,47 +134,52 @@ class Gm_ceilingHelpersGm_ceiling
                 ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `php_input`, `user`')
                 ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$input', '$user_str'");
             $db->setQuery($query);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             die("Что-то пошло не так...");
         }
         try {
             $db->execute();
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$query."\n----------\n", FILE_APPEND);
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $query . "\n----------\n", FILE_APPEND);
             die("Что-то пошло не так...");
         }
         $code = $db->insertid();
         throw new Exception('Ошибка!', $code);
     }
 
-    public static function margin($value, $margin) {
+    public static function margin($value, $margin)
+    {
         return margin($value, $margin);
     }
-    public static function double_margin($value, $margin1, $margin2) {
+
+    public static function double_margin($value, $margin1, $margin2)
+    {
         return double_margin($value, $margin1, $margin2);
     }
-    public static function dealer_margin($price, $margin, $objectDealerPrice) {
+
+    public static function dealer_margin($price, $margin, $objectDealerPrice)
+    {
         return dealer_margin($price, $margin, $objectDealerPrice);
     }
 
-    public static function getDealerInfo($dealer_id) {
+    public static function getDealerInfo($dealer_id)
+    {
         try {
             $model_dealer_info = self::getModel('dealer_info');
             $result = $model_dealer_info->getDataById($dealer_id);
             return $result;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function deleteMetizFromGoods($goods) {
+    public static function deleteMetizFromGoods($goods)
+    {
         try {
             $temp_goods = [];
             foreach ($goods as $key => $value) {
@@ -175,7 +188,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             return $temp_goods;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -183,7 +196,7 @@ class Gm_ceilingHelpersGm_ceiling
     /**
      * Get an instance of the named modelt
      *
-     * @param   string $name Model name
+     * @param string $name Model name
      *
      * @return null|object
      */
@@ -197,9 +210,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $model = JModelLegacy::getInstance($name, 'Gm_ceilingModel');
             }
             return $model;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -214,20 +225,19 @@ class Gm_ceilingHelpersGm_ceiling
                 $controller = JModelLegacy::getInstance($name, 'Gm_ceilingController');
             }
             return $controller;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /**
      * Gets the files attached to an item
      *
-     * @param   int $pk The item's id
+     * @param int $pk The item's id
      *
-     * @param   string $table The table's name
+     * @param string $table The table's name
      *
-     * @param   string $field The field's name
+     * @param string $field The field's name
      *
      * @return  array  The files
      */
@@ -242,33 +252,29 @@ class Gm_ceilingHelpersGm_ceiling
                 ->where('id = ' . (int)$pk);
             $db->setQuery($query);
             return explode(',', $db->loadResult());
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function registerUser($FIO, $phone, $email, $client_id, $type = null,$reset = null)
+
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null, $reset = null)
     {
         try {
             jimport('joomla.user.helper');
-            if(empty($type)){
+            if (empty($type)) {
                 $type = 1;
             }
-            if(empty($reset)){
+            if (empty($reset)) {
                 $reset = 0;
             }
             $phone = mb_ereg_replace('[^\d]', '', $phone);
-            if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
-            {
-                $phone = '7'.$phone;
+            if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10) {
+                $phone = '7' . $phone;
             }
-            if (strlen($phone) != 11)
-            {
+            if (strlen($phone) != 11) {
                 throw new Exception('Неверный формат номера телефона.');
             }
-            if (mb_substr($phone, 0, 1) != '7')
-            {
+            if (mb_substr($phone, 0, 1) != '7') {
                 $phone = substr_replace($phone, '7', 0, 1);
             }
 
@@ -293,10 +299,9 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $userID = $user->id;
             $user =& JUser::getInstance((int)$userID);
-            if($type == 3 || $type == 2|| $type == 7|| $type == 8){
+            if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
                 $post['dealer_id'] = 1;
-            }
-            else {
+            } else {
                 $post['dealer_id'] = $userID;
             }
 
@@ -307,30 +312,26 @@ class Gm_ceilingHelpersGm_ceiling
             $margin_model = self::getModel('Dealer_info');
             $mount_model = self::getModel('mount');
             $gm_margin = $margin_model->getDataById(1);
-            if ($type == 3 || $type == 2 || $type == 7|| $type == 8)
-            {
+            if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
                 $gm_mount = $mount_model->getDataAll(1);
-                $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
-            }
-            else
-            {
+                $margin_model->save($gm_margin->dealer_canvases_margin, $gm_margin->dealer_components_margin, $gm_margin->dealer_mounting_margin, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
+            } else {
                 $gm_mount = $mount_model->getDataAll(0);
-                $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+                $margin_model->save(0, 0, 0, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
             }
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
 
             return $userID;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             if (!empty($client_id)) {
                 Gm_ceilingHelpersGm_ceiling::getModel('Client')->delete($client_id);
             }
-            die($e->getMessage().' ');
+            die($e->getMessage() . ' ');
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /*  основная функция для расчета стоимости потолка
         $from_db - 0,1 флаг, брать ли данные калькуляции из БД
         $calculation_id - id калькуляции в БД
@@ -339,7 +340,8 @@ class Gm_ceilingHelpersGm_ceiling
         $pdf - 0,1 флаг формирования PDF
         $print_components - 0,1 флаг возвращения расчета при вызове в переменную
     */
-    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount,$gm_mounters=null){
+    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount, $gm_mounters = null)
+    {
         try {
             $jinput = JFactory::getApplication()->input;
             /*____________________Модели_______________________*/
@@ -348,14 +350,14 @@ class Gm_ceilingHelpersGm_ceiling
             /*_________________________________________________*/
 
             $calculation_data = $calculation_model->getData($calculation_id);
-            $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
+            $calculation_data2 = (array)$calculation_model->getDataById($calculation_id);
             foreach ($calculation_data as $key => $item) {
                 if (empty($item) && array_key_exists($key, $calculation_data2))
                     $data[$key] = $calculation_data2[$key];
                 else
                     $data[$key] = $item;
             }
-            if(!$from_db){
+            if (!$from_db) {
                 //Получаем данные
                 $data_form = $jinput->getArray([
                     'jform' => [
@@ -407,7 +409,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'n44' => 'string',
                         'n46' => 'int',
                         'niche' => 'int',
-                        'height'=>'int',
+                        'height' => 'int',
                         'dop_krepezh' => 'string', //Доп. крепеж
                         'calculation_title' => 'string',
                         'color' => 'string', //цвет
@@ -416,8 +418,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'discount' => 'int',
                         'need_metiz' => 'int',
                         'need_cuts' => 'int',
-                        'scaffolding'=>'int',
-                        'n12_cancel_install' =>'int'
+                        'scaffolding' => 'int',
+                        'n12_cancel_install' => 'int'
                         // 'rek' => 'int',
                         // 'proizv' => 'string'
                     ]
@@ -426,8 +428,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 $data_form = $data_form['jform'];
                 //throw new Exception(print_r($data_form,true));
-                foreach ($data_form as $key => $value)
-                {
+                foreach ($data_form as $key => $value) {
                     if (mb_ereg('^[\d]+[\,]{1}[\d]+$', $value)) {
                         $value = str_replace(',', '.', $value);
                     }
@@ -435,8 +436,8 @@ class Gm_ceilingHelpersGm_ceiling
                         $value = floatval($value);
                     }
                     //если не гмменеджер и не нужны обрезки ставим что нужны(костыль из-за того что нет на странице и он принимает как ноль)
-                    if($key == "need_cuts"){
-                        if(empty($value) && !in_array('16',JFactory::getUser()->groups)){
+                    if ($key == "need_cuts") {
+                        if (empty($value) && !in_array('16', JFactory::getUser()->groups)) {
                             $value = 1;
                         }
                     }
@@ -445,11 +446,10 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
 
-            if(!empty($data['n3_id'])){
-                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id'],'old');
+            if (!empty($data['n3_id'])) {
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3_id'], 'old');
                 $data['n1'] = $canvasData[0]->texture_id;
-            }
-            else{
+            } else {
                 $data['n1'] = null;
             }
 
@@ -500,12 +500,12 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $data['need_big_clemma'] = 0;
             //провода
-            $n19_count = $jinput->get('n19_count',[],"ARRAY");
+            $n19_count = $jinput->get('n19_count', [], "ARRAY");
             $n19_type = $jinput->get('n19_type', [], 'ARRAY');
             if (count($n19_count) >= 1 && !empty($n19_count[0])) {
                 foreach ($n19_count as $key => $each) {
                     /*костыль под клеммные колодки, уогда провод 1,5 клеммники 10мм*/
-                    if($n19_type[$key] == 745){
+                    if ($n19_type[$key] == 745) {
                         $data['need_big_clemma'] = 1;
                     }
                     $n19[] = [
@@ -579,7 +579,7 @@ class Gm_ceilingHelpersGm_ceiling
             $n45 = array();
             if (count($n45_count) >= 1 && !empty($n45_count[0])) {
                 foreach ($n45_count as $key => $each) {
-                    if ($n45_count[$key] != ""){
+                    if ($n45_count[$key] != "") {
                         $total_n45 += $n45_count[$key];
                         $n45[] = array(
                             $n45_count[$key],
@@ -591,7 +591,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $data['total_n45'] = $total_n45;
             //фотопечать
-            $n37 = (object)array("square"=>$data['n37_square'],"cost"=>$data['n37_cost']);
+            $n37 = (object)array("square" => $data['n37_square'], "cost" => $data['n37_cost']);
             //Получаем массив из переменной дополнительных комплектующих со склада
             $components_title_stock = $jinput->get('components_stock_title', '-', 'ARRAY');
             if ($components_title_stock == '-')
@@ -643,18 +643,16 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             $data['extra_mounting'] = json_encode($extra_mounting, JSON_UNESCAPED_UNICODE);
-            if(!empty($n37->square)&&!empty($n37->cost)) {
+            if (!empty($n37->square) && !empty($n37->cost)) {
                 $data['n37'] = json_encode($n37);
-            }
-            else{
+            } else {
                 $data['n37'] = null;
             }
             $data["need_mount"] = $need_mount;
             //Получаем объект дилера
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
             $data['dealer_id'] = $ProjectData = self::getModel("project")->getData($data["project_id"])->dealer_id;
-            if (gettype($data) == "array")
-            {
+            if (gettype($data) == "array") {
                 if (empty($data['dealer_id'])) {
                     $dealer = JFactory::getUser(2);
                 } else {
@@ -669,33 +667,33 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             //счиатем работы ГМ
-            $guild_data = self::calculate_guild_jobs(null,$data);
+            $guild_data = self::calculate_guild_jobs(null, $data);
             $data["guild_data"] = $guild_data;
-            if(!empty($data['n1'])){
+            if (!empty($data['n1'])) {
                 //если не перегарпунка, то счиатаем полотно
-                if(empty(floatval($data['n36']))) {
+                if (empty(floatval($data['n36']))) {
                     //cчитаем полотно
                     $canvases_data = self::calculate_canvases(null, $data);
 
                     //считаем обрезки
-                    if($canvas->texture_id == 29){
+                    if ($canvas->texture_id == 29) {
                         $data['need_cuts'] = 0;//если ткань не считаем образки
                     }
-                    if($data['need_cuts']) {
+                    if ($data['need_cuts']) {
                         $offcut_square_data = self::calculate_offcut(null, $data);
                     }
                 }
             }
             //считаем комплектующие
 
-            $components_data = self::calculate_components(null,$data,$del_flag);
-            if(!empty($components_data)){
+            $components_data = self::calculate_components(null, $data, $del_flag);
+            if (!empty($components_data)) {
                 $calcsCompModel = self::getModel('Calcs_components');
-                $calcsCompModel->save($data['id'],$components_data);
+                $calcsCompModel->save($data['id'], $components_data);
             }
             //считаем монтаж
-            $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
-            $mounting_data = self::calculate_mount($del_flag,null,$data,null,$gm_mounters);
+            $data["need_mount_extra"] = !empty((array)json_decode($data['extra_mounting']));
+            $mounting_data = self::calculate_mount($del_flag, null, $data, null, $gm_mounters);
             //Итоговая сумма компонентов
             //Прибавляем к подсчету комплектующие
             $components_sum = 0;
@@ -706,7 +704,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $gm_components_sum += $component_item['gm_total'];
                 $dealer_components_sum += $component_item['dealer_total'];
             }
-            $total_with_gm_dealer_margin  = $mounting_data['total_with_gm_dealer_margin'];
+            $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
             $total_with_gm_dealer_margin_guild = $mounting_data['total_with_gm_dealer_margin_guild'];
             $total_dealer_mounting = $mounting_data['total_dealer_mounting'];
             //Получаем скидку
@@ -714,7 +712,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Сюда забиваем ответ в JSON
             $ajax_return = [];
             /*если минимальный заказ,то полотно 200 рублей, обрезки и работу цеха не считаем*/
-            if($canvases_data['min_self_dealer_total']){
+            if ($canvases_data['min_self_dealer_total']) {
                 $data['canvases_sum'] = MIN_SUM;
                 $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
                 $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
@@ -747,8 +745,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data["created_by"] = $user->id;
             $data["modified_by"] = $user->id;
             /*Временный костыль*/
-            if (!empty($data["id"]))
-            {
+            if (!empty($data["id"])) {
                 $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
                 if (empty($data["n1"])) $data["n1"] = $temp_calculation_data->n1;
@@ -761,48 +758,45 @@ class Gm_ceilingHelpersGm_ceiling
                 if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
-            if (empty($data['calculation_title']) || $data['calculation_title'] == "Без имени")
-            {
+            if (empty($data['calculation_title']) || $data['calculation_title'] == "Без имени") {
                 $index = $calculation_model->getCalcIndex($data['project_id']);
                 $data['calculation_title'] = "Потолок $index";
             }
 
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
-            if ($save == 1)
-            {
+            if ($save == 1) {
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
             }
             //костыль для сохранения сумм полотен
-            if ($save == 2)
-            {
-                $calculation_model->updateCanvasSum($data['id'],$data['canvases_sum']);
+            if ($save == 2) {
+                $calculation_model->updateCanvasSum($data['id'], $data['canvases_sum']);
             }
             //Пошла печать PDF
             if ($pdf == 1) {//наряд монтажной бригаде
-                if($need_mount || $data["need_mount_extra"]){
-                    self::create_mount_estimate_by_stage_old($data['id'],null,1);
+                if ($need_mount || $data["need_mount_extra"]) {
+                    self::create_mount_estimate_by_stage_old($data['id'], null, 1);
                 }
-                if(!empty($data['n1'])){
+                if (!empty($data['n1'])) {
                     //PDF раскроя
-                    self::create_cut_pdf_old(null,$data);
+                    self::create_cut_pdf_old(null, $data);
                     //для менеджера
                 }
-                self::create_manager_estimate_old(1,null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                self::create_manager_estimate_old(1, null, $data, $canvases_data, $offcut_square_data, $guild_data);
 
                 //клиентская смета
-                self::create_client_single_estimate_old($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
+                self::create_client_single_estimate_old($need_mount, null, $data, $components_data, $canvases_data, $offcut_square_data, $guild_data, $mounting_data);
             }
             $return = json_encode($ajax_return);
 
             return $return;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_client_single_estimate($data){
+
+    public static function create_client_single_estimate($data)
+    {
         try {
             $calculation = $data['calculation'];
             $factory_jobs = $data['factory_jobs'];
@@ -829,7 +823,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_margin = $dealer_info->dealer_mounting_margin-0;
             }*/
 
-            $total_goods_sum = 0;$total_mount_sum = 0;
+            $total_goods_sum = 0;
+            $total_mount_sum = 0;
             $html = '<h1>Смета по материалам и комплектующим</h1>';
             $html .= "<h1>Название: " . $calculation->calculation_title . "</h1>";
             $html .= '<div class = "date_lbl"><h2>Дата:' . date("d.m.Y") . '</h2></div>';
@@ -861,33 +856,32 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Цена, руб.</th>
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th></tr>';
-            foreach ($goods as $item){
-                if($item->category_id == 1){
+            foreach ($goods as $item) {
+                if ($item->category_id == 1) {
                     //$canvases_margin_price = round(self::margin($item->dealer_price,$canvases_margin),2);
                     $html .= '<tr>';
                     $html .= '<td>' . $item->name . '</td>';
                     $html .= '<td class="center">' . $item->dealer_price_with_margin . '</td>';
                     $html .= '<td class="center">' . $calculation->n4 . '</td>';
-                    $canvas_sum = ($calculation->n4*$item->dealer_price_with_margin) < MIN_SUM*100/(100-$canvases_margin) ? MIN_SUM*100/(100-$canvases_margin) : $calculation->n4*$item->dealer_price_with_margin;
+                    $canvas_sum = ($calculation->n4 * $item->dealer_price_with_margin) < MIN_SUM * 100 / (100 - $canvases_margin) ? MIN_SUM * 100 / (100 - $canvases_margin) : $calculation->n4 * $item->dealer_price_with_margin;
                     $html .= '<td class="center">' . $canvas_sum . '</td>';
                     $html .= '</tr>';
                     $total_goods_sum += $canvas_sum;
-                    if(!empty($offcuts)){
-                        $offcuts_price_with_margin = round(self::margin($offcuts->price,$canvases_margin),2);
-                        $offcuts_total = $offcuts_price_with_margin*$offcuts->count;
+                    if (!empty($offcuts)) {
+                        $offcuts_price_with_margin = round(self::margin($offcuts->price, $canvases_margin), 2);
+                        $offcuts_total = $offcuts_price_with_margin * $offcuts->count;
                         $html .= '<tr>';
-                        $html .= '<td>' . $item->name .'(обрезки)'. '</td>';
+                        $html .= '<td>' . $item->name . '(обрезки)' . '</td>';
                         $html .= '<td class="center">' . $offcuts_price_with_margin . '</td>';
                         $html .= '<td class="center">' . $offcuts->count . '</td>';
                         $html .= '<td class="center">' . $offcuts_total . '</td>';
                         $html .= '</tr>';
                         $total_goods_sum += $offcuts_total;
                     }
-                }
-                else{
+                } else {
                     $html .= '<tr>';
                     $html .= '<td>' . $item->name . '</td>';
-                    $html .= '<td class="center">' . round(self::margin($item->dealer_price,$components_margin),2) . '</td>';
+                    $html .= '<td class="center">' . round(self::margin($item->dealer_price, $components_margin), 2) . '</td>';
                     $html .= '<td class="center">' . $item->final_count . '</td>';
                     $html .= '<td class="center">' . $item->price_sum_with_margin . '</td>';
                     $html .= '</tr>';
@@ -895,7 +889,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
             }
-            if(!empty($factory_jobs)) {
+            if (!empty($factory_jobs)) {
                 foreach ($factory_jobs as $f_job) {
                     $html .= '<tr>';
                     $html .= '<td>' . $f_job->name . '</td>';
@@ -906,24 +900,24 @@ class Gm_ceilingHelpersGm_ceiling
                     $total_goods_sum += round($f_job->price_sum, 2);
                 }
             }
-            if(!empty($photoprint)){
-                $photoprint_sum = round(self::margin($photoprint->price,$canvases_margin),2) ;
+            if (!empty($photoprint)) {
+                $photoprint_sum = round(self::margin($photoprint->price, $canvases_margin), 2);
                 $html .= '<tr>';
                 $html .= '<td>Фотопечать</td>';
                 $html .= '<td class="center"></td>';
-                $html .= '<td class="center">' . $photoprint->square.'</td>';
-                $html .= '<td class="center">'.$photoprint_sum .'</td>';
+                $html .= '<td class="center">' . $photoprint->square . '</td>';
+                $html .= '<td class="center">' . $photoprint_sum . '</td>';
                 $html .= '</tr>';
                 $total_goods_sum += $photoprint_sum;
             }
-            if(!empty($extra_components)){
+            if (!empty($extra_components)) {
                 foreach ($extra_components as $extra_component) {
-                    $extra_component_sum = round(self::margin($extra_component->price,$components_margin),2);
+                    $extra_component_sum = round(self::margin($extra_component->price, $components_margin), 2);
                     $html .= '<tr>';
-                    $html .= '<td>'.$extra_component->title.'</td>';
+                    $html .= '<td>' . $extra_component->title . '</td>';
                     $html .= '<td class="center"></td>';
                     $html .= '<td class="center"></td>';
-                    $html .= '<td class="center">'.$extra_component_sum.'</td>';
+                    $html .= '<td class="center">' . $extra_component_sum . '</td>';
                     $html .= '</tr>';
                     $total_goods_sum += $extra_component_sum;
                 }
@@ -941,19 +935,19 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<tr>';
                     $html .= '<td>' . $job->name . '</td>';
                     $html .= '<td class="center">' . $job->price_with_margin . '</td>';
-                    $html .= '<td class="center">' . round($job->final_count,2) . '</td>';
+                    $html .= '<td class="center">' . round($job->final_count, 2) . '</td>';
                     $html .= '<td class="center">' . $job->price_sum_with_margin . '</td>';
                     $html .= '</tr>';
                     $total_mount_sum += $job->price_sum_with_margin;
                 }
-                if(!empty($extra_mounting)){
+                if (!empty($extra_mounting)) {
                     foreach ($extra_mounting as $extra_mount) {
-                        $extra_mount_sum = round(self::margin($extra_mount->price,$mounting_margin),2);
+                        $extra_mount_sum = round(self::margin($extra_mount->price, $mounting_margin), 2);
                         $html .= '<tr>';
-                        $html .= '<td>'.$extra_mount->title.'</td>';
+                        $html .= '<td>' . $extra_mount->title . '</td>';
                         $html .= '<td class="center"></td>';
                         $html .= '<td class="center"></td>';
-                        $html .= '<td class="center">'.$extra_mount_sum.'</td>';
+                        $html .= '<td class="center">' . $extra_mount_sum . '</td>';
                         $html .= '</tr>';
                         $total_mount_sum += $extra_mount_sum;
                     }
@@ -964,60 +958,58 @@ class Gm_ceilingHelpersGm_ceiling
 
             $total_sum = $total_goods_sum + $total_mount_sum;
             if ($calculation->discount != 0) {
-                $new_total_discount = round($total_sum - $total_sum*$calculation->discount/100,2);
+                $new_total_discount = round($total_sum - $total_sum * $calculation->discount / 100, 2);
                 $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $total_sum . ' руб. - ' . $calculation->discount . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
-            }
-            else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $total_sum . ' руб.</div>';
+            } else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $total_sum . ' руб.</div>';
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $filename = md5($calculation->id . "client_single") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_client_single_estimate_old($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
-                                                             $mounting_data = null){
+
+    public static function create_client_single_estimate_old($need_mount, $calc_id = null, $data = null, $components_data = null, $canvases_data = null, $offcut_square_data = null, $guild_data = null,
+                                                             $mounting_data = null)
+    {
         try {
-            $html = self::create_client_single_estimate_html($need_mount,$calc_id,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
-            if(empty($calc_id)){
+            $html = self::create_client_single_estimate_html($need_mount, $calc_id, $data, $components_data, $canvases_data, $offcut_square_data, $guild_data, $mounting_data);
+            if (empty($calc_id)) {
                 $calc_id = $data['id'];
             }
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $filename = md5($calc_id . "client_single") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
-                                                              $mounting_data = null){
+
+    public static function create_client_single_estimate_html($need_mount, $calc_id = null, $data = null, $components_data = null, $canvases_data = null, $offcut_square_data = null, $guild_data = null,
+                                                              $mounting_data = null)
+    {
         try {
-            if(empty($canvases_data)){
-                if(!empty($calc_id)){
+            if (empty($canvases_data)) {
+                if (!empty($calc_id)) {
                     $canvases_data = self::calculate_canvases($calc_id);
                 }
 
             }
-            if(empty($components_data)){
-                $components_data = self::calculate_components($calc_id,null,0);
+            if (empty($components_data)) {
+                $components_data = self::calculate_components($calc_id, null, 0);
             }
-            if(empty($guild_data)){
+            if (empty($guild_data)) {
                 $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
+            } else $guild_data = $guild_data['guild_data'];
+            if (empty($mounting_data)) {
+                $mounting_data = self::calculate_mount(0, $calc_id, null);
             }
-            else $guild_data = $guild_data['guild_data'];
-            if(empty($mounting_data)){
-                $mounting_data = self::calculate_mount(0,$calc_id,null);
-            }
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
-            if(empty($offcut_square_data)){
-                if($data['need_cuts']) {
+            if (empty($offcut_square_data)) {
+                if ($data['need_cuts']) {
                     if (!empty($calc_id)) {
                         $offcut_square_data = self::calculate_offcut($calc_id);
                     }
@@ -1028,7 +1020,7 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($components_data as $component_item) {
                 $dealer_components_sum += $component_item['dealer_total'];
             }
-            if($canvases_data['min_dealer_total']){
+            if ($canvases_data['min_dealer_total']) {
                 $canvases_data['dealer_total'] = $canvases_data['min_dealer_total'];
                 $offcut_square_data['dealer_total'] = 0;
             }
@@ -1058,7 +1050,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
             $html .= '</table>';
             $html .= '<h2>Общее: ' . $new_total . ' руб.</h2>';
-            if ($data['discount'] != 0){
+            if ($data['discount'] != 0) {
                 $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
             }
             $html .= '<table border="0" cellspacing="0" width="100%">
@@ -1083,7 +1075,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
                 $html .= '</tr>';
             }
-            if ($data['n3_id'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
+            if ($data['n3_id'] && $data['offcut_square'] > $data['n4'] * 0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
@@ -1107,7 +1099,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $item['title'] . '</td>';
                 $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                $html .= '<td class="center">' . $item['dealer_salary_total']. '</td>';
+                $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
                 $html .= '</tr>';
             }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2) . '</th></tr>';
@@ -1133,26 +1125,26 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
             else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
             return $html;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_client_common_estimate($project_id,$calc_ids = null){
+
+    public static function create_client_common_estimate($project_id, $calc_ids = null)
+    {
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $project_model = self::getModel('project');
             $project = $project_model->getData($project_id);
             $calculations_model = self::getModel('calculations');
-            if($project->project_mounter != 0){
+            if ($project->project_mounter != 0) {
                 $names = $calculations_model->FindAllMounters($project->project_mounter);
                 $brigade = JFactory::getUser($project->project_mounter);
             }
             $calculations = $calculations_model->new_getProjectItems($project_id);
-            if(!empty($calc_ids)){
-                foreach($calculations as $key => $calculation){
-                    if(!in_array($calculation->id,$calc_ids)){
+            if (!empty($calc_ids)) {
+                foreach ($calculations as $key => $calculation) {
+                    if (!in_array($calculation->id, $calc_ids)) {
                         unset($calculations[$key]);
                     }
                 }
@@ -1161,16 +1153,16 @@ class Gm_ceilingHelpersGm_ceiling
             $transport = self::calculate_transport($project_id);
             $client_contacts_model = self::getModel('client_phones');
             $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
-            for($i=0;$i<count($client_contacts);$i++){
+            for ($i = 0; $i < count($client_contacts); $i++) {
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
             $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-            if(isset($brigade)){
+            if (isset($brigade)) {
                 $brigade_names = '';
                 $html .= '<h2>Монтажная бригада: ' . $brigade->name . '</h2>';
                 $html .= "<h2>Состав монтажной бригады: </h2>";
-                for($i=0;$i<count($names);$i++){
+                for ($i = 0; $i < count($names); $i++) {
                     $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
                 }
                 $html .= $brigade_names;
@@ -1188,14 +1180,14 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Периметр, м </th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-            $sum = 0;$discount_sum = 0;
+            $sum = 0;
+            $discount_sum = 0;
             foreach ($calculations as $calc) {
-                if(!empty($calc->n3)){
+                if (!empty($calc->n3)) {
                     $calc_itog_sum = $calc->dealer_components_sum;
                     $calc_itog_sum += $calc->dealer_canvases_sum;
                     $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-                }
-                else{
+                } else {
                     $calc_itog_sum = $calc->components_sum_with_margin;
                     $calc_itog_sum += $calc->canvases_sum_with_margin;
                     $calc_itog_sum += $calc->mounting_sum_with_margin;
@@ -1210,7 +1202,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $calc_itog_sum . '</td>';
                 $html .= '</tr>';
                 $sum += $calc_itog_sum;
-                $discount_sum +=$calc_itog_discount_sum;
+                $discount_sum += $calc_itog_discount_sum;
             }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
@@ -1224,7 +1216,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
             $html .= '<tr>';
-            $html .= '<td>' . $transport['transport']. '</td>';
+            $html .= '<td>' . $transport['transport'] . '</td>';
             $html .= '<td class="center">' . $transport['distance'] . '</td>';
             $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
             $html .= '<td class="center">' . $transport['client_sum'] . '</td>';
@@ -1236,7 +1228,7 @@ class Gm_ceilingHelpersGm_ceiling
             //$html .= "<pagebreak />";
             $array = [];
             $array[] = $html;
-            foreach($calculations as $calc){
+            foreach ($calculations as $calc) {
                 $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "client_single") . ".pdf";
                 /*
                 $need_mount = ($calc->mounting_sum > 0);
@@ -1245,13 +1237,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $filename = md5($project->id . "client_common") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function calculate_components($calc_id=null,$data=null,$del_flag=0){
+
+    public static function calculate_components($calc_id = null, $data = null, $del_flag = 0)
+    {
         try {
             if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
@@ -1262,7 +1254,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $data['n3'] = $calculation_data->n3_id;
                 if (!empty($data['n3'])) {
-                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3'],'old');
+                    $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3'], 'old');
                     $data['n1'] = $canvasData[0]->texture_id;
                 }
 
@@ -1333,10 +1325,9 @@ class Gm_ceilingHelpersGm_ceiling
             $items_3 = $components_model->getFilteredItems($filter);
 
 
-            if($data['need_big_clemma'] == 1){
+            if ($data['need_big_clemma'] == 1) {
                 $filter = "`co`.`title`  LIKE('%10 мм%') AND `c`.`title` LIKE('%Клеммная колодка%') ";
-            }
-            else{
+            } else {
                 $filter = "`co`.`title`  LIKE('%2,5 мм%') AND `c`.`title` LIKE('%Клеммная колодка%') ";
             }
             $items_2 = $components_model->getFilteredItems($filter);
@@ -1553,38 +1544,38 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if ($del_flag == 1) {
                 $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-                if(is_string($data['n13'])){
+                if (is_string($data['n13'])) {
                     $n13 = json_decode($data['n13']);
                 }
-                if(is_string($data['n19'])){
+                if (is_string($data['n19'])) {
                     $n19 = json_decode($data['n19']);
                 }
-                if(is_string($data['n26'])){
+                if (is_string($data['n26'])) {
                     $n26 = json_decode($data['n26']);
                 }
-                if(is_string($data['n22'])){
+                if (is_string($data['n22'])) {
                     $n22 = json_decode($data['n22']);
                 }
-                if(is_string($data['n14'])){
+                if (is_string($data['n14'])) {
                     $n14 = json_decode($data['n14']);
                 }
-                if(is_string($data['n23'])){
+                if (is_string($data['n23'])) {
                     $n23 = json_decode($data['n23']);
                 }
-                if(is_string($data['n15'])){
+                if (is_string($data['n15'])) {
                     $n15 = json_decode($data['n15']);
                 }
-                if(is_string($data['n29'])){
+                if (is_string($data['n29'])) {
                     $n29 = json_decode($data['n29']);
                 }
-                if(is_string($data['n45'])){
+                if (is_string($data['n45'])) {
                     $n45 = json_decode($data['n45']);
                 }
 
 
                 if (!empty($n19) && count($n19) > 0) {
                     foreach ($n19 as $wire) {
-                        if($wire[0]>0){
+                        if ($wire[0] > 0) {
                             $total_n19_count += $wire[0];
                             $component_count[$wire[1]] += $wire[0];
                         }
@@ -1635,13 +1626,13 @@ class Gm_ceilingHelpersGm_ceiling
 
                 if (!empty($n45) && count($n45) > 0) {
                     foreach ($n45 as $line) {
-                        $component_count[$line[1]] += $line[0] ;
+                        $component_count[$line[1]] += $line[0];
                     }
-                    $component_count[$items_726[0]->id] += $data['total_n45']  *4;
-                    if($data['need_metiz']) {
-                        $component_count[$klop[0]->id] += $data['total_n45']   * 8;
-                        $component_count[$items_5[0]->id] += $data['total_n45']   * 4;
-                        $component_count[$items_9[0]->id] += $data['total_n45']   * 4;
+                    $component_count[$items_726[0]->id] += $data['total_n45'] * 4;
+                    if ($data['need_metiz']) {
+                        $component_count[$klop[0]->id] += $data['total_n45'] * 8;
+                        $component_count[$items_5[0]->id] += $data['total_n45'] * 4;
+                        $component_count[$items_9[0]->id] += $data['total_n45'] * 4;
                     }
                 }
 
@@ -1736,7 +1727,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $n19 = $data['n19'];
                 if (count($n19) > 0) {
                     foreach ($n19 as $wire) {
-                        if($wire->count > 0){
+                        if ($wire->count > 0) {
                             $total_n19_count += $wire->count;
                             $component_count[$wire->wire_id] += $wire->count;
                         }
@@ -1814,18 +1805,18 @@ class Gm_ceilingHelpersGm_ceiling
                 //throw new Exception(print_r($n45,true));
                 if (count($n45) > 0) {
                     foreach ($n45 as $key => $line) {
-                        if($line->n45_count > 0){
+                        if ($line->n45_count > 0) {
                             $component_count[$line->n45_type] += $line->n45_count;
                             $data['total_n45'] += $line->n45_count;
                         }
                     }
                     //throw new Exception(print_r($n45,true));
-                    $component_count[$items_726[0]->id] += $data['total_n45']*4;
+                    $component_count[$items_726[0]->id] += $data['total_n45'] * 4;
                     //throw new Exception(print_r($component_count[$items_726[0]->id],true));
-                    if($data['need_metiz']) {
-                        $component_count[$klop[0]->id] += $data['total_n45']*8;
-                        $component_count[$items_5[0]->id] += $data['total_n45']*4;
-                        $component_count[$items_9[0]->id] += $data['total_n45']*4;
+                    if ($data['need_metiz']) {
+                        $component_count[$klop[0]->id] += $data['total_n45'] * 8;
+                        $component_count[$items_5[0]->id] += $data['total_n45'] * 4;
+                        $component_count[$items_9[0]->id] += $data['total_n45'] * 4;
                     }
                 }
             }
@@ -1852,15 +1843,13 @@ class Gm_ceilingHelpersGm_ceiling
                         $component_count[$items_239[0]->id] = 0;
                     }
 
-                }
-                elseif ($data['n28'] == 4) {
+                } elseif ($data['n28'] == 4) {
                     if ($component_count[$kraab[0]->id] > $data['n30']) {
                         $component_count[$kraab[0]->id] -= $data['n30'];
                     } else {
                         $component_count[$kraab[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 5) {
+                } elseif ($data['n28'] == 5) {
                     if ($component_count[$euroKraab[0]->id] > $data['n30']) {
                         $component_count[$euroKraab[0]->id] -= $data['n30'];
                     } else {
@@ -1869,10 +1858,10 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             //карниз
-            if($data['n16'] == 0) {
+            if ($data['n16'] == 0) {
                 $component_count[$items_1[0]->id] += $data['n27'];
-                $component_count[$items_726[0]->id] += $data['n27']*2;  //меб.уголок 100*125
-                if($data['need_metiz']){
+                $component_count[$items_726[0]->id] += $data['n27'] * 2;  //меб.уголок 100*125
+                if ($data['need_metiz']) {
                     $component_count[$items_3[0]->id] += $data['n27'] * 3;
                     $component_count[$items_5[0]->id] += $data['n27'] * 6;
                     $component_count[$items_8[0]->id] += $data['n27'] * 9;
@@ -1881,34 +1870,34 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //скрытый карниз
             if ($data['n16']) {
-                switch ($data['niche']){
+                switch ($data['niche']) {
                     case 1 :
                         $component_count[$items_1[0]->id] += $data['n27'];      //брус
                         $component_count[$items_11[0]->id] += $data['n27'];     //Багет
-                        $component_count[$items_726[0]->id] += $data['n27']*2;  //меб.уголок 100*125
+                        $component_count[$items_726[0]->id] += $data['n27'] * 2;  //меб.уголок 100*125
                         $component_count[$items_14[0]->id] += $data['n27'];     //вставка в разд
                         break;
                     case 2 :
                         $component_count[$items_1[0]->id] += $data['n27'];
                         $component_count[$items_11[0]->id] += $data['n27'];
                         $component_count[$items_64[0]->id] += $data['n27'];     //отбойник
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_726[0]->id] += $data['n27'] * 2;
                         break;
                     case 3:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_726[0]->id] += $data['n27'] * 2;
                         $component_count[$items_236[0]->id] += $data['n27'];    //потлочн аллюм багет
                         $component_count[$items_727[0]->id] += $data['n27'];    //пластик
                         break;
                     case 4:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_726[0]->id] += $data['n27'] * 2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_728[0]->id] += $data['n27'];    //пластик
                         break;
                     case 5:
                         $component_count[$items_1[0]->id] += $data['n27'];
-                        $component_count[$items_726[0]->id] += $data['n27']*2;
+                        $component_count[$items_726[0]->id] += $data['n27'] * 2;
                         $component_count[$items_236[0]->id] += $data['n27'];
                         $component_count[$items_729[0]->id] += $data['n27'];    //пластик
                         break;
@@ -1917,54 +1906,47 @@ class Gm_ceilingHelpersGm_ceiling
                  $component_count[$items_8[0]->id] += $data['n27'] * 4;*/
             }
             //лючок
-            if($data['n33']>0){
+            if ($data['n33'] > 0) {
                 $component_count[$items_1[0]->id] += $data['n33'];
-                $component_count[$items_726[0]->id] += $data['n33']*2;
+                $component_count[$items_726[0]->id] += $data['n33'] * 2;
             }
 
             //Люк
-            if($data['n33_2']>0){
+            if ($data['n33_2'] > 0) {
                 $component_count[$items_1[0]->id] += 3;
                 $component_count[$items_236[0]->id] += 3;
                 $component_count[$items_726[0]->id] += 8;
                 $component_count[$items_730[0]->id] += 3;
             }
             //контурный профиль
-            if($data['n35'] > 0){
+            if ($data['n35'] > 0) {
                 $component_count[$items_735[0]->id] += $data['n35'];
-                if ($data['n28'] == 3){
-                    if($component_count[$items_11[0]->id] > $data['n35']){
+                if ($data['n28'] == 3) {
+                    if ($component_count[$items_11[0]->id] > $data['n35']) {
                         $component_count[$items_11[0]->id] -= $data['n35'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_11[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 1){
-                    if($component_count[$items_236[0]->id] > $data['n35']){
+                } elseif ($data['n28'] == 1) {
+                    if ($component_count[$items_236[0]->id] > $data['n35']) {
                         $component_count[$items_236[0]->id] += $data['n35'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_236[0]->id] = 0;
                     }
 
-                }
-                elseif ($data['n28'] == 2) {
-                    if($component_count[$items_239[0]->id] > $data['n35']){
+                } elseif ($data['n28'] == 2) {
+                    if ($component_count[$items_239[0]->id] > $data['n35']) {
                         $component_count[$items_239[0]->id] -= $data['n35'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_239[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 4) {
+                } elseif ($data['n28'] == 4) {
                     if ($component_count[$kraab[0]->id] > $data['n30']) {
                         $component_count[$kraab[0]->id] -= $data['n30'];
                     } else {
                         $component_count[$kraab[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 5) {
+                } elseif ($data['n28'] == 5) {
                     if ($component_count[$euroKraab[0]->id] > $data['n30']) {
                         $component_count[$euroKraab[0]->id] -= $data['n30'];
                     } else {
@@ -1973,59 +1955,51 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             //керамогранит
-            if($data['n8'] > 0){
+            if ($data['n8'] > 0) {
                 //вычитаем из обычного профидя количество которое будет обагечено алюминиевым
-                if ($data['n28'] == 3){
-                    if($component_count[$items_11[0]->id] > $data['n8']){
+                if ($data['n28'] == 3) {
+                    if ($component_count[$items_11[0]->id] > $data['n8']) {
                         $component_count[$items_11[0]->id] -= $data['n8'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_11[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 1){
-                    if($component_count[$items_236[0]->id] > $data['n8']){
+                } elseif ($data['n28'] == 1) {
+                    if ($component_count[$items_236[0]->id] > $data['n8']) {
                         $component_count[$items_236[0]->id] += $data['n8'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_236[0]->id] = 0;
                     }
 
-                }
-                elseif ($data['n28'] == 2) {
-                    if($component_count[$items_239[0]->id] > $data['n8']){
+                } elseif ($data['n28'] == 2) {
+                    if ($component_count[$items_239[0]->id] > $data['n8']) {
                         $component_count[$items_239[0]->id] -= $data['n8'];
-                    }
-                    else{
+                    } else {
                         $component_count[$items_239[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 4) {
+                } elseif ($data['n28'] == 4) {
                     if ($component_count[$kraab[0]->id] > $data['n30']) {
                         $component_count[$kraab[0]->id] -= $data['n30'];
                     } else {
                         $component_count[$kraab[0]->id] = 0;
                     }
-                }
-                elseif ($data['n28'] == 5) {
+                } elseif ($data['n28'] == 5) {
                     if ($component_count[$euroKraab[0]->id] > $data['n30']) {
                         $component_count[$euroKraab[0]->id] -= $data['n30'];
                     } else {
                         $component_count[$euroKraab[0]->id] = 0;
                     }
                 }
-                if($data['n8'] == $data['n5'] && $data['n30'] > 0) // если керамогранит по всемy периметру и есть парящий потолок
+                if ($data['n8'] == $data['n5'] && $data['n30'] > 0) // если керамогранит по всемy периметру и есть парящий потолок
                 {
                     //вычитаем из кол-ва керамогранита количество парящего
                     $n8_val = $data['n8'] - $data['n30'];
-                }
-                else{
+                } else {
                     $n8_val = $data['n8'];
                 }
                 $component_count[$items_236[0]->id] += $n8_val;
                 $component_count[$items_1[0]->id] += $n8_val;
-                $component_count[$items_430[0]->id] += $n8_val*2;
-                if($data['need_metiz']) {
+                $component_count[$items_430[0]->id] += $n8_val * 2;
+                if ($data['need_metiz']) {
                     $component_count[$items_5[0]->id] += $n8_val * 4;
                     $component_count[$items_9[0]->id] += $n8_val * 4;
                     $component_count[$items_8[0]->id] += $n8_val * 4;
@@ -2033,37 +2007,37 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //лента для карниза
             //контурный профиль
-            if($data['n39'] > 0){
+            if ($data['n39'] > 0) {
                 $component_count[$items_cornice_lenta[0]->id] += $data['n39'];
 
             }
-            if($data['n40'] > 0){
+            if ($data['n40'] > 0) {
                 $component_count[$items_cornice_round[0]->id] += $data['n40'];
 
             }
             //закладная брусом
             $component_count[$items_1[0]->id] += $data['n17'];
             $component_count[$items_430[0]->id] += $data['n17'] * 2;
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_5[0]->id] += $data['n17'] * 6;
                 $component_count[$items_9[0]->id] += $data['n17'] * 6;
                 $component_count[$items_8[0]->id] += $data['n17'] * 6;
             }
             //укрепление стен
             $component_count[$items_1[0]->id] += $data['n18'];
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_6[0]->id] += $data['n18'] * 3;
                 $component_count[$items_5[0]->id] += $data['n18'] * 3;
             }
             $component_count[$items_430[0]->id] += $data['n18'] * 2;
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_9[0]->id] += $total_n19_count * 2;
                 $component_count[$items_5[0]->id] += $total_n19_count * 2;
             }
             //разделитель ТОЛЬКО ДЛЯ ПВХ
-            if (!empty($data['n1']) &&  $data['n1'] != 29) {
+            if (!empty($data['n1']) && $data['n1'] != 29) {
                 $component_count[$items_1[0]->id] += $data['n20'];
-                if($data['need_metiz']) {
+                if ($data['need_metiz']) {
                     $component_count[$items_6[0]->id] += $data['n20'] * 3;
                     $component_count[$items_9[0]->id] += $data['n20'] * 20;
                     $component_count[$items_5[0]->id] += $data['n20'] * 3;
@@ -2078,7 +2052,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Отбойник
             $component_count[$items_1[0]->id] += $data['n20_1'];
             $component_count[$otb[0]->id] += $data['n20_1'];
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_6[0]->id] += $data['n20_1'] * 3;
                 $component_count[$items_9[0]->id] += $data['n20_1'] * 20;
                 $component_count[$items_5[0]->id] += $data['n20_1'] * 3;
@@ -2090,21 +2064,19 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $component_count[$items_35[0]->id] += $n20_1_count * 2.5;
             //Дополнительный крепеж
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_9[0]->id] += $data['dop_krepezh'] * 10;
             }
-            if ($data['n1'] == 29)
-            {
+            if ($data['n1'] == 29) {
                 $component_count[$wall_bag_tiss[0]->id] += $data['dop_krepezh'] / 2;
-            }
-            else{
+            } else {
                 $component_count[$items_11[0]->id] += $data['dop_krepezh'] / 2;
             }
 
             //пожарная сигнализация
             $component_count[$items_495[0]->id] += $data['n21'];
             $component_count[$items_58[0]->id] += $data['n21'];
-            if($data['need_metiz']) {
+            if ($data['need_metiz']) {
                 $component_count[$items_3[0]->id] += $data['n21'] * 3;
                 $component_count[$items_5[0]->id] += $data['n21'] * 3;
                 $component_count[$items_9[0]->id] += $data['n21'] * 3;
@@ -2123,7 +2095,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Сюда считаем итоговую сумму компонентов
             $components_data = array();
             foreach ($component_count as $key => $cost) {
-                if(self::rounding($cost, $components[$key]->count_sale) > 0){
+                if (self::rounding($cost, $components[$key]->count_sale) > 0) {
                     $component_item = array();
                     $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
                     $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
@@ -2174,13 +2146,13 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             return $components_data;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function get_margin($project_id=null){
+
+    public static function get_margin($project_id = null)
+    {
         try {
             $result = array();
             if (!empty($project_id)) {
@@ -2212,16 +2184,16 @@ class Gm_ceilingHelpersGm_ceiling
             $result ['dealer_components_margin'] = $dealer_components_margin;
             $result ['dealer_mounting_margin'] = $dealer_mounting_margin;
             return $result;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function calculate_canvases($calc_id=null,$data=null){
+
+    public static function calculate_canvases($calc_id = null, $data = null)
+    {
         try {
             $calculation_model = self::getModel('calculation');
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $data = get_object_vars($calculation_model->getData($calc_id));
             } else if (!empty($data["id"])) {
                 $data = get_object_vars($calculation_model->getData($data["id"]));
@@ -2231,39 +2203,35 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_canvases_margin = $margins['gm_canvases_margin'];
             $dealer_canvases_margin = $margins['dealer_canvases_margin'];
             $dealer_info = JFactory::getUser($data['dealer_id']);
-            if($dealer_info->dealer_id == 1){
+            if ($dealer_info->dealer_id == 1) {
                 $dealer_info_canvases = $dealer_info->getCanvasesPrice($dealer_info->dealer_id);
-            }
-            else{
+            } else {
                 $dealer_info_canvases = $dealer_info->getCanvasesPrice();
             }
             //Получаем прайс-лист полотен
             $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $canvases_list = $canvases_model->getFilteredItemsCanvas(null,'old');
+            $canvases_list = $canvases_model->getFilteredItemsCanvas(null, 'old');
             $canvases = [];
             foreach ($canvases_list as $i => $canvas)
                 $canvases[$canvas->id] = $canvas;
             $canvases_data = array();
             $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
-            $canvasesData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id",'old');
-            if($canvasesData[0]->texture_id == 29){
+            $canvasesData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id", 'old');
+            if ($canvasesData[0]->texture_id == 29) {
                 $cutCanvas = $canvases_model->getCutArea($data['id']);
                 $data['n4'] = $cutCanvas->canvas_area;
             }
-            if (is_null($canvasesData[0]->color_id))
-            {
+            if (is_null($canvasesData[0]->color_id)) {
                 $color_title = '303';
-            }
-            else
-            {
+            } else {
                 $color_title = $canvasesData[0]->color_title;
             }
             $facture = $canvasesData[0]->texture_title;
             $width = floatval($canvasesData[0]->width) * 100;
             $name = $canvasesData[0]->name;
             $canvases_data['id'] = $canvas_id;
-            $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
-            $canvases_data['sub_title'] = $facture.'-'.$color_title;
+            $canvases_data['title'] = $facture . '-' . $color_title . '-' . $width . ' ' . $name;
+            $canvases_data['sub_title'] = $facture . '-' . $color_title;
             $canvases_data['width'] = $width;
             $canvases_data['manufacturer'] = $name;
             $canvases_data['quantity'] = $data['n4'];
@@ -2290,26 +2258,25 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases_data['min_dealer_total'] = margin(MIN_SUM, $dealer_canvases_margin);
             }
             return $canvases_data;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function calculate_offcut($calc_id=null,$data = null){
+
+    public static function calculate_offcut($calc_id = null, $data = null)
+    {
         try {
             $calculation_model = self::getModel('calculation');
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $data = get_object_vars($calculation_model->getData($calc_id));
             } else if (!empty($data["id"])) {
                 $data = get_object_vars($calculation_model->getData($data["id"]));
             }
             $data['n3'] = $data['n3_id'];
             $dealer_info = JFactory::getUser($data['dealer_id']);
-            if($dealer_info->dealer_id == 1){
+            if ($dealer_info->dealer_id == 1) {
                 $dealer_info_canvases = $dealer_info->getCanvasesPrice($dealer_info->dealer_id);
-            }
-            else{
+            } else {
                 $dealer_info_canvases = $dealer_info->getCanvasesPrice();
             }
             $margins = self::get_margin($data['project_id']);
@@ -2317,10 +2284,10 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_canvases_margin = $margins['dealer_canvases_margin'];
             $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
             $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id",'old');
+            $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id", 'old');
             $canvas = $canvasData[0];
             $offcut_square_data = array();
-            if ($canvas_id && $data['offcut_square'] > $data['n4']*0.5) {
+            if ($canvas_id && $data['offcut_square'] > $data['n4'] * 0.5) {
                 $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
                 $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
                 $offcut_square_data['self_price'] = round($canvas->price * 0.5, 2);                                    //Себестоимость
@@ -2338,15 +2305,15 @@ class Gm_ceilingHelpersGm_ceiling
                 $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
             }
             return $offcut_square_data;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function calculate_guild_jobs($calc_id=null,$data=null){
+
+    public static function calculate_guild_jobs($calc_id = null, $data = null)
+    {
         try {
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $calc_model = self::getModel('calculation');
                 $data = get_object_vars($calc_model->getData($calc_id));
                 $data['n3'] = $data['n3_id'];
@@ -2357,11 +2324,11 @@ class Gm_ceilingHelpersGm_ceiling
             $margin = self::get_margin($data['project_id']);
             $guild_data = array();
             $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            if(!empty($data['n3'])){
-                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id'],'old');
+            if (!empty($data['n3'])) {
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3_id'], 'old');
                 $data['n1'] = $canvasData[0]->texture_id;
             }
-            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
+            if (!empty($data['n1']) && $data['n1'] != 29 && $data['n9'] > 6) {
                 //Обработка 1 угла
                 $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
                 $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
@@ -2374,7 +2341,7 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => ($data['n9'] - 6) * $dealer_mp20                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-            if ( $data['n31'] > 0) {
+            if ($data['n31'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $gm_mp22 = margin($results->mp22, $margin['gm_canvases_margin']);
                 $dealer_mp22 = margin($gm_mp22, $margin['dealer_canvases_margin']);
@@ -2387,7 +2354,7 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n31'] * $dealer_mp22                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-            if($data['n10'] > 0){
+            if ($data['n10'] > 0) {
                 //криволинейный участок
                 $gm_mp21 = margin($results->mp21, $margin['gm_canvases_margin']);
                 $dealer_mp21 = margin($gm_mp21, $margin['dealer_canvases_margin']);
@@ -2400,7 +2367,7 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n10'] * $dealer_mp21                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-            if($data['n36'] > 0){
+            if ($data['n36'] > 0) {
                 $gm_mp35 = margin($results->mp35, $margin['gm_canvases_margin']);
                 $dealer_mp35 = margin($gm_mp35, $margin['dealer_canvases_margin']);
                 $guild_data[] = array(
@@ -2412,7 +2379,7 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n36'] * $dealer_mp35                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-            if($data['n43'] > 0){
+            if ($data['n43'] > 0) {
                 $gm_mp72 = margin($results->mp72, $margin['gm_canvases_margin']);
                 $dealer_mp72 = margin($gm_mp72, $margin['dealer_canvases_margin']);
                 $guild_data[] = array(
@@ -2424,17 +2391,17 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n43'] * $dealer_mp72                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-            if(!empty($data['n37'])){
+            if (!empty($data['n37'])) {
                 $n37 = json_decode($data['n37']);
-                if(!empty($n37->square) && !empty($n37->cost)){
-                    $gm_price = round($n37->cost/$n37->square,2);
+                if (!empty($n37->square) && !empty($n37->cost)) {
+                    $gm_price = round($n37->cost / $n37->square, 2);
                     $dealer_price = margin($gm_price, $margin['dealer_canvases_margin']);
                     $guild_data[] = array(
                         "title" => "Фотопечать",                                                     //Название
                         "quantity" => $n37->square,                                                  //Кол-во
                         "gm_salary" => $gm_price,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                         "gm_salary_total" => $n37->cost,                                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $dealer_price ,                                           //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary" => $dealer_price,                                           //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $n37->square * $dealer_price                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
@@ -2450,18 +2417,18 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             return $result;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /*  основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
         $calc_id - id калькуляции в БД
         $data - массив данных для просчета, если новый просчет
     */
-    public static function calculate_mount($del_flag,$calc_id=null,$data=null,$service=null){
+    public static function calculate_mount($del_flag, $calc_id = null, $data = null, $service = null)
+    {
         try {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -2474,12 +2441,11 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $transport = 0;
             $calculation_data = null;
-            if(empty($calc_id)){
+            if (empty($calc_id)) {
                 $project_id = $data['project_id'];
-            }
-            else {
-                $calculation_data = (array) $calculation_model->getData($calc_id);
-                $calculation_data2 = (array) $calculation_model->getDataById($calc_id);
+            } else {
+                $calculation_data = (array)$calculation_model->getData($calc_id);
+                $calculation_data2 = (array)$calculation_model->getDataById($calc_id);
                 foreach ($calculation_data as $key => $item) {
                     if ((empty($item) || strripos($key, "n") == 0) && array_key_exists($key, $calculation_data2))
                         $calculation_data[$key] = $calculation_data2[$key];
@@ -2500,24 +2466,22 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($project_id)->id_client;
-            if(!empty($client_id)){
+            if (!empty($client_id)) {
                 $client_model = self::getModel('client');
                 $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
-                if($dealer->dealer_type == 7){
+                if ($dealer->dealer_type == 7) {
                     $dealer_id = $dealer->id;
-                }
-                else{
+                } else {
                     $dealer_id = $dealer->dealer_id;
                 }
-                if(empty($dealer_id)){
+                if (empty($dealer_id)) {
                     $dealer_id = 1;
                 }
-            }
-            else{
+            } else {
                 $dealer_id = 1;
             }
             //Если существующая калькуляция
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 foreach ($calculation_data as $key => $item) {
                     $data[$key] = $item;
                 }
@@ -2530,16 +2494,16 @@ class Gm_ceilingHelpersGm_ceiling
                 $n29 = $data['n29'];
                 $n45 = $data['n45'];
             }
-            $gm_mount  = $mount_model->getDataAll(1);
-            if((!empty($service) && $service == "service")){
+            $gm_mount = $mount_model->getDataAll(1);
+            if ((!empty($service) && $service == "service")) {
                 $data['need_mount'] = 2;
             }
 
-            if($data['need_mount'] == 1){
+            if ($data['need_mount'] == 1) {
                 $results = $mount_model->getDataAll($dealer_id);
 
             }
-            if($data['need_mount'] == 2){
+            if ($data['need_mount'] == 2) {
                 $results = $mount_model->getDataAll(0);
                 /*array_walk($results, function(&$mp,$key){
                     /*обагечивание и натяжка наценка 20%
@@ -2553,15 +2517,15 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             });*/
             }
-            if($data['need_mount'] == 3){
+            if ($data['need_mount'] == 3) {
                 $results = $mount_model->getDataAll(3);
             }
-            if($service == "serviceSelf"){
+            if ($service == "serviceSelf") {
                 $results = $mount_model->getDataAll(1);
             }
-            if(!empty($data['n3_id'])){
+            if (!empty($data['n3_id'])) {
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id'],'old');
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =" . $data['n3_id'], 'old');
                 $data['n1'] = $canvasData[0]->texture_id;
             }
             $count_round_lamp = 0;
@@ -2574,7 +2538,7 @@ class Gm_ceilingHelpersGm_ceiling
             $count_profil_2 = 0;
             $count_profil_3 = 0;
             $count_profil_4 = 0;
-            if(empty($calc_id)){
+            if (empty($calc_id)) {
                 if (!is_array($data['n13'])) $n13 = json_decode($data['n13']);
                 else $n13 = $data['n13'];
                 if (!is_array($data['n26'])) $n26 = json_decode($data['n26']);
@@ -2628,10 +2592,10 @@ class Gm_ceilingHelpersGm_ceiling
                         switch (gettype($svet)) {
                             case 'object':
                                 if ($svet->n13_count > 0) {
-                                    if($svet->n13_type == 2){
+                                    if ($svet->n13_type == 2) {
                                         $count_round_lamp += $svet->n13_count;
                                     }
-                                    if($svet->n13_type == 3){
+                                    if ($svet->n13_type == 3) {
                                         $count_square_lamp += $svet->n13_count;
                                     }
                                 }
@@ -2639,10 +2603,10 @@ class Gm_ceilingHelpersGm_ceiling
 
                             default:
                                 if ($svet[0] > 0) {
-                                    if($svet[1] == 2){
+                                    if ($svet[1] == 2) {
                                         $count_round_lamp += $svet[0];
                                     }
-                                    if($svet[1] == 3){
+                                    if ($svet[1] == 3) {
                                         $count_square_lamp += $svet[0];
                                     }
                                 }
@@ -2670,7 +2634,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                     }
                 }
-                if($data['n22_1'] > 0){
+                if ($data['n22_1'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж пластикового короба(вытяжка)",                                    //Название
                         "quantity" => $data['n22_1'],                                                        //Кол-во
@@ -2678,18 +2642,17 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n22_1'] * $gm_mount->mp62,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp62,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n22_1'] * $results->mp62,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
 
-                if($data['n41'] > 0){
-                    if($data['n41'] ==  1){
-                        $mp70  =  $results->mp70;
+                if ($data['n41'] > 0) {
+                    if ($data['n41'] == 1) {
+                        $mp70 = $results->mp70;
                         $gm_mp70 = $gm_mount->mp70;
                         $dem_title = "Демонтаж потолка менее 5кв.м";
-                    }
-                    else{
-                        $mp70  =  $results->mp74;
+                    } else {
+                        $mp70 = $results->mp74;
                         $gm_mp70 = $gm_mount->mp74;
                         $dem_title = "Демонтаж потолка более 5кв.м";
                     }
@@ -2697,32 +2660,32 @@ class Gm_ceilingHelpersGm_ceiling
                         "title" => $dem_title,                                                       //Название
                         "quantity" => 1,                                                   //Кол-во
                         "gm_salary" => $gm_mp70,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" =>1 * $gm_mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => 1 * $gm_mp70,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $mp70,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" =>1*$mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>1
+                        "dealer_salary_total" => 1 * $mp70,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 1
                     );
                 }
-                if($data['n42'] > 0){
+                if ($data['n42'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Вытяжка(наклейка кольца)",                                                       //Название
                         "quantity" => $data['n42'],                                                   //Кол-во
                         "gm_salary" => $gm_mount->mp71,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" =>$data['n42'] * $gm_mount->mp71,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n42'] * $gm_mount->mp71,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp71,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" =>$data['n42'] * $results->mp71,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "dealer_salary_total" => $data['n42'] * $results->mp71,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 2
                     );
                 }
-                if($data['remove_n28'] > 0){
+                if ($data['remove_n28'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Демонтаж старого профиля",                                               //Название
                         "quantity" => $data['remove_n28'],                                                   //Кол-во
                         "gm_salary" => $gm_mount->mp63,                                                      //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" =>$data['remove_n28'] * $gm_mount->mp63,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['remove_n28'] * $gm_mount->mp63,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp63,                                                   //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" =>$data['remove_n28'] * $results->mp63,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>1
+                        "dealer_salary_total" => $data['remove_n28'] * $results->mp63,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 1
                     );
                 }
                 if ((is_array($n23) || is_object($n23)) && count($n23) > 0) {
@@ -2748,12 +2711,11 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($truba->n14_count > 0) {
                                     $size_str = $components[$truba->n14_type]->title;
                                     $size = preg_replace("/[^-0-9]/", '', $size_str);
-                                    $size_arr = explode('-',$size);
+                                    $size_arr = explode('-', $size);
                                     (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
-                                    if($diam > 100){
+                                    if ($diam > 100) {
                                         $count_big_pipe += $truba->n14_count;
-                                    }
-                                    else{
+                                    } else {
                                         $count_pipe += $truba->n14_count;
                                     }
                                 }
@@ -2763,12 +2725,11 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($truba[0] > 0) {
                                     $size_str = $components[$truba[1]]->title;
                                     $size = preg_replace("/[^-0-9]/", '', $size_str);
-                                    $size_arr = explode('-',$size);
+                                    $size_arr = explode('-', $size);
                                     (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
-                                    if($diam > 100){
+                                    if ($diam > 100) {
                                         $count_big_pipe += $truba[0];
-                                    }
-                                    else{
+                                    } else {
                                         $count_pipe += $truba[0];
                                     }
                                 }
@@ -2820,7 +2781,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($profil[0] > 0 && ($profil[1] == 17 || $profil[1] == 20)) {
                                     $count_profil_5 += $profil[0];
                                 }
-                                if ($profil[0] > 0 && ($profil[1] == 18 || $profil[1] == 21 )) {
+                                if ($profil[0] > 0 && ($profil[1] == 18 || $profil[1] == 21)) {
                                     $count_profil_6 += $profil[0];
                                 }
                                 if ($profil[0] > 0 && $profil[1] == 19) {
@@ -2831,7 +2792,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 //только для ПВХ
-                if (!empty($data['n1']) &&  $data['n1'] != 29) {
+                if (!empty($data['n1']) && $data['n1'] != 29) {
                     if ($data['height'] == 1 || $data['height'] == 2 || $data['height'] == 3 || $data['height'] == 4) {
                         $name = "высота >3м";
                         $mp1 = $results->mp1 + 10;
@@ -2926,8 +2887,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
 
 
-
-                    if($data['n46'] > 0){
+                    if ($data['n46'] > 0) {
                         $mounting_data[] = array(
                             "title" => "Монтаж острых углов",                                                                    //Название
                             "quantity" => $data['n46'],                                                      //Кол-во
@@ -2944,8 +2904,7 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($data['n28'] == 4 || $data['n28'] == 5) {
                         $mp47 = $results->mp76;
                         $gm_mp47 = $gm_mount->mp76;
-                    }
-                    else{
+                    } else {
                         $mp47 = $results->mp47;
                         $gm_mp47 = $gm_mount->mp47;
                     }
@@ -2964,14 +2923,13 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 //только для ткани
                 if ($data['n1'] == 29) {
-                    if($data['height'] == 1 || $data['height'] == 2 || $data['height'] == 3 || $data['height'] == 4){
+                    if ($data['height'] == 1 || $data['height'] == 2 || $data['height'] == 3 || $data['height'] == 4) {
                         $name = "высота >3м";
                         $mp68 = $results->mp68 + 10;
                         $mp69 = $results->mp69 + 10;
                         $gm_mp68 = $gm_mount->mp68 + 10;
                         $gm_mp69 = $gm_mount->mp69 + 10;
-                    }
-                    else{
+                    } else {
                         $name = "высота <3м ";
                         $mp68 = $results->mp68;
                         $mp69 = $results->mp69;
@@ -3012,13 +2970,13 @@ class Gm_ceilingHelpersGm_ceiling
                                 "gm_salary_total" => $n5val * $gm_mount->mp33,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
                                 "dealer_salary_total" => $n5val * $results->mp33,                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                "stage"=>3
+                                "stage" => 3
                             );
                         }
                     }
                 }
                 //----------------------------- Общие просчеты и для ПВХ и для ткани ----------------------------------------
-                if($data['n33']>0){
+                if ($data['n33'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж лючка ",                                                        //Название
                         "quantity" => $data['n33'],                                                        //Кол-во
@@ -3026,10 +2984,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n33'] * $gm_mount->mp49,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp49,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n33'] * $results->mp49,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['n33_2']>0){
+                if ($data['n33_2'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж большого люка ",                                                          //Название
                         "quantity" => $data['n33_2'],                                                      //Кол-во
@@ -3037,10 +2995,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n33_2'] * $gm_mount->mp50,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp50,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n33_2'] * $results->mp50,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['n34']>0){
+                if ($data['n34'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Установка диодной ленты",                                              //Название
                         "quantity" => $data['n34'],                                                        //Кол-во
@@ -3048,10 +3006,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n34'] * $gm_mount->mp51,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp51,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n34'] * $results->mp51,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['n34_2']>0){
+                if ($data['n34_2'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж и подключение блока питания",                                   //Название
                         "quantity" => $data['n34_2'],                                                      //Кол-во
@@ -3059,10 +3017,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n34_2'] * $gm_mount->mp52,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp52,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n34_2'] * $results->mp52,                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['n35']>0){
+                if ($data['n35'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж контурного профиля",                                            //Название
                         "quantity" => $data['n35'],                                                        //Кол-во
@@ -3070,10 +3028,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n35'] * $gm_mount->mp61,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp61,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n35'] * $results->mp61,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['n38']>0){
+                if ($data['n38'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Ремонт потолка",                                                       //Название
                         "quantity" => $data['n38'],                                                        //Кол-во
@@ -3081,10 +3039,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n38'] * $gm_mount->mp64,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp64,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n38'] * $results->mp64,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
-                if($data['height'] == 1){
+                if ($data['height'] == 1) {
                     $mounting_data[] = array(
                         "title" => "Высота от 4 до 5 метров",                                              //Название
                         "quantity" => 1,                                                                   //Кол-во
@@ -3095,7 +3053,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage" => 2
                     );
                 }
-                if($data['height'] == 2){
+                if ($data['height'] == 2) {
                     $mounting_data[] = array(
                         "title" => "Высота более 5 метров",                                                //Название
                         "quantity" => 1,                                                                   //Кол-во
@@ -3106,7 +3064,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage" => 2
                     );
                 }
-                if($data['height'] == 3){
+                if ($data['height'] == 3) {
                     $mounting_data[] = array(
                         "title" => "Высота от 3 до 3,5 метров",                                                //Название
                         "quantity" => 1,                                                                   //Кол-во
@@ -3117,7 +3075,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage" => 2
                     );
                 }
-                if($data['height'] == 4){
+                if ($data['height'] == 4) {
                     $mounting_data[] = array(
                         "title" => "Высота от 3,5 до 4 метров",                                                //Название
                         "quantity" => 1,                                                                   //Кол-во
@@ -3128,7 +3086,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "stage" => 2
                     );
                 }
-                if($data['scaffolding'] == 1){
+                if ($data['scaffolding'] == 1) {
                     $mounting_data[] = array(
                         "title" => "Сборка/разборка лесов",                                                //Название
                         "quantity" => 1,                                                                   //Кол-во
@@ -3171,11 +3129,11 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($data['color'] > 0) {
                         $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                         $color = $color_model->getData($data['color']);
-                        $name = "Вставка, цвет: " . $color->colors_title." ";
+                        $name = "Вставка, цвет: " . $color->colors_title . " ";
                     } else {
                         $name = "Вставка ";
                     }
-                    $quantity = ($data['n6']>0) ? $data['n5'] - $data['n20'] : $data['n5'];
+                    $quantity = ($data['n6'] > 0) ? $data['n5'] - $data['n20'] : $data['n5'];
                     $mounting_data[] = array(
                         "title" => $name,                                                              //Название
                         "quantity" => $quantity,                                                       //Кол-во
@@ -3183,7 +3141,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $quantity * $gm_mount->mp10,                              //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp10,                                             //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $quantity * $results->mp10,                           //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 4
+                        "stage" => 4
                     );
                 }
                 //установка люстры
@@ -3195,9 +3153,9 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $gm_mount->mp2 * $data['n12'],                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp2,//max($dealer->mp4, $dealer->mp5),            //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n12'] * $results->mp2,                         //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
-                    if(!$data['n12_cancel_install']) {
+                    if (!$data['n12_cancel_install']) {
                         $mounting_data[] = array(
                             "title" => "Установка люстры ",                                   //Название
                             "quantity" => $data['n12'],//$count_lust,                                      //Кол-во
@@ -3205,19 +3163,18 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $gm_mount->mp2_2 * $data['n12'],                          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp2_2,//max($dealer->mp4, $dealer->mp5),          //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $data['n12'] * $results->mp2_2,                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>3
+                            "stage" => 3
                         );
                     }
                 }
-                if($data['n16']){
+                if ($data['n16']) {
                     $cornice = "Закладная под шторный карниз / Скрытый ";
                     $cornice1 = "Установка шторного карниза в бетон/ Скрытый ";
-                }
-                else {
+                } else {
                     $cornice = "Закладная под шторный карниз / Обычный ";
                     $cornice1 = "Установка шторного карниза / Обычный ";
                 }
-                if($data['n13_inside_ring'] > 0){
+                if ($data['n13_inside_ring'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Вклейка кольца внутрь",                                          //Название
                         "quantity" => $data['n13_inside_ring'],                                             //Кол-во
@@ -3225,11 +3182,11 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n13_inside_ring'] * $gm_mount->mp83,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp83,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n13_inside_ring'] * $results->mp83,                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
 
-                if($data['n13_double'] > 0){
+                if ($data['n13_double'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Двойное подключение светильников",      //Название
                         "quantity" => $data['n13_double'],                                             //Кол-во
@@ -3237,7 +3194,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n13_double'] * $gm_mount->mp84,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp84,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n13_double'] * $results->mp84,                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=>2
+                        "stage" => 2
                     );
                 }
                 //Установка светильников
@@ -3250,7 +3207,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_round_lamp * $gm_mount->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_round_lamp * $results->mp4,                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>2
+                            "stage" => 2
                         );
                     }
                     if ($count_square_lamp > 0) {
@@ -3261,11 +3218,11 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_square_lamp * $gm_mount->mp5,                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_square_lamp * $results->mp5,                 //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>2
+                            "stage" => 2
                         );
                     }
-                    $count_lamp = $count_square_lamp+$count_round_lamp;
-                    if($count_lamp > 0){
+                    $count_lamp = $count_square_lamp + $count_round_lamp;
+                    if ($count_lamp > 0) {
                         $mounting_data[] = array(
                             "title" => "Установка светильников ",                           //Название
                             "quantity" => $count_lamp,                                                   //Кол-во
@@ -3273,7 +3230,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_lamp * $gm_mount->mp4_2,                         //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp4_2,                                          //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_lamp * $results->mp4_2,                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>3
+                            "stage" => 3
 
                         );
                     }
@@ -3287,7 +3244,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_ventilation * $gm_mount->mp16,                   //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp16,                                           //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_ventilation * $results->mp16,                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=>3
+                            "stage" => 3
                         );
                     }
                 }
@@ -3301,7 +3258,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_diffuzor * $gm_mount->mp19,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp19,                                           //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_diffuzor * $results->mp19,                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 3
+                            "stage" => 3
                         );
                     }
                 }
@@ -3315,7 +3272,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_pipe * $gm_mount->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_pipe * $results->mp8,                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 3
+                            "stage" => 3
                         );
                     }
                     if ($count_big_pipe > 0) {
@@ -3326,7 +3283,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_big_pipe * $gm_mount->mp7,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_big_pipe * $results->mp7,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 3
+                            "stage" => 3
                         );
                     }
                 }
@@ -3339,7 +3296,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_1 * $gm_mount->mp23,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_1 * $results->mp23,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_2 > 0) {
@@ -3350,7 +3307,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_2 * $gm_mount->mp24,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_2 * $results->mp24,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_3 > 0) {
@@ -3361,7 +3318,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_3 * $gm_mount->mp25,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_3 * $results->mp25,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_4 > 0) {
@@ -3372,7 +3329,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_4 * $gm_mount->mp26,                       //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_4 * $results->mp26,                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_5 > 0) {
@@ -3383,7 +3340,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_5 * $gm_mount->mp58,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp58,                                             //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_5 * $results->mp58,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_6 > 0) {
@@ -3394,7 +3351,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_6 * $gm_mount->mp59,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp59,                                             //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_6 * $results->mp59,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                     if ($count_profil_7 > 0) {
@@ -3405,13 +3362,13 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $count_profil_7 * $gm_mount->mp82,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp82,                                             //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_profil_7 * $results->mp82,                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 2
+                            "stage" => 2
                         );
                     }
                 }
                 //шторный карниз
                 if ($data['n27'] > 0) {
-                    if($data['n16'] == 0) {
+                    if ($data['n16'] == 0) {
                         $mounting_data[] = array(
                             "title" => $cornice,                                                           //Название
                             "quantity" => $data['n27'],                                                    //Кол-во
@@ -3430,9 +3387,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "dealer_salary_total" => $data['n27'] * $results->mp11_2,                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             "stage" => 3
                         );
-                    }
-                    else{
-                        switch($data['niche']){
+                    } else {
+                        switch ($data['niche']) {
                             case 1:
                                 $nicheTitle = "Монтаж открытой ниши под шторный карниз";
                                 $mountPrice = $results->mp53;
@@ -3498,7 +3454,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n17'] * $gm_mount->mp11,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp11,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n17'] * $results->mp11,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //пожарная сигнализация
@@ -3510,7 +3466,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n21'] * $gm_mount->mp6,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp6,                                                  //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n21'] * $results->mp6,                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 3
+                        "stage" => 3
                     );
                 }
                 //парящий потолок
@@ -3522,7 +3478,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n30'] * $gm_mount->mp30,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp30,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n30'] * $results->mp30,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //разделитель
@@ -3534,7 +3490,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n20'] * $gm_mount->mp9,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp9,                                                  //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n20'] * $results->mp9,                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //Отбойник
@@ -3546,7 +3502,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n20_1'] * $gm_mount->mp9_1,                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp9_1,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n20_1'] * $results->mp9_1,                         //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 if ($data['n32'] > 0) {
@@ -3557,7 +3513,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n32'] * $gm_mount->mp27,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp27,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n32'] * $results->mp27,
-                        "stage"=> 2//Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "stage" => 2//Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 //крепление в плитку
@@ -3569,7 +3525,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n7'] * $gm_mount->mp13,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp13,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n7'] * $results->mp13,                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //крепление в керамогранит
@@ -3581,7 +3537,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n8'] * $gm_mount->mp14,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp14,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n8'] * $results->mp14,                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //укрепление стены
@@ -3593,7 +3549,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n18'] * $gm_mount->mp15,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp15,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n18'] * $results->mp15,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 2
+                        "stage" => 2
                     );
                 }
                 //сложность доступа к месту установки
@@ -3605,10 +3561,10 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n24'] * $gm_mount->mp17,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp17,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n24'] * $results->mp17,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 3
+                        "stage" => 3
                     );
                 }
-                if($data['n44'] > 0){
+                if ($data['n44'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж с пылесосом",                                                    //Название
                         "quantity" => $data['n44'],                                                        //Кол-во
@@ -3616,29 +3572,29 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['n44'] * $gm_mount->mp73,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp73,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['n44'] * $results->mp73,                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 1
+                        "stage" => 1
                     );
                 }
                 //throw new Exception($data['total_n45']);
-                if($data['total_n45'] > 0){
+                if ($data['total_n45'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Монтаж профиля световые линии ($name)",                                                                    //Название
-                        "quantity" => $data['total_n45']  ,                                                      //Кол-во
+                        "quantity" => $data['total_n45'],                                                      //Кол-во
                         "gm_salary" => $gm_mount->mp78,                                                   //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['total_n45']   * $gm_mount->mp78,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['total_n45'] * $gm_mount->mp78,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp78,                                                  //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['total_n45']   * $results->mp78,                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['total_n45'] * $results->mp78,                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage" => 2
                     );
                 }
-                if($data['total_n45'] > 0){
+                if ($data['total_n45'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Натяжка световые линии",                                                  //Название
-                        "quantity" => $data['total_n45']  ,                                                          //Кол-во
+                        "quantity" => $data['total_n45'],                                                          //Кол-во
                         "gm_salary" => $gm_mount->mp77,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['total_n45']   *  $gm_mount->mp77,                                 //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['total_n45'] * $gm_mount->mp77,                                 //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp77,                                             //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['total_n45']   * $results->mp77,                              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['total_n45'] * $results->mp77,                              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         "stage" => 3
                     );
                 }
@@ -3651,7 +3607,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "gm_salary_total" => $data['dop_krepezh'] * $gm_mount->mp18,                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp18,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                         "dealer_salary_total" => $data['dop_krepezh'] * $results->mp18,                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                        "stage"=> 3
+                        "stage" => 3
                     );
                 }
                 //Дополнительный монтаж
@@ -3665,7 +3621,7 @@ class Gm_ceilingHelpersGm_ceiling
                             "gm_salary_total" => $extra_mount->value,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $extra_mount->value,                                                //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $extra_mount->value,                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            "stage"=> 3
+                            "stage" => 3
                         );
                     }
                 }
@@ -3708,13 +3664,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             $result['mounting_data'] = $mounting_data;
-            $result['total_gm_mounting'] =  $total_gm_mounting + $transport;
-            $result['total_dealer_mounting'] =  $total_dealer_mounting;
+            $result['total_gm_mounting'] = $total_gm_mounting + $transport;
+            $result['total_dealer_mounting'] = $total_dealer_mounting;
             $result['total_with_gm_margin'] = $total_with_gm_margin;
             $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
             $result['total_with_dealer_margin'] = $total_with_dealer_margin;
             $result['stages'] = $stages;
-            if(empty($stages)){
+            if (empty($stages)) {
                 $stages[2] = 0;
                 $stages[3] = 0;
                 $stages[4] = 0;
@@ -3723,13 +3679,10 @@ class Gm_ceilingHelpersGm_ceiling
             $calcsMountModel = self::getModel('calcs_mount');
             $calcsMountModel->save($calcMountData);
             return $result;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-
 
 
     /* функция для расчета стоимости траноспорта
@@ -3738,61 +3691,58 @@ class Gm_ceilingHelpersGm_ceiling
     $distance расстояние
     $distance_col - кол-во выездов
     */
-    public static function calculate_transport($project_id,$service=null){
+    public static function calculate_transport($project_id, $service = null)
+    {
         try {
             $project_model = self::getModel('Project');
             //$mount_model = self::getModel('mount');
 
-            if(!empty($project_id)){
+            if (!empty($project_id)) {
                 $project = $project_model->getData($project_id);
                 $transport_type = $project->transport;
                 $distance = $project->distance;
                 $distance_col = $project->distance_col;
-                if(!empty($project->dealer_id)){
+                if (!empty($project->dealer_id)) {
                     $dealer = JFactory::getUser($project->dealer_id);
                     $dealer_id = $dealer->dealer_id;
-                }
-                else{
+                } else {
                     $dealer_id = 1;
                 }
                 $res = Gm_ceilingHelpersGm_ceiling::getDealerInfo($dealer_id);
-                if(empty($res->user_id)) {
+                if (empty($res->user_id)) {
                     $res->user_id = 1;
                 }
 
-                if($service == "service"){
-                    $res =  Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
+                if ($service == "service") {
+                    $res = Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
                     //$res->transport +=$res->transport*0.5;
                     //$res->distance +=$res->distance*0.5;
-                }
-                else{
-                    $res =  Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
+                } else {
+                    $res = Gm_ceilingHelpersGm_ceiling::getDealerInfo(1);
                 }
                 //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
-                if($res) {
-                    $res->distance = str_replace(',','.', $res->distance);
-                    $res->transport = str_replace(',','.', $res->transport);
-                    $distance = str_replace(',','.', $distance);
-                    if($transport_type == 1) {
+                if ($res) {
+                    $res->distance = str_replace(',', '.', $res->distance);
+                    $res->transport = str_replace(',', '.', $res->transport);
+                    $distance = str_replace(',', '.', $distance);
+                    if ($transport_type == 1) {
                         $transport_sum = round(double_margin($res->transport * $distance_col, $project->gm_mounting_margin, 30));
                         $transport_sum_1 = round(margin($res->transport * $distance_col, 0));
                         $result = array(
                             'transport' => 'Транспорт по городу',
                             'distance' => '-',
-                            'distance_col'=> $distance_col,
-                            'one_transport_price' =>$res->transport,
+                            'distance_col' => $distance_col,
+                            'one_transport_price' => $res->transport,
                             'client_sum' => $transport_sum,
                             'mounter_sum' => $transport_sum_1
                         );
 
-                    }
-                    elseif($transport_type == 2) {
-                        if($distance<=50){
+                    } elseif ($transport_type == 2) {
+                        if ($distance <= 50) {
                             $transport_sum = 500 * $distance_col;
-                            $transport_sum_1 = 500  * $distance_col;
+                            $transport_sum_1 = 500 * $distance_col;
                             $one_transport_price = 500;
-                        }
-                        else {
+                        } else {
                             $transport_sum = ($res->distance * $distance) * $distance_col;
                             $transport_sum_1 = ($res->distance * $distance) * $distance_col;
                             $one_transport_price = ($res->distance * $distance);
@@ -3800,43 +3750,41 @@ class Gm_ceilingHelpersGm_ceiling
                         $result = array(
                             'transport' => 'Выезд за город',
                             'distance' => $distance,
-                            'distance_col'=> $distance_col,
-                            'one_transport_price' =>$one_transport_price,
+                            'distance_col' => $distance_col,
+                            'one_transport_price' => $one_transport_price,
                             'client_sum' => $transport_sum,
                             'mounter_sum' => $transport_sum_1
                         );
-                    }
-                    else {
+                    } else {
                         $transport_sum = 0;
                         $transport_sum_1 = 0;
                         $result = array(
                             'transport' => 'Без транспорта',
                             'distance' => '-',
-                            'distance_col'=> '-',
+                            'distance_col' => '-',
                             'client_sum' => $transport_sum,
                             'mounter_sum' => $transport_sum_1
                         );
                     }
                 }
-                if($transport_type == 1) {
+                if ($transport_type == 1) {
                     /*  $discount = $project_model->getDiscount($project_id);
                      $max = 0;
                      foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
                      $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100); */
                 }
                 return $result;
-            }
-            else{
+            } else {
                 throw new Exception("empty project_id!");
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /* функция генерации общего наряда на монтаж */
-    public static function create_common_estimate_mounters($project_id,$calc_ids = null,$service=null){
+    public static function create_common_estimate_mounters($project_id, $calc_ids = null, $service = null)
+    {
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $project_model = self::getModel('project');
@@ -3918,39 +3866,18 @@ class Gm_ceilingHelpersGm_ceiling
             }
             foreach ($calculations as $calc) {
                 $extra_total = 0;
-                $extra_service_total = 0;
                 if(!empty($calc->extra_mounting)){
                     $extra_mounting = json_decode($calc->extra_mounting);
                     foreach($extra_mounting as $extra_mount){
-                        if($newService){
-                            if(!empty($extra_mount->service_price)){
-                                $extra_service_total += $extra_mount->service_price;
-                            }
-                            else{
-                                $extra_service_total += $extra_mount->price+ $extra_mount->price*0.2;
-                            }
-                        }
-                        else{
-                            $extra_total += $extra_mount->price;
-                        }
+                        $extra_total += $extra_mount->price;
                     }
                 }
                 if(empty($calc->n3)){
-                    $stage_sum = [];
-                    $gm_stage_sum = [];
-
-                    if($newService){
-                        if(!empty($extra_service_total)&&!$full){
-                            $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_service_total];
-                        }
+                    $stage_sum = [];$gm_stage_sum = [];
+                    if(!empty($extra_total)&&!$full){
+                        $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_total];
                     }
-                    else{
-                        if(!empty($extra_total)&&!$full){
-                            $stage_sum['extra'] = (object)["stage"=>"extra","stage_name"=>"Доп.Работы","sum"=>$extra_total];
-                        }
-                    }
-                    $total_dealer_sum = 0;
-                    $total_gm_sum =0;
+                    $total_dealer_sum = 0;$total_gm_sum =0;
                     foreach ($calc->dealer_mount as $job){
                         $stage_sum[$job->mount_type_id] += $job->price_sum;
                         $total_dealer_sum += $job->price_sum;
@@ -3966,12 +3893,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $calc->gm_mount_sum = $gm_stage_sum;
                     }
                     else{
-                        if($newService){
-                            $calc->mount_sum[1] = $total_dealer_sum+$extra_service_total;
-                        }
-                        else{
-                            $calc->mount_sum[1] = $total_dealer_sum+$extra_total;
-                        }
+                        $calc->mount_sum[1] = $total_dealer_sum+$extra_total;
                         $calc->gm_mount_sum[1] = $total_gm_sum+$extra_total;
                     }
                 }
@@ -4025,19 +3947,19 @@ class Gm_ceilingHelpersGm_ceiling
 
             self::save_pdf($gm_array, $sheets_dir . $filename_gm, "A4");
             self::save_pdf($dealer_array, $sheets_dir . $filename_dealer, "A4");
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    static function createCommonSheet($project,$calculations,$mount_data,$transport,$full,$type){
-        try{
+    static function createCommonSheet($project, $calculations, $mount_data, $transport, $full, $type)
+    {
+        try {
             $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
             $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
             $calculations_model = self::getModel('calculations');
-            $split_mount = [];$exist_calc_details = false;
+            $split_mount = [];
+            $exist_calc_details = false;
             $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
             $html .= "<h2>Даты этапов и монтажные бригады </h2>";
             $html .= '<table border="0" cellspacing="0">
@@ -4051,56 +3973,53 @@ class Gm_ceilingHelpersGm_ceiling
                 $split_mount[$value->time][] = $value;
                 $brigade_names = "";
                 $names = $calculations_model->FindAllMounters($value->mounter);
-                for($i=0;$i<count($names);$i++){
+                for ($i = 0; $i < count($names); $i++) {
                     $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
                 }
-                if(!empty($brigade_names)){
-                    $mount_brigade = JFactory::getUser($value->mounter)->name."(".$brigade_names.")";
-                }
-                else{
+                if (!empty($brigade_names)) {
+                    $mount_brigade = JFactory::getUser($value->mounter)->name . "(" . $brigade_names . ")";
+                } else {
                     $mount_brigade = JFactory::getUser($value->mounter)->name;
                 }
-                if(!empty($value->time)){
-                    $stage_date = date('d.m.Y H:i',strtotime($value->time));
-                }
-                else{
+                if (!empty($value->time)) {
+                    $stage_date = date('d.m.Y H:i', strtotime($value->time));
+                } else {
                     $stage_date = "Дата отсутствует";
                 }
-                $html .="<tr>
+                $html .= "<tr>
                             <td>$value->stage_name</td>
                             <td class=\"center\"> ";
                 $html .= $stage_date;
-                $html .="</td>
+                $html .= "</td>
                             <td class=\"center\">$mount_brigade</td>
                         </tr>";
             }
             $html .= "</tbody></table>";
             $html .= '<h2>Краткая информация: </h2>';
             $total_mount_sum = 0;
-            foreach ($split_mount as $key=>$splitted){
+            foreach ($split_mount as $key => $splitted) {
                 $sums = [];
                 $sum = 0;
-                if(!empty($key)){
-                    $date = date('d.m.Y H:i',strtotime($key));
-                }
-                else{
+                if (!empty($key)) {
+                    $date = date('d.m.Y H:i', strtotime($key));
+                } else {
                     $date = "Дата отсутствует";
                 }
-                $html.= '<b>'.$date.'</b><br>';
+                $html .= '<b>' . $date . '</b><br>';
                 $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Название</th>
                                 <th class="center">Площадь, м<sup>2</sup>.</th>
                                 <th class="center">Периметр, м </th>';
-                foreach ($splitted as $stage){
+                foreach ($splitted as $stage) {
                     $html .= "<th class=\"center\">$stage->stage_name, руб.</th>";
                 }
-                $html .='<th class="center">Стоимость, руб.</th>';
+                $html .= '<th class="center">Стоимость, руб.</th>';
                 $html .= '</tr>';
                 foreach ($calculations as $calc) {
                     //throw new Exception(print_r($calc,true));
-                    if(!empty($calc->details)){
+                    if (!empty($calc->details)) {
                         $exist_calc_details = true;
                     }
                     $html .= '<tr>';
@@ -4119,7 +4038,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $sum += $calc_sum;
                 }
                 $html .= '<tr><th colspan="3" class="right">Итого, руб:</th>';
-                foreach ($sums as $item){
+                foreach ($sums as $item) {
                     $html .= '<th class="center">' . $item . '</th>';
                 }
                 $html .= '<th class="center">' . $sum . '</th></tr>';
@@ -4134,7 +4053,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
                             </tr>';
 
-                if($transport['distance_col']>0) {
+                if ($transport['distance_col'] > 0) {
                     $html .= '<tr>';
                     $html .= '<td>' . $transport['transport'] . '</td>';
                     $html .= '<td class="center">' . $transport['distance'] . '</td>';
@@ -4143,25 +4062,22 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tr>';
 
 
-
-                }
-                else{
+                } else {
                     $html .= '<tr>';
                     $html .= '<td colspan="4">Просчитано меньшее кол-во выездов</td>';
                     $html .= '</tr>';
                 }
-                if($transport['distance_col']>0) {
+                if ($transport['distance_col'] > 0) {
                     $one_transport = $transport['one_transport_price'];
-                }
-                else{
+                } else {
                     $one_transport = 0;
                 }
                 $transport['distance_col'] -= 1;
                 $html .= '</tbody></table><p>&nbsp;</p>';
-                $total_mount_sum+=round($one_transport + $sum);
+                $total_mount_sum += round($one_transport + $sum);
                 $html .= '<div style="text-align: right; font-weight: bold;"> Сумма: ' . round($one_transport + $sum, 2) . ' руб.</div>';
             }
-            if($transport['distance_col']>0){
+            if ($transport['distance_col'] > 0) {
                 $html .= '<h2>Транспортные расходы: </h2>';
                 $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
@@ -4171,17 +4087,17 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
                             </tr>';
                 $html .= '<tr>';
-                $html .= '<td>' . $transport['transport']. '</td>';
+                $html .= '<td>' . $transport['transport'] . '</td>';
                 $html .= '<td class="center">' . $transport['distance'] . '</td>';
                 $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
-                $html .= '<td class="center">' . $transport['distance_col']*$transport['one_transport_price'] . '</td>';
+                $html .= '<td class="center">' . $transport['distance_col'] * $transport['one_transport_price'] . '</td>';
                 $html .= '</tr>';
                 $html .= '</tbody></table><p>&nbsp;</p>';
-                $total_mount_sum += round( $transport['distance_col']*$transport['one_transport_price'],2);
+                $total_mount_sum += round($transport['distance_col'] * $transport['one_transport_price'], 2);
             }
 
             $html .= '<br><div style="text-align: right; font-weight: bold;"> Итого: ' . $total_mount_sum . ' руб.</div>';
-            if($exist_calc_details) {
+            if ($exist_calc_details) {
                 $html .= '<h2>Примечания: </h2>';
                 foreach ($calculations as $calc) {
                     if (!empty($calc->details)) {
@@ -4190,16 +4106,16 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             return $html;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    static function create_mount_estimate_by_stage($data,$mounter,$stage){
-        try{
+
+    static function create_mount_estimate_by_stage($data, $mounter, $stage)
+    {
+        try {
             //throw new Exception(print_r($data,true));
-            if(!empty($data)){
+            if (!empty($data)) {
                 $calculation = $data['calculation'];
                 $jobs = $data['jobs'];
                 $gm_jobs = $data['gm_jobs'];
@@ -4213,53 +4129,51 @@ class Gm_ceilingHelpersGm_ceiling
                 $mount_types = $projects_mounts_model->get_mount_types();
                 $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
                 $phones = '';
-                for($i=0;$i<count($client_contacts);$i++){
+                for ($i = 0; $i < count($client_contacts); $i++) {
                     $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
                 }
                 $full = false;
-                if($stage == 1){
+                if ($stage == 1) {
                     $full = true;
                 }
                 $isService = false;
-                if(!empty($project->calcs_mounting_sum)){
+                if (!empty($project->calcs_mounting_sum)) {
                     $isService = true;
                 }
-                if($calculation->need_mount == 2){
+                if ($calculation->need_mount == 2) {
                     $isService = true;
                 }
                 $extra_sum = 0;
                 $extra_service_sum = 0;
-                $extra_html ='<h1>Дополнительные работы</h1><table border="0" cellspacing="0" width="100%">
+                $extra_html = '<h1>Дополнительные работы</h1><table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Наименование</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                if(!empty($extra_mount)){
+                if (!empty($extra_mount)) {
                     $dealer_extra = $extra_html;
                     $gm_extra = $extra_html;
-                    foreach ($extra_mount as $mount){
+                    foreach ($extra_mount as $mount) {
                         $gm_extra .= "<tr><td>$mount->title</td><td>$mount->price</td></tr>";
                         $extra_sum += $mount->price;
-                        if($isService){
-                            if(empty($mount->service_price)){
-                                $mount->service_price = $mount->price + $mount->price*0.2;
+                        if ($isService) {
+                            if (empty($mount->service_price)) {
+                                $mount->service_price = $mount->price + $mount->price * 0.2;
                             }
                             $dealer_extra .= "<tr><td>$mount->title</td><td>$mount->service_price</td></tr>";
                             $extra_service_sum += $mount->service_price;
-                        }
-                        else{
+                        } else {
                             $dealer_extra .= "<tr><td>$mount->title</td><td>$mount->price</td></tr>";;
                         }
                     }
                 }
-                if($isService){
-                    $gm_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
-                    $dealer_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_service_sum.'</td></tr></tbody></table>';
-                }
-                else{
-                    $gm_extra .= '<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
-                    $dealer_extra .='<tr><td><b>Итого</b></td><td>'.$extra_sum.'</td></tr></tbody></table>';
+                if ($isService) {
+                    $gm_extra .= '<tr><td><b>Итого</b></td><td>' . $extra_sum . '</td></tr></tbody></table>';
+                    $dealer_extra .= '<tr><td><b>Итого</b></td><td>' . $extra_service_sum . '</td></tr></tbody></table>';
+                } else {
+                    $gm_extra .= '<tr><td><b>Итого</b></td><td>' . $extra_sum . '</td></tr></tbody></table>';
+                    $dealer_extra .= '<tr><td><b>Итого</b></td><td>' . $extra_sum . '</td></tr></tbody></table>';
                 }
                 $html = '<h1>Информация</h1>';
                 $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
@@ -4274,7 +4188,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 if (isset($phones)) {
-                    $html .= "<b>Телефон: </b>".$phones . "<br>";
+                    $html .= "<b>Телефон: </b>" . $phones . "<br>";
 
                 }
                 if (isset($project->project_info)) {
@@ -4308,7 +4222,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
                     }
                 }
-                if(isset($data['details'])){
+                if (isset($data['details'])) {
                     $html .= "<b>Примечание : </b>" . $data['details'] . "<br>";
                 }
                 if (!empty($mount_date)) {
@@ -4318,8 +4232,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>';
-                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $calculation->id) . '.svg'))
-                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $calculation->id) . '.svg' . '" style="width: 100%; max-height: 800px;"/> ';
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . md5("calculation_sketch" . $calculation->id) . '.svg'))
+                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . md5("calculation_sketch" . $calculation->id) . '.svg' . '" style="width: 100%; max-height: 800px;"/> ';
                 $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -4331,24 +4245,23 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_gm = $html;
                 $html_dealer = $html;
 
-                if(!empty($gm_jobs)){
+                if (!empty($gm_jobs)) {
                     foreach ($gm_jobs as $gm_job) {
-                        if(!$full) {
+                        if (!$full) {
                             if ($gm_job->mount_type_id == $stage) {
                                 $html_gm .= '<tr>';
                                 $html_gm .= '<td>' . $gm_job->name . '</td>';
                                 $html_gm .= '<td class="center">' . round($gm_job->price, 2) . '</td>';
-                                $html_gm .= '<td class="center">' . round($gm_job->final_count,2) . '</td>';
+                                $html_gm .= '<td class="center">' . round($gm_job->final_count, 2) . '</td>';
                                 $html_gm .= '<td class="center">' . round($gm_job->price_sum, 2) . '</td>';
                                 $html_gm .= '</tr>';
                                 $total_sum_gm += round($gm_job->price_sum, 2);
                             }
-                        }
-                        else{
+                        } else {
                             $html_gm .= '<tr>';
                             $html_gm .= '<td>' . $gm_job->name . '</td>';
                             $html_gm .= '<td class="center">' . round($gm_job->price, 2) . '</td>';
-                            $html_gm .= '<td class="center">' . round($gm_job->final_count,2) . '</td>';
+                            $html_gm .= '<td class="center">' . round($gm_job->final_count, 2) . '</td>';
                             $html_gm .= '<td class="center">' . round($gm_job->price_sum, 2) . '</td>';
                             $html_gm .= '</tr>';
                             $total_sum_gm += round($gm_job->price_sum, 2);
@@ -4357,35 +4270,34 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
                 foreach ($jobs as $job) {
-                    if(!$full){
-                        if($job->mount_type_id == $stage){
+                    if (!$full) {
+                        if ($job->mount_type_id == $stage) {
                             $html_dealer .= '<tr>';
                             $html_dealer .= '<td>' . $job->name . '</td>';
                             $html_dealer .= '<td class="center">' . round($job->price, 2) . '</td>';
-                            $html_dealer .= '<td class="center">' . round($job->final_count,2) . '</td>';
+                            $html_dealer .= '<td class="center">' . round($job->final_count, 2) . '</td>';
                             $html_dealer .= '<td class="center">' . round($job->price_sum, 2) . '</td>';
                             $html_dealer .= '</tr>';
                             $total_sum_dealer += round($job->price_sum, 2);
                         }
-                    }
-                    else{
+                    } else {
                         $html_dealer .= '<tr>';
                         $html_dealer .= '<td>' . $job->name . '</td>';
                         $html_dealer .= '<td class="center">' . round($job->price, 2) . '</td>';
-                        $html_dealer .= '<td class="center">' . round($job->final_count,2) . '</td>';
+                        $html_dealer .= '<td class="center">' . round($job->final_count, 2) . '</td>';
                         $html_dealer .= '<td class="center">' . round($job->price_sum, 2) . '</td>';
                         $html_dealer .= '</tr>';
                         $total_sum_dealer += round($job->price_sum, 2);
                     }
                 }
 
-                if(!empty($gm_jobs)){
+                if (!empty($gm_jobs)) {
                     $html_gm .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum_gm, 2) . '</th></tr>';
                 }
                 $html_dealer .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum_dealer, 2) . '</th></tr>';
 
 
-                if(!empty($gm_jobs)) {
+                if (!empty($gm_jobs)) {
                     $html_gm .= '</tbody></table><p>&nbsp;</p>';
                     $html_gm .= $gm_extra;
                 }
@@ -4393,58 +4305,55 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_dealer .= $dealer_extra;
 
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                if(!$full){
-                    $filename_gm = md5($calculation->id."mount_stage_gm".$stage) . ".pdf";
-                    $filename_dealer = md5($calculation->id."mount_stage_dealer".$stage) . ".pdf";
+                if (!$full) {
+                    $filename_gm = md5($calculation->id . "mount_stage_gm" . $stage) . ".pdf";
+                    $filename_dealer = md5($calculation->id . "mount_stage_dealer" . $stage) . ".pdf";
 
+                } else {
+                    $filename_gm = md5($calculation->id . "mount_single_gm") . ".pdf";
+                    $filename_dealer = md5($calculation->id . "mount_single_dealer") . ".pdf";
                 }
-                else{
-                    $filename_gm = md5($calculation->id."mount_single_gm") . ".pdf";
-                    $filename_dealer = md5($calculation->id."mount_single_dealer") . ".pdf";
-                }
-                if(!empty($gm_jobs)) {
+                if (!empty($gm_jobs)) {
                     Gm_ceilingHelpersGm_ceiling::save_pdf($html_gm, $sheets_dir . $filename_gm, "A4");
                 }
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html_dealer, $sheets_dir . $filename_dealer, "A4");
                 return 1;
 
-            }
-            else{
+            } else {
                 throw new Exception("Empty calculation id");
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    static function create_mount_estimate_by_stage_old($calc_id,$mounter,$stage,$mount_date=null,$service=null,$need_mount = null){
-        try{
-            if(!empty($calc_id)){
+    static function create_mount_estimate_by_stage_old($calc_id, $mounter, $stage, $mount_date = null, $service = null, $need_mount = null)
+    {
+        try {
+            if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
                 $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
                 $calculations_model = self::getModel('calculations');
                 $data = get_object_vars($calculation_model->getData($calc_id));
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($data['project_id']);
-                if(!empty($project->calcs_mounting_sum)){
+                if (!empty($project->calcs_mounting_sum)) {
                     $service = "service";
                 }
-                $data_mount = self::calculate_mount(0,$data['id'],null,$service);
+                $data_mount = self::calculate_mount(0, $data['id'], null, $service);
 
                 $names = $calculations_model->FindAllMounters($mounter);
                 $mount_types = $projects_mounts_model->get_mount_types();
-                for($i=0;$i<count($names);$i++){
+                for ($i = 0; $i < count($names); $i++) {
                     $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
                 }
                 $client_contacts_model = self::getModel('client_phones');
                 $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
-                for($i=0;$i<count($client_contacts);$i++){
+                for ($i = 0; $i < count($client_contacts); $i++) {
                     $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
                 }
                 $full = false;
-                if($stage == 1){
+                if ($stage == 1) {
                     $full = true;
                 }
                 $html .= '<h1>Информация</h1>';
@@ -4460,7 +4369,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 if (isset($phones)) {
-                    $html .= "<b>Телефон: </b>".$phones . "<br>";
+                    $html .= "<b>Телефон: </b>" . $phones . "<br>";
 
                 }
                 if (isset($project->project_info)) {
@@ -4474,7 +4383,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
                 if (isset($brigade_names)) {
-                    $html .= "<b>Состав монтажной бригады: </b>".$brigade_names."<br>";
+                    $html .= "<b>Состав монтажной бригады: </b>" . $brigade_names . "<br>";
                 }
                 $html .= "<b>Этап</b>: $mount_types[$stage]<br>";
                 if (isset($project->gm_calculator_note)) {
@@ -4497,7 +4406,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
                     }
                 }
-                if(isset($data['details'])){
+                if (isset($data['details'])) {
                     $html .= "<b>Примечание : </b>" . $data['details'] . "<br>";
                 }
                 if (!empty($mount_date)) {
@@ -4509,8 +4418,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>';
-                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg'))
-                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg' . '" style="width: 100%; max-height: 800px;"/> ';
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg'))
+                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg' . '" style="width: 100%; max-height: 800px;"/> ';
                 $html .= '<table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -4522,8 +4431,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_gm .= $html;
                 $html_dealer .= $html;
                 foreach ($mounting_data as $item) {
-                    if(!$full){
-                        if($item["stage"] == $stage){
+                    if (!$full) {
+                        if ($item["stage"] == $stage) {
                             $html_gm .= '<tr>';
                             $html_gm .= '<td>' . $item['title'] . '</td>';
                             $html_gm .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
@@ -4540,8 +4449,7 @@ class Gm_ceilingHelpersGm_ceiling
                             $html_dealer .= '</tr>';
                             $total_sum_dealer += round($item['dealer_salary_total'], 2);
                         }
-                    }
-                    else{
+                    } else {
                         $html_gm .= '<tr>';
                         $html_gm .= '<td>' . $item['title'] . '</td>';
                         $html_gm .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
@@ -4558,11 +4466,10 @@ class Gm_ceilingHelpersGm_ceiling
                     }
 
                 }
-                if(!$full){
+                if (!$full) {
                     $html_gm .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum_gm, 2) . '</th></tr>';
                     $html_dealer .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum_dealer, 2) . '</th></tr>';
-                }
-                else{
+                } else {
                     $html_gm .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_gm_mounting'], 2) . '</th></tr>';
                     $html_dealer .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_dealer_mounting'], 2) . '</th></tr>';
                 }
@@ -4571,60 +4478,58 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_dealer .= '</tbody></table><p>&nbsp;</p>';
 
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                if(!$full){
-                    $filename_gm = md5($calc_id."mount_stage_gm".$stage) . ".pdf";
-                    $filename_dealer = md5($calc_id."mount_stage_dealer".$stage) . ".pdf";
+                if (!$full) {
+                    $filename_gm = md5($calc_id . "mount_stage_gm" . $stage) . ".pdf";
+                    $filename_dealer = md5($calc_id . "mount_stage_dealer" . $stage) . ".pdf";
 
-                }
-                else{
-                    $filename_gm = md5($calc_id."mount_single_gm") . ".pdf";
-                    $filename_dealer = md5($calc_id."mount_single_dealer") . ".pdf";
+                } else {
+                    $filename_gm = md5($calc_id . "mount_single_gm") . ".pdf";
+                    $filename_dealer = md5($calc_id . "mount_single_dealer") . ".pdf";
                 }
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html_gm, $sheets_dir . $filename_gm, "A4");
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html_dealer, $sheets_dir . $filename_dealer, "A4");
                 return 1;
 
-            }
-            else{
+            } else {
                 throw new Exception("Empty calculation id");
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /* функция для создания PDF документа с расходкой по проекту */
-    public static function create_estimate_of_consumables($project_id,$need_price=1){
+    public static function create_estimate_of_consumables($project_id, $need_price = 1)
+    {
         try {
             $project_model = self::getModel('Project');
             $project = $project_model->getData($project_id);
+            $dealer = JFactory::getUser($project->dealer_id);
             $client_model = self::getModel('Client');
             $client = $client_model->getClientById($project->id_client);
             $calculations_model = self::getModel('calculations');
-            $model_calcform =self::getModel('CalculationForm');
+            $model_calcform = self::getModel('CalculationForm');
             $calculations = $calculations_model->new_getProjectItems($project_id);
-            $all_goods = [];$extra_components = [];
+            $all_goods = [];
+            $extra_components = [];
             $components_data = [];
-            foreach($calculations as $calc){
-                if(!empty($calc->n3)){
-                    $components_data [] = self::calculate_components($calc->id,null,0);
-                }
-                else{
-                    if(!empty($calc->cancel_metiz)){
+            foreach ($calculations as $calc) {
+                if (!empty($calc->n3)) {
+                    $components_data [] = self::calculate_components($calc->id, null, 0);
+                } else {
+                    if (!empty($calc->cancel_metiz)) {
                         $calcs_goods[] = self::deleteMetizFromGoods($model_calcform->getGoodsPricesInCalculation($calc->id, $client->dealer_id));
-                    }
-                    else{
+                    } else {
                         $calcs_goods[] = $model_calcform->getGoodsPricesInCalculation($calc->id, $client->dealer_id);
                     }
 
-                    if(!empty($calc->extra_components)){
+                    if (!empty($calc->extra_components)) {
                         $extra_components[] = json_decode($calc->extra_components);
                     }
                 }
 
             }
-            if(!empty($components_data)){
+            if (!empty($components_data)) {
                 $print_data = [];
                 $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
                 $components_list = $components_model->getFilteredItems();
@@ -4634,12 +4539,11 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($components_data as $component_array) {
                     foreach ($component_array as $key1 => $component) {
                         if ($component['stack'] == 0) {
-                            if(array_key_exists($component['id'], $print_data)){
-                                $print_data[$component['id']]['self_total'] +=  $component['self_total'];
+                            if (array_key_exists($component['id'], $print_data)) {
+                                $print_data[$component['id']]['self_total'] += $component['self_total'];
                                 $print_data[$component['id']]['dealer_total'] += $component['self_dealer_total'];
                                 $print_data[$component['id']]['quantity'] = self::rounding($print_data[$component['id']]['quantity'] + $component['quantity'], $components[$component['id']]->count_sale);
-                            }
-                            else{
+                            } else {
                                 $print_data[$component['id']] = $component;
                             }
 
@@ -4658,7 +4562,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             foreach ($calcs_goods as $goods_array) {
                 foreach ($goods_array as $goods) {
-                    if($goods->category_id != 10){
+                    if ($goods->category_id != 10) {
                         if ($goods->category_id != 1) {
                             if (array_key_exists($goods->goods_id, $all_goods)) {
                                 $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
@@ -4671,24 +4575,24 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             }
-            if(!empty($print_data)){
-                foreach ($print_data as $data){
+            if (!empty($print_data)) {
+                foreach ($print_data as $data) {
                     $found = false;
-                    foreach ($all_goods as $key=>$value){
-                        if($value->name == $data['title']){
+                    foreach ($all_goods as $key => $value) {
+                        if ($value->name == $data['title']) {
                             $value->final_count += $data['quantity'];
                             $value->price_sum += $data['self_total'];
                             $found = true;
                             break;
                         }
                     }
-                    if(!$found){
+                    if (!$found) {
                         $tempObject = (object)[
                             "name" => $data['title'],
                             "final_count" => $data['quantity'],
                             "price_sum" => $data['self_total']
                         ];
-                        $all_goods[$data['id']+1000] = $tempObject;
+                        $all_goods[$data['id'] + 1000] = $tempObject;
                     }
                 }
             }
@@ -4698,12 +4602,14 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Номер договора:  </b>" . $project_id . "<br>";
                 }
             }
+            $html .= "<b>Дилер:</b> $dealer->name;<br>";
+            $html .= "<b>Адрес:</b> $project->project_info;<br>";
             $html .= '<p>&nbsp;</p>
             <h2>Дата: ' . date("d.m.Y") . '</h2>
             <table border="0" cellspacing="0" width="100%">
             <tbody><tr><th>Наименование</th><th class="center">Кол-во</th>';
-            if($need_price == 1){
-                $html .='<th class="center">Общая стоимость</th></tr>';
+            if ($need_price == 1) {
+                $html .= '<th class="center">Общая стоимость</th></tr>';
             }
             $price_itog = 0;
             foreach ($all_goods as $key => $goods) {
@@ -4711,7 +4617,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $goods->name . '</td>';
                 /* $html .= '<td class="center">' . $item['unit'] . '</td>';*/
                 $html .= '<td class="center">' . $goods->final_count . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td class="center">' . round($goods->price_sum, 2) . '</td>';
                 }
                 $html .= '</tr>';
@@ -4721,40 +4627,38 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($extra_array as $extra_component) {
                     $html .= '<tr>';
                     $html .= '<td colspan="2">' . $extra_component->title . '</td>';
-                    if($need_price == 1){
+                    if ($need_price == 1) {
                         $html .= '<td class="center">' . round($extra_component->price, 2) . '</td>';
                     }
                     $html .= '</tr>';
                     $price_itog += round($extra_component->price, 2);
                 }
             }
-            if($need_price == 1){
+            if ($need_price == 1) {
                 $html .= '<tr><th colspan="2" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
             }
             $html .= '</tbody></table><p>&nbsp;</p>';
             $html .= '*Возможно дублирование одних и тех же комплектующих с незначительными различиями в названии из-за перехода к новой структуре хранения данных';
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            if($need_price == 1){
+            if ($need_price == 1) {
                 $filename = md5($project_id . "consumables") . ".pdf";
-            }
-            else{
+            } else {
                 $filename = md5($project_id . "consumablesnone") . ".pdf";
             }
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             return $html;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /* функция генерации pdf раскроя */
-    public static function create_cut_pdf($data){
-        try{
-            if(empty($data)) {
+    public static function create_cut_pdf($data)
+    {
+        try {
+            if (empty($data)) {
                 throw new Exception("Empty data for cut PDF");
-            }
-            else{
+            } else {
                 $calculation = $data['calculation'];
                 $project_model = self::getModel('project');
                 $project = $project_model->getData($calculation->project_id);
@@ -4763,30 +4667,30 @@ class Gm_ceilingHelpersGm_ceiling
                 $client = $client_model->getClientById($project->id_client);
                 $dealer_name = JFactory::getUser($client->dealer_id)->name;
                 $cut_data = $calculation->cut_data;
-                $calc_data = explode('||',$calculation->calc_data);
+                $calc_data = explode('||', $calculation->calc_data);
                 $walls = $calc_data[0];
                 $diags = $calc_data[1];
                 $p_usadki = $calculation->shrink_percent;
-                $usadka = (1-$p_usadki)*100;
+                $usadka = (1 - $p_usadki) * 100;
                 $array1 = array();
                 $array2 = explode(';', $calculation->calc_data);
                 array_pop($array2);
-                foreach($array2 as $str) {
+                foreach ($array2 as $str) {
                     list($key, $value) = explode('=', $str);
                     $array1[$key] = $value;
                 }
-                foreach($array1 as $key=>$value){
-                    $us_walls .= $key.'='.round($value*$p_usadki,1).';';
+                foreach ($array1 as $key => $value) {
+                    $us_walls .= $key . '=' . round($value * $p_usadki, 1) . ';';
                 }
                 $factory_jobs = $data['factory_jobs'];
-                $mpdf = new mPDF('utf-8', 'A4','8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
-                $mpdf->setAutoTopMargin='stretch';
+                $mpdf = new mPDF('utf-8', 'A4', '8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
+                $mpdf->setAutoTopMargin = 'stretch';
                 $mpdf->setAutoBottomMargin = 'stretch';
                 $header = '
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">'.$calculation->calculation_title.'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">' . $calculation->calculation_title . '</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
@@ -4821,11 +4725,11 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<tbody>';
                 $html .= '<tr>';
                 $html .= '<th>Площадь:</th><td class="td-val">' . $calculation->n4 . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td class="td-val">' . round($calculation->offcut_square,2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th><td class="td-val">'.$usadka.'</td> ';
+                      <th>Обрезки:</th><td class="td-val">' . round($calculation->offcut_square, 2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th><td class="td-val">' . $usadka . '</td> ';
                 $html .= '</tr>';
                 $html .= '<tr>';
-                $html .= '<th>Периметр:</th><td class="td-val">' .$calculation->n5 . 'м</td>
+                $html .= '<th>Периметр:</th><td class="td-val">' . $calculation->n5 . 'м</td>
                       <th>Кол-во углов:</th><td class="td-val">' . $calculation->n9 . '</td>';
                 $html .= '</tr>';
                 $html .= '<tr>';
@@ -4839,16 +4743,15 @@ class Gm_ceilingHelpersGm_ceiling
                 $mpdf->WriteHTML($stylesheet, 1);
                 $mpdf->WriteHTML($html, 2);
                 $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-                if($mpdf->y < $unusedSpaceH){
-                    $min_height = ($unusedSpaceH -5)*3.779528;
+                if ($mpdf->y < $unusedSpaceH) {
+                    $min_height = ($unusedSpaceH - 5) * 3.779528;
                     $max_height_attr = " max-height:$min_height;";
-                }
-                else{
+                } else {
                     $max_height_attr = "";
                 }
                 $html_image = '<div align="center" style="width: 100%;page-break-after:always;">';
                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"))
-                    $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                    $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;' . $max_height_attr . '"/>';
                 $html_image .= '</div>';
                 $html_image .= "<pagebreak/>";
 
@@ -4861,11 +4764,11 @@ class Gm_ceilingHelpersGm_ceiling
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:'.$calculation->calculation_title.'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:' . $calculation->calculation_title . '</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
-                $mpdf->SetHTMLHeader($header,'O',true);
+                $mpdf->SetHTMLHeader($header, 'O', true);
                 $html_cut .= '<table >';
                 $html_cut .= '<tbody>';
                 $html_cut .= '<tr>';
@@ -4892,16 +4795,16 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_cut .= '<table>';
                 $html_cut .= '<tbody>';
                 $html_cut .= '<tr>';
-                $html_cut .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
+                $html_cut .= '<th>Стороны: </th><td>' . $us_walls . '</td>';
                 $html_cut .= '</tr>';
                 $html_cut .= '</tbody>';
                 $html_cut .= '</table>';
                 $html_cut .= '<table>';
                 $html_cut .= '<tbody>';
                 $html_cut .= '<tr>';
-                $html_cut .=  '<th>Площадь:</th><td>' . $calculation->n4 . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($calculation->offcut_square,2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th> <td>'.$usadka.'</td>';
+                $html_cut .= '<th>Площадь:</th><td>' . $calculation->n4 . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($calculation->offcut_square, 2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th> <td>' . $usadka . '</td>';
                 $html_cut .= '</tr>';
                 $html_cut .= '<tr>';
                 $html_cut .= '<th>Периметр:</th><td>' . $calculation->n5 . 'м</td><th>Кол-во углов:</th><td>' . $calculation->n9 . '</td>';
@@ -4915,9 +4818,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html_cut .= '</table>';
                 $mpdf->WriteHTML($stylesheet, 1);
                 $mpdf->WriteHTML($html_cut, 2);
-                $footer ='<hr style="color:#414099;size:4px">';
+                $footer = '<hr style="color:#414099;size:4px">';
                 $footer .= '<div class="left_f">';
-                $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
+                $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> " . JFactory::getUser()->name . "</span><br>";
                 $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
                 $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
                 $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
@@ -4927,20 +4830,19 @@ class Gm_ceilingHelpersGm_ceiling
                 $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
                 $footer .= '</div>';
                 $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
-                $footer .= '<b>Сумма:'. $calculation->canvases_sum .'р.</b>';
+                $footer .= '<b>Сумма:' . $calculation->canvases_sum . 'р.</b>';
                 $footer .= '</div>';
                 $mpdf->SetHTMLFooter($footer);
                 $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-                if($mpdf->y < $unusedSpaceH){
-                    $min_height = ($unusedSpaceH -5)*3.779528;
+                if ($mpdf->y < $unusedSpaceH) {
+                    $min_height = ($unusedSpaceH - 5) * 3.779528;
                     $max_height_attr = " max-height:$min_height;";
-                }
-                else{
+                } else {
                     $max_height_attr = "";
                 }
                 $html = '<div align="center" style="width: 100%;">';
                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $calculation->id) . ".svg"))
-                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                    $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $calculation->id) . ".svg" . '" style="width: 100%;' . $max_height_attr . '"/>';
                 $html .= '</div>';
 
                 $mpdf->WriteHTML($stylesheet, 1);
@@ -4949,27 +4851,26 @@ class Gm_ceilingHelpersGm_ceiling
                 $mpdf->WriteHTML($html_cut, 2);
                 $mpdf->WriteHTML($html, 2);
                 $filename = md5($calculation->id . 'cutpdf') . '.pdf';
-                $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');
+                $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . $filename, 'F');
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
     }
 
-    public static function create_cut_pdf_old($calc_id=null,$data = null){
-        try{
+    public static function create_cut_pdf_old($calc_id = null, $data = null)
+    {
+        try {
             $us_walls = '';
             $html = '';
             $html_cut = '';
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
                 $data = $calculation_model->getData($calc_id);
                 $data = get_object_vars($data);
             }
-            if(empty($calc_id)){
+            if (empty($calc_id)) {
                 $calc_id = $data['id'];
             }
             $project_model = self::getModel('project');
@@ -4980,30 +4881,30 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_name = JFactory::getUser($client->dealer_id)->name;
             $cut_data = $data['cut_data'];
             $p_usadki = $data['shrink_percent'];
-            $calc_data = explode('||',$data['calc_data']);
+            $calc_data = explode('||', $data['calc_data']);
             $walls = $calc_data[0];
             $diags = $calc_data[1];
             $p_usadki = $data['shrink_percent'];
-            $usadka = (1-$p_usadki)*100;
+            $usadka = (1 - $p_usadki) * 100;
             $array1 = array();
             $array2 = explode(';', $data['calc_data']);
             array_pop($array2);
-            foreach($array2 as $str) {
+            foreach ($array2 as $str) {
                 list($key, $value) = explode('=', $str);
                 $array1[$key] = $value;
             }
-            foreach($array1 as $key=>$value){
-                $us_walls .= $key.'='.round($value*$p_usadki,1).';';
+            foreach ($array1 as $key => $value) {
+                $us_walls .= $key . '=' . round($value * $p_usadki, 1) . ';';
             }
-            $mpdf = new mPDF('utf-8', 'A4','8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
-            $mpdf->setAutoTopMargin='stretch';
+            $mpdf = new mPDF('utf-8', 'A4', '8', '', 10, 10, 7, 7, 10, 10); //'8', '', 1, 1, 5, 5, 1, 0);
+            $mpdf->setAutoTopMargin = 'stretch';
             $mpdf->setAutoBottomMargin = 'stretch';
             //throw new Exception($data['calculation_title']);
             $header = '
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">'.$data['calculation_title'].'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">' . $data['calculation_title'] . '</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
@@ -5038,8 +4939,8 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<tbody>';
             $html .= '<tr>';
             $html .= '<th>Площадь:</th><td class="td-val">' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td class="td-val">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th><td class="td-val">'.$usadka.'</td> ';
+                      <th>Обрезки:</th><td class="td-val">' . round($data['offcut_square'], 2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th><td class="td-val">' . $usadka . '</td> ';
             $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<th>Периметр:</th><td class="td-val">' . $data['n5'] . 'м</td>
@@ -5055,16 +4956,15 @@ class Gm_ceilingHelpersGm_ceiling
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html, 2);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-            if($mpdf->y < $unusedSpaceH){
-                $min_height = ($unusedSpaceH -5)*3.779528;
+            if ($mpdf->y < $unusedSpaceH) {
+                $min_height = ($unusedSpaceH - 5) * 3.779528;
                 $max_height_attr = " max-height:$min_height;";
-            }
-            else{
+            } else {
                 $max_height_attr = "";
             }
             $html_image = '<div align="center" style="width: 100%;page-break-after:always;">';
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
-                $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                $html_image .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;' . $max_height_attr . '"/>';
             $html_image .= '</div>';
             $html_image .= "<pagebreak/>";
 
@@ -5077,11 +4977,11 @@ class Gm_ceilingHelpersGm_ceiling
                 <table width="100%" style="vertical-align: middle;">
                     <tr>
                         <td width="33%"  style="text-align:left"><!--<img style="max-height:50px" src="/images/GM.png"/>--></td>
-                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:'.$data['calculation_title'].'</h1></td>
+                        <td width="33%" style="text-align: center;"><h1 style="text-align:center;">Раскрой:' . $data['calculation_title'] . '</h1></td>
                         <td width="33%" style="text-align: right;">{DATE j.m.Y}</td>
                     </tr>
                 </table>';
-            $mpdf->SetHTMLHeader($header,'O',true);
+            $mpdf->SetHTMLHeader($header, 'O', true);
             $html_cut .= '<table >';
             $html_cut .= '<tbody>';
             $html_cut .= '<tr>';
@@ -5108,16 +5008,16 @@ class Gm_ceilingHelpersGm_ceiling
             $html_cut .= '<table>';
             $html_cut .= '<tbody>';
             $html_cut .= '<tr>';
-            $html_cut .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
+            $html_cut .= '<th>Стороны: </th><td>' . $us_walls . '</td>';
             $html_cut .= '</tr>';
             $html_cut .= '</tbody>';
             $html_cut .= '</table>';
             $html_cut .= '<table>';
             $html_cut .= '<tbody>';
             $html_cut .= '<tr>';
-            $html_cut .=  '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
-                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'],2) . 'м<sup>2</sup></td>
-                      <th>% усадки:</th> <td>'.$usadka.'</td>';
+            $html_cut .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td>
+                      <th>Обрезки:</th><td style = "border-style:hidden">' . round($data['offcut_square'], 2) . 'м<sup>2</sup></td>
+                      <th>% усадки:</th> <td>' . $usadka . '</td>';
             $html_cut .= '</tr>';
             $html_cut .= '<tr>';
             $html_cut .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>
@@ -5130,9 +5030,9 @@ class Gm_ceilingHelpersGm_ceiling
             $html_cut .= '</table>';
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($html_cut, 2);
-            $footer ='<hr style="color:#414099;size:4px">';
+            $footer = '<hr style="color:#414099;size:4px">';
             $footer .= '<div class="left_f">';
-            $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> ".JFactory::getUser()->name."</span><br>";
+            $footer .= "<span>Отгрузку разрешил:</span> _________ <span class='name'> " . JFactory::getUser()->name . "</span><br>";
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
             $footer .= "<span>Отпустил:</span><div class='lines'> _______________  __________________</div>";
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
@@ -5142,20 +5042,19 @@ class Gm_ceilingHelpersGm_ceiling
             $footer .= "<div class='podp'>Подпись</div><div class='rs'> Расшифровка</div><br>";
             $footer .= '</div>';
             $footer .= '<div align="right" style="width: 100%;font-size: 12pt";font-style: italic;>';
-            $footer .= '<b>Сумма:'. $data['canvases_sum'] .'р.</b>';
+            $footer .= '<b>Сумма:' . $data['canvases_sum'] . 'р.</b>';
             $footer .= '</div>';
             $mpdf->SetHTMLFooter($footer);
             $unusedSpaceH = $mpdf->h - $mpdf->y - $mpdf->bMargin;
-            if($mpdf->y < $unusedSpaceH){
-                $min_height = ($unusedSpaceH -5)*3.779528;
+            if ($mpdf->y < $unusedSpaceH) {
+                $min_height = ($unusedSpaceH - 5) * 3.779528;
                 $max_height_attr = " max-height:$min_height;";
-            }
-            else{
+            } else {
                 $max_height_attr = "";
             }
             $html = '<div align="center" style="width: 100%;">';
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
-                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;'.$max_height_attr.'"/>';
+                $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;' . $max_height_attr . '"/>';
             $html .= '</div>';
 
             $mpdf->WriteHTML($stylesheet, 1);
@@ -5164,16 +5063,16 @@ class Gm_ceilingHelpersGm_ceiling
             $mpdf->WriteHTML($html_cut, 2);
             $mpdf->WriteHTML($html, 2);
             $filename = md5($calc_id . 'cutpdf') . '.pdf';
-            $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/'.$filename, 'F');
-        }
-        catch(Exception $e)
-        {
+            $mpdf->Output($_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . $filename, 'F');
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
     }
+
     /*функция генерации pdf для менеджера*/
-    public static function create_manager_estimate($data){
+    public static function create_manager_estimate($data)
+    {
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             $canvas = $data['canvas'];
@@ -5213,32 +5112,31 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<table style="width:100%;border:0px"><thead><td>Изображение</td><td>Длины сторон</td></thead>';
             $html .= '<tbody>
                        <tr>';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" .  $calculation->id) . ".svg")) {
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg")) {
                 $html .= '<td><div class="col-md-8"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg" . '" style="width: 100%; max-height: 530px;"/></div></td>';
+            } else {
+                $html .= '<td>Отсутствует</td>';
             }
-            else{
-                $html.= '<td>Отсутствует</td>';
-            }
-            $html .= '<td>'.str_replace(';','<br>',$calculation->calc_data).'</td>';
-            $html .='</tr></tbody></table>';
+            $html .= '<td>' . str_replace(';', '<br>', $calculation->calc_data) . '</td>';
+            $html .= '</tr></tbody></table>';
 
 
             $html .= '<table border="0" cellspacing="0" width="100%">
                     <tbody><tr><th>Наименование</th>';
 
-            $html .='<th class="center">Себестоимость</th>';
-            $html .='<th class="center">Кол-во</th>';
-            $html .='<th>Итого</th>';
-            $html .='</tr>';
+            $html .= '<th class="center">Себестоимость</th>';
+            $html .= '<th class="center">Кол-во</th>';
+            $html .= '<th>Итого</th>';
+            $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<td>' . $canvas->name . '</td>';
             $html .= '<td>' . round($canvas->dealer_price, 2) . '</td>';
             $html .= '<td class="center">' . $calculation->n4 . '</td>';
-            $html .= '<td>' . round($canvas->dealer_price*$calculation->n4,2). '</td>';
+            $html .= '<td>' . round($canvas->dealer_price * $calculation->n4, 2) . '</td>';
             $html .= '</tr>';
-            $total_sum += round($canvas->dealer_price*$calculation->n4,2);
-            if(!empty($offcuts)){
-                $offcuts_total = $offcuts->count*$offcuts->price;
+            $total_sum += round($canvas->dealer_price * $calculation->n4, 2);
+            if (!empty($offcuts)) {
+                $offcuts_total = $offcuts->count * $offcuts->price;
                 $html .= '<tr>';
                 $html .= '<td>' . $offcuts->name . '</td>';
                 $html .= '<td >' . round($offcuts->price, 2) . '</td>';
@@ -5247,35 +5145,35 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '</tr>';
                 $total_sum += $offcuts_total;
             }
-            if(!empty($factory_jobs)){
+            if (!empty($factory_jobs)) {
                 foreach ($factory_jobs as $job) {
                     $html .= '<tr>';
                     $html .= '<td>' . $job->name . '</td>';
                     $html .= '<td>' . round($job->price, 2) . '</td>';
                     $html .= '<td class="center">' . $job->count . '</td>';
-                    $html .= '<td>' . $job->price_sum. '</td>';
+                    $html .= '<td>' . $job->price_sum . '</td>';
                     $html .= '</tr>';
                     $total_sum += $job->price_sum;
                 }
             }
-            if(!empty($photoprint)){
+            if (!empty($photoprint)) {
                 $html .= '<tr>';
                 $html .= '<td>Фотопечать</td>';
                 $html .= '<td>-</td>';
-                $html .= '<td class="center">'.$photoprint->square.'</td>';
-                $html .= '<td>'.$photoprint->price.'</td>';
+                $html .= '<td class="center">' . $photoprint->square . '</td>';
+                $html .= '<td>' . $photoprint->price . '</td>';
                 $html .= '</tr>';
                 $total_sum += $photoprint->price;
             }
-            if ( $calculation->n9 > 0) {
+            if ($calculation->n9 > 0) {
                 $html .= '<tr>';
                 $html .= '<td>Всего углов</td>';
                 $html .= '<td></td>';
-                $html .= '<td class="center">' .  $calculation->n9 . '</td>';
+                $html .= '<td class="center">' . $calculation->n9 . '</td>';
                 $html .= '<td></td>';
                 $html .= '</tr>';
             }
-            if($total_sum<MIN_SUM){
+            if ($total_sum < MIN_SUM) {
                 $total_sum = MIN_SUM;
             }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_sum, 2) . '</th></tr>';
@@ -5283,40 +5181,39 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tbody></table><p>&nbsp;</p>';
 
 
-            $filename = md5( $calculation->id . "manager") . ".pdf";
+            $filename = md5($calculation->id . "manager") . ".pdf";
 
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function create_manager_estimate_old($need_price,$calc_id=null,$data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null){
+    public static function create_manager_estimate_old($need_price, $calc_id = null, $data = null, $canvases_data = null, $offcut_square_data = null, $guild_data = null)
+    {
         try {
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            if(!empty($calc_id)){
+            if (!empty($calc_id)) {
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
-            if(empty($calc_id)){
+            if (empty($calc_id)) {
                 $calc_id = $data['id'];
             }
             $project_model = self::getModel('project');
             $project = $project_model->getData($data['project_id']);
-            if(!empty($data['n3'])) {
+            if (!empty($data['n3'])) {
                 if (empty($canvases_data)) {
                     $canvases_data = self::calculate_canvases($calc_id);
                 }
                 if (empty($offcut_square_data)) {
-                    if($data['need_cuts']) {
+                    if ($data['need_cuts']) {
                         $offcut_square_data = self::calculate_offcut($calc_id);
                     }
                 }
             }
-            if(empty($guild_data)){
+            if (empty($guild_data)) {
                 $guild_data = self::calculate_guild_jobs($calc_id);
             }
             $html = '<h1>Информация</h1>';
@@ -5336,7 +5233,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= "<b>Адрес: </b>" . $project->project_info . "<br>";
                 }
             }
-            if (isset($project->project_mounter)&&$need_price == 1) {
+            if (isset($project->project_mounter) && $need_price == 1) {
                 if ($project->project_mounter) {
                     $html .= "<b>Монтажная группа: </b>" . JFactory::getUser($project->project_mounter)->name . "<br>";
                 }
@@ -5350,15 +5247,15 @@ class Gm_ceilingHelpersGm_ceiling
                     <h1>Для менеджера</h1>
                     <table border="0" cellspacing="0" width="100%">
                     <tbody><tr><th>Наименование</th>';
-            if($need_price == 1){
-                $html .='<th class="center">Себестоимость</th>';
+            if ($need_price == 1) {
+                $html .= '<th class="center">Себестоимость</th>';
             }
-            $html .='<th class="center">Кол-во</th>';
-            if($need_price == 1){
-                $html .=' <th>Итого</th>';
+            $html .= '<th class="center">Кол-во</th>';
+            if ($need_price == 1) {
+                $html .= ' <th>Итого</th>';
             }
-            $html .='</tr>';
-            if($canvases_data['min_self_dealer_total']){
+            $html .= '</tr>';
+            if ($canvases_data['min_self_dealer_total']) {
                 $canvases_data['self_dealer_total'] = $canvases_data['min_self_dealer_total'];
             }
             if ($data['n3']) {
@@ -5371,24 +5268,24 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td>' . round($canvases_data['self_dealer_price'], 2) . '</td>';
                 }
                 $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td>' . $canvases_data['self_dealer_total'] . '</td>';
                 }
                 $html .= '</tr>';
             }
-            if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5 && $data['need_cuts']) {
+            if ($data['n3'] && $data['offcut_square'] > $data['n4'] * 0.5 && $data['need_cuts']) {
                 $name = $offcut_square_data['title'];
                 $html .= '<tr>';
                 $html .= '<td>' . $name . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td >' . round($offcut_square_data['self_dealer_price'], 2) . '</td>';
                 }
                 $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td>' . $offcut_square_data['self_dealer_total'] . '</td>';
                 }
                 $html .= '</tr>';
@@ -5396,11 +5293,11 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($guild_data["guild_data"] as $item) {
                 $html .= '<tr>';
                 $html .= '<td>' . $item['title'] . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td>' . round($item['gm_salary'], 2) . '</td>';
                 }
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                if($need_price == 1){
+                if ($need_price == 1) {
                     $html .= '<td>' . $item['gm_salary_total'] . '</td>';
                 }
                 $html .= '</tr>';
@@ -5413,11 +5310,11 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td></td>';
                 $html .= '</tr>';
             }
-            if($canvases_data['min_self_dealer_total']) {
-                $offcut_square_data['self_dealer_total']  = 0;
+            if ($canvases_data['min_self_dealer_total']) {
+                $offcut_square_data['self_dealer_total'] = 0;
                 $guild_data["total_gm_guild"] = 0;
             }
-            if($need_price == 1){
+            if ($need_price == 1) {
                 $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
                 $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
             }
@@ -5425,24 +5322,22 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
                 $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
-            if($need_price == 1){
+            if ($need_price == 1) {
                 $filename = md5($calc_id . "manager") . ".pdf";
-            }
-            else{
+            } else {
                 $filename = md5($calc_id . "managernone") . ".pdf";
             }
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_common_manager_estimate($project_id) {
+
+    public static function create_common_manager_estimate($project_id)
+    {
         try {
-            if (!empty($project_id))
-            {
+            if (!empty($project_id)) {
                 $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
                 $calculations_model = self::getModel('calculations');
                 $calculations = $calculations_model->new_getProjectItems($project_id);
@@ -5482,37 +5377,36 @@ class Gm_ceilingHelpersGm_ceiling
                 $model = self::getModel("project");
                 $calculations_id = $model->getCalculationIdById($project_id);
                 $array_files = [];
-                array_push($array_files,$html);
+                array_push($array_files, $html);
                 foreach ($calculations_id as $item)
-                    $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "manager") . ".pdf";
+                    $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($item->id . "manager") . ".pdf";
                 self::save_pdf($array_files, $filename, "A4");
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function create_common_cut_pdf($project_id) {
+
+    public static function create_common_cut_pdf($project_id)
+    {
         try {
-            if (!empty($project_id))
-            {
+            if (!empty($project_id)) {
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($project_id . "common_cutpdf") . ".pdf";
                 $model = self::getModel("project");
                 $calculations_id = $model->getCalculationIdById($project_id);
                 $array_files = [];
                 foreach ($calculations_id as $item)
-                    $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "cutpdf") . ".pdf";
+                    $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($item->id . "cutpdf") . ".pdf";
                 self::save_pdf($array_files, $filename, "A4");
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
-    public static function print_components($project_id, $components_data){
+    public static function print_components($project_id, $components_data)
+    {
         try {
             $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $components_list = $components_model->getFilteredItems();
@@ -5628,12 +5522,11 @@ class Gm_ceilingHelpersGm_ceiling
             $filename = md5($project_id . "-8") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     public static function rounding($id, $value)
     {
         try {
@@ -5643,19 +5536,18 @@ class Gm_ceilingHelpersGm_ceiling
                     $count++;
                 }
                 $id = $count * $value;
-            }
-            else {
+            } else {
                 $id = 0;
             }
             return $id;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     //Печатаем подготовленные данные в PDF
-    public static function save_pdf($html, $filename, $mode, $type = null){
+    public static function save_pdf($html, $filename, $mode, $type = null)
+    {
         try {
             if (is_file($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename);
@@ -5695,64 +5587,67 @@ class Gm_ceilingHelpersGm_ceiling
 
             $mpdf->Output($filename, 'F');
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     public static function getClassPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation)
     {
         try {
             return new mPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     //Уведомление разных структур
-    public static function notify($data, $type){
+    public static function notify($data, $type)
+    {
         try {
             $mailer = JFactory::getMailer();
             $config = JFactory::getConfig();
-            $sender = array(
+            $sender = [
                 $config->get('mailfrom'),
                 $config->get('fromname')
-            );
+            ];
             $mailer->setSender($sender);
-            $client = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+            $clientFormModel = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
             $mounterModel = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-
+            $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $projectId = null;
+            if (is_array($data)) {
+                $projectId = $data['id'];
+            }
+            if (is_object($data)) {
+                $projectId = $data->id;
+            }
+            if (!empty($projectId)) {
+                $projectInfo = $projectModel->getDataForNotify($projectId);
+            }
             if ($type == 0) {
                 //Уведомление о записи на замер
-                $gauger = JFactory::getUser($data['project_calculator']);
+                $gauger = JFactory::getUser($projectInfo->project_calculator);
                 $mailer->addRecipient($gauger->email);
                 $dealer = JFactory::getUser($gauger->dealer_id);
                 $mailer->addRecipient($dealer->email);
                 $body = "Здравствуйте. На сайте произведена новая запись на замер\n\n";
-                if (!empty($data['client_name'])) {
-                    $body .= "Имя клиента: " . $data['client_name'] . "\n";
+                if (!empty($projectInfo->client_name)) {
+                    $body .= "Клиент:  $projectInfo->client_name.\n";
                 }
-                if (!empty($data['client_contacts'])) {
-                    if (is_array($data['client_contacts'])) {
-                        foreach ($data['client_contacts'] as $key => $value) {
-                            $body .= "Телефон клиента: " . $value . "\n";
+                if (!empty($projectInfo->client_contacts)) {
+                    $body .= "Контакты: $projectInfo->client_contacts \n";
+                }
+                if (!empty($projectInfo->project_info))
+                    $body .= "Адрес:  $projectInfo->project_info.\n";
+                $body .= "Дата замера: $projectInfo->measure_date. \n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        if ($note->type == 1 || $note->type == 2) {
+                            $body .= "$note->description $note->value. \n";
                         }
-                    } else {
-                        $body .= "Телефон клиента: " . $data['client_contacts'] . "\n";
                     }
                 }
-                $address = $data['project_info'];
-                if (!empty($data['project_info_house'])) $address .= ", дом: " . $data['project_info_house'];
-                if (!empty($data['project_info_bdq'])) $address .= ", корпус: " . $data['project_info_bdq'];
-                if (!empty($data['project_apartment'])) $address .= ", квартира: " . $data['project_apartment'];
-                if (!empty($data['project_info_porch'])) $address .= ", подъезд: " . $data['project_info_porch'];
-                if (!empty($data['project_info_floor'])) $address .= ", этаж: " . $data['project_info_floor'];
-                if (!empty($data['project_info_code'])) $address .= ", код: " . $data['project_info_code'];
-                $body .= "Адрес: " . $address . "\n";
-                $body .= "Дата замера: " . $data['project_calculation_date'] . "\n";
-
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новая запись на замер');
                 $mailer->setBody($body);
@@ -5775,7 +5670,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
 
-                $dopinfo = $client->getInfo($data->client_id);
+                $dopinfo = $clientFormModel->getInfo($data->client_id);
                 $body = "Здравствуйте. Новый договор " . $data->id . " ожидает монтажа!\n\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
@@ -5792,78 +5687,68 @@ class Gm_ceilingHelpersGm_ceiling
                 $user_model = self::getModel('users');
                 $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
-                    if(!empty($user->email)) {
+                    if (!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-                $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство\n\n";
-                $body .= "Имя клиента: " . $data->client_id . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
-
-                if(!empty($data->dealer_calculator_note)){
-                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
+                $body = "Здравствуйте. Новый договор " . $projectId . " отправлен в производство\n\n";
+                if ($projectInfo->dealer_id == 1) {
+                    if (!empty($projectInfo->cleint_name)) {
+                        $body .= "Клиент: $projectInfo->client_name. \n";
+                    }
+                    if (!empty($projectInfo->client_contacts)) {
+                        $body .= "Контакты: $projectInfo->client_contacts. \n";
+                    }
                 }
-                if(!empty($data->gm_calculator_note)){
-                    $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
+                if (!empty($projectInfo->project_info)) {
+                    $body .= "Адрес: $projectInfo->project_info. \n";
                 }
-                if(!empty($data->dealer_chief_note)){
-                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
+                $dealer = JFactory::getUser($projectInfo->dealer_id);
+                $body .= "Дилер: $dealer->name. \n";
+                if ($projectInfo->dealer_id == 1) {
+                    $sum = (!empty((float)$projectInfo->new_project_sum)) ? $projectInfo->new_project_sum : $projectInfo->project_sum;
+                    $body .= "Сумма договора: $sum. \n";
                 }
-                if(!empty($data->gm_chief_note)){
-                    $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        $body .= "$note->description $note->value; \n";
+                    }
                 }
-                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
-                $body .= "Сумма договора: " . $sum . "\n";
-                $user = JFactory::getUser();
-                $dealer = JFactory::getUser($user->dealer_id);
-                $body .= "Дилер: " . $dealer->name . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор в производстве');
                 $mailer->setBody($body);
             } elseif ($type == 3) {
                 //Уведомление о выполнении договора
                 $user_model = self::getModel('users');
-                if($data->dealer_id == 1){
+                if ($projectInfo->dealer_id == 1) {
                     //отправка менеджерам ГМ
                     $users = $user_model->getUserByGroup(16);
-                }
-                else{
+                } else {
                     //отправка менеджерам дилера и самому дилеру
-                    $users = $user_model->getUsersByGroupAndDealer(13,$data->dealer_id);
-                    $dealer = JFactory::getUser($data->dealer_id);
-                    array_push($users,$dealer);
+                    $users = $user_model->getUsersByGroupAndDealer(13, $projectInfo->dealer_id);
+                    $dealer = JFactory::getUser($projectInfo->dealer_id);
+                    array_push($users, $dealer);
                 }
                 foreach ($users as $user) {
-                    if(!empty($user->email)) {
+                    if (!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-                $dopinfo = $client->getInfo($data->client_id);
-                $body = "Здравствуйте.  Договор № " . $data->id . " выполнен \n\n";
-                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->projecct_sum;
-                $body .= "Сумма договора: " . $sum . "\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
-                if(!empty($data->dealer_calculator_note)){
-                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
+                $body = "Здравствуйте.  Договор № " . $projectId . " выполнен \n\n";
+                $sum = (!empty((float)$projectInfo->new_project_sum)) ? $projectInfo->new_project_sum : $projectInfo->projecct_sum;
+                $body .= "Адрес: $projectInfo->project_info. \n";
+                $body .= "Клиент: $projectInfo->client_name. \n";
+                $body .= "Контакты: $projectInfo->client_contacts. \n";
+                $body .= "Сумма договора: $sum. \n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        $body .= "$note->description $note->value. \n";
+                    }
                 }
-                if(!empty($data->gm_calculator_note)){
-                    $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                }
-                if(!empty($data->dealer_chief_note)){
-                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
-                }
-                if(!empty($data->gm_chief_note)){
-                    $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
-                }
-                if(!empty($data->mounter_note)){
-                    $body .= "Примечание монтажной бригады: " . $data->mounter_note . "\n";
-                }
-                if(!empty($data->gm_mounter_note)){
-                    $body .= "Примечание монтажной бригады ГМ: " . $data->gm_mounter_note . "\n";
+
+                if(file_exists($_SERVER["DOCUMENT_ROOT"]."/uploaded_calc_images/images_$projectId.zip")){
+                    $body .= "Во вложении прикреплены все изображения по проекту. \n";
+                    $mailer->AddAttachment($_SERVER["DOCUMENT_ROOT"]."/uploaded_calc_images/images_$projectId.zip");
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Договор выполнен');
@@ -5871,38 +5756,54 @@ class Gm_ceilingHelpersGm_ceiling
             } elseif ($type == 4) {
                 //Уведомление об отправке договора в отказы
                 $user_model = self::getModel('users');
-                if($data->dealer_id == 1){
+                if ($projectInfo->dealer_id == 1) {
                     //отправка менеджерам ГМ
                     $users = $user_model->getUserByGroup(16);
-                }
-                else{
+                } else {
                     //отправка менеджерам дилера и самому дилеру
-                    $users = $user_model->getUsersByGroupAndDealer(13,$data->dealer_id);
-                    $dealer = JFactory::getUser($data->dealer_id);
-                    array_push($users,$dealer);
+                    $users = $user_model->getUsersByGroupAndDealer(13, $projectInfo->dealer_id);
+                    $dealer = JFactory::getUser($projectInfo->dealer_id);
+                    array_push($users, $dealer);
                 }
                 foreach ($users as $user) {
-                    if(!empty($user->email)) {
+                    if (!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-                $notes = self::getProjectNotes($data->id,3);
-                foreach($notes as $note){
-                    $noteText .= $note->description.$note->value.";\n\n";
+                $notes = self::getProjectNotes($projectId, 3);
+                $noteText = '';
+                if (!empty($notes)) {
+                    foreach ($notes as $note) {
+                        $noteText .= "$note->description $note->value.\n";
+                    }
                 }
-                $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте. Проект " . $data->id . " перемещен в отказы.\n\n";
-                $body .= "Имя клиента: " . $data->client_id . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
-                $body .= "Причина отказа: " . $noteText. "\n";
-                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
-                $body .= "Сумма проекта:" .$sum ."\n";
+                switch($projectInfo->project_status){
+                    case 2:
+                        $status = 'отказ от замера';
+                        break;
+                    case 3:
+                        $status = 'отказ от договора';
+                        break;
+                    case 15:
+                        $status = 'отказ от сотрудничества';
+                        break;
+                    default:
+                        $status = 'отказы';
+                }
+                $body = "Здравствуйте. Проект " . $projectId . " перемещен в $status.\n\n";
+                $body .= "Клиент: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->cleint_contacts . "\n";
+                $body .= "Адрес: " . $projectInfo->project_info . "\n";
+                if (!empty($noteText)) {
+                    $body .= "Причина отказа: " . $noteText . "\n";
+                }
+                $sum = (!empty((float)$projectInfo->new_project_sum)) ? $projectInfo->new_project_sum : $projectInfo->project_sum;
+                $body .= "Сумма проекта:" . $sum . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-                $mailer->setSubject('Договор перемещен в отказы');
+                $mailer->setSubject("Проект перемещен в $status");
                 $mailer->setBody($body);
             } elseif ($type == 5) {
-                $dopinfo = $client->getInfo($data->client_id);
+                $dopinfo = $clientFormModel->getInfo($data->id_client);
                 $body = "Здравствуйте. Необходимо перезвонить:\n\n";
                 $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
                 $body .= "Дата и время: " . $data->date_time . "\n";
@@ -5917,72 +5818,83 @@ class Gm_ceilingHelpersGm_ceiling
                 $user_model = self::getModel('users');
                 $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
-                    if(!empty($user->email)) {
+                    if (!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-                $dopinfo = $client->getInfo($data->client_id);
-                $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство, несколько потолков перемещены в отказы под номером " . $data->refuse_id . "!\n\n";
-                $body .= "Имя клиента: " . $data->client_id . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
-
-                if(!empty($data->dealer_calculator_note)){
-                    $body .= "Примечание замерщика: " . $data->dealer_calculator_note . "\n";
-                }
-                if(!empty($data->gm_calculator_note)){
-                    $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                }
-                if(!empty($data->dealer_chief_note)){
-                    $body .= "Примечание начальника МС: " . $data->dealer_chief_note . "\n";
-                }
-                if(!empty($data->gm_chief_note)){
-                    $body .= "Примечание начальника МС ГМ: " . $data->gm_chief_note . "\n";
-                }
-                $sum = (!empty((float)$data->new_project_sum)) ? $data->new_project_sum : $data->project_sum;
-                $body .= "Сумма договора: " . $sum . "\n";
-                $user = JFactory::getUser();
-                $dealer = JFactory::getUser($user->dealer_id);
+                $body = "Здравствуйте. Договор №$data->id отправлен в производство. Один или несколько потолков перемещены в проект №$data->refuse_id и переведены в статус `Отказ от договора`.\n\n";
+                $body .= "Клиент: $projectInfo->client_name. \n";
+                $body .= "Контакты: $projectInfo->client_contacts. \n";
+                $body .= "Адрес: $projectInfo->project_info. \n";
+                $sum = (!empty((float)$projectInfo->new_project_sum)) ? $projectInfo->new_project_sum : $projectInfo->project_sum;
+                $body .= "Сумма договора: $sum. \n";
+                $dealer = JFactory::getUser($projectInfo->dealer_id);
                 $body .= "Дилер: " . $dealer->name . "\n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        $body .= "$note->description $note->value. \n";
+                    }
+                }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Новый договор в производстве');
                 $mailer->setBody($body);
             } elseif ($type == 7) {
                 //Уведомление о назначении договора на монтаж нужной бригаде
-                if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
-                $dopinfo = $client->getInfo($data->id_client);
                 $body = "Здравствуйте! Новый договор " . $data->id . " ожидает монтажа!\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
-                $body .= "Периметр: " . $data->perimeter . "\n";
-                $body .= "З/п: " . $data->salary . "\n";
-                $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
-                if ($data->project_mounting_date != "0000-00-00 00:00:00")
-                    $body .= "Дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
-                $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
-                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-                $mailer->setSubject('Новый договор назначен на монтаж');
-                $mailer->setBody($body);
-                if(!empty($data->mount_data)){
-                    $mount_data = json_decode(htmlspecialchars_decode($data->mount_data));
-                    foreach ($mount_data as $key => $value) {
-                        $email = JFactory::getUser($value->mounter)->email;
-                        $mailer->addRecipient($email);
+                $body .= "Клиент: $projectInfo->client_name. \n";
+                $body .= "Контакты: $projectInfo->client_contacts.\n";
+                $body .= "Адрес: $projectInfo->project_info. \n";
+                $mountData = [];
+                if (!empty($projectInfo->mount)) {
+                    $mountData = json_decode($projectInfo->mount);
+                }
+                $messages = [];
+                /*if(!empty($projectInfo->calcs_id)){
+                    $calculationFormController = Gm_ceilingHelpersGm_ceiling::getController('calculationForm');
+                    $calcs_ids = explode(',',$projectInfo->calcs_id);
+                    foreach($calcs_ids as $id){
+                        $calculationFormController->calculateMount($id,$projectInfo->dealer_id);
                     }
-
+                }*/
+                if (!empty($mountData)) {
+                    foreach ($mountData as $stage) {
+                        $stageInfo = (object)["id" => $stage->type_id, "name" => $stage->type_name, "date" => $stage->date];
+                        if (empty($messages[$stage->mounter])) {
+                            $messages[$stage->mounter] = [];
+                        }
+                        array_push($messages[$stage->mounter], $stageInfo);
+                    }
                 }
-                else{
-                    $mailer->addRecipient($mounters->email);
+                foreach ($messages as $mounter_id => $stages) {
+                    $mounter = JFactory::getUser($mounter_id);
+                    //$salary = 0;
+                    $messageText = $body;
+                    foreach ($stages as $stage) {
+                        $messageText .= "Этап: $stage->name Дата: $stage->date;\n";
+                    }
+                    //$messageText .= "З/п: " . $salary . "\n";
+                    $messageText .= "Периметр: $projectInfo->perimeter. \n";
+                    if (!empty($projectInfo->notes)) {
+                        foreach ($projectInfo->notes as $note) {
+                            $messageText .= "$note->description $note->value. \n";
+                        }
+                    }
+                    $messageText .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                    $mailer->setSubject('Новый договор назначен на монтаж');
+                    $mailer->setBody($messageText);
+                    $mailer->addRecipient($mounter->email);
+                    $send = $mailer->Send();
                 }
+                return 1;
             } elseif ($type == 8) {
                 //Уведомление о изменении времени на монтаж нужной бригаде
-                if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
-                $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте, " . $mounters->name . ". У договора " . $data->id . " изменилась дата(время) монтажа!\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
+                if ($data->project_mounter){
+                    $mounters = $mounterModel->getEmailMount($data->project_mounter);
+                }
+                $body = "Здравствуйте. У договора №$data->id изменилась дата(время) монтажа!\n\n";
+                $body .= "Клиент: $projectInfo->client_name. \n";
+                $body .= "Контакты: $projectInfo->client_contacts.\n";
+                $body .= "Адрес: $projectInfo->project_info. \n";
                 $jdate1 = new JDate(JFactory::getDate($data->old_date));
                 if ($data->old_date != "0000-00-00 00:00:00")
                     $body .= "Старая дата и время монтажа: " . $jdate1->format('d.m.Y H:i') . "\n";
@@ -5996,12 +5908,13 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->addRecipient($mounters->email);
             } elseif ($type == 9) {
                 //Уведомление о изменении бригады
-                if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->old_mounter);
-                $dopinfo = $client->getInfo($data->id_client);
+                if ($data->project_mounter){
+                    $mounters = $mounterModel->getEmailMount($data->old_mounter);
+                }
                 $jdate1 = new JDate(JFactory::getDate($data->old_date));
                 $body = "Здравствуйте, " . $mounters->name . ". Монтаж договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+                $body .= "Имя клиента: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->client_contacts . "\n";
 
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Монтаж отменен');
@@ -6010,11 +5923,10 @@ class Gm_ceilingHelpersGm_ceiling
             } elseif ($type == 10) {
                 // уведомление о изменении даты замера
                 $user = JFactory::getUser($data->project_calculator);
-                $dopinfo = $client->getInfo($data->id_client);
-                $body = "Здравствуйте, " . $user->name . ". У договора " . $data->id . " изменилась дата(время) замера!\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
+                $body = "Здравствуйте. У договора " . $projectId . " изменилась дата/время замера!\n\n";
+                $body .= "Имя клиента: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->client_contacts . "\n";
+                $body .= "Адрес: " . $projectInfo->project_info . "\n";
                 $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
                 if ($data->old_date_gauger != "0000-00-00 00:00:00") {
                     $body .= "Старая дата и время замера: " . $jdate1->format('d.m.Y H:i') . "\n";
@@ -6031,11 +5943,10 @@ class Gm_ceilingHelpersGm_ceiling
             } elseif ($type == 11) {
                 // уведомление о изменнеии замерщика
                 $user = JFactory::getUser($data->project_calculator);
-                $dopinfo = $client->getInfo($data->id_client);
                 $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
-                $body = "Здравствуйте, " . $user->name . ". замер договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+                $body = "Здравствуйте, " . $user->name . ". замер договора " . $projectId . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
+                $body .= "Имя клиента: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->client_contacts . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Замер отменен');
                 $mailer->setBody($body);
@@ -6043,12 +5954,10 @@ class Gm_ceilingHelpersGm_ceiling
             } elseif ($type == 12) {
                 // уведомление для менеджеров о изменении даты монтажа от дилеров
                 $user = JFactory::getUser($data->read_by_manager);
-                $dopinfo = $client->getInfo($data->id_client);
-
-                $body = "Здравствуйте, " . $user->name . ". У договора (дилера) " . $data->id . " изменилась дата(время) монтажа!\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
+                $body = "Здравствуйте, " . $user->name . ". У договора (дилера) " . $projectId . " изменилась дата(время) монтажа!\n\n";
+                $body .= "Имя клиента: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->client_contacts . "\n";
+                $body .= "Адрес: " . $projectInfo->project_info . "\n";
                 $jdate1 = new JDate(JFactory::getDate($data->old_date));
                 if ($data->old_date != "0000-00-00 00:00:00") {
                     $body .= "Старая дата и время монтажа: " . $jdate1->format('d.m.Y H:i') . "\n";
@@ -6063,18 +5972,16 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->addRecipient($user->email);
             } elseif ($type == 13) {
                 // уведомление дилера, что потолок запушен в производство
-                $dopinfo = $client->getInfo($data->client_id);
-                $dealer = JFactory::getUser($dopinfo->dealer_id);
+                $dealer = JFactory::getUser($projectInfo->dealer_id);
                 $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . " запущен в производство\n\n";
-                $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-                $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-                $body .= "Адрес: " . $data->project_info . "\n";
+                $body .= "Имя клиента: " . $projectInfo->client_name . "\n";
+                $body .= "Телефон клиента: " . $projectInfo->client_contacts . "\n";
+                $body .= "Адрес: " . $projectInfo->project_info . "\n";
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Договор запущен в производство');
                 $mailer->setBody($body);
                 $mailer->addRecipient($dealer->email);
-            }
-            elseif($type == 14){
+            } elseif ($type == 14) {
                 $user_model = self::getModel('users');
                 $users = $user_model->getUserByGroup(17);
                 $client_model = self::getModel('client');
@@ -6088,62 +5995,80 @@ class Gm_ceilingHelpersGm_ceiling
                 $body .= "Телефон дилера: " . $dealer->username . "\n";
                 $body .= "Желаемые дата и время монтажа: \n";
                 foreach ($data->mount as $value) {
-                    $body .=$value->stage_name." : ". $value->time . "\n";
+                    $body .= $value->stage_name . " : " . $value->time . "\n";
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Дилер заказал монтаж');
                 $mailer->setBody($body);
-            }
-            elseif($type == 15){
+            } elseif ($type == 15) {
                 $dealer = JFactory::getUser($data->dealer_id);
                 $mailer->addRecipient($dealer->email);
                 $body = "Здравствуйте. Начальник монтажной службы утвердил дату монтажа в проекте №" . $data->project_id . "\n\n";
                 $body .= "Дата и время монтажа: \n";
                 foreach ($data->mount as $value) {
-                    $body .=$value->stage_name." : ". $value->time . "\n";
+                    $body .= $value->stage_name . " : " . $value->time . "\n";
                 }
                 $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Начальник монтажной службы утвердил монтаж');
                 $mailer->setBody($body);
-            }
-            elseif($type == 16){
+            } elseif ($type == 16) {
                 $user_model = self::getModel('users');
                 $users = $user_model->getUserByGroup(16);
                 foreach ($users as $user) {
-                    if(!empty($user->email)) {
+                    if (!empty($user->email)) {
                         $mailer->addRecipient($user->email);
                     }
                 }
-                $body = "Здравствуйте. В проекте №" . $data['id']. " изменилась дата монтажа.\n";
+                $body = "Здравствуйте. В проекте №" . $data['id'] . " изменилась дата монтажа.\n";
                 $body .= "Старая данные о монтаже: \n";
                 foreach ($data['old_data'] as $stage) {
-                    $body.= "Этап: $stage->name \n";
+                    $body .= "Этап: $stage->name \n";
                     $time = strtotime($stage->time);
                     $formatted = date("d.m.Y H:i:s", $time);
-                    $body.= "Дата: $formatted\n";
+                    $body .= "Дата: $formatted\n";
                 }
                 $body .= "Новые данные о монтаже: \n";
                 foreach ($data['new_data'] as $stage) {
-                    $body.= "Этап: $stage->name \n";
+                    $body .= "Этап: $stage->name \n";
                     $time = strtotime($stage->time);
                     $formatted = date("d.m.Y H:i:s", $time);
-                    $body.= "Дата: $formatted\n";
+                    $body .= "Дата: $formatted\n";
                 }
 
-                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $body .= "Чтобы перейтви на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
                 $mailer->setSubject('Изменена дата монтажа');
+                $mailer->setBody($body);
+            } elseif ($type == 17) {
+                //Уведомление о добавлении потолка, в запущенный проект
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(16);
+                foreach ($users as $user) {
+                    if (!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
+                }
+                $body = "Здравствуйте. В проект №" . $projectInfo->id . " добавлен дополнительный просчет.\n";
+                $body .= "Адрес: $projectInfo->project_info; \n";
+                $dealer = JFactory::getUser($projectInfo->dealer_id);
+                $body .= "Дилер: $dealer->name. \n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        $body .= "$note->description $note->value; \n";
+                    }
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Дополнение к проекту');
                 $mailer->setBody($body);
             }
             $send = $mailer->Send();
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function push($id, $status_id){
+    public static function push($id, $status_id)
+    {
         try {
             $mailer = JFactory::getMailer();
             $em = '';
@@ -6164,14 +6089,13 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->addRecipient($em);
             $send = $mailer->Send();
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function saverclient($data, $id){
+    public static function saverclient($data, $id)
+    {
         try {
             $html = file_get_contents("http://" . $_SERVER['SERVER_NAME'] . "/components/com_gm_ceiling/views/mail/saverclient.html");
             $mailer = JFactory::getMailer();
@@ -6198,14 +6122,14 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->addRecipient($em);
             $send = $mailer->Send();
             return 1;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /*  функция декодирования дополнительных комплектующих, монтажных работ и пр. */
-    public static function decode_extra($extra){
+    public static function decode_extra($extra)
+    {
         try {
             $extra_array = json_decode($extra);
             $result_array = array();
@@ -6220,13 +6144,13 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             return $result_array;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function decode_stock($components){
+
+    public static function decode_stock($components)
+    {
         try {
             $comp_stock_array = json_decode($components);
             $result_array = array();
@@ -6234,7 +6158,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
                 foreach ($comp_stock_array as $item) {
                     if (isset($item->title) && isset($item->value)) {
-                        $title = $model->getComponents(["select"=>["FullName"=>"CONCAT(components.title, ' ', options.title)"], "where" => ["=" => ["options.id" => $item->title]]]);
+                        $title = $model->getComponents(["select" => ["FullName" => "CONCAT(components.title, ' ', options.title)"], "where" => ["=" => ["options.id" => $item->title]]]);
                         $result_array[] = array(
                             'title' => $title[0]->FullName,
                             'value' => $item->value,
@@ -6244,14 +6168,14 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             return json_encode($result_array);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     // рисует календарь
-    public static function DrawCalendarTar($id, $month, $year, $flag){
+    public static function DrawCalendarTar($id, $month, $year, $flag)
+    {
         try {
             // $id - айдишник бригады или менеджера или замерщика, $month - месяц, $year - год
             $ArMonths = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
@@ -6263,8 +6187,8 @@ class Gm_ceilingHelpersGm_ceiling
             $table .= '<tr>';
             $table .= '<td><button class="btn btn-primary btn-sm prev" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></td>';
             $table .= '<td colspan="5" class="caption-month"><p>' . $ArMonths[$month] . ' ' . $year . 'г.</p></td>';
-            $table .='<td><button class="btn btn-primary btn-sm next" id="next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>';
-            $table .='</tr>';
+            $table .= '<td><button class="btn btn-primary btn-sm next" id="next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>';
+            $table .= '</tr>';
             // создание и заполнение ячеек под дни
             $table .= '<tr>';
             for ($d = 0; $d < 7; $d++) {
@@ -6392,9 +6316,9 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
                             if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="day-off" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             }
                         } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
                             $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
@@ -6486,13 +6410,13 @@ class Gm_ceilingHelpersGm_ceiling
                                         if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
                                             $DayMounters[$r] = "yellow";
                                         }
-                                        if ($value[2] == 16 || $value[2] == 24 || $value[2] == 25 || $value[2] == 26|| $value[2] == 27 || $value[2] == 28 || $value[2] == 29 ) {
+                                        if ($value[2] == 16 || $value[2] == 24 || $value[2] == 25 || $value[2] == 26 || $value[2] == 27 || $value[2] == 28 || $value[2] == 29) {
                                             $DayMounters[$r] = "navy";
                                         }
                                         if ($value[2] == 17) {
                                             $DayMounters[$r] = "brown";
                                         }
-                                        if ($value[2] == 11 ) {
+                                        if ($value[2] == 11) {
                                             $DayMounters[$r] = "green";
                                         }
                                         if ($value[2] == 12) {
@@ -6529,9 +6453,9 @@ class Gm_ceilingHelpersGm_ceiling
                             $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else {
                             if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="day-off" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             }
                         }
                     }
@@ -6546,16 +6470,17 @@ class Gm_ceilingHelpersGm_ceiling
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
                         $AllMountingOfBrigade = $model->GetAllMountingOfBrigade($id, $date1, $date2);
-                        $DateStatys = [];$need_calc_projects = [];
+                        $DateStatys = [];
+                        $need_calc_projects = [];
                         foreach ($AllMountingOfBrigade as $value) {
                             if ($value->read_by_mounter == null) {
                                 $value->read_by_mounter = "0";
                             }
-                            $arr = array("mount_date" =>substr($value->project_mounting_date, 0, 10),
+                            $arr = array("mount_date" => substr($value->project_mounting_date, 0, 10),
                                 "read_by_mounter" => $value->read_by_mounter,
                                 "project_status" => $value->project_status,
                                 "perimeter" => $value->n5,
-                                "id"=>$value->id);
+                                "id" => $value->id);
                             array_push($DateStatys, $arr);
 
 
@@ -6569,7 +6494,7 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                             foreach ($DateStatys as $value) {
                                 if ($value["mount_date"] == $year . "-" . $monthfull . "-" . $t) {
-                                    if(!empty($need_calc_projects[$value["mount_date"]])) {
+                                    if (!empty($need_calc_projects[$value["mount_date"]])) {
                                         if (!in_array($value["id"], $need_calc_projects[$value["mount_date"]])) {
                                             $need_calc_projects[$value["mount_date"]][] = $value["id"];
                                         }
@@ -6645,13 +6570,13 @@ class Gm_ceilingHelpersGm_ceiling
                             $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
                             $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
-                        } else if($DayMounter[$j - $first_day_of_week + 1][0] == "blue") {
+                        } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "blue") {
                             $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P=' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                         } else {
                             if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off2" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="day-off2" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                                $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                             }
                         }
                     }
@@ -6664,12 +6589,11 @@ class Gm_ceilingHelpersGm_ceiling
             // конец таблицы
             $table .= '</table>';
             return $table;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     /*
      * Функция создания html календаря
      *
@@ -6677,13 +6601,14 @@ class Gm_ceilingHelpersGm_ceiling
      * @param   number  $month  - От даты сейчас
      * @result  string  html
      */
-    public function LiteCalendar($month = null, $year = null, $day = null){
+    public function LiteCalendar($month = null, $year = null, $day = null)
+    {
         try {
-            $month = ($month == null && $month != 0)?date("m"):intval($month);
+            $month = ($month == null && $month != 0) ? date("m") : intval($month);
             $monthNow = date("m");
-            $year = ($year == null)?date("Y"):$year;
+            $year = ($year == null) ? date("Y") : $year;
             $yearNow = date("Y");
-            $day = ($day == null)?date("j"):$day;
+            $day = ($day == null) ? date("j") : $day;
             $DATA = (object)[
                 "Month" => ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
                 "Month2" => ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
@@ -6725,27 +6650,25 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[intval($DATE->MonthNumber) - 1], $DATA->Month2[intval($DATE->MonthNumber) - 1], $DATE->TopName, $DaysOfTheWeek, $Days);
             return $Calendar;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     public static function parse_price($price, $dealerPrice, $PriceDB = null)
     {
         try {
             if ($price == null || gettype($dealerPrice) != "object")
                 return null;
-            if ($PriceDB == null)
-            {
-                $Table = ($dealerPrice->component_id != null)?"Components":"Canvases";
-                $IdPrice = ($dealerPrice->component_id != null)?$dealerPrice->component_id:$dealerPrice->canvas_id;
+            if ($PriceDB == null) {
+                $Table = ($dealerPrice->component_id != null) ? "Components" : "Canvases";
+                $IdPrice = ($dealerPrice->component_id != null) ? $dealerPrice->component_id : $dealerPrice->canvas_id;
                 $model = self::getModel($Table);
                 $PriceDB = $model->getPrice($IdPrice)->price;
             }
-            $data = (object) [];
+            $data = (object)[];
             $data->dealerPrice = $dealerPrice;
-            $price = (string) $price;
+            $price = (string)$price;
             $data->price = $price;
             $temp = str_replace("*", "", $price);
             $data->star = (strlen($temp) != strlen($price));
@@ -6779,79 +6702,52 @@ class Gm_ceilingHelpersGm_ceiling
                 $data->percentValue += $data->dealerPrice->value;
 
             //throw new Exception(print_r($data,true));
-            if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
-            {
+            if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty)) {
                 $data->dealerPrice->type = 0;
                 $data->dealerPrice->price = 0;
                 $data->dealerPrice->value = 0;
-            }
-            else if ($data->star && $data->point && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
-            {
+            } else if ($data->star && $data->point && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty)) {
                 $data->dealerPrice->type = 1;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = 0;
-            }
-            else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
-            {
+            } else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty)) {
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = 0;
-            }
-            else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty))
-            {
+            } else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty)) {
                 $data->dealerPrice->type = 1;
                 $data->dealerPrice->value = 0;
-            }
-            else if ($data->sharp && !$data->valueEmpty && !($data->star || $data->switch || $data->percent))
-            {
+            } else if ($data->sharp && !$data->valueEmpty && !($data->star || $data->switch || $data->percent)) {
                 $data->dealerPrice->price = $data->value;
-            }
-            else if (!$data->valueEmpty && !($data->sharp || $data->switch || $data->percent))
-            {
+            } else if (!$data->valueEmpty && !($data->sharp || $data->switch || $data->percent)) {
                 $data->dealerPrice->type = 1;
                 $data->dealerPrice->price = $data->value;
                 $data->dealerPrice->value = 0;
-            }
-            else if (!$data->valueEmpty && $data->switch && !($data->sharp || $data->star || $data->percent))
-            {
+            } else if (!$data->valueEmpty && $data->switch && !($data->sharp || $data->star || $data->percent)) {
                 $data->dealerPrice->type = 4;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value + $data->switchValue;
-            }
-            else if ($data->star && !$data->valueEmpty && $data->switch && !($data->sharp || $data->percent))
-            {
+            } else if ($data->star && !$data->valueEmpty && $data->switch && !($data->sharp || $data->percent)) {
                 $data->dealerPrice->type = 4;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value + $data->switchValue;
-            }
-            else if (!$data->valueEmpty && $data->switch && $data->percent && !($data->sharp || $data->star))
-            {
+            } else if (!$data->valueEmpty && $data->switch && $data->percent && !($data->sharp || $data->star)) {
                 $data->dealerPrice->type = 5;
                 $data->dealerPrice->value = $data->value + $data->percentValue;
-            }
-            else if ($data->star && !$data->valueEmpty && $data->switch && $data->percent && !$data->sharp)
-            {
+            } else if ($data->star && !$data->valueEmpty && $data->switch && $data->percent && !$data->sharp) {
                 $data->dealerPrice->type = 5;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value + $data->percentValue;
-            }
-            else if ($data->sharp && !$data->valueEmpty && $data->switch && !($data->star || $data->percent))
-            {
+            } else if ($data->sharp && !$data->valueEmpty && $data->switch && !($data->star || $data->percent)) {
                 $data->dealerPrice->type = 4;
                 $data->dealerPrice->value = $data->value;
-            }
-            else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && !$data->percent)
-            {
+            } else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && !$data->percent) {
                 $data->dealerPrice->type = 4;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value;
-            }
-            else if ($data->sharp && !$data->valueEmpty && $data->switch && $data->percent && !$data->star)
-            {
+            } else if ($data->sharp && !$data->valueEmpty && $data->switch && $data->percent && !$data->star) {
                 $data->dealerPrice->type = 5;
                 $data->dealerPrice->value = $data->value;
-            }
-            else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && $data->percent)
-            {
+            } else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && $data->percent) {
                 $data->dealerPrice->type = 5;
                 $data->dealerPrice->price = $PriceDB;
                 $data->dealerPrice->value = $data->value;
@@ -6859,28 +6755,28 @@ class Gm_ceilingHelpersGm_ceiling
 
             $data->updatePrice = self::update_price($data->dealerPrice, $PriceDB);
             return $data;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
     public static function update_price($objectDealerPrice, $Price)
     {
         try {
             $percent = ($objectDealerPrice->type == 3 || $objectDealerPrice->type == 5);
             $value = abs($objectDealerPrice->value);
-            $valueSTR = (($objectDealerPrice->value == abs($objectDealerPrice->value))?" + ":" - ") . $value;
+            $valueSTR = (($objectDealerPrice->value == abs($objectDealerPrice->value)) ? " + " : " - ") . $value;
             $updatePrice = "";
             if ($objectDealerPrice->price != $Price) $updatePrice .= $objectDealerPrice->price;
-            if ($value != 0) $updatePrice .= $valueSTR . (($percent)?"%":"");
+            if ($value != 0) $updatePrice .= $valueSTR . (($percent) ? "%" : "");
             return $updatePrice;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function generatePassword($length) {
+    public static function generatePassword($length)
+    {
         try {
             $pass = '';
             for ($i = $length; $i--;) {
@@ -6892,9 +6788,9 @@ class Gm_ceilingHelpersGm_ceiling
                     case 2:
                         $symbol = chr(random_int(65, 90));
                         break;
-                    case 3:
+                    /*case 3:
                         $symbol = chr(random_int(97, 122));
-                        break;
+                        break;*/
                     default:
                         $symbol = chr(random_int(97, 122));
                         break;
@@ -6902,47 +6798,50 @@ class Gm_ceilingHelpersGm_ceiling
                 $pass .= $symbol;
             }
             return $pass;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    static function rus2translit($string) {
+    static function rus2translit($string)
+    {
         try {
-            $converter = array(
-                'а' => 'a',   'б' => 'b',   'в' => 'v',
-                'г' => 'g',   'д' => 'd',   'е' => 'e',
-                'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
-                'и' => 'i',   'й' => 'y',   'к' => 'k',
-                'л' => 'l',   'м' => 'm',   'н' => 'n',
-                'о' => 'o',   'п' => 'p',   'р' => 'r',
-                'с' => 's',   'т' => 't',   'у' => 'u',
-                'ф' => 'f',   'х' => 'h',   'ц' => 'c',
-                'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
-                'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
-                'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+            $converter = [
+                'а' => 'a', 'б' => 'b', 'в' => 'v',
+                'г' => 'g', 'д' => 'd', 'е' => 'e',
+                'ё' => 'e', 'ж' => 'zh', 'з' => 'z',
+                'и' => 'i', 'й' => 'y', 'к' => 'k',
+                'л' => 'l', 'м' => 'm', 'н' => 'n',
+                'о' => 'o', 'п' => 'p', 'р' => 'r',
+                'с' => 's', 'т' => 't', 'у' => 'u',
+                'ф' => 'f', 'х' => 'h', 'ц' => 'c',
+                'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch',
+                'ь' => '\'', 'ы' => 'y', 'ъ' => '\'',
+                'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
 
-                'А' => 'A',   'Б' => 'B',   'В' => 'V',
-                'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
-                'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
-                'И' => 'I',   'Й' => 'Y',   'К' => 'K',
-                'Л' => 'L',   'М' => 'M',   'Н' => 'N',
-                'О' => 'O',   'П' => 'P',   'Р' => 'R',
-                'С' => 'S',   'Т' => 'T',   'У' => 'U',
-                'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
-                'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
-                'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
-                'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
-            );
+                'А' => 'A', 'Б' => 'B', 'В' => 'V',
+                'Г' => 'G', 'Д' => 'D', 'Е' => 'E',
+                'Ё' => 'E', 'Ж' => 'Zh', 'З' => 'Z',
+                'И' => 'I', 'Й' => 'Y', 'К' => 'K',
+                'Л' => 'L', 'М' => 'M', 'Н' => 'N',
+                'О' => 'O', 'П' => 'P', 'Р' => 'R',
+                'С' => 'S', 'Т' => 'T', 'У' => 'U',
+                'Ф' => 'F', 'Х' => 'H', 'Ц' => 'C',
+                'Ч' => 'Ch', 'Ш' => 'Sh', 'Щ' => 'Sch',
+                'Ь' => '\'', 'Ы' => 'Y', 'Ъ' => '\'',
+                'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya',
+            ];
             return strtr($string, $converter);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    public static function groupMapNoteTitle($groups,$user = null){
-        if(!empty($user)){
-            if($user->dealer_type == 2){
-                $isClient=true;
+
+    public static function groupMapNoteTitle($groups, $user = null)
+    {
+        if (!empty($user)) {
+            if ($user->dealer_type == 2) {
+                $isClient = true;
             }
         }
         $result = (object)[];
@@ -6961,7 +6860,7 @@ class Gm_ceilingHelpersGm_ceiling
         if (in_array("14", $groups)) { //Дилер
             $result->title = "dealer";
             $result->description = "Дилер ";
-            if($isClient){
+            if ($isClient) {
                 $result->description = "Клиент ";
             }
         }
@@ -6988,69 +6887,87 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $result;
     }
-    public static function getProjectNotes($project_id,$type = null) {
+
+    public static function getProjectNotes($project_id, $type = null)
+    {
         try {
             $model_project = self::getModel('project');
-            $notes = $model_project->getProjectNotes($project_id,$type);
+            $notes = $model_project->getProjectNotes($project_id, $type);
             $result = [];
             foreach ($notes as $key => $value) {
                 $user = JFactory::getUser($value->user_id);
                 $groups = $user->get('groups');
-                $groupTitle = self::groupMapNoteTitle($groups,$user);
-                $noteObject = (object)array("value"=>"","description"=>"","type"=>"","author"=>"");
+                $groupTitle = self::groupMapNoteTitle($groups, $user);
+                $noteObject = (object)array("value" => "", "description" => "", "type" => "", "author" => "");
 
-                switch($value->type){
+                switch ($value->type) {
                     case 1://общее примечание
                         $noteObject->description = 'Общее примечание по проекту: ';
                         $noteObject->value = $value->note;
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_common"] = $noteObject;
+                        $result[$groupTitle->title . "_common"] = $noteObject;
                         break;
                     case 2://примечание к замеру
-                        $noteObject->value =$value->note;
-                        $noteObject->description = $groupTitle->description."к замеру: ";
+                        $noteObject->value = $value->note;
+                        $noteObject->description = $groupTitle->description . "к замеру: ";
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_measure"] = $noteObject;
+                        $result[$groupTitle->title . "_measure"] = $noteObject;
                         break;
                     case 3://примечание отказа
-                        $noteObject->value =$value->note;
-                        $noteObject->description = $groupTitle->description." к отказу: ";
+                        $noteObject->value = $value->note;
+                        $noteObject->description = $groupTitle->description . " к отказу от договора: ";
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_refuse"] = $noteObject;
+                        $result[$groupTitle->title . "_refuse"] = $noteObject;
                         break;
                     case 4://в производство
-                        $noteObject->value =$value->note;
-                        $noteObject->description = $groupTitle->description." к производству: ";
+                        $noteObject->value = $value->note;
+                        $noteObject->description = $groupTitle->description . " к производству: ";
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_production"] = $noteObject;
+                        $result[$groupTitle->title . "_production"] = $noteObject;
                         break;
                     case 5://к монтажу
-                        $noteObject->value =$value->note;
-                        $noteObject->description = $groupTitle->description." к монтажу: ";
+                        $noteObject->value = $value->note;
+                        $noteObject->description = $groupTitle->description . " к монтажу: ";
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_mount"] = $noteObject;
+                        $result[$groupTitle->title . "_mount"] = $noteObject;
                         break;
                     case 6://после монтажа
-                        $noteObject->value =$value->note;
+                        $noteObject->value = $value->note;
                         $noteObject->type = $value->type;
                         $noteObject->author = $value->user_id;
-                        $result[$groupTitle->title."_after_mount"] = $noteObject;
+                        $result[$groupTitle->title . "_after_mount"] = $noteObject;
+                        break;
+                    case 7://отказ от замера
+                        $noteObject->value = $value->note;
+                        $noteObject->type = $value->type;
+                        $noteObject->description = $groupTitle->description . " к отказу от замера: ";
+                        $noteObject->author = $value->user_id;
+                        $result[$groupTitle->title . "_ref_measure"] = $noteObject;
+                        break;
+                    case 8://отказ от сотрудничества
+                        $noteObject->value = $value->note;
+                        $noteObject->type = $value->type;
+                        $noteObject->description = $groupTitle->description . " к отказу от сотрудничества: ";
+
+                        $noteObject->author = $value->user_id;
+                        $result[$groupTitle->title . "_ref_coop"] = $noteObject;
                         break;
                 }
 
             }
             return (object)$result;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
-    public static function forceLogin($userId) {
+    public static function forceLogin($userId)
+    {
         $app = JFactory::getApplication();
         $logoutStatus = $app->logout();
         if ($logoutStatus) {
@@ -7076,28 +6993,100 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    public static function parseProjectInfo($project_info){
-        try{
+    public static function parseProjectInfo($project_info)
+    {
+        try {
             $street = preg_split("/,.дом:.([\d\w\/\s]{1,4})/", $project_info)[0];
-            preg_match("/.дом:.([\d\w\/\s]{1,4})/", $project_info,$house);
+            preg_match("/.дом:.([\d\w\/\s]{1,4})/", $project_info, $house);
             $house = $house[1];
-            preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $project_info,$bdq);
+            preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $project_info, $bdq);
             $bdq = $bdq[1];
-            preg_match("/.квартира:.([\d\s]{1,4})/", $project_info,$apartment);
+            preg_match("/.квартира:.([\d\s]{1,4})/", $project_info, $apartment);
             $apartment = $apartment[1];
-            preg_match("/.подъезд:.([\d\s]{1,4})/", $project_info,$porch);
+            preg_match("/.подъезд:.([\d\s]{1,4})/", $project_info, $porch);
             $porch = $porch[1];
-            preg_match("/.этаж:.([\d\s]{1,4})/", $project_info,$floor);
+            preg_match("/.этаж:.([\d\s]{1,4})/", $project_info, $floor);
             $floor = $floor[1];
-            preg_match("/.код:.([\d\S\s]{1,10})/", $project_info,$code);
+            preg_match("/.код:.([\d\S\s]{1,10})/", $project_info, $code);
             $code = $code[1];
 
-            $result = (object)array("street"=>$street,"house"=>$house,"bdq"=>$bdq,"apartment"=>$apartment,
-                "porch"=>$porch,"floor"=>$floor,"code"=>$code);
+            $result = (object)[
+                "street" => $street,
+                "house" => $house,
+                "bdq" => $bdq,
+                "apartment" => $apartment,
+                "porch" => $porch,
+                "floor" => $floor,
+                "code" => $code
+            ];
             return $result;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
+
+    static function createImgArchive($projectId)
+    {
+        try {
+            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calculationsIds = $calculationsModel->getIdsByProjectId($projectId);
+            $imagesPaths = [];
+            //throw new Exception(print_r($calculationsIds,true));
+            foreach ($calculationsIds as $id) {
+                $path = $_SERVER['DOCUMENT_ROOT'] . "/uploaded_calc_images/$id->id";
+                if (file_exists($path)) {
+                    self::getFilelist($path, $imagesPaths);
+                }
+            }
+            if(!empty($imagesPaths)){
+                //throw new Exception(print_r($imagesPaths,true));
+                $zip = new ZipArchive();
+                $zipName = $_SERVER['DOCUMENT_ROOT']."/uploaded_calc_images/images_$projectId.zip";
+                if ($zip->open($zipName, ZipArchive::CREATE)!==TRUE) {
+                    throw new Exception("Невозможно открыть <$zipName>");
+                }
+                foreach($imagesPaths as $path){
+                    //rename($path->full_path,$path->full_path.'.jpg');
+                    $zip->addFile($path->full_path,$path->name.'.jpg');
+
+                }
+                $zip->close();
+
+               foreach ($calculationsIds as $id) {
+                    self::delDir($_SERVER['DOCUMENT_ROOT']."/uploaded_calc_images/$id->id");
+                }
+            }
+            return $zipName;
+
+        } catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    static function getFilelist($dirpath, &$context)
+    {
+        $fileArray = scandir($dirpath);
+        if (count($fileArray) > 2) {
+            /* Remove the . (current directory) and .. (parent directory) */
+            array_shift($fileArray);
+            array_shift($fileArray);
+            foreach ($fileArray as $f) {
+                $full_path = $dirpath . DIRECTORY_SEPARATOR . $f;
+                /* If the file is a directory, call the function recursively */
+                if (is_dir($full_path)) {
+                    self::getFilelist($full_path, $context);
+                } else {
+                    /* else, append the full path of the file to the context array */
+                    $context[] = (object)["full_path"=>$full_path, "name"=>$f];
+                }
+            }
+        }
+    }
+    static function delDir($dir) {
+        $files = array_diff(scandir($dir), ['.','..']);
+        foreach ($files as $file) {
+            (is_dir($dir.'/'.$file)) ? self::delDir($dir.'/'.$file) : unlink($dir.'/'.$file);
+        }
+        return rmdir($dir);
     }
 }

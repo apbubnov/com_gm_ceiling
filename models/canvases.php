@@ -922,4 +922,24 @@ class Gm_ceilingModelCanvases extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getCanvasesWidths($filter){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`a`.`id`,`a`.`width`,`a`.`price`');
+            $query->from('`rgzbn_goods_canvases` AS `a`');
+            if (!empty($filter)) {
+                $query->where($filter);
+            }
+            $db->setQuery($query);
+            //throw new Exception($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

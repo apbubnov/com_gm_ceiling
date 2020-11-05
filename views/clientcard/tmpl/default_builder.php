@@ -13,7 +13,7 @@ $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 $mountTypes = $projectsMountsModel->get_mount_types();
 unset($mountTypes[1]);
 foreach ($mountTypes as $key=>$value){
-    $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
+    $mountTypes[$key] = ["title"=>$value,"status"=>$key+25];
 }
 $history = $historyModel->getDataByClientId($this->item->id);
 
@@ -551,6 +551,9 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 </td>
                 <td>
                     Время
+                </td>
+                <td>
+                    <i class="far fa-trash-alt"></i>
                 </td>
             </tr>
             </thead>
@@ -1139,14 +1142,22 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     dataType: "json",
                     async: false,
                     success: function(data) {
-                        var total = 0,note = "";
+                        var total = 0,note = "",
+                            delBtn = '';
                         console.log(data);
                         jQuery("#detailed_salary > tbody").empty();
                         jQuery.each(data,function (index,el){
                             total += +el.sum;
                             note = (!empty(el.note)) ? el.note : "Выплата";
+                            console.log(el.type);
+                            if(el.type == 2){
+                                delBtn = '<button class="btn btn-danger del_payment"><i class="far fa-trash-alt"></i></button>'
+                            }
+                            else{
+                                delBtn = '-';
+                            }
                             jQuery("#detailed_salary > tbody").append('<tr/>');
-                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td>')
+                            jQuery("#detailed_salary > tbody > tr:last").append('<td>'+el.sum+'</td><td>'+note+'</td><td>'+el.datetime+'</td><td>'+delBtn+'</td>')
                         });
                         jQuery("#detailed_salary > tbody").append('<tr/>');
                         jQuery("#detailed_salary > tbody > tr:last").append('<td align="right"><b>Итого:<b></td><td>'+total+'</td><td></td>');
@@ -1907,18 +1918,17 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 data=[],
                 mounterExist = true,
                 refresh = (jQuery(elem).attr('name') == "refresh_btn") ? 1 : 0;
-                jQuery.each(calcs, function (index, elem) {
-                    if (elem.mounters) {
-                        data.push({id: elem.id, title: elem.title, mounter: elem.mounters[0].id, sum: elem.sum});
+                jQuery.each(calcs, function (index, el) {
+                    if (el.mounters) {
+                        data.push({id: el.id, title: el.title, mounter: el.mounters[0].id, sum: el.sum});
                     }
                     else {
-                        if(elem.name == "check_sum") {
+                        if(elem.name == "check_btn") {
                             mounterExist = false;
                         }
                     }
                 });
 
-            console.log( JSON.stringify(data));
             if(mounterExist){
                 jQuery.ajax({
                     url: "index.php?option=com_gm_ceiling&task=MountersSalary.save",
@@ -1932,7 +1942,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if(elem.name == "check_sum") {
+                        if(elem.name == "check_btn") {
                             elem.remove();
                             project.status = stage + 29;
                         }

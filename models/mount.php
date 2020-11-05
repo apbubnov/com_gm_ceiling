@@ -501,23 +501,19 @@ class Gm_ceilingModelMount extends JModelList
 
     function updateServicePrice($price){
 	    try{
-	        $update_case = '';
-	        if(!empty($price)){
-	            $update_case .=  'CASE ';
-	            foreach ($price as $item){
-	                $update_case .= "WHEN id = $item->job_id THEN $item->price ";
+            $db = JFactory::getDbo();
+            if(!empty($price)){
+                foreach ($price as $item) {
+                    $query = $db->getQuery(true);
+                    $query
+                        ->update('`rgzbn_gm_ceiling_jobs`')
+                        ->set("price = $item->price")
+                        ->where("id = $item->job_id");
+                    $db->setQuery($query);
+                    $db->execute();
                 }
-	            $update_case .= 'END';
             }
-	        if(!empty($update_case)){
-	            $db = JFactory::getDbo();
-	            $query = $db->getQuery(true);
-	            $query
-                    ->update('`rgzbn_gm_ceiling_jobs`')
-                    ->set("price = $update_case;1");
-	            $db->setQuery($query);
-	            $db->execute();
-            }
+
 	        return true;
         }
         catch(Exception $e){

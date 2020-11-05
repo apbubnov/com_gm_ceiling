@@ -124,7 +124,7 @@ $advt = $apiPhonesModel->getDealersAdvt($user->dealer_id);
                 <select class="form-control"  name= "jform[advt]" id="advt_select">
                     <option value="">Выберите рекламу</option>
                     <?php foreach ($advt as $i){ ?>
-                        <option value="<?=$i->id?>"><?=$i->advt_title?></option>
+                        <option value="<?=$i['id']?>"><?=$i['advt_title']?></option>
                     <?php }?>
                 </select>
             </div>
@@ -196,7 +196,7 @@ $advt = $apiPhonesModel->getDealersAdvt($user->dealer_id);
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Не введен адрес и дом замера!"
+                    text: "Не введен адрес и номер дома!"
                 });
                 return;
             }
@@ -222,7 +222,7 @@ $advt = $apiPhonesModel->getDealersAdvt($user->dealer_id);
                     text: "Не выбрана реклама, продолжить?",
                     buttons:[
                         {
-                            addClass: 'btn btn-primary', text: 'Записать без реклама', onClick: function($noty) {
+                            addClass: 'btn btn-primary', text: 'Записать без рекламы', onClick: function($noty) {
                                 jQuery("#calculate_form").submit();
                             }
                         },
@@ -236,31 +236,13 @@ $advt = $apiPhonesModel->getDealersAdvt($user->dealer_id);
                 return;
             }
             jQuery("#calculate_form").submit();
-
-
-
-			if(jQuery("#jform_project_calculation_date").val()!=""
-                && jQuery("#jform_project_calculator").val()!=""
-                && jQuery("#jform_project_info").val()!=""
-                && jQuery("#jform_project_info_house").val()!=""
-                && (jQuery("#client_id").val()!="0" || jQuery("#jform_client_name").val()!=""))
-            {
-				jQuery("#calculate_form").submit();
-			}
-			else{
-				var n = noty({
-					theme: 'relax',
-                    timeout: 2000,
-					layout: 'center',
-					maxVisible: 5,
-					type: "error",
-					text: "Введены не все данные!"
-				});
-			}
 		});
 
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
-		
+
+		jQuery('#jform_client_contacts').focus(function () {
+            jQuery('#client_id').val('');
+        });
 
 		jQuery('#jform_client_contacts').blur(function () {
 		    var client_phone = jQuery(this).val();

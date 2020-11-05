@@ -27,33 +27,26 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 <?=parent::getButtonBack();?>
 <h2 class="center">Отказы</h2>
-<form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=refused'); ?>" method="post"
-      name="adminForm" id="adminForm">
-	  <div class="row-fluid toolbar">
-		<div class="span9">
-			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-		</div>
-	  </div>
 	<table class="table table-striped one-touch-view" id="projectList">
 		<thead>
 			<tr>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+					Номер договора
+				</th>
+                <th>
+                    Статус
+                </th>
+				<th class='center'>
+					Дата замера
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Дата замера', 'a.project_mounting_date', $listDirn, $listOrder); ?>
+					Адрес
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Время замера', 'a.project_mounting_daypart', $listDirn, $listOrder); ?>
+					Телефоны
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+					Клиент
 				</th>
 				<?php
 					$user  = JFactory::getUser();
@@ -80,19 +73,16 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<td class="center one-touch">
 						<?php echo $item->id; ?>
 					</td>
+                    <td>
+                        <?= $item->status;?>
+                    </td>
 					<td class="center one-touch">
-							<?php if($item->project_calculation_date != '0000-00-00 00:00:00') { ?>
-								<?php $jdate = new JDate($item->project_calculation_date); ?>
-								 <?php echo $jdate->format('d.m.Y'); ?>
-						<?php } else { ?> -
-						<?php } ?>
-					</td>
-					<td class="center one-touch">
-							<?php if($item->project_calculation_date != '0000-00-00 00:00:00') { ?>
-								<?php $jdate = new JDate($item->project_calculation_date); ?>
-								 <?php echo $jdate->format('H:i'); ?>
-						<?php } else { ?> -
-						<?php } ?>
+							<?php if(!empty($item->project_calculation_date)) {
+							    echo date('d.m.Y H:i',strtotime($item->project_calculation_date));
+							}
+							else {
+                                echo '-';
+                            }?>
 					</td>
 					<td class="center one-touch">
 						<?php echo $this->escape($item->project_info); ?>
@@ -123,20 +113,4 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 	<?php echo JHtml::_('form.token'); ?>
-</form>
 
-<?php if($canDelete) : ?>
-<script type="text/javascript">
-
-	jQuery(document).ready(function () {
-		jQuery('.delete-button').click(deleteItem);
-	});
-
-	function deleteItem() {
-
-		if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
-			return false;
-		}
-	}
-</script>
-<?php endif; ?>

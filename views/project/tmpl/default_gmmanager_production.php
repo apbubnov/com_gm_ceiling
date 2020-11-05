@@ -33,7 +33,6 @@ $dealerType = $dealer->dealer_type;
         margin-bottom: 15px;
     }
 </style>
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
@@ -404,7 +403,7 @@ $dealerType = $dealer->dealer_type;
 ?>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
     init_mount_calendar('calendar_mount','mount','mw_mounts_calendar',['close_mw','mw_container']);
@@ -1153,28 +1152,5 @@ $dealerType = $dealer->dealer_type;
         });
     });
 
-    // Подсказки по городам
-    ymaps.ready(init);
-    var Data = {};
-    function init() {
-        // Подключаем поисковые подсказки к полю ввода.
-        var suggestView = new ymaps.SuggestView('jform_address');
-        input = jQuery('#jform_address');
-
-        suggestView.events.add('select', function (e) {
-            var s = e.get('item').value.replace('Россия, ','');
-            input.val(s);
-        });
-
-        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
-        Data.ProjectInfoYMaps.click(hideYMaps);
-    }
-
-    function hideYMaps() {
-        setTimeout(function () {
-            Data.ProjectInfoYMaps.hide();
-            $("#jform_house").focus();
-        }, 75);
-    }
 
 </script>

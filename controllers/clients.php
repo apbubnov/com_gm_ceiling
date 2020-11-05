@@ -177,4 +177,17 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    public function getClientsByIds(){
+       try{
+           $jinput = JFactory::getApplication()->input;
+           $ids = $jinput->get('ids','','STRING');
+           $modelClients = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+           $result = $modelClients->getClientsByIds($ids);
+           die(json_encode($result));
+       }
+       catch(Exception $e) {
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+       }
+    }
 }

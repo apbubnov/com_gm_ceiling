@@ -516,7 +516,6 @@ $types = $mountersdebtModel->getTypes();
                 return result;
             });
             console.log(current_builder);
-            return;
             if(check_pay_possibility(current_builder,close_sum)){
 
                 savePay(mounter_id,close_sum,current_builder.builder_id,payed_td,rest_td,current_builder);

@@ -36,6 +36,7 @@ if (in_array('16', $user_groups)) {
 $type = $jinput->get('type', '', 'STRING');
 $subtype = $jinput->get('subtype', '', 'STRING');
 $precalculation = $jinput->get('precalculation', '', 'STRING');
+$addition = $jinput->get('addition',0,'INT');
 $seam = $jinput->get('seam', 0, 'INT');
 $api = $jinput->get('api', 0, 'INT');
 $device = $jinput->get('device', '', "STRING");
@@ -64,7 +65,10 @@ $precalculation_url = '';
 if (!empty($precalculation)) {
     $precalculation_url = "&precalculation=$precalculation";
 }
-
+$addition_url = '';
+if (!empty($addition)) {
+    $addition_url = "&addition=$addition";
+}
 $device_url = '';
 if (!empty($device)) {
     $device_url = "&device=$device";
@@ -313,6 +317,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
     <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
     <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
     <input name="precalculation" id="precalculation" value="<?php echo $precalculation_url; ?>" type="hidden">
+    <input name="addition" id="addition" value="<?php echo $addition_url; ?>" type="hidden">
     <input name="device" id="device" value="<?php echo $device_url; ?>" type="hidden">
     <input name="api" id="api" value="<?php echo $api_url; ?>" type="hidden">
     <input name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
@@ -769,7 +774,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         precalculation = '<?php echo $precalculation; ?>',
         gmManager = '<?= $gmManager?>',
         seam = '<?php echo $seam; ?>',
-        goodsJobsMap = JSON.parse('<?=$goods_jobs_map?>');
+        goodsJobsMap = JSON.parse('<?=$goods_jobs_map?>'),
+        dealerType = '<?= $dealer->dealer_type;?>';
 
     console.log('g-j MAP', goodsJobsMap);
     console.log("dealer",dealerId);
@@ -940,8 +946,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
     var componentsInCategories;
 
     function createAdditionalWorkFields(specJobs,select) {
-        console.log('!!!',select.value);
-        if (!empty(specJobs)) {
+        if (!empty(specJobs)&&!empty(select)) {
             jQuery.each(specJobs, function (n, specJob) {
                 var divRow = jQuery(document.createElement('div')),
                     titleDiv = jQuery(document.createElement('div')),
@@ -1106,8 +1111,16 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         jQuery('body').on('click', '.add_fields', function () {
             var div_fields = jQuery(this).closest('.row').find('.div-fields');
             div_fields.toggle();
-            if(jQuery(this).data('group_id') == 1 || jQuery(this).data('group_id') == 2 ){
+            if(jQuery(this).data('group_id') == 1 ){
                 jQuery(div_fields.find('.countDiv')[0]).children().val(calculation.n5);
+            }
+            if(jQuery(this).data('group_id') == 2){
+                if(dealerType != 7){
+                    jQuery(div_fields.find('.countDiv')[0]).children().val(+calculation.n5+0.5);
+                }
+                else{
+                    jQuery(div_fields.find('.countDiv')[0]).children().val(calculation.n5)
+                }
             }
         });
 
@@ -1301,7 +1314,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         });
 
         jQuery("#save_button").click(function(){
-            let url = '<?php echo $save_button_url;?>';
+            let url = '<?php echo $save_button_url;?>',
+                addition = '<?=$addition;?>';
             jQuery.ajax({
                 type: 'POST',
                 url: 'index.php?option=com_gm_ceiling&task=calculation.save_details',
@@ -1309,7 +1323,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     title: jQuery("#jform_calculation_title").val() ,
                     details: jQuery("#jform_details").val(),
                     manager_note: jQuery("#jform_manager_note").val(),
-                    calc_id: calculation.id
+                    calc_id: calculation.id,
+                    addition: addition
                 },
                 success: function(data){
                     location.href = url;

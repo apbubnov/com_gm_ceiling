@@ -852,4 +852,38 @@ class Gm_ceilingModelCalculation extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function saveDetails($title,$comment,$manager_note,$calc_id){
+	    try{
+            if((!empty($title) || !empty($comment) || !empty($manager_note)) && !empty($calc_id)){
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query->update('`#__gm_ceiling_calculations`');
+                if(!empty($title)){
+                    $query->set("`calculation_title`='$title'");
+                }
+                if(!empty($comment)){
+                    $query->set("`details`='$comment'");
+                }
+                if(!empty($manager_note)){
+                    $query->set("`manager_note` = '$manager_note'");
+                }
+                $query->where("`id`=$calc_id");
+                $db->setQuery($query);
+                $db->execute();
+            }
+            return true;
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getByProjectId($projectId){
+	    try{
+
+        } catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -27,7 +27,7 @@ class Gm_ceilingModelStatuses extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('*');
+			$query->select('id,title');
 			$query->from('#__gm_ceiling_status');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();

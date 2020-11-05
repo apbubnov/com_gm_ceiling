@@ -408,5 +408,19 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function updateDopNumber(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $userId = $jinput->getInt('userId');
+            $dopNum = $jinput->get('number','','STRING');
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $userModel->updateDopNumber($userId,$dopNum);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

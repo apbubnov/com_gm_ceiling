@@ -216,50 +216,6 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			elseif(!empty($data['project_info-top']))
 				$project_data['project_info'] = $data['project_info-top'];
 			$project_data['created'] = date("d.m.Y");
-			
-			//Если расчет пришел со страницы клиентского гостевого расчета
-			if($data['type'] === "guest") {
-				$client_data['owner'] = $data['owner'];
-				$client_id = $client_model->save($client_data);				
-				$project_data['client_id'] = $client_id;
-				$project_data['project_status'] = 1;
-				if(!empty($data['project_calculation_date']))
-					$jdate = new JDate($data['project_calculation_date']);
-				elseif(!empty($data['project_calculation_date-top']))
-					$jdate = new JDate($data['project_calculation_date-top']);
-				$project_data['project_calculation_date'] = $jdate->format('d.m.Y H:i');
-				if(!empty($data['project_calculation_daypart'])){	
-					$project_data['project_calculation_daypart'] = $data['project_calculation_daypart'];
-					/*$project_data['project_calculation_from'] = $jdate->format('d.m.Y') . " " . $times[$data['project_calculation_daypart']];
-					$project_data['project_calculation_to'] = $jdate->format('d.m.Y') . " " . $times2[$data['project_calculation_daypart']];
-				*/
-				}
-				elseif(!empty($data['project_calculation_daypart-top'])){
-					$project_data['project_calculation_daypart'] = $data['project_calculation_daypart-top'];
-					//$project_data['project_calculation_from'] = $jdate->format('d.m.Y') . " " . $times[$data['project_calculation_daypart-top']];
-					//$project_data['project_calculation_to'] = $jdate->format('d.m.Y') . " " . $times2[$data['project_calculation_daypart-top']];
-				}
-				$project_data['who_calculate'] = 1;
-				$project_data['who_mounting'] = 1;
-				if(!empty($data['project_note']))
-					$project_data['project_note'] = $data['project_note'];
-				elseif(!empty($data['project_note-top']))
-					$project_data['project_note'] = $data['project_note-top'];
-				$project_data['owner'] = $data['owner'];
-				$project_data['gm_canvases_margin']   = $dealer->gm_canvases_margin;
-				$project_data['gm_components_margin'] = $dealer->gm_components_margin;
-				$project_data['gm_mounting_margin']   = $dealer->gm_mounting_margin;
-				
-				$project_data['dealer_canvases_margin']   = $dealer->dealer_canvases_margin;
-				$project_data['dealer_components_margin'] = $dealer->dealer_components_margin;
-				$project_data['dealer_mounting_margin']   = $dealer->dealer_mounting_margin;
-				
-				$project_id = $project_model->save($project_data);
-				
-				$data['project_id'] = $project_id;
-				Gm_ceilingHelpersGm_ceiling::notify($data, 0);
-
-			}
 
 	        $new_discount =  $jinput->get('new_discount',-1, 'RAW');
 	        if((!empty($new_discount) && $new_discount >= 0) && $new_discount != $project_data['project_discount']){
@@ -728,8 +684,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
+			$stockModel = $this->getModel('stock','Gm_ceilingModel');
 			$model_calculation->update_calculation($data);
-
+			$additionalCount = $stockModel->getCategoryAdditionalCount();
 
 
 			if(!empty($jobs)){

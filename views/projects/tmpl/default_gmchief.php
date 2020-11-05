@@ -33,6 +33,7 @@ foreach ($this->items as $i => $item){
     $item->project_info = addslashes($item->project_info);
 }
 $projects = quotemeta(json_encode($this->items));
+$done_statuses = [11,16,17,24,25,26,27,28,29];
 ?>
 <?=parent::getButtonBack();?>
 <form action="">
@@ -42,11 +43,6 @@ $projects = quotemeta(json_encode($this->items));
 <?php if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><?php else: ?><h2 class="center">Заказы</h2><?php endif; ?>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>" method="post"
       name="adminForm" id="adminForm">
-    <?php if (false): ?>
-	  <div class="toolbar">
-		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-		</div>
-    <?php endif; ?>
     <div class="row right">
         <div class="col-md-7">
         </div>
@@ -58,10 +54,10 @@ $projects = quotemeta(json_encode($this->items));
         </div>
     </div>
     <?php if (count($this->items) > 0): ?>
-	<table class="table table-striped  g_table" id="projectList">
+	<table class="table table-striped" id="projectList">
 		<thead>
 			<tr>
-				<th></th>
+				<th><i class="fas fa-check-double"></i></th>
 				<th class='center'>
 					Номер договора
 				</th>
@@ -70,9 +66,6 @@ $projects = quotemeta(json_encode($this->items));
 				</th>
 				<th class='center'>
 					Адрес
-				</th>
-				<th class='center'>
-					Телефоны
 				</th>
 				<th class='center'>
 					Клиент
@@ -103,8 +96,11 @@ $projects = quotemeta(json_encode($this->items));
                 ?>
 				<tr data-project_id = "<?=$item->id; ?>">
                     <td>
-                        <?php if ($item->project_status == 10): ?>
+                        <?php if ($item->project_status == 11): ?>
                             <button class="btn btn-primary btn-sm btn-done" data-project_id="<?= $item->id; ?>" type="button"><i class="fa fa-check"></i></button>
+                        <?php endif; ?>
+                        <?php if ($item->project_status == 12): ?>
+                            <i class="fas fa-check-double"></i>
                         <?php endif; ?>
                     </td>
                     <td class="center one-touch">
@@ -117,10 +113,8 @@ $projects = quotemeta(json_encode($this->items));
 						<?php echo $this->escape($item->project_info); ?>
 					</td>
 					<td class="center one-touch">
-						<?php echo $item->client_contacts; ?>
-					</td>
-					<td class="center one-touch">
-						<?php echo $item->client_name; ?>
+                        <?= "$item->client_name<br>$item->client_contacts;" ?>
+
 					</td>
 					<td class="center one-touch">
 						<?php echo $item->dealer_name; ?>
@@ -147,45 +141,109 @@ $projects = quotemeta(json_encode($this->items));
 
 <script type="text/javascript">
 	jQuery(document).ready(function () {
-	    var projects = JSON.parse('<?php echo $projects;?>');
-	    console.log("p",projects);
-        jQuery('body').on('click',".btn-done",function(){
-			var button = jQuery( this );
-			
-			noty({
-				layout	: 'center',
-				type	: 'warning',
-				modal	: true,
-				text	: 'Вы уверены, что хотите отметить договор выполненным?',
-				killer	: true,
-				buttons	: [
-					{addClass: 'btn btn-success', text: 'Выполнен', onClick: function($noty) {
-							jQuery.get(
-							  "/index.php?option=com_gm_ceiling&task=project.done",
-							  {
-							      project_id: button.data("project_id"),
-                                  check:1
-							  },
-							  function(data){
-								  if(data == "1") {
-									  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
-								  }
-							  }
-							);
-							$noty.close();
-						}
-					},
-					{addClass: 'btn', text: 'Отмена', onClick: function($noty) {
-							$noty.close();
-						}
-					}
-				]
-			});
+        var projects = JSON.parse('<?php echo $projects;?>'),
+            done_statuses = JSON.parse('<?= json_encode($done_statuses)?>');
+        jQuery('body').on('click',".btn-done",function(e){
+			var button = jQuery( this ),
+                subject = "Отметка стоимости договора <br> № " + button.data("project_id"),
+                text = "",
+                project = projects.find(function (item) {
+                    return item.id == button.data('project_id');
+                }),
+                project_sum = !empty(project.new_project_sum) ? project.new_project_sum : project.project_sum,
+                components_sum = !empty(project.self_price) ? project.self_price : +project.canvases_sum + +project.components_sum,
+                mounting_sum = +project.mounting_sum+ +project.transport_cost;
+            text += "<div class='dop_info_block' style='font-size:15px;'>";
+            text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + project_sum + "'/></div></br>";
+            text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + components_sum + "'/></div></br>";
+            text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;' value='" + mounting_sum + "'/></div>";
+            text += "</div>";
+            modal({
+                type: 'primary',
+                title: subject,
+                text: text,
+                size: 'small',
+                buttons: [{
+                    text: 'Выполнено', //Button Text
+                    val: 0, //Button Value
+                    eKey: true, //Enter Keypress
+                    onClick: function(dialog) {
+                        var input_value = jQuery("#input_check").val(),
+                            input_mounting = jQuery("#input_mounting").val(),
+                            input_material = jQuery("#input_material").val(),
+                            profit = parseFloat(input_value) - (parseFloat(input_mounting)+parseFloat(input_mounting));
 
+                        jQuery.ajax({
+                            type: 'POST',
+                            url: "index.php?option=com_gm_ceiling&task=project.done",
+                            data: {
+                                project_id : button.data("project_id"),
+                                new_value : input_value,
+                                mouting_sum : input_mounting,
+                                material_sum : input_material,
+                                check: 1
+                            },
+                            success: function(data){
+                                button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Закрыт!");
+                                var n = noty({
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "success",
+                                    text: data
+                                });
+                            },
+                            dataType: "text",
+                            timeout: 10000,
+                            error: function(data){
+                                console.log(data);
+                                var n = noty({
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка при попытке сохранить отметку. Сервер не отвечает"
+                                });
+                            }
+                        });
+                        return 1;
+                    }
+                },
+                    {
+                        addClass: 'btn', text: 'Отмена', onClick: function($noty) {
+                            $noty.close();
+                        }
+                    }
+                ],
+                callback: null,
+                autoclose: false,
+                center: true,
+                closeClick: true,
+                closable: true,
+                theme: 'xenon',
+                animate: true,
+                background: 'rgba(0,0,0,0.35)',
+                zIndex: 1050,
+                buttonText: {
+                    ok: 'Поставить',
+                    cancel: 'Снять'
+                },
+                template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
+                _classes: {
+                    box: '.modal-box',
+                    boxInner: ".modal-inner",
+                    title: '.modal-title',
+                    content: '.modal-text',
+                    buttons: '.modal-buttons',
+                    closebtn: '.modal-close-btn'
+                }
+
+            });
+			return false;
 		});
 
 		jQuery("#search_btn").click(function () {
-		    var style,check_btn;
+		    var style,check_btn = '';
 		    jQuery("#projectList > tbody").empty();
 		    var search_str = jQuery("#search_text").val().toLowerCase(),
                 regExp = new RegExp(search_str);
@@ -200,11 +258,16 @@ $projects = quotemeta(json_encode($this->items));
                     else{
                         style = "";
                     }
-                    if(project.project_status == 10){
-                        check_btn = '<button class="btn btn-primary btn-sm btn-done" data-project_id="'+project.id+'" type="button"><i class="fa fa-check"></i></button>';
+                    if(done_statuses.indexOf(parseInt(project.project_status)) != -1 || project.project_status == 12) {
+                        if (done_statuses.indexOf(parseInt(project.project_status)) != -1) {
+                            check_btn = '<button class="btn btn-primary btn-sm btn-done" data-project_id="' + project.id + '" type="button"><i class="fa fa-check"></i></button>';
+                        }
+                        if (project.project_status == 12) {
+                            check_btn = '<i class="fas fa-check-double"></i>';
+                        }
                     }
                     else{
-                        check_btn = "";
+                        check_btn = '';
                     }
                     jQuery("#projectList > tbody").append('<tr data-project_id = "'+project.id+'"></tr>');
                     jQuery("#projectList > tbody > tr:last").append(

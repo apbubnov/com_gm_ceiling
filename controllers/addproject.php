@@ -90,18 +90,24 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 				$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 				$client_data['created'] = date("Y-m-d");
 				$client_data['client_name'] = $data['client_name'];
-				$client_data['client_contacts'] = preg_replace('/[\(\)\-\s]/', '', $data['client_contacts']);
-				
-				$groups = $user->get('groups');
-				if (in_array("22", $groups) || in_array("21", $groups) || in_array("17", $groups) || in_array("12", $groups)) $client_data['dealer_id'] = $user->dealer_id;
-				else if(in_array("14", $groups)) $client_data['dealer_id'] = $userId;
-
+                $client_data['client_contacts'] = mb_ereg_replace('[^\d]', '', $data['client_contacts']);
+                $client_data['dealer_id'] = $user->dealer_id;
 				$client_id = $client_model->save($client_data);
-				if ($client_id == 'client_found')
-				{
-					$client_bool = false;
-				}
-				$project_data['client_id'] = $client_id;
+                if ($client_id == 'client_found')
+                {
+                    $clientsphonesModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+                    $client = $clientsphonesModel->getItemsByPhoneNumber($client_data['client_contacts'], $user->dealer_id);
+                    if(!empty($client)) {
+                        $client_id = $client->id;
+                    }
+                    else{
+                        throw new Exception("Существующий клиент не найден по номеру телефона");
+                    }
+                }
+                if($client_id == 0){
+                    throw new Exception("Запись на Гильдию мастеров!!!");
+                }
+                $project_data['client_id'] = $client_id;
 			}
 			else {
 				//если существующий клиент помещаем в проект id этого клиента
@@ -153,6 +159,24 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
             if(!empty($data['measure_note'])){
                $projectModel  = Gm_ceilingHelpersGm_ceiling::getModel('project');
                $projectModel->saveNote($project_id,$data['measure_note'],2);
+            }
+            /*проверка если замер записан более чем  через 2 дня, поставить звонок уточнить актуальность замера */
+
+            $today = new DateTime(date('Y-m-d'));
+            $measureDate = new DateTime($data['project_calculation_date']);
+            $day_diff = date_diff($measureDate,$today);
+            //throw new Exception(print_r($day_diff,true));
+            if($day_diff->days >=2){
+                $callbackDate = ($measureDate->sub(date_interval_create_from_date_string('1 days')))->format('Y-m-d');
+                if(date('N',strtotime($callbackDate)) == 7){
+                    $callbackDate = ($measureDate->sub(date_interval_create_from_date_string('2 days')))->format('Y-m-d');
+                }
+                if(date('N',strtotime($callbackDate)) == 6){
+                    $callbackDate = ($measureDate->sub(date_interval_create_from_date_string('1 days')))->format('Y-m-d');
+                }
+                $callbackDate = $callbackDate.' 16:30:00';
+                $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
+                $callback_model->save($callbackDate, "Уточнить актуальность замера", $project_data['client_id'], $user->id);
             }
             /*Запись в историю проектов*/
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');

@@ -220,25 +220,19 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 			$title = $jinput->get('title', "", 'STRING');
 			$comment = $jinput->get('details', "", 'STRING');
 			$manager_note = $jinput->get('manager_note',"","STRING");
-
+			$additionFlag = $jinput->get('addition',0,'INT');
 			$calc_id  = $jinput->get('calc_id', "", 'INT');
-			if((!empty($title) || !empty($comment) || !empty($manager_note)) && !empty($calc_id)){
-				$db = JFactory::getDbo();
-				$query = $db->getQuery(true);
-				$query->update('`#__gm_ceiling_calculations`');
-				if(!empty($title)){
-					$query->set("`calculation_title`='$title'");
-				}
-				if(!empty($comment)){
-					$query->set("`details`='$comment'");
-				}
-				if(!empty($manager_note)){
-					$query->set("`manager_note` = '$manager_note'");
-				}
-				$query->where("`id`=$calc_id");
-				$db->setQuery($query);
-		        $db->execute();
-	        }
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            if($additionFlag == 1){
+                $calculationData = $calculationModel->getBaseCalculationDataById($calc_id);
+                $modelProject = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                $project = $modelProject->getData($calculationData->project_id);
+                if($project->project_status >= 5){
+                    Gm_ceilingHelpersGm_ceiling::notify($project,17);
+                }
+            }
+            $calculationModel->saveDetails($title,$comment,$manager_note,$calc_id);
+            die(true);
 		}
 		catch(Exception $e)
         {
@@ -263,27 +257,6 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 
         }
 	}
-
-	function delete(){
-		try{
-			$jinput = JFactory::getApplication()->input;
-			$idCalc = $jinput->get('calc_id',null, 'INT');
-			if(!empty($idCalc)){
-				$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');	
-				$result = $model->delete($idCalc);
-				die(json_encode($result));
-			}
-			else{
-				throw new Exception("Empty calculation id!");
-			}
-			
-		}
-		catch(Exception $e)
-        {
-           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-        }
-	}
-
 	function recalcMount(){
 	    try{
             $jinput = JFactory::getApplication()->input;
@@ -436,5 +409,83 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    /*4API*/
+    public function get(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $calculation = (object)[];
+            if(!empty($id)){
+	            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+	            $calculation = $calculationModel->new_getData($id);
+            }
+	        die(json_encode($calculation));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function create(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            $calculationId = null;
+            if(!empty($projectId)){
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $calculationId  = $calculationModel->create_calculation($projectId);
+
+            }
+            die(json_encode($calculationId));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function update(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $calculation = $jinput->get('calculation','', 'STRING');
+            $calculation = json_decode($calculation);
+
+            if(!empty($calculation)){
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $calculationData = [];
+                foreach ($calculation as $key=>$value){
+                    if($key!='goods' && $key != 'jobs' && !empty($value)){
+                        $calculationData[$key] = $value;
+                    }
+                }
+                $calculationModel->update_calculation($calculationData);
+                die(json_encode(true));
+            }
+            else{
+                die(json_encode(false));
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delete(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $idCalc = $jinput->get('calc_id',null, 'INT');
+            if(!empty($idCalc)){
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+                $result = $model->delete($idCalc);
+                die(json_encode($result));
+            }
+            else{
+                throw new Exception("Empty calculation id!");
+            }
+
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    /*END*/
 
 }

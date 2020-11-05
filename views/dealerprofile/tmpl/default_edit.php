@@ -71,9 +71,15 @@ if($userType == 7){
 
 
 <?php if($userType != 7) { ?>
-  <div style="width: 100%; text-align: right; margin-top: 15px;">
-    <a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
-  </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div style="text-align: right;" class="col-md-3">
+            <a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=integration" class="btn btn-large btn-primary">Интеграция</a>
+        </div>
+    </div>
 <?php } ?>
 <!--<div class="row">
     <h5 class="caption2">Настройка просчетной страницы</h5>

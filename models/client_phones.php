@@ -50,12 +50,12 @@ class Gm_ceilingModelClient_phones extends JModelList
 				->leftJoin('`#__users` AS `u` ON `b`.`id` = `u`.`associated_client`')
 				->where("`a`.`phone` LIKE(".$db->quote("%".$number."%").")")
 				->order('`b`.`dealer_id`');
+
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
 			$result = null;
 			if (!empty($items)) {
-				$result = $items[0];
 				foreach ($items as $key => $item) {
 					if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type)) {
 						$result = $item;

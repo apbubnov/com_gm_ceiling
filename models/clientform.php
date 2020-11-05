@@ -361,6 +361,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 
 			if(!empty($data['client_contacts']))
 			{
+
 				$phone = $data['client_contacts'];
 				$phone = mb_ereg_replace('[^\d]', '', $phone);
 		        if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
@@ -379,10 +380,9 @@ class Gm_ceilingModelClientForm extends JModelForm
 	            
 				$project_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 	            $result = $project_model->getItemsByPhoneNumber($phone, $data['dealer_id']);
-	            //throw new Exception(print_r($result->deleted_by_user,true));
 
 	            if (!empty($result) && $result->deleted_by_user == 0 && $result->client_dealer_id == $data['dealer_id']){
-	            	return 'client_found';
+	                return 'client_found';
 	            }
 	            if(!empty($result) && $result->deleted_by_user == 1){
 	            	$model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
@@ -400,7 +400,6 @@ class Gm_ceilingModelClientForm extends JModelForm
 		            return $result->id;
 	            }
 			}
-
 			$table = $this->getTable();
 
 			if ($table->save($data) === true)

@@ -143,10 +143,10 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <td class="center one-touch">
                             <?php
                             $projectSum = 0;
-                            if(!empty($item->new_project_sum)){
+                            if(!empty(floatval($item->new_project_sum))){
                                 $projectSum = $item->new_project_sum;
                             }
-                            elseif(!empty($item->project_sum)){
+                            elseif(!empty(floatval($item->project_sum))){
                                 $projectSum = $item->project_sum;
                             }
                             else{

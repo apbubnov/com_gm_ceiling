@@ -31,12 +31,28 @@ class Gm_ceilingModelProject_Prepayment extends JModelItem
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select("prepayment_sum,DATE_FORMAT(datetime,'%d.%m.%Y %H:%i:%s') as datetime")
+                ->select("id,prepayment_sum,DATE_FORMAT(datetime,'%d.%m.%Y %H:%i:%s') as datetime")
                 ->from('`rgzbn_gm_ceiling_projects_prepayment`')
                 ->where("`project_id` = $projectId");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete($id){
+        try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('`rgzbn_gm_ceiling_projects_prepayment`')
+                ->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

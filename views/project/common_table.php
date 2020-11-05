@@ -16,7 +16,7 @@ $user_groups = $user->groups;
 if(in_array('16',$user_groups)){
     $is_gmmanager = true;
 }
-if(in_array('17',$user_groups) || $user->id == 2){
+if(in_array('17',$user_groups) || $user->id == 2 || in_array('38',$user_groups)){
     $isNMS = true;
 }
 if($user->dealer_type == 2){
@@ -555,10 +555,10 @@ $pdf_names = [];
                                 </td>
                                 <td colspan="2">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-xs-3">
                                             <span id="prepayment_total" style="vertical-align: middle;"><?php echo !empty($this->item->prepayment_total) ? $this->item->prepayment_total : 0 ;?></span>руб.
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-xs-3">
                                             <button id="show_detailed_prepayment" type="button" class="btn btn-primary" style="padding-right: 6px;padding-left: 6px;">Посмотреть детально</button>
                                         </div>
                                     </div>
@@ -567,7 +567,7 @@ $pdf_names = [];
                             <tr id="detailed_tr" style="display: none;">
                                 <td id="detailed_td" colspan="3"></td>
                             </tr>
-                            <tr>
+                            <tr >
                                 <td>
                                     Внесение
                                 </td>
@@ -895,6 +895,7 @@ $pdf_names = [];
                     }
                     $color = $detailed_canvas[0]->color;
                     $hex = $detailed_canvas[0]->hex;
+
                     ?>
                     <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                         <div class="other_tabs">
@@ -920,54 +921,66 @@ $pdf_names = [];
                                     <?php if($needShow){ ?>
                                         <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>">Изменить расчет</a>
                                     <?php }?>
-                                    <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" data-img-type="before" style="display: none;" multiple accept="image/*">
-                                    <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
-                                    <input type="hidden" id="input_delete_uploaded_calc_img">
+                                    <?php if($this->item->status !=12){?>
+                                        <input type="file" class="img_file" data-calc-id="<?= $calculation->id; ?>" data-img-type="before" style="display: none;" multiple accept="image/*">
+                                        <button type="button" class="btn btn-primary btn_img_file"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                                        <input type="hidden" id="input_delete_uploaded_calc_img">
+                                    <?php }?>
                                 </div>
                             </div>
                             <?php
-                            $dir_before = 'uploaded_calc_images/'.$calculation->id.'/before';
-                            $dir_after = 'uploaded_calc_images/'.$calculation->id.'/after';
-                            $dir_defect = 'uploaded_calc_images/'.$calculation->id.'/defect';
-                            $files = [];
-                            $temp = [];
-                            if (is_dir($dir_before)) {
-                                $temp = scandir($dir_before);
-                                foreach ($temp as $key => $value) {
-                                    if (strlen($value) === 32) {
-                                        $temp[$key] = $dir_before.'/'.$value;
-                                    } else {
-                                        unset($temp[$key]);
+                            $archive = "uploaded_calc_images/images_".$this->item->id.".zip";
+                            if(!file_exists($archive)){
+                                $dir_before = 'uploaded_calc_images/'.$calculation->id.'/before';
+                                $dir_after = 'uploaded_calc_images/'.$calculation->id.'/after';
+                                $dir_defect = 'uploaded_calc_images/'.$calculation->id.'/defect';
+                                $files = [];
+                                $temp = [];
+                                if (is_dir($dir_before)) {
+                                    $temp = scandir($dir_before);
+                                    foreach ($temp as $key => $value) {
+                                        if (strlen($value) === 32) {
+                                            $temp[$key] = $dir_before.'/'.$value;
+                                        } else {
+                                            unset($temp[$key]);
+                                        }
                                     }
+                                    $files = array_merge($files, $temp);
                                 }
-                                $files = array_merge($files, $temp);
-                            }
-                            if (is_dir($dir_after)) {
-                                $temp = scandir($dir_after);
-                                foreach ($temp as $key => $value) {
-                                    if (strlen($value) === 32) {
-                                        $temp[$key] = $dir_after.'/'.$value;
-                                    } else {
-                                        unset($temp[$key]);
+                                if (is_dir($dir_after)) {
+                                    $temp = scandir($dir_after);
+                                    foreach ($temp as $key => $value) {
+                                        if (strlen($value) === 32) {
+                                            $temp[$key] = $dir_after.'/'.$value;
+                                        } else {
+                                            unset($temp[$key]);
+                                        }
                                     }
+                                    $files = array_merge($files, $temp);
                                 }
-                                $files = array_merge($files, $temp);
-                            }
-                            if (is_dir($dir_defect)) {
-                                $temp = scandir($dir_defect);
-                                foreach ($temp as $key => $value) {
-                                    if (strlen($value) === 32) {
-                                        $temp[$key] = $dir_defect.'/'.$value;
-                                    } else {
-                                        unset($temp[$key]);
+                                if (is_dir($dir_defect)) {
+                                    $temp = scandir($dir_defect);
+                                    foreach ($temp as $key => $value) {
+                                        if (strlen($value) === 32) {
+                                            $temp[$key] = $dir_defect.'/'.$value;
+                                        } else {
+                                            unset($temp[$key]);
+                                        }
                                     }
+                                    $files = array_merge($files, $temp);
                                 }
-                                $files = array_merge($files, $temp);
                             }
+                            
 
                             if (empty($files)) {
-                                $col1 = 0;
-                                $col2 = 5;
+                                if(!file_exists($archive)){
+                                    $col1 = 0;
+                                    $col2 = 5;
+                                }
+                                else{
+                                    $col1 = 6;
+                                    $col2 = 6;
+                                }
                             } else {
                                 $col1 = 8;
                                 $col2 = 4;
@@ -975,12 +988,30 @@ $pdf_names = [];
                             ?>
                             <div class="row">
                                 <div class="col-md-<?=$col1?>">
-                                    <div class="row div_imgs">
-                                        <?php
-                                        foreach ($files as $value) {
-                                            echo '<img src="'.$value.'" data-path="'.str_replace('uploaded_calc_images/', '', $value).'" class="uploaded_calc_img">';
-                                        }
-                                        ?>
+                                    <?php if(file_exists($archive)){?>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span style="color:red;">
+                                                        Внимание!Все изображения прикрепленные к просчетам перемещены в архив, который вы можете скачать по ссылке ниже!
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                     <a href="<?=$archive ;?>" download="" class="btn btn-primary">
+                                                       <i class="fas fa-download"></i>  Скачать архив
+                                                    <a>
+                                                </div>
+                                        
+
+                                    <?php }
+                                        else{ ?>
+                                            <div class="row div_imgs">        
+                                            <?php 
+                                                if(!empty($files)){ 
+                                                    foreach ($files as $value) {
+                                                    echo '<img src="'.$value.'" data-path="'.str_replace('uploaded_calc_images/', '', $value).'" class="uploaded_calc_img">';
+                                                }
+                                            }
+                                        } ?>
                                     </div>
                                 </div>
                                 <div class="col-md-<?=$col2;?>">

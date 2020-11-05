@@ -198,7 +198,7 @@ if(!empty($this->item->mount_data)){
     <div id="mw_mounts_calendar" class="modal_window"></div>
 </div>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js?t=<?php echo time(); ?>"></script>
 <script type="text/javascript" src="/components/com_gm_ceiling/date_picker/mounts_calendar.js"></script>
 <script type="text/javascript">
     var project_id = '<?= $this->item->id;?>',
@@ -218,7 +218,6 @@ if(!empty($this->item->mount_data)){
     });
     jQuery(document).ready(function(){
         jQuery("#update_discount").click(function() {
-            save_data_to_session(4);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
                 data: {
@@ -334,8 +333,11 @@ if(!empty($this->item->mount_data)){
                     layout: 'center',
                     maxVisible: 5,
                     type: "success",
-                    text: "Адрес сохранен!"
+                    text: "Проект запущен в производство!"
                 });
+                setTimeout(function () {
+                    location.reload();
+                },2000);
             },
             error: function (data) {
                 console.log(data);
@@ -345,7 +347,7 @@ if(!empty($this->item->mount_data)){
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Ошибка изменения скидки"
+                    text: "Ошибка запуска в производство"
                 });
             }
         });

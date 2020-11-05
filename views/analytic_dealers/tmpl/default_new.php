@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 $date_from = date('Y-m-d');
 $date_to = date('Y-m-d');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('Analytic_Dealers');
-$data = json_encode($model->getData($date_from,$date_to));
+$data = json_encode($model->getData($date_from,$date_to,5,true));
 $month_begin_date = date('Y-m-01');
 $today = date('Y-m-d');
 $jinput = JFactory::getApplication()->input;

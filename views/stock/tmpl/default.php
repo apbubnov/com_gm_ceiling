@@ -68,6 +68,16 @@ $userGroup = $user->groups;
         </a>
     </div>
     <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=moving&subtype=create', false, 2); ?>">
+            <i class="fa fa-bars" aria-hidden="true"></i> Сделать перемещение
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=movings&subtype=history', false, 2); ?>">
+            <i class="fa fa-bars" aria-hidden="true"></i> История перемещений
+        </a>
+    </div>
+    <div class="row center">
         <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=dealers', false, 2); ?>">
             <i class="fas fa-users"></i> Дилеры
         </a>

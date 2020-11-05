@@ -30,7 +30,7 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
             $jinput = JFactory::getApplication()->input;
             $date = $jinput->get('date', '', 'STRING');
             $label_id = $jinput->get('label_id', 0, 'INT');
-
+            $onlySelf = $jinput->get('only',0,'INT');
             $type = $jinput->get('type', 0, 'INT');
             if ($type == 1) {
                 $filter = '(`p`.`project_status` IS NULL) AND ';
@@ -40,11 +40,17 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
 
             $filter .= (!empty($date)) ? "DATE_FORMAT(`a`.`date_time`,'%Y-%m-%d') <= '$date' AND " : "";
             $filter .= (!empty($label_id)) ? "`c`.`label_id` = $label_id AND " : "";
-            if (in_array('35', $groups)) {
-                $filter .= "(`c`.`dealer_id` = $dealerId or `us`.`dealer_id` = $dealerId)";
-            } else {
-                $filter .= "(`a`.`manager_id` = $userId or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $userId)";
+            if($onlySelf == 1){
+                $filter .= "(`a`.`manager_id` = $userId or `us`.`dealer_id` = $userId)";
             }
+            else{
+                if (in_array('35', $groups)) {
+                    $filter .= "(`c`.`dealer_id` = $dealerId or `us`.`dealer_id` = $dealerId)";
+                } else {
+                    $filter .= "(`a`.`manager_id` = $userId or `a`.`manager_id` = $dealerId or `us`.`dealer_id` = $userId)";
+                }
+            }
+
             
             $model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $result = $model->gettingData($filter);

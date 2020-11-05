@@ -237,7 +237,8 @@ class Gm_ceilingModelStock extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->select('id, name')
-                ->from("`#__gm_stock_stocks`");
+                ->from("`#__gm_stock_stocks`")
+                ->order('id DESC');
             $db->setQuery($query);
             return $db->loadObjectList();
         }
@@ -931,9 +932,26 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
+    function getCategoryAdditionalCount(){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id,additional_quantity')
+                ->from('`#__gm_stock_goods_categories`')
+                ->where('additional_quantity is not null')
+                ->order('`id`');
+            $db->setQuery($query);
+            $items = $db->loadObjectList('id');
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public function getGoods($goods_id = null) {
         try {
-            $result = array();
+            $result = [];
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
@@ -944,50 +962,50 @@ class Gm_ceilingModelStock extends JModelList
                     `go`.`price`, 
                     `stoc`.`name` as `stock_name`, 
                     `stoc`.`id` as `stock_id`, 
-                    `inv`.`count`')
+                   SUM(`inv`.`count`) AS `count`')
                 ->from('`#__gm_stock_goods` as `go`')
                 ->leftJoin('`#__gm_stock_inventory` as `inv` on `go`.`id` = `inv`.`goods_id`')
                 ->leftJoin('`#__gm_stock_stocks` as `stoc` on `inv`.`stock_id` = `stoc`.`id`')
-                ->order('`go`.`id`');
-
+                ->group('`go`.`id`,`stock_id`')
+                ->order('`count` DESC');
                 if (!empty($goods_id)) {
                     $query->where("`go`.`id`=$goods_id");
                 }
 
             $db->setQuery($query);
             $items = $db->loadObjectList();
-
-            $stocks_count = array();      
-            $stocks = array();                
-            $items_stocks = $items[0]->id;
+            $temp = [];
             foreach ($items as $value) {
-                if ($value->id != $items_stocks) {
-                    $stocks_count[] = $stocks;
-                    $stocks = null;
+                if(empty($result[$value->id])){
+                    $temp[$value->id] = (object) [
+                        'id' => $value->id,
+                        'name' => $value->name,
+                        'category_id' => $value->category_id,
+                        'unit_id' => $value->unit_id,
+                        'price' => $value->price,
+                        'stocks_count' => []
+                    ];
+
                 }
-                if ($value->stock_id != null) {
-                    $stocks[] = (object) array('id' => $value->stock_id,'name' => $value->stock_name,'count' => $value->count);
-                } 
-                $items_stocks = $value->id;
+                if(!empty($value->stock_id)){
+                    array_push($temp[$value->id]->stocks_count,
+                        (object)[
+                            'id'=> $value->stock_id,
+                            'name'=> $value->stock_name,
+                            'count'=> $value->count
+                        ]);
+                }
             }
 
-            $items_stocks = 0;
-            $i = 0;
-            foreach ($items as $value) {
-
-                if ($value->id != $items_stocks) {
-                    $result[] = (object) array('id' => $value->id, 'name' => $value->name, 'category_id' => $value->category_id, 'unit_id' => $value->unit_id, 'price' => $value->price, 'stocks_count' => $stocks_count[$i]);
-                    $items_stocks = $value->id;
-                    $i++;
-                }
-
+            foreach ($temp as $t){
+                array_push($result,$t);
             }
-
-            return $result;      
+            return $result;
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
 
     public function getOperations() {
         try {
@@ -1585,13 +1603,14 @@ class Gm_ceilingModelStock extends JModelList
                 ->where("s.date_time < '$date'")
                 ->order('inv.goods_id');
             $query
-                ->select('g.id,g.name,IFNULL(SUM(r.count),0) AS received_count,IFNULL(sales.sale_count,0) AS sale_count')
+                ->select('g.id,g.name,IFNULL(SUM(r.count),0) AS received_count,IFNULL(sales.sale_count,0) AS sale_count,IFNULL(SUM(i.count),0) AS rest_count')
                 ->from('`rgzbn_gm_stock_goods` AS g')
                 ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.goods_id = g.id')
                 ->leftJoin('`rgzbn_gm_stock_reception` AS r ON r.inventory_id = i.id')
                 ->leftJoin("($saleQuery) as sales ON sales.goods_id = g.id")
                 ->where("(r.date_time <'$date' OR r.date_time IS  NULL)")
-                ->group('g.id');
+                ->group('g.id')
+                ->order('rest_count DESC');
             if(!empty($search)){
                 $query->where("g.name like '%$search%'");
             }
