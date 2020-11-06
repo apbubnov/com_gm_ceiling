@@ -11,15 +11,26 @@ class Gm_ceilingModelProject_Prepayment extends JModelItem
 {
     function save($projectId,$sum){
         try{
-            $db    = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->insert('`rgzbn_gm_ceiling_projects_prepayment`')
-                ->columns('`project_id`, `prepayment_sum`')
-                ->values("$projectId,$sum");
-            $db->setQuery($query);
-            $db->execute();
-            return true;
+            if(!empty($projectId)) {
+                $sum = floatval($sum);
+                if(!empty($sum)){
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $query
+                        ->insert('`rgzbn_gm_ceiling_projects_prepayment`')
+                        ->columns('`project_id`, `prepayment_sum`')
+                        ->values("$projectId,$sum");
+                    $db->setQuery($query);
+                    $db->execute();
+                    return true;
+                }
+                else{
+                    return null;
+                }
+            }
+            else{
+                return null;
+            }
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

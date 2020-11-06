@@ -780,7 +780,7 @@ jQuery('[name="add_calc_comment"]').click(function () {
 
 jQuery("#prepayment_save").click(function () {
     var button = jQuery(this),
-        prepayment_sum = jQuery("#prepayment").val();
+        prepayment_sum = parseFloat(jQuery("#prepayment").val());
     if (!empty(prepayment_sum)) {
         jQuery.ajax({
             type: 'POST',
@@ -980,7 +980,7 @@ jQuery(document).on('click', '.additional_goods', function () {
 });
 
 jQuery('.save_final_btn').click(function () {
-    var final_sum = jQuery('.final_sum').val();
+    var final_sum = parseFloat(jQuery('.final_sum').val());
     jQuery.ajax({
         type: 'POST',
         url: "index.php?option=com_gm_ceiling&task=project.saveSum",

@@ -341,7 +341,7 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 	        	throw new Exception('Empty calc_id!');
 	        }
 	        if ($type !== 'before' && $type !== 'after' && $type !== 'defect') {
-	        	throw new Exception('Invalid img type!');
+	        	$type = 'before';
 	        }
 	        if (!is_dir('uploaded_calc_images/'.$calc_id.'/'.$type)) {
 	        	if (!mkdir('uploaded_calc_images/'.$calc_id.'/'.$type, 0777, true)) {
@@ -350,7 +350,7 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 	        }
 
 	        $dir = 'uploaded_calc_images/'.$calc_id.'/'.$type.'/';
-	        $urls = array();
+	        $urls = [];
 
 	        foreach ($_FILES as $file) {
 				$md5 = md5($calc_id.microtime().$file['name']);

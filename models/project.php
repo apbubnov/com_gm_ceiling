@@ -1874,15 +1874,24 @@ class Gm_ceilingModelProject extends JModelItem
 
     function saveFinalSum($id,$project_sum){
 	    try{
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->update('#__gm_ceiling_projects')
-                ->set("new_project_sum = $project_sum")
-                ->where("id = $id");
-            $db->setQuery($query);
-            $db->execute();
-            return true;
+	        if(!empty($id)) {
+	            $project_sum = floatval($project_sum);
+	            if(!empty($project_sum)) {
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $query
+                        ->update('#__gm_ceiling_projects')
+                        ->set("new_project_sum = $project_sum")
+                        ->where("id = $id");
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+                return true;
+            }
+	        else{
+	            return false;
+	        }
+
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

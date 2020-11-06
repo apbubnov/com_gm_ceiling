@@ -29,13 +29,13 @@ class Gm_ceilingModelDealer_info extends JModelList
 	 * @see        JController
 	 * @since      1.6
 	 */
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		try
 		{
 			if (empty($config['filter_fields']))
 			{
-				$config['filter_fields'] = array(
+				$config['filter_fields'] = [
 				//	'id', 'a.id',
 	              //  'texture_id', 'a.texture_id',
 	                //'color_id', 'a.color_id',
@@ -45,7 +45,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 	                //'price', 'a.price',
 	               // 'count', 'a.count',
 	               // 'full_name', 'CONCAT( a.name , \' \', a.country , \' \', a.width )'
-				);
+				];
 			}
 
 			parent::__construct($config);
@@ -67,12 +67,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
-			$app = JFactory::getApplication();
 			$user = JFactory::getUser();
 			$dealerId = $user->dealer_id;
-			// Create a new query object.
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
+
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*');
@@ -87,9 +84,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 	}
 	function getData()
 	{
-		try
-		{
-			$app = JFactory::getApplication();
+		try{
 			$user = JFactory::getUser();
 			
 			if(empty($user->dealer_id)) $dealerId = 1;
@@ -113,17 +108,19 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
-			$app = JFactory::getApplication();
-			$user = JFactory::getUser();
-			
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
-			$query->select('*');
-			$query->from('#__gm_ceiling_dealer_info');
-			$query->where("`dealer_id` = $dealerId");
-			$db->setQuery($query);
-			$item = $db->loadObject();
-			return $item;
+		    if(!empty($dealerId)) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                $query->select('*');
+                $query->from('#__gm_ceiling_dealer_info');
+                $query->where("`dealer_id` = $dealerId");
+                $db->setQuery($query);
+                $item = $db->loadObject();
+                return $item;
+            }
+		    else{
+		        return null;
+            }
 		}
 		catch(Exception $e)
 		{
@@ -139,14 +136,19 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select($margin_name);
-			$query->from('#__gm_ceiling_dealer_info');
-			$query->where("`dealer_id` = $dealer_id");
-			$db->setQuery($query);
-			$result = $db->loadResult();
-			return $result;
+		    if(!empty($dealer_id) && !empty($margin_name)) {
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query->select($margin_name);
+                $query->from('#__gm_ceiling_dealer_info');
+                $query->where("`dealer_id` = $dealer_id");
+                $db->setQuery($query);
+                $result = $db->loadResult();
+                return $result;
+            }
+		    else{
+		        return null;
+            }
 		}
 		catch(Exception $e)
 		{
@@ -193,11 +195,11 @@ class Gm_ceilingModelDealer_info extends JModelList
 			$items = $db->loadObjectList();
 
 			$str_update = "";
-			$arr_insert = array();
+			$arr_insert = [];
 			foreach ($array as $value) {
 				$bool = false;
 				$job_id = $value['job_id'];
-				$price = $value['price'];
+				$price = !empty($value['price']) ? $value['price'] : 0;
 				foreach ($items as $value2) {
 					if ($value2->job_id == $value['job_id']) {
 						$str_update .= "when `job_id` = $job_id then $price \n";
@@ -235,12 +237,12 @@ class Gm_ceilingModelDealer_info extends JModelList
 				$db->execute();
 			}
 			if(!empty($data)) {
-                $canvases_margin = $data['canvases_margin'];
-                $components_margin = $data['components_margin'];
-                $mounting_margin = $data['mounting_margin'];
-                $min_sum = $data['min_sum'];
-                $transport = $data['transport'];
-                $distance = $data['distance'];
+                $canvases_margin = !empty($data['canvases_margin']) ? $data['canvases_margin'] : 0;
+                $components_margin = !empty($data['components_margin']) ? $data['components_margin'] : 0;
+                $mounting_margin =  !empty($data['mounting_margin']) ? $data['mounting_margin'] : 0;
+                $min_sum = !empty($data['min_sum']) ? $data['min_sum'] : 0;
+                $transport = !empty($data['transport']) ? $data['transport'] : 0;
+                $distance =!empty($data['distance']) ? $data['distance'] : 0;
 
                 $query = $db->getQuery(true);
                 $query->update('`rgzbn_gm_ceiling_dealer_info`')
