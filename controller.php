@@ -504,7 +504,7 @@ public function register_mnfctr(){
                $login = $phone;
             }
             jimport('joomla.user.helper');
-            $data = array(
+            $data = [
                "name" => $FIO,
                "username" => $login,
                "password" => $password,
@@ -514,7 +514,7 @@ public function register_mnfctr(){
                "phone" => $phone,
                "block" => 0,
                "dealer_type" => 2
-            );
+            ];
             try {
                $user = new JUser;
                if (!$user->bind($data)) {
@@ -553,12 +553,12 @@ public function register_mnfctr(){
                $result = json_encode($userID);
                die($result);
             } catch (Exception $e) {
-               $result = json_encode(array(
-                   'error' => array(
+               $result = json_encode([
+                   'error' => [
                        'msg' => $e->getMessage(),
                        'code' => $e->getCode(),
-                   ),
-               ));
+                   ],
+               ]);
                die($result);
             }
        }
@@ -2765,8 +2765,8 @@ public function register_mnfctr(){
                             break;
                         }
                     }
-                    if (empty($calculation->cancel_cuts) && !empty($calculation->offcuts) ) {
-                        $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$calculation->offcuts,"price"=>$canvas_price * 0.5);
+                    if (empty($calculation->cancel_cuts) && !empty($calculation->offcut_square) && $calculation->offcut_square > $calculation->n4*0.5) {
+                        $data_for_manager_estimate['offcuts'] = (object)array("name"=>"Обрезки","count"=>$calculation->offcut_square,"price"=>$canvas_price * 0.5);
                     }
                     $data_for_manager_estimate['photoprint'] = json_decode($calculation->photo_print);
                     $data_for_manager_estimate['factory_jobs'] = $factory_jobs;

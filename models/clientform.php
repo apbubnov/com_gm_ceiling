@@ -377,11 +377,10 @@ class Gm_ceilingModelClientForm extends JModelForm
 		        {
 		            $phone = substr_replace($phone, '7', 0, 1);
 		        }
-	            
-				$project_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-	            $result = $project_model->getItemsByPhoneNumber($phone, $data['dealer_id']);
-
-	            if (!empty($result) && $result->deleted_by_user == 0 && $result->client_dealer_id == $data['dealer_id']){
+				$phonesModel = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+	            $result = $phonesModel->getItemsByPhoneNumber($phone, $data['dealer_id'],$data['is_dealer']);
+	           
+	            if ((!empty($result) && $result->deleted_by_user == 0 && $result->client_dealer_id == $data['dealer_id'])||($result->id== $result->associated_client && !empty($data['is_dealer']))){
 	                return 'client_found';
 	            }
 	            if(!empty($result) && $result->deleted_by_user == 1){

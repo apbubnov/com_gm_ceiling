@@ -2035,6 +2035,40 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getMountingSum($projectId,$dealerId){
+        try{
+            $project = $this->getNewData($projectId);
+            $mountMargin = $project->dealer_mounting_margin;
+            $calculations = $this->getCalculationIdById($projectId);
+            $ids = [];
+            foreach ($calculations as $item){
+                array_push($ids,$item->id);
+            }
+            $calculatuionsIds = implode(',',$ids);
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $subQuery = $db->getQuery(true);
+            $subQuery
+                ->select('DISTINCT `cjm`.`job_id`, SUM(`cjm`.`count`) AS `job_count_all`')
+                ->from('`rgzbn_gm_ceiling_calcs_jobs_map` AS `cjm`')
+                ->where(" `cjm`.`calc_id` IN($calculatuionsIds)")
+                ->group('`cjm`.`job_id`');
+            $query
+                ->select('SUM(ROUND(`jf`.`job_count_all` * IFNULL(`jdp`.`price`, 0), 2)) AS `price_sum`')
+                ->select("SUM(ROUND(`jf`.`job_count_all` * IFNULL(`jdp`.`price`, 0) * 100 / (100 - $mountMargin), 2)) AS `price_sum_with_margin`")
+                ->from("($subQuery) as `jf`")
+                ->innerJoin('`rgzbn_gm_ceiling_jobs` AS `j` ON  `jf`.`job_id` = `j`.`id`')
+                ->leftJoin("`rgzbn_gm_ceiling_jobs_dealer_price` AS `jdp` ON  `jf`.`job_id` = `jdp`.`job_id` AND `jdp`.`dealer_id` = $dealerId")
+                ->where('`j`.`guild_only` = 0 AND `j`.`is_factory_work` = 0');
+            $db->setQuery($query);
+            $result = $db->loadObject();
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     public function getByClientId($id){
         try{
             $db = JFactory::getDbo();

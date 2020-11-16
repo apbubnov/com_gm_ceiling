@@ -1053,7 +1053,7 @@ class Gm_ceilingModelStock extends JModelList
                 ->from('`rgzbn_gm_stock_units` as `u`')
                 ->order('`u`.`id`');
             $db->setQuery($query);
-            $items = $db->loadAssoc('id');
+            $items = $db->loadObjectList('id');
 
             return $items;
         } catch(Exception $e) {

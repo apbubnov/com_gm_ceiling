@@ -434,4 +434,39 @@ class Gm_ceilingModelAnalytic_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getMountServiceAnalytic($dateFrom,$dateTo){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('DISTINCT p.id,u.name,p.calcs_mounting_sum,SUM(calc.mounting_sum) AS mounting_sum')
+                ->from('`rgzbn_gm_ceiling_projects` AS p')
+                ->leftJoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = p.id')
+                ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
+                ->leftJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.project_id = p.id')
+                ->leftJoin('`rgzbn_gm_ceiling_dealer_info` AS di ON di.dealer_id = c.dealer_id')
+                ->leftJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+                ->where("ph.new_status = 5 AND ph.date_of_change BETWEEN '$dateFrom' AND '$dateTo' AND calcs_mounting_sum != '' AND c.dealer_id NOT IN(1,2785)")
+                ->group('p.id');
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            if(!empty($result)){
+                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                foreach ($result as $key => $value) {
+                    $calcsMountSums = json_decode($value->calcs_mounting_sum);
+                    foreach ($calcsMountSums as $item){
+                        $result[$key]->serviceSum += $item;
+                    }
+                    $mountSum = $projectModel->getMountingSum($value->id,1);
+                    $result[$key]->mounting_sum = !empty($mountSum->price_sum) ? $mountSum->price_sum : 0;
+                }
+
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

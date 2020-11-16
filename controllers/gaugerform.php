@@ -43,9 +43,11 @@ class Gm_ceilingControllerGaugerForm extends JControllerForm
 			jimport('joomla.user.helper');
 
 			if ($dealerId == 1) {
-				$groups = array(2, 22);
+			    $group = 22;
+				$groups = array(2, $group);
 			} else {
-				$groups = array(2, 21);
+			    $group = 21;
+				$groups = array(2, $group);
 			}
 
 			$data = array(
@@ -59,21 +61,26 @@ class Gm_ceilingControllerGaugerForm extends JControllerForm
 
 		    $user = new JUser;
 			if (!$user->bind($data)) {
-				throw new Exception($user->getError());
+				throw new Exception("bind".$user->getError());
 			}
 			if (!$user->save()) {
-				throw new Exception($user->getError());
-			}
+			   if($user->getError() == 'Имя пользователя занято'){
+			       $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                   $id_gauger = $userModel->addGroupToExistUser($phone,$dealerId,$group);
+               }
 
-			$id_gauger = $user->id;
-			
+			}
+			else{
+                $id_gauger = $user->id;
+            }
+
 			// письмо
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
-			$sender = array(
+			$sender = [
 				$config->get('mailfrom'),
 				$config->get('fromname')
-			);
+			];
 			$mailer->setSender($sender);
 			$mailer->addRecipient($email);
 			$body = "Здравствуйте. Вас зарегистрировали на сайте Гильдии Мастеров как замерщика. Данные учетной записи: \n Логин: ".$phone." \n Пароль: ".$password;

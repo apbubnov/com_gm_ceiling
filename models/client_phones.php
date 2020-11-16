@@ -29,7 +29,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 	 * @since      1.6
 	 */
 	
-	public function getItemsByPhoneNumber($number, $dealer_id) {
+	public function getItemsByPhoneNumber($number, $dealer_id,$isDealer = null) {
 		try {
 			$number = mb_ereg_replace('[^\d]', '', $number);
 	        if (strlen($number) == 10) {
@@ -44,7 +44,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("`b`.`id`, `b`.`client_name`, `b`.`dealer_id` AS `client_dealer_id`, `a`.`phone`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`,`b`.`deleted_by_user`")
+				->select("`b`.`id`,`u`.`associated_client`,`b`.`client_name`, `b`.`dealer_id` AS `client_dealer_id`, `a`.`phone`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`,`b`.`deleted_by_user`")
 				->from("`#__gm_ceiling_clients_contacts` AS `a`")
 				->innerJoin('`#__gm_ceiling_clients` AS `b` ON `a`.`client_id` = `b`.`id`')
 				->leftJoin('`#__users` AS `u` ON `b`.`id` = `u`.`associated_client`')
@@ -52,7 +52,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 				->order('`b`.`dealer_id`');
 
 			$db->setQuery($query);
-
+		
 			$items = $db->loadObjectList();
 			$result = null;
 			if (!empty($items)) {
@@ -66,6 +66,10 @@ class Gm_ceilingModelClient_phones extends JModelList
 						break;
 					}
 					if ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id) {
+						$result = $item;
+						break;
+					}
+					if($item->id == $item->associated_client && !empty($isDealer)){
 						$result = $item;
 						break;
 					}

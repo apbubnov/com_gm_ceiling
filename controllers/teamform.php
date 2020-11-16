@@ -41,13 +41,13 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 			}
 			//-----------------------------------
 			jimport('joomla.user.helper');
-
+			$group = 11;
 			$data = array(
 				"name" => $name,
 				"username" => $phone,
 				"password" => $password,
 				"email" => $email,
-				"groups" => array(2, 11),
+				"groups" => array(2, $group),
 				"dealer_id" => $dealerId
 			);
 
@@ -57,20 +57,25 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 					throw new Exception($user->getError());
 				}
 				if (!$user->save()) {
-					throw new Exception($user->getError());
+                    if($user->getError() == 'Имя пользователя занято') {
+                        $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                        $id_brigade = $userModel->addGroupToExistUser($phone, $dealerId, $group);
+                    }
+					//throw new Exception($user->getError());
 				}
-
-				$id_brigade = $user->id;
+                else{
+                    $id_brigade = $user->id;
+                }
 
 				$userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
 				$userModel->saveUserCity($city,$id_brigade);
 				// письмо
 				$mailer = JFactory::getMailer();
 				$config = JFactory::getConfig();
-				$sender = array(
+				$sender = [
 					$config->get('mailfrom'),
 					$config->get('fromname')
-				);
+				];
 				$mailer->setSender($sender);
 				$mailer->addRecipient($email);
 				$body = "Здравствуйте. Вас зарегистрировали на сайте Гильдии Мастеров как монтажную бригаду. Данные учетной записи для каждого участника бригады: \n Логин: ".$phone." \n Пароль: ".$password;
@@ -81,8 +86,8 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 				// сохранение монтажников
 				$model = $this->getModel('Teamform', 'Gm_ceilingModel');
 
-				$name_mount = $jinput->get('name-mount', array(), 'ARRAY');
-	            $phone_mount = $jinput->get('phone-mount', array(), 'ARRAY');
+				$name_mount = $jinput->get('name-mount', [], 'ARRAY');
+	            $phone_mount = $jinput->get('phone-mount', [], 'ARRAY');
 				$phone_mount = preg_replace('/[\(\)\-\+\s]/', '', $phone_mount);
 
 				$pasport = [];
@@ -121,12 +126,12 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 				}
 
 			} catch (Exception $e) {
-				$result = json_encode(array(
-					'error' => array(
+				$result = json_encode([
+					'error' => [
 						'msg' => $e->getMessage(),
 						'code' => $e->getCode(),
-					),
-				),JSON_UNESCAPED_UNICODE );
+					],
+				],JSON_UNESCAPED_UNICODE );
 				die($result);
 			}
 		}

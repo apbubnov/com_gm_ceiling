@@ -94,22 +94,25 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 // удаляем начальные и конечные '-'
                 $brigadePhone = trim($str, "-");
             }
-            $data = array(
+            $data = [
                 "name" => $brigadeName,
                 "username" => $brigadePhone,
                 "password" => $brigadePhone,
                 "password2" => $brigadePhone,
                 "email" => $brigadePhone."@none",
-                "groups" => array(2, 34),
+                "groups" => [2, 34],
                 "dealer_type" => 0,
                 "dealer_id" => 1
-            );
+            ];
             $user = new JUser;
             if (!$user->bind($data)) {
                 throw new Exception($user->getError());
             }
             if (!$user->save()) {
-                throw new Exception($user->getError());
+                if($user->getError() == 'Имя пользователя занято') {
+                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                    $id_brigade = $userModel->addGroupToExistUser($brigadePhone, 1, 34);
+                }
             }
             die(json_encode(true));
 	    }
@@ -361,9 +364,9 @@ class Gm_ceilingControllerUsers extends JControllerForm
             jimport('joomla.user.helper');
 
             if ($dealerId == 1) {
-                $groups = [2, 16];
+                $group = 16;
             } else {
-                $groups = [2, 13];
+                $group = 13;
             }
 
             $data = [
@@ -371,7 +374,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 "username" => $phone,
                 "password" => $password,
                 "email" => $email,
-                "groups" => $groups,
+                "groups" => [2,$group],
                 "dealer_id" => $dealerId,
                 "requireReset" => 0
             ];
@@ -383,9 +386,12 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 die(json_encode($result));
             }
             if (!$user->save()) {
-                //throw new Exception($user->getError());
-                $result = ["type"=>'error','text'=>$user->getError()];
-                die(json_encode($result));
+                if($user->getError() == 'Имя пользователя занято') {
+                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                    $id_brigade = $userModel->addGroupToExistUser($phone, $dealerId, $group);
+                }
+               /* $result = ["type"=>'error','text'=>$user->getError()];
+                die(json_encode($result));*/
             }
 
             // письмо
@@ -417,6 +423,47 @@ class Gm_ceilingControllerUsers extends JControllerForm
             $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $userModel->updateDopNumber($userId,$dopNum);
             die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getDealerIdMap(){
+	    try {
+	        $jinput = JFactory::getApplication()->input;
+	        $phone = $jinput->get('phone','','STRING');
+	        $pass = $jinput->get('code','','STRING');
+        
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $mapModel = Gm_ceilingHelpersGm_ceiling::getModel('users_dealer_id_map');
+	        $user = $usersModel->getUserByUsername($phone);
+            $verifyPass = JUserHelper::verifyPassword($pass, $user->password, $user->id);
+        
+            if($verifyPass){
+	           $result = $mapModel->getDealerIdMap($user->id);
+            }
+            else{
+                $result = (object)["error"=>'Некорректный логин/пароль!'];
+            }
+	        die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function changeDataBeforeLogin(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $dataId = $jinput->getInt('id');
+	        $mapModel = Gm_ceilingHelpersGm_ceiling::getModel('users_dealer_id_map');
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $data = $mapModel->getData($dataId);
+
+	        $mapModel->setGroupActive($dataId,$data->user_id);
+            $usersModel->updateUsersData($data);
+            die(true);
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

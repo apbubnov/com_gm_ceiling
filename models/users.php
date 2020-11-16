@@ -918,4 +918,49 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function addGroupToExistUser($phone,$dealerId,$group){
+	    try{
+	        $mapModel = Gm_ceilingHelpersGm_ceiling::getModel('users_dealer_id_map');
+            $oldUser = $this->getUserByUsername($phone);
+            $groups = array_diff(JFactory::getUser($oldUser->id)->groups,SYSTEM_GROUPS);
+            $savedGroups = $mapModel->getSavedGroups($oldUser->id);
+            $groupsToSave = array_diff($groups,$savedGroups);
+
+            if(!empty($groupsToSave)){
+                foreach($groupsToSave as $groupId){
+                    $mapModel->saveDealerIdMap($oldUser->id,$oldUser->dealer_id,$groupId,$oldUser->dealer_type);
+                }
+            }
+            /*сохраняем новую группу*/
+            if(!in_array($group,$savedGroups)) {
+                $mapModel->saveDealerIdMap($oldUser->id, $dealerId, $group, $oldUser->dealer_type);
+            }
+            return $oldUser->id;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateUsersData($data){
+	    try{
+	        if(!empty($data)){
+	            $db = JFactory::getDbo();
+	            $query = $db->getQuery(true);
+	            $query
+                    ->update('rgzbn_users')
+                    ->set("dealer_id = $data->dealer_id")
+                    ->set("dealer_type = $data->dealer_type")
+                    ->where("id = $data->user_id");
+	            $db->setQuery($query);
+	            $db->execute();
+	            return true;
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

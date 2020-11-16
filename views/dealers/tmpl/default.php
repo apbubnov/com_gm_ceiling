@@ -199,7 +199,7 @@ unset($_SESSION["dealers_$userId"]);
             <p>Город</p>
             <p><input type="text" id="dealer_city" placeholder="Город"></p>
             <p>
-                <button type="submit" id="save_dealer" class="btn btn-primary">ОК</button>
+                <button type="button" id="save_dealer" class="btn btn-primary">ОК</button>
             </p>
         </div>
         <div class="modal_window" id="modal_window_kp_editor">
@@ -573,7 +573,6 @@ unset($_SESSION["dealers_$userId"]);
                                     city: document.getElementById('dealer_city').value
                                 },
                                 success: function (data) {
-                                    if (isNaN(data)) {
                                         if (data == 'client_found') {
                                             var n = noty({
                                                 timeout: 2000,
@@ -583,17 +582,7 @@ unset($_SESSION["dealers_$userId"]);
                                                 type: "error",
                                                 text: "Клиент с таким номером существует!"
                                             });
-                                        } else {
-                                            var n = noty({
-                                                timeout: 2000,
-                                                theme: 'relax',
-                                                layout: 'center',
-                                                maxVisible: 5,
-                                                type: "error",
-                                                text: data
-                                            });
-                                        }
-                                    } else {
+                                        }  else {
                                         var n = noty({
                                             timeout: 2000,
                                             theme: 'relax',
@@ -602,7 +591,7 @@ unset($_SESSION["dealers_$userId"]);
                                             type: "success",
                                             text: "Дилер добавлен!"
                                         });
-                                        location.reload();
+                                        //location.reload();
                                     }
                                 },
                                 dataType: "text",

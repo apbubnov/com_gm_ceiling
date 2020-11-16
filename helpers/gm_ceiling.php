@@ -17,6 +17,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
 const VERDICT_STATUSES = [5, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 19, 23, 24, 25, 26, 27, 28, 29];
 const INTERNAL_STATUSES = [6, 7, 8, 9, 13, 14, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33];
 const MIN_SUM = 250;
+const SYSTEM_GROUPS = [1,2,3,4,5,6,7,8,9,10,15,24,25,27,28,29,30,31,32,36,37];
 /* функция для применения маржи */
 function margin($value, $margin)
 {
@@ -295,39 +296,59 @@ class Gm_ceilingHelpersGm_ceiling
                 throw new Exception($user->getError());
             }
             if (!$user->save()) {
-                throw new Exception($user->getError());
+                if($user->getError() == 'Имя пользователя занято') {
+                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                    $oldUser = $userModel->getUserByUsername($phone);
+                    $userID = $userModel->addGroupToExistUser($phone, $oldUser->id, 14);
+                    $userModel->updateAssocClient($userID,$client_id);
+                }
+                else{
+                    throw new Exception($user->getError());
+                }
             }
-            $userID = $user->id;
-            $user =& JUser::getInstance((int)$userID);
-            if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
-                $post['dealer_id'] = 1;
-            } else {
-                $post['dealer_id'] = $userID;
+            else{
+                $userID = $user->id;
+                $user =& JUser::getInstance((int)$userID);
+
+                if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
+                    $post['dealer_id'] = 1;
+                } else {
+                    $post['dealer_id'] = $userID;
+                }
+
+                $post['associated_client'] = $client_id;
+                if(empty($user->email)){
+                    $post['email'] = $email;
+                }
+                if (!$user->bind($post)){
+                    throw new Exception("123".$user->getError());
+                }
+                if (!$user->save(true)){
+                    throw new Exception($user->getError());
+                }
+                $margin_model = self::getModel('Dealer_info');
+                $mount_model = self::getModel('mount');
+                $gm_margin = $margin_model->getDataById(1);
+                if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
+                    $gm_mount = $mount_model->getDataAll(1);
+                    $margin_model->save($gm_margin->dealer_canvases_margin, $gm_margin->dealer_components_margin, $gm_margin->dealer_mounting_margin, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
+                } else {
+                    $gm_mount = $mount_model->getDataAll(0);
+                    $margin_model->save(0, 0, 0, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
+                }
+                $gm_mount->user_id = $userID;
+                $mount_model->insert($gm_mount);
             }
 
-            $post['associated_client'] = $client_id;
-            if (!$user->bind($post)) return false;
-            if (!$user->save()) return false;
-            JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
-            $margin_model = self::getModel('Dealer_info');
-            $mount_model = self::getModel('mount');
-            $gm_margin = $margin_model->getDataById(1);
-            if ($type == 3 || $type == 2 || $type == 7 || $type == 8) {
-                $gm_mount = $mount_model->getDataAll(1);
-                $margin_model->save($gm_margin->dealer_canvases_margin, $gm_margin->dealer_components_margin, $gm_margin->dealer_mounting_margin, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
-            } else {
-                $gm_mount = $mount_model->getDataAll(0);
-                $margin_model->save(0, 0, 0, $gm_margin->gm_canvases_margin, $gm_margin->gm_components_margin, $gm_margin->gm_mounting_margin, $userID, $gm_margin->discount);
-            }
-            $gm_mount->user_id = $userID;
-            $mount_model->insert($gm_mount);
+
+            //JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
 
             return $userID;
         } catch (Exception $e) {
             if (!empty($client_id)) {
                 Gm_ceilingHelpersGm_ceiling::getModel('Client')->delete($client_id);
             }
-            die($e->getMessage() . ' ');
+            //die($e->getMessage() . ' ');
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
