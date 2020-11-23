@@ -45,7 +45,7 @@ class Gm_ceilingController extends JControllerLegacy
 
             $app->input->set('subtype', $subtype);
             $type = $app->input->getCmd('type', NULL);
-
+            $id = $app->input->getInt('id');
             if ($type == NULL) {
                 $groups = $user->get('groups');
                 $_SESSION['user_group'] = $groups;
@@ -121,14 +121,25 @@ class Gm_ceilingController extends JControllerLegacy
                     }
                 }
             }
+            /*для просмотра клиентом страницы с товараами (project_consumables)*/
+            $userClient = null;
+            if($view == 'project' && $type == 'consumables'){
+                $projectModel = self::getModel('Project');
+                $project = $projectModel->getNewData($id);
+                $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $userClient = $usersModel->getUserByAssociatedClient($project->client_id);
+                if(!empty($userClient) && $userClient->dealer_type == 2){
+                    Gm_ceilingHelpersGm_ceiling::forceLogin((int)$userClient->id);
+                }
+            }
             /*&& $view != 'prices' && $view != 'canvases' && $view != 'components'*/
-            if ($user->guest && $view != 'calculationform' && $view != 'info' && $view != 'analiticdealers')
+            if (empty($userClient) && $user->guest && $view != 'calculationform' && $view != 'info' && $view != 'analiticdealers' )
             {
                 header('location: /index.php?option=com_users&view=login');
                 die('403 forbidden');
             }
-            $app->input->set('view', $view);
 
+            $app->input->set('view', $view);
             parent::display($cachable, $urlparams);
 
             return $this;

@@ -2,14 +2,14 @@
 $monthBegin = date('Y-m-01');
 $today = date('Y-m-d');
 $analyticModel = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
-$data = $analyticModel->getMountServiceAnalytic($monthBegin,$today);
-$projectCount = count($data);
+/*$data = $analyticModel->getMountServiceAnalytic($monthBegin,$today);
+$projectCount = count($data);*/
 
 ?>
 <h4>Данные по заказам монтажной службы</h4>
 <div class="row">
     <div class="col-md-6">
-        Общее кол-во проектов за период <span id="project_count"><?=$projectCount;?></span>
+        Общее кол-во проектов за период <span id="project_count"></span>
     </div>
     <div class="col-md-3">
         <input type="date" id="date_from" class="form-control date" value="<?=$monthBegin?>">
@@ -38,31 +38,49 @@ $projectCount = count($data);
         </th>
     </thead>
     <tbody>
-        <?php foreach ($data as $item){?>
-            <tr data-id="<?=$item->id;?>">
+       <!-- <?php /*foreach ($data as $item){*/?>
+            <tr data-id="<?/*=$item->id;*/?>">
                 <td>
-                    <?=$item->name;?>
+                    <?/*=$item->name;*/?>
                 </td>
                 <td>
-                    <?=$item->id;?>
+                    <?/*=$item->id;*/?>
                 </td>
                 <td>
-                    <?=$item->mounting_sum;?>
+                    <?/*=$item->mounting_sum;*/?>
                 </td>
                 <td>
-                    <?=$item->serviceSum;?>
+                    <?/*=$item->serviceSum;*/?>
                 </td>
                 <td>
-                    <?=(($item->serviceSum-$item->mounting_sum)/$item->mounting_sum)*100;?>
+                    <?/*=(($item->serviceSum-$item->mounting_sum)/$item->mounting_sum)*100;*/?>
                 </td>
             </tr>
-        <?php }?>
+        --><?php /*}*/?>
     </tbody>
 </table>
 
 <script>
     jQuery(document).ready(function () {
+        var savedDates = localStorage.getItem('dates');
+        localStorage.removeItem('dates');
+        if(!empty(savedDates)){
+            savedDates = JSON.parse(savedDates);
+            jQuery('#date_from').val(savedDates.date_from);
+            jQuery('#date_to').val(savedDates.date_to);
+        }
+        getData();
         jQuery('.date').change(function () {
+           getData();
+        });
+
+        jQuery('#service_analytic > tbody').on('click','tr',function(){
+            var id = jQuery(this).data('id');
+            location.href = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='+id;
+            localStorage.setItem('dates',JSON.stringify({date_from:jQuery('#date_from').val(),date_to:jQuery('#date_to').val()}));
+        });
+
+        function getData() {
             var dateFrom = jQuery('#date_from').val(),
                 dateTo = jQuery('#date_to').val();
             if(dateFrom>dateTo){
@@ -81,7 +99,7 @@ $projectCount = count($data);
                         jQuery('#project_count').text(data.length);
                         jQuery('#service_analytic > tbody').empty();
                         jQuery.each(data,function (n,el) {
-                            jQuery('#service_analytic > tbody').append('<tr>' +
+                            jQuery('#service_analytic > tbody').append('<tr data-id="'+el.id+'">' +
                                 '<td>'+el.name+'</td>'+
                                 '<td>'+el.id+'</td>'+
                                 '<td>'+el.mounting_sum+'</td>'+
@@ -102,11 +120,6 @@ $projectCount = count($data);
                     }
                 });
             }
-        });
-
-        jQuery('#service_analytic > tbody > tr').click(function(){
-            var id = jQuery(this).data('id');
-            location.href = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='+id;
-        });
+        }
     });
 </script>

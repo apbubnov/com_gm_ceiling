@@ -55,6 +55,7 @@ class Gm_ceilingModelDealers extends JModelItem
 				->where("u.dealer_type IN (0,1,6) AND um.group_id IN (14,27,28,29,30,31) AND u.associated_client IS NOT NULL")
 				->group("u.id");
 			$db->setQuery($query);
+			//throw new Exception($query);
 			$items = $db->loadObjectList();
 			return $items;
 		}

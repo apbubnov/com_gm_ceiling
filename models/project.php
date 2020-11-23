@@ -1963,6 +1963,40 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function deleteGoods($projectId,$goodsIds){
+	    try{
+            $db = JFactory::getDbo();
+
+            $query = "
+                DELETE `rgzbn_gm_ceiling_calcs_goods_map`
+                FROM `rgzbn_gm_ceiling_calcs_goods_map`
+                INNER JOIN `rgzbn_gm_ceiling_calculations` ON `rgzbn_gm_ceiling_calculations`.`id` = `rgzbn_gm_ceiling_calcs_goods_map`.`calc_id`
+                WHERE `rgzbn_gm_ceiling_calculations`.`project_id` = $projectId AND  `rgzbn_gm_ceiling_calcs_goods_map`.`goods_id` IN ($goodsIds)";
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function deleteJobs($projectId,$jobsIds){
+        try{
+            $db = JFactory::getDbo();
+            $query = "
+                DELETE `rgzbn_gm_ceiling_calcs_jobs_map`
+                FROM `rgzbn_gm_ceiling_calcs_jobs_map`
+                INNER JOIN `rgzbn_gm_ceiling_calculations` ON `rgzbn_gm_ceiling_calculations`.`id` = `rgzbn_gm_ceiling_calcs_jobs_map`.`calc_id`
+                WHERE `rgzbn_gm_ceiling_calculations`.`project_id` = $projectId AND  `rgzbn_gm_ceiling_calcs_jobs_map`.`job_id` IN ($jobsIds)";
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     /*4API*/
     public function create($client_id){
         try{

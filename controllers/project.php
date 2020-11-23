@@ -2160,27 +2160,48 @@ class Gm_ceilingControllerProject extends JControllerLegacy
     {
         try {
             $jinput = JFactory::getApplication()->input;
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+
             $projectId = $jinput->getInt('project_id');
+            $projectInfo = $jinput->getString('project_info');
+            $projectSum = $jinput->getString('project_sum');
             $mountData = $jinput->get('mount_data', '', 'STRING');
             $mountNote = $jinput->get('mount_note', '', 'STRING');
+            $delJobs = $jinput->get('del_jobs','','STRING');
+            $delGoods = $jinput->get('del_goods','','STRING');
             $productionNote = $jinput->get('production_note', '', 'STRING');
             $status = $jinput->getInt('status');
             $mountData = json_decode($mountData);
+
+            $dataToSave = [
+                "id" => $projectId,
+                "project_info" => $projectInfo,
+                "project_status" => $status,
+                "project_sum" => $projectSum
+            ];
             if (!empty($mountData)) {
                 $mountData = json_decode($mountData);
                 $projectMountModel = Gm_ceilingHelpersGm_ceiling::getModel('Projects_mounts');
                 $projectMountModel->save($projectId, $mountData);
             }
 
+            if(!empty($delGoods)){
+                $model->deleteGoods($projectId,implode(',',$delGoods));
+            }
+            if(!empty($delJobs)){
+                $model->deleteJobs($projectId,implode(',',$delJobs));
+            }
             if (!empty($productionNote)) {
                 $this->addNote($projectId, $productionNote, 4);
             }
             if (!empty($mountNote)) {
                 $this->addNote($projectId, $mountNote, 5);
             }
-            $model = $this->getModel('Project', 'Gm_ceilingModel');
-            $result = $model->newStatus($projectId, $status);
-            die(json_encode($result));
+
+            $model->update($dataToSave);
+            Gm_ceilingHelpersGm_ceiling::notify($dataToSave,2);
+            //$result = $model->newStatus($projectId, $status);
+            die(json_encode(true));
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

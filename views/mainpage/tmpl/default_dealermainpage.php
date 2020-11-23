@@ -102,6 +102,9 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                     <div class="row margin_bottom">
                         <a class="btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=visitors',false)?>">Посетители сайта</a>
                     </div>
+                    <div class="row margin_bottom">
+                        <a class="btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=mountservice',false)?>">Проекты Монтажной Службы</a>
+                    </div>
                 <?php }?>
             </div>
             <div class="modal_window" id="mw_precalc">
