@@ -768,10 +768,12 @@ class Gm_ceilingModelProjects extends JModelList
                                                     } else {
                                                         $group = 13;
                                                     }
-                                                    $query->select('users.id')
+                                                    $query
+                                                        ->select('DISTINCT users.id')
                                                         ->from('#__users as users')
+                                                        ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                                                         ->innerJoin("#__user_usergroup_map as map ON map.user_id = users.id")
-                                                        ->where("group_id = '$group'");
+                                                        ->where("map.group_id = '$group' OR dm.group_id = $group");
                                                 } else
                                                     // менеджер (запущенные в производстве)
                                                     if ($status == "RunInProduction") {
@@ -1234,19 +1236,20 @@ class Gm_ceilingModelProjects extends JModelList
         {
             $currentDate = date("Y-m-d").' 00:00:00';
             $db = $this->getDbo();
-            $query = $db->getQuery(true);
+
             $query = 'SET SESSION group_concat_max_len  = 16384';
             $db->setQuery($query);
             $db->execute();
 
             $query = $db->getQuery(true);
-            $query->select('`u`.`id` AS `project_calculator`,
+            $query->select('DISTINCT `u`.`id` AS `project_calculator`,
                     GROUP_CONCAT(DISTINCT CONCAT(`p`.`project_calculation_date`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(`p`.`project_info`, \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `calc_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
             $query->from('`#__users` AS `u`');
+            $query->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = u.id');
             $query->leftJoin('`rgzbn_gm_ceiling_projects` AS `p` ON `p`.`project_calculator` = `u`.`id`');
             $query->leftJoin('`rgzbn_gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND (`p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`p`.`project_calculation_date` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
+            $query->where("(`u`.`dealer_id` = $dealer_id OR dm.dealer_id = $dealer_id) AND (`p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`p`.`project_calculation_date` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
             $query->group('`u`.`id`');
             $db->setQuery($query);
             
@@ -1276,12 +1279,14 @@ class Gm_ceilingModelProjects extends JModelList
                     GROUP_CONCAT(DISTINCT CONCAT(`m`.`date_time`, \'|\', `p`.`id`, \'|\', REPLACE(REPLACE(ifnull(`p`.`project_info`,\'\'), \'|\', \'\'), \'!\', \'\')) SEPARATOR \'!\') AS `mount_dates`,
                     GROUP_CONCAT(DISTINCT CONCAT(`d`.`date_from`, \'|\', `d`.`date_to`) SEPARATOR \',\') AS `off_dates`');
             $query->from('`#__users` AS `u`');
+            $query->leftJoin('`rgzbn_users_dealer_id_map` as `dm` ON `dm`.`user_id` = `u`.`id`');
             $query->leftJoin('`#__gm_ceiling_projects_mounts` AS `m` ON `m`.`mounter_id` = `u`.`id`');
             $query->leftJoin('`#__gm_ceiling_projects` AS `p` ON `p`.`id` = `m`.`project_id`');
             $query->leftJoin('`#__gm_ceiling_day_off` AS `d` ON `u`.`id` = `d`.`id_user`');
             $query->innerJoin('`#__user_usergroup_map` AS `g` ON `u`.`id` = `g`.`user_id`');
-            $query->where("`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 $service OR `g`.`group_id` = 14) AND (`p`.`project_status` > 3 OR `p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
+            $query->where("(`u`.`dealer_id` = $dealer_id AND (`g`.`group_id` = 11 $service OR `g`.`group_id` = 14) OR (`dm`.`dealer_id` = $dealer_id AND `dm`.`group_id` IN (11,14))) AND (`p`.`project_status` > 3 OR `p`.`project_status` = 1 OR `p`.`project_status` IS NULL) AND (`m`.`date_time` > '$currentDate' OR `d`.`date_to` > '$currentDate')");
             $query->group('`u`.`id`');
+            //throw new Exception($query);
             $db->setQuery($query);
             $result = $db->loadObjectList();
 

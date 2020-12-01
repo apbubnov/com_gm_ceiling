@@ -787,7 +787,8 @@ class Gm_ceilingModelProject extends JModelItem
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query ->select("name")
+			$query
+                ->select("name")
 				->from('`#__users`')
 				->where("id = '$id'");
 			$db->setQuery($query);
@@ -998,7 +999,8 @@ class Gm_ceilingModelProject extends JModelItem
 			}
 			if ($flag == 2) {
 				$query2 = $db->getQuery(true);
-				$query2->select('name')
+				$query2
+                    ->select('name')
 					->from('#__users')
 					->where("id = $data");
 				$db->setQuery($query2);
@@ -1024,10 +1026,12 @@ class Gm_ceilingModelProject extends JModelItem
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('users.id, users.name')
+            $query
+                ->select('users.id, users.name')
                 ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup_map ON users.id = usergroup_map.user_id')
-                ->where("users.dealer_id = $id AND usergroup_map.group_id = 11");
+                ->where("(users.dealer_id = $id AND usergroup_map.group_id = 11) OR (dm.dealer_id = $id and dm.group_id = 11)");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

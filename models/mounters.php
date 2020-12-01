@@ -162,20 +162,6 @@ class Gm_ceilingModelMounters extends JModelList
 				);
 
 			$query->from('`#__gm_ceiling_groups` AS a');
-			/*
-			// Join over the users for the checked out user.
-			$query->select('uc.name AS editor');
-			$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-			// Join over the created by field 'created_by'
-			$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-			// Join over the created by field 'modified_by'
-			$query->join('LEFT', '#__users AS modified_by ON modified_by.id = a.modified_by');
-			// Join over the foreign key 'dealer_id'
-			$query->select('`#__gm_ceiling_dealers_2481843`.`dealer_name` AS dealers_fk_value_2481843');
-			$query->join('LEFT', '#__gm_ceiling_dealers AS #__gm_ceiling_dealers_2481843 ON #__gm_ceiling_dealers_2481843.`id` = a.`dealer_id`');
-	*/
 			$user = JFactory::getUser();
 			$groups = $user->get('groups');
 			

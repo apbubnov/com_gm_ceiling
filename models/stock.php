@@ -140,10 +140,11 @@ class Gm_ceilingModelStock extends JModelList
             $query = $db->getQuery(true);
 
             $query
-                ->select("u.id as dealer, u.name as dealer_name")
+                ->select("DISTINCT u.id as dealer, u.name as dealer_name")
                 ->from("`#__users` as u")
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = u.id')
                 ->join("LEFT", "`#__user_usergroup_map` as ug ON u.id = ug.user_id")
-                ->where("ug.group_id = 14")
+                ->where("(ug.group_id = 14 OR dm.group_id = 14)")
                 ->where("u.name LIKE ('%" . $search . "%')");
 
             $db->setQuery($query);

@@ -184,7 +184,7 @@ class Gm_ceilingHelpersGm_ceiling
         try {
             $temp_goods = [];
             foreach ($goods as $key => $value) {
-                if ($value->category_id != 11 && $value->category_id != 26 && $value->category_id != 28) {
+                if ($value->category_id != 11 /*&& $value->category_id != 26*/ && $value->category_id != 28) {
                     $temp_goods[] = $value;
                 }
             }

@@ -41,10 +41,12 @@ class Gm_ceilingModelGaugers extends JModelItem {
 				$type = 21;
 			}
 			$query = $db->getQuery(true);
-			$query->select('`u`.`id`, `u`.`name`')
+			$query
+                ->select('DISTINCT `u`.`id`, `u`.`name`')
 				->from('`#__users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` ON `dm`.`user_id` = `u`.`id`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-				->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
+				->where("(`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type) OR (`dm`.`dealer_id` = $dealerId AND `dm`.`group_id` = $type)");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 

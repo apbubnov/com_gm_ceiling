@@ -108,9 +108,10 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->where('ms.sum > 0 AND ms.note IS NOT NULL AND ms.builder_id IS NOT NULL')
                 ->group(' ms.builder_id,ms.mounter_id');
             $query
-                ->select('u.id AS mounter_id,u.name AS mounter_name,u.username as phone,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed,movs.moved')
+                ->select('DISTINCT u.id AS mounter_id,u.name AS mounter_name,u.username as phone,builder.name AS builder_name,builder.id AS builder_id,t.taken,cs.closed,ps.payed,movs.moved')
                 ->select('md.debt-md.decrease_debt AS debt_rest')
                 ->from('`rgzbn_users` AS u')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = u.id')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS um ON u.id = um.user_id')
                 ->leftJoin('`rgzbn_gm_ceiling_calcs_mount` AS cm ON u.id = cm.mounter_id')
                 ->leftJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.id = cm.calculation_id')
@@ -122,7 +123,7 @@ class Gm_ceilingModelMountersCommon extends JModelItem {
                 ->leftJoin("($closedSubquery) AS cs ON cs.mounter_id = u.id AND cs.dealer_id = builder.id")
                 ->leftJoin("($payedSubQuery) AS ps ON ps.mounter_id = u.id AND ps.builder_id = builder.id")
                 ->leftJoin("($movesSubQuery) AS movs ON movs.mounter_id = u.id AND movs.builder_id = builder.id")
-                ->where('um.group_id = 34')
+                ->where('um.group_id = 34 OR dm.group_id = 34')
                 ->group('cm.mounter_id,builder.id')
                 ->order('mounter_name,builder.id ASC');
             $db->setQuery($query);

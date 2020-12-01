@@ -441,27 +441,6 @@ public function register_mnfctr(){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
-    /* public function update_old_mnfct(){
-            $clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-            $clients_dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-            $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query->select('`u`.`id`,`u`.`name`,u.email,u.username');
-            $query->from('`#__users` AS `u`');
-            $query->where('`dealer_type` = 6 AND ISNULL(`associated_client`)');
-            $db->setQuery($query);
-            $item = $db->loadObjectList();
-            foreach ($item as $dealer) {
-                $client_data['client_name'] = $dealer->name;
-                $client_data['client_contacts'] = $dealer->username;
-                $client_data['dealer_id'] = $dealer->id;
-                $client_id = $clientform_model->save($client_data);
-                $clients_dop_contacts->save($client_id,1,$dealer->email);
-                $user_model->updateAssocClient($dealer->id,$client_id);
-            }
-
-        }*/
 
     public function update_mnfctr(){
         try

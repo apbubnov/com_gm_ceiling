@@ -28,7 +28,8 @@ class Gm_ceilingModelTeam extends JModelItem
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('name, username, email')
+			$query
+                ->select('name, username, email')
 				->from('#__users')
 				->where("id = '$id'");
 			$db->setQuery($query);
@@ -69,10 +70,12 @@ class Gm_ceilingModelTeam extends JModelItem
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('`users`.`id` as `id`, `users`.`name` as `name`')
+			$query
+                ->select('`users`.`id` as `id`, `users`.`name` as `name`')
 				->from('`#__users` as `users`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
 				->innerJoin('`#__user_usergroup_map` as `map` ON `users`.`id` = `map`.`user_id`')			
-				->where("`users`.`dealer_id` = '$id' and `map`.`group_id` = 11");
+				->where("(`users`.`dealer_id` = '$id' and `map`.`group_id` = 11) OR (dm.dealer_id = $id AND dm.group_id = 11)");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();

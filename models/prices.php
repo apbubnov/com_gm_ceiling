@@ -132,22 +132,7 @@ class Gm_ceilingModelPrices extends JModelList
 
 	        $query->select('CONCAT( component.title , \' \', a.title , \' - \', component.unit ) AS full_name');
 	        $query->join('NATURAL', '#__gm_ceiling_components AS component');
-			/*
-			// Join over the users for the checked out user.
-			$query->select('uc.name AS editor');
-			$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
-			// Join over the created by field 'created_by'
-			$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-			// Join over the created by field 'modified_by'
-			$query->join('LEFT', '#__users AS modified_by ON modified_by.id = a.modified_by');
-
-			if (!JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling'))
-			{
-				$query->where('a.state = 1');
-			}
-	*/
 			// Filter by search in title
 			$search = $this->getState('filter.search');
 

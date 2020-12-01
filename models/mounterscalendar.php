@@ -155,10 +155,12 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('users.email')
-			->from('#__users as users')
-			->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')		
-			->where('users.dealer_id = '.$user->dealer_id.' and map.group_id = '.$groupe);
+			$query
+                ->select('DISTINCT users.email')
+                ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id` as dm ON dm.user_id = users.id')
+                ->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')
+			    ->where("(users.dealer_id = $user->dealer_id and map.group_id = $groupe) OR (dm.dealer_id = $user->dealer_id AND dm.group_id = $groupe)");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -177,15 +179,17 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
 
-			$query2->select("users.name")
-			->from('#__users as users')
-			->where("users.id = m.mounter_id");
+			$query2
+                ->select("users.name")
+			    ->from('#__users as users')
+			    ->where("users.id = m.mounter_id");
 
-			$query->select("p.project_info, mt.title AS stage_name, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
-			->from('#__gm_ceiling_projects as p')
-			->leftJoin('#__gm_ceiling_projects_mounts as m ON p.id = m.project_id')
-            ->InnerJoin('`rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = m.type')
-			->where("p.id = $id");
+			$query
+                ->select("p.project_info, mt.title AS stage_name, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
+			    ->from('#__gm_ceiling_projects as p')
+			    ->leftJoin('#__gm_ceiling_projects_mounts as m ON p.id = m.project_id')
+                ->InnerJoin('`rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = m.type')
+			    ->where("p.id = $id");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

@@ -139,30 +139,6 @@ class Gm_ceilingModelColors extends JModelList
 				);
 
 			$query->from('`#__gm_ceiling_colors` AS a');
-			/*
-			// Join over the users for the checked out user.
-			$query->select('uc.name AS uEditor');
-			$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-			// Join over the created by field 'created_by'
-			$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-			// Join over the created by field 'modified_by'
-			$query->join('LEFT', '#__users AS modified_by ON modified_by.id = a.modified_by');
-			// Join over the foreign key 'color_canvas'
-			$query->select('`#__gm_ceiling_canvases_2512177`.`canvas_title` AS tags_fk_value_2512177');
-			$query->select('`#__gm_ceiling_canvases_2512177`.`canvas_texture` AS canvas_texture');
-			$query->join('LEFT', '#__gm_ceiling_canvases AS #__gm_ceiling_canvases_2512177 ON #__gm_ceiling_canvases_2512177.`id` = a.`color_canvas`');
-			// Join over the foreign key 'canvas_texture'
-			$query->select('`#__gm_ceiling_textures_2460714`.`texture_title` AS textures_fk_value_2460714');
-			$query->join('LEFT', '#__gm_ceiling_textures AS #__gm_ceiling_textures_2460714 ON #__gm_ceiling_textures_2460714.`id` = `#__gm_ceiling_canvases_2512177`.`canvas_texture`');
-			
-			if (!JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling'))
-			{
-				$query->where('a.state = 1');
-			}
-	*/
-
 	        $query->select('canvases.id AS canvases_id');
 	        $query->join('LEFT', '#__gm_ceiling_canvases AS canvases ON canvases.color_id = a.id');
 

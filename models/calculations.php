@@ -839,10 +839,12 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('users.id, users.name')
+            $query
+                ->select('DISTINCT users.id, users.name')
                 ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup_map ON users.id = usergroup_map.user_id')
-                ->where("users.dealer_id = $id AND usergroup_map.group_id = 11");
+                ->where("(users.dealer_id = $id AND usergroup_map.group_id = 11) OR (dm.dealer_id = $id and dm.group_id = 11)");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();
@@ -1000,10 +1002,12 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('users.id, users.name')
+            $query
+                ->select('DISTINCT users.id, users.name')
                 ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup_map ON users.id = usergroup_map.user_id')
-                ->where("users.dealer_id = '$id' AND usergroup_map.group_id = '$gauger'");
+                ->where("(users.dealer_id = '$id' AND usergroup_map.group_id = '$gauger') OR (dm.dealer_id = $id and dm.group_id = id)");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

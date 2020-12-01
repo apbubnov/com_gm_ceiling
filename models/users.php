@@ -50,16 +50,17 @@ class Gm_ceilingModelUsers extends JModelList
 				->select('COUNT(*)')
 				->from('`#__users_dealer_instruction` as di')
 				->where('di.user_id = u.id');
-			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city,c.manager_id');
+			$query->select('DISTINCT `u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city,c.manager_id');
 			$query->select("($kp_cnt_query) as kp_cnt");
 			$query->select("($comments_cnt_query) as cmnt_cnt");
 			$query->select("($dealer_instr_cnt_query) as inst_cnt");
 			$query->from('`#__users` AS `u`');
+			$query->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on dm.user_id = u .id');
 			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->leftJoin('`#__gm_ceiling_dealer_info` as i on u.id = i.dealer_id');
-			$query->where('`#__user_usergroup_map`.`group_id`=14 AND `dealer_type` < 2');
+			$query->where('(`#__user_usergroup_map`.`group_id` = 14 OR dm.group_id = 14) AND `dealer_type` < 2');
 			$query->group('`id`');
 			$query->order('`id` DESC');
 			$db->setQuery($query);
@@ -599,11 +600,13 @@ class Gm_ceilingModelUsers extends JModelList
 			$items = [];
 			if(!in_array(16, $groups) && $user->dealer_type != 2){
 				$query = $db->getQuery(true);
-				$query->select('`u`.`id`, `u`.`name`')
+				$query->select('distinct `u`.`id`, `u`.`name`')
 					->from('`#__users` AS `u`')
+                    ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id`=`u`.`id`')
 					->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-                    ->where("`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type");
+                    ->where("(`u`.`dealer_id` = $dealerId AND `g`.`group_id` = $type) OR (`dm`.`dealer_id` = $dealerId AND `dm`.`group_id` = 11)");
 				$db->setQuery($query);
+				//throw new Exception($query);
 				$items = $db->loadObjectList();
 
 				if (empty($items)) {
@@ -636,8 +639,9 @@ class Gm_ceilingModelUsers extends JModelList
             $query = $db->getQuery(true);
             $query->select('count(distinct `u`.`id`) as brigades_count')
                 ->from('`#__users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on`dm`.`user_id`=`u`.`id`')
                 ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-                ->where("`u`.`dealer_id` = $dealer_id AND `g`.`group_id` = $group");
+                ->where("(`u`.`dealer_id` = $dealer_id AND `g`.`group_id` = $group) OR (`dm`.`dealer_id` = $dealer_id and `dm`.`group_id` = $group)");
             $db->setQuery($query);
             $item = $db->loadObject();
             return $item;
@@ -652,8 +656,9 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select('`u`.`id`, `u`.`name`,`u`.`username` as `phone`, `u`.`email`')
+				->select(' distinct `u`.`id`, `u`.`name`,`u`.`username` as `phone`, `u`.`email`')
 				->from('`#__users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
 				->where("`g`.`group_id` = $group_id")
                 ->order("`u`.`name`");
@@ -691,10 +696,11 @@ class Gm_ceilingModelUsers extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`u`.`id`, `u`.`name`, `u`.`email`')
+                ->select('DISTINCT `u`.`id`, `u`.`name`, `u`.`email`')
                 ->from('`#__users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
                 ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-                ->where("`g`.`group_id` = $group_id and u.dealer_id = $dealer_id");
+                ->where("(`g`.`group_id` = $group_id and u.dealer_id = $dealer_id) OR (dm.dealer_id = $dealer_id AND dm.group_id = $group_id)");
             $db->setQuery($query);
             //throw new Exception($query);
 
@@ -712,10 +718,11 @@ class Gm_ceilingModelUsers extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`u`.`id`, `u`.`name`, `u`.`email`')
+                ->select('DISTINCT `u`.`id`, `u`.`name`, `u`.`email`')
                 ->from('`#__users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
                 ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-                ->where("`g`.`group_id` IN ($groups) and u.dealer_id = $dealer_id");
+                ->where("(`g`.`group_id` IN ($groups) and u.dealer_id = $dealer_id) OR (`dm`.`dealer_id` = $dealer_id AND `dm`.`group_id` in($groups))");
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
@@ -881,11 +888,12 @@ class Gm_ceilingModelUsers extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`u`.`id`,`u`.`name`,`u`.`dop_number`,GROUP_CONCAT(`g`.`title`) as groups,GROUP_CONCAT(`g`.`id`)')
+                ->select('DISTINCT `u`.`id`,`u`.`name`,`u`.`dop_number`,GROUP_CONCAT( DISTINCT `g`.`title`) as groups,GROUP_CONCAT(`g`.`id`)')
                 ->from('`rgzbn_users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
                 ->leftJoin('`rgzbn_user_usergroup_map` AS `map` ON `map`.`user_id` = `u`.`id`')
-                ->leftJoin('`rgzbn_usergroups` AS `g` ON `g`.`id` = `map`.`group_id`')
-                ->where("`u`.`dealer_id` = $dealerId AND `g`.`id` IN(11,12,13,14,21)")
+                ->leftJoin('`rgzbn_usergroups` AS `g` ON `g`.`id` = `map`.`group_id` OR `g`.`id` = `dm`.`group_id`')
+                ->where("(`u`.`dealer_id` = $dealerId AND `g`.`id` IN(11,12,13,14,21)) OR (`dm`.`dealer_id` = $dealerId and dm.group_id IN (11,12,13,14,21))")
                 ->group('`u`.`id`');
             $db->setQuery($query);
             $items = $db->loadObjectList();

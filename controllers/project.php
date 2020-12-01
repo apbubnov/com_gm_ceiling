@@ -2042,7 +2042,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $prepaymentSum = $jinput->get('sum', '', 'STRING');
             $clientId = $jinput->getInt('client_id');
             if (empty($clientId) && !empty($projectId)) {
-                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('proejct');
+                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
                 $project = $projectModel->getData($projectId);
                 $clientId = $project->id_client;
             }

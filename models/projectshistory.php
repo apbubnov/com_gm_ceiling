@@ -133,9 +133,10 @@ class Gm_ceilingModelProjectshistory extends JModelList
             	->where("u.dealer_type in $dealer_type");
 
             $subquery_dealer_users
-            	->select("id")
+            	->select("distinct id")
             	->from("`#__users`")
-            	->where("dealer_id = $dealer_id");
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = u.id')
+            	->where("(u.dealer_id = $dealer_id or dm.dealer_id = $dealer_id)");
 			switch(true){
             	case $statuses == 'all' && $advt == 'total':
 	                $where  = "p.created between '$date1' and '$date2' and (p.api_phone_id in ($subquery_advt) or p.client_id in($clients_id) )";
@@ -249,12 +250,13 @@ class Gm_ceilingModelProjectshistory extends JModelList
                 ->where("ph.date_of_change between '$date1' and '$date2' and ph.new_status in (1,3,4,5) and c.dealer_id = $dealerId")
                 ->group('ph.new_status,p.created_by,p.read_by_manager');
 	        $query
-                ->select('u.id,u.name')
+                ->select('DISTINCT u.id,u.name')
                 ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"status":"\',pr.new_status,\'","projects":[\',pr.projects,\']}\')),\']\') AS `data`')
                 ->from('`rgzbn_users` as u')
+                ->from('`rgzbn_users_dealer_id_map` as dm on dm.user_id = u.id')
                 ->innerJoin('`rgzbn_user_usergroup_map` as map on u.id = map.user_id')
                 ->innerJoin("($subquery) as pr on pr.created_by = u.id OR pr.read_by_manager = u.id")
-                ->where('map.group_id = 16')
+                ->where('map.group_id = 16 or dm.group_id = 16')
                 ->group('u.id');
 	        $db->setQuery($query);
             //throw new Exception($query);

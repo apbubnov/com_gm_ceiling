@@ -30,10 +30,12 @@ class Gm_ceilingModelReservecalculation extends JModelList {
                 $group = "21";
             }
 
-            $query->select('users.id, users.name')
+            $query
+                ->select('DISTINCT users.id, users.name')
                 ->from('#__users as users')
+                ->leftJoin('rgzbn_users_dealer_id_map as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup_map ON users.id = usergroup_map.user_id')
-                ->where("users.dealer_id = '$dealer_id' AND usergroup_map.group_id = '$group'");
+                ->where("(users.dealer_id = '$dealer_id' AND usergroup_map.group_id = '$group') OR (dm.dealer_id = $dealer_id AND dm.group_id = $group)");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

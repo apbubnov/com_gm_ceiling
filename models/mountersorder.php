@@ -259,10 +259,12 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('users.email')
-			->from('#__users as users')
-			->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')		
-			->where('users.dealer_id = '.$user->dealer_id.' and map.group_id = '.$groupe);
+			$query
+                ->select('DISTINCT users.email')
+                ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
+                ->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')
+                ->where("(users.dealer_id = $user->dealer_id and map.group_id = $groupe) OR (dm.dealer_id = $user->dealer_id AND dm.group_id = $groupe)");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -281,14 +283,16 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
 
-			$query2->select("users.name")
-			->from('#__users as users')
-			->where("users.id = m.mounter_id");
+			$query2
+                ->select("users.name")
+			    ->from('#__users as users')
+    			->where("users.id = m.mounter_id");
 
-			$query->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
-			->from('#__gm_ceiling_projects as p')
-			->innerJoin('#__gm_ceiling_projects_mounts as m ON m.project_id = p.id')
-			->where("p.id = $id AND m.type = $stage");
+			$query
+                ->select("p.project_info, m.date_time as project_mounting_date, m.mounter_id as project_mounter, ($query2) as project_mounter_name")
+			    ->from('#__gm_ceiling_projects as p')
+			    ->innerJoin('#__gm_ceiling_projects_mounts as m ON m.project_id = p.id')
+		    	->where("p.id = $id AND m.type = $stage");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();

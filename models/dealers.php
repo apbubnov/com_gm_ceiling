@@ -52,7 +52,8 @@ class Gm_ceilingModelDealers extends JModelItem
 				->from("`#__users` AS u")
 				->innerJoin("`#__user_usergroup_map` AS um ON um.user_id = u.id")
 				->leftJoin("($subquery) AS info ON info.dealer_id = u.id")
-				->where("u.dealer_type IN (0,1,6) AND um.group_id IN (14,27,28,29,30,31) AND u.associated_client IS NOT NULL")
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` ON `dm`.`user_id` = `u`.`id`')
+				->where("u.dealer_type IN (0,1,6) AND (um.group_id IN (14,27,28,29,30,31) OR `dm`.`group_id` = 14) AND u.associated_client IS NOT NULL")
 				->group("u.id");
 			$db->setQuery($query);
 			//throw new Exception($query);

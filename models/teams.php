@@ -36,13 +36,15 @@ class Gm_ceilingModelTeams extends JModelItem {
                 ->from('`rgzbn_gm_ceiling_mounters_map` AS map')
                 ->innerJoin('`rgzbn_gm_ceiling_mounters` AS m ON m.id = map.id_mounter')
                 ->group('map.id_brigade');
-            $query->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
+            $query
+                ->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
                 ->from('#__users as users')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
                 ->leftJoin('`rgzbn_user_info` as ui on ui.user_id = users.id')
                 ->leftJoin('`rgzbn_city` AS c ON c.id = ui.city_id')
                 ->leftJoin("($namesSubquery) AS mn ON mn.id_brigade = users.id")
-                ->where("users.dealer_id = '$dealerId' and usergroup.group_id = '$group'")
+                ->where("(users.dealer_id = '$dealerId' and usergroup.group_id = '$group') OR (dm.dealer_id = $dealerId AND dm.group_id = $group)")
                 ->group('city_id');
             if(!empty($cityId)){
                 $query->where("ui.city_id = $cityId");

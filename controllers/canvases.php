@@ -62,64 +62,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
 
         }
     }
-/*
-	public function activate()
-	{
-        // Initialise variables.
-        $app = JFactory::getApplication();
 
-        // Checking if the user can remove object
-        $user = JFactory::getUser();
-
-        $jinput = JFactory::getApplication()->input;
-
-        $margin = $user->get('dealer_canvases_margin');
-        $new_margin = $jinput->get("new_margin",$margin,"INT");
-
-        if ($new_margin != $margin && ( !empty($new_margin) || $new_margin == 0))
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $fields = array(
-                $db->quoteName('dealer_canvases_margin'). ' = '.$db->quote($new_margin)
-            );
-            $conditions = array(
-                $db->quoteName('id').' = '.$db->quote($user->get("dealer_id"))
-            );
-            $query->update($db->quoteName('#__users'))->set($fields)->where($conditions);
-            $db->setQuery($query);
-            $result = $db->execute();
-        }
-
-        $this->setMessage("Данные успешно изменены");
-
-        $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=canvases', false));
-/*
-        if ($)
-
-        $model = parent::getModel('Canvases', 'Gm_ceilingModel');
-
-        $jinput = JFactory::getApplication()->input;
-
-		$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
-
-
-		if($isDiscountChange&&(!empty($new_discount)||$new_discount==0)){
-					$db = JFactory::getDbo();
-					$query = $db->getQuery(true);
-					$fields = array(
-						$db->quoteName('project_discount'). ' = '.$db->quote($new_discount)
-						);
-					$conditions = array(
-						$db->quoteName('id').' = '.$db->quote($project_id)
-						);
-					$query->update($db->quoteName('#__dealer_canvases_margin'))->set($fields)->where($conditions);
-					$db->setQuery($query); 
-					$result = $db->execute();
-
-			}
-				$this->setMessage("Данные успешно изменены");*/
-	//}
     public function setPrice()
     {
         try

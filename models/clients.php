@@ -443,6 +443,7 @@ if (empty($list['direction']))
                 ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` on `c`.`label_id` = `lbs`.`id`')
                 ->leftJoin('`rgzbn_gm_ceiling_calls_status_history` AS chs ON chs.client_id = c.id')
                 ->leftJoin('`rgzbn_gm_ceiling_calls_status` AS cs ON cs.id = chs.status')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop  $label_filter");
             if((!empty($limit) || $limit == 0)&&!empty($select_size)){
                 $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
@@ -460,10 +461,10 @@ if (empty($list['direction']))
                 $query->where("`i`.`city` = '$city'");
             }
             if(!empty($status)){
-                $query->where("`#__user_usergroup_map`.`group_id`IN ($status)");
+                $query->where("(`#__user_usergroup_map`.`group_id`IN ($status) OR dm.group_id = 14)");
             }
             else{
-                $query->where("`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)");
+                $query->where("(`#__user_usergroup_map`.`group_id`IN (14,27,28,29,30,31)OR dm.group_id = 14)");
             }
             if(!empty($date_from) && !empty($date_to)){
                 $query->where("chs.change_time BETWEEN '$date_from 00:00:00' AND '$date_to 23:59:59'");
