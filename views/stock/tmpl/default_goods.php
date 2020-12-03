@@ -35,6 +35,21 @@
                         ?>
                     </select>
                 </div>
+                <div class="col-md-6" style="margin-bottom: 5px;margin-top: 5px;">
+                    <button type="button" class="btn btn-primary" id="new_category">
+                        <i class="fas fa-plus-square"></i> Добавить категорию
+                    </button>
+                    <div class="row" id="new_category_info" style="display:none;margin-top: 5px;">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="new_category_name">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary" id="create_new_category">
+                                <i class="far fa-save"></i> Сохранить
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div id="common_props">
@@ -222,13 +237,63 @@
                 });
             }
             else{
-                var n = noty({
+                noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
                     text: warning_text
+                });
+            }
+        });
+
+        jQuery('#new_category').click(function(){
+            jQuery('#new_category_info').toggle();
+        });
+
+        jQuery('#create_new_category').click(function () {
+            var name = jQuery('#new_category_name').val();
+            if(!empty(name)){
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=stock.createCategory",
+                    type: "post",
+                    data: {
+                        name: name
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Категория добавлена!"
+                        });
+                        setTimeout(function(){location.reload()},2000);
+                    },
+                    error: function (data) {
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+            else{
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Название категории не может быть пустым!"
                 });
             }
         });

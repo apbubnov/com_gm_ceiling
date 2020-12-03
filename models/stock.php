@@ -1623,4 +1623,21 @@ class Gm_ceilingModelStock extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
      }
+
+     function createCategory($name){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_stock_goods_categories`')
+                ->columns('category')
+                ->values("'$name'");
+            $db->setQuery($query);
+            $id = $db->insertId();
+            return $id;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+     }
 }
