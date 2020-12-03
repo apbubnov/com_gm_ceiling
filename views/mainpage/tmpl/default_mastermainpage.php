@@ -25,12 +25,38 @@ $userId     = $user->get('id');
 ?>
 <?=parent::getButtonBack();?>
 <h2 class="center">Мастер</h2>
-
+<style>
+    .row{
+        margin-bottom: 1em !important;
+    }
+</style>
 <div class="start_page">
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-building" aria-hidden="true"></i>Застройщики</a>
-	</p>
-    <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mounterscommon', false); ?>"><i class="fa fa-building" aria-hidden="true"></i>Сводная таблица</a>
-    </p>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <a class="btn btn-large btn-primary" style="width: 85% !important;" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>">
+                <i class="fa fa-building" aria-hidden="true"></i>   Застройщики
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <a class="btn btn-large btn-primary" style="width: 85% !important;" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mounterscommon', false); ?>">
+                <i class="fas fa-table" style="text-align: left;"></i>   Сводная таблица
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <a class="btn btn-large btn-primary" style="width: 85% !important;" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=builders', false); ?>">
+                <i class="fas fa-users" style="text-align: left"></i> Управление бригадами
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
 </div>

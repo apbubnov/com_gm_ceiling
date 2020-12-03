@@ -336,22 +336,6 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 </div>
 <hr>
 
-<div class="row center">
-    <p class="caption-tar">Бригады</p>
-
-    <div class="col-md-6">
-        <p><b>Добавить бригаду</b></p>
-        <label for="new_mounter_name">ФИО/Название</label>
-        <input type="text" id="new_mounter_name" class="input-gm">
-        <label for="new_mounter_phone">Телефон</label>
-        <input type="text" id="new_mounter_phone" class="input-gm">
-        <button class="btn btn-primary" id="create_mounter">Cоздать</button>
-    </div>
-    <div class="col-md-6">
-        <button class="btn btn-primary" type="button" id="btn_show_mounters">Просмотреть список бригад </button>
-    </div>
-</div>
-<hr>
 <div class="row center" style="margin-bottom: 5px;">
     <div class="col-md-6">
         <p class="caption-tar">Общая информация по объекту</p>
@@ -1002,59 +986,6 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
             jQuery("#mv_container").show();
             jQuery("#modal_window_call").show("slow");
             jQuery("#close").show();
-        });
-
-        jQuery("#btn_show_mounters").click(function (){
-            jQuery("#mv_container").show();
-            jQuery("#delete_mounter_window").show("slow");
-            jQuery("#close").show();
-            console.log(mountersForDelete);
-            jQuery("#mountersTbl > tbody").empty();
-            if(!empty(mountersForDelete)){
-                mountersForDelete.forEach(function(mounter){
-                    jQuery("#mountersTbl > tbody").append('<tr></tr>');
-                    jQuery("#mountersTbl > tbody > tr:last").append('<td>'+mounter.name+'</td>' +
-                                                                    '<td><a href="tel:\'+'+mounter.phone+'\'">'+mounter.phone+'</a></td>'+
-                                                                    '<td><button class="btn btn-danger btn-sm" name="btn_delete_mounter" data-id='+mounter.id+'><i class="fa fa-trash" aria-hidden="true"></i></button></td>');
-                });
-            }
-            jQuery("[name = 'btn_delete_mounter']").click(function () {
-                var button = jQuery(this);
-                var mounterId = button.data('id');
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=users.deleteUser",
-                    data: {
-                        user_id : mounterId
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function(data) {
-                        button.closest('tr').hide();
-                        var index = 0;
-                        for(var i = 0;i<mountersForDelete.length;i++){
-                            if(mountersForDelete[i].id == mounterId){
-                                index = i;
-                                break;
-                            }
-                        }
-                        console.log(index);
-                        mountersForDelete.splice(index,1);
-                        mountersOption = "<option>Выберите</option>";
-                        generateMountersOption(mountersForDelete);
-                    },
-                    error: function(data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
-                });
-
-            });
         });
 
         jQuery("#to_common_salary").click(function () {
@@ -2097,42 +2028,6 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 var projectId = jQuery(this).data('project_id');
                 document.location.href = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=precalc&id='+projectId;
             });
-
-            jQuery("#create_mounter").click(function () {
-                var name = jQuery("#new_mounter_name").val(),
-                    phone = jQuery("#new_mounter_phone").val();
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=users.registerMounterForBuilding",
-                    data: {
-                        name: name,
-                        phone: phone
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function(data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Добавлено!"
-                        });
-                        setTimeout(location.reload(),10000);
-                    },
-                    error: function(data) {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
-                });
-            })
-
 
             jQuery(".mount_stage").click(function () {
                 var stage = jQuery(this).data("mount_type");

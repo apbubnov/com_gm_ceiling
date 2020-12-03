@@ -74,6 +74,9 @@ class Gm_ceilingControllerUsers extends JControllerForm
 	        $jinput = JFactory::getApplication()->input;
 	        $brigadeName = $jinput->get('name','','STRING');
 	        $brigadePhone = $jinput->get('phone','','STRING');
+	        $email = $jinput->get('email','','STRING');
+	        $groups = $jinput->get('groups',[],'ARRAY');
+
 	        if(!empty($brigadePhone)){
                 $brigadePhone = mb_ereg_replace('[^\d]', '', $brigadePhone);
                 if (mb_substr($brigadePhone, 0, 1) == '9' && strlen($brigadePhone) == 10)
@@ -94,30 +97,58 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 // удаляем начальные и конечные '-'
                 $brigadePhone = trim($str, "-");
             }
-            $data = [
-                "name" => $brigadeName,
-                "username" => $brigadePhone,
-                "password" => $brigadePhone,
-                "password2" => $brigadePhone,
-                "email" => $brigadePhone."@none",
-                "groups" => [2, 34],
-                "dealer_type" => 0,
-                "dealer_id" => 1
-            ];
-            $user = new JUser;
-            if (!$user->bind($data)) {
-                throw new Exception($user->getError());
+
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $user = $usersModel->getUserByUsername($brigadePhone);
+
+	        if(empty($user)){
+                if(empty($email)){
+                    $email = $brigadePhone."@none";
+                }
+                $data = [
+                    "name" => $brigadeName,
+                    "username" => $brigadePhone,
+                    "password" => $brigadePhone,
+                    "password2" => $brigadePhone,
+                    "email" => $email,
+                    "groups" => [2],
+                    "dealer_type" => 0,
+                    "dealer_id" => 1
+                ];
+                $user = new JUser;
+                if (!$user->bind($data)) {
+                    throw new Exception($user->getError());
+                }
+                if (!$user->save()) {
+                    throw new Exception($user->getError());
+                }
             }
-            if (!$user->save()) {
-                if($user->getError() == 'Имя пользователя занято') {
-                    $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                    $id_brigade = $userModel->addGroupToExistUser($brigadePhone, 1, 34);
+            if(!empty($user)){
+                if(!empty($groups)){
+                    foreach ($groups as $id){
+                        $usersModel->addGroupToExistUser($brigadePhone, 1, $id);
+                    }
                 }
             }
             die(json_encode(true));
 	    }
         catch(Exception $e)
         {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function deleteUserFromGroup(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $userId = $jinput->getInt('id');
+	        $groupId = $jinput->getInt('group');
+	        $user = JFactory::getUser();
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $result = $usersModel->deleteUserFromGroup($userId,$groupId,$user->dealer_id);
+	        die(json_encode($result));
+        }
+        catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

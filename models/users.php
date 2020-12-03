@@ -971,4 +971,83 @@ class Gm_ceilingModelUsers extends JModelList
         }
     }
 
+    function getGroupsByParentGroup($parentId){
+	    try{
+	        $result = [];
+            if(!empty($parentId)){
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->select('id,title')
+                    ->from('`rgzbn_usergroups`')
+                    ->where("parent_id = $parentId")
+                    ->order('id');
+                $db->setQuery($query);
+                $result = $db->loadObjectList();
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUserInGroups($dealerId,$groups){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $subquery = $db->getQuery(true);
+            $subquery
+                ->select('`u`.`id`, `u`.`name`, `u`.`username`,`u`.`email`,IF(ISNULL(g.group_id) OR g.group_id = 2,dm.group_id,g.group_id) AS group_id')
+                ->from('`rgzbn_users` AS `u`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` AS `dm` ON `dm`.`user_id` = `u`.`id`')
+                ->innerJoin('`rgzbn_user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
+                ->where("(`g`.`group_id` IN ($groups) AND u.dealer_id = $dealerId) OR (`dm`.`dealer_id` = $dealerId AND `dm`.`group_id` IN($groups))");
+
+            $query
+                ->select('ug.id,ug.title,concat(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',u1.id,\'","name":"\',u1.name,\'","phone":"\',u1.username,\'"}\')),\']\') AS users')
+                ->from('`rgzbn_usergroups` AS ug')
+                ->leftJoin("($subquery) AS u1 ON u1.group_id = ug.id")
+                ->where("ug.id IN($groups)")
+                ->group('ug.id');
+            $db->setQuery($query);
+            $data = $db->loadObjectList();
+            $result = [];
+            if(!empty($data)){
+                foreach ($data as $item){
+                    $result[$item->id] = (object)[
+                        "id" => $item->id,
+                        "title" => $item->title,
+                        "users" => json_decode($item->users),
+                        "count" => count(json_decode($item->users))
+                    ];
+                }
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function deleteUserFromGroup($userId,$groupId,$dealerId){
+	    try{
+	        $result = null;
+	        if(!empty($userId) && !empty($groupId) && !empty($dealerId)) {
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->delete('`rgzbn_users_dealer_id_map`')
+                    ->where("user_id = $userId AND group_id = $groupId AND dealer_id = $dealerId");
+                $db->setQuery($query);
+                $db->execute();
+                $result = $db->getAffectedRows();
+            }
+	        return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
