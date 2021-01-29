@@ -482,14 +482,15 @@ class Gm_ceilingModelMount extends JModelList
         }
     }
 
-    function getServicePrice(){
+    function getServicePrice($dealerId){
 	    try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`id`,`name`,`price`')
-                ->from('`rgzbn_gm_ceiling_jobs`')
-                ->where('is_factory_work = 0 and guild_only = 0');
+                ->select('`j`.`id`,`j`.`name`,IFNULL(`sp`.`price`,0) as price,`sp`.`id` as `sp_id`')
+                ->from('`rgzbn_gm_ceiling_jobs` as j')
+                ->leftJoin("`rgzbn_gm_ceiling_jobs_service_price` as sp on sp.job_id = j.id and sp.dealer_id = $dealerId")
+                ->where('`j`.`is_factory_work` = 0 and `j`.`guild_only` = 0');
             $db->setQuery($query);
             $price = $db->loadObjectList();
             return $price;
@@ -501,14 +502,25 @@ class Gm_ceilingModelMount extends JModelList
 
     function updateServicePrice($price){
 	    try{
+	        $user = JFactory::getUser();
+	        $dealerId = $user->dealer_id;
             $db = JFactory::getDbo();
             if(!empty($price)){
                 foreach ($price as $item) {
                     $query = $db->getQuery(true);
-                    $query
-                        ->update('`rgzbn_gm_ceiling_jobs`')
-                        ->set("price = $item->price")
-                        ->where("id = $item->job_id");
+                    if(!empty($item->sp_id)){
+                        $query
+                            ->update('`rgzbn_gm_ceiling_jobs_service_price`')
+                            ->set("price = $item->price")
+                            ->where("id = $item->$item->sp_id and job_id = $item->job_id");
+                    }
+                    else{
+                        $query
+                            ->insert('`rgzbn_gm_ceiling_jobs_service_price`')
+                            ->columns("`job_id`,`price`,`dealer_id`")
+                            ->values("$item->job_id,$item->price,$dealerId");
+                    }
+
                     $db->setQuery($query);
                     $db->execute();
                 }

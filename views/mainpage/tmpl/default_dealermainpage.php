@@ -122,7 +122,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                         <div class="row">
                             <div class="col-md-4" style="text-align: left">
                                 <input name="precalc_type" class="radio" id ="exist_project" value="1" type="radio">
-                                <label for="exist_project">сущесвующий проект</label>
+                                <label for="exist_project">существующий проект</label>
                             </div>
                             <div id="search_field" class="col-md-8" style="display: none;">
                                 <div class="row">
@@ -270,7 +270,11 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
         <div class="row center">
             <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fas fa-edit" aria-hidden="true"></i>Рассчитать</button>
         </div>
-
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="/index.php?option=com_gm_ceiling&view=stock&type=store">
+                <i class="fas fa-cart-arrow-down"></i> Комплектующие
+            </a>
+        </div>
         <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>">
                 <div style="position:relative;">
@@ -333,6 +337,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
 <script>
     var selected_project;
     jQuery(document).mouseup(function (e){
+
         var div = jQuery("#mw_analytic"),
             div1 = jQuery("#mw_precalc");
         if (!div.is(e.target) &&
@@ -345,6 +350,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
         }
     });
     jQuery(document).ready(function () {
+        localStorage.clear();
         var dealerType = '<?=$user->dealer_type;?>';
         jQuery.ajax({
             type: 'POST',

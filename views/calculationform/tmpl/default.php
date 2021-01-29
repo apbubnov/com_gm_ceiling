@@ -114,6 +114,7 @@ $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel("calculationform");
 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
 $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+$usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
 /*____________________end_______________________  */
 $fields = $calculationformModel->getFields(1);
 $goods_jobs_map = json_encode($fields['goods_jobs_map']);
@@ -260,6 +261,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                         </div>
                     </div>
                  </div>';
+/*получаем список МС*/
+$listOfMS = $usersModel->getUserByGroup('26');
 ?>
 <style>
     .container {
@@ -276,7 +279,19 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         font-family: "Cuprum";
         color: #414099;
     }
-
+    .category_title{
+        font-size: 14pt;
+        text-align: center;
+        font-weight: bold;
+        color: #FFFFFF;
+        border-radius: 5px;
+        background-color:#414099;
+        margin: 5px 0 5px 0;
+        line-height: 2.5em;
+    }
+    .main_groups{
+       display: none;
+    }
 </style>
 <?php if ($api == 1): ?>
     <style type="text/css">
@@ -458,9 +473,72 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 </div>
             </div>
         <?php } ?>
-
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="row title">
+                        <label style="margin-left: 15px; margin-bottom: 2px; color: rgb(65, 64, 153);">Введите высоту стен, м</label>
+                    </div>
+                    <div class="countDiv">
+                        <input class="form-control" id="walls_height" value="<?=$calculation->walls_height;?>">
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="div-fields">
+                        <div class="row title" style="margin-left: 5px; color: rgb(65, 64, 153);">
+                            <label style="margin-bottom: 2px; color: rgb(65, 64, 153);">Добавьте размеры проемов</label>
+                        </div>
+                        <div class="row center title" style="margin-left: 15px; color: rgb(65, 64, 153);">
+                            <div class="countDiv col-md-3 col-xs-4">
+                                <label style="margin-bottom: 2px; color: #414099;">Высота,см</label>
+                            </div>
+                            <div class="countDiv col-md-3 col-xs-4">
+                                <label style="margin-bottom: 2px; color: #414099;">Ширина,см</label>
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <label style="margin-bottom: 2px; color: #414099;">Тип</label>
+                            </div>
+                            <div class="col-md-2 col-xs-2">
+                                <i class="fa fa-trash-alt" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 row-fields openings" data-id="opening_fields" style="margin-bottom: 5px;">
+                            <div class="countDiv col-md-3 col-xs-4" style="padding-right: 0px;">
+                                <input class="form-control quantity_input height" placeholder="Высота">
+                            </div>
+                            <div class="countDiv col-md-3 col-xs-4" style="padding-right: 0px;">
+                                <input class="form-control quantity_input width" placeholder="Ширина">
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <select class="form-control opening_select">
+                                    <option value="1">Оконный</option>
+                                    <option value="2">Дверной</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-xs-2">
+                                <button class="clear_form_group btn btn-danger delete_goods" type="button">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row center">
+                            <button class="btn btn-primary add" type="button" data-field="opening_fields" style="margin-bottom: 15px;">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Добавить</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
         <div id="params_block">
-            <div class="row" id="cancel_maingroup">
+           <!-- <div class="row" id="cancel_maingroup">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <button class="btn btn_calc" type="button" data-maingroup_id="cancel">
@@ -530,7 +608,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                 <div>
                                     <div class="col-sm-12 row-fields" data-id="without_mount" data-group_id="cancel_mount" data-jobs="[]" style="margin-bottom: 5px;">
                                         <div class="countDiv">
-                                            <input type="radio" data-id="without_mount" id="without_mount" name="cancel_mount" class="radio" value="0" <?= $gmManager ? 'checked' : '' ?>>
+                                            <input type="radio" data-id="without_mount" id="without_mount" name="cancel_mount" class="radio" value="0" <?/*= $gmManager ? 'checked' : '' */?>>
                                             <label for="without_mount">Без монтажа</label>
                                         </div>
                                     </div>
@@ -539,7 +617,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                          style="margin-bottom: 5px;">
                                         <div class="countDiv"><input type="radio" data-id="mount_service"
                                                                      id="mount_service" name="cancel_mount"
-                                                                     class="radio" data-count="2" <?= !$gmManager ? 'checked' : '' ?>
+                                                                     class="radio" data-count="2" <?/*= !$gmManager ? 'checked' : '' */?>
                                                                      value="2">
                                             <label for="mount_service">Монтажная служба</label></div>
                                     </div>
@@ -548,7 +626,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                         <div class="countDiv">
                                             <input type="radio" data-id="self_mount" id="self_mount"
                                                    name="cancel_mount" class="radio" data-count="1"
-                                                   value="1" <?=$dealer->dealer_type == 7 ? 'checked':''?>>
+                                                   value="1" <?/*=$dealer->dealer_type == 7 ? 'checked':''*/?>>
                                             <label for="self_mount">Свой прайс</label>
                                         </div>
                                     </div>
@@ -557,7 +635,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
 
 
                         </div>
-                        <?php if($gmManager){?>
+                        <?php /*if($gmManager){*/?>
                             <div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                 <div class="col-sm-11 col-xs-11" style="padding-right: 5px;">
                                     <button type="button" data-group_id="cancel_offcut" data-maingroup_id="cancel"
@@ -593,11 +671,11 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                     </div>
                                 </div>
                             </div>
-                        <?php }?>
+                        <?php /*}*/?>
                     </div>
                 </div>
                 <div class="col-sm-3"></div>
-            </div>
+            </div>-->
         </div>
         <!-- Рассчитать -->
         <div class="container">
@@ -775,8 +853,50 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         gmManager = '<?= $gmManager?>',
         seam = '<?php echo $seam; ?>',
         goodsJobsMap = JSON.parse('<?=$goods_jobs_map?>'),
-        dealerType = '<?= $dealer->dealer_type;?>';
-
+        dealerType = '<?= $dealer->dealer_type;?>',
+        listOfNMS = JSON.parse('<?= json_encode($listOfMS)?>'),
+        openingData,
+        mountServiceOptions = [
+            {
+                id: "without_mount",
+                group_id: "cancel_mount",
+                goods_category_id: null,
+                parent:null,
+                goods: [],
+                value: 0,
+                duplicate: "0",
+                input_type : "2",
+                title: "Без монтажа"
+            },
+            {
+                id: "self_mount",
+                group_id: "cancel_mount",
+                goods_category_id: null,
+                parent:null,
+                goods: [],
+                value: 1,
+                duplicate: "0",
+                input_type : "2",
+                title: "Свой прайс"
+            }
+        ];
+    if(listOfNMS.length){
+        for(var i = 0; i<listOfNMS.length;i++){
+            mountServiceOptions.push(
+                {
+                    id: "mount_service_"+listOfNMS[i].id,
+                    group_id: "cancel_mount",
+                    goods_category_id: null,
+                    parent:null,
+                    goods: [],
+                    value: listOfNMS[i].id,
+                    duplicate: "0",
+                    input_type : "2",
+                    title: listOfNMS[i].name
+                }
+            );
+        }
+    }
     console.log('g-j MAP', goodsJobsMap);
     console.log("dealer",dealerId);
     var DEFAULT_MAINGROUPS = [
@@ -855,7 +975,72 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     ]
                 }
             ]
+        },
+        {
+            id: "cancel",
+            title: "Отменить",
+            groups:[
+                {
+                    title: "Отменить метизы",
+                    description: "При выборе данной опции отменяются все метизы",
+                    id: "cancel_metiz",
+                    main_group_id: "cancel",
+                    icon: "/images/cancel_metiz.png",
+                    fields:[
+                        {
+                            id: "is_cancel_metiz",
+                            group_id: "cancel_metiz",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"cancel_metiz"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "1",
+                            title: "Отментить метизы"
+
+                        }
+                    ]
+                },
+                {
+                    title: "Отменить монтаж",
+                    description: 'При выборе опции "Свой прайс" монтажные работы считаются по Вашему прайсу монтажа, ' +
+                        'при выборе опции "Монтадная служба" работы считаются по прайсу монтажной службы , при выборе опции "Без монтажа" монтажные работы не будут посчитаны',
+                    id: "cancel_mount",
+                    main_group_id: "cancel",
+                    icon: "/images/cancel_mount.png",
+                    fields: mountServiceOptions
+                },
+                {
+                    title: "Отменить обрезки",
+                    description: "При выборе данной опции отменяются обрезки",
+                    id: "cancel_offcut",
+                    main_group_id: "cancel",
+                    icon: "/images/offcut.png",
+                    fields:[
+                        {
+                            id: "is_cancel_offcut",
+                            group_id: "cancel_offcut",
+                            goods_category_id: null,
+                            parent:null,
+                            goods: [],
+                            jobs: [
+                                {
+                                    id:"cancel_offcuts"
+                                }
+                            ],
+                            duplicate: "0",
+                            input_type : "1",
+                            title: "Отментить обрезки"
+                        }
+                    ]
+                },
+            ]
         }
+
         ],
         DEFAULT_FIELDS = [
             {
@@ -995,25 +1180,21 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         if(!gmManager){
             DEFAULT_MAINGROUPS.shift();
         }
-        data = data.concat(DEFAULT_MAINGROUPS);
+        data[0].main_groups = data[0].main_groups.concat(DEFAULT_MAINGROUPS);
         jQuery.each(DEFAULT_FIELDS,function(index,field){
-            var insert_index = data.findIndex(function (elem) {
+            var insert_index = data[0].main_groups.findIndex(function (elem) {
                 return elem.id == field.main_group_id;
             });
-            data[insert_index].groups.push(field);
+            data[0].main_groups[insert_index].groups.push(field);
         });
-        console.log("data", data);/*
-        console.log('componentsInCategories', componentsInCategories);*/
-
+        console.log("data", data);
+        createCategories(data);
+        createBlocks(data);
         document.body.onload = function () {
             jQuery('.PRELOADER_GM').hide();
         };
-        //console.log(data);
-        createBlocks(data);
-        //console.log(jQuery('.btn_calc[data-maingroup_id="1"]').parent().find('.inner_container'));
         jQuery('.btn_calc[data-maingroup_id="4"]').parent().find('.inner_container').prepend(ceiling_field);
         jQuery('.btn_calc[data-maingroup_id="4"]').parent().find('.inner_container').prepend(harpoon_field);
-
 
         jQuery('.col-sm-6').on('mouseenter', '.help', function () {
             jQuery(this.lastElementChild).show();
@@ -1024,7 +1205,17 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         });
 
         jQuery('body').on('click', '.btn_calc', function () {
-            jQuery(this).closest('.col-sm-6').find('.inner_container').toggle();
+            var container = jQuery(this).closest('.col-sm-6').find('.inner_container'),
+                angle = jQuery(this).find('i');
+            container.toggle();
+            if(container.is(':visible')){
+                angle.removeClass('fa-angle-down');
+                angle.addClass('fa-angle-up');
+            }
+            else{
+                angle.removeClass('fa-angle-up');
+                angle.addClass('fa-angle-down');
+            }
         });
 
         jQuery('body').on('click', '.add', function () {
@@ -1040,8 +1231,12 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             }
             jQuery.each(rowFields, function (index, elem) {
                 var radios = jQuery(elem).find('input[type=radio]'),
-                    labels = jQuery(elem).find('label');
-                jQuery(elem).find('.countDiv').children()[0].value = "";
+                    labels = jQuery(elem).find('label'),
+                    countDivs = jQuery(elem).find('.countDiv');
+                jQuery.each(countDivs,function(n,el){
+                    jQuery(el).children()[0].value = "";
+                });
+                //jQuery(elem).find('.countDiv').children()[0].value = "";
                 jQuery(elem).find('.div-goods_select').hide();
                 jQuery.each(radios, function (ind, radioBtn) {
                     var id = jQuery(radioBtn).prop('id') + "_" + count;
@@ -1057,15 +1252,25 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             parent.before(rowFields);
         });
 
+        jQuery('#params_block').on('click','.category_title',function () {
+            var categoryRow = jQuery(this).closest('.category'),
+                categoryId = categoryRow.data('id'),
+                mainGroupsContainer = jQuery('.main_groups[data-category="'+categoryId+'"]'),
+                angle = categoryRow.find('i');
+            mainGroupsContainer.toggle();
+            if(mainGroupsContainer.is(':visible')){
+                angle.removeClass('fa-angle-down');
+                angle.addClass('fa-angle-up');
+            }
+            else{
+                angle.removeClass('fa-angle-up');
+                angle.addClass('fa-angle-down');
+            }
+        });
+
         jQuery('body').on('input','.quantity_input',function () {
             jQuery(this).val(jQuery(this).val().replace(/\,/g, '.'));
-            /*var value = jQuery(this).val(),
-                newValue = value.replace(/^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g,'$1'),
-                regExp = /^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g;;
-            console.log(regExp.test(value));
-            console.log(newValue);*/
-            //jQuery(this).val(jQuery(this).val().replace(/(?=(\d+\.\d{2})).+|(\.(?=\.))/gi, '$1'));
-        })
+           })
         jQuery('body').on('blur','.quantity_input',function () {
             var value = jQuery(this).val(),
                 regExp = /^[0-9]*[.]?[0-9]+([-][0-9]*[.]?[0-9]+)*$/g,
@@ -1122,13 +1327,35 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     jQuery(div_fields.find('.countDiv')[0]).children().val(calculation.n5)
                 }
             }
+            /*подставляем площадь проемов*/
+            if(jQuery(this).data('group_id') == 35){
+                openingData = getOpeningsCommonValues();
+                let height = empty(jQuery('#walls_height').val()) ? 0 : jQuery('#walls_height').val(),
+                    square = height*calculation.n5 - openingData.square;
+
+                if(square<0){
+                    jQuery(div_fields.find('.countDiv')[0]).children().val(0);
+                }
+                else{
+                    jQuery(div_fields.find('.countDiv')[0]).children().val(square);
+                }
+            }
         });
 
         jQuery('body').on('click', 'input[type="radio"]', function () {
-            var selectDiv = jQuery(this).closest('.row-fields').find('.div-goods_select');
+            var selectDiv = jQuery(this).closest('.row-fields').find('.div-goods_select'),
+                relatedInput = jQuery(this).closest('.row-fields').find('.div-jobs');
             if (this.checked) {
-                var goodsSelects = jQuery(this).closest('.div-fields').find('.div-goods_select');
+                var goodsSelects = jQuery(this).closest('.div-fields').find('.div-goods_select'),
+                    jobsInput = jQuery(this).closest('.div-fields').find('.div-jobs');
                 jQuery.each(goodsSelects, function (index, elem) {
+                    var parent = jQuery(elem).parent(),
+                        relatedRadio = jQuery(parent).find('input[type=radio]');
+                    if (!relatedRadio.prop('checked')) {
+                        jQuery(elem).hide();
+                    }
+                });
+                jQuery.each(jobsInput, function (index, elem) {
                     var parent = jQuery(elem).parent(),
                         relatedRadio = jQuery(parent).find('input[type=radio]');
                     if (!relatedRadio.prop('checked')) {
@@ -1137,6 +1364,9 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 });
                 if (!empty(selectDiv)) {
                     selectDiv.show();
+                }
+                if(!empty(relatedInput)){
+                    relatedInput.toggle();
                 }
             }
         });
@@ -1226,15 +1456,12 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             }
             var collected_data = collectData(),
                 dataToSave = collectFieldsDataToSave(),
-                need_mount = jQuery('[name="cancel_mount"]:checked').val(),
+                need_mount = jQuery('[name="cancel_mount_1"]:checked').val(),
                 cancel_metiz = jQuery("#fieldis_cancel_metiz").is(':checked') ? 1 : 0,
                 cancel_offcuts = jQuery("#fieldis_cancel_offcut").is(':checked') ? 1 : 0;
 
             console.log("collected_data",collected_data);
-            /*console.log("need_mount",need_mount);
-            console.log("cancel_metiz",cancel_metiz);
-            console.log("cancel_offcuts",cancel_offcuts);*/
-            //localStorage.setItem('dataToSave', dataToSave);
+
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=calculationForm.calculate",
                 type: "post",
@@ -1251,7 +1478,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     cancel_metiz: cancel_metiz,
                     cancel_offcuts: cancel_offcuts,
                     discount: jQuery("#new_discount").val(),
-
+                    walls_height: jQuery('#walls_height').val(),
+                    openings: JSON.stringify(collected_data.openings)
                 },
                 dataType: "json",
                 async: true,
@@ -1391,26 +1619,60 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
 
     }
 
-    function createBlocks(data) {
-        var div, containerDiv = jQuery("#cancel_maingroup");
-        jQuery.each(data, function (index, elem) {
-            var buttonTitle = '<div class="col-xs-11"><b>' + elem.title + '</b></div><div class="col-xs-1"><i class="fa fa-angle-down" style="color: #414099;"></i></div>';
-            div = jQuery(document.createElement('div'));
-            div.addClass('row');
-            div.append('<div class="col-sm-3"></div>');
-            var btnDiv = jQuery(document.createElement('div')),
-                button = jQuery(document.createElement('button'));
-            button.addClass('btn btn_calc');
-            button.prop('type', 'button');
-            button.html(buttonTitle);
-            button.attr("data-maingroup_id", elem.id);
-            btnDiv.addClass('col-sm-6');
-            btnDiv.append(button);
-            btnDiv.append(createWorkButton(elem.groups));
-            div.append(btnDiv);
-            div.append('<div class="col-sm-3"></div>');
-            containerDiv.before(div);
+    function createCategories(data){
+        var categoryDivRow,
+            categoryTitleDiv;
+        jQuery.each(data,function(i,category){
+            categoryDivRow = jQuery('<div/>')
+            categoryDivRow.addClass('row');
+            categoryDivRow.addClass('category');
+            categoryDivRow.append(jQuery('<div/>').addClass('col-xs-3'));
+            categoryDivRow.attr('data-id',category.id);
+
+            categoryTitleDiv = jQuery('<div/>').addClass('col-xs-6');
+            categoryTitleDiv.addClass('category_title');
+            categoryTitleDiv.append(jQuery('<div/>').addClass('col-xs-10').append(category.title));
+            categoryTitleDiv.append(jQuery('<div/>').addClass('col-xs-2').append('<i class="fa fa-angle-down"></i>'));
+
+            categoryDivRow.append(categoryTitleDiv);
+            categoryDivRow.append(jQuery('<div/>').addClass('col-xs-3'));
+
+            jQuery('#params_block').append(categoryDivRow);
         });
+    }
+    function createBlocks(data) {
+        var div,
+            containerDiv;
+
+        for(let i=0;i<data.length;i++){
+            containerDiv = jQuery('<div/>').addClass('container');
+            containerDiv.addClass('main_groups');
+            jQuery.each(data[i].main_groups, function (index, elem) {
+                console.log(elem);
+                if(empty(containerDiv.attr('data-category'))){
+                    containerDiv.attr('data-category',elem.category_id);
+                }
+                var buttonTitle = '<div class="col-xs-11"><b>' + elem.title + '</b></div><div class="col-xs-1"><i class="fa fa-angle-down" style="color: #414099;"></i></div>';
+                div = jQuery(document.createElement('div'));
+                div.addClass('row');
+                div.append('<div class="col-sm-3"></div>');
+                var btnDiv = jQuery(document.createElement('div')),
+                    button = jQuery(document.createElement('button'));
+                button.addClass('btn btn_calc');
+                button.prop('type', 'button');
+                button.html(buttonTitle);
+                button.attr("data-maingroup_id", elem.id);
+                btnDiv.addClass('col-sm-6');
+                btnDiv.append(button);
+                btnDiv.append(createWorkButton(elem.groups));
+                div.append(btnDiv);
+                div.append('<div class="col-sm-3"></div>');
+                containerDiv.append(div);
+            });
+            console.log(containerDiv.attr('data-category'));
+            jQuery('.category[data-id="'+containerDiv.attr('data-category')+'"]').after(containerDiv);
+        }
+
     }
 
     function createWorkButton(buttonsArray) {
@@ -1525,10 +1787,33 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     divRow.addClass('center');
                 }
                 if (elem.input_type == 2) {
-                    var radioBtn = createRadioBtns(elem);
-                    countDiv.append(radioBtn.radioBtn);
-                    countDiv.append(radioBtn.label);
-                    divRow.append(countDiv);
+                    var radioDiv = jQuery(document.createElement('div')),
+                        inputDiv = jQuery(document.createElement('div')),
+                        radioBtn = createRadioBtns(elem),
+                        input;
+                    radioDiv.addClass('col-xs-6 div-radio countDiv');
+                    inputDiv.addClass('col-xs-6 div-jobs');
+                    if(elem.manual_jobs){
+                        jQuery.each(elem.manual_jobs,function(i,j){
+                            let div = jQuery(document.createElement('div'));
+                            div.addClass('countDiv');
+                            div.addClass('col-md-12');
+                            div.attr('data-job_id',j.id);
+                            div.append('<label>'+j.name+'</label>');
+                            input = createInput();
+                            input.attr('id','rd_man'+j.id);
+                            div.append(input);
+                            inputDiv.append(div);
+                        });
+
+                    }
+                    inputDiv.css({"display": "none"});
+                    radioDiv.append(radioBtn.radioBtn);
+                    radioDiv.append(radioBtn.label);
+                    divRow.append(radioDiv);
+                    divRow.append(inputDiv);
+
+
 
                 }
                 if (elem.input_type == 3) {
@@ -1679,7 +1964,13 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         radioBtn.prop('id', field.id);
         radioBtn.prop('name', field.group_id + '_1');
         radioBtn.addClass('radio');
-        radioBtn.prop('value', getIds(field.jobs));
+        radioBtn.prop('value', "");
+        if(!empty(field.jobs)){
+            radioBtn.prop('value', getIds(field.jobs));
+        }
+        if(field.value !== undefined){
+            radioBtn.prop('value', field.value);
+        }
         label.prop('for', field.id);
         label.html(field.title);
         result = {radioBtn: radioBtn, label: label};
@@ -1722,8 +2013,10 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
 
     function getIds(objArr) {
         var result = [];
-        for (var i = objArr.length; i--;) {
-            result.push(objArr[i].id);
+        if(!empty(objArr)) {
+            for (var i = objArr.length; i--;) {
+                result.push(objArr[i].id);
+            }
         }
         return JSON.stringify(result);
     }
@@ -1737,13 +2030,9 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
     }
 
     function fill_calc_data() {
-        var /*canvas = calculation.goods.filter(function (goods) {
-                return goods.category_id == 1;
-            }),*/
-            factory_works = calculation.jobs.filter(function (job) {
+        var factory_works = calculation.jobs.filter(function (job) {
                 return job.is_factory_work == 1 && job.guild_only == 0;
             });
-        //console.log('factory_works',factory_works);
         if(factory_works.length){
             for(var i = 0;i<factory_works.length;i++){
                 var tr = jQuery(document.createElement('tr'));
@@ -1752,6 +2041,23 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 jQuery("#common_info_table").append(tr);
             }
         }
+        /*заполнение проемов*/
+        var openings = (!empty(calculation.openings)) ? JSON.parse(atob(calculation.openings)) : null,
+            openignsArr = !empty(openings) ? openings.openings : null,
+            openingFields;
+        if(!empty(openignsArr)){
+            var addBtn = jQuery('.add[data-field = opening_fields]');
+            for(var i=0;i<openignsArr.length;i++){
+                openingFields = jQuery('.openings').last();
+                openingFields.find('.width').val(openignsArr[i].width);
+                openingFields.find('.height').val(openignsArr[i].height);
+                openingFields.find('.opening_select').val(openignsArr[i].type);
+                if(i<openignsArr.length-1) {
+                    addBtn.trigger('click');
+                }
+            }
+        }
+
         if (calculation.n4 && calculation.n5 && calculation.n9) {
             jQuery("#jform_n4").val(calculation.n4);
             jQuery("#jform_n5").val(calculation.n5);
@@ -1760,10 +2066,6 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             jQuery("#jform_n31").val(calculation.n31);
             jQuery("#jform_shrink_per").val(((1 - calculation.shrink_percent).toFixed(2) * 100).toFixed(2));
             jQuery("#data-wrapper").show();
-            /*if (canvas.length) {
-                console.log("canvas", canvas[0]);
-                jQuery("#jform_canvas").val(canvas[0].name);
-            }*/
 
         }
         let filename = '<?php echo $calc_img;?>';
@@ -1776,7 +2078,14 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
         console.log('retrievedObject: ', savedData);
         if (!empty(savedData)) {
             jQuery.each(savedData, function (index, elem) {
-                jQuery('#params_block').find('.btn_calc[data-maingroup_id="' + elem.maingroup_id + '"]').trigger('click');
+                var mainGroupBtn = jQuery('#params_block').find('.btn_calc[data-maingroup_id="' + elem.maingroup_id + '"]'),
+                    mainGroupsContainer = mainGroupBtn.closest('.main_groups'),
+                    categoryId = mainGroupsContainer.attr('data-category'),
+                    categoryBtn = jQuery('.category[data-id="'+categoryId+'"]').find('.category_title');
+                if(!mainGroupsContainer.is(':visible')){
+                    categoryBtn.trigger('click');
+                }
+                mainGroupBtn.trigger('click');
                 for (var i = elem.groups.length; i--;) {
                     jQuery('#params_block').find('.add_fields[data-group_id="' + elem.groups[i].group_id + '"]').trigger('click');
 
@@ -1798,7 +2107,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                             }
                             if (savedInput.type == "text") {
                                 countDiv = jQuery(rowFields[f]).find('.countDiv');
-                                input = jQuery(countDiv).find('.form-control');
+                                input = jQuery(countDiv).find('.quantity_input');
                                 input.val(savedInput.value);
                                 if (savedInput.related.length) {
                                     for (var k = 0; k < savedInput.related.length; k++) {
@@ -1808,9 +2117,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                             var specJobs = jQuery('option:selected',select).data('spec_jobs');
                                                 createAdditionalWorkFields(specJobs,select[0]);
                                             if(!empty(savedInput.related[k].additional)){
-                                                console.log(savedInput.related[k]);
                                                 jQuery.each(savedInput.related[k].additional,function(n,field){
-                                                    console.log(jQuery('[data-id="'+field.id+'"]').find('.quantity_input'));
                                                     jQuery('[data-id="'+field.id+'"]').find('.quantity_input').val(field.value);
                                                 });
                                             }
@@ -1822,6 +2129,12 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                             if (savedInput.related[k].assoc) {
                                                 radioBtn.trigger('click');
                                                 radioBtn.closest('.row-fields').find('.div-goods_select').children().val(savedInput.related[k].assoc.value);
+                                            }
+                                            if (savedInput.related[k].assocInputs) {
+                                                radioBtn.trigger('click');
+                                                jQuery.each(savedInput.related[k].assocInputs,function(index,el){
+                                                   radioBtn.closest('.row-fields').find('.div-jobs').children().find('#'+el.id).val(el.value);
+                                                })
                                             }
                                         }
                                         if (savedInput.related[k].type == 'checkbox') {
@@ -1887,7 +2200,7 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             if(jQuery(div).data('field_id') != 'dopgoods'){
                 var currentJobs = jQuery(div).data('jobs'),
                     currentGoods = jQuery(div).data('goods'),
-                    countDiv, input, goodSelect, radio,checkbox;
+                    countDiv, input, goodSelect, radio,checkbox,inputs;
                 if (empty(currentJobs)) {
                     currentJobs = [];
                 }
@@ -1907,7 +2220,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                     //поиск связанных radio
                     var id = countDiv.parent().data('id'),
                         radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
-                        radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                        radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select'),
+                        radioInputs = radio.closest('.row-fields').find('.div-jobs').find('.countDiv');
                     if (!empty(radio.val())) {
                         if (!empty(input.val())) {
                             if (currentJobs.length == 0) {
@@ -1926,6 +2240,15 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                     }
                                 }
                                 components.push({id: radioGoodSelect.val(), count: input.val()});
+                            }
+                            if(radioInputs.length != 0){
+                                jQuery.each(radioInputs,function(i,j){
+                                    var div = jQuery(j),
+                                        input = div.find('input');
+                                    if(!empty(input.val())){
+                                        jobs.push({id: div.data('job_id'), count: input.val()})
+                                    }
+                                });
                             }
                         }
                     }
@@ -1963,9 +2286,12 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 }
                 if (input.prop('type') == "radio" && empty(input.data('parent'))) {
                     if (input.is(':checked')) {
-                        currentJobs = JSON.parse(input.val());
-                        for (var i = currentJobs.length; i--;) {
-                            jobs.push({id: currentJobs[i], count: 1});
+                        if(!empty(input.val())) {
+                            console.log(input);
+                            currentJobs = JSON.parse(input.val());
+                            for (var i = currentJobs.length; i--;) {
+                                jobs.push({id: currentJobs[i], count: 1});
+                            }
                         }
                     }
                 }
@@ -2005,6 +2331,29 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             }
         }
 
+        /*проемы*/
+        var openingsEl = jQuery('.openings'),
+            openingsData = {
+                openings : [],
+                square: 0,
+                widths: 0
+            },
+            width,height,type;
+        jQuery.each(openingsEl,function(n,o){
+            width = jQuery(o).find('.width').val();
+            height = jQuery(o).find('.height').val();
+            type = jQuery(o).find('.opening_select').val();
+            openingsData.square += width*height*0.0001;
+            if(type == 2){
+                openingsData.widths += width;
+            }
+            openingsData.openings.push({
+               width: width,
+               height: height,
+               type: type
+           });
+        });
+
         jQuery.each(jQuery('[name = "work_title"]'), function (index, elem) {
             var cost = jQuery(elem).closest('.field').find('[name="work_cost"]').val(),
                 isService = jQuery('#mount_service').is(':checked');
@@ -2034,7 +2383,6 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                 }
             }
         });
-        console.log(stock_goods);
         jobs = sumSameValues(jobs);
         components = components.concat(stock_goods);
         components = sumSameValues(components);
@@ -2044,7 +2392,8 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             goods: components,
             extra_components: additional_components,
             extra_mounting: additional_works,
-            photo_print: photoprint
+            photo_print: photoprint,
+            openings: openingsData
         };
     }
 
@@ -2106,9 +2455,11 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                         if (input.val() > 0) {
                             var id = countDiv.parent().data('id'),
                                 radio = countDiv.parent().find('input[type=radio][data-parent="' + id + '"]:checked'),
-                                radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select');
+                                radioGoodSelect = radio.closest('.row-fields').find('.div-goods_select').find('.goods_select'),
+                                realatedInputs = radio.closest('.row-fields').find('.div-jobs').find('.countDiv');
                             if (!empty(radio.val())) {
-                                var assocSelect = "";
+                                var assocSelect = "",
+                                    assocInputs = [];
                                 if (radioGoodSelect.length != 0) {
                                     assocSelect = {
                                         id: radioGoodSelect.attr('id'),
@@ -2116,11 +2467,26 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                                         value: radioGoodSelect.val()
                                     };
                                 }
+                                if (realatedInputs.length != 0) {
+                                    jQuery.each(realatedInputs,function(i,j){
+                                        var input = jQuery(j).find('input');
+                                        if(!empty(input.val())){
+                                            assocInputs.push(
+                                                {
+                                                    id: input.attr('id'),
+                                                    type: input.prop('type'),
+                                                    value: input.val()
+                                                }
+                                            );
+                                        }
+                                    })
+                                }
                                 related.push({
                                     id: radio.attr('id'),
                                     type: radio.prop('type'),
                                     value: 1,
-                                    assoc: assocSelect
+                                    assoc: assocSelect,
+                                    assocInputs: assocInputs
                                 });
 
                             }
@@ -2271,5 +2637,19 @@ $harpoon_html = '<div class="row" style="margin-bottom: 5px; margin-top: 5px;">
             jQuery('#input_camvas_area').val(calculation.canvas_area);
             jQuery('#div_for_test').show();
         }
+    }
+
+    function getOpeningsCommonValues() {
+        var result = {
+            "square": 0,
+            "length": 0
+        }
+        jQuery.each(jQuery('.openings'),function(i,e){
+           result.square += jQuery(e).find('.width').val()*jQuery(e).find('.height').val()*0.0001;
+           if(jQuery(e).find('opening_select').val() == 2){
+               result.length += jQuery(e).find('.width').val();
+           }
+        });
+        return result;
     }
 </script>

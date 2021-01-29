@@ -96,9 +96,13 @@ $projectCount = count($data);*/
                     dataType: "json",
                     async: true,
                     success: function (data) {
+                        var total_br = 0,
+                            total_ms = 0;
                         jQuery('#project_count').text(data.length);
                         jQuery('#service_analytic > tbody').empty();
                         jQuery.each(data,function (n,el) {
+                            total_br += +el.mounting_sum;
+                            total_ms += +el.serviceSum;
                             jQuery('#service_analytic > tbody').append('<tr data-id="'+el.id+'">' +
                                 '<td>'+el.name+'</td>'+
                                 '<td>'+el.id+'</td>'+
@@ -107,6 +111,9 @@ $projectCount = count($data);*/
                                 '<td>'+((el.serviceSum-el.mounting_sum)/el.mounting_sum)*100+'</td>'+
                                 '</tr>');
                         });
+                        total_br = parseFloat(total_br).toFixed(2);
+                        total_ms = parseFloat(total_ms).toFixed(2);
+                        jQuery('#service_analytic > tbody').append('<tr><td colspan="2" style="text-align:right;"><b>Итого</b></td><td>'+ total_br+'</td><td>'+total_ms+'</td><td>'+((total_ms-total_br)/total_br)*100+'</td></tr>');
                     },
                     error: function (data) {
                         var n = noty({

@@ -5,8 +5,12 @@
  * Date: 18.03.2019
  * Time: 14:56
  */
+$user = JFactory::getUser();
+$isObjMaster = in_array('46',$user->groups);
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_clients = $clients_model->getBuilders();
+$href = !$isObjMaster ? 'index.php?option=com_gm_ceiling&view=clientcard&type=builder&subtype=mounter&id=' : 'index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=';
+
 ?>
 <h2 class="center">Застройщики</h2>
 <div class="row" style="margin-bottom: 15px;">
@@ -52,26 +56,40 @@ $result_clients = $clients_model->getBuilders();
     </thead>
     <tbody id="tbody_builders">
     <?php
-    foreach ($result_clients as $key => $value)
-    {
-        $groups = explode(';',$value->groups);
-        if(!in_array(36,$groups)) {
-            ?>
+        foreach ($result_clients as $key => $value){
+            if(!$isObjMaster) {
+                $groups = explode(';', $value->groups);
+                if (!in_array(36, $groups)) {
+                    ?>
+                    <tr class="row center" data-href="<?php echo JRoute::_($href . (int)$value->associated_client); ?>">
+                        <td class="center">
+                            <?php echo $value->name; ?>
+                        </td>
+                    </tr>
+    <?php
+                }
+            }
+            else{
+                if($value->manager_id == $user->id) {
 
-            <tr class="row center" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&subtype=mounter&id='.(int)$value->associated_client); ?>">
-                <td class="center">
-                    <?php echo $value->name; ?>
-                </td>
-            </tr>
-            <?php
+                    ?>
+                    <tr class="row center" data-href="<?php echo JRoute::_($href . (int)$value->associated_client); ?>">
+                        <td class="center">
+                            <?php echo $value->name; ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
         }
-    }
     ?>
     </tbody>
 </table>
 <script>
     jQuery(document).ready(function() {
-        var builders = JSON.parse('<?=quotemeta(json_encode($result_clients));?>');
+        var builders = JSON.parse('<?=quotemeta(json_encode($result_clients));?>'),
+            objMaster = <?= empty($isObjMaster) ? false : true;?>,
+            user = JSON.parse('<?=json_encode($user);?>');
         console.log(builders);
         jQuery('body').on('click', 'tr', function (e) {
             if (jQuery(this).data('href') != "") {
@@ -87,15 +105,23 @@ $result_clients = $clients_model->getBuilders();
                     flag: 'builders'
                 },
                 success: function(data){
-                    console.log(data);
+                    console.log('123',data);
                     var tbody = document.getElementById('tbody_builders');
                     tbody.innerHTML = '';
                     var html = '';
                     for(var i in data)
                     {
+                        if(!objMaster){
+                            html += '<tr  data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&subtype=mounter&id=' + data[i].id + '">';
+                            html += '<td>' + data[i].client_name + '</td>';
+                        }
+                        else{
+                            if(data[i].manager_id == user.id){
+                                html += '<tr  data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' + data[i].id + '">';
+                                html += '<td>' + data[i].client_name + '</td>';
+                            }
+                        }
 
-                        html += '<tr  data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&subtype=mounter&id=' + data[i].id + '">';
-                        html += '<td>' + data[i].client_name + '</td>';
                     }
                     tbody.innerHTML = html;
                     html = '';
@@ -120,7 +146,17 @@ $result_clients = $clients_model->getBuilders();
             var builders_to_show = [];
             if(this.value == 0){
                 jQuery("#legend").show();
-                fillTable(builders);
+                if(!objMaster){
+                    fillTable(builders);
+                }
+                else{
+                    jQuery.each(builders,function(index,elem){
+                        if(elem.manager_id == user.id){
+                            builders_to_show.push(elem);
+                        }
+                    });
+                    fillTable(builders_to_show);
+                }
             }
             if(this.value == 1){
                 jQuery.each(builders,function(index,elem){
@@ -130,7 +166,14 @@ $result_clients = $clients_model->getBuilders();
                         });
                     console.log(check);
                     if(empty(check)){
-                        builders_to_show.push(elem);
+                        if(!objMaster){
+                            builders_to_show.push(elem);
+                        }
+                        else{
+                            if(elem.manager_id == user.id){
+                                builders_to_show.push(elem);
+                            }
+                        }
                     }
                 });
                 jQuery("#legend").hide();
@@ -144,7 +187,14 @@ $result_clients = $clients_model->getBuilders();
                         });
                     console.log(check);
                     if(!empty(check)){
-                        builders_to_show.push(elem);
+                        if(!objMaster){
+                            builders_to_show.push(elem);
+                        }
+                        else{
+                            if(elem.manager_id == user.id){
+                                builders_to_show.push(elem);
+                            }
+                        }
                     }
                 });
                 jQuery("#legend").hide();

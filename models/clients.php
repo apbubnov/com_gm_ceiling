@@ -693,6 +693,7 @@ if (empty($list['direction']))
             $query
                 ->select("c.id AS client_id,COUNT(calc.id) AS  calcs_count,COUNT(cm.mounter_id) AS mounters_count,c.client_name,SUM(cm.sum) AS total_sum,CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"calc_id\":\"',calc.id,'\",\"calc_status\":\"',IFNULL(cm.status_id,'-'),'\",\"defect_status\":\"',calc.defect_status,'\",\"title\":\"',calc.calculation_title,'\",\"sum\":\"',cm.sum,'\",\"mounter\":\"',IFNULL(cm.mounter_id,\"\"),'\"}') SEPARATOR ','),']') AS calcs,
                 p.project_status,p.project_info,p.id,cm.mounter_id,SUM(0) AS n7,SUM(calc.n4) AS quadr,SUM(calc.n5) AS per")
+                ->select('GROUP_CONCAT(DISTINCT calc.walls_height) AS heights,ifnull(SUM(calc.n5*calc.walls_height),0) AS walls_square')
                 ->from("`rgzbn_gm_ceiling_clients` AS c")
                 ->innerJoin("`rgzbn_gm_ceiling_projects` AS p ON p.client_id = c.id")
                 ->innerJoin("`rgzbn_gm_ceiling_calculations` AS calc ON p.id = calc.project_id")
@@ -727,7 +728,9 @@ if (empty($list['direction']))
                                                                          "sum"=>$value->total_sum,
                                                                          "status"=>$value->project_status,
                                                                          "calcs_count" => $value->calcs_count,
-                                                                         "mounters_count" => $value->mounters_count
+                                                                         "mounters_count" => $value->mounters_count,
+                                                                         "walls_heights" => $value->heights,
+                                                                         "walls_square" => $value->walls_square
                                                                         );
             }
             return $result;

@@ -37,7 +37,7 @@ class Gm_ceilingModelTeams extends JModelItem {
                 ->innerJoin('`rgzbn_gm_ceiling_mounters` AS m ON m.id = map.id_mounter')
                 ->group('map.id_brigade');
             $query
-                ->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
+                ->select('ui.city_id,c.name,CONCAT(\'[\',GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',users.id,\'","name":"\',users.name,\'","include_mounters":"\',IFNULL(mn.names,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS mounters')
                 ->from('#__users as users')
                 ->leftJoin('`rgzbn_users_dealer_id_map` as dm on dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')

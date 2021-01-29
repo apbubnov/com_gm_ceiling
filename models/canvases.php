@@ -546,14 +546,16 @@ class Gm_ceilingModelCanvases extends JModelList
             }
             else{
                 $query->from('`rgzbn_goods_canvases` AS `a`');
+                $query->order('`a`.`color`');
             }
             //throw new Exception($query);
 
             if (!empty($filter)) {
                 $query->where($filter);
             }
+
             $db->setQuery($query);
-            //throw new Exception($query);
+
             $items = $db->loadObjectList();
             return $items;
         }

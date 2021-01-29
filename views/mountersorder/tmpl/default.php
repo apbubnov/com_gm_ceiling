@@ -955,8 +955,12 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 <div id="div-images-block">
                     <div class="row">
                         <div class="col-md-1 col-sm-0"></div>
-                        <div class="col-md-5 col-sm-12">Изображение для "<?= $value->calculation_title; ?>"</div>
-                        <div class="col-md-5 col-sm-12"><input type="file" class="img_file" data-calc-id="<?= $value->id; ?>" data-img-type="after" multiple accept="image/*"></div>
+                        <div class="col-md-5 col-sm-12">
+                            Изображение для "<?= $value->calculation_title; ?>"
+                        </div>
+                        <div class="col-md-5 col-sm-12">
+                            <input type="file" class="img_file" data-calc-id="<?= $value->id; ?>" data-img-type="after" multiple accept="image/*">
+                        </div>
                         <div class="col-md-1 col-sm-0"></div>
                     </div>
                     <hr>
@@ -1196,9 +1200,11 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 // кнопка "монтаж выполнен"
                 CurrentDateTime();
 
-                var formData = new FormData();
-                var elemsFiles = document.getElementsByClassName('img_file');
-                var arrayCalcImages = [];
+                var formData = new FormData(),
+                    elemsFiles = document.getElementsByClassName('img_file'),
+                    arrayCalcImages = [],
+                    addedImages = [];
+
                 for (var obj,i = elemsFiles.length; i--;) {
                     if (elemsFiles[i].files.length < 1) {
                         continue;
@@ -1210,9 +1216,11 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                     }
 
                     jQuery.each(elemsFiles[i].files, function(key, value) {
-                        console.log(key);
-                        obj.images.push(value.name);
-                        formData.append(+elemsFiles[i].getAttribute('data-calc-id')+ +key, value);
+                        if(!checkSameImg(addedImages,value)) {
+                            addedImages.push(value);
+                            obj.images.push(value.name);
+                            formData.append(+elemsFiles[i].getAttribute('data-calc-id') + +key, value);
+                        }
                     });
                     arrayCalcImages.push(obj);
                 }
@@ -1259,7 +1267,7 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                         layout: 'center',
                         maxVisible: 5,
                         type: "error",
-                        text: "Пожалуйста, загрузите фотографии!"
+                        text: "Пожалуйста, прикрепите хотя бы одну фотографию к любому потолку!"
                     });
                 }
             } else if (whatBtn == "underfulfilled") {
@@ -1309,6 +1317,17 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
             jQuery("#img_modal_container").hide();
             jQuery("#modal_window_img").hide();
         });
+
+        function checkSameImg(array,img){
+            var result = false;
+            for(var i = 0;i<array.length;i++){
+                if(array[i].name === img.name && array[i].size === img.size){
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
     });
 
 </script>

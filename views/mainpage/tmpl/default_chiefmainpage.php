@@ -24,6 +24,8 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 $answer2 = $model->getDataByStatus("UnComplitedMountings");
 // незапущенные монтажи
 $answer3 =  $model->getDataByStatus("Mountings");
+//запросы на монтаж
+/*$answer4 = $model->getDataByStatus("MountService");*/
 //--------------------------------------
 ?>
 <style>
@@ -32,50 +34,13 @@ $answer3 =  $model->getDataByStatus("Mountings");
     }
 </style>
 <!-- <?=parent::getButtonBack();?> -->
-<h2 class="center">Монтажи</h2>
-<?php if ($user->dealer_type == 0) { ?>
-	<div class="start_page">
-		<div class="row center">
-            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false); ?>">
-                <div style="position:relative;">
-                    <div>
-                        <i class="fa fa-calculator" aria-hidden="true"></i> График замеров
-                    </div>
-                    <?php if ($answer1[0]->count != 0) { ?>
-                        <div class="circl-digits"><? echo $answer1[0]->count; ?></div>
-                    <?php } ?>
-                </div>
-            </a>
-		</div>
-		<div class="row center">
-            <a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>">
-                <div style="position:relative;">
-                    <div>
-                        <i class="fa fa-calculator" aria-hidden="true"></i> Монтажи
-                    </div>
-                    <?php if ($answer2[0]->count != 0) { ?>
-                        <div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-                    <?php } ?>
-                </div>
-            </a>
-		</div>
-		<div class="row center">
-			<a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=run', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные заказы</a>
-		</div>
-		<div class="row center">
-			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
-		</div>
-		<div class="row center">
-			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
-		</div>
-	</div>
-<? } else if ($user->dealer_type == 1) { ?>
+<h2 class="center">Начальник МС</h2>
 	<div class="start_page">
 		<div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>">
                 <div style="position:relative;">
                     <div>
-                        <i class="far fa-money-bill-alt"></i> Договоры
+                        <i class="far fa-handshake"></i> Договоры
                     </div>
                     <?php if ($answer2[0]->count != 0) { ?>
                         <div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
@@ -95,8 +60,23 @@ $answer3 =  $model->getDataByStatus("Mountings");
                 </div>
             </a>
 		</div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=service', false); ?>">
+            <div style="position:relative;">
+                    <div>
+                        <i class="fas fa-hammer"></i> Запросы на монтаж
+                    </div>
+                  <!--  <?php /*if ($answer4[0]->count != 0) { */?>
+                        <div class="circl-digits"><?php /*echo $answer4[0]->count; */?></div>
+                    --><?php /*} */?>
+                </div>
+            </a>
+        </div>
 		<div class="row center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
 		</div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=price&type=mount&subtype=service', false); ?>"><i class="fas fa-dollar-sign"></i> Прайс МС</a>
+        </div>
 	</div>
-<? } ?>
+

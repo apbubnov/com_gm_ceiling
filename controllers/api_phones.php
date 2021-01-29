@@ -45,6 +45,32 @@ class Gm_ceilingControllerApi_phones extends JControllerLegacy{
         }
 	}
 
+    function saveName(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $apiPhoneId = $jinput->getInt('id');
+            $newName = $jinput->get('name','','STRING');
+            $model = $this->getModel();
+            $model->saveExpense($apiPhoneId,$newExpense);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $apiPhoneId = $jinput->getInt('id');
+            $model = $this->getModel();
+            $model->delete($apiPhoneId);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	function saveExpense(){
         try{
             $jinput = JFactory::getApplication()->input;
@@ -52,6 +78,21 @@ class Gm_ceilingControllerApi_phones extends JControllerLegacy{
             $newExpense = $jinput->get('newExpense',null,'DOUBLE');
             $model = $this->getModel();
             $model->saveExpense($apiPhoneId,$newExpense);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function add(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name','','STRING');
+            $expense = $jinput->get('exp','','STRING');
+            $model = $this->getModel();
+            $model->saveAdvt($name,$expense);
             die(json_encode(true));
         }
         catch(Exception $e)

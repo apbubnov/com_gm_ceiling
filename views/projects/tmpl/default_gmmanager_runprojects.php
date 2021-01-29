@@ -16,13 +16,6 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$listOrder  = $this->state->get('list.ordering');
-$listDirn   = $this->state->get('list.direction');
-$canCreate  = $user->authorise('core.create', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canEdit    = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
-$canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
-$canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
 <style>
@@ -36,108 +29,90 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 <h2 class = "center">Запущенные проекты</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects'); ?>" method="post" name="adminForm" id="adminForm">
-    <?php if (count($this->items) > 0): ?>
-<!--         <div class="toolbar">
-            <?php //echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-        </div> -->
-        <table class="table table-striped one-touch-view g_table" id="projectList">
-            <thead>
+    <table class="table table-striped one-touch-view g_table" id="projectList">
+        <thead>
             <tr>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
                     Номер договора
                 </th>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
                     Статус
                 </th>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'Дата замера', 'a.project_mounting_from', $listDirn, $listOrder); ?>
                     Дата замера
                 </th>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'Дата монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
                     Дата монтажа
                 </th>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
                     Адрес
                 </th>
                 <th class='center'>
-                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
                     Клиент
                 </th>
                 <th class="center">
                     Дилер
                 </th>
             </tr>
-            </thead>
-            <tbody>
-            <?php
-                $this_items = $this->items;
-                $items_length = count($this_items);
-            ?>
-            <?php for ($i = 0; $i < $items_length; $i++) {
-                $item = $this_items[$i];
-                $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-                $client_id = $item->client_id;
-                $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-                $client = $model_client->getClientById($client_id);
-                $dealer = JFactory::getUser($client->dealer_id);
-                if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')):
-                    $canEdit = JFactory::getUser()->id == $item->created_by;
-                endif; ?>
-                <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
-                    <td class="center one-touch">
-                        <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
-                        <?php echo $item->id;?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->status; ?>
-                        <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
-                    </td>
-                    <td class="center one-touch">
-                        <?php
-                            if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00') {
-                                echo '-';
-                            } else {
-                                echo date('d.m.Y h:i', strtotime($item->project_calculation_date));
-                            }
-                        ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php
-                            if (empty($item->project_mounting_date) || $item->project_mounting_date == '00.00.0000 00:00') {
-                                echo '-';
-                            } else {
-                                echo $item->project_mounting_date;
-                            }
-                        ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php
-                            if (empty($item->project_info)) {
-                                echo '-';
-                            } else {
-                                echo $this->escape($item->project_info);
-                            }
-                        ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_name.'<br>'.$item->client_contacts; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $dealer->name; ?>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p class="center">
-        <h3>У вас еще нет завершенных проектов!</h3>
-        </p>
-    <?php endif; ?>
+        </thead>
+        <tbody>
+        <?php
+            $this_items = $this->items;
+            $items_length = count($this_items);
+        ?>
+        <?php for ($i = 0; $i < $items_length; $i++) {
+            $item = $this_items[$i];
+            $client_id = $item->client_id;
+            $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $client = $model_client->getClientById($client_id);
+            $dealer = JFactory::getUser($client->dealer_id);
+        ?>
+            <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
+                <td class="center one-touch">
+                    <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
+                    <?php echo $item->id;?>
+                </td>
+                <td class="center one-touch">
+                    <?php echo $item->status; ?>
+                    <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
+                </td>
+                <td class="center one-touch">
+                    <?php
+                        if (empty($item->project_calculation_date) || $item->project_calculation_date == '0000-00-00 00:00:00') {
+                            echo '-';
+                        } else {
+                            echo date('d.m.Y h:i', strtotime($item->project_calculation_date));
+                        }
+                    ?>
+                </td>
+                <td class="center one-touch">
+                    <?php
+                        if (empty($item->project_mounting_date) || $item->project_mounting_date == '00.00.0000 00:00') {
+                            echo '-';
+                        } else {
+                            echo $item->project_mounting_date;
+                        }
+                    ?>
+                </td>
+                <td class="center one-touch">
+                    <?php
+                        if (empty($item->project_info)) {
+                            echo '-';
+                        } else {
+                            echo $this->escape($item->project_info);
+                        }
+                    ?>
+                </td>
+                <td class="center one-touch">
+                    <?php echo $item->client_name.'<br>'.$item->client_contacts; ?>
+                </td>
+                <td class="center one-touch">
+                    <?php echo $dealer->name; ?>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

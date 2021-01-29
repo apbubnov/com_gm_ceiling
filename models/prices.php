@@ -461,12 +461,14 @@ class Gm_ceilingModelPrices extends JModelList
 			$db = $this->getDbo();
 
             $query = $db->getQuery(true);
-            $query ->select('`j`.`id`,`j`.`name`, `dp`.`price`, `dp`.`id` as `dp_id`, IFNULL(`dp`.`price`, 0) as `price`')
+            $query
+                ->select('`j`.`id`,`j`.`name`, `dp`.`price`, `dp`.`id` as `dp_id`, IFNULL(`dp`.`price`, 0) as `price`')
             	->from('`#__gm_ceiling_jobs` as `j`')
             	->leftJoin("`#__gm_ceiling_jobs_dealer_price` as `dp`
             		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealer_id ")
             	->where('`guild_only` = 0 and `is_factory_work` = 0')
             	->order('`j`.`id`');
+            //throw new Exception($query);
             $db->setQuery($query);
             $db->execute();
 			$items = $db->loadObjectList();
@@ -475,4 +477,57 @@ class Gm_ceilingModelPrices extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function getJobsGroupedByType($dealerId){
+	    try{
+	        $result = [];
+            $db = $this->getDbo();
+
+            $sessionQuery = 'SET SESSION group_concat_max_len  = 1048576';
+            $db->setQuery($sessionQuery);
+            $db->execute();
+
+            $query = $db->getQuery(true);
+            $query
+                ->select('mt.id,mt.title')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',j.id,\'","name":"\',j.name,\'","price":"\',IFNULL(`dp`.`price`, 0),\'","dp_id":"\',IFNULL(dp.id,\'-\'),\'"}\') SEPARATOR \',\'),\']\') AS jobs')
+                ->from('`#__gm_ceiling_jobs` as `j`')
+                ->leftJoin('`rgzbn_gm_ceiling_mounts_types` AS mt ON mt.id = j.mount_type_id')
+                ->leftJoin("`#__gm_ceiling_jobs_dealer_price` as `dp`
+            		on `j`.`id` = `dp`.`job_id` and `dp`.`dealer_id` = $dealerId ")
+                ->where('`guild_only` = 0 and `is_factory_work` = 0')
+                ->group('mt.id')
+                ->order('`mt`.`id`,`j`.`id`');
+            $db->setQuery($query);
+            $db->execute();
+            $items = $db->loadObjectList();
+            if(!empty($items)){
+                foreach ($items as $item){
+                    if($item->id == 2 || $item->id == 3 || $item->id == 4){
+                        if(empty($result[0])){
+                            $result[0] = (object)[
+                                "id" => 0,
+                                "title" => 'Натяжные потолки',
+                                "jobs"  => json_decode($item->jobs)
+                            ];
+                        }
+                        else{
+                            $result[0]->jobs = array_merge($result[0]->jobs,json_decode($item->jobs));
+                        }
+                    }
+                    else{
+                        $result[$item->id] = (object)[
+                            "id" => $item->id,
+                            "title" => $item->title,
+                            "jobs"  => json_decode($item->jobs)
+                        ];
+                    }
+                }
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

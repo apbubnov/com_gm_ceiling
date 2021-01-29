@@ -9,6 +9,7 @@ $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
 $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+$usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
 
 $mountTypes = $projectsMountsModel->get_mount_types();
 unset($mountTypes[1]);
@@ -54,6 +55,10 @@ foreach($all_builders as $builder){
 //$mounterSalaryModel->recalcClosedSum($dealer->id);
 $calcsComponentModel = Gm_ceilingHelpersGm_ceiling::getModel('Calcs_components');
 $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->id);
+$isObjMaster = in_array('46',$user_group);
+$disabled = $isObjMaster ? 'disabled' : '';
+
+$objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
 ?>
 
 <style>
@@ -101,29 +106,46 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 </style>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div class="container">
-    <div class="row" style="margin-bottom: 15px;">
+    <div class="row center" style="margin-bottom: 15px;">
         <div class="col-xs-12 col-md-8">
-            <div class="col-xs-6 col-md-6" id="FIO-container-tar"><label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label></div>
-            <div class="col-xs-3 col-md-2">
-                <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            <div class="col-xs-6 col-md-6" id="FIO-container-tar">
+                <label id = "FIO">Имя: <?php echo $this->item->client_name; ?></label>
             </div>
+            <?php if(!$isObjMaster){?>
+                <div class="col-xs-3 col-md-2">
+                    <button type="button" id="edit" value="" class = "btn btn-primary">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
+                    </button>
+                </div>
+            <?php }?>
             <div class="col-xs-3 col-md-2">
-                <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+                <!--<button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>-->
             </div>
-            <div class="col-xs-3 col-md-2">
-                <a href="/index.php?index.php?option=com_gm_ceiling&view=dealerprofile&type=edit&id=<?php echo $dealer->id?>" class = "btn btn-primary" i>Прайс</a>
-            </div>
+            <?php if(!$isObjMaster){?>
+                <div class="col-xs-3 col-md-2">
+                    <a href="/index.php?index.php?option=com_gm_ceiling&view=dealerprofile&type=edit&id=<?php echo $dealer->id?>" class = "btn btn-primary">Прайс</a>
+                </div>
+            <?php }?>
         </div>
-        <div class="col-xs-6 col-md-2 left">
+        <!--<div class="col-xs-6 col-md-2 left">
             <button type="button" class="btn btn-primary" id="show_info_div">Информация</button>
         </div>
         <div class="col-xs-6 col-md-2 left">
             <button type="button" class="btn btn-primary" id="show_actions_div">Действия</button>
-        </div>
+        </div>-->
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <!-- <label style="font-size: 18pt;color: #414099;">Менеджер: <?php /*echo $manager_name;*/?></label>-->
+        <div class="col-md-8 col-xs-12">
+            <div class="col-xs-10 col-md-8">
+                <label style="font-size: 18pt;color: #414099;">Мастер на объекте: <?php echo $manager_name;?></label>
+            </div>
+            <?php if(!$isObjMaster){ ?>
+                <div class="col-xs-2 col-md-2">
+                    <button class="btn btn-primary" id="change_master" >
+                        <i class="fas fa-user-edit"> <?=!empty($manager_name) ? 'Изменить' : 'Назначить';?></i>
+                    </button>
+                </div>
+            <?php }?>
         </div>
     </div>
     <div class="row" id="dealer_info_div" style="display: none;">
@@ -219,20 +241,20 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
     <div class="row" style="margin-bottom: 10px;">
         <div class="col-md-4 center">
             <label for="floor_count">Кол-во этажей</label><br>
-            <input type="number" id="floor_count" class="input-gm">
+            <input type="number" id="floor_count" class="form-control">
         </div>
         <div class="col-md-4 center">
             <label for="start_number">Начало нумерации</label><br>
-            <input type="number" id="start_number" class="input-gm">
+            <input type="number" id="start_number" class="form-control">
         </div>
         <div class="col-md-4 center">
             <label for="apartment_count">Кол-во квартир на этаже</label><br>
-            <input type="number" id="apartment_count" class="input-gm">
+            <input type="number" id="apartment_count" class="form-control">
         </div>
     </div>
     <div class="row center">
         <div class="col-md-12">
-            <button class="btn btn-primary" type="button" id="createFloors">Создать</button>
+            <button class="btn btn-primary" type="button" id="createFloors" <?=$disabled?>>Создать</button>
         </div>
     </div>
 </div>
@@ -293,7 +315,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 </div>
 <div class="row center">
     <div class="col-md-12">
-        <button class="btn btn-primary" id="duplicate">Дублировать</button>
+        <button class="btn btn-primary" id="duplicate" <?=$disabled?>>Дублировать</button>
     </div>
 </div>
 <div class="row">
@@ -331,7 +353,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 </div>
 <div class="row center">
     <div class="col-md-12">
-        <button class="btn btn-primary" id="duplicate_selected">Дублировать</button>
+        <button class="btn btn-primary" id="duplicate_selected" <?=$disabled?>>Дублировать</button>
     </div>
 </div>
 <hr>
@@ -451,15 +473,17 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
         <button type="button" id="recalc_salary" class="btn btn-primary">Пересчитать з\п бригадам</button>
     </div>-->
 </div>
+<?php if(!$isObjMaster){ ?>
 <div class="row center" style="margin-top:15px">
     <div class="col-md-12">
         <a href="/index.php?option=com_gm_ceiling&view=mounterscommon" class="btn btn-primary"> Посмотреть сводную таблицу</a>
     </div>
 </div>
+<?php }?>
 <hr>
 <div class="row center">
     <div class="col-md-12">
-        <button class="btn btn-primary" type="button" id="btn_close">Закрыть объект</button>
+        <button class="btn btn-primary" type="button" id="btn_close" <?=$disabled?>>Закрыть объект</button>
     </div>
 </div>
 <div id="mv_container" class="modal_window_container">
@@ -575,7 +599,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 
                 </div>
                 <div class="col-md-8">
-                    <h4>Назначить бригады попотолочно</h4>
+                    <h4>Назначить бригады покомнатно</h4>
                     <table id="calcsMounters" class="table_project_analitic">
                         <thead>
                         <tr class="caption_table">
@@ -686,13 +710,39 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
             </div>
         </div>
     </div>
+    <div class="modal_window" id="mw_objMaster">
+        <div class="row" >
+            <h4>Назначение/изменение мастера на объекте</h4>
+        </div>
+        <div class="row" style="margin-bottom: 1em !important;">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <select class="form-control" id="masters_select">
+                    <option value="">Выберите мастера</option>
+                    <?php foreach ($objMasters as $master){?>
+                        <option value="<?=$master->id?>"><?=$master->name?></option>
+                    <?php }?>
+                </select>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="save_obj_master">
+                    <i class="far fa-save"></i> Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
     <script>
         var progressData = [],
-            mountersOption = "<option>Выберите</option>",
-            mountersForDelete = [],
+            mountersOption = "",
             checks,
-            projectsWithCalcsIds = JSON.parse('<?=addslashes(json_encode($projectsWithCalcIds))?>');
+            projectsWithCalcsIds = JSON.parse('<?=addslashes(json_encode($projectsWithCalcIds))?>'),
+            allMounters = [],
+            isObjMaster = '<?=!empty($isObjMaster) ? false : true?>';
+            console.log(isObjMaster);
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
             CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
@@ -739,16 +789,19 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 div12 = jQuery("#noty_center_layout_container"),
                 div13 = jQuery("#mw_dop_costs"),
                 div14 = jQuery("#mw_view_dop_costs"),
-                div15 = jQuery('#mw_common_goods');
+                div15 = jQuery('#mw_common_goods'),
+                div16 = jQuery('#mw_objMaster');
             if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
                 && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
                 && !div7.is(e.target)&& !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
-                &&!div11.is(e.target)&&!div12.is(e.target) && !div13.is(e.target) &&!div14.is(e.target) && !div15.is(e.target)
+                && !div11.is(e.target)&&!div12.is(e.target) && !div13.is(e.target) &&!div14.is(e.target) && !div15.is(e.target)
+                && !div16.is(e.target)
                 && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0
                 && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0
                 && div7.has(e.target).length === 0 && div8.has(e.target).length === 0 && div9.has(e.target).length === 0
                 && div10.has(e.target).length === 0 && div11.has(e.target).length === 0&& div12.has(e.target).length === 0
-                && div13.has(e.target).length === 0 && div14.has(e.target).length === 0 && div15.has(e.target).length === 0 ) {
+                && div13.has(e.target).length === 0 && div14.has(e.target).length === 0 && div15.has(e.target).length === 0
+                && div16.has(e.target).length === 0) {
                 jQuery("#close").hide();
                 jQuery("#mv_container").hide();
                 div.hide();
@@ -766,6 +819,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 div13.hide();
                 div14.hide();
                 div15.hide();
+                div16.hide();
             }
         });
 
@@ -1150,45 +1204,56 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
             }
 
             jQuery('[name="save_pay"]').click(function(){
-               var button = jQuery(this),
-                   paid_sum = button.closest("td").find('[name="pay_sum"]').val(),
-                   mounter_id = button.data("mounter_id"),
-                   taken_sum = button.closest("tr").find('[name="taken"]')[0].textContent,
-                   paid = button.closest('tr').find("[name='paid']"),
-                   rest = button.closest('tr').find("[name='rest']"),
-                   oldval = paid[0].textContent,
-                   restOld = button.closest("tr").find('[name="rest"]')[0].textContent ;
-               if(paid_sum>0){
-                   paid_sum = -paid_sum;
-               }
-               if(-(paid_sum+ +oldval)>taken_sum){
-                   noty({
-                       theme: 'relax',
-                       layout: 'center',
-                       timeout: false,
-                       type: "info",
-                       text: "Сумма выплаты больше суммы, взятой монтажником, продолжить?",
-                       buttons:[
-                           {
-                               addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
-                                   savePay(mounter_id, paid_sum, paid, oldval,rest,restOld);
-                                   button.closest("td").find('[name="pay_sum"]').val("");
-                                   $noty.close();
-                               }
-                           },
-                           {
-                               addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
-                                   $noty.close();
+                if(!isObjMaster) {
+                    var button = jQuery(this),
+                        paid_sum = button.closest("td").find('[name="pay_sum"]').val(),
+                        mounter_id = button.data("mounter_id"),
+                        taken_sum = button.closest("tr").find('[name="taken"]')[0].textContent,
+                        paid = button.closest('tr').find("[name='paid']"),
+                        rest = button.closest('tr').find("[name='rest']"),
+                        oldval = paid[0].textContent,
+                        restOld = button.closest("tr").find('[name="rest"]')[0].textContent;
+                    if (paid_sum > 0) {
+                        paid_sum = -paid_sum;
+                    }
+                    if (-(paid_sum + +oldval) > taken_sum) {
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: false,
+                            type: "info",
+                            text: "Сумма выплаты больше суммы, взятой монтажником, продолжить?",
+                            buttons: [
+                                {
+                                    addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
+                                        savePay(mounter_id, paid_sum, paid, oldval, rest, restOld);
+                                        button.closest("td").find('[name="pay_sum"]').val("");
+                                        $noty.close();
+                                    }
+                                },
+                                {
+                                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                                        $noty.close();
 
-                               }
-                           }
-                       ]
-                   })
-               }
-               else{
-                   savePay(mounter_id, paid_sum, paid, oldval,rest,restOld);
-                   button.closest("td").find('[name="pay_sum"]').val("");
-               }
+                                    }
+                                }
+                            ]
+                        })
+                    } else {
+                        savePay(mounter_id, paid_sum, paid, oldval, rest, restOld);
+                        button.closest("td").find('[name="pay_sum"]').val("");
+                    }
+                }
+                else{
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Недостаточно прав доступа!"
+                    });
+                }
             return false;
             });
         });
@@ -1207,6 +1272,75 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
             jQuery("#modal_window_comm").hide();
         });
 
+        jQuery('#change_master').click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#mw_objMaster").show();
+        });
+
+        jQuery('#save_obj_master').click(function(){
+            var objMasterId = jQuery('#masters_select').val(),
+                clientId = '<?=$this->item->id?>';
+           if(!empty(objMasterId)){
+               updateManager(clientId,objMasterId);
+           }
+           else{
+               noty({
+                   theme: 'relax',
+                   layout: 'center',
+                   timeout: false,
+                   type: "info",
+                   text: "Мастер будет снят с данного объекта.Продолжить?",
+                   buttons: [
+                       {
+                           addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
+                               updateManager(clientId,null);
+                               $noty.close();
+                           }
+                       },
+                       {
+                           addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                               $noty.close();
+                           }
+                       }
+                   ]
+               });
+           }
+        });
+
+        function updateManager(clientId,managerId){
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.updateManager",
+                data: {
+                    client_id: clientId,
+                    manager_id: managerId
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Сохранено!"
+                    });
+                    setTimeout(function(){location.reload();},2000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
         jQuery("#createFloors").click(function(){
             var floorsCount = jQuery("#floor_count").val(),
                 apartmentCount = jQuery("#apartment_count").val(),
@@ -1228,8 +1362,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     dataType: "json",
                     timeout: 10000,
                     error: function(data){
-
-                        var n = noty({
+                        noty({
                             theme: 'relax',
                             timeout: 2000,
                             layout: 'center',
@@ -1359,6 +1492,9 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
         });
         jQuery('body').on('click', '.edit_mounter', function(e)
         {
+            var stage =  jQuery('.mount_stage.active').data('mount_type');
+            console.log(stage);
+            generateMountersOption(stage);
             jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
             jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
             this.remove();
@@ -1432,12 +1568,15 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
 
         function drawReportTable(stage){
             getReportData(stage);
+            generateMountersOption(stage);
             var reportTable = jQuery("#report_table");
             reportTable.empty();
             var temp_sums = [];
             for(var i=0,elem;i<Object.keys(progressData).length;i++) {
                 var floor_sum = 0,
-                    floor_sq = 0;
+                    floor_sq = 0,
+                    floor_heights = [],
+                    floor_walls_square = 0;
                 reportTable.append('<tr/>');
                 elem = progressData[Object.keys(progressData)[i]];
                 jQuery("#report_table > tbody > tr:last").attr("data-id", Object.keys(progressData)[i]);
@@ -1445,7 +1584,9 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     '<td>' +
                         '<span>' + elem.name + '</span><br>'+
                         '<span name="total_fl_sq"></span><br>'+
-                        '<span name="total_fl_sum"></span>'+
+                        '<span name="total_fl_sum"></span><br>'+
+                        '<span name="total_fl_heights"></span><br>'+
+                        '<span name="total_fl_walls_sq"></span>'+
                     '</td>');
 
                 for (var j = 0, td, val, sum,mounter,acceptDoneBtn,button; j < elem.projects.length; j++) {
@@ -1454,6 +1595,23 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     sum = parseFloat(elem.projects[j].sum);
                     floor_sq +=val;
                     floor_sum += sum;
+                    floor_walls_square += parseFloat(elem.projects[j].walls_square);
+                    if(empty(floor_heights)){
+                        if(!empty( elem.projects[j].walls_heights)) {
+                            floor_heights = elem.projects[j].walls_heights.split(',');
+                        }
+                    }
+                    else{
+                        if(!empty(elem.projects[j].walls_heights)){
+                            var w_heights = elem.projects[j].walls_heights.split(',');
+                            for(var h=0;h<w_heights.length;h++){
+                                if(!floor_heights.include(w_heights[h])){
+                                    floor_heights.push(w_heights[h]);
+                                }
+                            }
+                        }
+                    }
+                    console.log(elem.projects[j]);
                     if(temp_sums[elem.name]) {
                         temp_sums[elem.name] += val;
                     }
@@ -1534,9 +1692,12 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     jQuery("#report_table > tbody > tr:last").append('<td '+style+'mounter_select data-id="' + elem.projects[j].id + '">' + td + '</td>');
                     jQuery("#report_table > tbody > tr:last").find('[name="total_fl_sq"]')[0].innerHTML = value+(+floor_sq).toFixed(2);
                     jQuery("#report_table > tbody > tr:last").find('[name="total_fl_sum"]')[0].innerHTML = 'Сумма:'+(+floor_sum).toFixed(2);
+                    jQuery("#report_table > tbody > tr:last").find('[name="total_fl_heights"]')[0].innerHTML = 'Высоты:'+ floor_heights.join(';') ;
+                    jQuery("#report_table > tbody > tr:last").find('[name="total_fl_walls_sq"]')[0].innerHTML = 'Площадь стен:'+floor_walls_square;
                 }
             }
             jQuery("[name='btn_mounters']").click(function (){
+                generateMountersOption(stage);
                 jQuery("#mv_container").show();
                 jQuery("#add_mounters").show("slow");
                 jQuery("#close").show();
@@ -1557,13 +1718,21 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                                 '<div class="row">'+
                                     '<button class="btn btn-primary approve_all" data-floor_id ="'+floorId+'"data-project_id = "'+projectId+'">Подтвердить</button>'+
                                 '</div>';
-                jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ потолки</h4>");
-                if(project.status < stage+29) {
-                    jQuery("#all_calcs_mounter").append(trAdd);
-                    jQuery("#all_calcs_mounter").append(trApprove);
+                jQuery("#all_calcs_mounter").append("<h4>Назначить бригаду на ВСЕ комнаты</h4>");
+                if(!isObjMaster) {
+                    if (project.status < stage + 29) {
+                        jQuery("#all_calcs_mounter").append(trAdd);
+                        jQuery("#all_calcs_mounter").append(trApprove);
+                    } else {
+                        if (project.calcs_count != project.mounters_count && project.mounters_count != 0) {
+                            jQuery("#all_calcs_mounter").append("На несколько комнат уже назначены бригады. Назначение бригады на все комнаты невозможно. Пожалуйста, назначьте бригады покомнатно");
+                        } else {
+                            jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
+                        }
+                    }
                 }
                 else{
-                    jQuery("#all_calcs_mounter").append("Этап выполнен, редактирование бригад невозможно!");
+                    jQuery("#all_calcs_mounter").append("У вас нет прав для редактирования бригад");
                 }
                 jQuery("#selected_floor").val(floorId);
                 jQuery("#selected_project").val(projectId);
@@ -1574,15 +1743,17 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
         }
 
         function fillMountersTable(projectStatus,stage,calcs){
-            console.log(projectStatus,stage);
-            console.log("calcs",calcs);
-
+            generateMountersOption(stage);
             var mounters,tr,
+                select = !isObjMaster ? '<select class="input-gm" name ="mounter_select">'+mountersOption+'</select>' : 'назначение недоступно',
+                aButton = !isObjMaster ? ACCEPT_BUTTON : '',
                 trAdd = '<div class="row">' +
-                    '<div class="col-md-8" name = "mounter_div"><select class="input-gm" name ="mounter_select">'+mountersOption+'</select></div>' +
-                    '<div class="col-md-4" name = "btn_div">'+ACCEPT_BUTTON+'</div>'+
-                    '</div>';
+                    '<div class="col-md-8" name = "mounter_div">'+select+'</div>' +
+                    '<div class="col-md-4" name = "btn_div">'+aButton+'</div>'+
+                    '</div>',
+                    editBtn = (projectStatus < stage+29 && !isObjMaster) ? EDIT_BUTTON : '';
             jQuery("#calcsMounters > tbody").empty();
+            
             jQuery.each(calcs,function(index,elem){
                 jQuery("#calcsMounters > tbody").append('<tr/>');
                 jQuery("#calcsMounters > tbody > tr:last").attr('data-calc_id',elem.id);
@@ -1592,7 +1763,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                     mounters.forEach(function (el) {
                         tr += '<div class="row">' +
                             '<div class="col-md-8" name = "mounter_div">' + el.name + '</div>' +
-                            '<div class="col-md-4" name ="btn_div">' + EDIT_BUTTON + '</div>' +
+                            '<div class="col-md-4" name ="btn_div">' + editBtn + '</div>' +
                             '</div>';
                     });
                 }
@@ -1601,7 +1772,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 }
                 tr+='</td>';
                 tr +='<td>'+elem.sum+'</td>';
-                tr += '<td>'+((elem.calc_status == 3) ? APPROVE_TAKING_BUTTON : DEFECT_FIXED_ICON)+'</td>';
+                tr += '<td>'+((elem.calc_status == 3 && !isObjMaster) ? APPROVE_TAKING_BUTTON : DEFECT_FIXED_ICON)+'</td>';
                 jQuery("#calcsMounters > tbody > tr:last").append(tr);
             });
         }
@@ -1702,7 +1873,31 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                 }
             });
         }
-        function generateMountersOption(data){
+        function generateMountersOption(stage){
+            var data = [];
+            switch(stage){
+                case 2:
+                case 3:
+                case 4:
+                    data = allMounters[34].users;
+                    break;
+                case 5:
+                    data = allMounters[39].users;
+                    break;
+                case 6:
+                    data = allMounters[40].users;
+                    break;
+                case 7:
+                    data = allMounters[41].users;
+                    break;
+                case 8:
+                    data = allMounters[42].users;
+                    break;
+                case 9:
+                    data = allMounters[43].users;
+                    break;
+            }
+            mountersOption = '<option>Выберите</option>';
             jQuery.each(data,function(index,element){
                 mountersOption += "<option value='"+element.id+"'>"+element.name+"</option>";
             });
@@ -1710,15 +1905,14 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
         function getMounters(){
             var option;
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=users.getUserByGroup",
+                url: "index.php?option=com_gm_ceiling&task=users.getUserInGroups",
                 data: {
-                    group: 34
+                    groups: '34,39,40,41,42,43,44'
                 },
                 dataType: "json",
                 async: false,
                 success: function(data) {
-                    mountersForDelete = data;
-                    generateMountersOption(data);
+                    allMounters = data;
                 },
                 error: function(data) {
                     var n = noty({
@@ -2445,6 +2639,7 @@ $common_goods = $calcsComponentModel->getAllComponentsOnBuildersObject($dealer->
                                                                     '<div class="row"><b>'+elem.client_name+'</b></div>' +
                                                                     '<div class="row"><b>S=</b>'+elem.square+'</div>' +
                                                                     '<div class="row"><b>P=</b>'+elem.perimeter+'</div>' +
+                                                                    '<div class="row"><b>Высота стен</b>'+elem.perimeter+'</div>' +
                                                                  '</td>');
                 var projects = JSON.parse(elem.projects);
                 jQuery.each(projects,function(ind,project){

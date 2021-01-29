@@ -1347,24 +1347,41 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 throw new Exception('Empty dealer_id!'); 
             }
             $db = $this->getDbo();
-
             $query = $db->getQuery(true);
-            $query->select('`id`, `title`, `order`');
-            $query->from('`#__gm_ceiling_fields_main_groups`');
-            $query->where("`dealer_id` = $dealer_id");
-            $query->order('`order`');
+            $query
+                ->select('`id`,`title`,`order`')
+                ->from('`rgzbn_gm_ceiling_categories_main_groups`')
+                ->where("`dealer_id` = $dealer_id")
+                ->order('`order`');
             $db->setQuery($query);
             $result = $db->loadObjectList();
-
             $ids = '';
             $last_key = count($result) - 1;
-            foreach ($result as $key => $main_group) {
+            foreach ($result as $key => $category) {
                 if ($key !== $last_key) {
-                    $ids .= $main_group->id.',';
+                    $ids .= $category->id.',';
                 } else {
-                    $ids .= $main_group->id;
+                    $ids .= $category->id;
                 }
-                $result[$key]->groups = array();
+                $result[$key]->main_groups = [];
+            }
+
+            $query = $db->getQuery(true);
+            $query->select('`id`, `title`, `order`,`category_id`');
+            $query->from('`#__gm_ceiling_fields_main_groups`');
+            $query->where("`dealer_id` = $dealer_id and category_id IN ($ids)");
+            $query->order('`order`');
+            $db->setQuery($query);
+            $main_groups = $db->loadObjectList('id');
+
+            $ids = implode(',',array_keys($main_groups));
+            foreach ($main_groups as $key => $main_group) {
+                $main_group->groups = [];
+                foreach ($result as $key2 => $category) {
+                    if($category->id == $main_group->category_id){
+                        $result[$key2]->main_groups[] = $main_group;
+                    }
+                }
             }
 
             $query = $db->getQuery(true);
@@ -1383,13 +1400,16 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 } else {
                     $ids .= $group->id;
                 }
-                $group->fields = array();
-                foreach ($result as $key2 => $main_group) {
-                    if ($main_group->id === $group->main_group_id) {
-                        $result[$key2]->groups[] = $group;
-                        break;
+                $group->fields = [];
+                foreach ($result as $key2 => $category) {
+                    foreach ($category->main_groups as $key3 => $main_group) {
+                        if ($main_group->id === $group->main_group_id) {
+                            $result[$key2]->main_groups[$key3]->groups[] = $group;
+                            break;
+                        }
                     }
                 }
+
             }
 
             $query = $db->getQuery(true);
@@ -1414,15 +1434,18 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 }
                 $field->goods = [];
                 $field->jobs = [];
-                foreach ($result as $key2 => $main_group) {
-                    foreach ($result[$key2]->groups as $key3 => $group) {
-                        if ($group->id === $field->group_id) {
-                            $result[$key2]->groups[$key3]->fields[] = $field;
-                            break 2;
+                foreach ($result as $key1 => $category){
+                    foreach ($category->main_groups as $key2 => $main_group) {
+                        foreach ($main_group->groups as $key3 => $group) {
+                            if ($group->id === $field->group_id) {
+                                $result[$key1]->main_groups[$key2]->groups[$key3]->fields[] = $field;
+                                break 2;
+                            }
                         }
                     }
                 }
             }
+
             $categories = substr($categories, 0, -1);
 
             $query = $db->getQuery(true);
@@ -1444,29 +1467,31 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
             foreach ($goods as $key => $item) {
 
-                if(!empty($item->jobs)){
+                if (!empty($item->jobs)) {
                     $goods_jobs_map[$item->id] = json_decode($item->jobs);
                 }
-                if(!empty($item->spec_jobs)){
+                if (!empty($item->spec_jobs)) {
                     $item->spec_jobs = json_decode($item->spec_jobs);
-                }
-                else{
+                } else {
                     unset($item->spec_jobs);
                 }
                 unset($item->jobs);
                 $item->child_goods = [];
-                foreach ($result as $key2 => $main_group) {
-                    foreach ($result[$key2]->groups as $key3 => $group) {
-                        foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
-                            if ($field->goods_category_id === $item->category_id) {
-                                $result[$key2]->groups[$key3]->fields[$key4]->goods[] = clone $item;
+                foreach ($result as $key1 => $category){
+                    foreach ($category->main_groups as $key2 => $main_group) {
+                        foreach ($main_group->groups as $key3 => $group) {
+                            foreach ($group->fields as $key4 => $field) {
+                                if ($field->goods_category_id === $item->category_id) {
+                                    $result[$key1]->main_groups[$key2]->groups[$key3]->fields[$key4]->goods[] = clone $item;
+                                }
                             }
                         }
                     }
                 }
             }
+
             $query = $db->getQuery(true);
-            $query->select('`j`.`id`, `j`.`name`, `m`.`field_id`');
+            $query->select('`j`.`id`, `j`.`name`,`m`.`type`,`m`.`field_id`');
             $query->from('`#__gm_ceiling_fields_jobs_map` as `m`');
             $query->innerJoin('`#__gm_ceiling_jobs` as `j` on `m`.`job_id` = `j`.`id`');
             $query->where("`field_id` in ($ids)");
@@ -1476,11 +1501,17 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $jobs = $db->loadObjectList();
 
             foreach ($jobs as $key => $job) {
-                foreach ($result as $key2 => $main_group) {
-                    foreach ($result[$key2]->groups as $key3 => $group) {
-                        foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
-                            if ($field->id === $job->field_id) {
-                                $result[$key2]->groups[$key3]->fields[$key4]->jobs[] = clone $job;
+                foreach ($result as $key1 => $category) {
+                    foreach ($category->main_groups as $key2 => $main_group) {
+                        foreach ($main_group->groups as $key3 => $group) {
+                            foreach ($group->fields as $key4 => $field) {
+                                if ($field->id === $job->field_id) {
+                                    if ($job->type == 0) {
+                                        $result[$key1]->main_groups[$key2]->groups[$key3]->fields[$key4]->jobs[] = clone $job;
+                                    } else {
+                                        $result[$key1]->main_groups[$key2]->groups[$key3]->fields[$key4]->manual_jobs[] = clone $job;
+                                    }
+                                }
                             }
                         }
                     }
@@ -1495,11 +1526,13 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $goods = $db->loadObjectList();
             if(!empty($goods)) {
                 foreach ($goods as $key => $goods_item) {
-                    foreach ($result as $key2 => $main_group) {
-                        foreach ($result[$key2]->groups as $key3 => $group) {
-                            foreach ($result[$key2]->groups[$key3]->fields as $key4 => $field) {
-                                if ($field->id === $goods_item->field_id) {
-                                    $result[$key2]->groups[$key3]->fields[$key4]->default_goods[] = clone $goods_item;
+                    foreach ($result as $key1 => $category) {
+                        foreach ($category->main_groups as $key2 => $main_group) {
+                            foreach ($main_group->groups as $key3 => $group) {
+                                foreach ($group->fields as $key4 => $field) {
+                                    if ($field->id === $goods_item->field_id) {
+                                        $result[$key1]->main_groups[$key2]->groups[$key3]->fields[$key4]->default_goods[] = clone $goods_item;
+                                    }
                                 }
                             }
                         }
@@ -1530,23 +1563,24 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db->setQuery($query);
 
             $child_goods = $db->loadObjectList();
-
-            foreach ($result as $key => $main_group) {
-                foreach ($result[$key]->groups as $key2 => $group) {
-                    foreach ($result[$key]->groups[$key2]->fields as $key3 => $field) {
-                        if (empty($field->goods)) {
-                            continue;
-                        }
-                        foreach ($result[$key]->groups[$key2]->fields[$key3]->jobs as $key5 => $job) {
-                            foreach ($child_goods as $key4 => $map_item) {
-                                if ($job->id == $map_item->job_id) {
-                                    foreach ($result[$key]->groups[$key2]->fields[$key3]->goods as $key6 => $item) {
-                                        if ($item->id == $map_item->parent_goods_id) {
-                                            $result[$key]->groups[$key2]->fields[$key3]->goods[$key6]->child_goods[] = $map_item;
-                                            break;
+            foreach($result as $key1 => $category) {
+                foreach ($category as $key => $main_group) {
+                    foreach ($main_group->groups as $key2 => $group) {
+                        foreach ($group->fields as $key3 => $field) {
+                            if (empty($field->goods)) {
+                                continue;
+                            }
+                            foreach ($field->jobs as $key5 => $job) {
+                                foreach ($child_goods as $key4 => $map_item) {
+                                    if ($job->id == $map_item->job_id) {
+                                        foreach ($field->goods as $key6 => $item) {
+                                            if ($item->id == $map_item->parent_goods_id) {
+                                                $result[$key1]->main_groups[$key]->groups[$key2]->fields[$key3]->goods[$key6]->child_goods[] = $map_item;
+                                                break;
+                                            }
                                         }
                                     }
-                                }  
+                                }
                             }
                         }
                     }
@@ -1814,7 +1848,7 @@ ORDER BY `goods_id`
         }
     }
 
-    public function getMountingServicePricesInCalculation($calc_id, $dealer_id) {
+    public function getMountingServicePricesInCalculation($calc_id, $dealer_id = 1) {
         try {
             $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $margin = $calculationModel->getProjectMargin($calc_id);
@@ -1833,10 +1867,10 @@ ORDER BY `goods_id`
                 `j`.`name`,
                 `j`.`mount_type_id`,
                 SUM(`jf`.`job_count_all`) AS `final_count`,
-                `j`.`price`,
-                ROUND(`j`.`price` * 100 / (100-$mounting_margin),2) as `price_with_margin`,
-                ROUND(SUM(`jf`.`job_count_all`) * `j`.`price`, 2) AS `price_sum`,
-                ROUND(SUM(`jf`.`job_count_all`) * `j`.`price` * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
+                `sp`.`price`,
+                ROUND(`sp`.`price` * 100 / (100-$mounting_margin),2) as `price_with_margin`,
+                ROUND(SUM(`jf`.`job_count_all`) * `sp`.`price`, 2) AS `price_sum`,
+                ROUND(SUM(`jf`.`job_count_all`) * `sp`.`price` * 100 / (100 - $mounting_margin), 2) AS `price_sum_with_margin`
     FROM    (
                     SELECT  `cjm`.`job_id`,
                              `cjm`.`count` as `job_count_all`
@@ -1846,6 +1880,8 @@ ORDER BY `goods_id`
                 ) AS `jf`
                 INNER JOIN  `rgzbn_gm_ceiling_jobs` AS `j`
                                 ON  `jf`.`job_id` = `j`.`id`
+                LEFT JOIN `rgzbn_gm_ceiling_jobs_service_price` as `sp`
+                                ON `sp`.`job_id` =  `jf`.`job_id` and `sp`.`dealer_id` = $dealer_id
     WHERE   `j`.`guild_only` = 0 AND
             `j`.`is_factory_work` = 0
     GROUP BY    `job_id`

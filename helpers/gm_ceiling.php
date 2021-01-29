@@ -6004,14 +6004,35 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->addRecipient($dealer->email);
             } elseif ($type == 14) {
                 $user_model = self::getModel('users');
-                $users = $user_model->getUserByGroup(17);
+                $nmsGroups = [];
+                if (is_array($data)) {
+                    $mount = $data['mount'];
+                }
+                if (is_object($data)) {
+                    $mount = $data->mount;
+                }
+                foreach ($mount as $stage){
+                    $mounter = JFactory::getUser($stage->mounter);
+                    if(in_array('26',$mounter->groups)){
+                        if($mounter->dealer_id == 1 && !in_array(17,$nmsGroups)){
+                            $nmsGroups [] = 17;
+                        }
+                        elseif(!in_array(12,$nmsGroups)){
+                            $nmsGroups [] = 12;
+                        }
+                    }
+                }
+                $users = [];
+                foreach ($nmsGroups as $group){
+                    $users = array_merge($users,$user_model->getUserByGroup($group));
+                }
                 $client_model = self::getModel('client');
                 $client = $client_model->getClientById($data->client_id);
                 $dealer = JFactory::getUser($client->dealer_id);
                 foreach ($users as $user) {
                     $mailer->addRecipient($user->email);
                 }
-                $body = "Здравствуйте. Дилер выбрал монтажную службу ГМ в проекте №" . $data->project_id . "\n\n";
+                $body = "Здравствуйте. Дилер выбрал монтажную службу в проекте №" . $data->project_id . "\n\n";
                 $body .= "Имя дилера: " . $dealer->name . "\n";
                 $body .= "Телефон дилера: " . $dealer->username . "\n";
                 $body .= "Желаемые дата и время монтажа: \n";

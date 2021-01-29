@@ -102,13 +102,15 @@ class Gm_ceilingModelUsers extends JModelList
             $query = $db->getQuery(true);
             $query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(distinct `b`.`phone` SEPARATOR \', \') AS `client_contacts`,`u`.`refused_to_cooperate`');
             $query->select('GROUP_CONCAT(um.group_id SEPARATOR \';\') as groups');
+            $query->select('m.name as manager,m.id as manager_id');
             $query->from('`#__users` AS `u`');
             $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
             $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
             $query->INNERJOIN('`#__user_usergroup_map` AS `um` ON `um`.`user_id` = `u`.`id`');
-            $query->where('`dealer_type` = 7');
-            $query->group('`id`');
-            $query->order('`id` DESC');
+            $query->leftJoin('`rgzbn_users` as m on m.id = c.manager_id');
+            $query->where('`u`.`dealer_type` = 7');
+            $query->group('`u`.`id`');
+            $query->order('`u`.`id` DESC');
             $db->setQuery($query);
             $item = $db->loadObjectList();
             return $item;
@@ -661,7 +663,7 @@ class Gm_ceilingModelUsers extends JModelList
                 ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
 				->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
 				->where("`g`.`group_id` = $group_id")
-                ->order("`u`.`name`");
+                ->order("`u`.`id`,`u`.`name`");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -700,7 +702,7 @@ class Gm_ceilingModelUsers extends JModelList
                 ->from('`#__users` AS `u`')
                 ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
                 ->innerJoin('`#__user_usergroup_map` AS `g` ON `g`.`user_id` = `u`.`id`')
-                ->where("(`g`.`group_id` = $group_id and u.dealer_id = $dealer_id) OR (dm.dealer_id = $dealer_id AND dm.group_id = $group_id)");
+                ->where("(`g`.`group_id` in ($group_id) and u.dealer_id = $dealer_id) OR (dm.dealer_id = $dealer_id AND dm.group_id IN ($group_id))");
             $db->setQuery($query);
             //throw new Exception($query);
 
@@ -1050,4 +1052,52 @@ class Gm_ceilingModelUsers extends JModelList
         }
     }
 
+    function createMountServiceUser($dealer){
+	    try{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+                ->select('id,name')
+                ->from('`rgzbn_users`')
+                ->where("dealer_id = $dealer->id and name = 'МС $dealer->name'");
+	        $db->setQuery($query);
+	        $msUser = $db->loadObject();
+	        if(empty($msUser)){
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`rgzbn_users`')
+                    ->columns('name,dealer_id')
+                    ->values("'МС $dealer->name',$dealer->id");
+                $db->setQuery($query);
+                $db->execute();
+                $userId = $db->insertId();
+            }
+	        else{
+	            $userId = $msUser->id;
+            }
+
+            $this->addGroup($userId,26);
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateNameById($id,$name){
+    	try{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+                ->update('`rgzbn_users`')
+                ->set("`name` = '$name'")
+                ->where("`id`=$id");
+	        $db->setQuery($query);
+	        $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }	
+    }
 }

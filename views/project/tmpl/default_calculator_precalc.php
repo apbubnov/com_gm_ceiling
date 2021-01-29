@@ -12,6 +12,7 @@ $user = JFactory::getUser();
 $user_group = $user->groups;
 $userId = $user->get('id');
 $userName = $user->get('username');
+$objMaster = in_array('46',$user->groups);
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
@@ -151,7 +152,7 @@ $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client)
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
     <!--Действия с проектом-->
     <?php
-    if (!in_array($this->item->project_status, VERDICT_STATUSES)) {
+    if (!in_array($this->item->project_status, VERDICT_STATUSES) && !$objMaster) {
         include_once('components/com_gm_ceiling/views/project/project_actions.php');
     }
     ?>

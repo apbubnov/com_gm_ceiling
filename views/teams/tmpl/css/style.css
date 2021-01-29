@@ -25,13 +25,22 @@
     position: relative;
     right: 0px !important;
 }
-
-#prev-button-container, #next-button-container {
-    display: inline-block;
-    float: left;
+#button-prev{
     position: fixed;
     top: 50%;
-    width: 50px;
+    left: 25px;
+}
+#button-next{
+    position: fixed;
+    top: 50%;
+    right: 25px;
+}
+/*#prev-button-container, #next-button-container {
+   !* display: inline-block;
+    float: left;*!
+    position: fixed;
+    top: 50%;
+   !* width: 50px;*!
 }
 
 #prev-button-container {
@@ -44,9 +53,9 @@
 
 #calendars-container {
     display: inline-block;
-    float: left;
+    text-align: center;
     width: 100%;
-}
+}*/
 
 .brigade-name {
     display: inline-block;

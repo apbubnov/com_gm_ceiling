@@ -665,6 +665,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $details = $jinput->get('details', '', 'STRING');
             $comment = $jinput->get('comment', '', 'STRING');
             $manager_note = $jinput->get('manager_note', '', 'STRING');
+            $walls_height = $jinput->get('walls_height','','STRING');
+            $openings = $jinput->get('openings','','STRING');
 
 			$user = JFactory::getUser($dealer_id);
 			$userType = $user->dealer_type;
@@ -681,6 +683,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			$data['details'] = $details;
 			$data['comment'] = $comment;
 			$data['manager_note'] = $manager_note;
+			$data['walls_height'] = $walls_height;
+			$data['openings'] = base64_encode($openings);
 
 			$model_calculation = $this->getModel('Calculation', 'Gm_ceilingModel');
 			$model_calcform = $this->getModel('CalculationForm', 'Gm_ceilingModel');
@@ -719,8 +723,9 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                         $all_jobs = $model_calcform->getJobsPricesInCalculation($calc_id, 1); // Получение работ по прайсу ГМ
                     }
 
-				} elseif ($need_mount == 2) {
-					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $dealer_id); // Получение работ по прайсу монажной службы
+				} else{
+				    $msUser = JFactory::getUser($need_mount);
+					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $msUser->dealer_id); // Получение работ по прайсу монажной службы
 				}
 			}
             //$model_calcform->addDopGoodsInCalculation($calc_id, $goods, false); // Добавление доп компонентов, со склада, чтобы не учитывать работу

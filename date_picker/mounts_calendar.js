@@ -2,38 +2,122 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 {
 	var cont = document.getElementById(elem_id), calendar, data_array, mounters, selectTime, selectMounter,service_data,
 	brigades_count,mw_elem = document.getElementById(modal_window), stages = [],
-	mw_stages = `<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:0px auto; top:10px;background:rgba(255,255,255,0.9);border: 1px solid #414099;border-radius:2px;width:300px;height:200px;display:none;">
-					<p><br>
-						<input type="radio" id="radio_full_mount" name="radio_stages">Полный монтаж<br>
-						<input type="radio" id="radio_stages_mount" name="radio_stages">Поэтапный монтаж<br>
-	                    <input type="checkbox" id="chkbox_obag" class="inp-cbx" style="display: none">
-	                    <label for="chkbox_obag" class="cbx">
-	                      <span>
-	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-	                        </svg>
-	                      </span>
-	                      <span>Обагечивание</span>
-	                    </label><br>
-	                    <input type="checkbox" id="chkbox_nat" class="inp-cbx" style="display: none">
-	                    <label for="chkbox_nat" class="cbx">
-	                      <span>
-	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-	                        </svg>
-	                      </span>
-	                      <span>Натяжка</span>
-	                    </label><br>
-	                    <input type="checkbox" id="chkbox_vst" class="inp-cbx" style="display: none">
-	                    <label for="chkbox_vst" class="cbx">
-	                      <span>
-	                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-	                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-	                        </svg>
-	                      </span>
-	                      <span>Вставка</span>
-	                    </label><br>
-                    </p>
+	mw_stages = `<div class="mw_stages" style="position:fixed;left:0px;right:0px;margin:0px auto; top:10px;background:rgba(255,255,255,0.9);border: 1px solid #414099;border-radius:2px;width:300px;height:auto;display:none;padding-bottom: 15px;">
+					<div class="row center">
+						<div class="col-md-12">
+							<input type="radio" id="radio_full_mount" name="radio_stages">Полный монтаж<br>
+						</div>
+					</div>
+					<div class="row center">
+						<div class="col-md-12">
+							<input type="radio" id="radio_stages_mount" name="radio_stages">Поэтапный монтаж<br>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_obag" class="inp-cbx" style="display: none">
+							<label for="chkbox_obag" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Обагечивание</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_nat" class="inp-cbx" style="display: none">
+							<label for="chkbox_nat" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Натяжка</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_vst" class="inp-cbx" style="display: none">
+							<label for="chkbox_vst" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Вставка</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_sht" class="inp-cbx" style="display: none">
+							<label for="chkbox_sht" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Штукатурка</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_mal" class="inp-cbx" style="display: none">
+							<label for="chkbox_mal" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Малярные работы</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_plot" class="inp-cbx" style="display: none">
+							<label for="chkbox_plot" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Плотничные работы</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_gkl" class="inp-cbx" style="display: none">
+							<label for="chkbox_gkl" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>ГКЛ</span>
+							</label>
+						</div>
+					</div>
+					<div class="row" style="text-align: left">
+						<div class="col-md-12">
+							<input type="checkbox" id="chkbox_plit" class="inp-cbx" style="display: none">
+							<label for="chkbox_plit" class="cbx">
+							  <span>
+								<svg width="12px" height="10px" viewBox="0 0 12 10">
+								  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+								</svg>
+							  </span>
+							  <span>Плиточные работы</span>
+							</label>
+						</div>
+					</div>
+					
                     <input class="btn btn-primary btn-sm btn_ok" type="button" value="Ок">
                     <input class="btn btn-primary btn-sm btn_cancel" type="button" value="Отмена">
                 </div>`;
@@ -173,6 +257,19 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            		selectMounter = this.getAttribute('data-mounter');
 
 		            		for (var i = stages.length; i--;) {
+								if(checkIsService(stages[i].mounter) && checkIsService(selectMounter) && stages[i].mounter != selectMounter){
+									noty({
+										timeout: 2000,
+										theme: 'relax',
+										layout: 'topCenter',
+										maxVisible: 5,
+										type: "error",
+										text: "Этапы монтажа назначаются только одной и той же монтажной службе!"
+									});
+									this.classList.remove('select-day');
+									mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
+									break;
+								}
 		            			if (stages[i].time != selectTime || stages[i].mounter != selectMounter) {
 		            				jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = true;
 					            	jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = true;
@@ -195,6 +292,26 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = true;
 			            			}
+									if (stages[i].stage == 5) {
+										jQuery('#'+modal_window+' #chkbox_sht')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_sht')[0].disabled = true;
+									}
+									if (stages[i].stage == 6) {
+										jQuery('#'+modal_window+' #chkbox_mal')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_mal')[0].disabled = true;
+									}
+									if (stages[i].stage == 7) {
+										jQuery('#'+modal_window+' #chkbox_plot')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_plot')[0].disabled = true;
+									}
+									if (stages[i].stage == 8) {
+										jQuery('#'+modal_window+' #chkbox_gkl')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled = true;
+									}
+									if (stages[i].stage == 9) {
+										jQuery('#'+modal_window+' #chkbox_plit')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_plit')[0].disabled = true;
+									}
 			            		}
 			            		else {
 			            			if (stages[i].stage == 1) {
@@ -218,14 +335,39 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 			            			if (stages[i].stage == 4) {
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].checked = true;
 			            				jQuery('#'+modal_window+' #chkbox_vst')[0].disabled = false;
-			            				
+
 			            			}
+									if (stages[i].stage == 5) {
+										jQuery('#'+modal_window+' #chkbox_sht')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_sht')[0].disabled = false;
+									}
+									if (stages[i].stage == 6) {
+										jQuery('#'+modal_window+' #chkbox_mal')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_mal')[0].disabled = false;
+									}
+									if (stages[i].stage == 7) {
+										jQuery('#'+modal_window+' #chkbox_plot')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_plot')[0].disabled = false;
+									}
+									if (stages[i].stage == 8) {
+										jQuery('#'+modal_window+' #chkbox_gkl')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled = false;
+									}
+									if (stages[i].stage == 9) {
+										jQuery('#'+modal_window+' #chkbox_plit')[0].checked = true;
+										jQuery('#'+modal_window+' #chkbox_plit')[0].disabled = false;
+									}
 			            		}
 		            		}
 
 		            		if (!jQuery('#'+modal_window+' #chkbox_obag')[0].disabled
 	            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
-	            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+	            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled
+								&& !jQuery('#'+modal_window+' #chkbox_sht')[0].disabled
+								&& !jQuery('#'+modal_window+' #chkbox_mal')[0].disabled
+								&& !jQuery('#'+modal_window+' #chkbox_plot')[0].disabled
+								&& !jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled
+								&& !jQuery('#'+modal_window+' #chkbox_plit')[0].disabled) {
 		            			jQuery('#'+modal_window+' #radio_full_mount')[0].disabled = false;
 		            			jQuery('#'+modal_window+' #radio_stages_mount')[0].disabled = false;
 		            		}
@@ -242,9 +384,18 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            			|| (jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& jQuery('#'+modal_window+' #chkbox_nat')[0].checked
 		            				&& jQuery('#'+modal_window+' #chkbox_vst')[0].checked
+									&& jQuery('#'+modal_window+' #chkbox_sht')[0].checked
+									&& jQuery('#'+modal_window+' #chkbox_mal')[0].checked
+									&& jQuery('#'+modal_window+' #chkbox_plot')[0].checked
+									&& jQuery('#'+modal_window+' #chkbox_gkl')[0].checked
+									&& jQuery('#'+modal_window+' #chkbox_plit')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled
 		            				&& !jQuery('#'+modal_window+' #chkbox_nat')[0].disabled
-		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled)) {
+		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled
+									&& !jQuery('#'+modal_window+' #chkbox_sht')[0].disabled
+									&& !jQuery('#'+modal_window+' #chkbox_mal')[0].disabled
+									&& !jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled
+									&& !jQuery('#'+modal_window+' #chkbox_plit')[0].disabled)) {
 		            			stages = [{stage: 1, time: selectTime, mounter: selectMounter}];
 		            		}
 		            		else {
@@ -268,7 +419,31 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            				del_by_stage(4);
 		            				stages.push({stage: 4, time: selectTime, mounter: selectMounter});
 		            			}
-
+								if (jQuery('#'+modal_window+' #chkbox_sht')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_sht')[0].disabled) {
+									del_by_stage(5);
+									stages.push({stage: 5, time: selectTime, mounter: selectMounter});
+								}
+								if (jQuery('#'+modal_window+' #chkbox_mal')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_mal')[0].disabled) {
+									del_by_stage(6);
+									stages.push({stage: 6, time: selectTime, mounter: selectMounter});
+								}
+								if (jQuery('#'+modal_window+' #chkbox_plot')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_plot')[0].disabled) {
+									del_by_stage(7);
+									stages.push({stage: 7, time: selectTime, mounter: selectMounter});
+								}
+								if (jQuery('#'+modal_window+' #chkbox_gkl')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled) {
+									del_by_stage(8);
+									stages.push({stage: 8, time: selectTime, mounter: selectMounter});
+								}
+								if (jQuery('#'+modal_window+' #chkbox_plit')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_plit')[0].disabled) {
+									del_by_stage(9);
+									stages.push({stage: 9, time: selectTime, mounter: selectMounter});
+								}
 		            			if (!jQuery('#'+modal_window+' #chkbox_obag')[0].checked
 		            				&& !jQuery('#'+modal_window+' #chkbox_obag')[0].disabled) {
 		            				del_by_stage(2);
@@ -278,12 +453,31 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		            				del_by_stage(3);
 		            			}
 		            			if (!jQuery('#'+modal_window+' #chkbox_vst')[0].checked
-		            				&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
-		            				del_by_stage(4);
-		            			}
+									&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+									del_by_stage(4);
+								}
+								if (!jQuery('#'+modal_window+' #chkbox_sht')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_vst')[0].disabled) {
+									del_by_stage(5);
+								}
+								if (!jQuery('#'+modal_window+' #chkbox_mal')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_mal')[0].disabled) {
+									del_by_stage(6);
+								}
+								if (!jQuery('#'+modal_window+' #chkbox_plot')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_plot')[0].disabled) {
+									del_by_stage(7);
+								}
+								if (!jQuery('#'+modal_window+' #chkbox_gkl')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_gkl')[0].disabled) {
+									del_by_stage(8);
+								}
+								if (!jQuery('#'+modal_window+' #chkbox_plit')[0].checked
+									&& !jQuery('#'+modal_window+' #chkbox_plit')[0].disabled) {
+									del_by_stage(9);
+								}
 		            		}
 		            		del_and_add_selectdays();
-		            		//console.log(JSON.stringify(stages));
 		            		mw_elem.getElementsByClassName('mw_stages')[0].style.display = 'none';
 		            		document.getElementById(input_mount).value = JSON.stringify(stages);
 		            		var tds_appointed = cont.getElementsByClassName('nice-appointed');
@@ -430,53 +624,149 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    }
 
 		    function check_mount_service(){
-		    	var project_id = jQuery("#project_id").val();
-		    	var incl_calcs = [];
+		    	var project_id = jQuery("#project_id").val(),
+					textMount = jQuery("#mount").val(),
+                    mount = !empty(textMount) ? JSON.parse(textMount) : [],
+					incl_calcs = [],
+					selectedMount = [],
+					mountType = '',
+                    isService,text = '',
+                    flag = false;
 		    	jQuery.each(jQuery("[name = 'include_calculation[]']:checked"),function(index,elem){
 		    		incl_calcs.push(elem.value);
+					mountType = jQuery(elem).data('mount');
+		    		if(!selectedMount.includes(mountType)){
+                        selectedMount.push(mountType);
+					}
 		    	});
 
-		    	console.log(incl_calcs);
-		    	jQuery.ajax({
-	                type: 'POST',
-	                url: "index.php?option=com_gm_ceiling&task=project.calcServiceMount",
-	                data:{
-	                	project_id:project_id,
-	                	mount:jQuery("#mount").val(),
-	                	calcs:incl_calcs
-	                },
-	                success: function(data) {
-	                	if(!empty(data)) {
-                            var transport = data['transport'];
-                            delete data['transport'];
-                            var old_mount_sum = 0, new_mount_sum = 0;
-                            jQuery.each(data, function (index, elem) {
-                                if (typeof self_data !== 'undefined' || self_data !== null) {
-                                    old_mount_sum += self_data[index].mount_data;
-                                    new_mount_sum += elem;
-                                    self_data[index].mount_data = elem;
-                                }
-                            });
-                            console.log(jQuery("#transport_sum span.sum").data('selfval'));
-                            old_mount_sum += jQuery("#transport_sum span.sum").data('selfval');
-                            new_mount_sum += transport;
-                            change_self_sum(old_mount_sum, new_mount_sum);
+		    	if(selectedMount.length == 1){
+
+		    	    isService = checkIsService(selectedMount[0]);
+		    	    if(isService){
+		    	        //в потолках выбрана МС
+		    	        for(var i=0;i<mount.length;i++){
+		    	            if(selectedMount != mount[i].mounter && checkIsService(mount[i].mounter)){
+		    	                text = "Просчет происходил по прайсу другой МС. При запуске с выбранной МС себестоимость изменится. Продолжить?";
+                                otherMS(text,project_id,textMount,incl_calcs);
+		    	                break;
+                            }
                         }
-	                },
-	                dataType: "json",
-	                timeout: 10000,
-	                error: function() {
-	                    noty({
-	                        timeout: 2000,
-	                        theme: 'relax',
-	                        layout: 'topCenter',
-	                        maxVisible: 5,
-	                        type: "error",
-	                        text: "error"
-	                    });
-	                }
-	            });
+                    }
+		    	    else{
+		    	        //в потолках не выбрана МС
+                        for(var i=0;i<mount.length;i++){//проверяем выбрана ли на каком-то этапе МС
+                            if(checkIsService(mount[i].mounter)){
+                                isService = true;
+                                break;
+                            }
+                        }
+                        if(isService){
+                            //на этапе выбрана МС
+                            text = 'При просчете использовался свой прайс монтажа, при выборе МС себестоимось изменится. Продолжить?'
+                            otherMS(text,project_id,textMount,incl_calcs);
+                        }
+                    }
+                }
+		    	if(selectedMount.length > 1){
+		    	    isService = false;flag=false;
+		    	    for(var i=0;i<mount.length;i++){//проверяем выбрана ли на каком-то этапе МС
+		    	        if(checkIsService(mount[i].mounter)){
+		    	            isService = true;
+		    	            break;
+                        }
+                    }
+
+		    	    for(var i=0;i<selectedMount.length;i++){
+		    	        if(checkIsService(selectedMount[i]) && isService){
+		    	            //в калькуляции МС и монтаж на МС, проверяем совпадают ли
+                            loop:
+                            for(var j=0;j<mount.length;j++){
+                                if(selectedMount[i] != mount[j].mounter && checkIsService(mount[j].mounter)){
+                                    text = "Просчет происходил по прайсу другой МС. При запуске с выбранной МС себестоимость изменится. Продолжить?";
+                                    otherMS(text,project_id,textMount,incl_calcs);
+                                    flag = true;
+                                    break loop;
+                                }/*
+                                if(flag){
+                                    break;
+                                }*/
+                            }
+
+
+                        }
+		    	        if(!checkIsService(selectedMount[i]) && isService){
+		    	            //в калькуляции не МС, а запускается с МС
+                            text = 'При просчете использовался свой прайс монтажа, при выборе МС себестоимось изменится. Продолжить?'
+                            otherMS(text,project_id,textMount,incl_calcs);
+                            break;
+                        }
+                    }
+                }
+
+		    	/**/
 		    }
+
+		    function otherMS(text,project_id,mount,incl_calcs){
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: false,
+                    type: "info",
+                    text: text,
+                    buttons: [
+                        {
+                            addClass: 'btn btn-primary', text: 'Да', onClick: function ($noty) {
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: "index.php?option=com_gm_ceiling&task=project.calcServiceMount",
+                                    data:{
+                                        project_id: project_id,
+                                        mount: mount,
+                                        calcs: incl_calcs
+                                    },
+                                    success: function(data) {
+                                        if(!empty(data)) {
+                                            var transport = data['transport'];
+                                            delete data['transport'];
+                                            var old_mount_sum = 0, new_mount_sum = 0;
+                                            jQuery.each(data, function (index, elem) {
+                                                if (typeof self_data !== 'undefined' || self_data !== null) {
+                                                    old_mount_sum += self_data[index].mount_data;
+                                                    new_mount_sum += elem;
+                                                    self_data[index].mount_data = elem;
+                                                }
+                                            });
+                                            console.log(jQuery("#transport_sum span.sum").data('selfval'));
+                                            old_mount_sum += jQuery("#transport_sum span.sum").data('selfval');
+                                            new_mount_sum += transport;
+                                            change_self_sum(old_mount_sum, new_mount_sum);
+                                        }
+                                    },
+                                    dataType: "json",
+                                    timeout: 10000,
+                                    error: function() {
+                                        noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'topCenter',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "error"
+                                        });
+                                    }
+                                });
+								$noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                                $noty.close();
+                            }
+                        }
+                    ]
+                })
+            }
 
 		    function change_self_sum(old_sum,new_sum){
 		    	var old_mount = jQuery("#calcs_self_mount_total span.sum").text();
@@ -511,7 +801,6 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
 		    	if (data_array[y] == undefined) {
 		    		data_array[y] = [];
 		    	}
-		    	//console.log(stages);
 		    	for (var i = stages.length, elems; i--;) {
 		    		date = stages[i].time.replace(/\s[\d]{1,2}\:[\d]{2}\:[\d]{2}/gi, '');
 		    		elems = jQuery('#'+elem_id+' .nice-normal[data-date="'+date+'"]');
@@ -578,5 +867,16 @@ function init_mount_calendar(elem_id, input_mount, modal_window, dop_mw)
             }
         });
         return date;
+	}
+
+	function checkIsService(mounterId) {
+	    var result = false;
+		for(var i=0; i < mounters.length; i++){
+			if(mounters[i].id == mounterId){
+				result =  mounters[i].service;
+				break;
+			}
+		}
+		return result;
 	}
 }

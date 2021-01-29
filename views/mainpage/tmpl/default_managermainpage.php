@@ -58,6 +58,7 @@ $userId     = $user->get('id');
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        localStorage.clear();
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",

@@ -340,10 +340,13 @@ class Gm_ceilingControllerClient extends JControllerLegacy
            	$client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
            	$client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
            	$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client');
+           	$historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
            	$new_phones =[];
            	$need_update_phones = [];
+           	$old_name = $client_model->getClientById($client_id)->client_name;
            	if(!empty($new_name)){
            		$client_model->updateClient($client_id,$new_name);
+           		$historyModel->save($client_id,"Изменено ФИО с $old_name на $new_name");
            	}
            	if(!empty($phones)){
            		foreach ($phones as $value) {

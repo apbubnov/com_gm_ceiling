@@ -158,7 +158,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			$query
                 ->select('DISTINCT users.email')
                 ->from('#__users as users')
-                ->leftJoin('`rgzbn_users_dealer_id` as dm ON dm.user_id = users.id')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as dm ON dm.user_id = users.id')
                 ->innerJoin('#__user_usergroup_map as map ON users.id = map.user_id')
 			    ->where("(users.dealer_id = $user->dealer_id and map.group_id = $groupe) OR (dm.dealer_id = $user->dealer_id AND dm.group_id = $groupe)");
 			$db->setQuery($query);

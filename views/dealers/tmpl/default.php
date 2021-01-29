@@ -27,7 +27,12 @@ unset($_SESSION["dealers_$userId"]);
         border-collapse: separate;
         border-spacing: 0 0.5em;
     }
-
+    .b_margin{
+        margin-bottom: 1em;
+    }
+    .left{
+        text-align: left;
+    }
 </style>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -35,13 +40,15 @@ unset($_SESSION["dealers_$userId"]);
     <div class="col-md-4">
         <a class="btn btn-large btn-primary"
            href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-           id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+           id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> На главную</a>
     </div>
     <div class="col-md-5">
         <h2>Дилеры</h2>
     </div>
-    <div class="col-md-3">
-        <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    <div class="col-md-3" style="text-align: right">
+        <button type="button" id="new_dealer" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Создать дилера
+        </button>
     </div>
 </div>
 <div class="row">
@@ -191,16 +198,45 @@ unset($_SESSION["dealers_$userId"]);
         <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
         </button>
         <div class="modal_window" id="modal_window_create">
-            <p><strong>Создание нового дилера</strong></p>
-            <p>ФИО:</p>
-            <p><input type="text" id="fio_dealer" placeholder="ФИО"></p>
-            <p>Номер телефона:</p>
-            <p><input type="text" id="dealer_contacts"></p>
-            <p>Город</p>
-            <p><input type="text" id="dealer_city" placeholder="Город"></p>
-            <p>
-                <button type="button" id="save_dealer" class="btn btn-primary">ОК</button>
-            </p>
+            <div class="row">
+                <h4>Создание нового дилера</h4>
+            </div>
+            <div class="row b_margin">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="row b_margin">
+                        <div class="col-md-6 col-xs-12 left">
+                            <label for="fio_dealer">ФИО</label>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <input type="text" class="form-control" id="fio_dealer" placeholder="ФИО">
+                        </div>
+                    </div>
+                    <div class="row b_margin">
+                        <div class="col-md-6 col-xs-12 left">
+                            <label for="dealer_contacts">Номер телефона</label>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <input type="text" class="form-control" id="dealer_contacts" placeholder="Номер телефона">
+                        </div>
+                    </div>
+                    <div class="row b_margin">
+                        <div class="col-md-6 col-xs-12 left">
+                            <label for="dealer_city">Город</label>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <input type="text" class="form-control" id="dealer_city" placeholder="Город">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" id="save_dealer" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+
         </div>
         <div class="modal_window" id="modal_window_kp_editor">
             <p>Название КП</p>

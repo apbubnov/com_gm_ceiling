@@ -138,6 +138,81 @@ class Gm_ceilingControllerUsers extends JControllerForm
         }
     }
 
+    function createUser(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $name = $jinput->getString('name');
+	        $phone = $jinput->getString('phone');
+	        $email = $jinput->getString('email');
+            $groups = $jinput->get('groups',[],'ARRAY');
+            $currentUser = JFactory::getUser();
+
+            if(!empty($phone)){
+                $phone = mb_ereg_replace('[^\d]', '', $phone);
+                if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10) {
+                    $phone = '7' . $phone;
+                }
+                if (strlen($phone) != 11) {
+
+                    die(json_encode((object)["type"=>"error","message"=>"Неверный формат номера телефона!"]));
+                }
+                if (mb_substr($phone, 0, 1) != '7') {
+                    $phone = substr_replace($phone, '7', 0, 1);
+                }
+            }
+            $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $usersModel->getUserByUsername($phone);
+
+            if(empty($user)){
+                if(empty($email)){
+                    $email = $phone."@none";
+                }
+                $data = [
+                    "name" => $name,
+                    "username" => $phone,
+                    "password" => $phone,
+                    "password2" => $phone,
+                    "email" => $email,
+                    "groups" => [2],
+                    "dealer_type" => 0,
+                    "require_reset" => 0,
+                    "dealer_id" => $currentUser->dealer_id
+                ];
+                $user = new JUser;
+                if (!$user->bind($data)) {
+                    throw new Exception($user->getError());
+                }
+                if (!$user->save()) {
+                    throw new Exception($user->getError());
+                }
+            }
+            if(!empty($user)){
+                if(!empty($groups)){
+                    foreach ($groups as $id){
+                        $usersModel->addGroupToExistUser($phone, $currentUser->dealer_id, $id);
+                    }
+                }
+            }
+            die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function createMountServiceUser(){
+	    try{
+	        $user = JFactory::getUser();
+	        $dealer = JFactory::getUser($user->dealer_id);
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $result = $usersModel->createMountServiceUser($dealer);
+	        die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
     function deleteUserFromGroup(){
 	    try{
 	        $jinput = JFactory::getApplication()->input;
@@ -495,6 +570,63 @@ class Gm_ceilingControllerUsers extends JControllerForm
 	        $mapModel->setGroupActive($dataId,$data->user_id);
             $usersModel->updateUsersData($data);
             die(true);
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUserInGroups(){
+	    try{
+	        $jinput = JFactory::getApplication()->input;
+	        $groups = $jinput->getString('groups');
+	        $user = JFactory::getUser();
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $grouppedUsers = $usersModel->getUserInGroups($user->dealer_id,$groups);
+	        die(json_encode($grouppedUsers));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUsersByGroupAndDealer(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $groups = $jinput->getString('groups');
+            $dealerId = $jinput->getInt('dealer_id');
+            $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $usersModel->getUsersByGroupAndDealer($groups,$dealerId);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addGroupToExistUser(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $userId = $jinput->getInt('user_id');
+            $group = $jinput->getInt('group_id');
+            $user = JFactory::getUser($userId);
+            $usersModel =  Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $usersModel->addGroupToExistUser($user->username,$user->dealer_id,$group);
+            die(json_encode(true));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function removeUserGroup(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $userId = $jinput->getInt('id');
+            $groupId = $jinput->getInt('group');
+            $usersModel =  Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $usersModel->deleteGroup($groupId,$userId);
+            die(json_encode(true));
         }
         catch(Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

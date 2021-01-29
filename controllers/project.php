@@ -780,6 +780,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         }
                         $pr_data['calcs_mounting_sum'] = json_encode($mount_sum);
                         $this->change_project_data($pr_data);
+
                         Gm_ceilingHelpersGm_ceiling::notify((object)$send_data, 14);
                         Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id, $include_calculation);
                     } else {
@@ -1685,18 +1686,23 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 
             $user = JFactory::getUser();
-            $reklama = $model_api_phones->getDataById($api_phone_id);
-
-            if ($user->dealer_id != $reklama->dealer_id && $user->id != $reklama->dealer_id) {
-                throw new Exception('403 forbidden');
+            if(!empty($api_phone_id)){
+                $reklama = $model_api_phones->getDataById($api_phone_id);
+                if ($user->dealer_id != $reklama->dealer_id && $user->id != $reklama->dealer_id) {
+                    throw new Exception('403 forbidden');
+                }
+                $project = $model_project->getData($data['id']);
+                if ($project->api_phone_id != 10) {
+                    $data['api_phone_id'] = $api_phone_id;
+                    $result = $model_project->save($data);
+                } else {
+                    $model_repeat->update($data['id'], $api_phone_id);
+                }
             }
-            $project = $model_project->getData($data['id']);
-            if ($project->api_phone_id != 10) {
-                $data['api_phone_id'] = $api_phone_id;
-                $result = $model_project->save($data);
-            } else {
-                $model_repeat->update($data['id'], $api_phone_id);
+            else{
+               $model_project->removeAdvt($data['id']);
             }
+            
             die(json_encode($result));
         } catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

@@ -16,15 +16,21 @@ $user_groups = $user->groups;
 if(in_array('16',$user_groups)){
     $is_gmmanager = true;
 }
-if(in_array('17',$user_groups) || $user->id == 2 || in_array('38',$user_groups)){
+if(in_array('17',$user_groups) || $user->id == 2 || in_array('45',$user_groups)){
     $isNMS = true;
 }
+$objMaster = in_array('46',$user_groups);
 if($user->dealer_type == 2){
     $isClient = true;
 }
+if(empty($mount_types)){
+    $projects_mounts_model = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
+    $mount_types = $projects_mounts_model->get_mount_types();
+    $mount_types['potolki'] = "Монтаж натяжных потолков";
+}
 $isBuilder = (JFactory::getUser($this->item->dealer_id)->dealer_type == 7);//проект застройщика или нет
-$needShow = !in_array($this->item->project_status,VERDICT_STATUSES) || $isBuilder;
-$displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder)?  "style=\"display:none;\"" : "";//скрыть элемент
+$needShow = (!in_array($this->item->project_status,VERDICT_STATUSES) || $isBuilder) && !$objMaster;
+$displayNone = (in_array($this->project_status,VERDICT_STATUSES) && !$isBuilder && !$objMaster)?  "style=\"display:none;\"" : "";//скрыть элемент
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
@@ -38,6 +44,7 @@ $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
+$mountInCategories = [];
 //$calculation_total_discount = 0;
 $calculations = $calculationsModel->new_getProjectItems($this->item->id);
 if (!empty($this->item->calcs_mounting_sum)) {
@@ -118,6 +125,13 @@ foreach ($calculations as $calculation) {
             $all_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, $this->item->dealer_id);
         }
         foreach ($all_jobs as $job){
+            if(in_array($job->mount_type_id, [2,3,4])){
+                $mountInCategories[$calculation->id]['potolki'][] = $job;
+            }
+            else{
+                $mountInCategories[$calculation->id][$job->mount_type_id][] = $job;
+            }
+
             $total_dealer_sum += $job->price_sum;
         }
         $all_gm_jobs = $calculationformModel->getJobsPricesInCalculation($calculation->id, 1);
@@ -362,7 +376,8 @@ $pdf_names = [];
                             ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
                                 <td  class="include_calculation" colspan="<?=$colspan?>" >
-                                    <input name='include_calculation[]' value='<?php echo "$calculation->id"; ?>' id="<?php echo "incl_$calculation->id"?>" style="display: none" type='checkbox' class="inp-cbx" checked <?php echo $displayNone;?> style="cursor: pointer;">
+                                    
+                                    <input name='include_calculation[]' value='<?php echo "$calculation->id"; ?>' id="<?php echo "incl_$calculation->id"?>" data-mount="<?= $calculation->need_mount;?>" style="display: none" type='checkbox' class="inp-cbx" checked <?php echo $displayNone;?> style="cursor: pointer;">
                                     <label for="<?php echo "incl_$calculation->id"?>" class="cbx" <?=$displayNone?>>
                                                     <span>
                                                         <svg width="12px" height="10px" viewBox="0 0 12 10">
@@ -1113,23 +1128,29 @@ $pdf_names = [];
                                                     </tbody>
                                                 </table>
                                             <?php }?>
-                                            <?php if(!empty($calculation->jobs)){?>
-                                                <h4 style="margin: 10px 0;cursor: pointer;" class="mount_jobs"><i class="fas fa-angle-down"></i> Монтажные работы</h4>
-                                                <table class="table_info2 table_jobs" style="display:none;">
-                                                    <thead>
-                                                    <th>Название</th>
-                                                    <th>Количество</th>
-                                                    </thead>
-                                                    <tbody>
-                                                    <?php foreach ($calculation->jobs as $job){
-                                                        if(!$job->guild_only && !$job->is_factory_work){
-                                                            echo "<tr><td>$job->name</td><td>".round($job->final_count,2)."</td></tr>";
-                                                        }
-                                                    }
-                                                    ?>
-                                                    </tbody>
-                                                </table>
-                                            <?php }?>
+                                            <?php   $jobsInMountType = $mountInCategories[$calculation->id];
+                                                if(!empty($jobsInMountType)){
+                                                    foreach ($jobsInMountType as $typeId =>$jobs){
+                                                        $mountTypeTitle = $mount_types[$typeId];?>
+                                                        <h4 style="margin: 10px 0;cursor: pointer;" class="mount_jobs" data-mount_type="<?=$typeId?>">
+                                                            <i class="fas fa-angle-down"></i> <?=$mountTypeTitle;?>
+                                                        </h4>
+                                                        <table class="table_info2 table_jobs" data-type="<?=$typeId?>" style="display:none;">
+                                                            <thead>
+                                                            <th>Название</th>
+                                                            <th>Количество</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            <?php foreach ($jobs as  $job){
+                                                                if(!$job->guild_only && !$job->is_factory_work){
+                                                                    echo "<tr><td>$job->name</td><td>".round($job->final_count,2)."</td></tr>";
+                                                                }
+                                                            }
+                                                            ?>
+                                                            </tbody>
+                                                        </table>
+                                            <?php }
+                                                }?>
                                             <?php if(!empty($calculation->factory_jobs)){?>
                                                 <h4 style="margin: 10px 0;cursor: pointer;" class="factory_jobs"><i class="fas fa-angle-down"></i> Работы цеха</h4>
                                                 <table class="table_info2 table_factory_jobs" style="display:none;">

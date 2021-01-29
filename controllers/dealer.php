@@ -95,10 +95,8 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 			$client_data['manager_id'] = mb_ereg_replace('[^\d]', '', $user->id);
 			$client_data['client_contacts'] = mb_ereg_replace('[^\d]', '', $phone);
 			$client_data['is_dealer'] = true;
-
 			$client_id = $clientform_model->save($client_data);
-			if ($client_id == 'client_found')
-			{
+			if ($client_id == 'client_found'){
 				die('client_found');
 			}
 			else

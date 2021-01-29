@@ -27,6 +27,8 @@ $address = Gm_ceilingHelpersGm_ceiling::parseProjectInfo($this->item->project_in
 if(gettype($this->item->mount_data) == 'string'){
     $this->item->mount_data = json_decode($this->item->mount_data);
 }
+$projectAdvt = $this->item->api_phone_id;
+$clientNameArr = explode(' ',$this->item->client_id);
 ?>
 <style>
     .act_btn{
@@ -180,14 +182,14 @@ if(gettype($this->item->mount_data) == 'string'){
         </div>
     <?php }?>
     <?php if(!empty($this->item->project_calculator)){?>
-    <div class="row">
-        <div class="col-md-4 col-xs-4">
-            <b>Замерщик</b>
+        <div class="row">
+            <div class="col-md-4 col-xs-4">
+                <b>Замерщик</b>
+            </div>
+            <div class="col-md-8 col-xs-8">
+                <?= JFactory::getUser($this->item->project_calculator)->name;?>
+            </div>
         </div>
-        <div class="col-md-8 col-xs-8">
-            <?= JFactory::getUser($this->item->project_calculator)->name;?>
-        </div>
-    </div>
     <?php }?>
     <?php if (!empty($this->item->mount_data)): ?>
         <div class="row center">
@@ -253,6 +255,9 @@ if(gettype($this->item->mount_data) == 'string'){
     </div>
 </div>
 <div class="modal_window_container mw_container_cl">
+    <button type="button" id="btn_close" class="btn-close">
+        <i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+    </button>
     <div id="mw_add_call" class="modal_window">
         <h4>Добавить звонок</h4>
         <link rel="stylesheet" href="/components/com_gm_ceiling/date_picker/nice-date-picker.css">
@@ -310,92 +315,103 @@ if(gettype($this->item->mount_data) == 'string'){
     </div>
     <div id="mw_cl_info" class="modal_window">
         <h4>Изменение данных клиента</h4>
-       <!-- <form id="new_cl_info">-->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="new_surname"> Фамилия </label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" id='new_surname'>
-                        </div>
+        <!-- <form id="new_cl_info">-->
+        <?php
+        $surname = '';
+        $name = '';
+        $patr = '';
+        if(count($clientNameArr) == 3){
+            $surname = $clientNameArr[0];
+            $name = $clientNameArr[1];
+            $patr = $clientNameArr[2];
+        }
+        $surname = $this->item->client_id;
+        ?>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="new_surname"> Фамилия </label>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="new_name"> Имя </label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" id='new_name'>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="new_patronymic"> Отчество </label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" id='new_patronymic'>
-                        </div>
+                    <div class="col-md-9">
+                        <input class="form-control" type="text" id='new_surname'  value="<?=$surname?>">
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div id="client_phones">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <b>Телефоны клиента</b>
-
-                            </div>
-                            <div class="col-md-2">
-                                <button id="add_phone" class="btn btn-primary" type="button"><i
-                                            class="fa fa-plus-square" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
-                        <?php foreach ($phone as $value) { ?>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <input name="new_client_contacts[]" class="form-control"
-                                           id="jform_client_contacts[]"
-                                           data-old="<?php echo $value->client_contacts; ?>"
-                                           placeholder="Телефон клиента" type="text"
-                                           value=<?php echo $value->client_contacts; ?>>
-                                </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-danger del_phone" type="button"><i class="fas fa-trash-alt"
-                                                                                              aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        <?php } ?>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="new_name"> Имя </label>
                     </div>
-
-                    <div id="client_emails">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <b>Эл.почта клиента</b>
-                            </div>
-                            <div class="col-md-2">
-                                <button id="add_email" class="btn btn-primary" type="button"><i
-                                            class="fa fa-plus-square" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
-                        <?php foreach ($contact_email as $value) { ?>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <input name="new_client_emails[]" id="jform_client_emails[]"
-                                           placeholder="Email клиента" type="text" class="form-control"
-                                           data-old="<?php echo $value->contact; ?>"
-                                           value=<?php echo $value->contact; ?>>
-                                </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-danger del_email"><i class="fas fa-trash-alt"
-                                                                                aria-hidden="true"></i></button>
-                                </div>
-                            </div>
-                        <?php } ?>
+                    <div class="col-md-9">
+                        <input class="form-control" type="text" id='new_name' value="<?=$name?>">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="new_patronymic"> Отчество </label>
+                    </div>
+                    <div class="col-md-9">
+                        <input class="form-control" type="text" id='new_patronymic' value="<?=$patr?>">
                     </div>
                 </div>
             </div>
-            <input name="new_client_name" id="jform_client_name" value="" type="hidden">
+            <div class="col-md-6">
+                <div id="client_phones">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <b>Телефоны клиента</b>
+
+                        </div>
+                        <div class="col-md-2">
+                            <button id="add_phone" class="btn btn-primary" type="button"><i
+                                        class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <?php foreach ($phone as $value) { ?>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input name="new_client_contacts[]" class="form-control"
+                                       id="jform_client_contacts[]"
+                                       data-old="<?php echo $value->client_contacts; ?>"
+                                       placeholder="Телефон клиента" type="text"
+                                       value=<?php echo $value->client_contacts; ?>>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-danger del_phone" type="button"><i class="fas fa-trash-alt"
+                                                                                          aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+
+                <div id="client_emails">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <b>Эл.почта клиента</b>
+                        </div>
+                        <div class="col-md-2">
+                            <button id="add_email" class="btn btn-primary" type="button"><i
+                                        class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <?php foreach ($contact_email as $value) { ?>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input name="new_client_emails[]" id="jform_client_emails[]"
+                                       placeholder="Email клиента" type="text" class="form-control"
+                                       data-old="<?php echo $value->contact; ?>"
+                                       value=<?php echo $value->contact; ?>>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-danger del_email"><i class="fas fa-trash-alt"
+                                                                            aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+        <input name="new_client_name" id="jform_client_name" value="" type="hidden">
         <!--</form>-->
         <button id="update_cl_info" class="btn btn-primary" type="button">Сохранить</button>
     </div>
@@ -443,7 +459,7 @@ if(gettype($this->item->mount_data) == 'string'){
                     </div>
                     <div class="col-md-4 col-xs-4">
                         <input class="form-control new_floor_cl" placeholder="Этаж" aria-required="true"
-                        type="text" value="<?=$address->floor;?>">
+                               type="text" value="<?=$address->floor;?>">
                     </div>
                     <div class="col-md-4 col-xs-4">
                         <input class="form-control new_code_cl" placeholder="Код" aria-required="true"
@@ -461,10 +477,12 @@ if(gettype($this->item->mount_data) == 'string'){
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label><strong>Выбрать:</strong></label>
+                    <div class="col-md-4 col-xs-12" style="text-align:left;">
+                        <label>
+                            <strong>Выбрать:</strong>
+                        </label>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8 col-xs-12">
                         <select id="advt_choose" class="form-control">
                             <option value="0">Выберите рекламу</option>
                             <?php if (!empty($all_advt)) foreach ($all_advt as $item) { ?>
@@ -474,16 +492,16 @@ if(gettype($this->item->mount_data) == 'string'){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <label><strong>Добавить:</strong></label>
+                    <div class="col-md-4 col-xs-12" style="text-align:left;">
+                        <label>
+                            <strong>Добавить:</strong>
+                        </label>
                     </div>
-                    <div class="col-md-8">
-                        <div id="new_advt_div" class="col-md-6">
-                            <input id="new_advt_name" placeholder="Название рекламы" class="form-control">
-                        </div>
-                        <div class="col-md=6">
-                            <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
-                        </div>
+                    <div class="col-md-4 col-xs-7">
+                        <input id="new_advt_name" placeholder="Название рекламы" class="form-control">
+                    </div>
+                    <div class="col-md-4 col-xs-5">
+                        <button type="button" class="btn btn-primary" id="add_new_advt">Добавить</button>
                     </div>
                 </div>
             </div>
@@ -512,7 +530,8 @@ if(gettype($this->item->mount_data) == 'string'){
         client_id = jQuery('#client_id').val(),
         client_name = jQuery('#client_name_cl').val(),
         deleted_phones = [],
-        deleted_emails = [];
+        deleted_emails = [],
+        project_advt = '<?=$projectAdvt;?>';
     jQuery(document).mouseup(function (e) { // событие клика по веб-документу
         var div1 = jQuery('#mw_add_call'),
             div2 = jQuery('#mw_advt'),
@@ -532,7 +551,7 @@ if(gettype($this->item->mount_data) == 'string'){
             && div5.has(e.target).length === 0
             && !div6.is(e.target)
             && div6.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#mw_close").hide();
+            jQuery(".btn-close").hide();
             jQuery(".mw_container_cl").hide();
             div1.hide();
             div2.hide();
@@ -548,13 +567,13 @@ if(gettype($this->item->mount_data) == 'string'){
         jQuery("[name = 'new_client_contacts[]']").mask('+7(999) 999-9999');
 
         jQuery("#assign_call").click(function () {
-            jQuery("#close_mw").show();
+            jQuery(".btn-close").show();
             jQuery(".mw_container_cl").show();
             jQuery("#mw_add_call").show();
         });
 
         jQuery("#change_data").click(function () {
-            jQuery("#close_mw").show();
+            jQuery(".btn-close").show();
             jQuery(".mw_container_cl").show();
             jQuery("#mw_cl_info").show('slow');
         });
@@ -635,7 +654,7 @@ if(gettype($this->item->mount_data) == 'string'){
         });
         /*изменение адреса и даты замераы*/
         jQuery("#edit_address").click(function () {
-            jQuery("#close_mw").show();
+            jQuery(".btn-close").show();
             jQuery(".mw_container_cl").show();
             jQuery("#mw_address").show();
         });
@@ -663,15 +682,15 @@ if(gettype($this->item->mount_data) == 'string'){
         /*------*/
 
         jQuery("#edit_advt").click(function () {
-            jQuery("#close_mw").show();
+            jQuery(".btn-close").show();
             jQuery(".mw_container_cl").show();
             jQuery("#mw_advt").show();
         });
 
         jQuery('#change_meaure_date').click(function () {
-           jQuery('#close_mw').show();
-           jQuery('#mw_change_measure').show();
-           jQuery('.mw_container_cl').show();
+            jQuery(".btn-close").show();
+            jQuery('#mw_change_measure').show();
+            jQuery('.mw_container_cl').show();
         });
 
         jQuery('#save_measure_changes').click(function(){
@@ -746,13 +765,13 @@ if(gettype($this->item->mount_data) == 'string'){
                 return;
             }
             var date = jQuery("#call_date").val().replace(/(-)([\d]+)/g, function(str,p1,p2) {
-                if (p2.length === 1) {
-                    return '-0'+p2;
-                }
-                else {
-                    return str;
-                }
-            }),
+                    if (p2.length === 1) {
+                        return '-0'+p2;
+                    }
+                    else {
+                        return str;
+                    }
+                }),
                 time = jQuery("#call_time").val(),
                 important = jQuery('#important_call').is(':checked') ? 1 : 0;
             if (time == '') {
@@ -822,55 +841,85 @@ if(gettype($this->item->mount_data) == 'string'){
             });
         });
         jQuery("#save_advt").click(function() {
-            if (jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '') {
+            if ((jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '')&&!empty(project_advt)) {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: false,
+                    type: "info",
+                    text: "Внимание проект будет отвязан от рекламы. Продолжить?",
+                    buttons: [
+                        {
+                            addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
+                                updateAdvt(project_id,null,client_id);
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn btn-primary', text: 'Выбрать рекламу', onClick: function ($noty) {
+                                jQuery(".btn-close").show();
+                                jQuery(".mw_container_cl").show();
+                                jQuery("#mw_advt").show();
+                                jQuery('#advt_choose').focus();
+                                $noty.close();
+                            }
+                        }
+                    ]
+                });
+                return;
+            }
+            if((jQuery("#advt_choose").val() == '0' || jQuery("#advt_choose").val() == '')&&empty(project_advt)){
                 noty({
                     timeout: 2000,
                     theme: 'relax',
                     layout: 'center',
                     maxVisible: 5,
                     type: "warning",
-                    text: "Укажите рекламу"
+                    text: "Реклама не выбрана!"
                 });
-                jQuery("#advt_choose").focus();
                 return;
             }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=project.save_advt",
-                data: {
-                    project_id: project_id,
-                    api_phone_id: jQuery("#advt_choose").val(),
-                    client_id: client_id
-                },
-                dataType: "json",
-                async: true,
-                success: function(data) {
-                    document.getElementById('save_advt').style.display = 'none';
-                    document.getElementById('advt_choose').disabled = 'disabled';
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Реклама сохранена"
-                    });
-                    location.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка"
-                    });
-                }
-            });
+            updateAdvt(project_id,jQuery("#advt_choose").val(),client_id);
         });
     });
 
+
+    function updateAdvt(project_id,advt,client_id){
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=project.save_advt",
+            data: {
+                project_id: project_id,
+                api_phone_id: advt,
+                client_id: client_id
+            },
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                document.getElementById('save_advt').style.display = 'none';
+                document.getElementById('advt_choose').disabled = 'disabled';
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Реклама сохранена"
+                });
+                location.reload();
+            },
+            error: function(data) {
+                console.log(data);
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка"
+                });
+            }
+        });
+    }
     function updateProejctData(data){
         data = JSON.stringify(data)
         jQuery.ajax({

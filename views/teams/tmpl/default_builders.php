@@ -34,7 +34,7 @@ $userGroups = $usersModel->getGroupsByParentGroup(38);
 <div class="row">
     <div class="col-md-8 col-sm-12">
         <h4>
-            Управленеи бригадами
+            Управлениe бригадами
         </h4>
     </div>
     <div class="col-md-4 col-xs-12 right">
@@ -143,6 +143,7 @@ $userGroups = $usersModel->getGroupsByParentGroup(38);
 </div>
 
 <script type="text/javascript">
+    var existUser;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#mw_add");
         if (!div.is(e.target) &&
@@ -192,33 +193,34 @@ $userGroups = $usersModel->getGroupsByParentGroup(38);
             jQuery('#error_text').text('');
             jQuery('#error_text').hide();
 
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=users.registerMounterForBuilding",
-                data: {
-                    name: name,
-                    phone: phone,
-                    email: email,
-                    groups: groupsId
 
-                },
-                success: function(data) {
-                    location.reload();
-                },
-                dataType: "json",
-                timeout: 10000,
-                error: function(data) {
-                    noty({
-                        theme: 'relax',
-                        timeout: 2000,
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при создании!"
-                    });
-                }
-            });
-
+            checkUser(phone);
+            if(!empty(existUser) && existUser.name != name){
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: false,
+                    type: "info",
+                    text: "Пользователь с таким номером телефона уже существует. Имя: "+ existUser.name+" . Переименовать в "+ name,
+                    buttons: [
+                        {
+                            addClass: 'btn btn-primary', text: 'Переименовать и добавить', onClick: function ($noty) {
+                                addBrigade(name,phone,email,groupsId,1);
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn btn-primary', text: 'Добавить без перемеименования', onClick: function ($noty) {
+                                addBrigade(name,phone,email,groupsId,0);
+                                $noty.close();
+                            }
+                        }
+                    ]
+                });
+            }
+            else{
+                addBrigade(name,phone,email,groupsId,0);
+            }
         });
 
         jQuery('.group_title').click(function(){
@@ -293,6 +295,62 @@ $userGroups = $usersModel->getGroupsByParentGroup(38);
                     });
                 }
             });
+        }
+
+        function checkUser(phone){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=users.getUserByUsername",
+                data: {
+                   phone: phone
+                },
+                success: function(data) {
+                    console.log(data);
+                    existUser = data;
+                },
+                dataType: "json",
+                timeout: 10000,
+                async: false,
+                error: function(data) {
+                    noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при удалении!"
+                    });
+                }
+            });
+        }
+
+        function addBrigade(name,phone,email,groupsId,needRename){
+            jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=users.registerMounterForBuilding",
+                    data: {
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        groups: groupsId,
+                        rename: needRename
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    dataType: "json",
+                    timeout: 10000,
+                    error: function(data) {
+                        noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при создании!"
+                        });
+                    }
+                });
         }
     });
 </script>

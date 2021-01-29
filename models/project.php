@@ -2001,6 +2001,23 @@ class Gm_ceilingModelProject extends JModelItem
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function removeAdvt($id){
+    	try{
+    		$db = JFactory::getDbo();
+    		$query = $db->getQuery(true);
+    		$query
+    			->update('rgzbn_gm_ceiling_projects')
+    			->set('api_phone_id = NULL')
+    			->where("id=$id");
+    		$db->setQuery($query);
+    		$db->execute();
+    		return $db->getAffectedRows();
+    	}
+    	catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
     /*4API*/
     public function create($client_id){
         try{

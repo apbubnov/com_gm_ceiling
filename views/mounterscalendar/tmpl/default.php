@@ -308,6 +308,7 @@ $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $yea
                     var status, type = "", note = "", comment_calc, project, adress, perimeter;
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
+                            note = '';
                             project = element.id;
                             adress = element.project_info;
                             perimeter = element.n5;

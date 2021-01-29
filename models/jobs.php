@@ -6,8 +6,7 @@ class Gm_ceilingModelJobs extends JModelList{
             $query = $db->getQuery(true);
             $query
                 ->select('`j`.`id`,  
-                    `j`.`name`, 
-                    `j`.`price`, 
+                    `j`.`name`,  
                     `j`.`guild_only`,
                     `j`.`is_factory_work`,
                     `j`.`mount_type_id`')

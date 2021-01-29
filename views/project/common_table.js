@@ -929,7 +929,8 @@ jQuery(document).on('click','.del_prepayment',function(){
 });
 
 jQuery(document).on('click', '.mount_jobs', function () {
-    jQuery(".table_jobs").toggle();
+    var mountType = jQuery(this).data('mount_type');
+    jQuery('.table_jobs[data-type="'+mountType+'"]').toggle();
     var i = jQuery(this).find('i');
     if (i.hasClass('fa-angle-down')) {
         i.removeClass("fa-angle-down").addClass("fa-angle-up");

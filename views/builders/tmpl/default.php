@@ -14,14 +14,17 @@ $userId     = $user->get('id');
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_clients = $clients_model->getBuilders();
+
+$isObjectMaster = in_array('46',$user->groups);
+$disabled = $isObjectMaster ? 'disabled' : '';
+
+$objMasters = $clients_model->getUsersByGroupAndDealer(46,$user->dealer_id);
 ?>
-    <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-       id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+    <?= parent::getButtonBack();?>
     <h2 class="center">Застройщики</h2>
     <div class="row" style="margin-bottom: 15px;">
         <div class="col-md-4">
-            <button type="button" id="new_builder" class="btn btn-primary">Добавить застройщика</button>
+            <button type="button" id="new_builder" class="btn btn-primary" <?= $disabled;?>>Добавить застройщика</button>
         </div>
         <div class="col-md-4">
             <select id="show_type" class="form-control">
@@ -62,7 +65,10 @@ $result_clients = $clients_model->getBuilders();
                Телефоны
             </th>
             <th>
-               Дата регистрации
+               Дата создания
+            </th>
+            <th>
+                Мастер
             </th>
         </tr>
         </thead>
@@ -73,7 +79,7 @@ $result_clients = $clients_model->getBuilders();
                     $groups = explode(';',$value->groups);
                     if(!in_array(36,$groups)) {
                         ?>
-                        <tr class="row"
+                        <tr class="row" data-id="<?=$value->id;?>" data-cl_id="<?=$value->associated_client?>"
                             data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' . (int)$value->associated_client); ?>">
                             <td>
                                 <?php echo $value->name; ?>
@@ -92,6 +98,19 @@ $result_clients = $clients_model->getBuilders();
                                 }
                                 ?>
                             </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <?= empty($value->manager) ? '-' : $value->manager;?>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn-sm btn-primary edit_master" <?=$disabled;?>>
+                                            <i class="fas fa-user-edit"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </td>
                         </tr>
                         <?php
                     }
@@ -99,9 +118,9 @@ $result_clients = $clients_model->getBuilders();
             ?>
         </tbody>
     </table>
-    <div id="modal-window-container">
-        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-1-tar">
+    <div class="modal_window_container" id="mw_container">
+        <button type="button" class="btn-close" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div class="modal_window" id="mw_create">
                 <p><strong>Создание нового застройщика</strong></p>
                 <p>Название:</p>
                 <p><input type="text" id="fio_builder"></p>
@@ -109,16 +128,45 @@ $result_clients = $clients_model->getBuilders();
                 <p><input type="text" id="builder_contacts"></p>
                 <p><button type="submit" id="save_builder" class="btn btn-primary">ОК</button></p>
         </div>
+        <div class="modal_window" id="mw_objMaster">
+            <input type="hidden" id="selected_object" value="">
+            <div class="row">
+                <h4>Назначение/изменение мастера на объекте <span id="selected_name"></span></h4>
+            </div>
+            <div class="row" style="margin-bottom: 1em !important;">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <select class="form-control" id="masters_select">
+                        <option value="">Выберите мастера</option>
+                        <?php foreach ($objMasters as $master){?>
+                            <option value="<?=$master->id?>"><?=$master->name?></option>
+                        <?php }?>
+                    </select>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row center">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="save_obj_master">
+                        <i class="far fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
 <script>
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-        if (!div3.is(e.target) // если клик был не по нашему блоку
-            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close4-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-1-tar").hide();
+        var div1 = jQuery("#mw_create"),
+            div2 = jQuery('#mw_objMaster');
+        if (!div1.is(e.target)
+            && div1.has(e.target).length === 0
+            && !div2.is(e.target)
+            && div2.has(e.target).length === 0) {
+            jQuery("#close").hide();
+            jQuery("#mw_container").hide();
+            div1.hide();
+            div2.hide();
         }
     });
 
@@ -171,9 +219,9 @@ $result_clients = $clients_model->getBuilders();
         });
 
         jQuery("#new_builder").click(function(){
-            jQuery("#close4-tar").show();
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-1-tar").show("slow");
+            jQuery("#close").show();
+            jQuery("#mw_container").show();
+            jQuery("#mw_create").show("slow");
         });
 
         jQuery("#save_builder").click(function(){
@@ -256,6 +304,85 @@ $result_clients = $clients_model->getBuilders();
                 }                   
             });
         });
+
+        jQuery('.edit_master').click(function () {
+            jQuery("#close").show();
+            jQuery("#mw_container").show();
+            jQuery("#mw_objMaster").show();
+            var selectedObjId = jQuery(this).closest('tr').data('id'),
+                selectedName = builders.find(function(e){if(e.id == selectedObjId){return e}}).name,
+                selectedClientId = jQuery(this).closest('tr').data('cl_id');
+            console.log(selectedObjId,selectedName);
+            jQuery('#selected_object').val(selectedClientId);
+            jQuery('#selected_name').text(selectedName);
+            return false;
+        });
+
+        jQuery('#save_obj_master').click(function(){
+            var objMasterId = jQuery('#masters_select').val(),
+                clientId = jQuery('#selected_object').val();
+
+            console.log(objMasterId);
+            if(!empty(objMasterId)){
+                updateManager(clientId,objMasterId);
+            }
+            else{
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: false,
+                    type: "info",
+                    text: "Мастер будет снят с данного объекта.Продолжить?",
+                    buttons: [
+                        {
+                            addClass: 'btn btn-primary', text: 'Продолжить', onClick: function ($noty) {
+                                updateManager(clientId,null);
+                                $noty.close();
+                            }
+                        },
+                        {
+                            addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                                $noty.close();
+                            }
+                        }
+                    ]
+                });
+            }
+        });
+
+        function updateManager(clientId,managerId){
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.updateManager",
+                data: {
+                    client_id: clientId,
+                    manager_id: managerId
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Сохранено!"
+                    });
+                    setTimeout(function(){location.reload();},2000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'topCenter',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
     });
     function fillTable(builders){
         jQuery("#tbody_builders").empty();

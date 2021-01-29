@@ -15,13 +15,14 @@ JHtml::_('behavior.multiselect');
 
 $jinput = JFactory::getApplication()->input;
 $user = JFactory::getUser();
+$dealerId = $user->dealer_id;
 $groups = $user->groups;
-$isNMS = in_array('17', $groups);
+$isNMS = in_array('17', $groups) || in_array('12',$groups);
 
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$servicePrice = $model_mount->getServicePrice();
+$servicePrice = $model_mount->getServicePrice($dealerId);
 $model_prices = Gm_ceilingHelpersGm_ceiling::getModel('prices');
-$gm_price = $model_prices->getJobsDealer(1);
+$gm_price = $model_prices->getJobsDealer($dealerId);
 ?>
     <style>
         body {
@@ -71,10 +72,13 @@ $gm_price = $model_prices->getJobsDealer(1);
             <?php foreach ($servicePrice as $value) { ?>
                 <div class="row" style="margin-top: 5px;">
                     <div class="col-md-2"></div>
-                    <div class="col-md-5 control-label"><label><?= $value->name; ?></label></div>
-                    <div class="col-md-3 left"><input type="text" class="required input" style="width:100%;" size="3"
+                    <div class="col-md-5 control-label">
+                        <label><?= $value->name; ?></label>
+                    </div>
+                    <div class="col-md-3 left">
+                        <input type="text" class="required input" style="width:100%;" size="3"
                                                       required aria-required="true" value="<?= $value->price; ?>"
-                                                      data-id="<?= $value->id; ?>" data-job_id="<?= $value->id; ?>"/>
+                                                      data-id="<?= $value->sp_id; ?>" data-job_id="<?= $value->id; ?>"/>
                     </div>
                     <div class="col-md-2"></div>
                 </div>
@@ -193,6 +197,7 @@ $gm_price = $model_prices->getJobsDealer(1);
             jQuery.each(jQuery(class_name), function (index, value) {
                 data.push({
                     job_id: jQuery(value).data('job_id'),
+                    sp_id: jQuery(value).data('id'),
                     price: value.value.replace(',', '.').replace(/[^\d\.]/g, '')
                 });
             });

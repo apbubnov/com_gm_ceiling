@@ -79,9 +79,10 @@ class Gm_ceilingControllerPrices extends Gm_ceilingController
             $pdfType = $jinput->get('pdf_type','','STRING');
             $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
             $model_prices = Gm_ceilingHelpersGm_ceiling::getModel('prices');
-
-            $price =  ($pdfType == 'service') ? $model_mount->getServicePrice() : $model_prices->getJobsDealer(1);
-            $title = ($pdfType == 'service') ? 'Прайс монтажной службы' : 'Прайс монтажа ГМ';
+            $user = JFactory::getUser();
+            $dealer = JFactory::getUser($user->dealer_id);
+            $price =  ($pdfType == 'service') ? $model_mount->getServicePrice($dealer->id) : $model_prices->getJobsDealer($dealer->id);
+            $title = ($pdfType == 'service') ? "Прайс монтажной службы $dealer->name" : "Прайс монтажа $dealer->name";
 
             $html = "
                 <h1>$title</h1>
@@ -97,7 +98,7 @@ class Gm_ceilingControllerPrices extends Gm_ceilingController
             }
             $html .=" </tbody></table>";
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/files/';
-            $filename = ($pdfType == 'service') ? 'price_mount_service.pdf' : 'mount_price_gm.pdf';
+            $filename = ($pdfType == 'service') ? "price_mount_service$dealer->id.pdf" : "mount_price_gm$dealer->id.pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
             die(json_encode('/files/'.$filename));
         } catch (Exception $e) {

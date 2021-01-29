@@ -182,15 +182,20 @@ if (!empty($brigadesData)) {
             </div>
         </div>
     </div>
-	<div id="prev-button-container">
-		<button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-	</div>
-	<div id="calendars-container">
-		<?php echo $calendars; ?>
-	</div>
-	<div id="next-button-container">
-		<button id="button-next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-	</div>
+    <div class="row center">
+        <div id="prev-button-container" class="col-md-1 col-xs-1">
+            <button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        </div>
+        <div id="calendars-container" class="col-md-10 col-xs-10">
+            <div class="calendars-brigade" >
+                <?php echo $calendars; ?>
+            </div>
+        </div>
+        <div id="next-button-container" class="col-md-1 col-xs-1">
+            <button id="button-next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+    </div>
+
 	<div id="modal-window-with-table">
 		<button type="button" id="close-modal-window"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="window-with-table">

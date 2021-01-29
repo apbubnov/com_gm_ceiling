@@ -99,9 +99,20 @@ class Gm_ceilingController extends JControllerLegacy
                             $type = "manufacturermainpage";//производитель
                         }
                         elseif (in_array("33", $groups)) {
-                            $type = "mastermainpage";//производитель
+                            $type = "mastermainpage";//мастер
                         }
-                        elseif (in_array('34', $groups)) {
+                        elseif(in_array('46',$groups)){
+                            $type = "buildermountersmainpage";
+                        }
+                        elseif (
+                            in_array('34', $groups) ||
+                            in_array('39', $groups) ||
+                            in_array('40', $groups) ||
+                            in_array('41', $groups) ||
+                            in_array('42', $groups) ||
+                            in_array('43', $groups) ||
+                            in_array('44', $groups)
+                        ) {
                             $type = "buildermountersmainpage";
                             //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=analytics', false));//аналитик
                         }
@@ -109,7 +120,7 @@ class Gm_ceilingController extends JControllerLegacy
                             $type = "analyst";
                             //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=analytics', false));//аналитик
                         }
-                        elseif(in_array('38', $groups)){
+                        elseif(in_array('45', $groups)){
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=teams&type=storekeeper', false));//аналитик
                         }
                         if (!empty($type)) {
@@ -597,10 +608,11 @@ public function register_mnfctr(){
             $new_fio = $jinput->get('fio', '', 'STRING');
             $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $old_name = $model_client->getClientById($client_id)->client_name;
             $model_client->updateClient($client_id,$new_fio);
             $user_model->updateUserNameByAssociatedClient($client_id, $new_fio);
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
-            $history_model->save($client_id,"Изменено ФИО пользователя");
+            $history_model->save($client_id,"Изменено ФИО с $old_name на $new_fio");
             die($new_fio);
         }
        catch(Exception $e)
@@ -3726,18 +3738,31 @@ public function register_mnfctr(){
     }
 
     function test(){
-       /* $db = JFactory::getDbo();
+       /* $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+        $servicePrice = $model_mount->getServicePrice();
+        $data = [];
+        foreach ($servicePrice as $price){
+            $data[] = "$price->id,'$price->price',1";
+        }
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query
-            ->select('p.id')
+            ->insert('`rgzbn_gm_ceiling_jobs_service_price`')
+            ->columns('`job_id`,`price`,`dealer_id`')
+            ->values($data);
+        $db->setQuery($query);
+        $db->execute();*/
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('id')
             ->from('`rgzbn_gm_ceiling_projects`')
-            ->where('p.id = 12');
+            ->where('project_status = 12');
         $db->setQuery($query);
         $ids = $db->loadObjectList();
-        foreach ($ids as $project) {
-            Gm_ceilingHelpersGm_ceiling::createImgArchive($project->id);
-        }*/
-        Gm_ceilingHelpersGm_ceiling::createImgArchive(2237);
+        foreach ($ids as $id) {
+            Gm_ceilingHelpersGm_ceiling::createImgArchive($id->id);
+        }
     }
 
 

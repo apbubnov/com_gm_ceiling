@@ -242,6 +242,23 @@ class Gm_ceilingModelApi_phones extends JModelList
         }
     }
 
+    function updateName($id,$name){
+    	try{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	        	->update('`rgzbn_gm_ceiling_api_phones`')
+	        	->set("`name` = '$name'")
+	        	->where("`id` = $id");
+	        $db->setQuery($query);
+	        $db->execute();
+	        return $db->getAffectedRows();
+    	}
+    	catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+    	}
+    }
+
     function saveExpense($apiPhoneId,$newExpense){
 	    try{
             $db = JFactory::getDbo();
@@ -254,6 +271,43 @@ class Gm_ceilingModelApi_phones extends JModelList
             return true;
         }
         catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete($id){
+    	try{
+    		$db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+            	->delete('`rgzbn_gm_ceiling_api_phones`')
+        		->where("`id` = $id");
+            $db->setQuery($query);
+            $db->execute();
+            return true;	
+    	}
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function saveAdvt($name,$expenses){
+        try
+        {
+        	$user = JFactory::getUser();
+        	$dealer_id = $user->dealer_id;
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query->insert('#__gm_ceiling_api_phones');
+	        $query->columns('`name`,`expenses`, `dealer_id`');
+			$query->values("'$name', '$expenses' ,$dealer_id");
+			$db->setQuery($query);
+	        $db->execute();
+	        $last_id = $db->insertid();
+	        return $last_id;
+	    }
+	    catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }

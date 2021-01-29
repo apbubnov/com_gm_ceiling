@@ -7,11 +7,34 @@ $clientcardModel = Gm_ceilingHelpersGm_ceiling::getModel('clientcard');
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $projectsMountsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects_mounts');
-$mountTypes = $projectsMountsModel->get_mount_types();
-unset($mountTypes[1]);
+$allmountTypes = $projectsMountsModel->get_mount_types();
+unset($allmountTypes[1]);
+$mountTypes = [];
+foreach ($allmountTypes as $id=>$type){
+    if(in_array(34,$user_group) && $id <= 4){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+    if(in_array(39,$user_group) && ($id == 5 || $id == 6)){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+    if((in_array(40,$user_group) || in_array(41,$user_group)) && $id == 7){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+    if(in_array(42,$user_group) && $id == 8){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+    if(in_array(43,$user_group) && $id == 9){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+    if(in_array(44,$user_group) && $id == 10){
+        $mountTypes[$id] = ["title"=>$type,"status"=>$id+25];
+    }
+}
+/*$mountTypes = $allmountTypes;
+
 foreach ($mountTypes as $key=>$value){
     $mountTypes[$key] = array("title"=>$value,"status"=>$key+25);
-}
+}*/
 $app = JFactory::getApplication();
 $jinput = $app->input;
 

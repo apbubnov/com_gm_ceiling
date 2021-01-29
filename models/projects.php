@@ -373,12 +373,18 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`cl`.`dealer_id` = 1');
 
                     } elseif ($subtype == 'service') {
+                        $dealerId = JFactory::getUser()->dealer_id;
+                        $subQuery = $db->getQuery(true);
+                        $subQuery
+                            ->select('map.user_id,map.group_id,u.dealer_id')
+                            ->from('`rgzbn_user_usergroup_map` AS map')
+                            ->leftJoin('`rgzbn_users` AS u ON u.id = map.user_id')
+                            ->unionAll('(SELECT user_id,group_id,dealer_id FROM `rgzbn_users_dealer_id_map`)');
                         $query->select("CONCAT('[',GROUP_CONCAT( distinct CONCAT('{\"mounter_id\":\"',prm.mounter_id,'\",\"date_time\":\"',DATE_FORMAT(prm.date_time,'%d.%m.%Y %H:%i'),'\",\"stage\":\"',prm.type,'\"}')  ORDER BY prm.date_time ASC SEPARATOR ','),']') AS mount_data");
-                        $query->innerJoin("`#__user_usergroup_map` as `umap` on `umap`.`user_id` IN ($mount_subquery)");
+                        $query->innerJoin("($subQuery) as `umap` on `umap`.`user_id` IN ($mount_subquery)");
                         $query->innerJoin("`rgzbn_gm_ceiling_projects_mounts` AS `prm` ON prm.project_id = p.id");
-                        $query->where("`umap`.`group_id` IN (11, 26) AND `project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
+                        $query->where("`umap`.`group_id` IN (11, 26) AND umap.dealer_id = $dealerId AND `project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
                         $query->group("p.id");
-
                     } else {
                         $query->where('`project_status` IN (10, 5, 11,12, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
                         $query->where("`u2`.`dealer_id` = $user->dealer_id");
@@ -823,7 +829,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
             $query
-                ->select('p.id')
+                ->select('p.id,p.client_id')
                 ->select('s.title as `status`')
                 ->select('p.project_info')
                 ->select('u.name AS created,u1.name AS read_by_manager')

@@ -55,6 +55,8 @@ $gaugers = $usersModel->getUsersByGroupAndDealer($gaugers_group, $user->dealer_i
 $managers = array_merge($managers, $gaugers);
 
 $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-d'));
+$objMaster = in_array('46',$user_group);
+$disabled = $objMaster ? 'disabled' : '';
 ?>
 
 <style>
@@ -82,7 +84,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
                 <label id="FIO" style="font-size: 24px;"><?php echo $this->item->client_name; ?></label>
             </div>
             <div class="col-md-2 col-xs-2">
-                <button type="button" id="edit" value="" class="btn btn-primary">
+                <button type="button" id="edit" value="" class="btn btn-primary" <?=$disabled?>>
                     <i class="fas fa-pen" aria-hidden="true"></i>
                 </button>
             </div>
@@ -93,7 +95,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
             </div>
             <div class="col-md-2 col-xs-2">
                 <?php if (count($managers)) { ?>
-                    <button type="button" id="edit_manager" value="" class="btn btn-primary">
+                    <button type="button" id="edit_manager" value="" class="btn btn-primary" <?=$disabled?>>
                         <i class="fas fa-edit" aria-hidden="true"></i>
                     </button>
                 <?php } ?>
@@ -144,7 +146,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
         <?php } ?>
         <div class="row margin">
             <div class="col-md-12">
-                <button class="btn btn-primary wide_btn" id="grant_access">
+                <button class="btn btn-primary wide_btn" id="grant_access" <?=$disabled?>>
                     Предоставить доступ <br>для онлайн просчета
                 </button>
             </div>
@@ -176,7 +178,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
 
 
 <?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_history.php'); ?>
-<?php include_once('components/com_gm_ceiling/views/clientcard/labels.php'); ?>
+<?php if(!$objMaster) include_once('components/com_gm_ceiling/views/clientcard/labels.php'); ?>
 <hr>
 
 <!-- конец -->
@@ -456,7 +458,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
                     <?php echo $item->status; ?>
                 </td>
                 <td>
-                    <button class="btn btn-danger btn-sm btn_del_proj" type="button" data-id="<?php echo $item->id; ?>">
+                    <button class="btn btn-danger btn-sm btn_del_proj" type="button" data-id="<?php echo $item->id; ?>" <?=$disabled;?>>
                         <i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                 </td>
             </tr>
@@ -472,9 +474,23 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
 </div>
 <!-- модальное окно -->
 <div class="modal_window_container" id="mw_container">
-    <button type="button" id="btn_close" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+    <button type="button" id="btn_close" class="btn-close">
+        <i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
     <div id="mw_call" class="modal_window">
+        <?php
+            $clientNameArr = explode(' ',$client->client_name);
+            $surname = '';
+            $name = '';
+            $patr = '';
+            if(count($clientNameArr) == 3){
+                $surname = $clientNameArr[0];
+                $name = $clientNameArr[1];
+                $patr = $clientNameArr[2];
+            }
+            else{ $surname = $client->client_name;}
+
+        ?>
         <div class="row center" style="margin-bottom: 15px;">
             Изменение ФИО клиента
         </div>
@@ -484,7 +500,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
                     <label for="new_surname">Фамилия</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="new_surname">
+                    <input type="text" class="form-control" id="new_surname" value="<?=$surname;?>">
                 </div>
             </div>
             <div class="col-md-4">
@@ -492,7 +508,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
                     <label for="new_name">Имя</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="new_name">
+                    <input type="text" class="form-control" id="new_name" value="<?=$name;?>">
                 </div>
             </div>
             <div class="col-md-4">
@@ -500,7 +516,7 @@ $closestCallBack = $callbackModel->getClosestCallback($this->item->id,date('Y-m-
                     <label for="new_patronymic">Отчество</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="new_patronymic">
+                    <input type="text" class="form-control" id="new_patronymic" value="<?=$patr;?>">
                 </div>
             </div>
 

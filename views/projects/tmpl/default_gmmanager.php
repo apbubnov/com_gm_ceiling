@@ -16,23 +16,27 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$listOrder  = $this->state->get('list.ordering');
-$listDirn   = $this->state->get('list.direction');
-$canCreate  = $user->authorise('core.create', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canEdit    = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'projectform.xml');
-$canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
-$canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
-$canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 <h2 class = "center">Запущенные в производство</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager'); ?>" method="post"
       name="adminForm" id="adminForm">
-    <? if (count($this->items) > 0): ?>
 	 <div class="row">
-         <div class="col-md-4 col-xs-6"></div>
-         <div class="col-md-4 col-xs-6 right"><input class="input-gm" id = "run_date"> </div>
+         <div class="col-md-8 col-xs-6 right" >
+             <div class="col-md-2" style="line-height: 2em;">
+                 Запущено с
+             </div>
+             <div class="col-md-4">
+                 <input class="form-control" id = "run_date_from" type="date">
+             </div>
+             <div class="col-md-2" style="line-height: 2em;">
+                 по
+             </div>
+             <div class="col-md-4">
+                 <input class="form-control" id = "run_date_to" type="date">
+             </div>
+         </div>
          <div class="col-md-3 col-xs-9">
              <input type="text" id="search_text" class="form-control">
          </div>
@@ -112,16 +116,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-    <? else: ?>
-        <p class="center">
-        <h3>У вас еще нет проектов, запущенных в производство!</h3>
-        </p>
-    <? endif; ?>
+
 
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
-	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>
 
@@ -131,9 +129,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
     $user_group = $user->groups;
 ?>
 
-<?php if($canDelete) { ?>
+
 <script type="text/javascript">
-    var items_json = '<?php echo json_encode($this->items)?>'.replace(/null/i, "\"\"");
+    var items_json = '<?= quotemeta(json_encode($this->items));?>'.replace(/null/i, "\"\"");
     var items = JSON.parse(items_json);
     console.log(items);
     jQuery(document).keypress(
@@ -143,7 +141,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             }
         });
 	jQuery(document).ready(function () {
-	    jQuery("#run_date").mask("99.99.9999");
 		jQuery('#btn_back').click(function(){
                 location.href = "/index.php?option=com_gm_ceiling&task=mainpage";
             });
@@ -151,7 +148,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 		jQuery("#search_btn").click(function () {
             var search = jQuery("#search_text").val();
-            var date = jQuery('#run_date').val();
+            var date_from = jQuery('#run_date_from').val(),
+                date_to = jQuery('#run_date_to').val();
             showFiltered(search,formatDate(date));
         });
 
@@ -237,4 +235,3 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         return this.split(search).join(replace);
     }
 </script>
-<?php } ?>

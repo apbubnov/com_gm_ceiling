@@ -211,6 +211,9 @@ class Gm_ceilingModelClient extends JModelItem
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__gm_ceiling_clients`");
+			if(empty($manager_id)){
+			    $manager_id = 'NULL';
+            }
 			$query->set("manager_id = $manager_id");
 			$query->where("id = $id");
 			$db->setQuery($query);
