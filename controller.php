@@ -3063,12 +3063,19 @@ public function register_mnfctr(){
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'calls.txt', json_encode($_POST)."\n----------\n", FILE_APPEND);
             $phone = $_POST['phone'];
+            $advt = $_POST['advt'];
+            $jinput = JFactory::getApplication()->input;
             if (empty($_POST['phone'])) {
-                $jinput = JFactory::getApplication()->input;
                 $phone = $jinput->get('phone','','STRING');
             }
-            $phone = mb_ereg_replace('[^\d]', '', $phone);
+            if (empty($_POST['advt'])) {
+                $advt = $jinput->get('advt','','STRING');
+            }
+            if(empty($advt)){
+                $advt = 43;
+            }
             file_put_contents($files.'calls.txt', json_encode($phone)."\n==========\n", FILE_APPEND);
+            $phone = mb_ereg_replace('[^\d]', '', $phone);
             $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
             $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
@@ -3085,7 +3092,7 @@ public function register_mnfctr(){
             if (mb_ereg('[\d]', $result)) {
                 $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
                 $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 697);
-                $this->createProject($result,43,null,null);
+                $this->createProject($result,$advt,null,null);
             }
             else
             {
@@ -3674,6 +3681,112 @@ public function register_mnfctr(){
         }
     }
 
+    function registrationBAU(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name','','STRING');
+            $surname = $jinput->get('surname','','STRING');
+            $password = $jinput->get('password','','STRING');
+            $phone = $jinput->get('phone','','STRING');
+            $phone = mb_ereg_replace('[^\d]', '', $phone);
+            $email = $jinput->get('email', '', 'STRING');
+            if(!empty($phone)){
+                $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $user = $userModel->getUserByUsername($phone);
+                if (!empty($user)) {
+                    /*Существующий пользователь*/
+                    die(json_encode((object)["type"=>"success","id"=>$user->associated_client,"code"=>$code]));
+                }
+                else{
+                    /*Новый пользователь*/
+                    $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
+                    $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                    $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                    $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+
+                    $client_data['client_name'] = "$surname $name";
+                    $client_data['client_contacts'] = $phone;
+                    $client_data['dealer_id'] = 1;
+                    $client_id = $clientform_model->save($client_data);
+
+                    if (mb_ereg('[\d]', $client_id)) {
+                        /*Новый клиент*/
+                        $clienthistory_model->save($client_id, 'Клиент создан в результате регистрации в BAUNET');
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Новый клиент из прилодения BAUNET', $client_id, 1);
+                    } else {
+                        /*такой клиент уже есть в базе*/
+                        $client = $clientsphones_model->getItemsByPhoneNumber($phone, 1);
+                        $client_id = $client->id;
+                        $clienthistory_model->save($client_id, 'Существующий клиент получил кабинет на calc.gm-vrn');
+                        $callback_model->save(date("Y-m-d H:i:s"), 'Существующий клиент получил кабинет на calc.gm-vrn.ru', $client_id, 1);
+                    }
+                    if (mb_ereg('[\d]', $client_id)) {
+                        //создание user'а
+                        $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser("$surname $name", $phone, $email, $client_id, 2,0,$password);
+                    }
+
+                    $response = json_decode($this->sendCall($phone));
+                    $code = $response->code;
+                    $userModel->setVerificationCode($dealer_id, $code);
+                    die(json_encode((object)["type"=>"success","id"=>$client_id,"code"=>$code]));
+                }
+            }
+            else{
+                die(json_encode((object)["type"=>"error","text"=>"Empty phone number"]));
+            }
+
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function sendCall($phone){
+        try{
+            include_once ($_SERVER['DOCUMENT_ROOT'] .'/components/com_gm_ceiling/smsc_api.php');
+            return callRequest($phone);
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function verifyCodeBAU(){
+        try{
+            $result = (object)array("type"=>"","data"=>"");
+            $jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone','','STRING');
+            $code = $jinput->getInt('code');
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $userModel->getUserByUsername($phone);
+            $now = date('Y-m-d H:i:s');
+            $codeCreationTime = $user->code_creation_time;
+            $diff = mktime($now) - mktime($codeCreationTime);
+            if($diff >=3600){
+                $result->type = 'error';
+                $result->data = 'Код устарел!';
+            }
+            else{
+                if($user->verification_code == $code){
+                    $result->type = 'success';
+                    $result->data = 'true';
+                    $userModel->setVerificationCode($user->id,null);
+                    Gm_ceilingHelpersGm_ceiling::forceLogin($user->id);
+                }
+                else{
+                    $result->type = 'error';
+                    $result->data = 'Введен неверный код!';
+                }
+            }
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
+
     function acceprFromQuiz(){
         try{
             $data = json_decode(file_get_contents('php://input'), true);
@@ -3757,14 +3870,68 @@ public function register_mnfctr(){
         $query
             ->select('id')
             ->from('`rgzbn_gm_ceiling_projects`')
-            ->where('project_status = 12');
+            ->where('project_status = 11');
         $db->setQuery($query);
         $ids = $db->loadObjectList();
         foreach ($ids as $id) {
             Gm_ceilingHelpersGm_ceiling::createImgArchive($id->id);
         }
     }
+    function duplicate(){
+        $from = [64886,64887,64888,64889,64890,64891,64892,64893,64894];
+        $to = [65234,65235,65236,65237,65238,65239,65240,65241,65242];
+        $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+        $calcModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+        $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+        $calcsMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
+        $canvasesModel = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+        foreach ($from as $key => $value) {
+            $fromProjects = $projectsModel->getClientsProjects($value);
+            $toDupProjects = $projectsModel->getClientsProjects($to[$key]);
+            foreach ($fromProjects as $proj) {
+                $calcsId = $calculationsModel->getIdsByProjectId($proj->id);
+                foreach ($calcsId as $calcId) {
+                    $calcData = $calcModel->new_getData($calcId->id);
+                    unset($calcData->id);
+                    $calcData = get_object_vars($calcData);
+                    $mountData = $calcsMountModel->getData($calcId->id);
+                    $calcData['mountData'] = $mountData;
+                    foreach ($toDupProjects as $dupProj) {
+                        if ($dupProj->project_info == $proj->project_info) {
+                            $calcData['canvas_area'] = $canvasesModel->getCutsData($calcId->id);
+                            $calcData['project_id'] = $dupProj->id;
+                            $newCalcId = $calcModel->duplicate($calcData);
 
+                            $oldFileName = md5('calculation_sketch' . $calcId->id);
+                            $oldImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$oldFileName.svg";
+                            $newFileName = md5('calculation_sketch' . $newCalcId);
+                            $newImage = $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/$newFileName.svg";
+                            copy($oldImage, $newImage);
+                             //раскрой
+                            $oldCutFileName = md5('cut_sketch' . $calcId->id);
+                            $oldCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$oldCutFileName.svg";
+                            $newCutFileName = md5('cut_sketch' . $newCalcId);
+                            $newCutImage = $_SERVER['DOCUMENT_ROOT'] . "/cut_images/$newCutFileName.svg";
+                            copy($oldCutImage, $newCutImage);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function getInfoImg(){
+        $dir = '/uploaded_calc_images';
+        $files = glob($dir."/*.*",GLOB_NOSORT);
+        do{
+            $dir = $dir."/*";
+            $files2 = glob($dir."/*.*",GLOB_NOSORT);
+
+            $files = array_merge($files,$files2);
+        }while(sizeof($files2)>0);
+
+        throw new Exception(print_r($files,true));
+    }
 
 }
 

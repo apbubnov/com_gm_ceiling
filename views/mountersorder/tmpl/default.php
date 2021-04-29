@@ -1037,6 +1037,9 @@ $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
                 status_mount = msg[0].project_status;
                 console.log(status_mount);
                 switch(status_mount){
+                    case '5':
+                    case '8':
+                    case '9':
                     case '10':
                     case '19':
                         if(stage == 1 || stages.indexOf("2")>=0){

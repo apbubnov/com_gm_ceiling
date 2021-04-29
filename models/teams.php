@@ -170,7 +170,7 @@ class Gm_ceilingModelTeams extends JModelItem {
                 ->select("projects.project_sum,projects.new_project_sum,($prepaymentSubquery) as prepayment")
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_projects_mounts AS m ON m.project_id = projects.id')
-				->where("m.mounter_id = '$id' and m.date_time between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 12, 17, 19,24,25,26,27,28,29)")
+				->where("m.mounter_id = '$id' and m.date_time between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 9, 10, 16, 11, 12, 17, 19,24,25,26,27,28,29)")
 				->order('m.date_time');
 			$db->setQuery($query);
 			$items = $db->loadObjectList(); 

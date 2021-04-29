@@ -529,6 +529,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
     .result_row:hover {
         background-color: #f1f1f1
     }
+    .emptyInp{
+        border: 2px solid red;
+    }
 
 </style>
 <h2 class="center">Создание новой реализации</h2>
@@ -545,7 +548,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             <i class="fa fa-plus" aria-hidden="true"></i> Товар
         </button>
         <select class="Action Stock" name="stock">
-            <?foreach ($stocks as $s):?>
+            <?php foreach ($stocks as $s):?>
                 <option value="<?=$s->id;?>"><?=$s->name;?></option>
             <?endforeach;?>
         </select>
@@ -565,6 +568,15 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             <tr class="Dealer" style="">
                 <td class="Name">Дилер:</td>
                 <td class="Value"></td>
+            </tr>
+            <tr >
+                <td class="Name">Адрес:</td>
+                <td class="Value">
+                    <div class="row"></div>
+                    <div class="row"></div>
+                    <div class="row"></div>
+                    <div class="row"></div>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -603,7 +615,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                     <label>Категория</label><br>
                     <div class="col-md-12">
                         <select class="form-control" id="goods_category_select" style="margin-bottom: 10px;">
-                            <option>Выберите категорию</option>
+                            <option value="choose_cat">Выберите категорию</option>
                             <?php foreach ($goodsInCategories as $category){?>
                                 <option value="<?=$category->category_id?>"><?=$category->category_name?></option>
                             <?php } ?>
@@ -635,6 +647,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 </table>
             </div>
             <div class="row">
+                <span>Внимание! Введеное количество округляется согласно кратности товара!</span>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     <button class="btn btn-primary" id="add_dop_goods">Добавить</button>
                 </div>
@@ -645,10 +660,28 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <label>Введите данные для поиска</label>
-                    <input class="form-control" id="search_inp">
-                    <div id="search_result" style="height: 300px; overflow-y: scroll;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>
+                                <label>Выберите тип клиента</label>
+                            </b>
+                        </div>
+                        <div class="col-md-12" style="text-align: left;">
+                            <input type="radio" class="radio" name="user_type" id="dealer" data-type="0,1" checked>
+                            <label for="dealer">Дилер</label>
+                        </div>
+                        <div class="col-md-12" style="text-align: left;">
+                            <input type="radio" class="radio" name="user_type" id="builder" data-type="7">
+                            <label for="builder">Стройка</label>
+                        </div>
                     </div>
+                    <div class="row">
+                        <b><label>Введите данные для поиска</label></b>
+                        <input class="form-control" id="search_inp">
+                        <div id="search_result" style="height: 300px; overflow-y: scroll;">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-md-4"></div>
             </div>
@@ -674,6 +707,26 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                     <label><b>Цена</b></label><br>
                    <span class="sum"></span>
                 </div>
+            </div>
+            <div class="row">
+                <span>Внимание!Введеное количество автоматически округляется согласно кратности товара!</span>
+            </div>
+        </div>
+        <div class="modal_window" id="mw_shortage">
+            <div class="row">
+                <table id="shortage_goods" class="table table-stripped table_cashbox">
+                    <thead>
+                    <td>
+                        Наименование
+                    </td>
+                    <td>
+                        Количество
+                    </td>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -717,6 +770,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
         found_users,
         customer ={},
         Goods = {},
+        addedGoods = {},
         goodsInCategories = JSON.parse('<?= $goodsInCategories_json?>'),
         goodsToAdd = {};
     console.log(goodsInCategories);
@@ -730,6 +784,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             && div1.has(e.target).length === 0 &&
             !div2.is(e.target)
             && div2.has(e.target).length === 0) {
+            if(div.is(':visible')){
+                addedGoods = {};
+            }
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
@@ -753,6 +810,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             jQuery("#mw_container").show();
             jQuery("#close").show();
             jQuery("#mw_add_goods").show('slow');
+            jQuery('#added_goods > tbody').empty();
+            jQuery('#goods_category_select').val('choose_cat');
+            jQuery('#goods_category_select').trigger('change');
         });
 
         jQuery("#choose_customer_btn").click(function () {
@@ -763,14 +823,16 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
         jQuery("#goods_category_select").change(function(){
             var selected_category = jQuery(this).val(),
-                goodsByCategory = goodsInCategories.filter(function(category){
+                goodsByCategory = (selected_category != 'choose_cat') ? goodsInCategories.filter(function(category){
                     return category.category_id == selected_category;
-                })[0].goods;
+                })[0].goods : '';
             jQuery("#goods_select").empty();
-            jQuery("#goods_select").append('<option>Выберите компонент</option>');
-            jQuery.each(goodsByCategory,function(index,elem){
-                jQuery("#goods_select").append('<option value = "'+elem.goods_id+'">'+elem.name+'</option>');
-            });
+            jQuery("#goods_select").append('<option value="choose_g">Выберите компонент</option>');
+            if(!empty(goodsByCategory)) {
+                jQuery.each(goodsByCategory, function (index, elem) {
+                    jQuery("#goods_select").append('<option value = "' + elem.goods_id + '">' + elem.name + '</option>');
+                });
+            }
             jQuery("#div_goods_select").show();
         });
 
@@ -785,37 +847,62 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 })[0];
             console.log(goodsByCategory);
             addGoodsInTable(selected_goods);
-            Goods[selected_goods.goods_id] = selected_goods;
+            addedGoods[selected_goods.goods_id] = selected_goods;
         });
 
         jQuery("#add_by_id").click(function () {
             var found_goods = findGoods(jQuery('#goods_id').val());
             console.log(found_goods);
             addGoodsInTable(found_goods);
-            Goods[found_goods.goods_id] = found_goods;
+            addedGoods[found_goods.goods_id] = found_goods;
 
        })
 
         jQuery("#add_dop_goods").click(function(){
-            var addTotalSum = 0;
+            var addTotalSum = 0,
+                wasEmptyValues = false;
             jQuery.each(jQuery("#added_goods > tbody > tr"),function (index,elem) {
                 elem = jQuery(elem);
-                Goods[elem.data('id')].final_count = elem.find('.count').val();
-                Goods[elem.data('id')].price_sum = Goods[elem.data('id')].dealer_price* Goods[elem.data('id')].final_count;
-                addTotalSum += Goods[elem.data('id')].price_sum;
+                var input = elem.find('.count');
+                if(empty(input.val())){
+                    wasEmptyValues = true;
+                    jQuery(input).addClass('emptyInp');
+                }
+                else{
+                    jQuery(input).removeClass('emptyInp');
+                }
+
+                addedGoods[elem.data('id')].final_count = round(input.val().replace(',', '.'), addedGoods[elem.data('id')].multiplicity);
+                addedGoods[elem.data('id')].price_sum = addedGoods[elem.data('id')].dealer_price * addedGoods[elem.data('id')].final_count;
+                addTotalSum += addedGoods[elem.data('id')].price_sum;
             });
-            fillData(Goods);
-            jQuery("#close").hide();
-            jQuery("#mw_container").hide();
-            jQuery("#mw_add_goods").hide();
+            if(wasEmptyValues) {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 5000,
+                    type: "error",
+                    text: "Пустое количество!"
+                });
+            }
+            else{
+                Goods = addedGoods;
+                addedGoods = {};
+                fillData(Goods);
+                jQuery("#close").hide();
+                jQuery("#mw_container").hide();
+                jQuery("#mw_add_goods").hide();
+            }
         });
 
         jQuery("#search_inp").keyup(function(){
+            var dealerType = jQuery('[name="user_type"]:checked').data('type');
             jQuery.ajax({
                 url: "/index.php?option=com_gm_ceiling&task=stock.getCustomer",
                 async: false,
                 data: {
-                   filter:jQuery("#search_inp").val()
+                    filter: jQuery("#search_inp").val(),
+                    dealer_type: dealerType
                 },
                 type: "POST",
                 success: function (data) {
@@ -854,7 +941,6 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
         });
 
         jQuery("#make_realisation").click(function () {
-            console.log(customer.associated_client);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=create_empty_project",
                 data: {
@@ -915,7 +1001,11 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
         });
 
         jQuery('body').on('click','.delete',function() {
-           jQuery(this).closest('tr').remove();
+            var row = jQuery(this).closest('tr'),
+                goodsId = row.data('id');
+            delete Goods[goodsId];
+            row.remove();
+
         });
 
         jQuery('.add_goods').click(function () {
@@ -938,6 +1028,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
         jQuery("#close_doc").click(function () {
             jQuery("#mw_doc").hide();
+            location.reload();
         });
 
         jQuery('body').on('click','.Clone',function() {
@@ -956,7 +1047,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
         jQuery("#new_count").keyup(function(){
            var id = jQuery(this).closest('.row').find('.edit_goods_id').val(),
-               new_count = jQuery(this).val(),
+               new_count = round(jQuery(this).val().replace(',','.'),Goods[id].multiplicity),
                price = jQuery(this).closest('.row').find('.goods_price').text(),
                old_sum = jQuery(this).closest('.row').find('.sum').text(),
                new_sum = (price*new_count).toFixed(2),
@@ -1034,63 +1125,88 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
     }
 
     function makeRealisation(project_id){
-        var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length};
-            jQuery.each(Goods,function(index,elem){
-                goodsToRealisation.goods.push({goods_id:elem.goods_id,category_id:elem.category_id,name:elem.name,dealer_price:elem.dealer_price,unit_id:elem.unit_id,count:elem.final_count});
-            });
-            console.log(goodsToRealisation);
+        var goodsToRealisation = {ids:Object.keys(Goods).join(','),goods:[],goods_count:Object.keys(Goods).length},
+            sum = 0,
+            wasEmpty = false;
+        jQuery.each(Goods,function(index,elem){
+            if(empty(elem.final_count)){
+                wasEmpty = true;
+                jQuery('#goods_table > tbody > tr[data-id="'+elem.goods_id+'"]').css('background-color','#ff6666');
+            }
+            if(!wasEmpty) {
+                jQuery('#goods_table > tbody > tr[data-id="'+elem.goods_id+'"]').css('background-color','');
+                goodsToRealisation.goods.push({
+                    goods_id: elem.goods_id,
+                    category_id: elem.category_id,
+                    name: elem.name,
+                    dealer_price: elem.dealer_price,
+                    unit_id: elem.unit_id,
+                    count: elem.final_count
+                });
+                sum += (parseFloat(elem.final_count).toFixed(2) * parseFloat(elem.dealer_price).toFixed(2));
+            }
+        });
+        if(!wasEmpty) {
             jQuery.ajax({
                 url: "/index.php?option=com_gm_ceiling&task=stock.makeRealisation",
                 async: false,
                 data: {
-                    goods:JSON.stringify(goodsToRealisation),
-                    project_id:project_id,
-                    stock: jQuery('[name="stock"]').val()
+                    goods: JSON.stringify(goodsToRealisation),
+                    project_id: project_id,
+                    stock: jQuery('[name="stock"]').val(),
+                    sum: sum
                 },
                 type: "POST",
                 success: function (data) {
-                   data = JSON.parse(data);
-                   if(data.type == 'error'){
-                       noty({
-                           theme: 'relax',
-                           layout: 'center',
-                           timeout: 5000,
-                           type: "error",
-                           text: data.text,
-                           buttons:[
-                               {
-                                   addClass: 'btn btn-primary', text: 'Посмотреть детали', onClick: function($noty) {
-                                       jQuery("#shortage_goods > tbody").empty();
-                                       jQuery.each(data.goods,function(index,goods){
-                                           jQuery("#shortage_goods > tbody").append('<tr><td>'+goods.name+'</td><td>'+goods.count+'</td></tr>')
-                                       });
-                                       jQuery("#mw_container").show();
-                                       jQuery("#mw_shortage").show('slow');
-                                       jQuery("#close").show();
-                                       $noty.close();
-                                   }
-                               },
-                               {
-                                   addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
-                                       $noty.close();
-                                   }
-                               }
-                           ]
-                       });
-                   }
-                   else{
-                       console.log(data);
-                       if (data.href != null)
-                       {
-                           jQuery.each(data.href, function (i, t) {
-                               console.log(i,t)
-                               jQuery("#"+i).val(t); jQuery("#"+i).attr("checked",true);
-                           });
-                           jQuery(".ModalDoc .Document .iFrame").attr("src", data.href.MergeFiles);
-                           jQuery("#mw_doc").show('slow');
-                           jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]").change(LoadPDF);
-                       }
-                   }
+                    data = JSON.parse(data);
+                    if (data.type == 'error') {
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "error",
+                            text: data.text,
+                            buttons: [
+                                {
+                                    addClass: 'btn btn-primary',
+                                    text: 'Посмотреть детали',
+                                    onClick: function ($noty) {
+                                        jQuery("#shortage_goods > tbody").empty();
+                                        jQuery.each(data.goods, function (index, goods) {
+                                            jQuery("#shortage_goods > tbody").append('<tr><td>' + goods.name + '</td><td>' + goods.count + '</td></tr>')
+                                        });
+                                        jQuery("#mw_container").show();
+                                        jQuery("#mw_shortage").show('slow');
+                                        jQuery("#close").show();
+                                        $noty.close();
+                                    }
+                                },
+                                {
+                                    addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                                        $noty.close();
+                                    }
+                                }
+                            ]
+                        });
+                    } else {
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "success",
+                            text: "Реализация прошла успешно!"
+                        });
+                        if (data.href != null) {
+                            jQuery.each(data.href, function (i, t) {
+                                console.log(i, t)
+                                jQuery("#" + i).val(t);
+                                jQuery("#" + i).attr("checked", true);
+                            });
+                            jQuery(".ModalDoc .Document .iFrame").attr("src", data.href.MergeFiles);
+                            jQuery("#mw_doc").show('slow');
+                            jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]").change(LoadPDF);
+                        }
+                    }
                 },
                 dataType: "text",
                 timeout: 10000,
@@ -1104,6 +1220,16 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                     });
                 }
             });
+        }
+        else{
+            noty({
+                theme: 'relax',
+                layout: 'center',
+                timeout: 5000,
+                type: "error",
+                text: "Позиции имеют нулевое количетсво!"
+            });
+        }
     }
 
     function LoadPDF() {
@@ -1131,5 +1257,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 });
             }
         });
+    }
+
+    function round(count,multiplicity) {
+        return Math.ceil(count/multiplicity)*multiplicity;
     }
 </script>

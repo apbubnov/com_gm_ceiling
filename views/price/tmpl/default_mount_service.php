@@ -17,45 +17,48 @@ $jinput = JFactory::getApplication()->input;
 $user = JFactory::getUser();
 $dealerId = $user->dealer_id;
 $groups = $user->groups;
-$isNMS = in_array('17', $groups) || in_array('12',$groups);
+$isNMS = in_array('17', $groups) || in_array('12',$groups ) || in_array('14',$groups);
 
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $servicePrice = $model_mount->getServicePrice($dealerId);
 $model_prices = Gm_ceilingHelpersGm_ceiling::getModel('prices');
 $gm_price = $model_prices->getJobsDealer($dealerId);
 ?>
-    <style>
-        body {
-            color: #414099;
-        }
+<style>
+    body {
+        color: #414099;
+    }
 
-        .caption1 {
-            text-align: center;
-            padding: 15px 0;
-            margin-bottom: 0;
-            color: #414099;
-        }
+    .caption1 {
+        text-align: center;
+        padding: 15px 0;
+        margin-bottom: 0;
+        color: #414099;
+    }
 
-        .caption2 {
-            text-align: center;
-            height: auto;
-            padding: 10px 0;
-            border: 0;
-            margin-bottom: 0;
-            color: #414099;
-        }
+    .caption2 {
+        text-align: center;
+        height: auto;
+        padding: 10px 0;
+        border: 0;
+        margin-bottom: 0;
+        color: #414099;
+    }
 
-        input[type="text"] {
-            padding: .5rem .75rem;
-            border: 1px solid rgba(0, 0, 0, .15);
-            border-radius: .25rem;
-        }
+    input[type="text"] {
+        padding: .5rem .75rem;
+        border: 1px solid rgba(0, 0, 0, .15);
+        border-radius: .25rem;
+    }
 
-        .control-label {
-            margin-top: 7px;
-            margin-bottom: 0;
-        }
-    </style>
+    .control-label {
+        margin-top: 7px;
+        margin-bottom: 0;
+    }
+</style>
+<div class="row" style="margin-bottom: 1em;">
+    <?=parent::getButtonBack();?>
+</div>
 <?php if ($isNMS || ($user->dealer_id == 1 && $user->dealer_type == 0)): ?>
     <div class="row">
         <div class="col-md-6">

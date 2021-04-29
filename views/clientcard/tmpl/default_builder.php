@@ -142,7 +142,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
             <?php if(!$isObjMaster){ ?>
                 <div class="col-xs-2 col-md-2">
                     <button class="btn btn-primary" id="change_master" >
-                        <i class="fas fa-user-edit"> <?=!empty($manager_name) ? 'Изменить' : 'Назначить';?></i>
+                        <i class="fas fa-user-edit"></i> <?=!empty($manager_name) ? 'Изменить' : 'Назначить';?>
                     </button>
                 </div>
             <?php }?>
@@ -383,12 +383,12 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
         </div>
         <div class="row" style="margin-bottom: 15px;">
             <div class="col-md-12">
-                <button class="btn btn-primary btn_width" id="btn_add_dop_costs"> Добавить доп.затраты</button>
+                <button class="btn btn-primary btn_width" id="btn_add_dop_costs" <?=$disabled;?>> Добавить доп.затраты</button>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary btn_width" id="btn_show_dop_costs"> Просмотреть доп.затраты</button>
+                <button class="btn btn-primary btn_width" id="btn_show_dop_costs" <?=$disabled;?>> Просмотреть доп.затраты</button>
             </div>
         </div>
     </div>
@@ -405,7 +405,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
 <hr>
 <div class="row center">
     <div class="col-md-12">
-        <button class="btn btn-primary" type="button" id="btn_recalc">Пересчитать всё</button>
+        <button class="btn btn-primary" type="button" id="btn_recalc" <?=$disabled;?>>Пересчитать всё</button>
     </div>
 </div>
 <hr>
@@ -464,7 +464,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
 
 <div class="row center">
     <div class="col-md-12">
-        <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
+        <button type="button" id="show_salary" class="btn btn-primary" <?=$disabled;?>>Посмотреть суммы по бригадам</button>
     </div>
     <!--<div class="col-md-6">
         <button type="button" id="show_salary" class="btn btn-primary">Посмотреть суммы по бригадам</button>
@@ -741,12 +741,13 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
             checks,
             projectsWithCalcsIds = JSON.parse('<?=addslashes(json_encode($projectsWithCalcIds))?>'),
             allMounters = [],
-            isObjMaster = '<?=!empty($isObjMaster) ? false : true?>';
+            isObjMaster = '<?=!empty($isObjMaster) ? false : true?>',
+            disabled = '<?=$disabled;?>';
             console.log(isObjMaster);
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",
             ACCEPT_BUTTON = "<button class='btn btn-primary btn-sm accept_mounter'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>",
-            CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
-            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'><i class=\"fas fa-sync\" aria-hidden=\"true\"></i></button></div></div>",
+            CHECK_BUTTON = "<div class='row'><div class='col-md-12'><button name='check_btn' class='btn btn-primary btn-sm sum_btn' "+disabled+"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button></div></div>",
+            REFRESH_BUTTON = "<div class='row'><div class='col-md-12'><button name='refresh_btn' class='btn btn-primary btn-sm sum_btn'" +disabled+"><i class=\"fas fa-sync\" aria-hidden=\"true\"></i></button></div></div>",
             BUILDERS_SELECT = '<select class="input-gm builders_select" style ="vertical-align: middle;"><?php echo $options ?></select>',
             MOVE_SUM_BTN = '<button class="btn btn-primary btn-sm transfer" style ="vertical-align: middle;"><i class="fas fa-save" aria-hidden="true"></i></buttton>',
             DEFECT_ICON = '<i class="fas fa-house-damage"></i>',
@@ -1495,7 +1496,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
             var stage =  jQuery('.mount_stage.active').data('mount_type');
             console.log(stage);
             generateMountersOption(stage);
-            jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+            jQuery(this.closest('td')).find("[name = 'mounter_div']")[0].innerHTML = "<select class='form-control' name ='mounter_select'>"+mountersOption+"</select>";
             jQuery(jQuery(this.closest('td')).find("[name = 'btn_div']")[0]).append(ACCEPT_BUTTON);
             this.remove();
         });
@@ -1620,7 +1621,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
 
                     }
                     var mountersStr = '<div class="row" style="font-size:9pt;">';
-                    mounter = "<select class='input-gm' name ='mounter_select'>"+mountersOption+"</select>";
+                    mounter = "<select class='form-control' name ='mounter_select'>"+mountersOption+"</select>";
                     acceptDoneBtn = "";
                     button = ACCEPT_BUTTON;
                     if(+elem.projects[j].status < stage+29)

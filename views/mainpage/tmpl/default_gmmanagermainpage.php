@@ -61,6 +61,9 @@ $user_group = $user->groups;
         <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fab fa-windows" aria-hidden="true"></i> Оконщики</a>
         </div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytic_dealers&type=new', false); ?>">Аналитика по дилерам</a>
+        </div>
 	</div>
 	<div class="columns-tar">
 		<div class="row center">
@@ -131,6 +134,9 @@ $user_group = $user->groups;
 		</div>
         <div class="row center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
+        </div>
+        <div class="row center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock', false); ?>"><i class="fas fa-warehouse"></i> На склад</a>
         </div>
 	</div>
 </div>

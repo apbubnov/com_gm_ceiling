@@ -93,8 +93,22 @@ class Gm_ceilingControllerAnalytic extends Gm_ceilingController
             $result = $model->getMountServiceAnalytic($dateFrom,$dateTo);
             die(json_encode($result));
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsAnalytic(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $dateFrom = $jinput->get('date_from','','STRING');
+            $dateTo = $jinput->get('date_to','','STRING');
+            $goodsId = $jinput->getString('goods_id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('analytic_new');
+            $result = $model->getGoodsAnalytic($dateFrom,$dateTo,$goodsId);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }

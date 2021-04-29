@@ -22,7 +22,7 @@ $app = JFactory::getApplication();
 $projectId = $app->input->get('id', 0, 'int');
 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
-$data = $projectModel->getProjectForStock($projectId);
+$data = $projectModel->getProjectForStock($projectId,'');
 $project = $projectModel->getData($projectId);
 $stocks = $model->getStocks();
 
@@ -491,8 +491,14 @@ echo parent::getPreloaderNotJS();
                 },
                 type: "POST",
                 success: function (data) {
-
-
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "success",
+                        text: "Возврат проведен!"
+                    });
+                    setTimeout(function(){location.reload()},4000);
                 },
                 dataType: "text",
                 timeout: 10000,
@@ -516,19 +522,21 @@ echo parent::getPreloaderNotJS();
             goods_name,
             td_edit = '<td><div class="row" style="margin-top: 5px;margin-bottom:5px;"> <div class="col-md-8"> '+INPUT_COUNT+'</div><div class="col-md-4">'+OK_BTN+'</div></div></td>';
         jQuery.each(goods,function(eindex,elem){
-            jQuery('#goods_table > tbody').append('<tr data-goods_id="'+elem.goods_id+'"></tr>');
-            if(elem.category_id == 1){
-                goods_name = 'Полотно: '+elem.name;
+            if(elem.realised == 1) {
+                /*если товар реализован, т.к в список попадают товары которые просчитаны, но не нужны*/
+                jQuery('#goods_table > tbody').append('<tr data-goods_id="' + elem.goods_id + '"></tr>');
+                if (elem.category_id == 1) {
+                    goods_name = 'Полотно: ' + elem.name;
+                } else {
+                    goods_name = 'Компонент: ' + elem.name;
+                }
+                jQuery('#goods_table > tbody > tr:last').append('<td>' + goods_name + '</td>' +
+                    '<td>' + elem.dealer_price + '</td>' +
+                    '<td class="goods_count">' + parseFloat(elem.final_count).toFixed(2) + '</td>' +
+                    '<td class="goods_sum">'+parseFloat(elem.final_count*elem.dealer_price).toFixed(2)+'</td>' +
+                    td_edit)
+                total_sum += +parseFloat(elem.final_count*elem.dealer_price).toFixed(2);
             }
-            else{
-                goods_name = 'Компонент: '+elem.name;
-            }
-            jQuery('#goods_table > tbody > tr:last').append('<td>'+goods_name+'</td>' +
-                '<td>'+elem.dealer_price+'</td>' +
-                '<td class="goods_count">'+parseFloat(elem.final_count).toFixed(2)+'</td>' +
-                '<td class="goods_sum">'+parseFloat(elem.price_sum).toFixed(2)+'</td>' +
-                td_edit)
-            total_sum += +elem.price_sum;
         });
         jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td colspan="3" class="total_sum_td"><b>'+total_sum+'</b></td></tr>');
         jQuery('.RV').text(total_sum);

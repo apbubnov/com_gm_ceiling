@@ -20,7 +20,8 @@ $userGroup = $user->groups;
 
 $monthBegin = date('Y-m-01');
 $today = date('Y-m-d');
-$projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForRealization('',$monthBegin,$today);
+$projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjectsForRealisationBuilders();
+$builders = Gm_ceilingHelpersGm_ceiling::getModel('users')->getBuilders();
 ?>
 <?= parent::getPreloader(); ?>
 
@@ -124,29 +125,27 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
     </div>
 </div>
 <div class="row">
-    <div class="col-md-3">
-        <div class="col-md-2" style="padding-top: 5px;">
-            <b><label>C</label></b>
+    <div class="col-md-6">
+        <div class="col-md-5">
+            <b>
+                <span style="vertical-align: middle">Выберите застройщика</span>
+            </b>
         </div>
-        <div class="col-md-10">
-            <input type="date" id="date_from" class="date form-control" value="<?=$monthBegin?>">
+        <div class="col-md-7">
+            <select class="form-control" id="choose_builder">
+                <option value="">Выберите застройщика</option>
+                <?php foreach($builders as $builder){
+                    echo "<option value='$builder->id'>$builder->name</option>";
+                } ?>
+            </select>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="col-md-2"  style="padding-top: 5px;">
-            <b><label>до</label></b>
-        </div>
-        <div class="col-md-10">
-            <input type="date" id="date_to" class="date form-control" value="<?=$today;?>">
-        </div>
-
     </div>
     <div class="col-md-1" style="text-align: right; padding-right: 0;padding-left: 0;padding-top: 5px;">
         <i class="fas fa-search"></i>
         <b><span style="vertical-align: middle">Поиск: </span></b>
     </div>
     <div class="col-md-4" style="text-align: right">
-        <input type="text" class="form-control" id="search_text" placeholder="Введите номер, адрес или дилера проекта" />
+        <input type="text" class="form-control" id="search_text" placeholder="Введите номер, проект или этаж" />
     </div>
     <div class="col-md-1">
         <button class="btn btn-primary" id="seach_btn">Найти</button>
@@ -156,113 +155,93 @@ $projects = Gm_ceilingHelpersGm_ceiling::getModel('Projects')->getProjetsForReal
     <table class="Elements" id="projects_table">
         <thead class="ElementsHead">
         <tr class="ElementsHeadTr">
-            <td>№</td>
+            <td class="Dealer">№</td>
+            <td class="Dealer">Проект</td>
             <td class="center">Кол-во потолков</td>
-            <td class="Name">Адрес</td>
-            <td class="Client">Клиент</td>
-            <td class="Dealer">Дилер</td>
-            <td class="Status">Статус</td>
-            <td class="Date">Дата создания</td>
+            <td class="Dealer">Этаж</td>
+            <td class="Dealer">Застройщик</td>
         </tr>
         </thead>
         <tbody>
         <? foreach ($projects as $p):?>
             <tr data-href="/index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=project&id=<?=(int)$p->id;?>">
                 <td class="Name"><?= $p->id; ?></td>
-                <td class="center"><?= $p->calc_count; ?></td>
                 <td class="Name"><?= $p->name; ?></td>
+                <td class="center"><?= $p->calc_count; ?></td>
                 <td class="Client"><?= $p->client; ?></td>
                 <td class="Dealer"><?= $p->dealer; ?></td>
-                <td class="Status"><?= $p->status_title; ?></td>
-                <td class="Date"><?= date("d.m.Y", strtotime($p->created)); ?></td>
             </tr>
         <? endforeach; ?>
         </tbody>
     </table>
 </div>
 
-    <script>
-        jQuery(document).ready(function(){
+<script>
+    jQuery(document).ready(function(){
 
-            jQuery('.date').change(function(){
-                getFilteredProjects();
-            });
+        jQuery('#choose_builder').change(function(){
+            getFilteredProjects();
+        });
 
-            jQuery('#seach_btn').click(function () {
-                getFilteredProjects();
-            });
+        jQuery('#seach_btn').click(function () {
+            getFilteredProjects();
+        });
 
-            jQuery('#projects_table').on('click','tr',function(){
-                location.href = jQuery(this).data('href');
-            });
+        jQuery('#projects_table').on('click','tr',function(){
+            location.href = jQuery(this).data('href');
+        });
 
-            function getFilteredProjects(){
-                var text = jQuery('#search_text').val(),
-                    dateFrom = jQuery('#date_from').val(),
-                    dateTo = jQuery('#date_to').val();
-                if(dateFrom > dateTo){
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "Error",
-                        text: "Начальная дата не может быть больше конечной!"
-                    });
-                    return;
-                }
-
-                jQuery.ajax({
-                    type: 'POST',
-                    async: false,
-                    url: "/index.php?option=com_gm_ceiling&task=projects.getProjectsForRealisation",
-                    data: {
-                        search: text,
-                        date_from: dateFrom,
-                        date_to: dateTo
-                    },
-                    success: function (data) {
-                        console.log(JSON.parse(data));
-                        if(!empty(data)){
-                            data = JSON.parse(data);
-                            jQuery('#projects_table > tbody').empty();
-                            jQuery.each(data,function (i,p) {
-                                jQuery('#projects_table > tbody').append('<tr data-href="/index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=project&id='+p.id+'">' +
-                                    '<td>'+p.id+'</td>'+
-                                    '<td>'+p.calc_count+'</td>'+
-                                    '<td>'+p.name+'</td>'+
-                                    '<td>'+p.client+'</td>'+
-                                    '<td>'+p.dealer+'</td>'+
-                                    '<td>'+p.status_title+'</td>'+
-                                    '<td>'+p.created+'</td>'+
-                                    '</tr>');
-                            });
-                        }
-                        else{
-                            noty({
-                                timeout: 2000,
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "warning",
-                                text: "по Вашему запросу ничего не найдено!"
-                            });
-                        }
-                    },
-                    error: function (data) {
+        function getFilteredProjects(){
+            var text = jQuery('#search_text').val(),
+                builder = jQuery('#choose_builder').val();
+            jQuery.ajax({
+                type: 'POST',
+                async: false,
+                url: "/index.php?option=com_gm_ceiling&task=projects.getProjectsForRealisationBuilder",
+                data: {
+                    search: text,
+                    builder: builder
+                },
+                success: function (data) {
+                    console.log(JSON.parse(data));
+                    if(!empty(data)){
+                        data = JSON.parse(data);
+                        jQuery('#projects_table > tbody').empty();
+                        jQuery.each(data,function (i,p) {
+                            jQuery('#projects_table > tbody').append('<tr data-href="/index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=project&id='+p.id+'">' +
+                                '<td>'+p.id+'</td>'+
+                                '<td>'+p.name+'</td>'+
+                                '<td>'+p.calc_count+'</td>'+
+                                '<td>'+p.client+'</td>'+
+                                '<td>'+p.dealer+'</td>'+
+                                '</tr>');
+                        });
+                    }
+                    else{
                         noty({
                             timeout: 2000,
                             theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка получения данных!"
+                            type: "warning",
+                            text: "по Вашему запросу ничего не найдено!"
                         });
                     }
+                },
+                error: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
 
-                });
-            }
-        });
+            });
+        }
+    });
 
 
-    </script>
+</script>

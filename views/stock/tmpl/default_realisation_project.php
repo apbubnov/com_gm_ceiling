@@ -526,72 +526,82 @@ echo parent::getPreloaderNotJS();
 </style>
 <h1>Реализация проекта №<?=$projectId;?></h1>
 <form class="Realization">
-<input type="number" name="project" value="<?=$projectId;?>" hidden>
-<input type="number" name="status" value="<?=$statusNumber;?>" hidden>
-<div class="Actions">
-    <?= parent::getButtonBack(); ?>
-    <?php if($statusNumber !=8) {?>
-    <button type="button" class="btn btn-primary add_goods"">
-        <i class="fa fa-plus" aria-hidden="true"></i> Компонент
-    </button>
-    <select class="Action Stock" name="stock">
-        <?foreach ($stocks as $s):?>
-            <option value="<?=$s->id;?>"><?=$s->name;?></option>
-        <?endforeach;?>
-    </select>
-    <button type="button" class="btn btn-primary make_realisation" <?php if ($data->customer->status == 8) echo "style='display:none;'"?>>
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i> Реализовать
-    </button>
-    <?php }?>
-</div>
+    <input type="number" name="project" value="<?=$projectId;?>" hidden>
+    <input type="number" name="status" value="<?=$statusNumber;?>" hidden>
+    <div class="Actions">
+        <?= parent::getButtonBack(); ?>
+        <?php if($statusNumber !=8) {?>
+        <button type="button" class="btn btn-primary add_goods"">
+            <i class="fa fa-plus" aria-hidden="true"></i> Компонент
+        </button>
+        <select class="Action Stock" name="stock">
+            <?foreach ($stocks as $s):?>
+                <option value="<?=$s->id;?>"><?=$s->name;?></option>
+            <?endforeach;?>
+        </select>
+        <button type="button" class="btn btn-primary make_realisation" <?php if ($data->customer->status == 8) echo "style='display:none;'"?>>
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i> Реализовать
+        </button>
+        <?php }?>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="CustomerInfo">
+                <table class="CustomerInfoTable">
+                    <tbody>
+                    <tr class="Project">
+                        <td class="Name">Проект №:</td>
+                        <td class="Value"><?=$project->id;?></td>
+                    </tr>
+                    <tr class="Project_info">
+                        <td class="Name">Адрес:</td>
+                        <td class="Value"><?=$project->project_info?></td>
+                    </tr>
+                    <tr class="Client">
+                        <td class="Name">Клиент:</td>
+                        <td class="Value"><?=$project->client_id?></td>
+                    </tr>
+                    <tr class="Dealer">
+                        <td class="Name">Дилер:</td>
+                        <td class="Value"><?=$dealer->name?></td>
+                    </tr>
+                    <tr class="Pay">
+                        <td class="Name">Оплата:</td>
+                        <td class="Value">
+                            <div class="Radio">
+                                <div class="RUB"><span class="RV">-</span> <i class="fas fa-ruble-sign"></i></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <?php include_once('components/com_gm_ceiling/views/project/project_notes.php'); ?>
+        </div>
+    </div>
 
-<div class="CustomerInfo">
-    <table class="CustomerInfoTable">
-        <tbody>
-            <tr class="Project">
-                <td class="Name">Проект №:</td>
-                <td class="Value"><?=$project->id;?></td>
+    <div class="Table">
+        <table class="Elements" id="goods_table">
+            <thead class="ElementsHead">
+            <tr class="ElementsHeadTr">
+                <td>Название</td>
+                <td>Стоимость</td>
+                <td>Значение</td>
+                <td>Цена</td>
+                <?php if($statusNumber !=8){?>
+                    <td colspan="2" class="ButtonTD">Функции</td>
+                <?php }
+                else{
+                    echo '<td>Функции</td>';
+                }?>
             </tr>
-            <tr class="Project_info">
-                <td class="Name">Адрес:</td>
-                <td class="Value"><?=$project->project_info?></td>
-            </tr>
-            <tr class="Client">
-                <td class="Name">Клиент:</td>
-                <td class="Value"><?=$project->client_id?></td>
-            </tr>
-            <tr class="Dealer">
-                <td class="Name">Дилер:</td>
-                <td class="Value"><?=$dealer->name?></td>
-            </tr>
-            <tr class="Pay">
-                <td class="Name">Оплата:</td>
-                <td class="Value">
-                    <div class="Radio">
-                        <div class="RUB"><span class="RV">-</span> <i class="fas fa-ruble-sign"></i></div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="Table">
-    <table class="Elements" id="goods_table">
-        <thead class="ElementsHead">
-        <tr class="ElementsHeadTr">
-            <td>Название</td>
-            <td>Стоимость</td>
-            <td>Значение</td>
-            <td>Цена</td>
-            <?php if($statusNumber !=8){?>
-                <td colspan="2" class="ButtonTD">Функции</td>
-            <?php } ?>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </form>
 
 <div class="modal_window_container" id="mw_container">
@@ -643,6 +653,9 @@ echo parent::getPreloaderNotJS();
             </table>
         </div>
         <div class="row">
+            <span>Внимание! Введеное количество округляется согласно кратности товара!</span>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <button class="btn btn-primary" id="add_dop_goods">Добавить</button>
             </div>
@@ -669,6 +682,9 @@ echo parent::getPreloaderNotJS();
                <span class="sum"></span>
             </div>
         </div>
+        <div class="row">
+            <span>Внимание!Введеное количество автоматически округляется согласно кратности товара!</span>
+        </div>
     </div>
     <div class="modal_window" id="mw_shortage">
         <div class="row">
@@ -687,35 +703,34 @@ echo parent::getPreloaderNotJS();
             </table>
         </div>
     </div>
+</div>
+<div class="ModalDoc" id="mw_doc" style="display: none;">
+    <div class="Document">
+        <iframe class="iFrame" >
 
-    <div class="modal_window ModalDoc" id="mw_doc" style="display: none;">
-        <div class="Document">
-            <iframe class="iFrame" >
-
-            </iframe>
-            <div class="Actions">
-                <div class="CheckBox">
-                    <div class="Name">Товарная накладная</div>
-                    <input type="checkbox" id="PackingList" name="page">
-                </div>
-                <div class="CheckBox">
-                    <div class="Name">Приходный кассовый ордер</div>
-                    <input type="checkbox" id="RetailCashOrder" name="page">
-                </div>
-                <div class="CheckBox">
-                    <div class="Name">Расходная накладная</div>
-                    <input type="checkbox" id="SalesInvoice" name="page">
-                </div>
-                <div class="Right">
-                    <button type="button" id="print_doc" <!--onclick="print_frame();-->"><i class="fa fa-print" aria-hidden="true"></i></button>
-                    <button type="button" id="save_doc" <!--onclick="save_frame();-->"><i class="fas fa-save" aria-hidden="true"></i></button>
-                    <button type="button" id="close_doc" <!--onclick="close_frame();-->"><i class="fa fa-times" aria-hidden="true"></i></button>
-                </div>
+        </iframe>
+        <div class="Actions">
+            <div class="CheckBox">
+                <div class="Name">Товарная накладная</div>
+                <input type="checkbox" id="PackingList" name="page">
+            </div>
+            <div class="CheckBox">
+                <div class="Name">Приходный кассовый ордер</div>
+                <input type="checkbox" id="RetailCashOrder" name="page">
+            </div>
+            <div class="CheckBox">
+                <div class="Name">Расходная накладная</div>
+                <input type="checkbox" id="SalesInvoice" name="page">
+            </div>
+            <div class="Right">
+                <button type="button" id="print_doc" <!--onclick="print_frame();-->"><i class="fa fa-print" aria-hidden="true"></i></button>
+                <button type="button" id="save_doc" <!--onclick="save_frame();-->"><i class="fas fa-save" aria-hidden="true"></i></button>
+                <button type="button" id="close_doc" <!--onclick="close_frame();-->"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
-
 </div>
+
 
 <script type="text/javascript">
     var EDIT_BUTTON = '<button type="button" class="Clone">' +
@@ -800,6 +815,7 @@ echo parent::getPreloaderNotJS();
 
         jQuery("#close_doc").click(function () {
             jQuery(".ModalDoc").hide();
+            location.href = '/index.php?option=com_gm_ceiling&view=stock&type=return&id='+project_id;
         });
 
         jQuery('body').on('click','.delete',function() {
@@ -810,6 +826,7 @@ echo parent::getPreloaderNotJS();
             jQuery("#mw_container").show();
             jQuery("#close").show();
             jQuery("#mw_add_goods").show('slow');
+            jQuery('#added_goods > tbody').empty();
         });
 
         jQuery('body').on('click','.Clone',function() {
@@ -828,7 +845,7 @@ echo parent::getPreloaderNotJS();
 
         jQuery("#new_count").keyup(function(){
            var id = jQuery(this).closest('.row').find('.edit_goods_id').val(),
-               new_count = jQuery(this).val(),
+               new_count = round(jQuery(this).val().replace(',','.'),Goods[id].multiplicity),
                price = jQuery(this).closest('.row').find('.goods_price').text(),
                old_sum = jQuery(this).closest('.row').find('.sum').text(),
                new_sum = (price*new_count).toFixed(2),
@@ -852,7 +869,7 @@ echo parent::getPreloaderNotJS();
             var addTotalSum = 0;
             jQuery.each(jQuery("#added_goods > tbody > tr"),function (index,elem) {
                 elem = jQuery(elem);
-                Goods[elem.data('id')].final_count = elem.find('.count').val();
+                Goods[elem.data('id')].final_count = round(elem.find('.count').val().replace(',', '.'),Goods[elem.data('id')].multiplicity);
                 Goods[elem.data('id')].price_sum = Goods[elem.data('id')].dealer_price* Goods[elem.data('id')].final_count;
                 addTotalSum += Goods[elem.data('id')].price_sum;
             });
@@ -890,79 +907,148 @@ echo parent::getPreloaderNotJS();
         });
 
         jQuery(".make_realisation").click(function () {
-            var notRealisedGoods = {};
+            var notRealisedGoods = {},
+                selectedGoods = {},
+                selectedIds,
+                notRealisedIds,
+                equals = true,
+                status = 8,// по-умолчанию статус "Выдан"
+                wasEmpty = false;
+
+            /*получаем все нереализованные товары*/
             jQuery.each(Goods, function(index,goods){
                 if(empty(goods.realised)){
                     notRealisedGoods[index] = goods;
                 }
             });
-            var goodsToRealisation = {ids:Object.keys(notRealisedGoods).join(','),goods:[],goods_count:Object.keys(notRealisedGoods).length};
-            jQuery.each(notRealisedGoods,function(index,elem){
-                goodsToRealisation.goods.push({goods_id:elem.goods_id,name:elem.name,dealer_price:elem.dealer_price,count:elem.final_count});
+            /*получаем все выбранные товары*/
+            jQuery.each(jQuery('[name="include_goods"]:checked'),function (i,c) {
+                selectedGoods[c.value] = Goods[c.value];
             });
 
-            jQuery.ajax({
-                url: "/index.php?option=com_gm_ceiling&task=stock.makeRealisation",
-                async: false,
-                data: {
-                    goods:JSON.stringify(goodsToRealisation),
-                    project_id:project_id,
-                    stock: jQuery('[name="stock"]').val()
-                },
-                type: "POST",
-                success: function (data) {
-                   data = JSON.parse(data);
-                   if(data.type == 'error'){
-                       noty({
-                           theme: 'relax',
-                           layout: 'center',
-                           timeout: 5000,
-                           type: "error",
-                           text: data.text,
-                           buttons:[
-                               {
-                                   addClass: 'btn btn-primary', text: 'Посмотреть детали', onClick: function($noty) {
-                                       jQuery("#shortage_goods > tbody").empty();
-                                       jQuery.each(data.goods,function(index,goods){
-                                           jQuery("#shortage_goods > tbody").append('<tr><td>'+goods.name+'</td><td>'+goods.count+'</td></tr>')
-                                       });
-                                       jQuery("#mw_container").show();
-                                       jQuery("#mw_shortage").show('slow');
-                                       jQuery("#close").show();
-                                       $noty.close();
-                                   }
-                               },
-                               {
-                                   addClass: 'btn btn-primary', text: 'Отмена', onClick: function($noty) {
-                                       $noty.close();
-                                   }
-                               }
-                           ]
-                       });
-                   }
-                   else{
-                       console.log(data);
-                       if (data != null)
-                       {
-                           jQuery.each(data, function (i, t) { jQuery("#"+i).val(t); jQuery("#"+i).attr("checked",true); });
-                           jQuery(".ModalDoc .Document .iFrame").attr("src", data.href.MergeFiles);
-                           jQuery(".ModalDoc").show();
-                           jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]").change(LoadPDF);
-                       }
-                   }
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        timeout: 5000,
-                        type: "error",
-                        text: "Сервер не отвечает!"
+            selectedIds = Object.keys(selectedGoods);
+            notRealisedIds = Object.keys(notRealisedGoods);
+            if(notRealisedIds.length === selectedIds.length){
+                var fIndex;
+                for(var i = 0;i<selectedIds.length;i++){
+                    /*если кол-во товаров в массивах совпадают, проверяем все ди выбранные есть в списке нереализованных*/
+                    fIndex = notRealisedIds.findIndex(function (currentId){ return currentId == selectedIds[i]});
+                    if( fIndex == -1){
+                        equals = false;
+                        break;
+                    }
+                }
+                if(!equals){
+                    /*если вдруг они не совпадают, то ставим неполностью выдан и списываем только выбранные*/
+                    status = 9;
+                    notRealisedGoods = selectedGoods
+                }
+            }
+            else{
+                /*если кол-во выбранных и нереализованных не совпадает,
+                 то статус неполностью выдан, и в список реализации добавляем выбранные товары*/
+                status = 9;
+                notRealisedGoods = selectedGoods
+            }
+            var goodsToRealisation = {ids:Object.keys(notRealisedGoods).join(','),goods:[],goods_count:Object.keys(notRealisedGoods).length};
+            jQuery.each(notRealisedGoods,function(index,elem){
+                if(empty(elem.final_count)){
+                    wasEmpty = true;
+                    jQuery('#goods_table > tbody > tr[data-id="'+elem.goods_id+'"]').css('background-color','#ff6666');
+                }
+                if(!wasEmpty) {
+                    goodsToRealisation.goods.push({
+                        goods_id: elem.goods_id,
+                        name: elem.name,
+                        dealer_price: elem.dealer_price,
+                        count: elem.final_count
                     });
                 }
             });
+            if(!wasEmpty){
+                jQuery.ajax({
+                    url: "/index.php?option=com_gm_ceiling&task=stock.makeRealisation",
+                    async: false,
+                    data: {
+                        goods: JSON.stringify(goodsToRealisation),
+                        project_id: project_id,
+                        stock: jQuery('[name="stock"]').val(),
+                        status: status
+                    },
+                    type: "POST",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if (data.type == 'error') {
+                            noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                timeout: 5000,
+                                type: "error",
+                                text: data.text,
+                                buttons: [
+                                    {
+                                        addClass: 'btn btn-primary',
+                                        text: 'Посмотреть детали',
+                                        onClick: function ($noty) {
+                                            jQuery("#shortage_goods > tbody").empty();
+                                            jQuery.each(data.goods, function (index, goods) {
+                                                jQuery("#shortage_goods > tbody").append('<tr><td>' + goods.name + '</td><td>' + goods.count + '</td></tr>')
+                                            });
+                                            jQuery("#mw_container").show();
+                                            jQuery("#mw_shortage").show('slow');
+                                            jQuery("#close").show();
+                                            $noty.close();
+                                        }
+                                    },
+                                    {
+                                        addClass: 'btn btn-primary', text: 'Отмена', onClick: function ($noty) {
+                                            $noty.close();
+                                        }
+                                    }
+                                ]
+                            });
+                        } else {
+                            noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                timeout: 5000,
+                                type: "success",
+                                text: "Реализация прошла успешно!"
+                            });
+                            if (data.href != null) {
+                                jQuery.each(data.href, function (i, t) {
+                                    console.log(i, t)
+                                    jQuery("#" + i).val(t);
+                                    jQuery("#" + i).attr("checked", true);
+                                });
+                                jQuery(".ModalDoc .Document .iFrame").attr("src", data.href.MergeFiles);
+                                jQuery("#mw_doc").show('slow');
+                                jQuery(".ModalDoc .Document .Actions .CheckBox input[type=\"checkbox\"]").change(LoadPDF);
+                            }
+                        }
+                    },
+                    dataType: "text",
+                    timeout: 10000,
+                    error: function () {
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "error",
+                            text: "Сервер не отвечает!"
+                        });
+                    }
+                });
+            }
+            else{
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 5000,
+                    type: "error",
+                    text: "Позиции имеют нулевое количетсво!"
+                });
+            }
         });
     });
 
@@ -1049,7 +1135,22 @@ echo parent::getPreloaderNotJS();
             else{
                 goods_name = 'Компонент: '+elem.name;
             }
-            var tr ='<td>'+goods_name+'</td>' +
+            var tr ='<td>';
+                if(!elem.realised){
+                    tr+='<input name="include_goods" value="'+elem.goods_id+'" id="g_'+elem.goods_id+'" style="display: none" type="checkbox" class="inp-cbx" checked>'+
+                        '<label for="g_'+elem.goods_id+'" class="cbx">'+
+                        '<span>'+
+                        '<svg width="12px" height="10px" viewBox="0 0 12 10">'+
+                        '<polyline points="1.5 6 4.5 9 10.5 1"></polyline>'+
+                        '</svg>'+
+                        '</span>'+
+                        '<span>'+goods_name+'</span>'+
+                        '</label>';
+                }
+                else{
+                    tr += goods_name;
+                }
+                tr +='</td>' +
                     '<td>'+elem.dealer_price+'</td>' +
                     '<td class="goods_count">'+parseFloat(elem.final_count).toFixed(2)+'</td>' +
                     '<td class="goods_sum">'+parseFloat(elem.price_sum).toFixed(2)+'</td>';
@@ -1066,4 +1167,9 @@ echo parent::getPreloaderNotJS();
         jQuery('#goods_table > tbody').append('<tr><td colspan="3" style="text-align:right;"><b>Итого:</b></td><td colspan="3" class="total_sum_td"><b>'+total_sum+'</b></td></tr>');
         jQuery('.RV').text(total_sum);
     }
+
+    function round(count,multiplicity) {
+        return Math.ceil(count/multiplicity)*multiplicity;
+    }
+
 </script>

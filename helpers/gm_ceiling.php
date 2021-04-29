@@ -258,7 +258,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
 
-    public static function registerUser($FIO, $phone, $email, $client_id, $type = null, $reset = null)
+    public static function registerUser($FIO, $phone, $email, $client_id, $type = null, $reset = null,$password = null)
     {
         try {
             jimport('joomla.user.helper');
@@ -279,11 +279,14 @@ class Gm_ceilingHelpersGm_ceiling
                 $phone = substr_replace($phone, '7', 0, 1);
             }
 
+            if(empty($password)){
+                $password = $phone;
+            }
             $data = array(
                 "name" => $FIO,
                 "username" => $phone,
-                "password" => $phone,
-                "password2" => $phone,
+                "password" => $password,
+                "password2" => $password,
                 "email" => $email,
                 "groups" => array(2, 14),
                 "phone" => $phone,
@@ -826,7 +829,7 @@ class Gm_ceilingHelpersGm_ceiling
             $extra_components = json_decode($calculation->extra_components);
             $extra_mounting = json_decode($calculation->extra_mounting);
             $jobs = $data['jobs'];
-            $goods = !empty($calculation->cancel_netiz) ? self::deleteMetizFromGoods($data['goods']) : $data['goods'];
+            $goods = !empty($calculation->cancel_metiz) ? self::deleteMetizFromGoods($data['goods']) : $data['goods'];
             $dealer = JFactory::getUser($data['dealer_id']);
             $dealer_info = self::getDealerInfo($dealer->id);
             $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
@@ -6102,6 +6105,30 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setSubject('Дополнение к проекту');
                 $mailer->setBody($body);
             }
+            elseif($type == 18){
+                //уведомление о проекте с расходкой
+                $user_model = self::getModel('users');
+                $users = $user_model->getUserByGroup(16);
+                foreach ($users as $user) {
+                    if (!empty($user->email)) {
+                        $mailer->addRecipient($user->email);
+                    }
+                }
+                $body = "Здравствуйте. Дилер заказал комплектующие. Проект №" . $projectInfo->id . ".\n";
+                if(!empty($projectInfo->project_info)) {
+                    $body .= "Адрес: $projectInfo->project_info; \n";
+                }
+                $dealer = JFactory::getUser($projectInfo->dealer_id);
+                $body .= "Дилер: $dealer->name. \n";
+                if (!empty($projectInfo->notes)) {
+                    foreach ($projectInfo->notes as $note) {
+                        $body .= "$note->description $note->value; \n";
+                    }
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Дилер заказал комплектующие');
+                $mailer->setBody($body);
+            }
             $send = $mailer->Send();
             return 1;
         } catch (Exception $e) {
@@ -6449,7 +6476,7 @@ class Gm_ceilingHelpersGm_ceiling
                                     if ($value[1] == 0) {
                                         $DayMounters[$r] = "red";
                                     } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
+                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 9 || $value[2] == 10 || $value[2] == 19) {
                                             $DayMounters[$r] = "yellow";
                                         }
                                         if ($value[2] == 16 || $value[2] == 24 || $value[2] == 25 || $value[2] == 26 || $value[2] == 27 || $value[2] == 28 || $value[2] == 29) {

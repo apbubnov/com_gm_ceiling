@@ -313,14 +313,49 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
 
     function getIssuedData($date1,$date2){
         try{
+            /*
+SELECT u.id,u.name,
+SUM((
+SELECT SUM(IFNULL(calc.canvases_sum,0))
+FROM `rgzbn_gm_ceiling_calculations` AS calc
+WHERE calc.project_id = p.id
+GROUP BY p.id
+)) AS canvases_sum,
+SUM(CASE WHEN g.category_id NOT IN(1,10) THEN s.sale_price*s.count ELSE 0 END) AS components_sum,
+SUM(CASE WHEN g.category_id IN(1,10) THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS canvases_cost_sum,
+SUM(CASE WHEN (g.category_id NOT IN(1,10) ) THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS components_cost_sum,
+SUM(IFNULL(r.cost_price,0)*s.count) AS cost_sum,
+GROUP_CONCAT(DISTINCT CONCAT('{"id":"',s.project_id,'","sum":"',p.project_sum,'"',(
+SELECT CONCAT('"canvases_sum":',SUM(calc.canvases_sum),'","components_sum":"',SUM(calc.components_sum),'"')
+FROM `rgzbn_gm_ceiling_calculations` AS calc
+WHERE calc.project_id = s.project_id),'"')  SEPARATOR ',') AS projects
+FROM `rgzbn_gm_stock_sales` AS s
+INNER JOIN `rgzbn_gm_ceiling_projects` AS p ON p.id = s.project_id
+INNER JOIN `rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id
+INNER JOIN `rgzbn_users` AS u ON u.id = c.dealer_id
+LEFT JOIN ((SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
+                                    FROM `rgzbn_gm_stock_moving` AS mov
+                                    INNER JOIN `rgzbn_gm_stock_inventory` AS i ON i.id = mov.to_inventory_id
+                                    INNER JOIN `rgzbn_gm_stock_reception` AS rec ON rec.inventory_id = mov.from_inventory_id)
+                                    UNION ALL
+                                    (SELECT inventory_id,cost_price
+                                    FROM `rgzbn_gm_stock_reception`)) AS r ON r.inventory_id = s.inventory_id
+INNER JOIN `rgzbn_gm_stock_inventory` AS i ON s.inventory_id = i.id
+INNER JOIN `rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id
+WHERE s.date_time BETWEEN '2021-02-15 00:00:00' AND '2021-02-24 23:59:59'
+GROUP BY u.id
+*/
             $db = $this->getDbo();
-            $query = $db->getQuery(true);
-            $projectSumQuery = $db->getQuery(true);
 
+            $projectSumQuery = $db->getQuery(true);
             $projectSumQuery
                 ->select('SUM(calc.canvases_sum)+SUM(calc.components_sum)')
                 ->from('`rgzbn_gm_ceiling_calculations` AS calc')
                 ->where('calc.project_id = s.project_id');
+
+            $query = 'SET SESSION group_concat_max_len  = 16384';
+            $db->setQuery($query);
+            $db->execute();
 
             $inventoryCostQuery = '(SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
                                     FROM `rgzbn_gm_stock_moving` AS mov
@@ -329,15 +364,16 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                                     UNION ALL
                                     (SELECT inventory_id,cost_price
                                     FROM `rgzbn_gm_stock_reception`)';
+            $query = $db->getQuery(true);
             $query
                 ->select('u.id,u.name')
-                ->select("($projectSumQuery) AS `sum`")
                 ->select('SUM(CASE WHEN g.category_id = 1 THEN s.sale_price*s.count ELSE 0 END) AS canvases_sum')
                 ->select('SUM(CASE WHEN g.category_id <> 1 THEN s.sale_price*s.count ELSE 0 END) AS components_sum')
                 ->select('SUM(CASE WHEN g.category_id = 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS canvases_cost_sum')
                 ->select('SUM(CASE WHEN g.category_id <> 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS components_cost_sum')
-                ->select('SUM(IFNULL(r.cost_price,0)*s.count) AS cost_sum')
-                ->select('GROUP_CONCAT(DISTINCT s.project_id SEPARATOR \',\') AS projects')
+                ->select('SUM(IFNULL(r.cost_price,0)*s.count) + SUM(p.delivery_sum) AS cost_sum')
+                ->select('GROUP_CONCAT(DISTINCT s.project_id SEPARATOR \',\') as pr_ids')
+                ->select("CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{\"id\":\"',s.project_id,'\",\"sum\":\"',IFNULL(($projectSumQuery),p.new_project_sum),'\"}')  SEPARATOR ','),']') AS projects")
                 ->from('`rgzbn_gm_stock_sales` AS s')
                 ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = s.project_id')
                 ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
@@ -345,10 +381,22 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
                 ->leftJoin("($inventoryCostQuery) AS r ON r.inventory_id = s.inventory_id")
                 ->innerJoin('`rgzbn_gm_stock_inventory` AS i ON s.inventory_id = i.id')
                 ->innerJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
-                ->where("s.date_time between '$date1 00:00:00' and '$date2 23:59:59'")
+                ->where("s.project_id IN(SELECT project_id FROM `rgzbn_gm_stock_sales` WHERE date_time BETWEEN '$date1 00:00:00' and '$date2 23:59:59')")
                 ->group('u.id');
+            //throw new Exception($query);
             $db->setQuery($query);
             $result = $db->loadObjectList();
+
+            foreach ($result as $item){
+                //throw new Exception(print_r($item,true));
+                $projects = json_decode($item->projects);
+
+                $sum = 0;
+                foreach ($projects as $project){
+                    $sum += $project->sum;
+                }
+                $item->sum = $sum;
+            }
             return $result;
         }
         catch(Exception $e)
@@ -462,4 +510,5 @@ class Gm_ceilingModelAnalytic_Dealers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
 }

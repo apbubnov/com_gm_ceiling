@@ -504,6 +504,21 @@ $pdf_names = [];
                             </td>
                             <!-- <input id="transport_suma" value='<?php //echo $client_sum_transport; ?>' type='hidden'> -->
                         </tr>
+                        <?php if($is_gmmanager){?>
+                            <tr>
+                                <th>Доставка</th>
+                                <td colspan="2">
+                                        <div class="col-md-4 col-xs-10">
+                                            <input class="form-control" id="delivery_sum" value="<?=!empty($this->item->delivery_sum) ? $this->item->delivery_sum : '';?>">
+                                        </div>
+                                        <div class="col-md-2 col-xs-2">
+                                            <button class="btn btn-primary" id="save_delivery" type="button">
+                                                <i class="far fa-save"></i>
+                                            </button>
+                                        </div>
+                                </td>
+                            </tr>
+                        <?php }?>
                         <tr style="background-color: rgba(0,0,0,0.15);">
                             <?php if ($kol > 0) { ?>
                                 <th>Итого/ - %:</th>
@@ -1197,6 +1212,28 @@ $pdf_names = [];
                                                         echo "<tr><td>$dop->title</td><td>$dop->price</td></tr>";
                                                     }
                                                     ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php } ?>
+                                            <?php if (!empty($calculation->openings) ) {
+                                                $openings = json_decode(base64_decode($calculation->openings));?>
+                                                <h4 style="margin: 10px 0;cursor: pointer;" class="additional_goods"><i class="fas fa-angle-down"></i> Проемы</h4>
+                                                <table class="table_info2 additional_goods_table" style="display:none;width:100%;">
+                                                    <thead>
+                                                    <th>Тип</th>
+                                                    <th>Размер</th>
+                                                    </thead>
+                                                    <tbody>
+                                                <?php
+                                                foreach($openings->openings as $opening){
+                                                    if($opening->type == 1){
+                                                        $name = "Оконный";
+                                                    }
+                                                    if($opening->type == 2){
+                                                        $name = "Дверной";
+                                                    }
+                                                    echo "<tr><td>$name</td><td>$opening->width см*$opening->height см</td></tr>";
+                                                }?>
                                                     </tbody>
                                                 </table>
                                             <?php } ?>

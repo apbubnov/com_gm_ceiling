@@ -113,13 +113,13 @@ class Gm_ceilingHelpersPDF {
         return (object) ["PackingList" => $PackingList, "SalesInvoice" => $SalesInvoice, "sum" => $sum];
     }
 
-    private static function MonthStr($key)
+    public static function MonthStr($key)
     {
         $month = array(1 => 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря');
         return $month[intval($key)];
     }
 
-    private static function NumToStr($in, $type = 0)
+    public static function NumToStr($in, $type = 0)
     {
         $number = array(
             array('','один','два','три','четыре','пять','шесть','семь', 'восемь','девять'),

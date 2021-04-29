@@ -513,6 +513,26 @@ class Gm_ceilingModelCalculations extends JModelList {
        
     }
 
+    public function new_getProjectItemsByIds($calcIds)
+    {
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('#__gm_ceiling_calculations')
+                ->where("id IN ($calcIds)");
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+
+    }
+
     public function getIdsByProjectId($project_id){
         try{
             $db = JFactory::getDbo();
@@ -1256,9 +1276,28 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $db->execute();
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function setFromOffcuts($ids){
+        try{
+            if(!empty($ids)) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_ceiling_calculations`')
+                    ->set('`from_offcuts` = 1')
+                    ->where("id in($ids)");
+                $db->setQuery($query);
+                $db->execute();
+                return $db->getNumRows();
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

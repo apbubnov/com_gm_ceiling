@@ -1,6 +1,6 @@
 <?php
 $usersModel  = Gm_ceilingHelpersGm_ceiling::getModel('users');
-$usersInGroups = $usersModel->getUserInGroups(1,'34,39,40,41,42,43,44');
+$usersInGroups = $usersModel->getUserInGroups(1,'34,39,40,41,42,43,44,46');
 $userGroups = $usersModel->getGroupsByParentGroup(38);
 ?>
 <style>
@@ -336,7 +336,18 @@ $userGroups = $usersModel->getGroupsByParentGroup(38);
                         rename: needRename
                     },
                     success: function(data) {
-                        location.reload();
+                        noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Бригада добавлена"
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        },3000)
+
                     },
                     dataType: "json",
                     timeout: 10000,

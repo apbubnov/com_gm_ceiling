@@ -372,8 +372,7 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function getCustomer($filter = null)
-    {
+    public function getCustomer($filter = null,$dealer_type = '1'){
         try
         {
             $user = JFactory::getUser();
@@ -382,128 +381,16 @@ class Gm_ceilingModelStock extends JModelList
             $query
                 ->select('u.id,u.name,u.username,c.client_name,cc.phone,u.associated_client')
                 ->from('`rgzbn_users` AS u')
-                ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = u.associated_client')
-                ->innerJoin('`rgzbn_gm_ceiling_clients_contacts` AS cc ON cc.client_id = c.id')
-                ->where("u.name LIKE '%$filter%' OR u.username LIKE '%$filter%' OR cc.phone LIKE '%$filter%' OR c.client_name LIKE '%$filter%'");
+                ->leftJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = u.associated_client')
+                ->leftJoin('`rgzbn_gm_ceiling_clients_contacts` AS cc ON cc.client_id = c.id')
+                ->where("(u.name LIKE '%$filter%' OR u.username LIKE '%$filter%' OR cc.phone LIKE '%$filter%' OR c.client_name LIKE '%$filter%')");
+            if(!empty($dealer_type)){
+                $query->where("u.dealer_type in($dealer_type)");
+            }
             $db->setQuery($query);
-            //throw new Exception($query);
             $items = $db->loadAssocList('id');
             return $items;
-            /*$filter['where']['IS'] = array();
-            foreach ($filter['where']['like'] as $k => $v)
-            {
-                if ($v == "'%%'") unset($filter['where']['like'][$k]);
-                else if ($v == "'%Нет%'")
-                {
-                    unset($filter['where']['like'][$k]);
-                    $filter['where']['IS']['('.$k] = "NULL OR ".$k." = '')";
-                }
-            }
-             if($filter['where']['like']['customer.type'] == "'%Дилер%'"){
-                    $isDealer = true;
-                }
-            
-            /*$q = $db->getQuery(true);
-            $q  ->from('`#__gm_ceiling_clients` AS client')
-                ->join('LEFT','`#__gm_ceiling_clients_contacts` AS contact ON contact.client_id = client.id ')
-                ->join('LEFT','`#__gm_ceiling_clients_dop_contacts` AS dop ON dop.client_id = client.id ')
-                ->join('LEFT','`#__gm_ceiling_clients_type` AS type ON type.id = client.type_id')
-                ->join('LEFT','`#__users` AS dealer ON dealer.id = client.dealer_id ')
-                ->join('LEFT','`#__gm_ceiling_dealer_info` as info ON info.dealer_id = dealer.id')
-                ->where('(dop.type_id = 1 or dop.type_id IS NULL) and client.dealer_id IS NOT NULL')
-                ->select("CONVERT(type.title USING utf8) as type, CONVERT(client.client_name USING utf8) as name, CONVERT(dop.contact USING utf8) as email, CONVERT(contact.phone USING utf8) as phone")
-                ->select("CONVERT(CONCAT('{\"type\":\"', type.id, '\", \"client\":{\"id\":\"', client.id ,'\", \"name\":\"', (CASE WHEN client.client_name IS NULL THEN '' ELSE client.client_name END), '\", \"email\":\"', (CASE WHEN dop.contact  IS NULL THEN '' ELSE dop.contact END), '\", \"phone\":\"', (CASE WHEN contact.phone IS NULL THEN '' ELSE contact.phone END), '\"}, \"dealer\":{\"id\":\"', dealer.id ,'\", \"name\":\"', dealer.name, '\", \"email\":\"', (CASE WHEN dealer.email IS NULL THEN '' ELSE dealer.email END), '\", \"phone\":\"', (CASE WHEN dealer.username IS NULL THEN '' ELSE dealer.username END), '\"}}') USING utf8) AS JSON")
-                ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
-                ->group("client.id");
-            $query_1 = "(" . (string) $q . ")";
 
-
-            $q = $db->getQuery(true);
-            $q  ->from('`#__users` AS dealer')
-                ->join('LEFT','`#__gm_ceiling_dealer_info` as info ON info.dealer_id = dealer.id')
-                ->join('LEFT','`#__user_usergroup_map` as map ON map.user_id = dealer.id')
-                ->where("map.group_id = '14'")
-                ->select("CONVERT('Дилер' USING utf8) as `type`, CONVERT(dealer.name USING utf8) as `name`, CONVERT(dealer.email USING utf8) as email, CONVERT(dealer.username USING utf8) as phone")
-                ->select("CONVERT(CONCAT('{\"type\":\"4\", \"client\":null, \"dealer\":{\"id\":\"', dealer.id ,'\", \"name\":\"', dealer.name, '\", \"email\":\"', (CASE WHEN dealer.email IS NULL THEN '' ELSE dealer.email END), '\", \"phone\":\"', (CASE WHEN dealer.username IS NULL THEN '' ELSE dealer.username END), '\"}}') USING utf8) AS JSON")
-                ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
-                ->group("dealer.id");
-            $query_2 = "(" . (string) $q . ")";
-
-            $q = $db->getQuery(true);
-            $q  ->from('`#__gm_ceiling_clients` AS client')
-                ->join('LEFT','`#__gm_ceiling_clients_contacts` AS contact ON contact.client_id = client.id ')
-                ->join('LEFT','`#__gm_ceiling_clients_dop_contacts` AS dop ON dop.client_id = client.id ')
-                ->join('LEFT','`#__gm_ceiling_clients_type` AS type ON type.id = client.type_id')
-                ->join('LEFT','`#__users` AS dealer ON dealer.id = client.dealer_id ')
-                ->join('LEFT','`#__gm_ceiling_dealer_info` as info ON info.dealer_id = dealer.id')
-                ->where('(dop.type_id = 1 or dop.type_id IS NULL) and client.dealer_id IS NOT NULL')
-                ->select("IF(client.id = dealer.associated_client,\"Дилер\",CONVERT(type.title USING utf8)) as `type`, CONVERT(client.client_name USING utf8) as name, CONVERT(dop.contact USING utf8) as email, CONVERT(contact.phone USING utf8) as phone")
-                ->select("CONVERT(CONCAT('{\"type\":\"', IF(client.id = dealer.associated_client,'4',type.id), '\", \"client\":{\"id\":\"', client.id ,'\", \"name\":\"', IF(client.client_name IS NULL, '', client.client_name), '\", \"email\":\"', IF(dop.contact  IS NULL, '', dop.contact), '\", \"phone\":\"', IF(contact.phone IS NULL, '', contact.phone), '\"}, \"dealer\":{\"id\":\"', dealer.id ,'\", \"name\":\"', dealer.name, '\", \"email\":\"', IF(dealer.email IS NULL, '', dealer.email ), '\", \"phone\":\"', IF(dealer.username IS NULL, '', dealer.username), '\"}}') USING utf8) AS JSON")
-                ->select("CONVERT(CONCAT('{\"component\":\"', info.dealer_components_margin, '\", \"canvas\":\"', info.dealer_canvases_margin ,'\"}') USING utf8) as margin")
-                ->group("client.id");
-                if(!$isDealer){
-
-                    $q->where("client.dealer_id = $user->dealer_id");
-                }
-            $query = $db->getQuery(true);
-            //$query->from("( " . $query_1 . " UNION " . $query_2 . " ) AS customer");
-            $query->from("($q) AS customer");
-            if ($filter['select'])
-                foreach ($filter['select'] as $key => $value)
-                {
-                    $query->select("(CASE WHEN ".$value." IS NULL || ".$value." = '' THEN 'Нет' ELSE ".$value." END)"." AS ".$key);
-                }
-            else $query->select('*');
-
-            if($filter['where'])
-                foreach ($filter['where'] as $key => $value)
-                    foreach ($value as $title => $item)
-                        $query->where($title.' '.$key.' '.$item.' ');
-            if ($filter['group'])
-                foreach ($filter['group'] as $value)
-                    $query->group($value);
-
-            if ($filter['order'])
-                foreach ($filter['order'] as $value)
-                    $query->order($value);
-
-
-            print_r($query,true);
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-
-            foreach ($result as $i => $v)
-            {
-                $JSON = json_decode($v->JSON);
-                if ($v->JSON == "") break;
-                else if (empty($JSON)) {
-                    $result[$i]->error = json_encode(array("Не возможно распарсить JSON! Обратитесь к администратору! Имя дилера : ".$v->Name));
-                    continue;
-                }
-
-                if ($JSON->dealer == null)
-                {
-                    unset($result[$i]);
-                    continue;
-                }
-
-                $query = $db->getQuery(true);
-                $query->from("`#__gm_ceiling_counterparty` AS CP")
-                    ->select("CP.id as id, CP.close_contract as date_contract")
-                    ->where("CP.user_id = ".$db->quote($JSON->dealer->id));
-                $db->setQuery($query);
-                $r = $db->loadObject();
-                if (empty($r)){
-                    $result[$i]->error = json_encode(array("У дилера нет контрагента, добавьте или выберите ГМ!"));
-                }
-                else{
-                    if($r->date_contract < date("YYYY-MM-DD")){
-                        $result[$i]->error = json_encode(array("У дилера закончился срок договора!"));
-                    }
-                }
-            }
-
-            return $result;*/
         }
         catch(Exception $e)
         {
@@ -652,7 +539,7 @@ class Gm_ceilingModelStock extends JModelList
         }
     }
 
-    public function getRealisedComponents($id){
+    public function getRealisedComponents($id,$filter = null){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -664,6 +551,10 @@ class Gm_ceilingModelStock extends JModelList
                 ->leftJoin('`rgzbn_gm_stock_goods` AS g ON i.goods_id = g.id')
                 ->where("s.project_id = $id")
                 ->group('g.id');
+            if(!empty($filter)){
+                $query->where("$filter");
+            }
+            /*throw new Exception($query);*/
             $db->setQuery($query);
             $items = $db->loadObjectList('goods_id');
             return $items;
@@ -977,7 +868,7 @@ class Gm_ceilingModelStock extends JModelList
             $items = $db->loadObjectList();
             $temp = [];
             foreach ($items as $value) {
-                if(empty($result[$value->id])){
+                if(empty($temp[$value->id])){
                     $temp[$value->id] = (object) [
                         'id' => $value->id,
                         'name' => $value->name,
@@ -986,16 +877,15 @@ class Gm_ceilingModelStock extends JModelList
                         'price' => $value->price,
                         'stocks_count' => []
                     ];
-
                 }
                 if(!empty($value->stock_id)){
-                    array_push($temp[$value->id]->stocks_count,
-                        (object)[
-                            'id'=> $value->stock_id,
-                            'name'=> $value->stock_name,
-                            'count'=> $value->count
-                        ]);
+                    $temp[$value->id]->stocks_count[$value->stock_id] = (object)[
+                        'id'=> $value->stock_id,
+                        'name'=> $value->stock_name,
+                        'count'=> $value->count
+                    ];
                 }
+
             }
 
             foreach ($temp as $t){
@@ -1124,7 +1014,7 @@ class Gm_ceilingModelStock extends JModelList
             $query
                 ->insert('`rgzbn_gm_stock_goods`')
                 ->columns('`name`,`category_id`,`unit_id`,`multiplicity`,`price`,`created_by`')
-                ->values("'$goodsName',$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->dealer_id);
+                ->values($db->quote($db->escape($goodsName,true)).",$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->dealer_id);
             $db->setQuery($query);
             $db->execute();
             $result = $db->insertId();
@@ -1195,8 +1085,8 @@ class Gm_ceilingModelStock extends JModelList
 
     public function getGoodsInCategories($dealer_id = null) {
         try {
-            $temp_result = array();
-            $result = array();
+            $temp_result = [];
+            $result = [];
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
@@ -1204,7 +1094,7 @@ class Gm_ceilingModelStock extends JModelList
                 ->from('`#__gm_stock_goods` as `g`')
                 ->innerJoin('`#__gm_stock_goods_categories` as `gc` on `g`.`category_id` = `gc`.`id`')
                 ->where('`visibility` <> 3')
-                ->order('`g`.`id`');
+                ->order('`g`.`name`');
             if(!empty($dealer_id)){
                 $query
                     ->select('ROUND(
@@ -1230,11 +1120,11 @@ class Gm_ceilingModelStock extends JModelList
             $items = $db->loadObjectList();
             foreach ($items as $value) {
                 if (empty($temp_result[$value->category_id])) {
-                    $temp_result[$value->category_id] = (object) array(
+                    $temp_result[$value->category_id] = (object) [
                         'category_id' => $value->category_id,
                         'category_name' => $value->category,
                         'goods' => array()
-                    );
+                    ];
                 }
                 $temp_result[$value->category_id]->goods[] = $value;
             }
@@ -1337,7 +1227,7 @@ class Gm_ceilingModelStock extends JModelList
                 $query
                     ->update('`rgzbn_gm_stock_sales`')
                     ->set("`count` = $r_update->count")
-                    ->where("`id` = $r_update->inventory_id and project_id = $projectid");
+                    ->where("`inventory_id` = $r_update->inventory_id and project_id = $projectId");
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -1348,6 +1238,22 @@ class Gm_ceilingModelStock extends JModelList
                     ->update('`rgzbn_gm_stock_inventory`')
                     ->set("`count` = $inventory->count")
                     ->where("`id` = $inventory->inventory_id");
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            $query = $db->getQuery(true);
+            $query
+                ->select('GROUP_CONCAT(`id` SEPARATOR \',\') as ids')
+                ->from('`rgzbn_gm_stock_sales`')
+                ->where("count = 0.00 and project_id = $projectId");
+            $db->setQuery($query);
+            $emptySalesIds = $db->loadObject();
+            if(!empty($emptySalesIds->ids)){
+                $query = $db->getQuery(true);
+                $query
+                    ->delete('`rgzbn_gm_stock_sales`')
+                    ->where("id IN($emptySalesIds->ids)");
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -1601,15 +1507,16 @@ class Gm_ceilingModelStock extends JModelList
                 ->select('inv.goods_id,SUM(s.count) AS sale_count')
                 ->from('`rgzbn_gm_stock_sales` AS s')
                 ->innerJoin('`rgzbn_gm_stock_inventory` AS inv ON s.inventory_id = inv.id')
-                ->where("s.date_time < '$date'")
+                ->where("s.date_time <= '$date 23:59:59'")
+                ->group('inv.goods_id')
                 ->order('inv.goods_id');
             $query
-                ->select('g.id,g.name,IFNULL(SUM(r.count),0) AS received_count,IFNULL(sales.sale_count,0) AS sale_count,IFNULL(SUM(i.count),0) AS rest_count')
+                ->select('g.id,g.name,SUM(IFNULL(r.count,0)) AS received_count,IFNULL(sales.sale_count,0) AS sale_count,IFNULL(SUM(i.count),0) AS rest_count')
                 ->from('`rgzbn_gm_stock_goods` AS g')
                 ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.goods_id = g.id')
                 ->leftJoin('`rgzbn_gm_stock_reception` AS r ON r.inventory_id = i.id')
                 ->leftJoin("($saleQuery) as sales ON sales.goods_id = g.id")
-                ->where("(r.date_time <'$date' OR r.date_time IS  NULL)")
+                ->where("(r.date_time <='$date 23:59:59' OR r.date_time IS  NULL)")
                 ->group('g.id')
                 ->order('rest_count DESC');
             if(!empty($search)){
@@ -1639,5 +1546,21 @@ class Gm_ceilingModelStock extends JModelList
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+     }
+
+     function getArrayOfGoods(){
+         try{
+             $db = JFactory::getDbo();
+             $query = $db->getQuery(true);
+             $query
+                 ->select('id,name')
+                 ->from('`rgzbn_gm_stock_goods`');
+             $db->setQuery($query);
+             $goods = $db->loadObjectList();
+             return $goods;
+         }
+         catch(Exception $e) {
+             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+         }
      }
 }

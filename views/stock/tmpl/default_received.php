@@ -7,7 +7,7 @@
 <h4>Список принятых товаров </h4>
 <div class="row" style="margin-bottom: 15px;">
     <div class="col-md-6">
-        <dov class="col-md-3"></dov>
+        <dov class="col-md-3">Поиск</dov>
         <div class="col-md-6">
             <input class="form-control" id="search">
         </div>
@@ -120,46 +120,11 @@
     var received_data = JSON.parse('<?= json_encode($data);?>');
     jQuery(document).ready(function(){
         jQuery('.date').change(function(){
-            var date_from = jQuery('#date_from').val(),
-                date_to = jQuery('#date_to').val(),
-                search = jQuery('#search').val();
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=stock.getReceivedGoods",
-                data: {
-                    date_from: date_from,
-                    date_to: date_to,
-                    search: search
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                   received_data = data;
-                   jQuery('#reception_table > tbody').empty();
-                   jQuery.each(data,function (n,e) {
-                       jQuery('#reception_table > tbody').append(
-                           '<tr data-id="'+e.id+'">' +
-                               '<td class="name">'+e.name+'</td>'+
-                               '<td class="cost_price">'+e.cost_price+'</td>'+
-                               '<td class="received_count">'+e.received_count+'</td>'+
-                               '<td class="stock">'+e.stock_name+'</td>'+
-                               '<td>'+e.date_time+'</td>'+
-                            '</tr>'
-                       );
+            getFilteredGoods();
+        });
 
-                   });
-                },
-                error: function (data) {
-                    console.log(data);
-                    noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
-                }
-            });
+        jQuery('#find').click(function(){
+            getFilteredGoods();
         });
 
         jQuery('#close_mw').click(function(){
@@ -254,5 +219,47 @@
             return result;
         }
 
+        function getFilteredGoods(){
+            var date_from = jQuery('#date_from').val(),
+                date_to = jQuery('#date_to').val(),
+                search = jQuery('#search').val();
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=stock.getReceivedGoods",
+                data: {
+                    date_from: date_from,
+                    date_to: date_to,
+                    search: search
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    received_data = data;
+                    jQuery('#reception_table > tbody').empty();
+                    jQuery.each(data,function (n,e) {
+                        jQuery('#reception_table > tbody').append(
+                            '<tr data-id="'+e.id+'">' +
+                            '<td class="name">'+e.name+'</td>'+
+                            '<td class="cost_price">'+e.cost_price+'</td>'+
+                            '<td class="received_count">'+e.received_count+'</td>'+
+                            '<td class="stock">'+e.stock_name+'</td>'+
+                            '<td>'+e.date_time+'</td>'+
+                            '</tr>'
+                        );
+
+                    });
+                },
+                error: function (data) {
+                    console.log(data);
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        }
     });
 </script>

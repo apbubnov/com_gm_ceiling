@@ -6,9 +6,10 @@
  * Time: 9:28
  */
 $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('Projects');
-$projects = $projects_model->getProjectsByHistoryStatus(8);
+$monthBegin = date('Y-m-01');
+$today = date('Y-m-d');
+$projects = $projects_model->getProjectsByHistoryStatus(8,$monthBegin,$today);
 ?>
-<?= parent::getButtonBack() ?>
 <style>
     .Elements {
         min-width: 100%;
@@ -81,6 +82,38 @@ $projects = $projects_model->getProjectsByHistoryStatus(8);
         z-index: 1;
     }
 </style>
+<div class="row" style="margin-bottom: 1em !important;">
+    <?= parent::getButtonBack() ?>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="col-md-2" style="padding-top: 5px;">
+            <b><label>C</label></b>
+        </div>
+        <div class="col-md-10">
+            <input type="date" id="date_from" class="date form-control" value="<?=$monthBegin?>">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-2"  style="padding-top: 5px;">
+            <b><label>до</label></b>
+        </div>
+        <div class="col-md-10">
+            <input type="date" id="date_to" class="date form-control" value="<?=$today;?>">
+        </div>
+
+    </div>
+    <div class="col-md-1" style="text-align: right; padding-right: 0;padding-left: 0;padding-top: 5px;">
+        <i class="fas fa-search"></i>
+        <b><span style="vertical-align: middle">Поиск: </span></b>
+    </div>
+    <div class="col-md-4" style="text-align: right">
+        <input type="text" class="form-control" id="search_text" placeholder="Введите номер, адрес или дилера проекта" />
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-primary" id="seach_btn">Найти</button>
+    </div>
+</div>
 <table class="table table-stripped table-cashbox">
     <table class="Elements" id="projects_table">
         <thead class="ElementsHead">
@@ -104,8 +137,81 @@ $projects = $projects_model->getProjectsByHistoryStatus(8);
 </table>
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        jQuery("#projects_table > tbody > tr").click(function(){
+        jQuery('.date').change(function(){
+            getFilteredProjects();
+        });
+
+        jQuery('#seach_btn').click(function () {
+            getFilteredProjects();
+        });
+
+        jQuery('#projects_table').on('click','tr',function(){
             location.href = '/index.php?option=com_gm_ceiling&view=stock&type=return&id='+jQuery(this).data('id');
-        })
+        });
+
+        function getFilteredProjects(){
+            var text = jQuery('#search_text').val(),
+                dateFrom = jQuery('#date_from').val(),
+                dateTo = jQuery('#date_to').val();
+            if(dateFrom > dateTo){
+                noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "Error",
+                    text: "Начальная дата не может быть больше конечной!"
+                });
+                return;
+            }
+
+            jQuery.ajax({
+                type: 'POST',
+                async: false,
+                url: "/index.php?option=com_gm_ceiling&task=projects.getProjectsByHistoryStatus",
+                data: {
+                    filter: text,
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    status: 8
+                },
+                success: function (data) {
+                    console.log(JSON.parse(data));
+                    if(!empty(data)){
+                        data = JSON.parse(data);
+                        jQuery('#projects_table > tbody').empty();
+                        jQuery.each(data,function (i,p) {
+                            jQuery('#projects_table > tbody').append('<tr data-id="'+p.id+'">' +
+                                '<td>'+p.id+'</td>'+
+                                '<td>'+p.project_info+'</td>'+
+                                '<td>'+p.name+'</td>'+
+                                '<td>'+p.date+'</td>'+
+                                '</tr>');
+                        });
+                    }
+                    else{
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "warning",
+                            text: "по Вашему запросу ничего не найдено!"
+                        });
+                    }
+                },
+                error: function (data) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка получения данных!"
+                    });
+                }
+
+            });
+        }
     });
 </script>

@@ -234,23 +234,30 @@ $objMasters = $clients_model->getUsersByGroupAndDealer(46,$user->dealer_id);
                     designer_type: 7
                 },
                 success: function(data){
-                    if (data == 'client_found')
-                    {
-                        var n = noty({
-                            timeout: 2000,
+                    if (data.type == 'error'){
+                       noty({
+                            timeout: 5000,
                             theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
                             type: "error",
-                            text: "Клиент с таким номером существует!"
+                            text: data.text
                         });
                     }
-                    else
-                    {
-                        location.reload();
+                    else{
+                        noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Застройщик добавлен!"
+                        });
+                        setTimeout(function(){location.reload();},2500);
+
                     }
                 },
-                dataType: "text",
+                dataType: "json",
                 async: false,
                 timeout: 10000,
                 error: function(data){

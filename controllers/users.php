@@ -632,5 +632,19 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getUserByUsername(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone','','STRING');
+            $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+            $usersModel =  Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $usersModel->getUserByUsername($phone);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

@@ -124,7 +124,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
     }
 
 
-    });
+
 
     function showStocks() {
         jQuery.ajax({

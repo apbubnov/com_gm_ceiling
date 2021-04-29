@@ -1462,7 +1462,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $db->setQuery($query);
             //throw new Exception($query);
             $goods = $db->loadObjectList();
-
             $goods_jobs_map = [];
 
             foreach ($goods as $key => $item) {
@@ -2026,6 +2025,26 @@ ORDER BY `goods_id`
                 }
             }
             return $goods;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getJobsFromGoodsMap(){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('parent_goods_id,CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"job_id":"\',jfg.child_job_id,\'","count":"\',jfg.count,\'"}\') SEPARATOR \',\'),\']\') as jobs')
+                ->from('`rgzbn_gm_ceiling_jobs_from_goods_map` AS jfg')
+                ->group('jfg.parent_goods_id');
+            $db->setQuery($query);
+            $result = $db->loadAssocList('parent_goods_id','jobs');
+            foreach ($result as $key=>$value){
+                $items[$key]=json_decode($value);
+            }
+            return (object)$items;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

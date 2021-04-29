@@ -126,25 +126,44 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 	        $name = $jinput->get('fio', null, 'STRING');
 	        $phone = $jinput->get('phone', null, 'STRING');
 	        $designer_type = $jinput->get('designer_type', null, 'INT');
-            $user = JFactory::getUser();
-			//Создание клиента
-			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-			$client_data['client_name'] = $name;
-			$client_data['manager_id'] = $user->id;
-			$client_data['client_contacts'] = $phone;
-			$client_id = $clientform_model->save($client_data);
-			if ($client_id == 'client_found')
-			{
-				die('client_found');
-			}
-			else
-			{
-				//создание user'а
-				$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id, $designer_type);
-				$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
-				$client_model->updateClient($client_id,null,$dealer_id);
-		        die($dealer_id);
-		    }
+	        $phone = mb_ereg_replace('[^\d]', '', $phone);
+	        $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $existUser = $userModel->getUserByUsername($phone);
+
+	        if(!empty($existUser)){
+	            $error = (object)["type"=>'error','text'=>''];
+	            if($existUser->dealer_type == 7){
+	                $error->text = 'Застройщик с таким номером уже существует!';
+                }
+	            elseif($existUser->dealer_type !=7){
+                    $error->text = 'Пользователь с таким номером уже существует и не является застройщиком. Добавление невозможно!';
+                }
+	            die(json_encode($error,JSON_UNESCAPED_UNICODE));
+            }
+	        else{
+                $user = JFactory::getUser();
+                //Создание клиента
+                $clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+                $client_data['client_name'] = $name;
+                $client_data['manager_id'] = $user->id;
+                $client_data['client_contacts'] = $phone;
+                $client_id = $clientform_model->save($client_data);
+                if ($client_id == 'client_found')
+                {
+                    $error = (object)["type"=>'error','text'=>'Клиент с таким номером уже существует!'];
+                    die(json_encode($error,JSON_UNESCAPED_UNICODE));
+                }
+                else
+                {
+                    //создание user'а
+                    $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id, $designer_type);
+                    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+                    $client_model->updateClient($client_id,null,$dealer_id);
+                    die($dealer_id);
+                }
+            }
+
+
 	    }
 	    catch(Exception $e)
         {

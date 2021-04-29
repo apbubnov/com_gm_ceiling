@@ -54,7 +54,12 @@ $userGroup = $user->groups;
     </div>
     <div class="row center">
         <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=projects', false, 2); ?>">
-            <i class="fa fa-bars" aria-hidden="true"></i> Реализация
+            <i class="fas fa-ellipsis-v"></i> Проекты на реализацию(дилеры)
+        </a>
+    </div>
+    <div class="row center">
+        <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=realisation&subtype=projects_builders', false, 2); ?>">
+            <i class="fas fa-ellipsis-v"></i> Проекты на реализацию(стройка)
         </a>
     </div>
     <div class="row center">
@@ -67,12 +72,12 @@ $userGroup = $user->groups;
             <i class="fa fa-bars" aria-hidden="true"></i> Количество оставшихся товаров
         </a>
     </div>
-    <div class="row center">
+    <div class="row center" style="display: none;">
         <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=moving&subtype=create', false, 2); ?>">
             <i class="fa fa-bars" aria-hidden="true"></i> Сделать перемещение
         </a>
     </div>
-    <div class="row center">
+    <div class="row center" style="display: none;">
         <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=movings&subtype=history', false, 2); ?>">
             <i class="fa fa-bars" aria-hidden="true"></i> История перемещений
         </a>
@@ -86,6 +91,9 @@ $userGroup = $user->groups;
         <a class="btn btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock&type=counterparty', false, 2); ?>">
             <i class="fas fa-users"></i> Поставщики
         </a>
+    </div>
+    <div class="row center">
+        <a class="btn  btn-width btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fas fa-dollar-sign"></i> Касса</a>
     </div>
 
 </div>

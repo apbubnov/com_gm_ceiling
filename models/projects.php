@@ -286,7 +286,7 @@ class Gm_ceilingModelProjects extends JModelList
                 case 'gmmanager':
                     if ($subtype == 'runprojects') {
                         $query->where("`p`.`project_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30)");
-
+                        $query->where("`ph`.`new_status` IN (10, 11, 16, 17, 19, 24, 25, 26, 27, 28, 29,30) and `ph`.`date_of_change` between DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m-01') and CURDATE() ");
                     } elseif ($subtype == 'archive') {
                         $query->where('`p`.`project_status` = 12');
                         $query->order('`p`.`closed` DESC');
@@ -295,7 +295,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('`p`.`project_status` = 22');
 
                     } else {
-                        $query->where('`p`.`project_status` IN (5)');
+                        $query->where('`p`.`project_status` IN (5,9)');
                     }
                     break;
 
@@ -386,7 +386,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where("`umap`.`group_id` IN (11, 26) AND umap.dealer_id = $dealerId AND `project_status` IN (5, 10, 19,24,25,26,27,28,29,30)");
                         $query->group("p.id");
                     } else {
-                        $query->where('`project_status` IN (10, 5, 11,12, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
+                        $query->where('`project_status` IN (5, 8, 9, 10, 11, 12, 16, 17, 24, 25, 26, 27, 28, 29, 30)');
                         $query->where("`u2`.`dealer_id` = $user->dealer_id");
                     }
                     $query->order('`last_mount_date` DESC');
@@ -1101,31 +1101,79 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function getProjetsForRealization($type = "Stock")
+    public function getProjetsForRealization($search = '',$dateFrom = null,$dateTo = null)
     {
         try
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-
-            $query->from('`#__gm_ceiling_projects` AS project')
-                ->select('project.id as id, project.project_info as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
-            if ($type == "Stock") $query->where('project.project_status IN (5, 6, 7, 8, 19) OR project.project_status IS NULL');
-            else if ($type == "Guild") $query->where('project.project_status IN (5, 7)');
-            $query->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
+            if(empty($dateFrom) && empty($dateTo)){
+                $dateFrom = date('Y-m-01');
+                $dateTo = date('Y-m-d');
+            }
+            $query
+                ->select('project.id as id, ifnull(project.project_info,\'-\') as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created')
                 ->select("s.id as status, s.title as status_title")
-                ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = project.client_id")
                 ->select('client.client_name as client')
-                ->join("LEFT","`#__users` as user ON user.id = client.dealer_id")
                 ->select('user.name as dealer')
+                ->select('COUNT(calc.id) AS calc_count')
+                ->from('`#__gm_ceiling_projects` AS project')
+                ->leftJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.project_id = project.id')
+                ->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
+                ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = project.client_id")
+                ->join("LEFT","`#__users` as user ON user.id = client.dealer_id")
+                ->leftJoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = project.id')
+                ->where("(project.project_status <> 8 AND ph.new_status IN(5,6,7,9,10,13,14,16,17,19,24,25,26) AND ph.date_of_change BETWEEN '$dateFrom' AND '$dateTo') ")
                 ->order('project.created DESC')
-                ->order('project.id desc');
+                ->order('project.id desc')
+                ->group('project.id');
+            if(!empty($search)){
+                $query->where("(project.id = '$search' OR project.project_info like '%$search%' OR client.client_name LIKE '%$search%' OR user.name LIKE '%$search%')");
+            }
             $db->setQuery($query);
             $return = $db->loadObjectList();
             return $return;
         }
         catch(Exception $e)
         {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getProjectsForRealisationBuilders($search,$builder){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            if(empty($dateFrom) && empty($dateTo)){
+                $dateFrom = date('Y-m-01');
+                $dateTo = date('Y-m-d');
+            }
+            $query
+                ->select('project.id as id, ifnull(project.project_info,\'-\') as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created')
+                ->select("s.id as status, s.title as status_title")
+                ->select('client.client_name as client')
+                ->select('user.name as dealer')
+                ->select('COUNT(calc.id) AS calc_count')
+                ->from('`#__gm_ceiling_projects` AS project')
+                ->leftJoin('`rgzbn_gm_ceiling_calculations` AS calc ON calc.project_id = project.id')
+                ->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
+                ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = project.client_id")
+                ->join("LEFT","`#__users` as user ON user.id = client.dealer_id")
+                ->leftJoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = project.id')
+                ->where("`user`.dealer_type = 7 ")
+                ->order('user.id,client.id,project.id')
+                ->group('project.id');
+            if(!empty($search)){
+                $query->where("(project.id = '$search' OR project.project_info like '%$search%' OR client.client_name LIKE '%$search%')");
+            }
+            if(!empty($builder)){
+                $query->where("user.id = $builder");
+            }
+            $db->setQuery($query);
+            $return = $db->loadObjectList();
+            return $return;
+        }
+        catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
@@ -1380,7 +1428,7 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    function getProjectsByHistoryStatus($status){
+    function getProjectsByHistoryStatus($status,$dateFrom = null,$dateTo = null,$filter = null){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -1390,7 +1438,22 @@ class Gm_ceilingModelProjects extends JModelList
                 ->innerjoin('`rgzbn_gm_ceiling_projects_history` AS ph ON ph.project_id = p.id')
                 ->innerJoin('`rgzbn_gm_ceiling_clients` AS c ON c.id = p.client_id')
                 ->innerJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
-                ->where("ph.new_status = $status");
+                ->where("(ph.new_status = $status)");
+            if(!empty($dateFrom)&&!empty($dateTo)){
+               $query->where("(ph.date_of_change BETWEEN '$dateFrom 00:00:00' AND '$dateTo 23:59:59')");
+            }
+            if(!empty($dateFrom)&&empty($dateTo)){
+                $query->where("(ph.date_of_change >= '$dateFrom 00:00:00')");
+            }
+            if(empty($dateFrom)&&!empty($dateTo)){
+                $query->where("(ph.date_of_change <= '$dateTo 23:59:59')");
+            }
+            if(!empty($filter)){
+                $query->where("(p.project_info LIKE '%$filter%' OR u.name LIKE '%$filter%' OR p.id LIKE '%$filter%')");
+            }
+            if(!empty($dateFrom) || !empty($dateTo)){
+                $query->order('ph.date_of_change DESC,p.id DESC');
+            }
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;
@@ -1414,7 +1477,73 @@ class Gm_ceilingModelProjects extends JModelList
             $db->setQuery($query);
             $result = $db->loadAssocList('project_id');
             return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function getProjectsWithRealisedGoodsByIds($ids){
+        try{
+            /*SELECT p.id,p.project_info,
+                IFNULL((
+                    SELECT SUM(calc.canvases_sum)+SUM(calc.components_sum)
+                    FROM `rgzbn_gm_ceiling_calculations` AS calc
+                    WHERE calc.project_id = s.project_id),p.new_project_sum) AS project_sum,
+                SUM(CASE WHEN g.category_id = 1 THEN s.sale_price*s.count ELSE 0 END) AS canvases_sum,
+                SUM(CASE WHEN g.category_id <> 1 THEN s.sale_price*s.count ELSE 0 END) AS components_sum,
+                SUM(CASE WHEN g.category_id = 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS canvases_cost_sum,
+                SUM(CASE WHEN g.category_id <> 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS components_cost_sum,
+                SUM(IFNULL(r.cost_price,0)*s.count) + SUM(p.delivery_sum) AS cost_sum,
+                CONCAT('[',GROUP_CONCAT(DISTINCT CONCAT('{"id":"',g.id,'","name":"',g.name,'","count":"',s.count,'","sale_price":"',s.sale_price,'","cost_price":"',r.cost_price,'"}')  SEPARATOR ','),']') AS goods
+            FROM `rgzbn_gm_stock_sales` AS s
+            INNER JOIN `rgzbn_gm_ceiling_projects` AS p ON p.id = s.project_id
+            LEFT JOIN ((SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
+                                                FROM `rgzbn_gm_stock_moving` AS mov
+                                                INNER JOIN `rgzbn_gm_stock_inventory` AS i ON i.id = mov.to_inventory_id
+                                                INNER JOIN `rgzbn_gm_stock_reception` AS rec ON rec.inventory_id = mov.from_inventory_id)
+                                                UNION ALL
+                                                (SELECT inventory_id,cost_price
+                                                FROM `rgzbn_gm_stock_reception`)) AS r ON r.inventory_id = s.inventory_id
+            INNER JOIN `rgzbn_gm_stock_inventory` AS i ON s.inventory_id = i.id
+            INNER JOIN `rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id
+            WHERE s.project_id IN(77947,77932,77743,77944)
+            GROUP BY p.id*/
+            $db = JFactory::getDbo();
+
+            $query = 'SET SESSION group_concat_max_len  = 4194304';
+            $db->setQuery($query);
+            $db->execute();
+            $inventoryCostQuery = '(SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
+                                    FROM `rgzbn_gm_stock_moving` AS mov
+                                    INNER JOIN `rgzbn_gm_stock_inventory` AS i ON i.id = mov.to_inventory_id
+                                    INNER JOIN `rgzbn_gm_stock_reception` AS rec ON rec.inventory_id = mov.from_inventory_id)
+                                    UNION ALL
+                                    (SELECT inventory_id,cost_price
+                                    FROM `rgzbn_gm_stock_reception`)';
+            $query = $db->getQuery(true);
+            $query
+                ->select('p.id,p.project_info')
+                ->select(' IFNULL((
+                    SELECT SUM(calc.canvases_sum)+SUM(calc.components_sum)
+                    FROM `rgzbn_gm_ceiling_calculations` AS calc
+                    WHERE calc.project_id = s.project_id),p.new_project_sum) AS project_sum')
+                ->select('SUM(CASE WHEN g.category_id = 1 THEN s.sale_price*s.count ELSE 0 END) AS canvases_sum')
+                ->select('SUM(CASE WHEN g.category_id <> 1 THEN s.sale_price*s.count ELSE 0 END) AS components_sum')
+                ->select('SUM(CASE WHEN g.category_id = 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS canvases_cost_sum')
+                ->select('SUM(CASE WHEN g.category_id <> 1 THEN IFNULL(r.cost_price,0)*s.count ELSE 0 END) AS components_cost_sum')
+                ->select('SUM(IFNULL(r.cost_price,0)*s.count) + SUM(p.delivery_sum) AS cost_sum')
+                ->select('CONCAT(\'[\',GROUP_CONCAT(DISTINCT CONCAT(\'{"id":"\',g.id,\'","name":"\',g.name,\'","count":"\',s.count,\'","sale_price":"\',s.sale_price,\'","cost_price":"\',r.cost_price,\'"}\')  SEPARATOR \',\'),\']\') AS goods')
+                ->from('`rgzbn_gm_stock_sales` AS s')
+                ->innerJoin('`rgzbn_gm_ceiling_projects` AS p ON p.id = s.project_id')
+                ->leftJoin("($inventoryCostQuery) AS r ON r.inventory_id = s.inventory_id")
+                ->innerJoin('`rgzbn_gm_stock_inventory` AS i ON s.inventory_id = i.id')
+                ->innerJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
+                ->where("s.project_id IN($ids)")
+                ->group('p.id');
+            $db->setQuery($query);
+            $result = $db->loadAssocList('id');
+            return $result;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

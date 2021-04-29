@@ -11,364 +11,549 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$month = date("n");
-$year = date("Y");
+$today = date("Y-m-d");
+$modelCashBox = Gm_ceilingHelpersGm_ceiling::getModel('cashbox');
+$types = $modelCashBox->getCashBoxTypes();
+$usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+$users = $usersModel->getUsersByGroupsAndDealer('16,19',$user->dealer_id);
+$cashboxTypes = $modelCashBox->getCashBoxTypes();
+$isManager = in_array('16',$user->groups);
+$isStorekeeper = in_array('19',$user->groups);
+$isBuh = in_array('14',$user->groups);
+$cashboxsSum = $modelCashBox->getCashboxSum();
+$cashboxType = '';
+if($isManager){
+    $cashboxType = 1;
+    unset($cashboxTypes[3]);
+}
+elseif($isStorekeeper){
+    $cashboxType = 2;
+    unset($cashboxTypes[1]);
+    unset($cashboxTypes[3]);
+}
+elseif($isBuh){
+    $cashboxType = 3;
+}
+
 ?>
-<form>
-    <div style="display:block; right:0px">
-        <a class="btn btn-large btn-primary"
-        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-        <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
-        <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-        <select id = "month">
-            <option value = "1">Январь</option>
-            <option value = "2">Февраль</option>
-            <option value = "3">Март</option>
-            <option value = "4">Апрель</option>
-            <option value = "5">Май</option>
-            <option value = "6">Июнь</option>
-            <option value = "7">Июль</option>
-            <option value = "8">Август</option>
-            <option value = "9">Сентябрь</option>
-            <option value = "10">Октябрь</option>
-            <option value = "11">Ноябрь</option>
-            <option value = "12">Декабрь</option>
-        </select><label id = "year"><?php echo $year?></label>
-        <button  type= "button"\ class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+<style>
+    .result_row{
+        border:1px solid #414099;
+        color: black;
+        padding: 12px 16px;
+        margin-bottom: 5px;
+        text-decoration: none;
+        display: block;
+    }
+    .result_row:hover {
+        background-color: #f1f1f1
+    }
+</style>
+<div class="row">
+    <?= parent::getButtonBack();?>
+</div>
+<div class="row" style="margin-bottom: 1em;">
+    <div class="col-md-4">
+        <div class="col-md-6">
+            <b>Период с</b>
+        </div>
+        <div class="col-md-6">
+            <b>по</b>
+        </div>
+        <div class="col-md-6" style="padding-left:0px;padding-right: 1px;">
+            <input class="form-control date_choose" type="date" id="date_from" value="<?=$today?>">
+        </div>
+
+        <div class="col-md-6" style="padding-left:1px;padding-right: 0px;">
+            <input class="form-control date_choose" type="date" id="date_to" value="<?=$today?>">
+        </div>
     </div>
-    <div id="modal_window_container" class = "modal_window_container">
-		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal_window_sum" class = "modal_window">
-			<h6 style = "margin-top:10px">Введите сумму</h6>
-			<p><input type="text" id="sum" placeholder="Сумма" required></p>
-			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-	    </div>
+    <div class="col-md-2" style="padding-left:1px;padding-right: 1px;" >
+        <div class="col-md-12">
+            <b>Тип кассы</b>
+        </div>
+        <div class="col-md-12">
+            <select class="form-control" id="cashbox_type">
+                <option value="">Выберите кассу</option>
+                <?php foreach ($cashboxTypes as $type){
+                    echo "<option value='$type->id'>$type->name</option>";
+                }?>
+            </select>
+        </div>
     </div>
-    <table class="table table-striped table_cashbox" id="cashbox_table">
-        <thead id = "cashbox_head">
-        <tr>
-            <th>
-              Дата
-            </th>
-            <th>
-               № дог-ра
-            </th>
-            <th>
-                Статус
-            </th>
-            <th>
-               Бригада
-            </th>
-            <th>
-                Сумма дог-ра
-            </th>
-            <th>
-                З\п монт-м
-            </th>
-            <th>
-                Не выдано монт-м
-            </th>
-            <th>
-                Расходные мат-лы
-            </th>
-            <th>
-                Остаток
-            </th>
-            <th>
-                Касса
-            </th>
-            <th>
-                Инкассация
-            </th>
-        </tr>
+    <div class="col-md-3">
+        <div class="col-md-12">
+            <b>Контрагент</b>
+        </div>
+        <div class="col-md-12">
+            <input class="form-control" id="search_inp">
+            <div class="search_result" style="height: 300px; overflow-y: scroll;display: none;">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-12">
+            <b>Ответственный</b>
+        </div>
+        <div class="col-md-12">
+            <select class="form-control" id="user_select">
+                <option>Выберите</option>
+                <?php foreach ($users as $userObj) {
+                    echo "<option value='$userObj->id'>$userObj->name</option>";
+                }?>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 1em;">
+    <div class="col-md-6">
+        <?php if($isBuh){?>
+            <div class="col-md-3">
+                <button class="btn btn-primary" id="create_collection">Инкассация</button>
+            </div>
+        <?php }?>
+        <div class="col-md-3">
+            <button class="btn btn-primary" id="create_payment">Внести\списать</button>
+        </div>
+    </div>
+    <div class="col-md-6" style="text-align: right;">
+        <?php if($isBuh) {
+            foreach ($cashboxsSum as $value) {
+                $cSum = $value['incoming'] - $value['outcoming']; ?>
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-4">
+                        <b><?= $value['name'] ?>:</b>
+                    </div>
+                    <div class="col-md-2">
+                        <b><?= $cSum; ?></b>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+        else{
+            $cSum = $cashboxsSum[$cashboxType]['incoming'] - $cashboxsSum[$cashboxType]['outcoming'];
+            echo "<b>В кассе: $cSum</b>";
+        }?>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-stripped table_cashbox" id="cashbox_table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Контрагент</th>
+                <th>Тип</th>
+                <th>Сумма</th>
+                <th>Касса</th>
+                <th>Ответственный</th>
+                <th>Комментарий</th>
+                <th>Ордер</th>
+            </tr>
         </thead>
+        <tbody>
 
-        <tbody id="cashbox_body">
-            <?php foreach ($this->item as $item) {
-               ?>
-                <tr>
-                    <td>
-                        <?php
-                            if(isset($item->id)){
-                                echo date_format(date_create($item->closed),"d.m.Y");
-                            }
-                            else{
-                                echo date_format(date_create($item->closed),"d.m.Y H:i:s");
-                            }
-                        ?>
-                    </td>
-                    <td>
-                        <?php echo $item->id;?>        
-                    </td>
-                    <td>
-                        <?php echo $item->status ?>
-                    </td>
-                    <td width = 15%>
-                        <?php echo $item->name;?>
-                    
-                    </td>
-                    <td>
-                        <?php echo $item->new_project_sum;?>        
-                    </td>
-                    <td>
-                        <?php echo $item->new_mount_sum;?>        
-                    </td>
-                    <td>
-                        <?php
-        
-                            echo $item->not_issued;
-                        ?>
-                    </td>
-                    <td>
-                        <?php echo $item->new_material_sum;?>        
-                    </td>
-                    <td>
-                        <?php
-                            if(!isset($item->sum)){
-                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                                echo $residue;
-                            }
-                        ?>        
-                    </td>
-                    <td>
-                        <?php
-                            $cashbox += $residue - $encash;
-                            $encash = 0;
-                            echo $cashbox;
-                        ?>
-                    </td>
-                    <td>
-                        <?php 
-                            if(isset($item->sum)) {
-                                $encash = $item->sum;
-                                echo $item->sum; 
-                            }
-                             ?>
-                    </td>
-                </tr>
-            <?php }?>
-            <tr>
-                <td style = "text-align:right" colspan = "10">
-                    <b>Итого в кассе:</b>
-                </td>
-                <td>
-                    <b><?php echo $cashbox;?></b>
-                </td>
-            </tr>
-            <tr>
-                <td style = "text-align:right" colspan = "10">
-                    <b>Недовыдано</b>
-                </td>
-                <td>
-                    <b><?php echo $all_not_issued ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td style = "text-align:right" colspan = "10">
-                   <b>Остаток</b>
-                </td>
-                <td>
-                    <b><?php echo $cashbox-$all_not_issued;?></b>
-                </td>
-            </tr>
         </tbody>
+        <tfoot></tfoot>
     </table>
-</form>
-
+</div>
+<div class="modal_window_container" id="mw_container">
+    <button type="button" id="btn_close" class="btn-close">
+        <i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+    </button>
+    <div class="modal_window" id="mw_payment">
+        <h4>Внесение оплаты</h4>
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="row" style="margin-bottom: 1em;">
+                <div class="col-md-6" style="text-align:left;">
+                    <span><b>Выберите контрагента:</b></span>
+                </div>
+                <div class="col-md-6">
+                    <input type="hidden" id="selected_dealer" >
+                    <input class="form-control" id="payment_search_dealer">
+                    <div class="search_result" id="found_dealers" style="height: 300px; overflow-y: scroll;display: none;"></div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 1em;">
+                <div class="col-md-3" style="text-align:right;">
+                    <span><b>Введите сумму</b></span>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" id="payment_sum">
+                </div>
+                <div class="col-md-3" style="text-align:right;">
+                    <span><b>Выберите тип:</b></span>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="payment_type">
+                        <option value="1">Внесение</option>
+                        <option value="2">Списание</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 1em;">
+                <div class="col-md-4" style="text-align:left;">
+                    <span><b>Введите комментарий:</b></span>
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" id="payment_comment">
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 1em;">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="save_payment">Сохранить</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="modal_window" id="mw_collection">
+        <h4>Инкассация</h4>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="row" style="margin-bottom: 1em;">
+                    <div class="col-md-6">
+                        <span><b>Введите сумму:</b></span>
+                    </div>
+                    <div class="col-md-6">
+                        <input class="form-control" id="collection_sum">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 1em;">
+                    <div class="col-md-6">
+                        <span><b>Введите комментарий:</b></span>
+                    </div>
+                    <div class="col-md-6">
+                        <input class="form-control" id="collection_comment">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 1em;">
+                    <div class="col-md-6">
+                        <span><b>Выберите кассу инкассации:</b></span>
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-control" id="collection_box">
+                            <?php foreach ($cashboxTypes as $type){
+                                echo "<option value='$type->id'>$type->name</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 1em;">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="save_collection">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
 <script>
+
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_sum"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_sum").hide();
+        var div1 = jQuery("#mw_collection"),
+            div2 = jQuery('#mw_payment');
+        if (!div1.is(e.target) &&
+            !div2.is(e.target) &&
+            div1.has(e.target).length === 0 &&
+            div2.has(e.target).length === 0) {
+            jQuery("#btn_close").hide();
+            jQuery("#mw_container").hide();
+            div1.hide();
+            div2.hide();
         }
     });
     jQuery(document).ready(function (){
-        jQuery("#cancel").click(function(){
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_sum").hide();
+        var counterparty,
+            isBuh = '<?=$isBuh?>',
+            isManager= '<?=$isManager?>',
+            isStorekeeper = '<?=$isStorekeeper?>';
+        if(isManager){
+            jQuery('#cashbox_type option[value="1"]').attr('selected',true);
+        }
+        if(isStorekeeper){
+            jQuery('#cashbox_type option[value="2"]').attr('selected',true);
+        }
+        getFilteredData();
+        jQuery("#search_inp").keyup(function(){
+            var searchVal = jQuery("#search_inp").val();
+            if(!empty(searchVal)){
+                findDealer(searchVal,this);
+            }
+            else{
+                jQuery("#search_result").empty();
+                jQuery("#search_result").hide();
+                counterparty = null;
+                getFilteredData();
+            }
         });
-        jQuery("#add").click(function (){
-            jQuery("#modal_window_container").show();
-            jQuery("#modal_window_sum").show("slow");
-            jQuery("#close").show();
+
+        jQuery('.date_choose').change(function () {
+            getFilteredData();
         });
-        jQuery("#save").click(function(){
-            id = <?php echo $userId;?>;
+
+        jQuery('#user_select').change(function () {
+            getFilteredData();
+        });
+
+        jQuery('.search_result').on('click','.result_row',function(){
+            var dealer_id = jQuery(this).data('id'),
+            parent = jQuery(this).closest('.search_result');
+            if (parent.attr('id') === 'found_dealers'){
+                jQuery('#selected_dealer').val(dealer_id);
+                jQuery('#payment_search_dealer').val(jQuery(this).text());
+            }
+            else{
+                counterparty = found_users[dealer_id];
+                jQuery('#search_inp').val(counterparty.name);
+                getFilteredData();
+            }
+            parent.hide();
+
+        });
+
+        jQuery('#search_inp').blur(function(){
+            getFilteredData();
+        });
+
+        jQuery('#cashbox_type').change(function () {
+            getFilteredData();
+        })
+
+        jQuery('#create_collection').click(function(){
+            jQuery('#btn_close').show();
+            jQuery('#mw_container').show();
+            jQuery('#mw_collection').show();
+        });
+
+        jQuery('#create_payment').click(function(){
+            jQuery('#btn_close').show();
+            jQuery('#mw_container').show();
+            jQuery('#mw_payment').show();
+            jQuery('#selected_dealer').val('');
+        });
+
+        jQuery('#save_payment').click(function (){
+            var dealer_id = jQuery('#selected_dealer').val(),
+                sum = jQuery('#payment_sum').val(),
+                paynent_type = jQuery('#payment_type').val(),
+                comment = jQuery('#payment_comment').val(),
+                user_id = '<?=$userId;?>',
+                cashbox_type = '<?=$cashboxType;?>',
+                data = {};
+            if(!empty(dealer_id)){
+                data.dealer_id = dealer_id;
+            }
+            if(!empty(sum)){
+                data.sum = sum;
+            }
+            if(!empty(paynent_type)){
+                data.operation_type = paynent_type;
+            }
+            if(!empty(comment)){
+                data.comment = comment;
+            }
+            if(!empty(user_id)){
+                data.user_id = user_id;
+            }
+            if(!empty(cashbox_type)){
+                data.cashbox_type = cashbox_type;
+            }
+            saveSum(data);
+        });
+
+        jQuery('#save_collection').click(function () {
+            var sum = jQuery('#collection_sum').val(),
+                cashbox = jQuery('#collection_box').val(),
+                comment = jQuery('#collection_comment').val(),
+                data = {
+                    operation_type: 3,
+                    user_id: '<?=$userId;?>',
+                    sum: sum,
+                    comment: comment,
+                    cashbox_type: cashbox
+                };
+            saveSum(data);
+        });
+
+        jQuery('#payment_search_dealer').keyup(function(){
+            findDealer(this.value,this);
+        });
+
+        jQuery('#cashbox_table').on('click','.create_check',function () {
+            var id = jQuery(this).closest('tr').data('id');
             jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=saveEncashment",
+                url: "/index.php?option=com_gm_ceiling&task=cashbox.createCashOrder",
                 async: false,
                 data: {
-                    sum: jQuery("#sum").val(),
                     id: id
                 },
+                type: "POST",
                 success: function (data) {
-                    window.location = window.location;
+                    window.open(data, '_blank');
                 },
                 dataType: "text",
                 timeout: 10000,
                 error: function () {
-                    var n = noty({
-                        timeout: 2000,
+                    noty({
                         theme: 'relax',
                         layout: 'center',
-                        maxVisible: 5,
+                        timeout: 5000,
                         type: "error",
-                        text: "Ошибка cервер не отвечает"
+                        text: "Сервер не отвечает!"
                     });
                 }
             });
         });
-        
-        month_old = 0;
-        year_old = 0;
-        jQuery("#next").click(function () {
-            month = <?php echo $month; ?>;
-            year = <?php echo $year; ?>;
-            if (month_old != 0) {
-                month = month_old;
-                year = year_old;
-            }
-            if (month == 12) {
-                month = 1;
-                year++;
-            } else {
-                month++;
-            }
-            month_old = month;
-            year_old = year;
-            update_month_year(month,year);  
-            getCashboxByDate(month,year);        
-        });
-        jQuery("#prev").click(function () {
-            month = <?php echo $month; ?>;
-            year = <?php echo $year; ?>;
-            if (month_old != 0) {
-                month = month_old;
-                year = year_old;
-            }
-            if (month == 1) {
-                month = 12;
-                year--;
-            } else {
-                month--;
-            }
-            month_old = month;
-            year_old = year;
-            update_month_year(month,year);
-            getCashboxByDate(month,year);
-        });
-        jQuery("#month").change(function() {
-            var month = this.value;
-            var year = jQuery("#year").text();
-            getCashboxByDate(month,year);
-        });
-        
-    });
-    function getCashboxByDate(month,year){
-        jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=getCashboxByMonth",
+
+        function getFilteredData() {
+            var dateFrom = jQuery('#date_from').val(),
+                dateTo = jQuery('#date_to').val(),
+                cashboxType = jQuery('#cashbox_type').val(),
+                counterpartyId = !empty(counterparty) ? counterparty.id :'',
+                userId = jQuery('#user_select').val();
+            console.log(jQuery('#cashbox_type').val());
+            jQuery.ajax({
+                url: "/index.php?option=com_gm_ceiling&task=cashbox.getData",
                 async: false,
                 data: {
-                    month: month,
-                    year: year
+                    date_from: dateFrom,
+                    dateTo: dateTo,
+                    counterparty: counterpartyId,
+                    user_id: userId,
+                    cashbox_type: cashboxType
                 },
+                type: "POST",
                 success: function (data) {
-                   fill_table(JSON.parse(data));
+                    jQuery('#cashbox_table > tbody').empty();
+                    if(!empty(data)){
+                        data = JSON.parse(data);
+                        jQuery.each(data,function (n,el) {
+                            console.log(el);
+                            var tr = '<tr data-id="'+el.id+'">' +
+                                '<td>'+el.datetime+'</td>'+
+                                '<td>'+el.counterparty+'</td>'+
+                                '<td>'+el.operation+'</td>'+
+                                '<td>'+el.sum+'</td>'+
+                                '<td>'+el.cashbox+'</td>'+
+                                '<td>'+el.user_name+'</td>'+
+                                '<td>'+el.comment+'</td>';
+                            if(el.operation_type != 3){
+                                tr += '<td><button class="btn btn-primary create_check"><i class="fas fa-money-check"></i></button></td>'+
+                            '</tr>';
+                            }
+                            else{
+                                tr+= '<td>-</td></tr>'
+                            }
+                            jQuery('#cashbox_table > tbody').append(tr);
+                       });
+                    }
+                    else{
+                        jQuery('#search_result').hide();
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "success",
+                            text: "Ничего не найдено!"
+                        });
+                    }
                 },
                 dataType: "text",
                 timeout: 10000,
                 error: function () {
-                    var n = noty({
-                        timeout: 2000,
+                    noty({
                         theme: 'relax',
                         layout: 'center',
-                        maxVisible: 5,
+                        timeout: 5000,
                         type: "error",
-                        text: "Ошибка cервер не отвечает"
+                        text: "Сервер не отвечает!"
                     });
                 }
             });
-    }
-    function update_month_year(month,year){
-        jQuery("#month option").each(function()
-        {
-            if(jQuery(this).val()==month){
-                jQuery(this).attr("selected",true);
-            }
-        });
-        jQuery("#year").text(year); 
-    }
-    function fill_table(data){
-        console.log(data);
-        all_not_issued = 0;
-        cashbox=0;
-        jQuery('#cashbox_table tbody').empty();
-        for(var i=0;i<data.length;i++) {
-            jQuery("#cashbox_table").append('<tr></tr>');
-            for(var j=0;j<Object.keys(data[i]).length;j++){
-                if(data[i][Object.keys(data[i])[j]]!=null){
-                    if(Object.keys(data[i])[j]=="closed"){
-                        if(data[i][Object.keys(data[i])[j]].search(':')!=-1){
-                            flag = 1;
+        }
+
+        function findDealer(searchVal,input){
+            jQuery.ajax({
+                url: "/index.php?option=com_gm_ceiling&task=stock.getCustomer",
+                async: false,
+                data: {
+                    filter: searchVal
+                },
+                type: "POST",
+                success: function (data) {
+                    var searchResult = jQuery(input).closest('div').find('.search_result');
+                    if(!empty(data)){
+                        searchResult.show();
+                        found_users = JSON.parse(data);
+                        var row;
+                        searchResult.empty();
+                        for(var i  in found_users){
+                            row = '<div class="result_row" data-id="'+found_users[i].id+'">'+found_users[i].name+'</div>';
+                            searchResult.append(row);
                         }
-                        else{
-                            flag = 0;
-                        }
-                        data[i][Object.keys(data[i])[j]] = formatDate(new Date(data[i][Object.keys(data[i])[j]]),flag);
                     }
-                    jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                    if(Object.keys(data[i])[j]=="cashbox"){
-                        cashbox = data[i][Object.keys(data[i])[j]];
+                    else{
+                        searchResult.hide();
+                        noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            timeout: 5000,
+                            type: "success",
+                            text: "Ничего не найдено!"
+                        });
                     }
-                    if(Object.keys(data[i])[j]=="not_issued"){
-                        all_not_issued += data[i][Object.keys(data[i])[j]];
-                    }
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
                 }
-                else{
-                    jQuery('#cashbox_table > tbody > tr:last').append('<td> </td>');
+            });
+        }
+
+        function saveSum(data) {
+            jQuery.ajax({
+                url: "/index.php?option=com_gm_ceiling&task=cashbox.save",
+                async: false,
+                data: {
+                    data_to_save: data
+                },
+                type: "POST",
+                success: function (data) {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "sucess",
+                        text: "Сохранено!"
+                    });
+                    setTimeout(function (){location.reload();},5000);
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 5000,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
                 }
-            }
+            });
         }
-
-        jQuery("#cashbox_table").append('<tr></tr>');
-        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Итого в кассе:<b></td><td>'+cashbox+'</td>');
-        jQuery("#cashbox_table").append('<tr></tr>');
-        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Недовыдано:<b></td><td>'+all_not_issued+'</td>');
-        jQuery("#cashbox_table").append('<tr></tr>');
-        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Остаток:<b></td><td>'+(cashbox-all_not_issued)+'</td>');
-
-    }
-    function formatDate(date,flag) {
-        var dd = date.getDate();
-        if (dd < 10) dd = '0' + dd;
-
-        var mm = date.getMonth() + 1;
-        if (mm < 10) mm = '0' + mm;
-
-        var yy = date.getFullYear();
-        if (yy < 10) yy = '0' + yy;
-
-        if(flag == 1){
-            var hh = date.getHours();
-            if (hh < 10) hh = '0' + hh;
-
-            var ii = date.getMinutes();
-            if (ii < 10) ii = '0' + ii;
-
-            var ss = date.getSeconds();
-            if (ss < 10) ss = '0' + ss;
-
-            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-        }
-        else{
-            return dd + '.' + mm + '.' + yy;
-        }
-    }
+    });
 </script>

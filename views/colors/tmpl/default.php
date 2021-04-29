@@ -165,31 +165,33 @@ $manufacturers = $stockModel->getPropManufacturers();
     <div class="modal_window_container" id="mw_container">
         <button type="button" class="close_btn" id="close""><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div class="modal_window" id="mwCreateColor">
-            <form>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="colorTitle">Введите назавние цвета:</label>
-                        <input id="colorTitle" class="input-gm">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for = "hexColor">Выберите цвет</label>
-                        <input id = "hexColor" class="input-gm">
-                        <div id = "color_selector">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="colorTitle">Введите назавние цвета:</label>
+                            <input id="colorTitle" class="form-control">
                         </div>
                     </div>
+                    <div class="row" >
+                        <div class="col-md-12">
+                            <label for = "hexColor">Выберите цвет</label>
+                            <input id = "hexColor" class="form-control">
+                            <div id = "color_selector" align="center"style="margin-top: 1em;">
+                            </div>
+                        </div>
 
 
-                </div>
-                <div class="row center">
-                    <div class="col-md-12">
-                        <button class="btn btn-primary" id="saveColorBtn">Сохранить</button>
+                    </div>
+                    <div class="row center">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" id="saveColorBtn">Сохранить</button>
+                        </div>
                     </div>
                 </div>
-            </form>
-
-
+                <div class="col-md-3"></div>
+            </div>
         </div>
         <div class="modal_window" id="mwEditColor">
             <input id="color_id" value="" type="hidden">

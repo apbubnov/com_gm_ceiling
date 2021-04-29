@@ -202,9 +202,9 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 		{
 			$jinput = JFactory::getApplication()->input;
             $proj_id = $jinput->get('proj_id', null, 'INT');
-
+            $title = $jinput->get('title','','STING');
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $result  = $calc_model->create_calculation($proj_id);
+            $result  = $calc_model->create_calculation($proj_id,$title);
             die(json_encode($result));
 		}
 		catch(Exception $e)
@@ -488,4 +488,27 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
     }
     /*END*/
 
+    function addGoodsFromCart(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $idCalc = $jinput->get('calc_id',null, 'INT');
+            $projectId = $jinput->get('project_id',null, 'INT');
+            $cart = $jinput->get('cart','','STRING');
+            if(!empty($cart)){
+                $cart = json_decode($cart);
+                $goods = $cart->goodsList;
+                $calculationFormModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
+                $calculationFormModel->addGoodsInCalculation($idCalc,$goods);
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $data = ["id" => $idCalc,"calculation_title"=>"Комплектующие","components_sum"=>$cart->sum];
+                $calculationModel->update_calculation($data);
+                $notify = ["id"=> $projectId];
+                Gm_ceilingHelpersGm_ceiling::notify($notify,18);
+            }
+
+        }
+        catch (Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

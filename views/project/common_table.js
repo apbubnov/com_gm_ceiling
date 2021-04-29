@@ -1053,3 +1053,51 @@ function saveProjectSum() {
         });
     }
 }
+
+
+jQuery('#table1').on('click','#save_delivery',function () {
+    var sum = jQuery('#delivery_sum').val();
+    if(!empty(sum)){
+        var data = {delivery_sum: sum},
+            id = project_id;
+        if (empty(id)) {
+            id = project_id.value;
+        }
+        if (id) {
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.updateProjectData",
+                data: {
+                    project_id: id,
+                    project_data: data
+                },
+                success: function (data) {
+                    noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Сохранено!"
+                    });
+                    setTimeout(function () {location.reload()},3000);
+                },
+                dataType: "json",
+                timeout: 20000,
+                error: function (data) {
+                    console.log('error');
+                }
+            });
+        }
+    }
+    else{
+        noty({
+            theme: 'relax',
+            timeout: 2000,
+            layout: 'center',
+            maxVisible: 5,
+            type: "error",
+            text: "Сохранение невозможно, пустая сумма!"
+        });
+    }
+});

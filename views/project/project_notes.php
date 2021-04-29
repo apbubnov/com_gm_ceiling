@@ -27,7 +27,7 @@ $common_note = "";
             <div class="col-md-4">
                 <b>Ввести общее примечание к проекту:</b></div>
             <div class="col-md-6 col-xs-9">
-                <textarea class="input-gm"  id="textarea_note" style="width: 98%;"><?= $common_note?></textarea>
+                <textarea class="form-control"  id="textarea_note" style="width: 98%;"><?= $common_note?></textarea>
             </div>
             <div class="col-md-2 col-xs-3" style="text-align: right;">
                 <button type="button" class="btn btn-primary" id="btn_add_note">Ок</button>

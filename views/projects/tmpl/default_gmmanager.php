@@ -150,7 +150,8 @@ $userId     = $user->get('id');
             var search = jQuery("#search_text").val();
             var date_from = jQuery('#run_date_from').val(),
                 date_to = jQuery('#run_date_to').val();
-            showFiltered(search,formatDate(date));
+            console.log(date_from);
+            showFiltered(search,date_from,date_to);
         });
 
         function OpenPage() {
@@ -161,13 +162,13 @@ $userId     = $user->get('id');
                 });
             });
         }
-        function showFiltered(searchText,searchDate){
+        function showFiltered(searchText,dateFrom,dateTo){
             jQuery("#projectList > tbody").empty();
             var search_reg = new RegExp(searchText, "ig");
             jQuery.each(items,function (index,elem) {
                 var status_history = [];
-                if(!empty(elem.project_status_history)&&!empty(searchDate)) {
-                    status_history  = JSON.parse(elem.project_status_history);
+                if(!empty(elem.project_status_history)&&!empty(dateFrom)) {
+                    status_history  = JSON.parse(elem.project_status_history.replace(/\\/g, ""));
                 }
                 var  existDate = true,
                      existText = true;
@@ -176,11 +177,18 @@ $userId     = $user->get('id');
                     existText = search_reg.test(elem.client_name)||search_reg.test(elem.dealer_name)||search_reg.test(elem.id)||
                     search_reg.test(elem.project_info);
                 }
-                console.log(searchDate);
-                if(!empty(searchDate)){
-                    console.log("date");
+                console.log(dateFrom);
+                if(!empty(dateFrom) || !empty(dateTo)){
                     existDate = status_history.find(function (status) {
-                        return !empty(searchDate) && status.status == 5 && status.date === searchDate ? true : false;
+                        if(!empty(dateFrom) && !empty(dateTo) && status.status == 5 && status.date >= dateFrom && status.date<=dateTo){
+                            return true;
+                        }
+                        if(!empty(dateFrom) && empty(dateTo) && status.status == 5 && status.date>= dateFrom){
+                            return true;
+                        }
+                        if(empty(dateFrom) && !empty(dateTo) && status.status == 5 && status.date<=dateTo){
+                            return true;
+                        }
                     });
 
                     if(existDate === undefined){
@@ -210,7 +218,7 @@ $userId     = $user->get('id');
             var date = jQuery("#run_date").val();
             var search = jQuery("#search_text").val();
             if(date.replaceAll('_',"").length > 9){
-                showFiltered(search,formatDate(date));
+                showFiltered(search,format_date(date));
             }
             if(date.replaceAll('_',"").replaceAll('.',"").length == 0){
                 showFiltered(search,"");
@@ -218,7 +226,7 @@ $userId     = $user->get('id');
         });
 	});
 
-    function formatDate(date) {
+    function format_date(date) {
        var date_arr = date.split('.'),
            year = date_arr[2],
            month = date_arr[1],

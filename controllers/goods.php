@@ -80,4 +80,31 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getActionsOnGoodsInfo(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $goodsId = $jinput->getInt('goods_id');
+            $dateTo = $jinput->get('date',date('Y-m-d H:i:s'),'STRING');
+            $modelGoods = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $actionsInfo = $modelGoods->getActionsOnGoodsInfo($goodsId,$dateTo);
+            die(json_encode($actionsInfo)) ;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addImages(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $hrefs = $jinput->get('hrefs',[],'ARRAY');
+            $modelGoods = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $modelGoods->addImages($hrefs);
+            die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

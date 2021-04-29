@@ -1209,6 +1209,15 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 /*------*/
                 $stockId = $jinput->get('stock_id', '1', 'INT');
                 $ready_date = json_decode($jinput->get('ready_dates', '', 'STRING'));
+                $include_calcs = json_decode($jinput->get('include_calcs', '', 'STRING'));
+                $realise_calcs = json_decode($jinput->get('realise_calcs', '', 'STRING'));
+                $realise_calcs = !empty($realise_calcs) ? implode(',',$realise_calcs) : 'empty';
+                /*из обрезков*/
+                $fromOffcuts = json_decode($jinput->get('offcuts', '', 'STRING'));
+                $fromOffcuts = !empty($fromOffcuts) ? implode(',',$fromOffcuts) : '';
+                $calc_model->setFromOffcuts($fromOffcuts);
+                /*----*/
+                $wasRealised = $jinput->getInt('realised');
                 if (!empty($ready_date)) {
                     foreach ($ready_date as $value) {
                         $calculationModel->save_ready_time($value->calc_id, $value->ready_time);
@@ -1242,7 +1251,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $stateOfAccountModel->save($dealer->associated_client, 2, $material_sum, null, $id);
                 }
                 /*списание полотна и гарпуна*/
-                $projectForStock = $model->getProjectForStock($id);
+                $projectForStock = $model->getProjectForStock($id,$realise_calcs);
                 $canvasGoods = (object)[
                     'ids' => '',
                     'goods' => [],
@@ -1259,22 +1268,23 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
                 $canvasGoods->goods_count = $goodsCount;
                 $canvasGoods->ids = implode(',', $ids);
-                //throw new Exception(print_r($canvasGoods,true));
                 $projectForStock->goods = $canvasGoods;
-                $controllerStock = Gm_ceilingHelpersGm_ceiling::getController('stock');
-                $realisationResult = $controllerStock->makeRealisation($id, $projectForStock, $stockId, 1);
-                if ($realisationResult->type == 'error') {
+                if(!empty($projectForStock->goods->ids) && $wasRealised == 2) {
+                    $controllerStock = Gm_ceilingHelpersGm_ceiling::getController('stock');
+                    $realisationResult = $controllerStock->makeRealisation($id, $projectForStock, $stockId, 1);
+                    if ($realisationResult->type == 'error') {
 
-                    $text = $realisationResult->text;
-                    if (!empty($realisationResult->goods)) {
-                        foreach ($realisationResult->goods as $goods) {
-                            $text .= "\n $goods->name;";
+                        $text = $realisationResult->text;
+                        if (!empty($realisationResult->goods)) {
+                            foreach ($realisationResult->goods as $goods) {
+                                $text .= "\n $goods->name;";
+                            }
                         }
+                        $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id=' . $id, false), $text, 'error');
+                    } else {
+                        $this->setRedirect($realisationResult->href['MergeFiles']);
+                        //throw new Exception(print_r($realisationResult,true));
                     }
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id=' . $id, false), $text, 'error');
-                } else {
-                    $this->setRedirect($realisationResult->href['MergeFiles']);
-                    //throw new Exception(print_r($realisationResult,true));
                 }
                 /**/
                 $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false));
@@ -1282,7 +1292,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false), 'Пустой номер проекта!', 'error');
             }
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
@@ -1302,12 +1313,31 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
-    public function return()
-    {
+    public function return(){
         try {
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', '0', 'INT');
+            $needReturn = $jinput->get('need_return', '0', 'INT');
             $model = $this->getModel('Project', 'Gm_ceilingModel');
+            if($needReturn){
+                /*Возвращаем списанные полотна и гарпун*/
+                $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+                $realisedGoods = $stockModel->getRealisedComponents($id,"(g.category_id IN (1,10))");
+                $returnArr = [];
+                $realisationUpdateArray = [];
+                $inventoryUpdateArr = [];
+                foreach ($realisedGoods as $goods){
+                    $inventories = json_decode($goods->inventories);
+                    foreach ($inventories as $inv){
+                        array_push($returnArr, (object)["inventory_id" => $inv->inventory_id,"count" =>$inv->r_count]);
+                        array_push($inventoryUpdateArr, (object)["inventory_id" => $inv->inventory_id,"count" =>$inv->i_count+$inv->r_count]);
+                        array_push($realisationUpdateArray, (object)["inventory_id" => $inv->inventory_id,"count" => 0]);
+                    }
+                }
+                if(!empty($returnArr)&&!empty($realisationUpdateArray)&&!empty($inventoryUpdateArr)){
+                    $stockModel->makeReturn($returnArr,$realisationUpdateArray,$inventoryUpdateArr,$id);
+                }
+            }
             $data = $model->return($id);
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
             /*удаление из истории статусов проекта еслион был в статусе 5,10,19*/
@@ -2263,9 +2293,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         try {
             $jinput = JFactory::getApplication()->input;
             $clientId = $jinput->getInt('client_id');
+            $projectInfo = $jinput->getString('project_info');
             if (!empty($clientId)) {
                 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                $projectId = $projectModel->create($clientId);
+                $projectId = $projectModel->create($clientId,$projectInfo);
                 die($projectId);
             } else {
                 die(null);
@@ -2362,13 +2393,28 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
                 $calculations = $projectModel->getCalculations($projectId);
             }
-            die(json_encode($calculations));
+            die(json_encode($calculations, JSON_UNESCAPED_UNICODE));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*END*/
+
+    public function checkExistRealiseCanvases(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $projectId = $jinput->getInt('project_id');
+            if(!empty($projectId)){
+                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                $result = $projectModel->checkExistRealiseCanvases($projectId);
+            }
+            die(json_encode($result, JSON_UNESCAPED_UNICODE));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 
 ?>

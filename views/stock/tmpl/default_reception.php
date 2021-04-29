@@ -99,6 +99,9 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
         line-height: 30px;
         text-align: center;
     }
+    .emptyInp{
+        border: 1px solid red;
+    }
 </style>
 
 <h1 class="center">Приём товаров</h1>
@@ -152,6 +155,23 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 			<th></th>
 		</thead>
 		<tbody id="tbody_goods"></tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" style="text-align: right;background-color: #FFFFFF !important;color: black !important;">
+                    <b>
+                        <span style="font-size: 14pt;">
+                            Итого:
+                        </span>
+                    </b>
+                </th>
+                <th style="background-color: #FFFFFF !important;color: black !important;">
+                    <b>
+                        <span id="total_receiption_sum" style="font-size: 14pt;">0</span>
+                        <i class="fas fa-ruble-sign"></i>
+                    </b>
+                </th>
+            </tr>
+        </tfoot>
 	</table>
 
 	<div class="right">
@@ -221,6 +241,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
         jQuery("#close_doc").click(function () {
             jQuery("#mw_doc").hide();
+            location.reload();
         });
 
         jQuery("#choose_category").change(function(){
@@ -248,7 +269,23 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             addGoodsInTable(selected_goods);
 
         });
-	});
+
+        jQuery('#tbody_goods').on('keyup','.cost',function () {
+            calculateTotalSum();
+        });
+
+        function calculateTotalSum(){
+            var rows = jQuery('#tbody_goods > tr'),
+                totalSum = 0;
+            console.log(rows);
+            jQuery.each(rows,function (i,r) {
+                var count = jQuery(r).find('.count').val().replace(',', '.');
+                var cost = jQuery(r).find('.cost').val().replace(',', '.');
+                totalSum += count*cost;
+            });
+            jQuery('#total_receiption_sum').text(totalSum);
+        }
+
 
 	document.getElementById('btn_show').onclick = function() {
 		getData();
@@ -319,6 +356,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
 	jQuery('body').on('click','.delete', function () {
 		jQuery(this).closest('tr').remove();
+        calculateTotalSum();
 	});
 
 	function showCounterparty() {
@@ -385,21 +423,54 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 
 	var array = [];
 	function collectDataTable(){
-		var rows = jQuery('#tbody_goods > tr');
+		var rows = jQuery('#tbody_goods > tr'),
+            wasEmpty = false;
 		array = [];
 		for (var i = 0; i < rows.length; i++) {
-			var inpCount = jQuery(rows[i]).find('.count').val();
-			var inpCost = jQuery(rows[i]).find('.cost').val();
+			var inpCount = jQuery(rows[i]).find('.count'),
+                inpCost = jQuery(rows[i]).find('.cost'),
+                countVal = inpCount.val().replace(',', '.'),
+                costVal = inpCost.val().replace(',', '.'),
+                id = rows[i].getAttribute("data-id");
+			if(!empty(countVal)&&!empty(costVal)) {
+                array.push({
+                    id: id,
+                    count: countVal,
+                    cost: costVal
+                });
+                inpCount.removeClass('emptyInp');
+                inpCost.removeClass('emptyInp');
+            }
+			else{
+			    wasEmpty = true;
+			    if(empty(countVal)){
+                    inpCount.addClass('emptyInp');
+                }
+			    else{
+                    inpCount.removeClass('emptyInp');
+                }
+                if(empty(costVal)){
+                    inpCost.addClass('emptyInp');
+                }
+                else{
+                    inpCost.removeClass('emptyInp');
+                }
 
-			var id = rows[i].getAttribute("data-id");
-			array.push({
-				id: id,
-				count: inpCount,
-				cost: inpCost
-			});
+            }
 		}
-
-		saveData();
+		if(!wasEmpty){
+		   saveData();
+        }
+		else{
+            noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Не введено количество/себестоимость"
+            });
+        }
 	}
 
 	function saveData() {
@@ -413,7 +484,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
 			},
 			success: function(data){
 				console.log(data);
-				var n = noty({
+                noty({
 					timeout: 2000,
 					theme: 'relax',
 					layout: 'center',
@@ -475,4 +546,5 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             }
         });
     }
+    });
 </script>

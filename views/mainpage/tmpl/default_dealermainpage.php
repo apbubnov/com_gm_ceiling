@@ -97,7 +97,7 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                 </div>
                 <?php if($user->dealer_id == 1 && ($user->dealer_type == 0 || $user->dealer_type == 1)){ ?>
                     <div class="row margin_bottom">
-                        <a class = "btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytic_dealers',false)?>"><i class="fas fa-chart-area"></i> Аналитика дилеров</a>
+                        <a class = "btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytic_dealers&type=new',false)?>"><i class="fas fa-chart-area"></i> Аналитика дилеров</a>
                     </div>
                     <div class="row margin_bottom">
                         <a class="btn btn-primary btn_width" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analytics&type=visitors',false)?>">Посетители сайта</a>
@@ -264,6 +264,9 @@ $managerTitle =  ($userId == 1 || $userId == 2 || $userId == 827)
                 <a class="btn btn-large btn-primary"
                    href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=stock', false); ?>"><i
                             class="fa fa-mobile" aria-hidden="true"></i> Склад</a>
+            </div>
+            <div class="row center">
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fas fa-dollar-sign"></i> Касса</a>
             </div>
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>

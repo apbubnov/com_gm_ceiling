@@ -469,4 +469,43 @@ class Gm_ceilingModelAnalytic_new extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getGoodsAnalytic($dateFrom,$dateTo,$goodsId = null){
+        try{
+            if(empty($dateFrom)){
+                $dateFrom = date('Y-m-d 00:00:00');
+            }
+            if(empty($dateTo)){
+                $dateTo = date('Y-m-d 23:59:59');
+            }
+            $db = JFactory::getDbo();
+            $inventoryCostQuery = '(SELECT mov.to_inventory_id AS inventory_id,rec.cost_price
+                                    FROM `rgzbn_gm_stock_moving` AS mov
+                                    INNER JOIN `rgzbn_gm_stock_inventory` AS i ON i.id = mov.to_inventory_id
+                                    INNER JOIN `rgzbn_gm_stock_reception` AS rec ON rec.inventory_id = mov.from_inventory_id)
+                                    UNION ALL
+                                    (SELECT inventory_id,cost_price
+                                    FROM `rgzbn_gm_stock_reception`)';
+            $query = $db->getQuery(true);
+            $query
+                ->select(' g.id,g.name,u.unit,SUM(s.count) AS total_count,SUM(s.sale_price*s.count) AS total_sum,SUM(s.count*c.cost_price) AS total_cost')
+                ->from('`rgzbn_gm_stock_sales` AS s')
+                ->leftJoin('`rgzbn_gm_stock_inventory` AS i ON i.id = s.inventory_id')
+                ->leftJoin("($inventoryCostQuery) AS c ON c.inventory_id = s.inventory_id")
+                ->leftJoin('`rgzbn_gm_stock_goods` AS g ON g.id = i.goods_id')
+                ->innerJoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
+                ->where("s.date_time BETWEEN '$dateFrom' AND '$dateTo'")
+                ->group('g.id')
+                ->order('total_count DESC');
+            if(!empty($goodsId)){
+                $query->where("g.id IN ($goodsId)");
+            }
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -581,8 +581,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             $canvases_sum_with_margin += $value->price_sum;
         }
 
-        if ($canvas_exist && $canvases_sum < 200) {
-            $canvases_sum = 200;
+        if ($canvas_exist && $canvases_sum < MIN_SUM) {
+            $canvases_sum = MIN_SUM;
             $canvases_sum_with_margin = $canvases_sum * 100 / (100 - $canvases_margin);
         }
 
@@ -726,6 +726,7 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 				} else{
 				    $msUser = JFactory::getUser($need_mount);
 					$all_jobs = $model_calcform->getMountingServicePricesInCalculation($calc_id, $msUser->dealer_id); // Получение работ по прайсу монажной службы
+
 				}
 			}
             //$model_calcform->addDopGoodsInCalculation($calc_id, $goods, false); // Добавление доп компонентов, со склада, чтобы не учитывать работу
@@ -991,6 +992,17 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
                 $result["service_sum_by_stage"] = $stages;
             }
             return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getJobsFromGoodsMap(){
+	    try{
+	        $calculationFromModel = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
+	        $map = $calculationFromModel->getJobsFromGoodsMap();
+	        die(json_encode($map));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

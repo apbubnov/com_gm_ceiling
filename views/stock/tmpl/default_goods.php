@@ -341,9 +341,13 @@
 
             var stocks = "";
             if (!empty(goods[i].stocks_count)) {
-                for (var j = 0; j < goods[i].stocks_count.length; j++) {
+                jQuery.each(goods[i].stocks_count,function(i,el){
+                    stocks += el.name + ': ' + el.count + '</br>';
+                });
+               /* for (var j = 0; j < goods[i].stocks_count.length; j++) {
+                    console.log('!!!!',goods[i].stocks_count[j]);
                     stocks += goods[i].stocks_count[j].name + ': ' + goods[i].stocks_count[j].count + "<html> <br> </html>";
-                }
+                }*/
             }
             td = tr.insertCell();
             td.innerHTML = stocks;

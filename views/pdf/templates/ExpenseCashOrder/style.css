@@ -1,0 +1,70 @@
+div {display: inline-block; float: left; width: 100%;}
+div, table { width: 100%; }
+div, td, tr, table {font-family: Arial;}
+
+.top {width: 98%; line-height: 8px; height: 20px;}
+.top .tline {width: 100%; text-align: right; font-size: 8px; line-height: 10px;}
+
+.page {width: 100%; height: auto; margin-top: 10px;}
+.page .pageleft {width: 100%;}
+.page .pageleft .t .tleft {width: 71.95%;}
+.page .pageleft .t .tright {width: 28%;}
+.page .pageleft .t .tright table {border-collapse: collapse;}
+.page .pageleft .t .tright table .textright {padding-right: 3px;}
+.page .pageleft .t .tright table .textcenter {padding: 2px 7px;}
+
+.page .pageleft .f {margin-top: 10px;}
+.page .pageleft .f table {width: 100%; float: left; border-collapse: collapse; }
+.page .pageleft .f table .name {width: 45%; padding-right: 5px; font-size: 12px;}
+
+.page .pageleft .root {border-collapse: collapse; margin-top: 10px; /*margin-right: 5px;*/ font-size: 11px;}
+.page .pageleft .root td {padding: 5px;}
+.page .pageleft .root .empty {width: 20px;}
+
+.page .pageleft .dop {margin-top: 10px;}
+.page .pageleft .dop td {font-size: 12px;}
+.page .pageleft .dop .dopleft {width: 15%;}
+.page .pageleft .dop .dopright {width: 85%;}
+
+.page .pageleft .line { margin-top: 10px; padding: 5px;}
+.page .pageleft .line .n {width: 30%; text-align: left;}
+.page .pageleft .line .p {width: 25%;}
+.page .pageleft .line .r {width: 44%;}
+
+.page .pageright {width: 35%; border-left: 1px dotted black; margin-right: -1px;}
+.page .pageright .name {font-weight: bold;}
+.page .pageright .resize {font-size: 14px; margin-top: 5px;}
+.page .pageright .line {margin-top: 3px;}
+.page .pageright .line1 .n {width: 80px;}
+.page .pageright .line1 .i {width: 150px;}
+.page .pageright .line2 .n {width: 40px; text-align: left;}
+.page .pageright .line2 .i {width: 200px;}
+.page .pageright .line3 .i {width: 200px; margin-left: 50px;}
+.page .pageright .line4 .i {width: 120px;}
+
+
+
+.bold {font-weight: bold}
+.line {font-size: 12px; height: 10px; line-height: 10px; text-align: left; margin-top: 0}
+.subline {font-size: 10px; height: 8px; line-height: 8px; text-align: center; border-top: 1px solid black;}
+.textcenter {text-align: center;}
+.textright {text-align: right;}
+.border {border: 1px solid black;}
+.borderbold {border: 2px solid black;}
+.bordertop {border: 2px solid black; border-bottom: 1px solid black;}
+
+.bordermidden {border: 2px solid black; border-bottom: 1px solid black; border-top: 1px solid black;}
+.borderbottom {border: 2px solid black; border-top: 1px solid black;}
+.line .n {text-align: right}
+.line .i {margin-left: 3px;}
+.line .i .itop {border-bottom: 1px solid black; padding-left: 2px;}
+.line .i .ibottom {font-size: 7px; line-height: 7px; text-align: center;}
+.sheath {padding: 10px; width: 95%; display: block;}
+.line-title{
+    display: inline-block;
+    width: 12%;
+}
+.line-content {
+    display: inline-block;
+    width: 88%;
+}

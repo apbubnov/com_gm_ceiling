@@ -21,101 +21,129 @@
 class Gm_ceilingModelCashbox extends JModelList
 {
 	
-	function getData($date1 = null,$date2 = null)
-	{
-		try
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			if(empty($date1) && empty($date2)){
-				$date1 = date('Y-m-01');
-				$date2 = date('Y-m-t'); 
-			}
-			$query
-				->select('p.closed')
-				->select('p.id')
-				->select('s.title as status')
-				->select('u.name')
-				->select('p.new_project_sum')
-				->select('p.new_mount_sum')
-				->select('p.project_status')
-				->select('p.new_material_sum')
-				->select('p.new_project_mounting')
-				->select('p.check_mount_done as `done`')
-				
-				->from('#__gm_ceiling_projects as p')
-				->innerJoin("`#__gm_ceiling_projects_mounts` as pm on p.id = pm.project_id")
-				->innerJoin('#__users as u ON pm.mounter_id = u.id')
-				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
-				->where("p.project_status in (12,17) and p.closed between '$date1' and '$date2'");
-			$db->setQuery($query);
-			$items1 = $db->loadObjectList();
-			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
-			$encashments = $encashment_model->getData($date1,$date2);
-			$new_encash = [];
-			foreach($encashments as $value){
-				$el = array(
-					'id'=>null,
-					'closed'=>$value->date_time,
-					'name'=>null,
-					'status'=>null,
-					'done'=>null,
-					'project_status' =>null,
-					'new_project_sum'=>null,
-					'new_project_mounting'=>null,
-					'new_mount_sum'=>null,
-					'new_material_sum'=>null,
-					'sum'=>$value->sum,
-				);
-				array_push($new_encash,(object)$el);
-			}
-
-			$items1 = array_merge($items1,$new_encash);
-
-			for($i=0; $i<count($items1); $i++){
-				for($j=$i+1; $j<count($items1); $j++){
-					if(strtotime($items1[$i]->closed)>strtotime($items1[$j]->closed)){
-						$temp = $items1[$j];
-						$items1[$j] = $items1[$i];
-						$items1[$i] = $temp;
-					}
-			   }         
-			}
-			
-		 	$items = [];
-			for($i=0; $i<count($items1); $i++){
-				$new_el['closed']=$items1[$i]->closed;
-				$new_el['id'] = $items1[$i]->id;
-				$new_el['status'] = $items1[$i]->status;
-
-				$new_el['name'] = $items1[$i]->name;
-				$new_el['new_project_sum'] = $items1[$i]->new_project_sum;
-				$new_el['new_mount_sum'] = $items1[$i]->new_mount_sum;
-				if($items1[$i]->done!=1&&$items1[$i]->project_status != 12){
-					$new_el['not_issued'] =  $items1[$i]->new_mount_sum - $items1[$i]->new_project_mounting;
-				}
-				else
-				{
-					$new_el['not_issued'] = 0;
-				}
-				$new_el['new_material_sum'] = $items1[$i]->new_material_sum;
-				$new_el['residue'] = $items1[$i]->new_project_sum - $items1[$i]->new_mount_sum -$items1[$i]->new_material_sum;
-				$new_el['cashbox'] += $new_el['residue'] - $encash;
-				$encash = 0;
-				$encash = $items1[$i]->sum;
-				$new_el['sum'] = $items1[$i]->sum;
-				array_push($items,(object)$new_el);
-			}
-			return $items; 
-
+	function getFilteredData($dateFrom,$dateTo,$cashBoxTypes,$counterparty,$userId){
+		try{
+		    $db = JFactory::getDbo();
+		    $query = $db->getQuery(true);
+		    $query
+                ->select('c.id,u.id AS counterparty_id,IFNULL(u.name,\'-\') AS counterparty,c.sum,ct.name AS cashbox,d.title AS operation,c.operation_type,m.id AS user_id,c.comment,m.name AS user_name,c.datetime')
+                ->from('`rgzbn_gm_ceiling_cashbox` AS c ')
+                ->leftJoin('`rgzbn_users` AS u ON u.id = c.dealer_id')
+                ->leftJoin('`rgzbn_gm_ceiling_debt_type` AS d ON d.id = c.operation_type')
+                ->leftJoin('`rgzbn_gm_ceiling_cashbox_type` AS ct ON ct.id = c.cashbox_type')
+                ->leftJoin('`rgzbn_users` AS m ON m.id = c.user_id');
+		    if(!empty($dateFrom)&&!empty($dateTo)){
+		        $query->where(" c.datetime BETWEEN '$dateFrom 00:00:00' AND '$dateTo 23:59:59'");
+            }
+		    elseif (!empty($dateFrom) && empty($dateTo)){
+		        $query->where("c.datetime >= '$dateFrom 00:00:00'");
+            }
+		    elseif (empty($dateFrom) && !empty($dateTo)){
+                $query->where("c.datetime <= '$dateTo 23:59:59'");
+            }
+		    if(!empty($cashBoxTypes)){
+		        $query->where("c.cashbox_type in ($cashBoxTypes)");
+            }
+		    if(!empty($counterparty)){
+		        $query->where("c.dealer_id = $counterparty");
+            }
+            if(!empty($userId)){
+                $query->where("c.user_id = $userId");
+            }
+		    $db->setQuery($query);
+            //throw new Exception($query);
+		    $data = $db->loadObjectList();
+		    //throw new Exception(print_r($data,true));
+		    return $data;
 		}
-		catch(Exception $e)
-        {
+		catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
+
+	function getDataById($id){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('c.*,u.name as dealer_name')
+                ->from('`rgzbn_gm_ceiling_cashbox` as c')
+                ->leftJoin('`rgzbn_users` as u on u.id = c.dealer_id')
+                ->where("c.id=$id");
+            $db->setQuery($query);
+            $data = $db->loadObject();
+            return $data;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+	function getCashBoxTypes(){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_ceiling_cashbox_type`');
+            $db->setQuery($query);
+            $types = $db->loadObjectList('id');
+            return $types;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function save($data){
+	    try{
+	        if(!empty($data)) {
+	            $columns = [];
+	            $values = [];
+                $db = JFactory::getDbo();
+                foreach ($data as $key => $value) {
+                    array_push($columns,$key);
+                    array_push($values,$db->quote($value));
+	            }
+                $columns = implode(',',$columns);
+                $values = implode(',',$values);
+                $query = $db->getQuery(true);
+                $query
+                    ->insert('`rgzbn_gm_ceiling_cashbox`')
+                    ->columns($columns)
+                    ->values($values);
+                $db->setQuery($query);
+
+                $db->execute();
+                return $db->lastId();
+            }
+	        else{
+	            return null;
+            }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 	
-	
-	
+	function getCashboxSum($type){
+	    try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('c.cashbox_type, ct.name')
+                ->select('SUM(CASE WHEN c.operation_type = 1 THEN c.sum ELSE 0 END) AS incoming')
+                ->select('SUM(CASE WHEN c.operation_type IN (2,3) THEN c.sum ELSE 0 END) AS outcoming')
+                ->from('`rgzbn_gm_ceiling_cashbox` AS c')
+                ->innerJoin('`rgzbn_gm_ceiling_cashbox_type` AS ct ON ct.id = c.cashbox_type')
+                ->group('c.cashbox_type');
+            $db->setQuery($query);
+            $result = $db->loadAssocList('cashbox_type');
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

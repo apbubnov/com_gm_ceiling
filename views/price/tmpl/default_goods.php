@@ -47,8 +47,40 @@ $categories = $categoryModel->get();
 
     }
 
-    .old_price,.div_save{
+    .div_save{
         margin-top: -0.75em;
+    }
+
+    .image_preview{
+        max-height: 125px;
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    .add_image_href_btn{
+        width:120px;
+        height: 120px;
+        background-color: #FFFFFF;
+        border: 2px solid grey;
+        vertical-align: middle;
+        margin-top: 3px;
+    }
+    .add_image_href_btn i{
+        padding-top: 5px;
+        font-size: 36pt;
+        color: grey;
+
+    }
+    .add_image_href_btn:hover{
+        color: #414099;
+        border-color: #414099;
+    }
+    .add_image_href_btn:hover > i{
+        color: #414099;
+    }
+    .more_imgs{
+        height:125px;
+        background-color: #d3d3f9 !important;
     }
 
 </style>
@@ -71,8 +103,75 @@ $categories = $categoryModel->get();
     </div>
 </div>
 <div id="goods_list"></div>
+<div class="modal_window_container" id="mw_container">
+    <button type="button" id="mw_close" class="close_btn">
+        <i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+    </button>
+    <div class="modal_window" id="mw_images" >
+        <div class="row">
+            <h4>Изображения для <span id="goods_title"></span></h4>
+        </div>
+        <div class="row" id="imgs_container">
 
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="add_imgs">
+                    <i class="far fa-plus-square"></i> Добавить новые изображения
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal_window" id="mw_add_img">
+        <input type="hidden" id="selected_goods">
+        <div class="row">
+            <h4>Добавьте ссылку на изображение</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div id="href_container" class="col-md-6">
+                <div class="row href_row">
+                    <div class="col-md-8">
+                        <input class="form-control href_val">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" id="main_img" name="main_img" class="inp-cbx" style="display: none">
+                        <label for="main_img" class="cbx">
+                        <span>
+                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                            </svg>
+                        </span>
+                            <span>Основная</span>
+                        </label>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" id="duplicate_field"><i class="far fa-clone"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="save_hrefs">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+    jQuery(document).mouseup(function (e){
+        var div = jQuery("#mw_images"),
+            div1 = jQuery('#mw_add_img');
+        if (!div.is(e.target)
+            && div.has(e.target).length === 0
+            &&!div1.is(e.target)
+            && div1.has(e.target).length === 0) {
+            jQuery(".close_btn").hide();
+            jQuery("#mw_container").hide();
+            jQuery(".modal_window").hide();
+        }
+    });
     jQuery(document).ready(function(){
         var goods,
             categories = JSON.parse('<?=json_encode($categories);?>');
@@ -179,6 +278,103 @@ $categories = $categoryModel->get();
             getGoods(search);
         });
 
+        jQuery('body').on('click','.more_imgs',function(){
+            var category_id = jQuery(this).data('category_id'),
+                id = jQuery(this).data('id'),
+                currentGoodsInCategory = JSON.parse(goods.find(function (el){ return el.id==category_id}).goods),
+                currentGoods = currentGoodsInCategory.find(function (g) { return g.id == id}),
+                images = JSON.parse(atob(currentGoods.images));
+            jQuery('#selected_goods').val(id);
+            jQuery('#imgs_container').empty();
+            jQuery.each(images,function (n,img) {
+                jQuery('#imgs_container').append('<div class="col-md-3"><img src="'+img.link+'" style="max-width: -webkit-fill-available;"></div>');
+            })
+            jQuery('#goods_title').text(currentGoods.name);
+            jQuery('#mw_container').show();
+            jQuery('#mw_close').show();
+            jQuery('#mw_images').show();
+        });
+
+        jQuery('body').on('click','.add_image_href_btn',function () {
+            jQuery('#selected_goods').val(jQuery(this).data('id'));
+            jQuery('.href_row.added').remove();
+            jQuery('.href_val')[0].value="";
+            jQuery('#main_img').removeAttr('checked');
+            jQuery('#mw_container').show();
+            jQuery('#mw_close').show();
+            jQuery('#mw_add_img').show();
+        });
+
+        jQuery('#add_imgs').click(function(){
+            jQuery('.modal_window').hide();
+            jQuery('.href_row.added').remove();
+            jQuery('.href_val')[0].value="";
+            jQuery('#main_img').removeAttr('checked');
+            jQuery('#mw_container').show();
+            jQuery('#mw_close').show();
+            jQuery('#mw_add_img').show();
+        });
+
+        jQuery('#duplicate_field').click(function(){
+            var checkBoxId = +/\d+/.exec(jQuery('[name="main_img"]').last().attr('id'))+1,
+                checkBox = "<input name = \"main_img\" type=\"checkbox\" id=\"main_img_" + checkBoxId + "\" class=\"inp-cbx\" style=\"display: none\">\n" +
+                    "<label for=\"main_img_" + checkBoxId + "\" class=\"cbx\">" +
+                    "<span>\n" +
+                    "<svg width=\"12px\" height=\"10px\" viewBox=\"0 0 12 10\">" +
+                    "<polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>" +
+                    "</svg>" +
+                    "</span>" +
+                    "<span>Основная</span>\n" +
+                    "</label>";
+           jQuery('#href_container').append(
+               '<div class="row href_row added">' +
+                   '<div class="col-md-8"><input class="form-control href_val"></div>' +
+                   '<div class="col-md-2">'+checkBox+'</div>' +
+                   '<div class="col-md-2"><button class="btn btn-danger remove_href"><i class="far fa-trash-alt"></i></button></div>' +
+               '</div>');
+        });
+
+        jQuery('#mw_add_img').on('click','.remove_href',function(){
+            jQuery(this).closest('.row').remove();
+        });
+
+        jQuery('#save_hrefs').click(function(){
+            var goodsId = jQuery('#selected_goods').val(),
+                hrefsRows = jQuery('.href_row'),
+                hrefs = [];
+            jQuery.each(hrefsRows,function(i,e){
+                var is_main = jQuery(e).find('[name="main_img"]').prop('checked') ? 1 : 0,
+                href = jQuery(e).find('.href_val').val();
+                if(!empty(href)) {
+                    hrefs.push(goodsId+",'"+href+"',"+is_main);
+                }
+            });
+            if(!empty(hrefs)){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=goods.addImages',
+                    data: {
+                        hrefs: hrefs
+                    },
+                    dataType: "json",
+                    timeout: 5000,
+                    success: function (data) {
+                       location.reload();
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
+
+        });
+
+        jQuery('#mw_add_img').on('click','[name="main_img"]',function () {
+            jQuery.each(jQuery('[name="main_img"]:checked'),function(i,e){jQuery(e).removeAttr('checked')});
+            if(!jQuery(this).is('checked')){
+                jQuery(this).attr('checked',"true");
+            }
+        });
+
         function getGoods(filter) {
             jQuery.ajax({
                 type: 'POST',
@@ -226,15 +422,25 @@ $categories = $categoryModel->get();
                 goods = JSON.parse(category.goods);
                 goodsDiv = jQuery('<div/>');
                 jQuery.each(goods,function(i,goods){
+                    var images = (!empty(goods.images)) ? JSON.parse(atob(goods.images)) : '',
+                        link = !empty(images[0]) ? images[0].link : '',
+                        imgDiv = (images.length > 1)
+                            ? '<div class="col-md-9 col-xs-9" style="padding-right: 0;text-align:center;"><img class="image_preview" src="'+link+'"/></div>' +
+                            '<div class="col-md-3 col-xs-3"><button class="btn  more_imgs" data-category_id="'+category.id+'" data-id="'+goods.id+'"><i class="fas fa-ellipsis-v" style="font-size: 25pt;color: #414099"></i></button></div>'
+                            : '<div class="col-md-12 col-xs-12" style="text-align: center"><label class="add_image_href_btn" data-id="'+goods.id+'"><i class="fas fa-plus"></br></i></br>Добавить</label></div>';
                     goodsDiv.append(
                         '<div class="row goods_row" data-id="'+goods.id+'" data-category_id="'+category.id+'">'+
-                            '<div class="col-md-12 col-xs-12 old_name">'+
+                        '<div class="col-md-3 col-xs-12">' +
+                        imgDiv +
+                        '</div>'+
+                        '<div class="col-md-9 col-xs-12">'+
+                        '<div class="col-md-9 col-xs-10 old_name">'+
                                 '<b>'+goods.name+'</b>'+
                             '</div>'+
-                            '<div class="col-md-2 col-xs-2 center old_price">'+
-                                goods.price +
+                            '<div class="col-md-3 col-xs-2 center old_price">'+
+                                '<b>Цена:'+goods.price + '</b><i class="fas fa-ruble-sign"></i>'+
                             '</div>'+
-                            '<div class="col-md-4 col-xs-6">'+
+                            '<div class="col-md-6 col-xs-6">'+
                                 '<div class="col-md-10">'+
                                     categorySelect +
                                 '</div>'+
@@ -245,10 +451,10 @@ $categories = $categoryModel->get();
                                 '</div>'+
                             '</div>'+
                             '<div class="col-md-6 col-xs-4" style="text-align: right">'+
-                                '<div class="col-md-6 col-xs-5">'+
+                                '<div class="col-md-5 col-xs-5">'+
                                     '<input class="form-control new_name" placeholder="Новое название">'+
                                 '</div>'+
-                                '<div class="col-md-4 col-xs-5">'+
+                                '<div class="col-md-5 col-xs-5">'+
                                     '<input class="form-control new_price" placeholder="Новая цена">'+
                                 '</div>'+
                                 '<div class="col-md-2 col-xs-2 div_save">'+
@@ -257,6 +463,7 @@ $categories = $categoryModel->get();
                                     '</button>'+
                                 '</div>'+
                             '</div>'+
+                        '</div>'+
                         '</div>'
                     );
 

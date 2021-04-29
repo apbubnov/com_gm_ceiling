@@ -1425,8 +1425,7 @@ class Gm_ceilingModelProject extends JModelItem
     }
 
 
-    public function getProjectForStock($id)
-    {
+    public function getProjectForStock($id,$calcIds = null){
     	try
     	{
 	        if (empty($id)) return null;
@@ -1449,6 +1448,7 @@ class Gm_ceilingModelProject extends JModelItem
                 ->join("LEFT","#__gm_ceiling_clients_dop_contacts as d ON d.client_id = c.id and d.type_id = '1' or d.type_id is NULL")
 	            ->where("p.id = " . $db->quote($id))
 	            ->group("p.id");
+
 	        $db->setQuery($query);
 	        $project = $db->loadObject();
 
@@ -1482,34 +1482,78 @@ class Gm_ceilingModelProject extends JModelItem
 
             $model_calcform = Gm_ceilingHelpersGm_ceiling::getModel('calculationForm');
             $calculations = $calculationsModel->new_getProjectItems($id);
+            if(!empty($calcIds)){
+                if($calcIds != 'empty') {
+                    $calculations = $calculationsModel->new_getProjectItemsByIds($calcIds);
+                }
+                else{
+                    $calculations = [];
+                }
+            }
             $calc_goods = [];
-            foreach ($calculations as $calculation) {
-                $calc_goods[$calculation->id] = $model_calcform->getGoodsPricesInCalculation($calculation->id,  $customer->dealer->id); // Получение компонентов
-            }
-            //throw new Exception(print_r($calc_goods,true));
-            foreach ($calc_goods as $goods_array){
-                foreach($goods_array as $goods){
-                    if(array_key_exists($goods->goods_id,$all_goods)){
-                        $all_goods[$goods->goods_id]->final_count += $goods->final_count;
-                        $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
-                        $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
 
+            if(!empty($calculations)) {
+                foreach ($calculations as $calculation) {
+                    /*удаляем саморезы если не нужны*/
+                    $cGoods = $model_calcform->getGoodsPricesInCalculation($calculation->id, $customer->dealer->id);// Получение компонентов
+                    if (!empty($calculation->cancel_metiz)) {
+                        $cGoods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($cGoods);
                     }
-                    else{
-                        $all_goods[$goods->goods_id] = $goods;
+                    if($calculation->from_offcuts == 1) {
+                       /*удалить полотно из массива компонентов, если из обрезков*/
+                        foreach ($cGoods as $key=>$goodsItem){
+                            if($goodsItem->category_id == 1){
+                                $canvIndex  = $key;
+                                break;
+                            }
+                        }
+                        unset($cGoods[$canvIndex]);
+                    }
+                    $calc_goods[$calculation->id] = $cGoods;
+                }
+
+                foreach ($calc_goods as $goods_array) {
+                    foreach ($goods_array as $goods) {
+                        if (array_key_exists($goods->goods_id, $all_goods)) {
+                            $all_goods[$goods->goods_id]->final_count += $goods->final_count;
+                            $all_goods[$goods->goods_id]->price_sum += $goods->price_sum;
+                            $all_goods[$goods->goods_id]->price_sum_with_margin += $goods->price_sum_with_margin;
+
+                        } else {
+                            $all_goods[$goods->goods_id] = $goods;
+                        }
+                    }
+                }
+                foreach ($realisedComponents as $key => $value) {
+                    /*если среди всех компонентов есть реализованный, то меняем его на реализованный объект, со свойством realised = 1*/
+                    /* проверка по кол-ву похоже не нужна, т.к при изменении кол-ва не выводит в реализованных
+                     * if (!empty($all_goods[$key])) {
+                        if(round($value->final_count, 2) == round($all_goods[$key]->final_count, 2) ){
+                            $all_goods[$key] = $value;
+                        }
+                    }else{
+                        $all_goods[$key] = $value;
+                    }*/
+                    $all_goods[$key] = $value;
+                    /*Если было заменено полотно на другое с таким же количетсвом, из-за того что нужного нет*/
+                    if($value->category_id == 1 && empty($all_goods[$key])){
+                        /*если списанный товар полотно и такого нет в списке всех товаров, то ищем полотно с таким-же кол-вом*/
+                        foreach ($all_goods as $goodsId=>$goodsItem){
+                            if($goodsItem->category_id == 1 && round($goodsItem->final_count, 2) == round($value->final_count, 2)){
+                                $all_goods[$goodsId] = $value;
+                                break;
+                            }
+                        }
                     }
                 }
             }
-			foreach ($realisedComponents as $key=>$value){
-			    if(!empty($all_goods[$key])){
-			        if($value->final_count == $all_goods[$key]->final_count){
-			            $all_goods[$key] = $value;
-                    }
-                }
+            else{
+                $all_goods = $realisedComponents;
             }
-
-			//throw new Exception(print_r($all_goods,true));
-	        $data = (object) array("goods" => $all_goods, "customer" => $customer);
+	        $data = (object) [
+	            "goods" => $all_goods,
+                "customer" => $customer
+            ];
 
 	        return $data;
 	    }
@@ -2019,7 +2063,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
     /*4API*/
-    public function create($client_id){
+    public function create($client_id,$project_info = null){
         try{
             $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $clientModel->get($client_id);
@@ -2034,6 +2078,9 @@ class Gm_ceilingModelProject extends JModelItem
                 "dealer_components_margin" => $margin->dealer_components_margin,
                 "dealer_mounting_margin" => $margin->dealer_mounting_margin
             ];
+            if(!empty($project_info)){
+                $projectData['project_info'] = $project_info;
+            }
             $projectForm = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
             $projectId = $projectForm->save($projectData);
             return $projectId;
@@ -2075,6 +2122,13 @@ class Gm_ceilingModelProject extends JModelItem
             $calculationformModel = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm');
             foreach ($calculations as $calculation) {
                 $allGoods = $calculationformModel->getGoodsPricesInCalculation($calculation->id,$project->dealer_id);
+                foreach ($allGoods as $goods){
+                    if($goods->category_id == 1){
+                        $goods->final_count = $calculation->n4;
+                        $goods->price_sum = $goods->dealer_price*$goods->final_count;
+                        $goods->price_sum_with_margin = $goods->dealer_price_with_margin*$goods->final_count;
+                    }
+                }
                 if(!empty($calculation->cancel_metiz)){
                     $calculation->goods = Gm_ceilingHelpersGm_ceiling::deleteMetizFromGoods($allGoods);
                 }
@@ -2176,4 +2230,79 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
     /*END*/
+
+    public function getCalculationsRealisedCanvases($id){
+        try{
+            $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            //получаем списанные полотна и гарпун
+            $realisedGoods = $stockModel->getRealisedComponents($id,"(g.category_id IN (1,10))");
+
+            $calcGoods = [];
+            $calculationsIds = $model_calculations->getIdsByProjectId($id);
+            foreach ($calculationsIds as $calcId) {
+                $goods = $calculationModel->getGoodsFromCalculation($calcId->id);
+                foreach ($goods as $goodsItem) {
+                    if($goodsItem->category_id == 1 || $goodsItem->category_id == 10){
+                        if(empty($calcGoods[$goodsItem->id])) {
+                            $calcGoods[$goodsItem->id] = (object)[
+                                "name"=>$goodsItem->name,
+                                "calc_count" => $goodsItem->count,
+                                "realised_count" => $realisedGoods[$goodsItem->id]->final_count,
+                                "calculations" => [$calcId->id => (object)["id"=>$calcId->id,"count"=>$goodsItem->count]]
+                            ];
+                        }
+                        else{
+                            $calcGoods[$goodsItem->id]->calc_count += $goodsItem->count;
+                            $calcGoods[$goodsItem->id]->calculations[$calcId->id] = (object)["id"=>$calcId->id,"count"=>$goodsItem->count];
+                        }
+                    }
+                }
+            }
+            //throw new Exception(print_r($calcGoods,true));
+            return $calcGoods;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function checkExistRealiseCanvases($projectId){
+        try{
+            $result = (object)["type"=>"success", "error_text"=>"","diff"=>[]];
+            $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $realisedGoods = $stockModel->getRealisedComponents($projectId,"(g.category_id IN (1,10))");
+            if(!empty($realisedGoods)){
+                $result->type = "realised";
+                $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+                $projectForStock = $projectModel->getProjectForStock($projectId);
+                $goodsToRealise = [];
+                foreach ($projectForStock->goods as $goods) {
+                    if ($goods->category_id == 1 || $goods->category_id == 10) {
+                        $goodsToRealise[$goods->goods_id] = $goods;
+                    }
+                }
+                if(count($realisedGoods) != count($goodsToRealise)){
+                    $result->type = "error";
+                    $result->error_text = "Кол-во списанных и реализуемых товаров не соответсвует!Проверьте соответсвие!";
+                }
+                else{
+                    foreach ($goodsToRealise as $id => $goods){
+                        if($goods->final_count != $realisedGoods[$id]->final_count){
+                            if($result->type != "error") {
+                                $result->type = "error";
+                                $result->error_text = "Кол-во списанного товара не соответсвует кол-ву списываемого товара";
+                            }
+                            $result->diff[] = (object)["name"=>$goods->name,"to_realise"=>$goods->final_count,"realised"=> $realisedGoods[$id]->final_count];
+                        }
+                    }
+                }
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

@@ -77,6 +77,7 @@ $disable = !empty($mountService) && in_array('26',$mountService->groups) ? 'disa
     .control-label {
         margin-top: 7px;
         margin-bottom: 0;
+        line-height: 0.9;
     }
     .left{
         text-align: left !important;
@@ -86,6 +87,9 @@ $disable = !empty($mountService) && in_array('26',$mountService->groups) ? 'disa
         width: 230px;
         margin-bottom: 0.5em;
         text-align: center;
+    }
+    .padding_row{
+        padding-left: 20px;
     }
 
 </style>
@@ -204,17 +208,18 @@ $disable = !empty($mountService) && in_array('26',$mountService->groups) ? 'disa
                 </h4>
             </div>
             <div class="jobs" style="display:none;">
-                <?php foreach ($mountType->jobs as $value) { ?>
-                    <!--<div class="row" style="margin-top: 5px;">-->
-                    <div class="col-md-6 col-xs-12" style="margin-bottom: 5px; !important;">
-                        <div class="col-md-6 control-label"><label><?= $value->name; ?></label></div>
-                        <div class="col-md-6 left">
-                            <input type="text" class="required input" style="width:100%;" size="3" required
-                                   aria-required="true" value="<?= $value->price; ?>" data-id="<?= $value->dp_id; ?>"
-                                   id="<?= $value->id; ?>"/>
-                        </div>
-                    </div>
-                    <!--</div>-->
+                <?php $jobs = $mountType->jobs ;
+                    echo '<div class="row padding_row">';
+                    for($i=0;$i<count($jobs);$i++){?>
+                            <div class="col-md-6 col-xs-12" style="margin-bottom: 5px !important;">
+                                <div class="col-md-8 control-label"><label><?= $jobs[$i]->name; ?></label></div>
+                                <div class="col-md-4 left">
+                                    <input type="text" class="required input" style="width:100%;" size="3" required
+                                           aria-required="true" value="<?= $jobs[$i]->price; ?>" data-id="<?= $jobs[$i]->dp_id; ?>"
+                                           id="<?= $jobs[$i]->id; ?>"/>
+                                </div>
+                            </div>
+                            <?php if($i%2 != 0 && $i<count($jobs)-1){echo '</div><div class="row padding_row">';} elseif($i==count($jobs)-1){echo'</div>';} ?>
                 <?php } ?>
             </div>
         </div>
@@ -452,6 +457,9 @@ $disable = !empty($mountService) && in_array('26',$mountService->groups) ? 'disa
                 arrow.removeClass('fa-angle-up');
                 arrow.addClass('fa-angle-down');
             }
+        });
+        jQuery('.padding_row').click(function(){
+            return false;
         });
 
         jQuery('#create_ms').click(function () {

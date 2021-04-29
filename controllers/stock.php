@@ -266,10 +266,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
     public function getCustomer()
     {
         try {
-            $filter = JFactory::getApplication()->input->get('filter', '', 'STRING');
+            $jinput = JFactory::getApplication()->input;
+            $filter = $jinput->get('filter', '', 'STRING');
+            $dealerType = $jinput->get('dealer_type','','STRING');
             if (!empty($filter)) {
                 $model = $this->getModel();
-                $result = $model->getCustomer($filter);
+                $result = $model->getCustomer($filter,$dealerType);
                 die(json_encode($result));
             }
         } catch(Exception $e)
@@ -988,7 +990,8 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 $goods = $data->goods;
                 $customer = $data->customer;
             }
-
+            $status = $jinput->get('status',8,'INT');
+            $sum = $jinput->get('sum','','STRING');
             if(empty($customer)){
                 $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
                 $customer = $projectModel->getProjectForStock($projectId)->customer;
@@ -1155,8 +1158,12 @@ class Gm_ceilingControllerStock extends JControllerLegacy
                 }
                 //throw new Exception(print_r($realiseArrays,true));
                 $stockModel->makeRealisation( $realiseArrays['realisation'],$realiseArrays['inventory']); // обновление данных в таблице inventories и записиь в sales
+                /*Сохраняем сумму, если сумма не пустая, т.е пришло со страницысоздания новой реализации, с проекта не отправляется сумма*/
+                if(!empty($sum)){
+                    $projectModel->saveFinalSum($projectId,$sum);
+                }
                 if(!$noneAjax){
-                    $projectModel->change_status($projectId,8);//переводим в статус "Выдан", только если со страницы кладовщика(пришло через ajax)
+                    $projectModel->change_status($projectId,$status);//переводим в статус "Выдан" или "неполностью выдан", только если со страницы кладовщика(пришло через ajax)
                 }
 
                 $date = date("Y-m-d H:i:s");

@@ -196,4 +196,61 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getProjectsForRealisation(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $search = $jinput->getString('search');
+            $dateFrom = $jinput->getString('date_from');
+            $dateTo = $jinput->getString('date_to');
+            $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $data = $projectsModel->getProjetsForRealization($search,$dateFrom,$dateTo);
+            die(json_encode($data));
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getProjectsForRealisationBuilder(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $search = $jinput->getString('search');
+            $builder = $jinput->getInt('builder');
+            $projectsModel = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $data = $projectsModel->getProjectsForRealisationBuilders($search,$builder);
+            die(json_encode($data));
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getProjectsByHistoryStatus(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $status = $jinput->getInt('status');
+            $dateFrom = $jinput->getString('date_from');
+            $dateTo = $jinput->getString('date_to');
+            $filter = $jinput->getString('filter');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $projects = $model->getProjectsByHistoryStatus($status,$dateFrom,$dateTo,$filter);
+            die(json_encode($projects));
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getProjectsWithRealisedGoodsByIds(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $ids = $jinput->getString('ids');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $projects = $model->getProjectsWithRealisedGoodsByIds($ids);
+            die(json_encode($projects));
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
