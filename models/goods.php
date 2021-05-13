@@ -8,19 +8,35 @@ class Gm_ceilingModelGoods extends JModelList{
     public function get($id = null){
         try {
             $db = $this->getDbo();
+            $sessionQuery = 'SET SESSION group_concat_max_len  = 1048576';
+            $db->setQuery($sessionQuery);
+            $db->execute();
+
+
             $query = $db->getQuery(true);
             $query
-                ->select('`g`.`id`, 
-                    `g`.`category_id`, 
+                ->select('`g`.`id` as goodsID,
+                    `g`.`category_id` as categoryID, 
                     `g`.`name`, 
-                    `g`.`unit_id`, 
-                    `g`.`price`')
-                ->from('`#__gm_stock_goods` as `g`');
+                    `u`.`unit`, 
+                    `g`.`price`,
+                    CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',gi.id,\'","link":"\',gi.link,\'"}\') SEPARATOR \',\'),\']\') AS imageID')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->leftjoin('`rgzbn_gm_stock_goods_images` AS gi ON g.id = gi.goods_id')
+                ->leftjoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
+                ->group('`g`.`id`');
             if (!empty($id)) {
                 $query->where("`g`.`id`= $id");
             }
+
             $db->setQuery($query);
-            $items = $db->loadObjectList();
+            if (!empty($id)) {
+                $items = $db->loadObject();
+            }
+            else{
+                $items = $db->loadObjectList();
+            }
+            //$items = $db->loadObjectList();
             return $items;
         }
         catch(Exception $e) {
@@ -28,19 +44,76 @@ class Gm_ceilingModelGoods extends JModelList{
         }
     }
 
-    public function getByCategory($category_id){
+    public function getInfo($id){
+        try{
+            $db = $this->getDbo();
+            $sessionQuery = 'SET SESSION group_concat_max_len  = 1048576';
+            $db->setQuery($sessionQuery);
+            $db->execute();
+
+
+            $query = $db->getQuery(true);
+            $query
+                ->select('`g`.`id` as goodsID,
+                    `g`.`baunet_category_id` as categoryID, 
+                    `g`.`name`, 
+                    `u`.`unit`, 
+                    `g`.`price`,
+                    `inf`.`info` as goodsInfo,
+                    CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',gi.id,\'","link":"\',gi.link,\'"}\') SEPARATOR \',\'),\']\') AS imageID')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->leftjoin('`rgzbn_gm_stock_goods_images` AS gi ON g.id = gi.goods_id')
+                ->leftjoin('`rgzbn_gm_stock_goods_info` AS inf ON inf.goods_id = g.id')
+                ->leftjoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
+                ->group('`g`.`id`');
+            if (!empty($id)) {
+                $query->where("`g`.`id`= $id");
+            }
+
+            $db->setQuery($query);
+            if (!empty($id)) {
+                $items = $db->loadObject();
+            }
+            else{
+                $items = $db->loadObjectList();
+            }
+            //$items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getByCategory($category_id,$main){
         try{
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('`g`.`id`, 
-                    `g`.`category_id`, 
+                ->select('`g`.`id` as goodsID,
+                    `g`.`baunet_category_id` as categoryID, 
                     `g`.`name`, 
-                    `g`.`unit_id`, 
-                    `g`.`price`')
-                ->from('`#__gm_stock_goods` as `g`');
-            if (!empty($id)) {
-                $query->where("`g`.`category_id`= $category_id");
+                    `u`.`unit`, 
+                    `g`.`price`,
+                    `inf`.`info` as goodsInfo,
+                    CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',gi.id,\'","link":"\',gi.link,\'"}\') SEPARATOR \',\'),\']\') AS imageID')
+                ->from('`#__gm_stock_goods` as `g`')
+                ->leftjoin('`rgzbn_gm_stock_goods_images` AS gi ON g.id = gi.goods_id')
+                ->leftjoin('`rgzbn_gm_stock_goods_info` AS inf ON inf.goods_id = g.id')
+                ->leftjoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
+                ->group('`g`.`id`');
+            if (!empty($category_id)) {
+                if($main == 0){
+                    $query->where("`g`.`baunet_category_id`= $category_id");
+                }
+                if($main == 1){
+                    $categorySubQuery = $db->getQuery(true);
+                    $categorySubQuery
+                        ->select('id')
+                        ->from('`rgzbn_gm_ceiling_baunet_catalog_category`')
+                        ->where("parent_id = $category_id OR id = $category_id");
+                    $query->where("`g`.`baunet_category_id` in ($categorySubQuery)");
+                }
             }
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -215,6 +288,162 @@ class Gm_ceilingModelGoods extends JModelList{
                 ->values($hrefs);
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addAvailabilityType($title){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_stock_goods_availability`')
+                ->columns('`title`')
+                ->values("'$title'");
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getGoodsAvailabilityTypes(){
+        try{
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('`rgzbn_gm_stock_goods_availability`');
+            $db->setQuery($query);
+            $types = $db->loadObjectList();
+            return $types;
+
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice,$goodsInfo=null) {
+        try{
+            $user = JFactory::getUser();
+            $dealerId = !empty($user->dealer_id) ? $user->dealer_id : 1;
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`rgzbn_gm_stock_goods`')
+                ->columns('`name`,`category_id`,`baunet_category_id`,`unit_id`,`multiplicity`,`price`,`created_by`,`visibility`')
+                ->values($db->quote($db->escape($goodsName,true)).",8,$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,$dealerId,3");
+            $db->setQuery($query);
+            $db->execute();
+            $goodsId = $db->insertId();
+            if(!empty($goodsInfo)){
+
+                $query
+                    ->insert('`rgzbn_gm_stock_goods_info`')
+                    ->columns('`goods_id`,`info`')
+                    ->values("$goodsId,'$goodsInfo'");
+                $db->setQuery($query);
+                $db->execute();
+            }
+            return $goodsId;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function update($goodsId,$category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice){
+        try{
+            $result = 0;
+            if(!empty($goodsId) && (!empty($category) || !empty($goodsName) || !empty($goodsUnit) || !empty($goodsMultiplicity) || !empty($goodsPrice))) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_gm_stock_goods`')
+                    ->where("id=$goodsId");
+                if(!empty($category)){
+                    $query->set("baunet_category_id = $category");
+                }
+                if(!empty($goodsName)){
+                    $query->set("name = '$goodsName'");
+                }
+                if(!empty($goodsUnit)){
+                    $query->set("unit_id = $goodsUnit");
+                }
+                if(!empty($goodsMultiplicity)){
+                    $query->set("multiplicity = $goodsMultiplicity");
+                }
+                if(!empty($goodsPrice)){
+                    $query->set("price = $goodsPrice");
+                }
+                $db->setQuery($query);
+                $db->execute();
+                $result = $db->getNumRows();
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function updateInfo($goodsId,$info){
+        try{
+            $result = 0;
+            if(!empty($goodsId) && !empty($info)){
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->select('*')
+                    ->from('`rgzbn_gm_stock_goods_info`')
+                    ->where("goods_id = $goodsId");
+                $db->setQuery($query);
+                $existInfo = $db->loadObjectList();
+                if(!empty($existInfo)){
+                    $query = $db->getQuery(true);
+                    $query
+                        ->update('`rgzbn_gm_stock_goods_info`')
+                        ->set("info = '$info'")
+                        ->where("goods_id = $goodsId");
+                    $db->setQuery($query);
+                    $db->execute();
+                    $result = $db->getNumRows();
+                }
+                else{
+                    $query = $db->getQuery(true);
+                    $query
+                        ->insert('`rgzbn_gm_stock_goods_info`')
+                        ->columns("goods_id,info")
+                        ->values("$goodsId,$info");
+                    $db->setQuery($query);
+                    $db->execute();
+                    $result = $db->getNumRows();
+                }
+
+            }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function delete($id){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->delete('')
+                ->from('`rgzbn_gm_stock_goods`')
+                ->where("id = $id");
+            $db->setQuery($query);
+            $db->execute();
+            $result = $db->getNumRows();
+            return $result;
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

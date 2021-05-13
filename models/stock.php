@@ -1009,12 +1009,14 @@ class Gm_ceilingModelStock extends JModelList
 
     function addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice) {
         try{
+            $user = JFactory::getUser();
+            $dealerId = !empty($user->dealer_id) ? $user->dealer_id : 1;
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
                 ->insert('`rgzbn_gm_stock_goods`')
                 ->columns('`name`,`category_id`,`unit_id`,`multiplicity`,`price`,`created_by`')
-                ->values($db->quote($db->escape($goodsName,true)).",$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,".JFactory::getUser()->dealer_id);
+                ->values($db->quote($db->escape($goodsName,true)).",$category,$goodsUnit,$goodsMultiplicity,$goodsPrice,$dealerId");
             $db->setQuery($query);
             $db->execute();
             $result = $db->insertId();

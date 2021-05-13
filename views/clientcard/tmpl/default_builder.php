@@ -903,7 +903,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
                     location.reload();
                 },
                 dataType: "json",
-                timeout: 10000,
+                timeout: 30000,
                 error: function(data){
                     var n = noty({
                         theme: 'relax',

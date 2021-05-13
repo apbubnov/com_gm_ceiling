@@ -6,7 +6,14 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('id');
             $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
-            die(json_encode($goodsModel->get($id)));
+            $goods = $goodsModel->get($id);
+            if(count($goods) >1){
+                die("{\"goods\":" . json_encode($goods,JSON_UNESCAPED_UNICODE)."}");
+            }
+            else{
+                die(json_encode($goods,JSON_UNESCAPED_UNICODE));
+            }
+
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -18,7 +25,19 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('category_id');
             $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
-            die(json_encode($goodsModel->getByCategory($id)));
+            die("{\"goods\":" .json_encode($goodsModel->getByCategory($id,0),JSON_UNESCAPED_UNICODE)."}");
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function getByMainCategory(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('category_id');
+            $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            die("{\"goods\":" .json_encode($goodsModel->getByCategory($id,1),JSON_UNESCAPED_UNICODE)."}");
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -102,6 +121,124 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $modelGoods = Gm_ceilingHelpersGm_ceiling::getModel('goods');
             $modelGoods->addImages($hrefs);
             die(json_encode(true));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function addGoodsAvailibilityType(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $title = $jinput->getString('title');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $model->addAvailabilityType($title);
+            die(json_encode(true));
+
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsAvailibilityTypes(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $types = $model->getGoodsAvailabilityTypes();
+            die(json_encode($types));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function add(){
+        try{
+            $data = $_POST;
+            if(empty($data)){
+                $jinput = JFactory::getApplication()->input;
+                $category = $jinput->getInt('category');
+                $goodsName = $jinput->getString('name');
+                $goodsUnit = $jinput->getInt('unit');
+                $goodsMultiplicity = $jinput->getString('multiplicity');
+                $goodsPrice = $jinput->getString('price');
+                $goodsInfo = $jinput->getString('info');
+            }
+            else{
+                $category = $data['category'];
+                $goodsName = $data['name'];
+                $goodsUnit = $data['unit'];
+                $goodsMultiplicity = $data['multiplicity'];
+                $goodsPrice = $data['price'];
+                $goodsInfo = $data['info'];
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $goodsId = $model->addGoods($category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice,$goodsInfo);
+            die(json_encode($goodsId));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function updateInfo(){
+        try{
+            $data = $_POST;
+            if(empty($data)) {
+                $jinput = JFactory::getApplication()->input;
+                $id = $jinput->getInt('id');
+                $info = $jinput->getString('info');
+            }
+            else{
+                $id = $data['id'];
+                $info = $data['info'];
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $result = $model->updateInfo($id,$info);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    public function update(){
+        try{
+            $data = $_POST;
+            if(empty($data)){
+                $jinput = JFactory::getApplication()->input;
+                $id = $jinput->getInt('id');
+                $category = $jinput->getInt('category');
+                $goodsName = $jinput->getString('name');
+                $goodsUnit = $jinput->getInt('unit');
+                $goodsMultiplicity = $jinput->getString('multiplicity');
+                $goodsPrice = $jinput->getString('price');
+                $goodsInfo = $jinput->getString('info');
+            }
+            else{
+                $id = $data['id'];
+                $category = $data['category'];
+                $goodsName = $data['name'];
+                $goodsUnit = $data['unit'];
+                $goodsMultiplicity = $data['multiplicity'];
+                $goodsPrice = $data['price'];
+                $goodsInfo = $data['info'];
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $result = $model->update($id,$category,$goodsName,$goodsUnit,$goodsMultiplicity,$goodsPrice,$goodsInfo);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function delete(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $result = $model->delete($id);
+            die(json_encode($result));
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
