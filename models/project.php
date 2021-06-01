@@ -1426,8 +1426,7 @@ class Gm_ceilingModelProject extends JModelItem
 
 
     public function getProjectForStock($id,$calcIds = null){
-    	try
-    	{
+    	try {
 	        if (empty($id)) return null;
 
 	        $db = $this->getDbo();

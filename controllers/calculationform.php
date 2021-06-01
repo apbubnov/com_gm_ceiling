@@ -700,8 +700,8 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			    foreach($goodsFromJobs as $key=>$value){
 			        if(in_array($key,$existGoods)){
 			            foreach ($goods as $index=>$goods_item){
-			                if($goods_item->id == $key){
-			                    $goods_item->count += $value->count;
+			                if($goods_item['id'] == $key){
+			                    $goods[$index]['count'] += $value->count;
 			                    break;
                             }
                         }

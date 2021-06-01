@@ -90,7 +90,19 @@ class Gm_ceilingControllerCallback extends Gm_ceilingController
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function getCallsCount(){
+        try {
+            $user = JFactory::getUser();
+            $date = date('Y-m-d');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $result = $model->getCallsCount($user,$date);
+            die($result);
+        }
+        catch (Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

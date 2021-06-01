@@ -82,7 +82,6 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 	{
         try
 		{
-
 			$app = JFactory::getApplication();
 	        $jinput = $app->input;
             $user = JFactory::getUser();
@@ -165,10 +164,8 @@ class Gm_ceilingControllerDealer extends JControllerLegacy
 
 
 	    }
-	    catch(Exception $e)
-        {
+	    catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
 

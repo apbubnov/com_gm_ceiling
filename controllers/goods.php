@@ -6,12 +6,18 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('id');
             $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
-            $goods = $goodsModel->get($id);
+            $goods = $goodsModel->getInfo($id);
             if(count($goods) >1){
-                die("{\"goods\":" . json_encode($goods,JSON_UNESCAPED_UNICODE)."}");
+                $result = str_replace('\"','"',json_encode($goods,JSON_UNESCAPED_UNICODE));
+                $result = str_replace('"{', '{', $result);
+                $result = str_replace('}"', '}', $result);
+                die("{\"goods\":" . $result ."}");
             }
             else{
-                die(json_encode($goods,JSON_UNESCAPED_UNICODE));
+                $result = str_replace('\"','"',json_encode($goods,JSON_UNESCAPED_UNICODE));
+                $result = str_replace('"{', '{', $result);
+                $result = str_replace('}"', '}', $result);
+                die($result);
             }
 
         }
@@ -25,7 +31,10 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('category_id');
             $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
-            die("{\"goods\":" .json_encode($goodsModel->getByCategory($id,0),JSON_UNESCAPED_UNICODE)."}");
+            $result = str_replace('\"','"',json_encode($goodsModel->getByCategory($id,0),JSON_UNESCAPED_UNICODE));
+            $result = str_replace('"{', '{', $result);
+            $result = str_replace('}"', '}', $result);
+            die("{\"goods\":" .$result."}");
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -37,7 +46,10 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->getInt('category_id');
             $goodsModel = Gm_ceilingHelpersGm_ceiling::getModel('goods');
-            die("{\"goods\":" .json_encode($goodsModel->getByCategory($id,1),JSON_UNESCAPED_UNICODE)."}");
+            $result = str_replace('\"','"',json_encode($goodsModel->getByCategory($id,1),JSON_UNESCAPED_UNICODE));
+            $result = str_replace('"{', '{', $result);
+            $result = str_replace('}"', '}', $result);
+            die("{\"goods\":" .$result."}");
         }
         catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -157,7 +169,7 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $data = $_POST;
             if(empty($data)){
                 $jinput = JFactory::getApplication()->input;
-                $category = $jinput->getInt('category');
+                $category = $jinput->getInt('categoryID');
                 $goodsName = $jinput->getString('name');
                 $goodsUnit = $jinput->getInt('unit');
                 $goodsMultiplicity = $jinput->getString('multiplicity');
@@ -165,7 +177,7 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
                 $goodsInfo = $jinput->getString('info');
             }
             else{
-                $category = $data['category'];
+                $category = $data['categoryID'];
                 $goodsName = $data['name'];
                 $goodsUnit = $data['unit'];
                 $goodsMultiplicity = $data['multiplicity'];
@@ -238,6 +250,18 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             $id = $jinput->getInt('id');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
             $result = $model->delete($id);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+    function getGoodsJobsMap(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $ids = $jinput->getString('ids');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $result = $model->getGoodsJobsMap($ids);
             die(json_encode($result));
         }
         catch(Exception $e) {

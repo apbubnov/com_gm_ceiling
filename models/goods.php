@@ -57,14 +57,13 @@ class Gm_ceilingModelGoods extends JModelList{
                 ->select('`g`.`id` as goodsID,
                     `g`.`baunet_category_id` as categoryID, 
                     `g`.`name`, 
-                    `u`.`unit`, 
+                    `g`.`unit_id` as `unit`, 
                     `g`.`price`,
                     `inf`.`info` as goodsInfo,
                     CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',gi.id,\'","link":"\',gi.link,\'"}\') SEPARATOR \',\'),\']\') AS imageID')
                 ->from('`#__gm_stock_goods` as `g`')
                 ->leftjoin('`rgzbn_gm_stock_goods_images` AS gi ON g.id = gi.goods_id')
                 ->leftjoin('`rgzbn_gm_stock_goods_info` AS inf ON inf.goods_id = g.id')
-                ->leftjoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
                 ->group('`g`.`id`');
             if (!empty($id)) {
                 $query->where("`g`.`id`= $id");
@@ -93,14 +92,13 @@ class Gm_ceilingModelGoods extends JModelList{
                 ->select('`g`.`id` as goodsID,
                     `g`.`baunet_category_id` as categoryID, 
                     `g`.`name`, 
-                    `u`.`unit`, 
+                    `g`.`unit_id` as `unit`, 
                     `g`.`price`,
                     `inf`.`info` as goodsInfo,
                     CONCAT(\'[\',GROUP_CONCAT(CONCAT(\'{"id":"\',gi.id,\'","link":"\',gi.link,\'"}\') SEPARATOR \',\'),\']\') AS imageID')
                 ->from('`#__gm_stock_goods` as `g`')
                 ->leftjoin('`rgzbn_gm_stock_goods_images` AS gi ON g.id = gi.goods_id')
                 ->leftjoin('`rgzbn_gm_stock_goods_info` AS inf ON inf.goods_id = g.id')
-                ->leftjoin('`rgzbn_gm_stock_units` AS u ON u.id = g.unit_id')
                 ->group('`g`.`id`');
             if (!empty($category_id)) {
                 if($main == 0){
@@ -331,6 +329,9 @@ class Gm_ceilingModelGoods extends JModelList{
         try{
             $user = JFactory::getUser();
             $dealerId = !empty($user->dealer_id) ? $user->dealer_id : 1;
+            if(empty($category)){
+                $category = 'NULL';
+            }
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query
@@ -382,7 +383,7 @@ class Gm_ceilingModelGoods extends JModelList{
                 }
                 $db->setQuery($query);
                 $db->execute();
-                $result = $db->getNumRows();
+                $result = 1;
             }
             return $result;
         }
@@ -395,6 +396,7 @@ class Gm_ceilingModelGoods extends JModelList{
         try{
             $result = 0;
             if(!empty($goodsId) && !empty($info)){
+                $info = str_replace(array("\r\n", "\r", "\n"),'',$info);
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true);
                 $query
@@ -411,7 +413,6 @@ class Gm_ceilingModelGoods extends JModelList{
                         ->where("goods_id = $goodsId");
                     $db->setQuery($query);
                     $db->execute();
-                    $result = $db->getNumRows();
                 }
                 else{
                     $query = $db->getQuery(true);
@@ -421,9 +422,8 @@ class Gm_ceilingModelGoods extends JModelList{
                         ->values("$goodsId,$info");
                     $db->setQuery($query);
                     $db->execute();
-                    $result = $db->getNumRows();
                 }
-
+                $result = 1;
             }
             return $result;
         }
@@ -442,7 +442,46 @@ class Gm_ceilingModelGoods extends JModelList{
                 ->where("id = $id");
             $db->setQuery($query);
             $db->execute();
-            $result = $db->getNumRows();
+            $result = 1;
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getGoodsJobsMap($ids){
+        try{
+            $result = [];
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $categorySubQuery = $db->getQuery(true);
+            $categorySubQuery
+                ->select('category_id')
+                ->from('`rgzbn_gm_stock_goods`')
+                ->where("id in($ids)");
+            $query
+                ->select('f.goods_category_id, GROUP_CONCAT(DISTINCT fj.job_id) as job_ids')
+                ->from('`rgzbn_gm_ceiling_fields` AS f')
+                ->leftJoin('`rgzbn_gm_ceiling_fields_jobs_map` AS fj ON fj.field_id = f.id ')
+                ->leftJoin('`rgzbn_gm_stock_goods` AS g ON g.category_id = f.goods_category_id')
+                ->where("f.goods_category_id IN ($categorySubQuery)");
+            $db->setQuery($query);
+            $goodsCategories = $db->loadObjectList('goods_category_id');
+            $categories = array_keys($goodsCategories);
+            $stockModel = Gm_ceilingHelpersGm_ceiling::getModel('stock');
+            $goods = [];
+            foreach ($categories as $category) {
+                $goods = array_merge($goods, $stockModel->getGoodsByCategory($category));
+            }
+
+            foreach ($goods as $goodsItem){
+               $jobs = explode(',', $goodsCategories[$goodsItem->category_id]->job_ids);
+
+               foreach ($jobs as $job){
+                   $result[$goodsItem->id][] = (object)["job_id"=>$job,"count"=>1];
+               }
+            }
             return $result;
         }
         catch(Exception $e) {

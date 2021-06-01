@@ -1194,8 +1194,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
     }
 
-    public function approvemanager()
-    {
+    public function approvemanager(){
         try {
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', '0', 'INT');

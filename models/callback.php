@@ -453,5 +453,26 @@ class Gm_ceilingModelCallback extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getCallsCount($user,$date){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('count(c.id) as count')
+                ->from('#__gm_ceiling_callback as c')
+                ->innerJoin('`#__users` as `u` ON `c`.`manager_id` = `u`.`id`')
+                ->where("date_time <= '$date 23:59:59'");
+            if(in_array('47',$user->groups)){
+                $query->where("(manager_id IN ($user->id))");
+            }
+            $db->setQuery($query);
+            $count = $db->loadObject()->count;
+            return $count;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }
 ?>

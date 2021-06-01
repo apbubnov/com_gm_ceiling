@@ -24,7 +24,7 @@ class Gm_ceilingControllerGoods_category extends JControllerLegacy{
             $id = $jinput->getInt('id');
             $goodsCategoryModel = Gm_ceilingHelpersGm_ceiling::getModel('goods_category');
             $categories = $goodsCategoryModel->getData($id);
-            if(count($categories) == 1){
+            if(count($categories) == 1 && !empty($id)){
                 die(json_encode($categories,JSON_UNESCAPED_UNICODE));
             }
             else{
@@ -66,14 +66,14 @@ class Gm_ceilingControllerGoods_category extends JControllerLegacy{
                 $name = $data['name'];
                 $parentId = $data['parent_id'];
                 $imageId = $data['image_id'];
-                $viewType = $data['view_type'];
+                $viewType = $data['viewType'];
             }
             else{
                 $jinput = JFactory::getApplication()->input;
                 $name = $jinput->getString('name');
                 $parentId =  $jinput->getString('parent_id');
                 $imageId =  $jinput->getString('image_id');
-                $viewType = $jinput->getString('view_type');
+                $viewType = $jinput->getString('viewType');
             }
             $goodsCategoryModel = Gm_ceilingHelpersGm_ceiling::getModel('goods_category');
             $categoryId = $goodsCategoryModel->create($name,$parentId,$imageId,$viewType);
@@ -105,7 +105,7 @@ class Gm_ceilingControllerGoods_category extends JControllerLegacy{
                 $name = $data['name'];
                 $parentId = $data['parent_id'];
                 $imageId = $data['image_id'];
-                $viewType = $data['view_type'];
+                $viewType = $data['viewType'];
             }
             else{
                 $jinput = JFactory::getApplication()->input;
@@ -113,7 +113,7 @@ class Gm_ceilingControllerGoods_category extends JControllerLegacy{
                 $name = $jinput->getString('name');
                 $parentId =  $jinput->getString('parent_id');
                 $imageId =  $jinput->getString('image_id');
-                $viewType = $jinput->getString('view_type');
+                $viewType = $jinput->getString('viewType');
             }
             $goodsCategoryModel = Gm_ceilingHelpersGm_ceiling::getModel('goods_category');
             $categoryId = $goodsCategoryModel->update($id,$name,$parentId,$imageId,$viewType);

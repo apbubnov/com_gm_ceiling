@@ -16,7 +16,8 @@ $user_group = $user->groups;
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 $labels = $clients_model->getClientsLabels($user->dealer_id);
 $isGauger = in_array('21',$user_group);
-$checked = $isGauger ? 'checked' : '';
+$isProvManager = in_array('47',$user_group);
+$checked = $isGauger || $isProvManager ? 'checked' : '';
 ?>
 
 <style type="text/css">
@@ -56,14 +57,14 @@ $checked = $isGauger ? 'checked' : '';
                 </ul>
             </div>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" <?=$isProvManager ? 'style="display: none;"':''?>>
             <select class="form-control" id="select_type">
                 <option value="0">Все типы</option>
                 <option value="1">Новые</option>
                 <option value="2">Отказы от договора</option>
             </select>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" <?=$isProvManager ? 'style="display: none;"':''?>>
             <div class="form-control">
                 <input type="checkbox" id="only_self" class="inp-cbx dup" <?=$checked?> style="display: none">
                 <label for="only_self" class="cbx">
@@ -99,7 +100,8 @@ $checked = $isGauger ? 'checked' : '';
         table_body_elem = document.getElementById('table_body'),
         user_id = <?php echo $userId; ?>,
         timeouts = [],
-        savedData;
+        savedData,
+        isProvManager = '<?=$isProvManager?>';
     function show_calls() {
         timeouts = [];
         var calendar_elem_value = document.getElementById('calendar').value;
@@ -216,6 +218,9 @@ $checked = $isGauger ? 'checked' : '';
                 url = 'index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=';
             } else {
                 url = 'index.php?option=com_gm_ceiling&view=clientcard&id=';
+            }
+            if(isProvManager){
+                url = 'index.php?option=com_gm_ceiling&view=clientcard&type=provider&id=';
             }
             document.location.href = url+(this.getAttribute('data-clientId')-0)+'&call_id='+(this.getAttribute('data-callId')-0);
         }

@@ -371,7 +371,36 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 		    } elseif ($type === 'after' && is_dir('uploaded_calc_images/'.$calc_id.'/defect')) {
 		    	$calc_model->update($calc_id, '`defect_status` = 2');
 		    }
-	        
+	        /*Уведомление мб на стройке, если фото загружвет мастер*/
+            $user = JFactory::getUser();
+            if(in_array('33',$user->groups) || in_array('46',$user->groups) && $type='defect'){
+                $calcMountModel = Gm_ceilingHelpersGm_ceiling::getModel('calcs_mount');
+                $mountData = $calcMountModel->selectMounter($calc_id);
+                $emails = [];
+                foreach($mountData as $item){
+                    if(!empty($item->mounter_id)) {
+                        $email = JFactory::getUser($item->mounter_id)->email;
+                        if (!in_array($emails, $email)) {
+                            array_push($emails, $email);
+                        }
+                    }
+                }
+                if(!empty($emails)) {
+                    $calculation = $calc_model->getBaseCalculationDataById($calc_id);
+                    $projectModel = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                    $project = $projectModel->getData($calculation->project_id);
+                    $images =  $this->getImagesByType($calc_id,$type);
+                    $notyData = (object)[
+                        "emails" => $emails,
+                        "project" => $project->project_info,
+                        "client" => $project->client_id,
+                        "calculation" => $calculation->calculation_title,
+                        "object" => JFactory::getUser($project->dealer_id)->name,
+                        "images" => $images
+                    ];
+                    Gm_ceilingHelpersGm_ceiling::notify($notyData,19);
+                }
+            }
             die(json_encode($urls));
         } catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
@@ -506,6 +535,41 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::notify($notify,18);
             }
 
+        }
+        catch (Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getImagesByType($calcId = null,$type= null){
+        try{
+            $ajax = 0;
+            if(empty($calcId) && empty($type)) {
+                $jinput = JFactory::getApplication()->input;
+                $calcId = $jinput->getInt('calculationId');
+                $type = $jinput->getString('type');
+                $ajax = 1;
+            }
+            $dir = "uploaded_calc_images/$calcId/$type";
+            $files = [];
+            $temp = [];
+            if (is_dir($dir)) {
+                $temp = scandir($dir);
+                foreach ($temp as $key => $value) {
+                    if (strlen($value) === 32) {
+                        $temp[$key] = $dir.'/'.$value;
+                    } else {
+                        unset($temp[$key]);
+                    }
+                }
+                $files = array_merge($files, $temp);
+            }
+            if($ajax == 1) {
+                die(json_encode($files));
+            }
+            if($ajax == 0){
+                return $files;
+            }
         }
         catch (Exception $e){
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());

@@ -741,7 +741,7 @@ $objMasters = $usersModel->getUsersByGroupAndDealer(46,$user->dealer_id);
             checks,
             projectsWithCalcsIds = JSON.parse('<?=addslashes(json_encode($projectsWithCalcIds))?>'),
             allMounters = [],
-            isObjMaster = '<?=!empty($isObjMaster) ? false : true?>',
+            isObjMaster = '<?=empty($isObjMaster) ? false : true?>',
             disabled = '<?=$disabled;?>';
             console.log(isObjMaster);
         var EDIT_BUTTON = "<button class='btn btn-primary btn-sm edit_mounter'><i class=\"fas fa-edit\" aria-hidden=\"true\"></i></button>",

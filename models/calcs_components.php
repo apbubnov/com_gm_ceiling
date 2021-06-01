@@ -49,6 +49,22 @@ class Gm_ceilingModelCalcs_components extends JModelList
                 ->group('cgm.goods_id');
             $db->setQuery($query);
             $goods = $db->loadObjectList();
+            if(empty($goods)){
+                $query = "SELECT CONCAT(co.title,' ',comp.title ) as name,cc.component_id as goods_id,sum(cc.count) as `count`,'' as unit
+                            FROM `rgzbn_gm_ceiling_calcs_components` AS cc
+                            LEFT JOIN `rgzbn_gm_ceiling_components_option` AS comp ON comp.id = cc.component_id
+                            LEFT JOIN `rgzbn_gm_ceiling_components` AS co ON co.id = comp.component_id
+                            WHERE cc.calc_id IN(
+                                SELECT c.id 
+                                FROM `rgzbn_gm_ceiling_calculations` AS c
+                                LEFT JOIN `rgzbn_gm_ceiling_projects` AS p ON p.id = c.project_id
+                                LEFT JOIN `rgzbn_gm_ceiling_clients` AS cl ON cl.id = p.client_id
+                                WHERE cl.dealer_id = $builderId
+                            )
+                            GROUP BY cc.component_id";
+                $db->setQuery($query);
+                $goods = $db->loadObjectList();
+            }
             return $goods;
         }
         catch(Exception $e) {

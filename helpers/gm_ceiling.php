@@ -6129,6 +6129,20 @@ class Gm_ceilingHelpersGm_ceiling
                 $mailer->setSubject('Дилер заказал комплектующие');
                 $mailer->setBody($body);
             }
+            elseif($type == 19){
+                $mailer->addRecipient($data->emails);
+                $body = "Здравствуйте. На объекте $data->object $data->client $data->project $data->calculation мастер выявил дефект.\n Фотографии дефекта прикреплены к этому письму.\n";
+                if(!empty($data->images)){
+                    $i = 0;
+                    foreach ($data->images as $image) {
+                        $i++;
+                        $mailer->AddAttachment($_SERVER['DOCUMENT_ROOT']."/". $image,"image$i.png");
+                    }
+                }
+                $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+                $mailer->setSubject('Дефект монтажа');
+                $mailer->setBody($body);
+            }
             $send = $mailer->Send();
             return 1;
         } catch (Exception $e) {

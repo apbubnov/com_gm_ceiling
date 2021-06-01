@@ -123,6 +123,13 @@ class Gm_ceilingController extends JControllerLegacy
                         elseif(in_array('45', $groups)){
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=teams&type=storekeeper', false));//аналитик
                         }
+                        elseif(in_array('47',$groups)){
+                            /*менеджер по производителям*/
+                            $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=provmanager', false));
+                        }
+                        elseif(in_array('48,49,50,51,52,53,54',$groups)){
+                            /*производитель*/
+                        }
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
                             $app->input->set('type', $type);
@@ -3683,19 +3690,29 @@ public function register_mnfctr(){
 
     function registrationBAU(){
         try{
-            $jinput = JFactory::getApplication()->input;
-            $name = $jinput->get('name','','STRING');
-            $surname = $jinput->get('surname','','STRING');
-            $password = $jinput->get('password','','STRING');
-            $phone = $jinput->get('phone','','STRING');
+            $data = $_POST;
+            if(!empty($data)){
+                $name = $data['name'];
+                $surname = $data['surname'];
+                $password = $data['password'];
+                $phone = $data['phone'];
+                $email = $data['email'];
+            }
+            else{
+                $jinput = JFactory::getApplication()->input;
+                $name = $jinput->get('name','','STRING');
+                $surname = $jinput->get('surname','','STRING');
+                $password = $jinput->get('password','','STRING');
+                $phone = $jinput->get('phone','','STRING');
+                $email = $jinput->get('email', '', 'STRING');
+            }
             $phone = mb_ereg_replace('[^\d]', '', $phone);
-            $email = $jinput->get('email', '', 'STRING');
             if(!empty($phone)){
                 $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $user = $userModel->getUserByUsername($phone);
                 if (!empty($user)) {
                     /*Существующий пользователь*/
-                    die(json_encode((object)["type"=>"success","id"=>$user->associated_client,"code"=>$code]));
+                    $dealer_id = $user->id;
                 }
                 else{
                     /*Новый пользователь*/
@@ -3724,15 +3741,38 @@ public function register_mnfctr(){
                         //создание user'а
                         $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser("$surname $name", $phone, $email, $client_id, 2,0,$password);
                     }
-
-                    $response = json_decode($this->sendCall($phone));
-                    $code = $response->code;
+                }
+                $response = $this->sendCall($phone);
+                if(count($response) == 3) {
+                    $code = $response[2];
+                    $code = substr($code,-4);
                     $userModel->setVerificationCode($dealer_id, $code);
-                    die(json_encode((object)["type"=>"success","id"=>$client_id,"code"=>$code]));
+                    die("{\"result\":".json_encode((object)["type"=>"success","id"=>$dealer_id],JSON_UNESCAPED_UNICODE)."}");
+                }
+                elseif(count($response) == 2){
+                    $text = '';
+                    switch($response[1]){
+                        case -1:
+                            $text = "Ошибка в параметрах.";
+                            break;
+                        case -2:
+                            $text = "Неверный логин или пароль";
+                            break;
+                        case -4:
+                            $text = "IP-адрес временно заблокирован из-за частых ошибок в запросах";
+                            break;
+                        case -5:
+                            $text = "Неверный формат даты.";
+                            break;
+                        case -9:
+                            $text = "Превышено кол-во одинаковых запросов в минуту";
+                            break;
+                    }
+                    die("{\"result\":".json_encode((object)["type"=>"error","text"=>$text],JSON_UNESCAPED_UNICODE)."}");
                 }
             }
             else{
-                die(json_encode((object)["type"=>"error","text"=>"Empty phone number"]));
+                die("{\"result\":".json_encode((object)["type"=>"error","text"=>"Пустой номер телефона"],JSON_UNESCAPED_UNICODE)."}");
             }
 
         }
@@ -3754,37 +3794,95 @@ public function register_mnfctr(){
     function verifyCodeBAU(){
         try{
             $result = (object)array("type"=>"","data"=>"");
-            $jinput = JFactory::getApplication()->input;
-            $phone = $jinput->get('phone','','STRING');
-            $code = $jinput->getInt('code');
-            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $user = $userModel->getUserByUsername($phone);
-            $now = date('Y-m-d H:i:s');
-            $codeCreationTime = $user->code_creation_time;
-            $diff = mktime($now) - mktime($codeCreationTime);
-            if($diff >=3600){
-                $result->type = 'error';
-                $result->data = 'Код устарел!';
+            $data = $_POST;
+            if(!empty($data)){
+                $userId = $data['id'];
+                $code = $data['code'];
             }
             else{
-                if($user->verification_code == $code){
-                    $result->type = 'success';
-                    $result->data = 'true';
-                    $userModel->setVerificationCode($user->id,null);
-                    Gm_ceilingHelpersGm_ceiling::forceLogin($user->id);
-                }
-                else{
-                    $result->type = 'error';
-                    $result->data = 'Введен неверный код!';
-                }
+                $jinput = JFactory::getApplication()->input;
+                $userId = $jinput->getInt('id');
+                $code = $jinput->getInt('code');
             }
-            die(json_encode($result));
+
+            $userModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = JFactory::getUser($userId);
+            if(intval($user->verification_code) == intval($code)){
+                $result->type = 'success';
+                $result->data = $user->associated_client;
+                $userModel->setVerificationCode($user->id,null);
+                Gm_ceilingHelpersGm_ceiling::forceLogin($user->id);
+            }
+            else{
+                $result->type = 'error';
+                $result->data = 'Введен неверный код!';
+            }
+
+            die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
         }
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
+    }
 
+    function authorisationBAU(){
+        try{
+            $result = (object)["type"=>"","data"=>""];
+            $data = $_POST;
+            if(!empty($data)){
+                $phone = $data['phone'];
+                $password = $data['password'];
+            }
+            else{
+                $jinput = JFactory::getApplication()->input;
+                $phone = $jinput->getString('phone');
+                $password = $jinput->getString('password');
+            }
+            if(empty($phone)){
+                $result->type = 'error';
+                $result->data = 'Пустой логин';
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+            if(empty($password)){
+                $result->type = 'error';
+                $result->data = 'Пустой пароль';
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+            $password = trim($password);
+            $username = mb_ereg_replace('[^\d]', '', $phone);
+            if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10)
+            {
+                $username = '7'.$username;
+            }
+            if (strlen($username) != 11)
+            {
+                $result->type = 'error';
+                $result->data = 'Неверный формат номера телефона';
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+            if (mb_substr($username, 0, 1) != '7')
+            {
+                $username = substr_replace($username, '7', 0, 1);
+            }
+            $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = JFactory::getUser($usersModel->getUserByUsername($username)->id);
+            $verifyPass = JUserHelper::verifyPassword($password, $user->password, $user->id);
+            if ($verifyPass) {
+                $result->type = 'success';
+                $result->data = $user->associated_client;
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+            else{
+                $result->type = 'error';
+                $result->data = 'Неверный логин или пароль';
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
     function acceprFromQuiz(){

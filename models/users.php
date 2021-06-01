@@ -1100,4 +1100,125 @@ class Gm_ceilingModelUsers extends JModelList
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }	
     }
+
+    function getUsersByFilter($manager_id,$city,$status,$client_name,$limit,$select_size,$coop, $label_id){
+        try{
+            $db    = JFactory::getDbo();
+            $client_name = $db->escape($client_name);
+            $query = $db->getQuery(true);
+            $label_filter = '';
+            if (!empty($label_id)) {
+                $label_filter = " AND `c`.`label_id` = $label_id";
+            }
+
+            $query
+                ->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`, `lbs`.`color_code`")
+                ->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
+                ->select("GROUP_CONCAT(DISTINCT `#__user_usergroup_map`.`group_id` SEPARATOR ',') AS `groups`")
+                ->select("u1.name AS manager_name")
+                ->from("`#__gm_ceiling_clients` as `c`")
+                ->innerjoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+                ->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+                ->leftJoin(' `rgzbn_users` AS `u1` ON `c`.`manager_id` = `u1`.`id`')
+                ->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`#__user_usergroup_map`.`user_id`')
+                ->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
+                ->leftJoin('`#__gm_ceiling_clients_labels` as `lbs` on `c`.`label_id` = `lbs`.`id`')
+                ->leftJoin('`rgzbn_users_dealer_id_map` as `dm` on `dm`.`user_id` = `u`.`id`')
+                ->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) and `u`.`refused_to_cooperate` = $coop  $label_filter");
+            if((!empty($limit) || $limit == 0)&&!empty($select_size)){
+                $query->order("`c`.`id` DESC LIMIT $limit,$select_size");
+            }
+            else{
+                $query->order("`c`.`id` DESC");
+            }
+            $query->group('`c`.`id`');
+            if (!empty($manager_id))
+            {
+                $query->where("`c`.`manager_id` = $manager_id");
+            }
+            if (!empty($city))
+            {
+                $query->where("`i`.`city` = '$city'");
+            }
+            if(!empty($status)){
+                $query->where("(`#__user_usergroup_map`.`group_id`IN ($status) OR dm.group_id IN ($status))");
+            }
+            else{
+                $query->where("(`#__user_usergroup_map`.`group_id`IN (49,50,51,52,53,54) OR dm.group_id IN(49,50,51,52,53,54))");
+            }
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            return $items;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function update($id,$phone,$name,$surname,$email,$password=null){
+	    try{
+	        $result = 0;
+	        if(!empty($id) && (!empty($phone) || !empty($name)) || !empty($surname) || !empty($email) ||!empty($password)) {
+	            $user = $this->getUserByAssociatedClient($id);
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query
+                    ->update('`rgzbn_users`')
+                    ->where("id = $user->id");
+                if(!empty($name) || !empty($surname)){
+                    $query->set("name = '$name $surname'");
+                    $clientModel = Gm_ceilingHelpersGm_ceiling::getModel('cleint');
+                    $clientModel->updateClient($id,"$name $surname");
+                }
+                if(!empty($email)){
+                    $query->set("email = '$email'");
+                }
+                if(!empty($phone)){
+                    $existUser = $this->getUserByUsername($phone);
+                    if(empty($existUser)){
+                        $query->set("username = '$phone'");
+                    }
+                    else{
+                        return '{"result":{"type":"error","data":"Пользователь с таким номером уже существует"}}';
+                    }
+                }
+                if(!empty($password)){
+                    $password = password_hash($password, PASSWORD_BCRYPT);
+                    $query->set("password = '$password'");
+                }
+                $db->setQuery($query);
+                $db->execute();
+                $result = 1;
+            }
+	        return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUserBAU($associated_client,$phone){
+	    try{
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('associated_client as id,name,username as phone,email,registerDate');
+            $query->from("`#__users`");
+            if(!empty($associated_client)){
+                $query->where("`associated_client` = $associated_client");
+            }
+            elseif (!empty($phone)){
+                $query->where("`username` = $phone");
+            }
+            else{
+                return 0;
+            }
+
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            return $item;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 }

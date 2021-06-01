@@ -117,6 +117,11 @@ $rest_sum = $closedSums->sum - $total_pay;
             Выбрано
         </div>
     </div>
+    <div class="col-md-3">
+        <div>
+            <i class="fas fa-house-damage"></i> Дефект в помещении
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -149,7 +154,8 @@ $rest_sum = $closedSums->sum - $total_pay;
             <thead>
             <tr class="caption_table">
                 <td width="10%"></td>
-                <td width="90%">
+                <td width="15%">Дефект</td>
+                <td width="75%">
                     Название помещения
                 </td>
             </tr>
@@ -165,7 +171,7 @@ $rest_sum = $closedSums->sum - $total_pay;
                         <span></span>
                     </label>
                 </td>
-                <td width="90%">
+                <td width="90%" colspan="2">
                     Выбрать всё
                 </td>
             </tr>
@@ -200,6 +206,17 @@ $rest_sum = $closedSums->sum - $total_pay;
             </tbody>
         </table>
     </div>
+    <div class="modal_window" id="mw_defect_images">
+        <div class="row">
+            <div class="col-md-2">
+                <button class="btn btn-primary back_mw">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            <h4>Просмотр фото дефекта</h4>
+        </div>
+        <div id="imgs_container"></div>
+    </div>
 </div>
 <script>
     var progressData = [];
@@ -212,14 +229,17 @@ $rest_sum = $closedSums->sum - $total_pay;
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#take_mount"),
-            div1 = jQuery("#detailed_salary"); // тут указываем ID элемента
+            div1 = jQuery("#detailed_salary"),
+            div2 = jQuery('#mw_defect_images'); // тут указываем ID элемента
 
         if (!div.is(e.target) && div.has(e.target).length === 0&&
-            !div1.is(e.target) && div1.has(e.target).length === 0) {
+            !div1.is(e.target) && div1.has(e.target).length === 0&&
+            !div2.is(e.target) && div2.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
-            jQuery("#take_mount").hide();
-            jQuery("#detailed_salary").hide();
+            div.hide();
+            div1.hide();
+            div2.hide();
         }
     });
 
@@ -234,29 +254,42 @@ $rest_sum = $closedSums->sum - $total_pay;
                 floor_sq = 0;
             html = '<div class="row" data-client_id = "'+Object.keys(progressData)[i]+'">';
             elem = progressData[Object.keys(progressData)[i]];
-            html += '<div class="col-md-1"><div class="row">'+elem.name+'</div><div class="row"> sq_total </div></div>';
-            html += '<div class="col-md-11">';
+            html += '<div class="col-md-2 col-xs-12"><div class="col-md-12 col-xs-12">'+elem.name+'</div><div class="col-md-12 col-xs-12"> sq_total </div></div>';
+            html += '<div class="col-md-10 col-xs-12">';
 
             for (var j = 0, td, val, sum,mounter; j < elem.projects.length; j++) {
-                var colIndex = 12;//(elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
-                var style;
+                var colIndex = 12,//(elem.projects.length >=12) ? 1 : (12 % (elem.projects.length) == 0) ? 12/(elem.projects.length) : parseInt(12/(elem.projects.length));
+                    style = '',
+                    defect = '';
                 jQuery.each(elem.projects[j].calcs,function(index,elem){
+                    //style = '';
                    if(elem.mounters && elem.mounters[0].id == user_id){
-                       console.log(elem);
                        if(elem.calc_status == 3){
                            style = 'style = "background:linear-gradient(135deg, white, yellow 150%);"';
+                           if(elem.defect_status == 1){
+                               defect = '<i class="fas fa-house-damage"></i> '+elem.title;
+                           }
+                           return false;
                        }
                        if(elem.calc_status == 4){
                            style = 'style = "background:linear-gradient(135deg, white, #414099 150%);"';
+                           if(elem.defect_status == 1){
+                               defect = '<i class="fas fa-house-damage"></i> '+elem.title;
+                           }
+                           return false;
                        }
 
                    }
                    else{
                        if(elem.mounters && elem.mounters[0].id != user_id) {
                            style = 'style = "background:linear-gradient(135deg, white, palevioletred 150%);"';
+                           return false;
+
                        }
                        else{
                            style = '';
+                           return false;
+
                        }
                    }
                 });
@@ -274,7 +307,10 @@ $rest_sum = $closedSums->sum - $total_pay;
                 }
                 var value = (stage == 3) ? "S=" : "P=";
 
-                td = '<b>'+elem.projects[j].title +'</b>'+
+                td = '<div class="row">'+
+                    '<div class="col-md-12"><b>'+elem.projects[j].title +'</b></div>'+
+                    '<div class="col-md-12">'+defect+'</div>'+
+                    '</div>'+
                     "<div class='row' style='font-size:11pt;font-style:italic;'>" +
                     "<div class='col-xs-5 col-md-5'>" +value+ val.toFixed(2) + "</div><div class='col-xs-7 col-md-7'>(<span class='sum'>" + sum.toFixed(2) + "</span>) </div>" +
                     "</div>";
@@ -286,7 +322,6 @@ $rest_sum = $closedSums->sum - $total_pay;
             html +='</div>';
 
             html = html.replace("sq_total",value+floor_sq.toFixed(2));
-            console.log(html);
             jQuery("#report_table").append(html);
 
         }
@@ -301,7 +336,8 @@ $rest_sum = $closedSums->sum - $total_pay;
                 floorId = row.data('client_id'),
                 projectId = item.data('proj_id'),
                 project = progressData[floorId].projects.find(function(obj){return obj.id == projectId}),
-                calcs = project.calcs;
+                calcs = project.calcs,
+                btnDefect = '';
             jQuery("#selected_floor").val(floorId);
             jQuery("#selected_project").val(projectId);
 
@@ -309,7 +345,8 @@ $rest_sum = $closedSums->sum - $total_pay;
                 var disabled = (!empty(elem.mounters) && elem.mounters[0].id != user_id) ? "disabled" :"";
                 var checked = (!empty(elem.mounters) && elem.mounters[0].id == user_id) ? "checked='checked'" : "";
                 var tr = "";
-                jQuery("#calcs > tbody").append('<tr class="calc_tr"></tr>');
+                btnDefect = elem.defect_status == 1 ? '<button class=\'btn btn-primary defect_imgs\'>Фото дефекта</button>' : '';
+                jQuery("#calcs > tbody").append('<tr class="calc_tr" data-calc_id ="'+elem.id+'"></tr>');
                 tr+="<td class='checkbox_td'>" +
                     "<input type=\"checkbox\"  id='calc"+elem.id+"' data-calc_id = "+elem.id+" "+disabled+" "+checked+" class=\"inp-cbx\" style=\"display: none\">\n" +
                     "                <label for='calc"+elem.id+"' class=\"cbx\">\n" +
@@ -321,6 +358,7 @@ $rest_sum = $closedSums->sum - $total_pay;
                     "                    <span></span>\n" +
                     "                </label>"+
                     "</td>"+
+                    '<td>'+btnDefect+'</td>'+
                     "<td class='title_td'>"+elem.title+"</td>";
                 jQuery("#calcs > tbody > tr:last").append(tr);
             });
@@ -361,6 +399,46 @@ $rest_sum = $closedSums->sum - $total_pay;
 
             jQuery("#save_btn").click(function () {
                 saveMounter();
+            });
+
+            jQuery('#calcs > tbody > tr').on('click','.defect_imgs',function(e){
+                var id = jQuery(this).closest('.calc_tr').data('calc_id');
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=calculation.getImagesByType",
+                    data: {
+                        calculationId: id,
+                        type: 'defect'
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+
+                        jQuery('#imgs_container').empty();
+                        jQuery.each(data,function(i,path){
+                            jQuery('#imgs_container').append('<div class="row"><img src="'+path+'"></div>');
+                        });
+                        jQuery('#take_mount').hide();
+                        jQuery('#mv_container').show();
+                        jQuery('#close').show();
+                        jQuery('#mw_defect_images').show();
+                    },
+                    error: function(data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка получения данных"
+                        });
+                    }
+                });
+                return false;
+            });
+
+            jQuery('.back_mw').click(function () {
+               jQuery(this).closest('.modal_window').hide();
+               jQuery('#take_mount').show();
             });
         });
     }

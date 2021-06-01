@@ -40,33 +40,33 @@ $categories = $categoryModel->get();
 
     .goods_row{
         border: 1px solid #414099;
-        height: 8em;
-        line-height: 4em;
+        height: 9em;
+        line-height: 3em;
         margin: 0 0 5px 0 !important;
         padding: 0 !important;
 
     }
 
     .div_save{
-        margin-top: -0.75em;
+        margin-top: -0.5em;
     }
 
     .image_preview{
-        max-height: 125px;
+        max-height: 140px;
         vertical-align: middle;
         padding-top: 2px;
         padding-bottom: 2px;
     }
     .add_image_href_btn{
-        width:120px;
-        height: 120px;
+        width:135px;
+        height: 135px;
         background-color: #FFFFFF;
         border: 2px solid grey;
         vertical-align: middle;
         margin-top: 3px;
     }
     .add_image_href_btn i{
-        padding-top: 5px;
+        padding-top: 20px;
         font-size: 36pt;
         color: grey;
 
@@ -79,8 +79,13 @@ $categories = $categoryModel->get();
         color: #414099;
     }
     .more_imgs{
+        margin-top: 8px !important;
         height:125px;
         background-color: #d3d3f9 !important;
+    }
+
+    .old_name{
+        margin-top: 10px;
     }
 
 </style>
@@ -174,9 +179,10 @@ $categories = $categoryModel->get();
     });
     jQuery(document).ready(function(){
         var goods,
-            categories = JSON.parse('<?=json_encode($categories);?>');
+            categories = JSON.parse('<?=json_encode($categories);?>'),
+            availabilityTypes;
         getGoods();
-
+        getAvailabilityTypes();
         jQuery('body').on('click','.save_btn', function(){
             var row = jQuery(this).closest('.goods_row'),
                 goods_id = row.data('id'),
@@ -375,6 +381,13 @@ $categories = $categoryModel->get();
             }
         });
 
+        jQuery('body').on('click','.save_btn_availability',function(){
+            var row = jQuery(this).closest('.goods_row'),
+                goodsId = row.data('id'),
+                availabilityType = row.find('.availibility_select').val();
+            console.log(goodsId,availabilityType);
+        });
+
         function getGoods(filter) {
             jQuery.ajax({
                 type: 'POST',
@@ -401,9 +414,13 @@ $categories = $categoryModel->get();
                 categoryDiv,
                 goodsDiv,
                 categorySelect = createSelect(categories),
-                goods;
+                goods,
+                availabilityOptions = '';
             goodsList.empty();
             console.log(data);
+            jQuery.each(availabilityTypes,function(i,aType){
+                availabilityOptions += '<option value="'+aType.id+'">'+aType.title+'</option>';
+            });
             jQuery.each(data,function (n,category) {
                 categoryDiv = jQuery('<div/>');
                 categoryDiv.append(
@@ -421,6 +438,7 @@ $categories = $categoryModel->get();
                 categoryDiv.addClass('category');
                 goods = JSON.parse(category.goods);
                 goodsDiv = jQuery('<div/>');
+
                 jQuery.each(goods,function(i,goods){
                     var images = (!empty(goods.images)) ? JSON.parse(atob(goods.images)) : '',
                         link = !empty(images[0]) ? images[0].link : '',
@@ -431,16 +449,30 @@ $categories = $categoryModel->get();
                     goodsDiv.append(
                         '<div class="row goods_row" data-id="'+goods.id+'" data-category_id="'+category.id+'">'+
                         '<div class="col-md-3 col-xs-12">' +
-                        imgDiv +
+                            imgDiv +
                         '</div>'+
-                        '<div class="col-md-9 col-xs-12">'+
-                        '<div class="col-md-9 col-xs-10 old_name">'+
+                        '<div class="col-md-5 col-xs-12" style="line-height: normal">'+
+                            '<div class="col-md-12 col-xs-10 old_name">'+
                                 '<b>'+goods.name+'</b>'+
                             '</div>'+
-                            '<div class="col-md-3 col-xs-2 center old_price">'+
+                            '<div class="col-md-12 col-xs-2 old_price">'+
                                 '<b>Цена:'+goods.price + '</b><i class="fas fa-ruble-sign"></i>'+
                             '</div>'+
-                            '<div class="col-md-6 col-xs-6">'+
+                        '</div>'+
+                        '<div class="col-md-4">'+
+                            '<div class="col-md-12" style="margin-top: 10px;margin-bottom: 3px;">'+
+                                '<div class="col-md-10">'+
+                                    '<select class="form-control availibility_select">' +
+                                        availabilityOptions +
+                                    '</select>'+
+                                '</div>'+
+                                '<div class="col-md-2 div_save">'+
+                                    '<button class="btn btn-primary save_btn_availability">'+
+                                        '<i class="far fa-save"></i>'+
+                                    '</button>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-md-12 col-xs-6" style="margin-top: 3px;margin-bottom: 3px;">'+
                                 '<div class="col-md-10">'+
                                     categorySelect +
                                 '</div>'+
@@ -450,7 +482,7 @@ $categories = $categoryModel->get();
                                     '</button>'+
                                 '</div>'+
                             '</div>'+
-                            '<div class="col-md-6 col-xs-4" style="text-align: right">'+
+                            '<div class="col-md-12 col-xs-4" style="margin-top: 3px;">'+
                                 '<div class="col-md-5 col-xs-5">'+
                                     '<input class="form-control new_name" placeholder="Новое название">'+
                                 '</div>'+
@@ -480,10 +512,33 @@ $categories = $categoryModel->get();
             var select = '<select class="form-control select_category">';
             select +='<option>Перенести в категорию</option>';
             jQuery.each(data,function(n,c){
-                select +='<option value="'+c.id+'">-'+c.category+'</option>';
+                select +='<option value="'+c.categoryID+'">-'+c.name+'</option>';
             });
             select += '</select>';
             return select;
+        }
+
+        function getAvailabilityTypes() {
+            jQuery.ajax({
+                type: 'POST',
+                url: '/index.php?option=com_gm_ceiling&task=goods.getGoodsAvailibilityTypes',
+                data: {},
+                dataType: "json",
+                timeout: 5000,
+                success: function (data) {
+                    availabilityTypes = data;
+                },
+                error: function (error) {
+                    noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: 'Ошибка!'
+                    });
+                }
+            });
         }
     });
 </script>

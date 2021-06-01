@@ -30,7 +30,7 @@ class Gm_ceilingModelGoods_category extends JModelList{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,view_type as viewType')
+                ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,viewType as viewType')
                 ->from('`rgzbn_gm_ceiling_baunet_catalog_category`');
             if(!empty($id)){
                 $query->where("id = $id");
@@ -53,9 +53,9 @@ class Gm_ceilingModelGoods_category extends JModelList{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,view_type as viewType')
+                ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,viewType as viewType')
                 ->from('`rgzbn_gm_ceiling_baunet_catalog_category`')
-                ->where("parent_id IS NULL");
+                ->where("parent_id IS NULL OR parent_id = id");
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;
@@ -71,7 +71,7 @@ class Gm_ceilingModelGoods_category extends JModelList{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true);
                 $query
-                    ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,view_type as viewType')
+                    ->select('id as categoryID,parent_id as parentID,name,image_id as imageID,viewType as viewType')
                     ->from('`rgzbn_gm_ceiling_baunet_catalog_category`')
                     ->where("parent_id = $parentId");
                 $db->setQuery($query);
@@ -96,11 +96,11 @@ class Gm_ceilingModelGoods_category extends JModelList{
                 }
                 if(!empty($imageID)){
                     $columns .= ',`image_id`';
-                    $values .= ",$imageID";
+                    $values .= ",'$imageID'";
                 }
-                if(!empty($imageID)){
-                    $columns .= ',`view_type`';
-                    $values .= ",$viewType";
+                if(!empty($viewType) || $viewType == 0){
+                    $columns .= ',`viewType`';
+                    $values .= ",'$viewType'";
                 }
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true);
@@ -155,10 +155,16 @@ class Gm_ceilingModelGoods_category extends JModelList{
                     $query->set("parent_id = $parentId");
                 }
                 if(!empty($imageId)){
-                    $query->set("image_id = $imageId");
+                    if($imageId == 'null'){
+                        $imageId = '(NULL)';
+                    }
+                    $query->set("image_id = '$imageId'");
                 }
-                if(!empty($viewType)){
-                    $query->set("view_type = $viewType");
+                if(!empty($viewType) || $viewType == 0){
+                    if($viewType == 'null'){
+                        $viewType = '(NULL)';
+                    }
+                    $query->set("viewType = '$viewType'");
                 }
                 $db->setQuery($query);
                 $db->execute();

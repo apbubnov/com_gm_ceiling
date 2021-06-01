@@ -34,12 +34,30 @@ class Gm_ceilingControllerUsers extends JControllerForm
 			$result = $model->getUserByGroup($group_id);
 			die(json_encode($result));
 		}
-		catch(Exception $e)
-        {
+		catch(Exception $e) {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
 	}
+
+	function getUsersByFilter(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $filter_city = $jinput->get('filter_city',"","STRING");
+            $filter_manager = $jinput->get('filter_manager',"","STRING");
+            $filter_status = $jinput->get('filter_status',"","STRING");
+            $limit = $jinput->get("limit",null,"INT");
+            $select_size = $jinput->get("select_size",null,"STRING");
+            $client_name = $jinput->get("client","","STRING");
+            $label_id = $jinput->get("label_id",null,"int");
+            $coop = $jinput->get('coop',0,'INT');
+            $model =  Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $model->getUsersByFilter($filter_manager,$filter_city,$filter_status,$client_name,$limit,$select_size,$coop, $label_id);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 /*    function rus2translit($string) {
         $converter = array(
             'а' => 'a',   'б' => 'b',   'в' => 'v',
@@ -145,6 +163,9 @@ class Gm_ceilingControllerUsers extends JControllerForm
 	        $phone = $jinput->getString('phone');
 	        $email = $jinput->getString('email');
             $groups = $jinput->get('groups',[],'ARRAY');
+            $city = $jinput->get('city','','STRING');
+            $withClient = $jinput->get('with_client',0,'INT');
+
             $currentUser = JFactory::getUser();
 
             if(!empty($phone)){
@@ -192,6 +213,22 @@ class Gm_ceilingControllerUsers extends JControllerForm
                         $usersModel->addGroupToExistUser($phone, $currentUser->dealer_id, $id);
                     }
                 }
+            }
+            if($withClient && empty($user->associated_client)){
+                /*если с клиентом*/
+
+                $client_data['client_name'] = mb_ereg_replace('[^\dA-Za-zА-ЯЁа-яё ]', '', $name);
+                $client_data['client_contacts'] = mb_ereg_replace('[^\d]', '', $phone);
+                $client_data['email'] = $email;
+                $client_data['dealer_id'] = $user->id;
+                $clientFormModel = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+                $client_id = $clientFormModel->save($client_data);
+                $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+                $dealer_info_model->update_city($user->dealer_id,$city);
+                $post['associated_client'] = $client_id;
+
+                $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $usersModel->updateAssocClient($user->id,$client_id);
             }
             die(json_encode(true));
         }
@@ -646,5 +683,120 @@ class Gm_ceilingControllerUsers extends JControllerForm
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+
+    function getGroupsByParentGroup(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $parentGroup = $jinput->getInt('parent');
+            $usersModel =  Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $usersModel->getGroupsByParentGroup($parentGroup);
+            die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function update(){
+	    try{
+	        $data = $_POST;
+	        if(!empty($data)){
+	            $id = $data['id'];
+	            $phone = $data['phone'];
+                $name = $data['name'];
+                $surname = $data['surname'];
+                $email = $data['email'];
+                $password = $data['password'];
+            }
+	        else{
+                $jinput = JFactory::getApplication()->input;
+                $id = $jinput->getInt('id');
+                $phone = $jinput->getString('phone');
+                $name = $jinput->getString('name');
+                $surname = $jinput->getString('surname');
+                $email = $jinput->getString('email');
+                $password = $jinput->getString('password');
+            }
+	        if(empty($id)){
+	            die('{"result":{"type":"error","data":"Пустой id"}}');
+            }
+	        $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+	        $result = $usersModel->update($id,$phone,$name,$surname,$email,$password);
+	        die(json_encode($result));
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function changePassBAU(){
+	    try{
+            $result = (object)["type"=>'',"data"=>''];
+            $data = $_POST;
+            if(!empty($data)){
+                $id = $data['id'];
+                $oldPassword = $data['old_password'];
+                $password = $data['password'];
+            }
+            else{
+                $jinput = JFactory::getApplication()->input;
+                $id = $jinput->getInt('id');
+                $oldPassword = $jinput->getString('old_password');
+                $password = $jinput->getString('password');
+
+            }
+            $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            if(!empty($id)){
+                if(empty($password)){
+                    $result->type = 'error';
+                    $result->data = 'Пароль не может быть пустым';
+                    die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+                }
+                if(empty($oldPassword)){
+                    $result->type = 'error';
+                    $result->data = 'Пустой старый пароль';
+                    die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+                }
+
+                $user = JFactory::getUser($usersModel->getUserByAssociatedClient($id)->id);
+                $verifyPass = JUserHelper::verifyPassword($oldPassword, $user->password, $user->id);
+                if ($verifyPass) {
+                    $usersModel->update($id,null,null,null,null,$password);
+                    $result->type = 'success';
+                    $result->data = $user->associated_client;
+                    die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+                }
+                else{
+                    $result->type = 'error';
+                    $result->data = 'Неверный старый пароль';
+                    die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+                }
+            }
+            else{
+                $result->type = 'error';
+                $result->data = 'Пустой id';
+                die("{\"result\":".json_encode($result,JSON_UNESCAPED_UNICODE)."}");
+            }
+
+        }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function getUser(){
+	    try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->getInt('id');
+            $phone = $jinput->getString('phone');
+            $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $usersModel->getUserBAU($id,$phone);
+            die('{"user":'.json_encode($user,JSON_UNESCAPED_UNICODE).'}');
+	    }
+        catch(Exception $e){
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }
 ?>

@@ -88,7 +88,7 @@ $href = !$isObjMaster ? 'index.php?option=com_gm_ceiling&view=clientcard&type=bu
 <script>
     jQuery(document).ready(function() {
         var builders = JSON.parse('<?=quotemeta(json_encode($result_clients));?>'),
-            objMaster = <?= empty($isObjMaster) ? false : true;?>,
+            objMaster = '<?= empty($isObjMaster) ? false : true;?>',
             user = JSON.parse('<?=json_encode($user);?>');
         console.log(builders);
         jQuery('body').on('click', 'tr', function (e) {

@@ -415,6 +415,10 @@ class Gm_ceilingModelClientForm extends JModelForm
 					$db->setQuery($query);
 					$db->execute();
 				}
+				if(!empty($data['email'])){
+				    $dopContacteModel = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+				    $dopContacteModel->save($id_client,1,$data['email']);
+                }
 				return $id_client;
 			}
 			else

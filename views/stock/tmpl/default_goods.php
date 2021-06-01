@@ -35,13 +35,21 @@
                         ?>
                     </select>
                 </div>
-                <div class="col-md-6" style="margin-bottom: 5px;margin-top: 5px;">
-                    <button type="button" class="btn btn-primary" id="new_category">
-                        <i class="fas fa-plus-square"></i> Добавить категорию
-                    </button>
+                <div class="col-md-6" style="margin-top: 5px;">
+                    <div class="col-md-6" style="margin-bottom: 5px;">
+                        <button type="button" class="btn btn-primary" id="new_category">
+                            <i class="fas fa-plus-square"></i> Добавить категорию
+                        </button>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom: 5px;">
+                        <button type="button" class="btn btn-primary" id="new_avail_type">
+                            <i class="fas fa-plus-square"></i> Добавить тип наличия
+                        </button>
+                    </div>
+
                     <div class="row" id="new_category_info" style="display:none;margin-top: 5px;">
                         <div class="col-md-8">
-                            <input type="text" class="form-control" id="new_category_name">
+                            <input type="text" class="form-control" id="new_category_name" placeholder="Название категории">
                         </div>
                         <div class="col-md-4">
                             <button type="button" class="btn btn-primary" id="create_new_category">
@@ -49,7 +57,19 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="row" id="new_avail_type_info" style="display:none;margin-top: 5px;">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="new_avail_type_name" placeholder="Название типа наличия">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary" id="create_new_avail_type" >
+                                <i class="far fa-save"></i> Сохранить
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <div class="row">
                 <div id="common_props">
@@ -252,6 +272,11 @@
             jQuery('#new_category_info').toggle();
         });
 
+        jQuery('#new_avail_type').click(function(){
+            jQuery('#new_avail_type_info').toggle();
+        });
+
+
         jQuery('#create_new_category').click(function () {
             var name = jQuery('#new_category_name').val();
             if(!empty(name)){
@@ -296,6 +321,52 @@
                     text: "Название категории не может быть пустым!"
                 });
             }
+        });
+
+        jQuery('#create_new_avail_type').click(function(){
+           var typeName = jQuery('#new_avail_type_name').val();
+           if(!empty(typeName)){
+               jQuery.ajax({
+                   url: "index.php?option=com_gm_ceiling&task=goods.addGoodsAvailibilityType",
+                   type: "post",
+                   data: {
+                       title: typeName
+                   },
+                   dataType: "json",
+                   async: false,
+                   success: function (data) {
+                       noty({
+                           timeout: 2000,
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "success",
+                           text: "Тип добавлен!"
+                       });
+                       setTimeout(function(){location.reload()},2000);
+                   },
+                   error: function (data) {
+                       noty({
+                           timeout: 2000,
+                           theme: 'relax',
+                           layout: 'center',
+                           maxVisible: 5,
+                           type: "error",
+                           text: "Ошибка сервера"
+                       });
+                   }
+               });
+           }
+           else{
+               noty({
+                   timeout: 2000,
+                   theme: 'relax',
+                   layout: 'center',
+                   maxVisible: 5,
+                   type: "error",
+                   text: "Название типа не может быть пустым!"
+               });
+           }
         });
     });
 
