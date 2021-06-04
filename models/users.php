@@ -1110,7 +1110,11 @@ class Gm_ceilingModelUsers extends JModelList
             if (!empty($label_id)) {
                 $label_filter = " AND `c`.`label_id` = $label_id";
             }
-
+            $groupsSelect = $db->getQuery(true);
+            $groupsSelect
+                ->select('id')
+                ->from('`rgzbn_usergroups`')
+                ->where('parent_id = 48');
             $query
                 ->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`, `lbs`.`color_code`")
                 ->select("GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
@@ -1144,8 +1148,9 @@ class Gm_ceilingModelUsers extends JModelList
                 $query->where("(`#__user_usergroup_map`.`group_id`IN ($status) OR dm.group_id IN ($status))");
             }
             else{
-                $query->where("(`#__user_usergroup_map`.`group_id`IN (49,50,51,52,53,54) OR dm.group_id IN(49,50,51,52,53,54))");
+                $query->where("(`#__user_usergroup_map`.`group_id`IN ($groupsSelect) OR dm.group_id IN($groupsSelect))");
             }
+
             $db->setQuery($query);
             $items = $db->loadObjectList();
             return $items;

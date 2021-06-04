@@ -403,6 +403,7 @@ $providersGroups = $usersModel->getGroupsByParentGroup(48);
     }
 
     jQuery(document).ready(function () {
+        jQuery('#provider_contacts').mask('+7 (999) 999-99-99');
         jQuery('#select_label').niceSelect();
         jQuery("#select_label").change(function () {
             var color = (jQuery(".option.selected").data("color"));

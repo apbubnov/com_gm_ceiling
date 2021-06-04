@@ -419,7 +419,7 @@ class Gm_ceilingModelGoods extends JModelList{
                     $query
                         ->insert('`rgzbn_gm_stock_goods_info`')
                         ->columns("goods_id,info")
-                        ->values("$goodsId,$info");
+                        ->values("$goodsId,'$info'");
                     $db->setQuery($query);
                     $db->execute();
                 }
@@ -482,6 +482,23 @@ class Gm_ceilingModelGoods extends JModelList{
                    $result[$goodsItem->id][] = (object)["job_id"=>$job,"count"=>1];
                }
             }
+            return $result;
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    function checkExist($ids){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id')
+                ->from('`rgzbn_gm_stock_goods`')
+                ->where("id in ($ids)");
+            $db->setQuery($query);
+            $result = $db->loadColumn();
             return $result;
         }
         catch(Exception $e) {

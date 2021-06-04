@@ -570,12 +570,56 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 <td class="Value"></td>
             </tr>
             <tr >
-                <td class="Name">Адрес:</td>
+                <td class="Name" width="50%">Адрес:</td>
                 <td class="Value">
-                    <div class="row"></div>
-                    <div class="row"></div>
-                    <div class="row"></div>
-                    <div class="row"></div>
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4">
+                                <label><b>Улица</b></label>
+                            </div>
+                            <div class="col-md-8 col-xs-8">
+                                <input  class="form-control new_address_cl" placeholder="Улица" type="text" value="<?=$address->street;?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4">
+                                <label><b>Дом \ Корпус</b></label>
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_house_cl" placeholder="Дом" aria-required="true" type="text" value="<?=$address->house;?>">
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_bdq_cl" placeholder="Корпус" aria-required="true"
+                                       type="text" value="<?=$address->bdq;?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4">
+                                <label><b>Квартира \ Подъезд</b></label>
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_apartment_cl" placeholder="Квартира" aria-required="true"
+                                       type="text" value="<?=$address->apartment;?>">
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_porch_cl" placeholder="Подъезд" aria-required="true"
+                                       type="text" value="<?=$address->porch;?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4">
+                                <label><b>Этаж \ Код домофона</b></label>
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_floor_cl" placeholder="Этаж" aria-required="true"
+                                       type="text" value="<?=$address->floor;?>">
+                            </div>
+                            <div class="col-md-4 col-xs-4">
+                                <input class="form-control new_code_cl" placeholder="Код" aria-required="true"
+                                       type="text" value="<?=$address->code;?>">
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
             </tbody>
@@ -952,6 +996,7 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 success: function (data) {
                     console.log(data);
                     data = JSON.parse(data);
+                    saveAddress(parseInt(data));
                     makeRealisation(parseInt(data));
                 },
                 dataType: "text",
@@ -968,6 +1013,38 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
             });
             
         });
+
+        function saveAddress(project_id){
+            var address = "",
+                street = jQuery(".new_address_cl").val(),
+                house = jQuery(".new_house_cl").val(),
+                bdq = jQuery(".new_bdq_cl").val(),
+                apartment = jQuery(".new_apartment_cl").val(),
+                porch = jQuery(".new_porch_cl").val(),
+                floor =jQuery(".new_floor_cl").val(),
+                code = jQuery(".new_code_cl").val();
+            if(house) address = street + ", дом: " + house;
+            if(bdq) address += ", корпус: " + bdq;
+            if(apartment) address += ", квартира: "+ apartment;
+            if(porch) address += ", подъезд: " + porch;
+            if(floor) address += ", этаж: " + floor;
+            if(code) address += ", код: " + code;
+
+            var data = {id:project_id,project_info:address};
+            data = JSON.stringify(data)
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.change_project_data",
+                data: {
+                    new_data: data
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                },
+                error: function (data) {
+                }
+            });
+        }
 
         jQuery('body').on('click','.Remove',function(){
            var btn = jQuery(this);

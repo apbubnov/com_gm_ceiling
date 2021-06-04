@@ -268,4 +268,42 @@ class Gm_ceilingControllerGoods extends JControllerLegacy{
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
+    public function mapGoods(){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('id,created_by')
+                ->from('`rgzbn_gm_stock_goods`');
+            $db->setQuery($query);
+            $goods = $db->loadObjectList();
+            $values = [];
+            foreach ($goods as $goodsItem) {
+                array_push($values,"$goodsItem->id,$goodsItem->created_by");
+            }
+            $insertQuery = $db->getQuery(true);
+            $insertQuery
+                ->insert('`rgzbn_gm_ceiling_goods_map_providers`')
+                ->columns('goods_id,provider_id')
+                ->values($values);
+            throw new Exception($insertQuery);
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
+    public function checkExist(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $ids = $jinput->getString('ids');
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('goods');
+            $result = $model->checkExist($ids);
+            die(json_encode($result));
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
+
 }

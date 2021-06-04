@@ -225,7 +225,7 @@ class Gm_ceilingControllerUsers extends JControllerForm
                 $client_id = $clientFormModel->save($client_data);
                 $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
                 $dealer_info_model->update_city($user->dealer_id,$city);
-                $post['associated_client'] = $client_id;
+
 
                 $usersModel = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $usersModel->updateAssocClient($user->id,$client_id);
