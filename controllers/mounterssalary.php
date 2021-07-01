@@ -61,8 +61,9 @@ class Gm_ceilingControllerMountersSalary extends JControllerLegacy {
             $mounterId = $jinput->getInt('mounter_id');
             $builderId = $jinput->getInt('builder_id');
             $sum = $jinput->get('paid_sum','','STRING');
+            $comment = $jinput->getString('comment');
             $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersSalary');
-            $model->savePay($mounterId,$builderId,$sum);
+            $model->savePay($mounterId,$builderId,$sum,$comment);
             die(json_encode(true));
         }
         catch(Exception $e)

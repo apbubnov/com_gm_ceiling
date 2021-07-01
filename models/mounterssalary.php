@@ -125,15 +125,21 @@ class Gm_ceilingModelMountersSalary extends JModelItem {
         }
     }
 
-    function savePay($mounterId,$builderId,$sum){
+    function savePay($mounterId,$builderId,$sum,$comment){
         try{
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             if(!empty($mounterId)&&!empty($builderId)&&!empty($sum)) {
+                $columns = '`mounter_id`,`builder_id`,`sum`,`type`';
+                $values = "$mounterId,$builderId,$sum,2";
+                if(!empty($comment)){
+                    $columns.= ',`note`';
+                    $values.= ",'$comment'";
+                }
                 $query
                     ->insert('`#__gm_ceiling_mounters_salary`')
-                    ->columns('`mounter_id`,`builder_id`,`sum`,`type`')
-                    ->values("$mounterId,$builderId,$sum,2");
+                    ->columns("$columns")
+                    ->values("$values");
                 $db->setQuery($query);
                 $db->execute();
                 return true;

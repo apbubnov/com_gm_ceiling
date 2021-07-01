@@ -20,10 +20,10 @@ $types = $mountersdebtModel->getTypes();
 <table class="table table_cashbox" id="common_table">
     <thead>
     <tr>
-        <th class="center">
+        <th class="center" style="width: 10%;">
             Монтажник
         </th>
-        <th class="center">
+        <th class="center" style="width:15%;">
             Объект
         </th>
         <th class="center">
@@ -50,7 +50,7 @@ $types = $mountersdebtModel->getTypes();
     <?php foreach ($items as $mounter_id => $item) {
         $total_taken = 0;$total_closed = 0;$total_payed = 0;$total_rest = 0;
         ?>
-        <tr data-mounter_id="<?php echo $mounter_id;?>">
+        <tr data-mounter_id="<?php echo $mounter_id;?>" >
             <td rowspan="<?php echo count($item['builder_data'])?>">
                 <div class="row">
                     <div class="col-md-12">
@@ -108,29 +108,7 @@ $types = $mountersdebtModel->getTypes();
                     ?>
                 </td>
                 <td>
-                    <div class="row">
-                        <div class="col-xs-10 col-md-10">
-                            <input class="input-gm close_sum" style="max-width: 100%;">
-                        </div>
-                        <div class="col-xs-2 col-md-2" style="padding-left: 0;">
-                            <button class="btn btn-primary btn-sm save_sum"><i class="far fa-save"></i></button>
-                        </div>
-                    </div>
-                    <?php if(!empty($item['mounter_debt'])){ ?>
-                        <div class="row">
-                            <div class="col-xs-12 col-md-12">
-                                <input type="checkbox" id="auto_<?=$value->builder_id.$mounter_id?>" class="inp-cbx auto_debt_relief" checked style="display: none">
-                                <label for="auto_<?=$value->builder_id. $mounter_id?>" class="cbx">
-                                                    <span>
-                                                        <svg width="12px" height="10px" viewBox="0 0 12 10">
-                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                                        </svg>
-                                                    </span>
-                                    <span>Автосписание долга</span>
-                                </label>
-                            </div>
-                        </div>
-                    <?php }?>
+                    <button class="btn btn-primary save_pay_btn"> Внести сумму</button>
 
                 </td>
                 <?php if($key == 0){?>
@@ -230,35 +208,107 @@ $types = $mountersdebtModel->getTypes();
             </tbody>
         </table>
     </div>
+    <div class="modal_window" id="mw_save_pay">
+        <input type="hidden" id="selected_mounter">
+        <input type="hidden" id="selected_builder">
+        <div class="row">
+            <h4>
+                Внесение оплаты бригаде <span id="mounter_name"></span> за объект <span id="builder_obj"></span>
+            </h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="row">
+                    <label>Введите сумму:</label>
+                </div>
+                <div class="row">
+                    <input class="form-control" id="close_sum">
+                </div>
+                <div class="row" id="debt_div" style="display: none;">
+                    <div class="col-xs-12 col-md-12">
+                        <input type="checkbox" id="auto_debt_relief" class="inp-cbx auto_debt_relief" checked style="display: none">
+                        <label for="auto_debt_relief" class="cbx">
+                    <span>
+                        <svg width="12px" height="10px" viewBox="0 0 12 10">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                    </span>
+                            <span>Автосписание долга</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <textarea class="form-control" rows="3" id="comment" placeholder="Введите комментарий"></textarea>
+            </div>
+            <!--<div class="col-xs-2 col-md-2" style="padding-left: 0;">
+                <button class="btn btn-primary btn-sm save_sum"><i class="far fa-save"></i></button>
+            </div>-->
+        </div>
+
+        <div class="row center">
+            <div class="col-md-12">
+                <button class="btn btn-primary save_sum">Сохранить</button>
+            </div>
+        </div>
+
+    </div>
 </div>
 <script>
     var data = JSON.parse('<?php echo json_encode($items)?>');
     console.log(data);
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#one_mounter_salary"),
-            div1 = jQuery("#detailed_debt"); // тут указываем ID элемента
+            div1 = jQuery("#detailed_debt"),
+            div2 = jQuery("#mw_save_pay");
         if (!div.is(e.target) && div.has(e.target).length === 0 &&
-            !div1.is(e.target) && div1.has(e.target).length === 0) {
+            !div1.is(e.target) && div1.has(e.target).length === 0 &&
+            !div2.is(e.target) && div2.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mw_container").hide();
             div.hide();
             div1.hide();
+            div2.hide();
         }
     });
 
     jQuery(document).ready(function () {
         console.log(data);
-        jQuery(".save_sum").click(function () {
+
+        jQuery('.save_pay_btn').click(function () {
             var tr = jQuery(this).closest('tr'),
-                mounter_id = tr.data('mounter_id'),
-                builder_id = tr.find('.builder').data('builder_id'),
+                mounterId = tr.data('mounter_id'),
+                builderId = tr.find('.builder_name').data('builder_id'),
+                mounter = data[mounterId],
+                builder = mounter.builder_data.find(function (e) {
+                    return e.builder_id == builderId;
+                });
+            jQuery('#selected_builder').val(builderId);
+            jQuery('#selected_mounter').val(mounterId);
+            jQuery('#mounter_name').text(mounter.mounter_name);
+            jQuery('#builder_obj').text(builder.builder_name);
+            if(!empty(mounter.mounter_debt)){
+                jQuery('#debt_div').show();
+            }
+            jQuery('#mw_container').show();
+            jQuery("#close").show();
+            jQuery('#mw_save_pay').show();
+        });
+
+        jQuery(".save_sum").click(function () {
+            var mounter_id = jQuery('#selected_mounter').val(),
+                builder_id = jQuery('#selected_builder').val(),
+                tr = jQuery(jQuery('#common_table').find('tr[data-mounter_id='+mounter_id+']').filter(function(ind,row){
+                    return jQuery(row).find('.builder[data-builder_id="'+builder_id+'"]').length > 0;
+                })[0]),
                 rest = parseFloat(tr.find('.rest')[0].innerText),
-                close_sum = parseFloat(tr.find('.close_sum').val()),
-                debt_auto_relief = jQuery(this).closest('td').find('.auto_debt_relief').is(':checked');
+                close_sum = parseFloat(jQuery('#close_sum').val()),
+                debt_auto_relief = jQuery('#auto_debt_relief').is(':checked'),
+                comment = jQuery('#comment').val();
             if(close_sum>0){
                 close_sum = -close_sum;
             }
-            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'),tr.find('.close_sum'),debt_auto_relief);
+            make_pay(mounter_id,builder_id,close_sum,tr.find('.payed'),tr.find('.rest'),tr.find('.close_sum'),debt_auto_relief,comment);
         });
 
         jQuery('.builder').click(function () {
@@ -462,7 +512,7 @@ $types = $mountersdebtModel->getTypes();
         }
         else return false;
     }
-    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td,input,debt_auto_relied) {
+    function make_pay(mounter_id,builder_id,close_sum,payed_td,rest_td,input,debt_auto_relied,comment) {
         var mounter_data = data[mounter_id],
             percent_sum = 0,
             tr = rest_td.closest('tr'),
@@ -481,7 +531,7 @@ $types = $mountersdebtModel->getTypes();
         /*если пока только один объект */
         if(mounter_data['builder_data'].length == 1){
             if(check_pay_possibility(mounter_data['builder_data'][0],close_sum)){
-                savePay(mounter_id,close_sum,mounter_data['builder_data'][0].builder_id,payed_td,rest_td,mounter_data['builder_data'][0]);
+                savePay(mounter_id,close_sum,mounter_data['builder_data'][0].builder_id,payed_td,rest_td,mounter_data['builder_data'][0],comment);
                 input.val("");
                 var n = noty({
                     timeout: 2000,
@@ -518,7 +568,7 @@ $types = $mountersdebtModel->getTypes();
             console.log(current_builder);
             if(check_pay_possibility(current_builder,close_sum)){
 
-                savePay(mounter_id,close_sum,current_builder.builder_id,payed_td,rest_td,current_builder);
+                savePay(mounter_id,close_sum,current_builder.builder_id,payed_td,rest_td,current_builder,comment);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -542,19 +592,19 @@ $types = $mountersdebtModel->getTypes();
                     /*списать часть*/
                     var available_sum = current_builder.taken - current_builder.closed + current_builder.rest;
                     if(available_sum > 0){
-                        savePay(mounter_id, 0 - available_sum, current_builder.builder_id, payed_td, rest_td, current_builder);
+                        savePay(mounter_id, 0 - available_sum, current_builder.builder_id, payed_td, rest_td, current_builder,comment);
                         close_sum += available_sum;
                     }
                     jQuery.each(mounter_data['builder_data'], function (index, builder) {
                         if (builder.builder_id != current_builder.builder_id && close_sum != 0) {
                             if(check_pay_possibility(builder,close_sum)){
-                                savePay(mounter_id,close_sum,builder.builder_id,payed_td,rest_td,builder);
+                                savePay(mounter_id,close_sum,builder.builder_id,payed_td,rest_td,builder,comment);
                                 close_sum = 0;
                             }
                             else{
                                 available_sum = builder.taken-builder.closed + builder.rest;
                                 if(available_sum > 0) {
-                                    savePay(mounter_id, 0 - available_sum, builder.builder_id, payed_td, rest_td, current_builder);
+                                    savePay(mounter_id, 0 - available_sum, builder.builder_id, payed_td, rest_td, current_builder,comment);
                                     close_sum += available_sum;
                                 }
                             }
@@ -590,13 +640,14 @@ $types = $mountersdebtModel->getTypes();
         }
     }
 
-    function savePay(mounter_id, paid_sum, builder_id,payed_td,rest_td,data) {
+    function savePay(mounter_id, paid_sum, builder_id,payed_td,rest_td,data,comment) {
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=MountersSalary.savePay",
             data: {
                 mounter_id: mounter_id,
                 paid_sum: paid_sum,
-                builder_id: builder_id
+                builder_id: builder_id,
+                comment: comment
             },
             dataType: "json",
             async: false,
