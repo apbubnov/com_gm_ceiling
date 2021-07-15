@@ -679,7 +679,13 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                         Наименование
                     </td>
                     <td>
+                        Цена,р.
+                    </td>
+                    <td>
                         Количество
+                    </td>
+                    <td>
+                        Стоимость,р.
                     </td>
                     <td>
                         <i class="far fa-trash-alt"></i>
@@ -1082,13 +1088,20 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
                 goodsId = row.data('id');
             delete Goods[goodsId];
             row.remove();
-
         });
 
         jQuery('.add_goods').click(function () {
             jQuery("#mw_container").show();
             jQuery("#close").show();
             jQuery("#mw_add_goods").show('slow');
+        });
+
+        jQuery('#added_goods').on('keyup','.count',function(){
+            var row = jQuery(this).closest('tr'),
+                price = row.find('.price').text(),
+                costTd = row.find('.cost_sum'),
+                count = this.value;
+            costTd.text(price*count);
         });
 
         jQuery("#print_doc").click(function() {
@@ -1137,9 +1150,8 @@ $goodsInCategories_json = quotemeta(json_encode($goodsInCategories, JSON_HEX_QUO
         });
     });
     function addGoodsInTable(goods){
-        console.log(goods);
         jQuery("#added_goods > tbody").append('<tr data-id="'+goods.goods_id+'"></tr>');
-        jQuery("#added_goods > tbody > tr:last").append('<td>'+goods.name+'</td><td>'+INPUT_COUNT+'</td><td>'+BUTTON_DELETE_MW+'</td>');
+        jQuery("#added_goods > tbody > tr:last").append('<td>'+goods.name+'</td><td class="price">'+goods.dealer_price+'</td><td>'+INPUT_COUNT+'</td><td class="cost_sum"></td><td>'+BUTTON_DELETE_MW+'</td>');
 
     }
     function fillData(goods){
